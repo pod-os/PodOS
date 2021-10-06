@@ -27,6 +27,6 @@ export class MyComponent {
   }
 
   render() {
-    return <div>Hello, World! I'm {this.getText()}</div>;
+    return <ion-button>Hello, World! I'm {this.getText()}</ion-button>;
   }
 }
