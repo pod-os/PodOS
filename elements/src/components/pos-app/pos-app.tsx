@@ -1,10 +1,9 @@
-import {Component, h} from '@stencil/core';
+import { Component, h } from '@stencil/core';
 
 @Component({
   tag: 'pos-app',
 })
 export class PosApp {
-
   render() {
     return (
       <ion-app>
@@ -13,25 +12,24 @@ export class PosApp {
             <ion-title slot="start">pod os</ion-title>
           </ion-toolbar>
         </ion-header>
-        <ion-content class='ion-padding'>
+        <ion-content class="ion-padding">
           <ion-grid>
             <ion-row>
               <ion-col size="12" size-sm>
                 <ion-card>
                   <ion-card-header>
-                    <img src="https://upload.wikimedia.org/wikipedia/de/5/57/Minecraft_logo-SVG.svg"/>
+                    <img src="https://upload.wikimedia.org/wikipedia/de/5/57/Minecraft_logo-SVG.svg" />
                     <ion-card-subtitle>VideoGame</ion-card-subtitle>
                     <ion-card-title>Minecraft</ion-card-title>
                   </ion-card-header>
-                  <ion-card-content>Minecraft is a sandbox video game developed by the Swedish video game developer
-                    Mojang Studios. The game was created by Markus "Notch" Persson in the Java programming language.
+                  <ion-card-content>
+                    Minecraft is a sandbox video game developed by the Swedish video game developer Mojang Studios. The game was created by Markus "Notch" Persson in the Java
+                    programming language.
                   </ion-card-content>
                 </ion-card>
               </ion-col>
               <ion-col size="12" size-sm>
                 <ion-list>
-
-
                   <ion-item-group>
                     <ion-item-divider>
                       <ion-label>schema:playMode</ion-label>
@@ -76,13 +74,12 @@ export class PosApp {
                       <ion-label>schema:description</ion-label>
                     </ion-item-divider>
                     <ion-item>
-                      <ion-label class="ion-text-wrap">Minecraft is a sandbox video game developed by the Swedish video
-                        game developer Mojang Studios. The game was created by Markus "Notch" Persson in the Java
+                      <ion-label class="ion-text-wrap">
+                        Minecraft is a sandbox video game developed by the Swedish video game developer Mojang Studios. The game was created by Markus "Notch" Persson in the Java
                         programming language.
                       </ion-label>
                     </ion-item>
                   </ion-item-group>
-
                 </ion-list>
               </ion-col>
               <ion-col size="12" size-sm>
@@ -96,16 +93,17 @@ export class PosApp {
                       <ion-toolbar>
                         <ion-label>
                           <h2>CHALLENGE ACCEPTED! #6 [Hot Pepper Challenge!]</h2>
-                          <p>How many Jalapeno can I eat without crying? ZERO. Today's challenge is for every chest I
-                            open, I have to eat a Jalapeno and... I HAVE TO WIN. This video was painful</p>
+                          <p>
+                            How many Jalapeno can I eat without crying? ZERO. Today's challenge is for every chest I open, I have to eat a Jalapeno and... I HAVE TO WIN. This video
+                            was painful
+                          </p>
                         </ion-label>
 
                         <ion-buttons slot="secondary">
                           <ion-button slot="end">
-                            <ion-icon name="open-outline"/>
+                            <ion-icon name="open-outline" />
                           </ion-button>
                         </ion-buttons>
-
                       </ion-toolbar>
                     </ion-item>
                     <ion-item>
@@ -117,10 +115,9 @@ export class PosApp {
 
                         <ion-buttons slot="secondary">
                           <ion-button slot="end">
-                            <ion-icon name="open-outline"/>
+                            <ion-icon name="open-outline" />
                           </ion-button>
                         </ion-buttons>
-
                       </ion-toolbar>
                     </ion-item>
                   </ion-item-group>
@@ -135,10 +132,9 @@ export class PosApp {
 
                         <ion-buttons slot="secondary">
                           <ion-button slot="end">
-                            <ion-icon name="open-outline"/>
+                            <ion-icon name="open-outline" />
                           </ion-button>
                         </ion-buttons>
-
                       </ion-toolbar>
                     </ion-item>
                   </ion-item-group>
@@ -146,8 +142,6 @@ export class PosApp {
               </ion-col>
             </ion-row>
           </ion-grid>
-
-
         </ion-content>
         <ion-footer>
           <ion-toolbar>
@@ -157,5 +151,4 @@ export class PosApp {
       </ion-app>
     );
   }
-
 }
