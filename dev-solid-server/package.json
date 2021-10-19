@@ -1,0 +1,14 @@
+{
+  "name": "dev-solid-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "community-solid-server --config @css:config/file.json --rootFilePath ./data"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@solid/community-server": "^2.0.0"
+  }
+}
