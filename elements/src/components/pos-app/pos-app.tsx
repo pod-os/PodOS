@@ -7,9 +7,11 @@ export class PosApp {
   render() {
     return (
       <ion-app>
+        <pos-track-session></pos-track-session>
         <ion-header>
           <ion-toolbar>
             <ion-title slot="start">pod os</ion-title>
+            <pos-login></pos-login>
           </ion-toolbar>
         </ion-header>
         <ion-content class="ion-padding">

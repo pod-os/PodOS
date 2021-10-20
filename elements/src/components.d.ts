@@ -8,6 +8,10 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
     interface PosApp {
     }
+    interface PosLogin {
+    }
+    interface PosTrackSession {
+    }
 }
 declare global {
     interface HTMLPosAppElement extends Components.PosApp, HTMLStencilElement {
@@ -16,15 +20,35 @@ declare global {
         prototype: HTMLPosAppElement;
         new (): HTMLPosAppElement;
     };
+    interface HTMLPosLoginElement extends Components.PosLogin, HTMLStencilElement {
+    }
+    var HTMLPosLoginElement: {
+        prototype: HTMLPosLoginElement;
+        new (): HTMLPosLoginElement;
+    };
+    interface HTMLPosTrackSessionElement extends Components.PosTrackSession, HTMLStencilElement {
+    }
+    var HTMLPosTrackSessionElement: {
+        prototype: HTMLPosTrackSessionElement;
+        new (): HTMLPosTrackSessionElement;
+    };
     interface HTMLElementTagNameMap {
         "pos-app": HTMLPosAppElement;
+        "pos-login": HTMLPosLoginElement;
+        "pos-track-session": HTMLPosTrackSessionElement;
     }
 }
 declare namespace LocalJSX {
     interface PosApp {
     }
+    interface PosLogin {
+    }
+    interface PosTrackSession {
+    }
     interface IntrinsicElements {
         "pos-app": PosApp;
+        "pos-login": PosLogin;
+        "pos-track-session": PosTrackSession;
     }
 }
 export { LocalJSX as JSX };
@@ -32,6 +56,8 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "pos-app": LocalJSX.PosApp & JSXBase.HTMLAttributes<HTMLPosAppElement>;
+            "pos-login": LocalJSX.PosLogin & JSXBase.HTMLAttributes<HTMLPosLoginElement>;
+            "pos-track-session": LocalJSX.PosTrackSession & JSXBase.HTMLAttributes<HTMLPosTrackSessionElement>;
         }
     }
 }

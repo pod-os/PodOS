@@ -17,13 +17,14 @@
   "scripts": {
     "build": "stencil build --docs",
     "start": "stencil build --dev --watch --serve",
-    "test": "stencil test --spec --e2e",
-    "test.watch": "stencil test --spec --e2e --watchAll",
+    "test": "jest ./src",
+    "test:e2e": "stencil test --e2e",
     "generate": "stencil generate"
   },
   "dependencies": {
     "@ionic/core": "^5.8.2",
-    "@stencil/core": "^2.7.0"
+    "@stencil/core": "^2.7.0",
+    "@stencil/store": "^1.5.0"
   },
   "devDependencies": {
     "@types/jest": "^26.0.24",
