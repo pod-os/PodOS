@@ -1,0 +1,32 @@
+{
+  "name": "pod-os",
+  "version": "0.1.0",
+  "description": "Personal Online Data Operating System",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pod-os/pod-os.git"
+  },
+  "keywords": [
+    "Solid",
+    "PodOS"
+  ],
+  "author": {
+    "name": "Angelo Veltens",
+    "email": "angelo.veltens@online.de",
+    "url": "https://angelo.veltens.org/profile/card#me"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pod-os/pod-os/issues"
+  },
+  "homepage": "https://github.com/pod-os/pod-os#readme",
+  "devDependencies": {
+    "prettier": "^2.4.1"
+  }
+}
