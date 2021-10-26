@@ -34,10 +34,12 @@ describe('pos-login', () => {
       Object.defineProperty(window, 'PodOS', {
         get() {
           return {
-            login: () => trackSessionCallback({ isLoggedIn: true, webId: 'https://pod.example/alice#me' }),
-            logout: () => null,
-            trackSession: cb => (trackSessionCallback = cb),
-            handleIncomingRedirect: () => Promise.resolve(),
+            PodOS: function PodOS() {
+              this.login = () => trackSessionCallback({ isLoggedIn: true, webId: 'https://pod.example/alice#me' });
+              this.logout = () => null;
+              this.trackSession = cb => (trackSessionCallback = cb);
+              this.handleIncomingRedirect = () => Promise.resolve();
+            },
           };
         },
       });

@@ -1,12 +1,15 @@
 import { sym } from "rdflib";
 import { Store } from "./Store";
-import { authenticatedFetch } from "./authentication";
+import { BrowserSession } from "./authentication";
 
 jest.mock("./authentication");
 
 describe("Store", () => {
   it("fetches and parses turtle data", async () => {
-    (authenticatedFetch as jest.Mock).mockResolvedValue({
+    const mockSession = {
+      authenticatedFetch: jest.fn(),
+    } as unknown as BrowserSession;
+    (mockSession.authenticatedFetch as jest.Mock).mockResolvedValue({
       ok: true,
       status: 200,
       statusText: "OK",
@@ -18,9 +21,9 @@ describe("Store", () => {
           '<https://pod.test/resource#it> <https://pod.test/vocab/predicate> "literal value" .'
         ),
     });
-    const store = new Store();
+    const store = new Store(mockSession);
     await store.fetch("https://pod.test/resource");
-    expect(authenticatedFetch).toHaveBeenCalledWith(
+    expect(mockSession.authenticatedFetch).toHaveBeenCalledWith(
       "https://pod.test/resource",
       expect.anything()
     );

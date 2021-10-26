@@ -1,12 +1,12 @@
 import { Fetcher, fetcher, graph, IndexedFormula, sym } from "rdflib";
-import { authenticatedFetch } from "./authentication";
+import { BrowserSession } from "./authentication";
 
 export class Store {
   fetcher: Fetcher;
   graph: IndexedFormula;
-  constructor() {
+  constructor(session: BrowserSession) {
     this.graph = graph();
-    this.fetcher = fetcher(this.graph, { fetch: authenticatedFetch });
+    this.fetcher = fetcher(this.graph, { fetch: session.authenticatedFetch });
   }
 
   fetch(uri: string) {
