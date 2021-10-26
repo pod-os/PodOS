@@ -9,11 +9,13 @@ const { state } = createStore({
   getIdpUrl,
   isLoggedIn: false,
   webId: '',
-  track: () =>
+  track: () => {
+    PodOS.handleIncomingRedirect();
     PodOS.trackSession(sessionInfo => {
       state.isLoggedIn = sessionInfo.isLoggedIn;
       state.webId = sessionInfo.webId;
-    }),
+    });
+  },
 });
 
 export default state;

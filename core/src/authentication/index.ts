@@ -1,11 +1,10 @@
-import { ISessionInfo } from "@inrupt/solid-client-authn-browser";
+import { fetch, ISessionInfo } from "@inrupt/solid-client-authn-browser";
 import * as authn from "@inrupt/solid-client-authn-browser";
 
-authn
-  .handleIncomingRedirect({
+export const handleIncomingRedirect = async () =>
+  authn.handleIncomingRedirect({
     restorePreviousSession: true,
-  })
-  .then(() => null);
+  });
 
 export const login = (oidcIssuer: string = "http://localhost:3000") => {
   return authn.login({
@@ -26,3 +25,5 @@ export const trackSession = (callback: (session: ISessionInfo) => unknown) => {
   session.onSessionRestore(() => callback(session.info));
   callback(session.info);
 };
+
+export const authenticatedFetch = fetch;

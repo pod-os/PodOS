@@ -37,6 +37,7 @@ describe('pos-login', () => {
             login: () => trackSessionCallback({ isLoggedIn: true, webId: 'https://pod.example/alice#me' }),
             logout: () => null,
             trackSession: cb => (trackSessionCallback = cb),
+            handleIncomingRedirect: () => Promise.resolve(),
           };
         },
       });
