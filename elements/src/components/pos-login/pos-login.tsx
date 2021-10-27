@@ -1,4 +1,4 @@
-import { Component, h, Host } from '@stencil/core';
+import { Component, EventEmitter, h, Event, Host, State } from '@stencil/core';
 
 import session from '../../store/session';
 
@@ -6,16 +6,33 @@ import session from '../../store/session';
   tag: 'pos-login',
 })
 export class PosLogin {
+  @Event({ eventName: 'consumeOs' }) consumeOsEmitter: EventEmitter;
+
+  @State() os: any;
+
+  componentWillLoad() {
+    this.consumeOsEmitter.emit(this.setOs);
+  }
+
+  setOs = async (os: any) => {
+    this.os = os;
+  };
+
   login() {
     const idp = session.getIdpUrl();
-    session.login(idp);
+    this.os.login(idp);
   }
+
+  logout() {
+    this.os.logout();
+  }
+
   render() {
     return (
       <Host>
         {session.isLoggedIn ? session.webId : ''}
         {!session.isLoggedIn && <ion-button onClick={() => this.login()}>Login</ion-button>}
-        {session.isLoggedIn && <ion-button onClick={() => session.logout()}>Logout</ion-button>}
+        {session.isLoggedIn && <ion-button onClick={() => this.logout()}>Logout</ion-button>}
       </Host>
     );
   }

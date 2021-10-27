@@ -1,18 +1,12 @@
 import { Component, h } from '@stencil/core';
-import { PodOS } from '../../window';
 
 @Component({
   tag: 'pos-demo-app',
 })
 export class PosDemoApp {
-  componentWillLoad() {
-    PodOS.fetch('http://localhost:3000/alice/profile/card#me');
-  }
-
   render() {
     return (
-      <ion-app>
-        <pos-track-session></pos-track-session>
+      <pos-app>
         <ion-header>
           <ion-toolbar>
             <ion-title slot="start">pod os</ion-title>
@@ -155,7 +149,7 @@ export class PosDemoApp {
             <ion-title>Footer</ion-title>
           </ion-toolbar>
         </ion-footer>
-      </ion-app>
+      </pos-app>
     );
   }
 }

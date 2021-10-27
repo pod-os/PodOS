@@ -6,7 +6,7 @@ describe('pos-login', () => {
     const page = await newE2EPage();
     await mockPodOs(page);
     const errors = trackErrors(page);
-    await page.setContent(`<pos-track-session></pos-track-session><pos-login></pos-login>`);
+    await page.setContent(`<pos-app><pos-login></pos-login></pos-app>`);
 
     // when alice logs in
     const beforeLogin = await page.find('pos-login');
