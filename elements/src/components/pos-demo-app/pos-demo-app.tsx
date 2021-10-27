@@ -2,9 +2,9 @@ import { Component, h } from '@stencil/core';
 import { PodOS } from '../../window';
 
 @Component({
-  tag: 'pos-app',
+  tag: 'pos-demo-app',
 })
-export class PosApp {
+export class PosDemoApp {
   componentWillLoad() {
     PodOS.fetch('http://localhost:3000/alice/profile/card#me');
   }
