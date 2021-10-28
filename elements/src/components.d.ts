@@ -12,6 +12,9 @@ export namespace Components {
     }
     interface PosLogin {
     }
+    interface PosResource {
+        "uri": string;
+    }
 }
 declare global {
     interface HTMLPosAppElement extends Components.PosApp, HTMLStencilElement {
@@ -32,10 +35,17 @@ declare global {
         prototype: HTMLPosLoginElement;
         new (): HTMLPosLoginElement;
     };
+    interface HTMLPosResourceElement extends Components.PosResource, HTMLStencilElement {
+    }
+    var HTMLPosResourceElement: {
+        prototype: HTMLPosResourceElement;
+        new (): HTMLPosResourceElement;
+    };
     interface HTMLElementTagNameMap {
         "pos-app": HTMLPosAppElement;
         "pos-demo-app": HTMLPosDemoAppElement;
         "pos-login": HTMLPosLoginElement;
+        "pos-resource": HTMLPosResourceElement;
     }
 }
 declare namespace LocalJSX {
@@ -46,10 +56,15 @@ declare namespace LocalJSX {
     interface PosLogin {
         "onConsumeOs"?: (event: CustomEvent<any>) => void;
     }
+    interface PosResource {
+        "onConsumeOs"?: (event: CustomEvent<any>) => void;
+        "uri"?: string;
+    }
     interface IntrinsicElements {
         "pos-app": PosApp;
         "pos-demo-app": PosDemoApp;
         "pos-login": PosLogin;
+        "pos-resource": PosResource;
     }
 }
 export { LocalJSX as JSX };
@@ -59,6 +74,7 @@ declare module "@stencil/core" {
             "pos-app": LocalJSX.PosApp & JSXBase.HTMLAttributes<HTMLPosAppElement>;
             "pos-demo-app": LocalJSX.PosDemoApp & JSXBase.HTMLAttributes<HTMLPosDemoAppElement>;
             "pos-login": LocalJSX.PosLogin & JSXBase.HTMLAttributes<HTMLPosLoginElement>;
+            "pos-resource": LocalJSX.PosResource & JSXBase.HTMLAttributes<HTMLPosResourceElement>;
         }
     }
 }
