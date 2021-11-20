@@ -30,7 +30,13 @@ export class PosLogin {
   render() {
     return (
       <Host>
-        {session.isLoggedIn ? session.webId : ''}
+        {session.isLoggedIn ? (
+          <pos-resource uri={session.webId}>
+            <pos-label />
+          </pos-resource>
+        ) : (
+          ''
+        )}
         {!session.isLoggedIn && <ion-button onClick={() => this.login()}>Login</ion-button>}
         {session.isLoggedIn && <ion-button onClick={() => this.logout()}>Logout</ion-button>}
       </Host>

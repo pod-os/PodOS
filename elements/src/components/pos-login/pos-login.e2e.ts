@@ -20,7 +20,8 @@ describe('pos-login', () => {
 
     // then her WebID shows up
     const afterLogin = await page.find('pos-login');
-    expect(afterLogin.innerText).toContain('https://pod.example/alice#me');
+    const label = await afterLogin.find('pos-resource > pos-label');
+    expect(label.shadowRoot).toEqualText('Alice');
 
     // and a logout button becomes available
     const logoutButton = await afterLogin.find('ion-button');
@@ -39,6 +40,10 @@ describe('pos-login', () => {
               this.logout = () => null;
               this.trackSession = cb => (trackSessionCallback = cb);
               this.handleIncomingRedirect = () => Promise.resolve();
+              this.fetch = () => Promise.resolve();
+              this.store = {
+                get: (uri: string) => ({ label: () => (uri === 'https://pod.example/alice#me' ? 'Alice' : 'Wrong label') }),
+              };
             },
           };
         },

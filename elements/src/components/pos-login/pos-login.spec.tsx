@@ -21,7 +21,7 @@ describe('pos-login', () => {
   `);
   });
 
-  it('renders logout button and WebID', async () => {
+  it('renders logout button and label for webId', async () => {
     session.isLoggedIn = true;
     session.webId = 'https://pod.example/alice#me';
     const page = await newSpecPage({
@@ -30,7 +30,9 @@ describe('pos-login', () => {
     });
     expect(page.root).toEqualHtml(`
     <pos-login>
-      https://pod.example/alice#me
+      <pos-resource uri="https://pod.example/alice#me">
+       <pos-label />
+      </pos-resource>
       <ion-button>
         Logout
       </ion-button>
