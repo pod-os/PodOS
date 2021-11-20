@@ -1,0 +1,6 @@
+@prefix :       <#> .
+@prefix schema: <http://schema.org/> .
+
+:it
+    schema:name "Minecraft" ;
+.

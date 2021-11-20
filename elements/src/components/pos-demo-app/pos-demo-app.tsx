@@ -14,7 +14,7 @@ export class PosDemoApp {
           </ion-toolbar>
         </ion-header>
         <ion-content class="ion-padding">
-          <pos-resource uri="http://localhost:3000/alice/profile/card#me">
+          <pos-resource uri="http://localhost:3000/alice/games/minecraft#it">
             <ion-grid>
               <ion-row>
                 <ion-col size="12" size-sm>
