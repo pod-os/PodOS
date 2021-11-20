@@ -5,8 +5,8 @@ import { Store } from "./Store";
 export * from "./authentication";
 
 export class PodOS {
-  private session: BrowserSession;
-  private store: Store;
+  private readonly session: BrowserSession;
+  readonly store: Store;
 
   constructor() {
     this.session = new BrowserSession();

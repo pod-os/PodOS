@@ -1,5 +1,6 @@
 import { Fetcher, fetcher, graph, IndexedFormula, sym } from "rdflib";
 import { BrowserSession } from "./authentication";
+import { Thing } from "./Thing";
 
 export class Store {
   fetcher: Fetcher;
@@ -11,5 +12,9 @@ export class Store {
 
   fetch(uri: string) {
     return this.fetcher.load(sym(uri));
+  }
+
+  get(uri: string) {
+    return new Thing(uri, this.graph);
   }
 }
