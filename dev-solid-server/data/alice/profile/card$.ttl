@@ -7,6 +7,6 @@
     foaf:primaryTopic <http://localhost:3000/alice/profile/card#me>.
 
 <http://localhost:3000/alice/profile/card#me>
-    
+    foaf:name "Alice";
     solid:oidcIssuer <http://localhost:3000/>;
     a foaf:Person.
