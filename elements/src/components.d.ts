@@ -10,6 +10,8 @@ export namespace Components {
     }
     interface PosDemoApp {
     }
+    interface PosLabel {
+    }
     interface PosLogin {
     }
     interface PosResource {
@@ -29,6 +31,12 @@ declare global {
         prototype: HTMLPosDemoAppElement;
         new (): HTMLPosDemoAppElement;
     };
+    interface HTMLPosLabelElement extends Components.PosLabel, HTMLStencilElement {
+    }
+    var HTMLPosLabelElement: {
+        prototype: HTMLPosLabelElement;
+        new (): HTMLPosLabelElement;
+    };
     interface HTMLPosLoginElement extends Components.PosLogin, HTMLStencilElement {
     }
     var HTMLPosLoginElement: {
@@ -44,6 +52,7 @@ declare global {
     interface HTMLElementTagNameMap {
         "pos-app": HTMLPosAppElement;
         "pos-demo-app": HTMLPosDemoAppElement;
+        "pos-label": HTMLPosLabelElement;
         "pos-login": HTMLPosLoginElement;
         "pos-resource": HTMLPosResourceElement;
     }
@@ -52,6 +61,9 @@ declare namespace LocalJSX {
     interface PosApp {
     }
     interface PosDemoApp {
+    }
+    interface PosLabel {
+        "onPod-os:resource"?: (event: CustomEvent<any>) => void;
     }
     interface PosLogin {
         "onConsumeOs"?: (event: CustomEvent<any>) => void;
@@ -63,6 +75,7 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "pos-app": PosApp;
         "pos-demo-app": PosDemoApp;
+        "pos-label": PosLabel;
         "pos-login": PosLogin;
         "pos-resource": PosResource;
     }
@@ -73,6 +86,7 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "pos-app": LocalJSX.PosApp & JSXBase.HTMLAttributes<HTMLPosAppElement>;
             "pos-demo-app": LocalJSX.PosDemoApp & JSXBase.HTMLAttributes<HTMLPosDemoAppElement>;
+            "pos-label": LocalJSX.PosLabel & JSXBase.HTMLAttributes<HTMLPosLabelElement>;
             "pos-login": LocalJSX.PosLogin & JSXBase.HTMLAttributes<HTMLPosLoginElement>;
             "pos-resource": LocalJSX.PosResource & JSXBase.HTMLAttributes<HTMLPosResourceElement>;
         }

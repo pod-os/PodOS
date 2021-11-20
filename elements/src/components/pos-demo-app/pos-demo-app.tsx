@@ -22,7 +22,9 @@ export class PosDemoApp {
                     <ion-card-header>
                       <img src="https://upload.wikimedia.org/wikipedia/de/5/57/Minecraft_logo-SVG.svg" />
                       <ion-card-subtitle>VideoGame</ion-card-subtitle>
-                      <ion-card-title>Minecraft</ion-card-title>
+                      <ion-card-title>
+                        <pos-label />
+                      </ion-card-title>
                     </ion-card-header>
                     <ion-card-content>
                       Minecraft is a sandbox video game developed by the Swedish video game developer Mojang Studios. The game was created by Markus "Notch" Persson in the Java

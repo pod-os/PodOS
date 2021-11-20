@@ -1,4 +1,8 @@
-import { Component, EventEmitter, Event, h, Prop, State, Watch } from '@stencil/core';
+import { Component, EventEmitter, Event, h, Prop, State, Watch, Listen } from '@stencil/core';
+
+interface GetResourceEvent extends CustomEvent {
+  detail: Function;
+}
 
 @Component({
   tag: 'pos-resource',
@@ -6,6 +10,8 @@ import { Component, EventEmitter, Event, h, Prop, State, Watch } from '@stencil/
 })
 export class PosResource {
   @State() os: any;
+
+  @State() resource: any;
 
   @Prop() uri: string;
 
@@ -25,10 +31,19 @@ export class PosResource {
     this.os = os;
   };
 
+  @Listen('pod-os:resource')
+  async provideResource(event: GetResourceEvent) {
+    event.stopPropagation();
+    if (this.resource) {
+      event.detail(this.resource);
+    }
+  }
+
   @Watch('os')
-  async loadResource(value: any) {
+  async loadResource(os: any) {
     try {
-      await value.fetch(this.uri);
+      await os.fetch(this.uri);
+      this.resource = os.store.get(this.uri);
     } catch (err) {
       this.error = err;
     }

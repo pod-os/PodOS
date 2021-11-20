@@ -64,6 +64,9 @@ describe('pos-resource', () => {
                   return Promise.reject(new Error('not found'));
                 }
               };
+              this.store = {
+                get: () => ({}),
+              };
               this.trackSession = () => null;
               this.handleIncomingRedirect = () => Promise.resolve();
             },
