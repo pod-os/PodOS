@@ -12,7 +12,7 @@ export class PosResource {
   @State() os: any;
 
   @State() resource: any;
-  @State() consumer: any;
+  @State() consumers: any[] = [];
 
   @Prop() uri: string;
 
@@ -38,7 +38,7 @@ export class PosResource {
     if (this.resource) {
       event.detail(this.resource);
     }
-    this.consumer = event;
+    this.consumers.push(event);
   }
 
   @Watch('os')
@@ -46,9 +46,9 @@ export class PosResource {
     try {
       await os.fetch(this.uri);
       this.resource = os.store.get(this.uri);
-      if (this.consumer) {
-        this.consumer.detail(this.resource);
-      }
+      this.consumers.forEach(consumer => {
+        consumer.detail(this.resource);
+      });
     } catch (err) {
       this.error = err;
     }
