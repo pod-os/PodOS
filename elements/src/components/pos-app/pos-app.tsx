@@ -1,5 +1,6 @@
 import { Component, h, Listen, State } from '@stencil/core';
 import state from '../../store/session';
+import { createPodOS } from '../../pod-os';
 
 interface ConsumeOsEvent extends CustomEvent {
   detail: Function;
@@ -12,8 +13,7 @@ export class PosApp {
   @State() os: any;
 
   componentWillLoad() {
-    // @ts-ignore
-    this.os = window.PodOS ? new window.PodOS.PodOS() : null;
+    this.os = createPodOS();
     this.os.handleIncomingRedirect();
     this.os.trackSession(sessionInfo => {
       state.isLoggedIn = sessionInfo.isLoggedIn;
