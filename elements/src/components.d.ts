@@ -12,6 +12,8 @@ export namespace Components {
     }
     interface PosLabel {
     }
+    interface PosLiterals {
+    }
     interface PosLogin {
     }
     interface PosResource {
@@ -37,6 +39,12 @@ declare global {
         prototype: HTMLPosLabelElement;
         new (): HTMLPosLabelElement;
     };
+    interface HTMLPosLiteralsElement extends Components.PosLiterals, HTMLStencilElement {
+    }
+    var HTMLPosLiteralsElement: {
+        prototype: HTMLPosLiteralsElement;
+        new (): HTMLPosLiteralsElement;
+    };
     interface HTMLPosLoginElement extends Components.PosLogin, HTMLStencilElement {
     }
     var HTMLPosLoginElement: {
@@ -53,6 +61,7 @@ declare global {
         "pos-app": HTMLPosAppElement;
         "pos-demo-app": HTMLPosDemoAppElement;
         "pos-label": HTMLPosLabelElement;
+        "pos-literals": HTMLPosLiteralsElement;
         "pos-login": HTMLPosLoginElement;
         "pos-resource": HTMLPosResourceElement;
     }
@@ -63,6 +72,9 @@ declare namespace LocalJSX {
     interface PosDemoApp {
     }
     interface PosLabel {
+        "onPod-os:resource"?: (event: CustomEvent<any>) => void;
+    }
+    interface PosLiterals {
         "onPod-os:resource"?: (event: CustomEvent<any>) => void;
     }
     interface PosLogin {
@@ -76,6 +88,7 @@ declare namespace LocalJSX {
         "pos-app": PosApp;
         "pos-demo-app": PosDemoApp;
         "pos-label": PosLabel;
+        "pos-literals": PosLiterals;
         "pos-login": PosLogin;
         "pos-resource": PosResource;
     }
@@ -87,6 +100,7 @@ declare module "@stencil/core" {
             "pos-app": LocalJSX.PosApp & JSXBase.HTMLAttributes<HTMLPosAppElement>;
             "pos-demo-app": LocalJSX.PosDemoApp & JSXBase.HTMLAttributes<HTMLPosDemoAppElement>;
             "pos-label": LocalJSX.PosLabel & JSXBase.HTMLAttributes<HTMLPosLabelElement>;
+            "pos-literals": LocalJSX.PosLiterals & JSXBase.HTMLAttributes<HTMLPosLiteralsElement>;
             "pos-login": LocalJSX.PosLogin & JSXBase.HTMLAttributes<HTMLPosLoginElement>;
             "pos-resource": LocalJSX.PosResource & JSXBase.HTMLAttributes<HTMLPosResourceElement>;
         }
