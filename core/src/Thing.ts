@@ -1,4 +1,4 @@
-import { IndexedFormula, sym } from "rdflib";
+import { IndexedFormula, isLiteral, Statement, sym } from "rdflib";
 
 export class Thing {
   constructor(readonly uri: string, readonly store: IndexedFormula) {}
@@ -37,4 +37,29 @@ export class Thing {
       );
     return value ?? this.uri;
   }
+
+  literals() {
+    const statements = this.store.statementsMatching(sym(this.uri));
+
+    const values = statements
+      .filter((it) => isLiteral(it.object))
+      .reduce((accumulator: Accumulator, current: Statement) => {
+        const existing = accumulator[current.predicate.uri];
+        return {
+          ...accumulator,
+          [current.predicate.uri]: existing
+            ? [...existing, current.object.value]
+            : [current.object.value],
+        };
+      }, {});
+
+    return Object.keys(values).map((predicate) => ({
+      predicate,
+      values: values[predicate],
+    }));
+  }
+}
+
+interface Accumulator {
+  [key: string]: string[];
 }
