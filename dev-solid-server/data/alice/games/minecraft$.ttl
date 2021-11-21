@@ -3,4 +3,8 @@
 
 :it
     schema:name "Minecraft" ;
+    schema:playMode schema:SinglePlayer, schema:MultiPlayer ;
+    schema:gamePlatform "Online_gaming_services" ;
+    schema:url <http://www.mineplex.com/> ;
+    schema:description "Minecraft is a sandbox video game developed by the Swedish video game developer Mojang Studios. The game was created by Markus \"Notch\" Persson in the Java programming language."
 .
