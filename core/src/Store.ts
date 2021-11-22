@@ -1,6 +1,6 @@
 import { Fetcher, fetcher, graph, IndexedFormula, sym } from "rdflib";
 import { BrowserSession } from "./authentication";
-import { Thing } from "./Thing";
+import { Thing } from "./thing";
 
 export class Store {
   fetcher: Fetcher;
