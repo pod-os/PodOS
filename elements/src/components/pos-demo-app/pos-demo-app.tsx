@@ -34,58 +34,6 @@ export class PosDemoApp {
                 </ion-col>
                 <ion-col size="12" size-sm>
                   <pos-literals />
-                  <ion-list>
-                    <ion-item-group>
-                      <ion-item-divider>
-                        <ion-label>schema:playMode</ion-label>
-                      </ion-item-divider>
-                      <ion-item>
-                        <ion-label>SinglePlayer</ion-label>
-                      </ion-item>
-                      <ion-item>
-                        <ion-label>MultiPlayer</ion-label>
-                      </ion-item>
-                    </ion-item-group>
-
-                    <ion-item-group>
-                      <ion-item-divider>
-                        <ion-label>schema:gamePlatform</ion-label>
-                      </ion-item-divider>
-                      <ion-item>
-                        <ion-label>Online_gaming_services</ion-label>
-                      </ion-item>
-                    </ion-item-group>
-
-                    <ion-item-group>
-                      <ion-item-divider>
-                        <ion-label>schema:url</ion-label>
-                      </ion-item-divider>
-                      <ion-item>
-                        <ion-label>http://www.mineplex.com/</ion-label>
-                      </ion-item>
-                    </ion-item-group>
-
-                    <ion-item-group>
-                      <ion-item-divider>
-                        <ion-label>schema:name</ion-label>
-                      </ion-item-divider>
-                      <ion-item>
-                        <ion-label>Minecraft</ion-label>
-                      </ion-item>
-                    </ion-item-group>
-
-                    <ion-item-group>
-                      <ion-item-divider>
-                        <ion-label>schema:description</ion-label>
-                      </ion-item-divider>
-                      <ion-item>
-                        <ion-label class="ion-text-wrap">
-                          Minecraft is a sandbox video game developed by the Swedish video game developer Mojang Studios. The game was created by Markus "Notch" Persson in the Java
-                          programming language.
-                        </ion-label>
-                      </ion-item>
-                    </ion-item-group>
-                  </ion-list>
                 </ion-col>
                 <ion-col size="12" size-sm>
                   <ion-list>

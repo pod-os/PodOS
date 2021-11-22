@@ -5,7 +5,7 @@ import { Component, h, Event, EventEmitter, State } from '@stencil/core';
   shadow: true,
 })
 export class PosLiterals {
-  @State() resource: any;
+  @State() data: any[] = [];
 
   @Event({ eventName: 'pod-os:resource' }) getResource: EventEmitter;
 
@@ -14,10 +14,22 @@ export class PosLiterals {
   }
 
   setResource = async (resource: any) => {
-    this.resource = resource;
+    this.data = resource.literals();
   };
 
   render() {
-    return this.resource ? <pre>${JSON.stringify(this.resource.literals(), null, 2)}</pre> : null;
+    const items = this.data.map(it => (
+      <ion-item-group>
+        <ion-item-divider>
+          <ion-label>{it.predicate}</ion-label>
+        </ion-item-divider>
+        {it.values.map(value => (
+          <ion-item>
+            <ion-label class="ion-text-wrap">{value}</ion-label>{' '}
+          </ion-item>
+        ))}
+      </ion-item-group>
+    ));
+    return this.data.length > 0 ? <ion-list>{items}</ion-list> : null;
   }
 }
