@@ -36,6 +36,7 @@ export class PosDemoApp {
                   <pos-literals />
                 </ion-col>
                 <ion-col size="12" size-sm>
+                  <pos-relations />
                   <ion-list>
                     <ion-item-group>
                       <ion-item-divider>

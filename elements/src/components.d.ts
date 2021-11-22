@@ -16,6 +16,8 @@ export namespace Components {
     }
     interface PosLogin {
     }
+    interface PosRelations {
+    }
     interface PosResource {
         "uri": string;
     }
@@ -51,6 +53,12 @@ declare global {
         prototype: HTMLPosLoginElement;
         new (): HTMLPosLoginElement;
     };
+    interface HTMLPosRelationsElement extends Components.PosRelations, HTMLStencilElement {
+    }
+    var HTMLPosRelationsElement: {
+        prototype: HTMLPosRelationsElement;
+        new (): HTMLPosRelationsElement;
+    };
     interface HTMLPosResourceElement extends Components.PosResource, HTMLStencilElement {
     }
     var HTMLPosResourceElement: {
@@ -63,6 +71,7 @@ declare global {
         "pos-label": HTMLPosLabelElement;
         "pos-literals": HTMLPosLiteralsElement;
         "pos-login": HTMLPosLoginElement;
+        "pos-relations": HTMLPosRelationsElement;
         "pos-resource": HTMLPosResourceElement;
     }
 }
@@ -80,6 +89,9 @@ declare namespace LocalJSX {
     interface PosLogin {
         "onConsumeOs"?: (event: CustomEvent<any>) => void;
     }
+    interface PosRelations {
+        "onPod-os:resource"?: (event: CustomEvent<any>) => void;
+    }
     interface PosResource {
         "onConsumeOs"?: (event: CustomEvent<any>) => void;
         "uri"?: string;
@@ -90,6 +102,7 @@ declare namespace LocalJSX {
         "pos-label": PosLabel;
         "pos-literals": PosLiterals;
         "pos-login": PosLogin;
+        "pos-relations": PosRelations;
         "pos-resource": PosResource;
     }
 }
@@ -102,6 +115,7 @@ declare module "@stencil/core" {
             "pos-label": LocalJSX.PosLabel & JSXBase.HTMLAttributes<HTMLPosLabelElement>;
             "pos-literals": LocalJSX.PosLiterals & JSXBase.HTMLAttributes<HTMLPosLiteralsElement>;
             "pos-login": LocalJSX.PosLogin & JSXBase.HTMLAttributes<HTMLPosLoginElement>;
+            "pos-relations": LocalJSX.PosRelations & JSXBase.HTMLAttributes<HTMLPosRelationsElement>;
             "pos-resource": LocalJSX.PosResource & JSXBase.HTMLAttributes<HTMLPosResourceElement>;
         }
     }
