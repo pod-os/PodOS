@@ -4,7 +4,7 @@ import { PosResource } from './pos-resource';
 import { when } from 'jest-when';
 
 describe('pos-resource', () => {
-  it('renders progress bar initially', async () => {
+  it('renders loading indicator initially', async () => {
     const page = await newSpecPage({
       components: [PosResource],
       html: `<pos-resource uri="https://resource.test/" />`,
@@ -18,7 +18,7 @@ describe('pos-resource', () => {
   `);
   });
 
-  it('renders progress bar while fetching', async () => {
+  it('renders loading indicator while fetching', async () => {
     const page = await newSpecPage({
       components: [PosResource],
       html: `<pos-resource uri="https://resource.test/" />`,
@@ -72,5 +72,87 @@ describe('pos-resource', () => {
         </mock:shadow-root>
       </pos-resource>
   `);
+  });
+
+  describe('when lazy', () => {
+    let page;
+    beforeEach(async () => {
+      page = await newSpecPage({
+        components: [PosResource],
+        html: `<pos-resource lazy uri="https://resource.test/" />`,
+      });
+    });
+
+    it('renders loading indicator before PodOS is ready', async () => {
+      expect(page.root).toEqualHtml(`
+      <pos-resource lazy uri="https://resource.test/">
+        <mock:shadow-root>
+          <ion-progress-bar type="indeterminate"></ion-progress-bar>
+        </mock:shadow-root>
+      </pos-resource>
+  `);
+    });
+    it('renders slot without fetching first', async () => {
+      const os = mockPodOS();
+      os.fetch.mockRejectedValue(new Error('should not fetch'));
+      await page.rootInstance.setOs(os);
+      await page.waitForChanges();
+      expect(page.root).toEqualHtml(`
+      <pos-resource lazy uri="https://resource.test/">
+        <mock:shadow-root>
+          <slot />
+        </mock:shadow-root>
+      </pos-resource>
+  `);
+    });
+
+    describe('after fetch is explicitly requested', function () {
+      it('renders loading indicator while fetching', async () => {
+        const os = mockPodOS();
+        when(os.fetch)
+          .calledWith('https://resource.test/')
+          .mockReturnValue(new Promise(() => null));
+        await page.rootInstance.setOs(os);
+        page.root.fetch();
+        await page.waitForChanges();
+        expect(page.root).toEqualHtml(`
+      <pos-resource lazy uri="https://resource.test/">
+        <mock:shadow-root>
+          <ion-progress-bar type="indeterminate"></ion-progress-bar>
+        </mock:shadow-root>
+      </pos-resource>
+  `);
+      });
+
+      it('renders slot after loading', async () => {
+        const os = mockPodOS();
+        when(os.fetch).calledWith('https://resource.test/').mockResolvedValue();
+        await page.rootInstance.setOs(os);
+        await page.root.fetch();
+        await page.waitForChanges();
+        expect(page.root).toEqualHtml(`
+      <pos-resource lazy uri="https://resource.test/">
+        <mock:shadow-root>
+          <slot></slot>
+        </mock:shadow-root>
+      </pos-resource>
+  `);
+      });
+
+      it('renders error when fetch failed', async () => {
+        const os = mockPodOS();
+        when(os.fetch).calledWith('https://resource.test/').mockRejectedValue(new Error('not found'));
+        await page.rootInstance.setOs(os);
+        page.root.fetch();
+        await page.waitForChanges();
+        expect(page.root).toEqualHtml(`
+      <pos-resource lazy uri="https://resource.test/">
+        <mock:shadow-root>
+          <div>not found</div>
+        </mock:shadow-root>
+      </pos-resource>
+  `);
+      });
+    });
   });
 });

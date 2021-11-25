@@ -1,3 +1,4 @@
+import { AnyHTMLElement } from '@stencil/core/internal';
 import { newSpecPage } from '@stencil/core/testing';
 import { mockPodOS } from '../../test/mockPodOS';
 import { PosApp } from '../pos-app/pos-app';
@@ -225,6 +226,117 @@ describe('pos-resource with a pos-label child', () => {
                 </mock:shadow-root>
               </pos-label>
             </pos-label>
+          </pos-label>
+        </pos-resource>
+      </ion-app>
+    </pos-app>
+  `);
+  });
+
+  it('renders label for lazy resource that would fetch to fail', async () => {
+    const os = mockPodOS();
+    when(os.fetch).calledWith('https://resource.test').mockRejectedValue(new Error('not found'));
+    when(os.store.get)
+      .calledWith('https://resource.test')
+      .mockReturnValue({
+        label: () => 'Test Resource',
+      });
+    const page = await newSpecPage({
+      components: [PosApp, PosResource, PosLabel],
+      html: `<pos-app>
+            <pos-resource lazy uri="https://resource.test">
+              <pos-label />
+            </pos-resource>
+        </pos-app>`,
+    });
+    expect(page.root).toEqualHtml(`
+    <pos-app>
+      <ion-app>
+        <pos-resource lazy uri="https://resource.test">
+          <mock:shadow-root>
+            <slot></slot>
+          </mock:shadow-root>
+          <pos-label>
+            <mock:shadow-root>
+              Test Resource
+            </mock:shadow-root>
+          </pos-label>
+        </pos-resource>
+      </ion-app>
+    </pos-app>
+  `);
+  });
+
+  it('renders error for lazy resource fails when fetched', async () => {
+    const os = mockPodOS();
+    when(os.fetch).calledWith('https://resource.test').mockRejectedValue(new Error('not found'));
+    when(os.store.get)
+      .calledWith('https://resource.test')
+      .mockReturnValueOnce({
+        label: () => 'Test Resource',
+      });
+    const page = await newSpecPage({
+      components: [PosApp, PosResource, PosLabel],
+      html: `<pos-app>
+            <pos-resource lazy uri="https://resource.test">
+              <pos-label />
+            </pos-resource>
+        </pos-app>`,
+    });
+    await (page.root.querySelector('pos-resource') as AnyHTMLElement).fetch();
+    await page.waitForChanges();
+    expect(page.root).toEqualHtml(`
+    <pos-app>
+      <ion-app>
+        <pos-resource lazy uri="https://resource.test">
+          <mock:shadow-root>
+             <div>
+               not found
+             </div>
+          </mock:shadow-root>
+          <pos-label>
+            <mock:shadow-root>
+              Test Resource
+            </mock:shadow-root>
+          </pos-label>
+        </pos-resource>
+      </ion-app>
+    </pos-app>
+  `);
+  });
+
+  it('rerenders child after lazy resource was fetched', async () => {
+    const os = mockPodOS();
+    when(os.fetch).calledWith('https://resource.test').mockResolvedValue();
+    when(os.store.get)
+      .calledWith('https://resource.test')
+      .mockReturnValueOnce({
+        label: () => 'Test Resource',
+      })
+      .mockReturnValueOnce({
+        label: () => 'Updated Test Resource',
+      });
+    const page = await newSpecPage({
+      components: [PosApp, PosResource, PosLabel],
+      html: `<pos-app>
+            <pos-resource lazy uri="https://resource.test">
+              <pos-label />
+            </pos-resource>
+        </pos-app>`,
+    });
+    await (page.root.querySelector('pos-resource') as AnyHTMLElement).fetch();
+    await page.waitForChanges();
+    expect(page.root).toEqualHtml(`
+    <pos-app>
+      <ion-app>
+        <pos-resource lazy uri="https://resource.test">
+          <mock:shadow-root>
+            <slot></slot>
+          </mock:shadow-root>
+          <pos-label>
+            <mock:shadow-root>
+              Updated Test Resource
+            </mock:shadow-root>
           </pos-label>
         </pos-resource>
       </ion-app>

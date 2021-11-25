@@ -19,6 +19,8 @@ export namespace Components {
     interface PosRelations {
     }
     interface PosResource {
+        "fetch": () => Promise<void>;
+        "lazy": boolean;
         "uri": string;
     }
 }
@@ -93,6 +95,7 @@ declare namespace LocalJSX {
         "onPod-os:resource"?: (event: CustomEvent<any>) => void;
     }
     interface PosResource {
+        "lazy"?: boolean;
         "onConsumeOs"?: (event: CustomEvent<any>) => void;
         "uri"?: string;
     }
