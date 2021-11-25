@@ -24,6 +24,8 @@ describe("Thing", function () {
       "http://www.w3.org/2000/01/rdf-schema#label",
       "https://www.w3.org/ns/activitystreams#name",
       "http://www.w3.org/2006/vcard/ns#fn",
+      "http://schema.org/caption",
+      "https://schema.org/caption",
     ])("returns the literal value of predicate %s", (predicate: string) => {
       const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";

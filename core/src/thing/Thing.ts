@@ -34,7 +34,9 @@ export class Thing {
       this.store.anyValue(
         sym(this.uri),
         sym("http://www.w3.org/2006/vcard/ns#fn")
-      );
+      ) ??
+      this.store.anyValue(sym(this.uri), sym("http://schema.org/caption")) ??
+      this.store.anyValue(sym(this.uri), sym("https://schema.org/caption"));
     return value ?? this.uri;
   }
 
