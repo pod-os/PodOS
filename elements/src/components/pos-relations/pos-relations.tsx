@@ -23,10 +23,8 @@ export class PosRelations {
         <ion-item-divider>
           <ion-label>{it.predicate}</ion-label>
         </ion-item-divider>
-        {it.uris.map(value => (
-          <ion-item>
-            <ion-label class="ion-text-wrap">{value}</ion-label>{' '}
-          </ion-item>
+        {it.uris.map(uri => (
+          <pos-rich-link uri={uri} />
         ))}
       </ion-item-group>
     ));

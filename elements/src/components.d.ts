@@ -23,6 +23,9 @@ export namespace Components {
         "lazy": boolean;
         "uri": string;
     }
+    interface PosRichLink {
+        "uri": string;
+    }
 }
 declare global {
     interface HTMLPosAppElement extends Components.PosApp, HTMLStencilElement {
@@ -67,6 +70,12 @@ declare global {
         prototype: HTMLPosResourceElement;
         new (): HTMLPosResourceElement;
     };
+    interface HTMLPosRichLinkElement extends Components.PosRichLink, HTMLStencilElement {
+    }
+    var HTMLPosRichLinkElement: {
+        prototype: HTMLPosRichLinkElement;
+        new (): HTMLPosRichLinkElement;
+    };
     interface HTMLElementTagNameMap {
         "pos-app": HTMLPosAppElement;
         "pos-demo-app": HTMLPosDemoAppElement;
@@ -75,6 +84,7 @@ declare global {
         "pos-login": HTMLPosLoginElement;
         "pos-relations": HTMLPosRelationsElement;
         "pos-resource": HTMLPosResourceElement;
+        "pos-rich-link": HTMLPosRichLinkElement;
     }
 }
 declare namespace LocalJSX {
@@ -99,6 +109,9 @@ declare namespace LocalJSX {
         "onConsumeOs"?: (event: CustomEvent<any>) => void;
         "uri"?: string;
     }
+    interface PosRichLink {
+        "uri"?: string;
+    }
     interface IntrinsicElements {
         "pos-app": PosApp;
         "pos-demo-app": PosDemoApp;
@@ -107,6 +120,7 @@ declare namespace LocalJSX {
         "pos-login": PosLogin;
         "pos-relations": PosRelations;
         "pos-resource": PosResource;
+        "pos-rich-link": PosRichLink;
     }
 }
 export { LocalJSX as JSX };
@@ -120,6 +134,7 @@ declare module "@stencil/core" {
             "pos-login": LocalJSX.PosLogin & JSXBase.HTMLAttributes<HTMLPosLoginElement>;
             "pos-relations": LocalJSX.PosRelations & JSXBase.HTMLAttributes<HTMLPosRelationsElement>;
             "pos-resource": LocalJSX.PosResource & JSXBase.HTMLAttributes<HTMLPosResourceElement>;
+            "pos-rich-link": LocalJSX.PosRichLink & JSXBase.HTMLAttributes<HTMLPosRichLinkElement>;
         }
     }
 }

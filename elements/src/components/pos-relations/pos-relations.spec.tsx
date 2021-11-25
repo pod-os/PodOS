@@ -18,7 +18,7 @@ describe('pos-relations', () => {
   `);
   });
 
-  it('renders single predicate and value', async () => {
+  it('renders single predicate and rich link to resource', async () => {
     const page = await newSpecPage({
       components: [PosRelations],
       html: `<pos-relations />`,
@@ -27,7 +27,7 @@ describe('pos-relations', () => {
       relations: () => [
         {
           predicate: 'http://schema.org/url',
-          uris: ['Alice'],
+          uris: ['https://person.test/alice'],
         },
       ],
     });
@@ -35,11 +35,12 @@ describe('pos-relations', () => {
 
     const el: HTMLElement = page.root.shadowRoot as unknown as HTMLElement;
 
-    expect(getByText(el, 'Alice')).toBeDefined();
     expect(getByText(el, 'http://schema.org/url')).toBeDefined();
+    const linkToAlice = page.root.shadowRoot.querySelector('pos-rich-link[uri="https://person.test/alice"]');
+    expect(linkToAlice).not.toBeNull();
   });
 
-  it('renders multiple predicates and values', async () => {
+  it('renders multiple predicates and rich links to resource', async () => {
     const page = await newSpecPage({
       components: [PosRelations],
       html: `<pos-relations />`,
@@ -48,11 +49,11 @@ describe('pos-relations', () => {
       relations: () => [
         {
           predicate: 'http://schema.org/url',
-          uris: ['Alice', 'Bernadette'],
+          uris: ['https://person.test/alice', 'https://person.test/bernadette'],
         },
         {
-          predicate: 'http://schema.org/description',
-          uris: ['the description'],
+          predicate: 'https://www.w3.org/ns/activitystreams#attachment',
+          uris: ['https://resource.test/attachment'],
         },
       ],
     });
@@ -60,11 +61,14 @@ describe('pos-relations', () => {
 
     const el: HTMLElement = page.root.shadowRoot as unknown as HTMLElement;
 
-    expect(getByText(el, 'Alice')).toBeDefined();
-    expect(getByText(el, 'Bernadette')).toBeDefined();
     expect(getByText(el, 'http://schema.org/url')).toBeDefined();
+    const linkToAlice = page.root.shadowRoot.querySelector('pos-rich-link[uri="https://person.test/alice"]');
+    expect(linkToAlice).not.toBeNull();
+    const linkToBernadette = page.root.shadowRoot.querySelector('pos-rich-link[uri="https://person.test/bernadette"]');
+    expect(linkToBernadette).not.toBeNull();
 
-    expect(getByText(el, 'the description')).toBeDefined();
-    expect(getByText(el, 'http://schema.org/description')).toBeDefined();
+    expect(getByText(el, 'https://www.w3.org/ns/activitystreams#attachment')).toBeDefined();
+    const linkToAttachment = page.root.shadowRoot.querySelector('pos-rich-link[uri="https://resource.test/attachment"]');
+    expect(linkToAttachment).not.toBeNull();
   });
 });
