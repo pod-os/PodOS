@@ -70,6 +70,18 @@ export class Thing {
     });
     return value;
   }
+
+  description() {
+    return this.anyValue(
+      "http://purl.org/dc/terms/description",
+      "http://purl.org/dc/elements/1.1/description",
+      "http://schema.org/description",
+      "https://schema.org/description",
+      "http://www.w3.org/2000/01/rdf-schema#comment",
+      "https://www.w3.org/ns/activitystreams#summary",
+      "http://www.w3.org/2006/vcard/ns#note"
+    );
+  }
 }
 
 interface Accumulator {

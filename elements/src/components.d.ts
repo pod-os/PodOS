@@ -10,6 +10,8 @@ export namespace Components {
     }
     interface PosDemoApp {
     }
+    interface PosDescription {
+    }
     interface PosLabel {
     }
     interface PosLiterals {
@@ -39,6 +41,12 @@ declare global {
     var HTMLPosDemoAppElement: {
         prototype: HTMLPosDemoAppElement;
         new (): HTMLPosDemoAppElement;
+    };
+    interface HTMLPosDescriptionElement extends Components.PosDescription, HTMLStencilElement {
+    }
+    var HTMLPosDescriptionElement: {
+        prototype: HTMLPosDescriptionElement;
+        new (): HTMLPosDescriptionElement;
     };
     interface HTMLPosLabelElement extends Components.PosLabel, HTMLStencilElement {
     }
@@ -79,6 +87,7 @@ declare global {
     interface HTMLElementTagNameMap {
         "pos-app": HTMLPosAppElement;
         "pos-demo-app": HTMLPosDemoAppElement;
+        "pos-description": HTMLPosDescriptionElement;
         "pos-label": HTMLPosLabelElement;
         "pos-literals": HTMLPosLiteralsElement;
         "pos-login": HTMLPosLoginElement;
@@ -91,6 +100,9 @@ declare namespace LocalJSX {
     interface PosApp {
     }
     interface PosDemoApp {
+    }
+    interface PosDescription {
+        "onPod-os:resource"?: (event: CustomEvent<any>) => void;
     }
     interface PosLabel {
         "onPod-os:resource"?: (event: CustomEvent<any>) => void;
@@ -115,6 +127,7 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "pos-app": PosApp;
         "pos-demo-app": PosDemoApp;
+        "pos-description": PosDescription;
         "pos-label": PosLabel;
         "pos-literals": PosLiterals;
         "pos-login": PosLogin;
@@ -129,6 +142,7 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "pos-app": LocalJSX.PosApp & JSXBase.HTMLAttributes<HTMLPosAppElement>;
             "pos-demo-app": LocalJSX.PosDemoApp & JSXBase.HTMLAttributes<HTMLPosDemoAppElement>;
+            "pos-description": LocalJSX.PosDescription & JSXBase.HTMLAttributes<HTMLPosDescriptionElement>;
             "pos-label": LocalJSX.PosLabel & JSXBase.HTMLAttributes<HTMLPosLabelElement>;
             "pos-literals": LocalJSX.PosLiterals & JSXBase.HTMLAttributes<HTMLPosLiteralsElement>;
             "pos-login": LocalJSX.PosLogin & JSXBase.HTMLAttributes<HTMLPosLoginElement>;

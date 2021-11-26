@@ -15,7 +15,14 @@ export class PosLabel {
             <h2>
               <pos-label />
             </h2>
-            <p>{this.uri}</p>
+            <p>
+              <ion-label style={{ maxWidth: '50rem' }}>
+                <pos-description />
+              </ion-label>
+            </p>
+            <p>
+              <a href={this.uri}>{this.uri}</a>
+            </p>
           </ion-label>
         </ion-item>
       </pos-resource>

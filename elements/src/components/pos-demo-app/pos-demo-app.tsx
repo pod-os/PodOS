@@ -27,8 +27,7 @@ export class PosDemoApp {
                       </ion-card-title>
                     </ion-card-header>
                     <ion-card-content>
-                      Minecraft is a sandbox video game developed by the Swedish video game developer Mojang Studios. The game was created by Markus "Notch" Persson in the Java
-                      programming language.
+                      <pos-description />
                     </ion-card-content>
                   </ion-card>
                 </ion-col>
