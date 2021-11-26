@@ -37,62 +37,6 @@ export class PosDemoApp {
                 </ion-col>
                 <ion-col size="12" size-sm>
                   <pos-relations />
-                  <ion-list>
-                    <ion-item-group>
-                      <ion-item-divider>
-                        <ion-label>schema:video</ion-label>
-                      </ion-item-divider>
-
-                      <ion-item>
-                        <ion-toolbar>
-                          <ion-label>
-                            <h2>CHALLENGE ACCEPTED! #6 [Hot Pepper Challenge!]</h2>
-                            <p>
-                              How many Jalapeno can I eat without crying? ZERO. Today's challenge is for every chest I open, I have to eat a Jalapeno and... I HAVE TO WIN. This
-                              video was painful
-                            </p>
-                          </ion-label>
-
-                          <ion-buttons slot="secondary">
-                            <ion-button slot="end">
-                              <ion-icon name="open-outline" />
-                            </ion-button>
-                          </ion-buttons>
-                        </ion-toolbar>
-                      </ion-item>
-                      <ion-item>
-                        <ion-toolbar>
-                          <ion-label>
-                            <h2>How to Build a Castle</h2>
-                            <p>Today I will show you how to build a giant castle.</p>
-                          </ion-label>
-
-                          <ion-buttons slot="secondary">
-                            <ion-button slot="end">
-                              <ion-icon name="open-outline" />
-                            </ion-button>
-                          </ion-buttons>
-                        </ion-toolbar>
-                      </ion-item>
-                    </ion-item-group>
-
-                    <ion-item-group>
-                      <ion-item-divider>
-                        <ion-label>schema:gameServer</ion-label>
-                      </ion-item-divider>
-                      <ion-item>
-                        <ion-toolbar>
-                          <ion-label>mineplex</ion-label>
-
-                          <ion-buttons slot="secondary">
-                            <ion-button slot="end">
-                              <ion-icon name="open-outline" />
-                            </ion-button>
-                          </ion-buttons>
-                        </ion-toolbar>
-                      </ion-item>
-                    </ion-item-group>
-                  </ion-list>
                 </ion-col>
               </ion-row>
             </ion-grid>
