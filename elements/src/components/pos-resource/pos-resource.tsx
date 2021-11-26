@@ -44,19 +44,20 @@ export class PosResource {
   }
 
   @Watch('os')
+  @Watch('uri')
   async loadResource() {
     await this.getResource(!this.lazy);
   }
 
   @Method()
   async fetch() {
-    this.loading = true;
     await this.getResource(true);
   }
 
   private async getResource(fetch: boolean = false) {
     try {
       if (fetch) {
+        this.loading = true;
         await this.os.fetch(this.uri);
       }
       this.resource = this.os.store.get(this.uri);

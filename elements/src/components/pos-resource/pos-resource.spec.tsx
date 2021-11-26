@@ -74,6 +74,28 @@ describe('pos-resource', () => {
   `);
   });
 
+  it('updates and loads resource when uri changes', async () => {
+    const page = await newSpecPage({
+      components: [PosResource],
+      html: `<pos-resource uri="https://resource.test/" />`,
+    });
+    const os = mockPodOS();
+    when(os.fetch).calledWith('https://resource.test/').mockResolvedValue();
+    when(os.fetch)
+      .calledWith('https://other-resource.test')
+      .mockReturnValue(new Promise(() => null));
+    await page.rootInstance.setOs(os);
+    page.root.setAttribute('uri', 'https://other-resource.test');
+    await page.waitForChanges();
+    expect(page.root).toEqualHtml(`
+      <pos-resource uri="https://other-resource.test">
+        <mock:shadow-root>
+          <ion-progress-bar type="indeterminate"></ion-progress-bar>
+        </mock:shadow-root>
+      </pos-resource>
+  `);
+  });
+
   describe('when lazy', () => {
     let page;
     beforeEach(async () => {
