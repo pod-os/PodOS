@@ -4,39 +4,19 @@ export class Thing {
   constructor(readonly uri: string, readonly store: IndexedFormula) {}
 
   label() {
-    const value =
-      this.store.anyValue(
-        sym(this.uri),
-        sym("http://xmlns.com/foaf/0.1/name")
-      ) ??
-      this.store.anyValue(
-        sym(this.uri),
-        sym("http://xmlns.com/foaf/0.1/nick")
-      ) ??
-      this.store.anyValue(sym(this.uri), sym("https://schema.org/name")) ??
-      this.store.anyValue(sym(this.uri), sym("http://schema.org/name")) ??
-      this.store.anyValue(
-        sym(this.uri),
-        sym("http://purl.org/dc/terms/title")
-      ) ??
-      this.store.anyValue(
-        sym(this.uri),
-        sym("http://purl.org/dc/elements/1.1/title")
-      ) ??
-      this.store.anyValue(
-        sym(this.uri),
-        sym("http://www.w3.org/2000/01/rdf-schema#label")
-      ) ??
-      this.store.anyValue(
-        sym(this.uri),
-        sym("https://www.w3.org/ns/activitystreams#name")
-      ) ??
-      this.store.anyValue(
-        sym(this.uri),
-        sym("http://www.w3.org/2006/vcard/ns#fn")
-      ) ??
-      this.store.anyValue(sym(this.uri), sym("http://schema.org/caption")) ??
-      this.store.anyValue(sym(this.uri), sym("https://schema.org/caption"));
+    const value = this.anyValue(
+      "http://xmlns.com/foaf/0.1/name",
+      "http://xmlns.com/foaf/0.1/nick",
+      "https://schema.org/name",
+      "http://schema.org/name",
+      "http://purl.org/dc/terms/title",
+      "http://purl.org/dc/elements/1.1/title",
+      "http://www.w3.org/2000/01/rdf-schema#label",
+      "https://www.w3.org/ns/activitystreams#name",
+      "http://www.w3.org/2006/vcard/ns#fn",
+      "http://schema.org/caption",
+      "https://schema.org/caption"
+    );
     return value ?? this.uri;
   }
 
@@ -80,6 +60,15 @@ export class Thing {
       predicate,
       uris: values[predicate],
     }));
+  }
+
+  anyValue(...predicateUris: string[]) {
+    let value;
+    predicateUris.some((it) => {
+      value = this.store.anyValue(sym(this.uri), sym(it));
+      return Boolean(value);
+    });
+    return value;
   }
 }
 
