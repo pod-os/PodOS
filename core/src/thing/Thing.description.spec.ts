@@ -17,8 +17,10 @@ describe("Thing", function () {
       "http://purl.org/dc/elements/1.1/description",
       "http://schema.org/description",
       "https://schema.org/description",
+      "https://schema.org/text",
       "http://www.w3.org/2000/01/rdf-schema#comment",
       "https://www.w3.org/ns/activitystreams#summary",
+      "https://www.w3.org/ns/activitystreams#content",
       "http://www.w3.org/2006/vcard/ns#note",
     ])("returns the literal value of predicate %s", (predicate: string) => {
       const store = graph();
