@@ -19,7 +19,7 @@ export class PosLogin {
   };
 
   login() {
-    const idp = session.getIdpUrl();
+    const idp = session.state.getIdpUrl();
     this.os.login(idp);
   }
 
@@ -30,15 +30,15 @@ export class PosLogin {
   render() {
     return (
       <Host>
-        {session.isLoggedIn ? (
-          <pos-resource uri={session.webId}>
+        {session.state.isLoggedIn ? (
+          <pos-resource uri={session.state.webId}>
             <pos-label />
           </pos-resource>
         ) : (
           ''
         )}
-        {!session.isLoggedIn && <ion-button onClick={() => this.login()}>Login</ion-button>}
-        {session.isLoggedIn && <ion-button onClick={() => this.logout()}>Logout</ion-button>}
+        {!session.state.isLoggedIn && <ion-button onClick={() => this.login()}>Login</ion-button>}
+        {session.state.isLoggedIn && <ion-button onClick={() => this.logout()}>Logout</ion-button>}
       </Host>
     );
   }

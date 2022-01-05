@@ -7,7 +7,7 @@ import session from '../../store/session';
 
 describe('pos-login', () => {
   it('renders login button', async () => {
-    session.isLoggedIn = false;
+    session.state.isLoggedIn = false;
     const page = await newSpecPage({
       components: [PosLogin],
       html: `<pos-login></pos-login>`,
@@ -22,8 +22,8 @@ describe('pos-login', () => {
   });
 
   it('renders logout button and label for webId', async () => {
-    session.isLoggedIn = true;
-    session.webId = 'https://pod.example/alice#me';
+    session.state.isLoggedIn = true;
+    session.state.webId = 'https://pod.example/alice#me';
     const page = await newSpecPage({
       components: [PosLogin],
       html: `<pos-login></pos-login>`,
