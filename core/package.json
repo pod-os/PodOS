@@ -1,7 +1,6 @@
 {
   "name": "@pod-os/core",
   "version": "0.1.0",
-  "description": "",
   "main": "lib/index.js",
   "files": [
     "lib/"
@@ -36,5 +35,18 @@
     "@inrupt/solid-client-authn-browser": "^1.11.2",
     "buffer": "^6.0.3",
     "rdflib": "^2.2.9"
-  }
+  },
+  "types": "./lib/index.d.ts",
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pod-os/pod-os.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pod-os/pod-os/issues"
+  },
+  "homepage": "https://github.com/pod-os/pod-os#readme",
+  "description": ""
 }

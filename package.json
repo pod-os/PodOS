@@ -7,6 +7,10 @@
     "doc": "docs"
   },
   "scripts": {
+    "test": "npm run test --workspaces --if-present",
+    "start:core": "npm start --workspace core",
+    "start:elements": "npm start --workspace elements",
+    "start:server": "npm start --workspace dev-solid-server"
   },
   "repository": {
     "type": "git",
@@ -28,5 +32,10 @@
   "homepage": "https://github.com/pod-os/pod-os#readme",
   "devDependencies": {
     "prettier": "^2.4.1"
-  }
+  },
+  "workspaces": [
+    "core",
+    "elements",
+    "dev-solid-server"
+  ]
 }

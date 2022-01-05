@@ -36,5 +36,14 @@
     "prettier": "^2.4.1",
     "puppeteer": "^10.0.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pod-os/pod-os.git"
+  },
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/pod-os/pod-os/issues"
+  },
+  "homepage": "https://github.com/pod-os/pod-os#readme"
 }

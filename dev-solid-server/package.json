@@ -1,7 +1,7 @@
 {
   "name": "dev-solid-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "Community Solid Server for local development",
   "main": "index.js",
   "scripts": {
     "start": "community-solid-server --config @css:config/file.json --rootFilePath ./data"
@@ -10,5 +10,14 @@
   "license": "MIT",
   "dependencies": {
     "@solid/community-server": "^2.0.0"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pod-os/pod-os.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pod-os/pod-os/issues"
+  },
+  "homepage": "https://github.com/pod-os/pod-os#readme"
 }
