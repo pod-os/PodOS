@@ -1,4 +1,5 @@
 import { IndexedFormula, isLiteral, isNamedNode, Statement, sym } from "rdflib";
+import { accumulateValues } from "./accumulateValues";
 
 export class Thing {
   constructor(readonly uri: string, readonly store: IndexedFormula) {}
@@ -25,15 +26,7 @@ export class Thing {
 
     const values = statements
       .filter((it) => isLiteral(it.object))
-      .reduce((accumulator: Accumulator, current: Statement) => {
-        const existing = accumulator[current.predicate.uri];
-        return {
-          ...accumulator,
-          [current.predicate.uri]: existing
-            ? [...existing, current.object.value]
-            : [current.object.value],
-        };
-      }, {});
+      .reduce(accumulateValues, {});
 
     return Object.keys(values).map((predicate) => ({
       predicate,
@@ -46,15 +39,7 @@ export class Thing {
 
     const values = statements
       .filter((it) => isNamedNode(it.object))
-      .reduce((accumulator: Accumulator, current: Statement) => {
-        const existing = accumulator[current.predicate.uri];
-        return {
-          ...accumulator,
-          [current.predicate.uri]: existing
-            ? [...existing, current.object.value]
-            : [current.object.value],
-        };
-      }, {});
+      .reduce(accumulateValues, {});
 
     return Object.keys(values).map((predicate) => ({
       predicate,
@@ -84,8 +69,4 @@ export class Thing {
       "http://www.w3.org/2006/vcard/ns#note"
     );
   }
-}
-
-interface Accumulator {
-  [key: string]: string[];
 }
