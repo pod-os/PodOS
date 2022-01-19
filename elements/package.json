@@ -18,7 +18,6 @@
     "build": "stencil build --docs",
     "start": "stencil build --dev --watch --serve",
     "test": "jest ./src",
-    "test:e2e": "stencil test --e2e",
     "generate": "stencil generate"
   },
   "dependencies": {
