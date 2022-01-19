@@ -64,6 +64,7 @@ export class PosResource {
         await this.os.fetch(this.uri);
       }
       this.resource = this.os.store.get(this.uri);
+      this.error = null;
       this.consumers.forEach(consumer => {
         consumer.detail(this.resource);
       });

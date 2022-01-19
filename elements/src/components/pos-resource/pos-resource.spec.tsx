@@ -130,6 +130,34 @@ describe('pos-resource', () => {
   `);
   });
 
+  it('removes error message after successful loading', async () => {
+    let sessionChanged;
+    // @ts-ignore
+    session.onChange = (prop, callback) => {
+      if (prop === 'isLoggedIn') {
+        sessionChanged = callback;
+      }
+    };
+    const page = await newSpecPage({
+      components: [PosResource],
+      html: `<pos-resource uri="https://resource.test/" />`,
+    });
+    const os = mockPodOS();
+    when(os.fetch).calledWith('https://resource.test/').mockRejectedValueOnce(new Error('unauthorized'));
+    when(os.fetch).calledWith('https://resource.test/').mockResolvedValueOnce();
+    await page.rootInstance.setOs(os);
+    expect(sessionChanged).toBeDefined();
+    sessionChanged();
+    await page.waitForChanges();
+    expect(page.root).toEqualHtml(`
+      <pos-resource uri="https://resource.test/">
+        <mock:shadow-root>
+          <slot></slot>
+        </mock:shadow-root>
+      </pos-resource>
+  `);
+  });
+
   describe('when lazy', () => {
     let page;
     beforeEach(async () => {
