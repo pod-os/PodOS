@@ -20,7 +20,7 @@ export class PosResource {
 
   @Prop() lazy: boolean = false;
 
-  @Event({ eventName: 'consumeOs' }) consumeOsEmitter: EventEmitter;
+  @Event({ eventName: 'pod-os:init' }) initializeOsEmitter: EventEmitter;
 
   @State()
   private error: any;
@@ -30,7 +30,7 @@ export class PosResource {
 
   componentWillLoad() {
     session.onChange('isLoggedIn', () => this.loadResource());
-    this.consumeOsEmitter.emit(this.setOs);
+    this.initializeOsEmitter.emit(this.setOs);
   }
 
   setOs = async (os: any) => {

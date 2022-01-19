@@ -111,14 +111,14 @@ declare namespace LocalJSX {
         "onPod-os:resource"?: (event: CustomEvent<any>) => void;
     }
     interface PosLogin {
-        "onConsumeOs"?: (event: CustomEvent<any>) => void;
+        "onPod-os:init"?: (event: CustomEvent<any>) => void;
     }
     interface PosRelations {
         "onPod-os:resource"?: (event: CustomEvent<any>) => void;
     }
     interface PosResource {
         "lazy"?: boolean;
-        "onConsumeOs"?: (event: CustomEvent<any>) => void;
+        "onPod-os:init"?: (event: CustomEvent<any>) => void;
         "uri"?: string;
     }
     interface PosRichLink {

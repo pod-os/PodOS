@@ -6,12 +6,12 @@ import session from '../../store/session';
   tag: 'pos-login',
 })
 export class PosLogin {
-  @Event({ eventName: 'consumeOs' }) consumeOsEmitter: EventEmitter;
+  @Event({ eventName: 'pod-os:init' }) initializeOsEmitter: EventEmitter;
 
   @State() os: any;
 
   componentWillLoad() {
-    this.consumeOsEmitter.emit(this.setOs);
+    this.initializeOsEmitter.emit(this.setOs);
   }
 
   setOs = async (os: any) => {

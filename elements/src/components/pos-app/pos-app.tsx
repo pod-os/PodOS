@@ -2,7 +2,7 @@ import { Component, h, Listen, State } from '@stencil/core';
 import session from '../../store/session';
 import { createPodOS } from '../../pod-os';
 
-interface ConsumeOsEvent extends CustomEvent {
+interface InitializeOsEvent extends CustomEvent {
   detail: Function;
 }
 
@@ -21,8 +21,8 @@ export class PosApp {
     });
   }
 
-  @Listen('consumeOs')
-  async consumeOs(event: ConsumeOsEvent) {
+  @Listen('pod-os:init')
+  async initializeOs(event: InitializeOsEvent) {
     event.stopPropagation();
     event.detail(this.os);
   }
