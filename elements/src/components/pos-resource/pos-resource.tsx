@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Event, h, Prop, State, Watch, Listen, Method } from '@stencil/core';
 
+import session from '../../store/session';
+
 interface GetResourceEvent extends CustomEvent {
   detail: Function;
 }
@@ -27,6 +29,7 @@ export class PosResource {
   private loading: boolean = true;
 
   componentWillLoad() {
+    session.onChange('isLoggedIn', () => this.loadResource());
     this.consumeOsEmitter.emit(this.setOs);
   }
 

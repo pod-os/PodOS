@@ -1,7 +1,11 @@
+jest.mock('../../store/session');
+
 import { newSpecPage } from '@stencil/core/testing';
 import { mockPodOS } from '../../test/mockPodOS';
 import { PosResource } from './pos-resource';
 import { when } from 'jest-when';
+
+import session from '../../store/session';
 
 describe('pos-resource', () => {
   it('renders loading indicator initially', async () => {
@@ -89,6 +93,36 @@ describe('pos-resource', () => {
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
       <pos-resource uri="https://other-resource.test">
+        <mock:shadow-root>
+          <ion-progress-bar type="indeterminate"></ion-progress-bar>
+        </mock:shadow-root>
+      </pos-resource>
+  `);
+  });
+
+  it('re-fetches resource when session state changes', async () => {
+    let sessionChanged;
+    // @ts-ignore
+    session.onChange = (prop, callback) => {
+      if (prop === 'isLoggedIn') {
+        sessionChanged = callback;
+      }
+    };
+    const page = await newSpecPage({
+      components: [PosResource],
+      html: `<pos-resource uri="https://resource.test/" />`,
+    });
+    const os = mockPodOS();
+    when(os.fetch).calledWith('https://resource.test/').mockResolvedValueOnce();
+    when(os.fetch)
+      .calledWith('https://resource.test/')
+      .mockReturnValueOnce(new Promise(() => null));
+    await page.rootInstance.setOs(os);
+    expect(sessionChanged).toBeDefined();
+    sessionChanged();
+    await page.waitForChanges();
+    expect(page.root).toEqualHtml(`
+      <pos-resource uri="https://resource.test/">
         <mock:shadow-root>
           <ion-progress-bar type="indeterminate"></ion-progress-bar>
         </mock:shadow-root>

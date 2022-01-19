@@ -11,7 +11,11 @@ export class Store {
   }
 
   fetch(uri: string) {
-    return this.fetcher.load(sym(uri));
+    // force fetching due to
+    // https://github.com/linkeddata/rdflib.js/issues/247
+    // and
+    // https://github.com/linkeddata/rdflib.js/issues/441
+    return this.fetcher.load(sym(uri), { force: true });
   }
 
   get(uri: string) {
