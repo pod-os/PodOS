@@ -1,11 +1,20 @@
 # Development Solid Server
 
-Community
-Solid
-Server
-for
-local
-development
+Community Solid Server for local development
+
+## Start
+
+You can start the server from pod-os root folder via:
+
+```shell
+npm run start:server
+```
+
+or from here by just
+
+```shell
+npm start
+```
 
 ## Users
 
