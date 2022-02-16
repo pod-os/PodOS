@@ -21,7 +21,9 @@ export class BrowserSession {
 
   async handleIncomingRedirect() {
     return this.session.handleIncomingRedirect({
-      restorePreviousSession: true,
+      // session restore disabled, due to
+      // https://github.com/inrupt/solid-client-authn-js/issues/1647
+      restorePreviousSession: false,
     });
   }
 
