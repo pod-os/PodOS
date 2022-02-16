@@ -13,33 +13,8 @@ export class PosDemoApp {
             <pos-login></pos-login>
           </ion-toolbar>
         </ion-header>
-        <ion-content class="ion-padding">
-          <pos-resource uri="http://localhost:3000/alice/games/minecraft#it">
-            <ion-grid>
-              <ion-row>
-                <ion-col size="12" size-sm>
-                  <ion-card>
-                    <ion-card-header>
-                      <img src="https://upload.wikimedia.org/wikipedia/de/5/57/Minecraft_logo-SVG.svg" />
-                      <ion-card-subtitle>VideoGame</ion-card-subtitle>
-                      <ion-card-title>
-                        <pos-label />
-                      </ion-card-title>
-                    </ion-card-header>
-                    <ion-card-content>
-                      <pos-description />
-                    </ion-card-content>
-                  </ion-card>
-                </ion-col>
-                <ion-col size="12" size-sm>
-                  <pos-literals />
-                </ion-col>
-                <ion-col size="12" size-sm>
-                  <pos-relations />
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-          </pos-resource>
+        <ion-content>
+          <pos-router />
         </ion-content>
         <ion-footer>
           <ion-toolbar>

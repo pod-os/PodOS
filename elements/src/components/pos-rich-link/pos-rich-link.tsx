@@ -1,16 +1,24 @@
-import { Component, h, Prop } from '@stencil/core';
+import { Component, Event, EventEmitter, h, Prop } from '@stencil/core';
 
 @Component({
   tag: 'pos-rich-link',
   shadow: true,
 })
-export class PosLabel {
+export class PosRichLink {
   @Prop() uri: string;
+
+  @Event({ eventName: 'pod-os:link' }) linkEmitter: EventEmitter;
 
   render() {
     return (
       <pos-resource lazy={true} uri={this.uri}>
-        <ion-item href={this.uri}>
+        <ion-item
+          href={this.uri}
+          onClick={e => {
+            e.preventDefault();
+            this.linkEmitter.emit(this.uri);
+          }}
+        >
           <ion-label>
             <h2>
               <pos-label />

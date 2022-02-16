@@ -14,7 +14,8 @@ npm run start:elements
 npm run start:server
 ```
 
-Visit http://localhost:3333/ to view the demo app.
+Visit http://localhost:3333/?uri=http%3A%2F%2Flocalhost%3A3000%2Falice%2Fgames%2Fminecraft%23it to view the demo app
+showing example data, or change the uri parameter to a resource of your choice.
 
 The development Solid server is running at http://localhost:3000/ 
 

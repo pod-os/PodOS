@@ -8,6 +8,8 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
     interface PosApp {
     }
+    interface PosAppGeneric {
+    }
     interface PosDemoApp {
     }
     interface PosDescription {
@@ -28,6 +30,8 @@ export namespace Components {
     interface PosRichLink {
         "uri": string;
     }
+    interface PosRouter {
+    }
 }
 declare global {
     interface HTMLPosAppElement extends Components.PosApp, HTMLStencilElement {
@@ -35,6 +39,12 @@ declare global {
     var HTMLPosAppElement: {
         prototype: HTMLPosAppElement;
         new (): HTMLPosAppElement;
+    };
+    interface HTMLPosAppGenericElement extends Components.PosAppGeneric, HTMLStencilElement {
+    }
+    var HTMLPosAppGenericElement: {
+        prototype: HTMLPosAppGenericElement;
+        new (): HTMLPosAppGenericElement;
     };
     interface HTMLPosDemoAppElement extends Components.PosDemoApp, HTMLStencilElement {
     }
@@ -84,8 +94,15 @@ declare global {
         prototype: HTMLPosRichLinkElement;
         new (): HTMLPosRichLinkElement;
     };
+    interface HTMLPosRouterElement extends Components.PosRouter, HTMLStencilElement {
+    }
+    var HTMLPosRouterElement: {
+        prototype: HTMLPosRouterElement;
+        new (): HTMLPosRouterElement;
+    };
     interface HTMLElementTagNameMap {
         "pos-app": HTMLPosAppElement;
+        "pos-app-generic": HTMLPosAppGenericElement;
         "pos-demo-app": HTMLPosDemoAppElement;
         "pos-description": HTMLPosDescriptionElement;
         "pos-label": HTMLPosLabelElement;
@@ -94,10 +111,13 @@ declare global {
         "pos-relations": HTMLPosRelationsElement;
         "pos-resource": HTMLPosResourceElement;
         "pos-rich-link": HTMLPosRichLinkElement;
+        "pos-router": HTMLPosRouterElement;
     }
 }
 declare namespace LocalJSX {
     interface PosApp {
+    }
+    interface PosAppGeneric {
     }
     interface PosDemoApp {
     }
@@ -122,10 +142,14 @@ declare namespace LocalJSX {
         "uri"?: string;
     }
     interface PosRichLink {
+        "onPod-os:link"?: (event: CustomEvent<any>) => void;
         "uri"?: string;
+    }
+    interface PosRouter {
     }
     interface IntrinsicElements {
         "pos-app": PosApp;
+        "pos-app-generic": PosAppGeneric;
         "pos-demo-app": PosDemoApp;
         "pos-description": PosDescription;
         "pos-label": PosLabel;
@@ -134,6 +158,7 @@ declare namespace LocalJSX {
         "pos-relations": PosRelations;
         "pos-resource": PosResource;
         "pos-rich-link": PosRichLink;
+        "pos-router": PosRouter;
     }
 }
 export { LocalJSX as JSX };
@@ -141,6 +166,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "pos-app": LocalJSX.PosApp & JSXBase.HTMLAttributes<HTMLPosAppElement>;
+            "pos-app-generic": LocalJSX.PosAppGeneric & JSXBase.HTMLAttributes<HTMLPosAppGenericElement>;
             "pos-demo-app": LocalJSX.PosDemoApp & JSXBase.HTMLAttributes<HTMLPosDemoAppElement>;
             "pos-description": LocalJSX.PosDescription & JSXBase.HTMLAttributes<HTMLPosDescriptionElement>;
             "pos-label": LocalJSX.PosLabel & JSXBase.HTMLAttributes<HTMLPosLabelElement>;
@@ -149,6 +175,7 @@ declare module "@stencil/core" {
             "pos-relations": LocalJSX.PosRelations & JSXBase.HTMLAttributes<HTMLPosRelationsElement>;
             "pos-resource": LocalJSX.PosResource & JSXBase.HTMLAttributes<HTMLPosResourceElement>;
             "pos-rich-link": LocalJSX.PosRichLink & JSXBase.HTMLAttributes<HTMLPosRichLinkElement>;
+            "pos-router": LocalJSX.PosRouter & JSXBase.HTMLAttributes<HTMLPosRouterElement>;
         }
     }
 }
