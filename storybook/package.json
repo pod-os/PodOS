@@ -1,0 +1,28 @@
+{
+  "name": "@pod-os/storybook",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "init": "storybook init",
+    "start": "start-storybook -p 6006",
+    "build": "build-storybook",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "lit-html": "^2.2.0",
+    "storybook": "^6.4.19"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.17.5",
+    "@storybook/addon-actions": "^6.4.19",
+    "@storybook/addon-essentials": "^6.4.19",
+    "@storybook/addon-links": "^6.4.19",
+    "@storybook/html": "^6.4.19",
+    "@storybook/web-components": "^6.4.19",
+    "babel-loader": "^8.2.3"
+  }
+}

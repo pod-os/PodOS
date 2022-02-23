@@ -1,0 +1,30 @@
+import {html} from "lit-html";
+
+import {
+  Canvas,
+  Meta,
+  Story
+} from '@storybook/addon-docs/blocks';
+
+<Meta
+  title="Basics"
+  args={{uri: "https://solidproject.solidcommunity.net/profile/card#me"}}
+/>
+
+
+## pos-label
+
+Renders a human-readable label of the resource.
+
+<Canvas
+  withSource="open">
+  <Story
+    name="pos-label"
+  >
+    {({uri}) => html`
+<pos-resource uri=${uri}>
+   <pos-label />
+</pos-resource>
+    `}
+  </Story>
+</Canvas>

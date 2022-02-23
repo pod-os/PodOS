@@ -10,7 +10,8 @@
     "test": "npm run test --workspaces --if-present",
     "start:core": "npm start --workspace core",
     "start:elements": "npm start --workspace elements",
-    "start:server": "npm start --workspace dev-solid-server"
+    "start:server": "npm start --workspace dev-solid-server",
+    "start:storybook": "npm start --workspace storybook"
   },
   "repository": {
     "type": "git",
@@ -36,6 +37,7 @@
   "workspaces": [
     "core",
     "elements",
-    "dev-solid-server"
+    "dev-solid-server",
+    "storybook"
   ]
 }

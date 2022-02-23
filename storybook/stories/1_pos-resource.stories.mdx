@@ -1,0 +1,28 @@
+import {html} from "lit-html";
+
+import {
+  Canvas,
+  Meta,
+  Story
+} from '@storybook/addon-docs/blocks';
+
+<Meta
+  title="Basics"
+  args={{ uri: "https://solidproject.solidcommunity.net/profile/card#me" }}
+/>
+
+## pos-resource
+
+<Canvas
+  withSource="open">
+  <Story
+    name="pos-resource"
+  >
+    {({uri}) => html`
+<pos-resource uri=${uri}>
+   This content will show up, after ${uri} has been fetched.
+   Child components will use the resource uri as a reference for showing further content.
+</pos-resource>
+    `}
+  </Story>
+</Canvas>
