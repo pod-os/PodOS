@@ -33,6 +33,34 @@ export namespace Components {
     interface PosRouter {
     }
 }
+export interface PosDescriptionCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosDescriptionElement;
+}
+export interface PosLabelCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosLabelElement;
+}
+export interface PosLiteralsCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosLiteralsElement;
+}
+export interface PosLoginCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosLoginElement;
+}
+export interface PosRelationsCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosRelationsElement;
+}
+export interface PosResourceCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosResourceElement;
+}
+export interface PosRichLinkCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosRichLinkElement;
+}
 declare global {
     interface HTMLPosAppElement extends Components.PosApp, HTMLStencilElement {
     }
@@ -122,27 +150,27 @@ declare namespace LocalJSX {
     interface PosDemoApp {
     }
     interface PosDescription {
-        "onPod-os:resource"?: (event: CustomEvent<any>) => void;
+        "onPod-os:resource"?: (event: PosDescriptionCustomEvent<any>) => void;
     }
     interface PosLabel {
-        "onPod-os:resource"?: (event: CustomEvent<any>) => void;
+        "onPod-os:resource"?: (event: PosLabelCustomEvent<any>) => void;
     }
     interface PosLiterals {
-        "onPod-os:resource"?: (event: CustomEvent<any>) => void;
+        "onPod-os:resource"?: (event: PosLiteralsCustomEvent<any>) => void;
     }
     interface PosLogin {
-        "onPod-os:init"?: (event: CustomEvent<any>) => void;
+        "onPod-os:init"?: (event: PosLoginCustomEvent<any>) => void;
     }
     interface PosRelations {
-        "onPod-os:resource"?: (event: CustomEvent<any>) => void;
+        "onPod-os:resource"?: (event: PosRelationsCustomEvent<any>) => void;
     }
     interface PosResource {
         "lazy"?: boolean;
-        "onPod-os:init"?: (event: CustomEvent<any>) => void;
+        "onPod-os:init"?: (event: PosResourceCustomEvent<any>) => void;
         "uri"?: string;
     }
     interface PosRichLink {
-        "onPod-os:link"?: (event: CustomEvent<any>) => void;
+        "onPod-os:link"?: (event: PosRichLinkCustomEvent<any>) => void;
         "uri"?: string;
     }
     interface PosRouter {
