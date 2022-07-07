@@ -6,6 +6,12 @@
 
 ## Run locally
 
+First install:
+
+```shell
+npm ci
+```
+
 Start up core, elements and a development solid server by running:
 
 ```shell
