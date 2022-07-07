@@ -32,7 +32,7 @@
   },
   "homepage": "https://github.com/pod-os/pod-os#readme",
   "devDependencies": {
-    "prettier": "^2.4.1"
+    "prettier": "^2.7.1"
   },
   "workspaces": [
     "core",
