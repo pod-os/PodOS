@@ -7,6 +7,7 @@
   ],
   "scripts": {
     "test": "jest",
+    "test:watch": "jest --watch",
     "lint": "eslint ./src",
     "bundle": "esbuild src/index.ts --outfile=lib/index.js --bundle --target=esnext --global-name=PodOS",
     "build": "rimraf lib && npm run bundle && npm run ts-types",
