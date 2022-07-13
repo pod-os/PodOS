@@ -1,4 +1,5 @@
 import { IndexedFormula, isLiteral, isNamedNode, Statement, sym } from "rdflib";
+import { accumulateSubjects } from "./accumulateSubjects";
 import { accumulateValues } from "./accumulateValues";
 
 export class Thing {
@@ -40,6 +41,18 @@ export class Thing {
     const values = statements
       .filter((it) => isNamedNode(it.object))
       .reduce(accumulateValues, {});
+
+    return Object.keys(values).map((predicate) => ({
+      predicate,
+      uris: values[predicate],
+    }));
+  }
+
+  reverseRelations() {
+    const statements = this.store.statementsMatching(undefined, undefined, sym(this.uri));
+
+    const values = statements
+      .reduce(accumulateSubjects, {});
 
     return Object.keys(values).map((predicate) => ({
       predicate,
