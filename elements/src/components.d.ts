@@ -27,6 +27,8 @@ export namespace Components {
         "lazy": boolean;
         "uri": string;
     }
+    interface PosReverseRelations {
+    }
     interface PosRichLink {
         "uri": string;
     }
@@ -56,6 +58,10 @@ export interface PosRelationsCustomEvent<T> extends CustomEvent<T> {
 export interface PosResourceCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosResourceElement;
+}
+export interface PosReverseRelationsCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosReverseRelationsElement;
 }
 export interface PosRichLinkCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -116,6 +122,12 @@ declare global {
         prototype: HTMLPosResourceElement;
         new (): HTMLPosResourceElement;
     };
+    interface HTMLPosReverseRelationsElement extends Components.PosReverseRelations, HTMLStencilElement {
+    }
+    var HTMLPosReverseRelationsElement: {
+        prototype: HTMLPosReverseRelationsElement;
+        new (): HTMLPosReverseRelationsElement;
+    };
     interface HTMLPosRichLinkElement extends Components.PosRichLink, HTMLStencilElement {
     }
     var HTMLPosRichLinkElement: {
@@ -138,6 +150,7 @@ declare global {
         "pos-login": HTMLPosLoginElement;
         "pos-relations": HTMLPosRelationsElement;
         "pos-resource": HTMLPosResourceElement;
+        "pos-reverse-relations": HTMLPosReverseRelationsElement;
         "pos-rich-link": HTMLPosRichLinkElement;
         "pos-router": HTMLPosRouterElement;
     }
@@ -169,6 +182,9 @@ declare namespace LocalJSX {
         "onPod-os:init"?: (event: PosResourceCustomEvent<any>) => void;
         "uri"?: string;
     }
+    interface PosReverseRelations {
+        "onPod-os:resource"?: (event: PosReverseRelationsCustomEvent<any>) => void;
+    }
     interface PosRichLink {
         "onPod-os:link"?: (event: PosRichLinkCustomEvent<any>) => void;
         "uri"?: string;
@@ -185,6 +201,7 @@ declare namespace LocalJSX {
         "pos-login": PosLogin;
         "pos-relations": PosRelations;
         "pos-resource": PosResource;
+        "pos-reverse-relations": PosReverseRelations;
         "pos-rich-link": PosRichLink;
         "pos-router": PosRouter;
     }
@@ -202,6 +219,7 @@ declare module "@stencil/core" {
             "pos-login": LocalJSX.PosLogin & JSXBase.HTMLAttributes<HTMLPosLoginElement>;
             "pos-relations": LocalJSX.PosRelations & JSXBase.HTMLAttributes<HTMLPosRelationsElement>;
             "pos-resource": LocalJSX.PosResource & JSXBase.HTMLAttributes<HTMLPosResourceElement>;
+            "pos-reverse-relations": LocalJSX.PosReverseRelations & JSXBase.HTMLAttributes<HTMLPosReverseRelationsElement>;
             "pos-rich-link": LocalJSX.PosRichLink & JSXBase.HTMLAttributes<HTMLPosRichLinkElement>;
             "pos-router": LocalJSX.PosRouter & JSXBase.HTMLAttributes<HTMLPosRouterElement>;
         }

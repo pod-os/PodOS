@@ -26,6 +26,7 @@ export class PosAppGeneric {
           </ion-col>
           <ion-col size="12" size-sm>
             <pos-relations />
+            <pos-reverse-relations />
           </ion-col>
         </ion-row>
       </ion-grid>
