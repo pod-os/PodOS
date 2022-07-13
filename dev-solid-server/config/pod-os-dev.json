@@ -1,0 +1,72 @@
+{
+  "@context": "https://linkedsoftwaredependencies.org/bundles/npm/@solid/community-server/^4.0.0/components/context.jsonld",
+  "import": [
+    "files-scs:config/app/main/default.json",
+    "files-scs:config/app/init/initialize-root.json",
+    "files-scs:config/app/setup/disabled.json",
+    "files-scs:config/app/variables/default.json",
+    "files-scs:config/http/handler/default.json",
+    "files-scs:config/http/middleware/websockets.json",
+    "files-scs:config/http/server-factory/websockets.json",
+    "files-scs:config/http/static/default.json",
+    "files-scs:config/identity/access/public.json",
+    "files-scs:config/identity/email/default.json",
+    "files-scs:config/identity/handler/default.json",
+    "files-scs:config/identity/ownership/token.json",
+    "files-scs:config/identity/pod/static.json",
+    "files-scs:config/identity/registration/enabled.json",
+    "files-scs:config/ldp/authentication/dpop-bearer.json",
+    "files-scs:config/ldp/authorization/webacl.json",
+    "files-scs:config/ldp/handler/default.json",
+    "files-scs:config/ldp/metadata-parser/default.json",
+    "files-scs:config/ldp/metadata-writer/default.json",
+    "files-scs:config/ldp/modes/default.json",
+    "files-scs:config/storage/backend/file.json",
+    "files-scs:config/storage/key-value/resource-store.json",
+    "files-scs:config/storage/middleware/default.json",
+    "files-scs:config/util/auxiliary/acl.json",
+    "files-scs:config/util/identifiers/suffix.json",
+    "files-scs:config/util/logging/winston.json",
+    "files-scs:config/util/representation-conversion/default.json",
+    "files-scs:config/util/resource-locker/memory.json",
+    "files-scs:config/util/variables/default.json"
+  ],
+  "@graph": [
+    {
+      "comment": [
+        "A filesystem-based server with Databrowser as UI.",
+        "Derived from config/file-no-setup.json"
+      ]
+    },
+    {
+      "comment": "Serve Databrowser as default representation",
+      "@id": "urn:solid-server:default:DefaultUiConverter",
+      "@type": "ConstantConverter",
+      "contentType": "text/html",
+      "filePath": "../elements/www/index.html",
+      "options_container": true,
+      "options_document": true,
+      "options_minQuality": 1,
+      "options_disabledMediaRanges": ["image/*", "application/pdf"]
+    },
+    {
+      "comment": "Serve Mashlib static files.",
+      "@id": "urn:solid-server:default:StaticAssetHandler",
+      "@type": "StaticAssetHandler",
+      "assets": [
+        {
+          "StaticAssetHandler:_assets_key": "/build/elements.esm.js",
+          "StaticAssetHandler:_assets_value": "../elements/www/build/elements.esm.js"
+        },
+        {
+          "StaticAssetHandler:_assets_key": "/build/elements.css",
+          "StaticAssetHandler:_assets_value": "../elements/www/build/elements.css"
+        },
+        {
+          "StaticAssetHandler:_assets_key": "/build/",
+          "StaticAssetHandler:_assets_value": "../elements/www/build/"
+        }
+      ]
+    }
+  ]
+}

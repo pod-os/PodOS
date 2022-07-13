@@ -4,7 +4,7 @@
   "description": "Community Solid Server for local development",
   "main": "index.js",
   "scripts": {
-    "start": "community-solid-server --config @css:config/file.json --rootFilePath ./data"
+    "start": "community-solid-server --config ./config/pod-os-dev.json --rootFilePath ./data"
   },
   "author": "",
   "license": "MIT",
