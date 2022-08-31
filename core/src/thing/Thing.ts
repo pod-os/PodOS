@@ -7,6 +7,7 @@ export class Thing {
 
   label() {
     const value = this.anyValue(
+      "http://www.w3.org/2006/vcard/ns#fn",
       "http://xmlns.com/foaf/0.1/name",
       "http://xmlns.com/foaf/0.1/nick",
       "https://schema.org/name",
@@ -15,7 +16,6 @@ export class Thing {
       "http://purl.org/dc/elements/1.1/title",
       "http://www.w3.org/2000/01/rdf-schema#label",
       "https://www.w3.org/ns/activitystreams#name",
-      "http://www.w3.org/2006/vcard/ns#fn",
       "http://schema.org/caption",
       "https://schema.org/caption"
     );
