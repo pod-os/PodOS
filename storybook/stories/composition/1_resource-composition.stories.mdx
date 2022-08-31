@@ -1,0 +1,37 @@
+import {html} from "lit-html";
+
+import {
+  Canvas,
+  Meta,
+  Story
+} from '@storybook/addon-docs/blocks';
+
+<Meta
+  title="Composition"
+  args={{uri: "https://solidproject.solidcommunity.net/profile/card#me"}}
+/>
+
+
+## pos-resource composition
+
+This is an example of how you can combine a `<pos-resource>` element with any html and other PodOS elements.
+
+<Canvas
+  withSource="open">
+  <Story
+    name="pos-resource composition"
+  >
+    {({uri}) => html`
+<pos-resource uri=${uri}>
+    The URI <a href="${uri}">${uri}</a> identifies <strong/><pos-label /></strong>, which is described as:
+    <blockquote>
+        <pos-description />
+    </blockquote>
+    <div>
+      <h2>Here is a table with some facts about <span><pos-label /></span>:</h2>
+      <pos-literals />
+    </div>
+</pos-resource>
+    `}
+  </Story>
+</Canvas>
