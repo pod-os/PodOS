@@ -1,5 +1,7 @@
 # PodOS - An operating system for your personal online datastore
 
+![CI](https://github.com/pod-os/PodOS/actions/workflows/ci-cd.yml/badge.svg)
+
 * [PodOS core](./core)
 * [PodOS elements](./elements)
 * [Documentation](./docs)
