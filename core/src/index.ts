@@ -29,7 +29,7 @@ export class PodOS {
     return this.session.logout();
   }
 
-  login(oidcIssuer: string = "http://localhost:3000") {
+  login(oidcIssuer = "http://localhost:3000") {
     return this.session.login(oidcIssuer);
   }
 }

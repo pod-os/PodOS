@@ -1,4 +1,4 @@
-import { IndexedFormula, isLiteral, isNamedNode, Statement, sym } from "rdflib";
+import { IndexedFormula, isLiteral, isNamedNode, sym } from "rdflib";
 import { accumulateSubjects } from "./accumulateSubjects";
 import { accumulateValues } from "./accumulateValues";
 
@@ -49,10 +49,13 @@ export class Thing {
   }
 
   reverseRelations() {
-    const statements = this.store.statementsMatching(undefined, undefined, sym(this.uri));
+    const statements = this.store.statementsMatching(
+      undefined,
+      undefined,
+      sym(this.uri)
+    );
 
-    const values = statements
-      .reduce(accumulateSubjects, {});
+    const values = statements.reduce(accumulateSubjects, {});
 
     return Object.keys(values).map((predicate) => ({
       predicate,
