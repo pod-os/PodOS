@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "start-storybook -p 6006",
-    "build": "build-storybook",
-    "build-storybook": "build-storybook"
+    "build": "build-storybook -o ../gh-pages/storybook"
   },
   "author": "",
   "license": "MIT",
