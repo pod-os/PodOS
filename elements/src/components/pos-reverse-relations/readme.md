@@ -1,4 +1,4 @@
-# pos-relations
+# pos-reverse-relations
 
 
 
@@ -29,11 +29,11 @@
 ### Graph
 ```mermaid
 graph TD;
-  pos-relations --> ion-item-group
-  pos-relations --> ion-item-divider
-  pos-relations --> ion-label
-  pos-relations --> pos-rich-link
-  pos-relations --> ion-list
+  pos-reverse-relations --> ion-item-group
+  pos-reverse-relations --> ion-item-divider
+  pos-reverse-relations --> ion-label
+  pos-reverse-relations --> pos-rich-link
+  pos-reverse-relations --> ion-list
   pos-rich-link --> pos-resource
   pos-rich-link --> ion-item
   pos-rich-link --> ion-label
@@ -42,8 +42,8 @@ graph TD;
   pos-resource --> ion-progress-bar
   ion-item --> ion-icon
   ion-item --> ion-ripple-effect
-  pos-app-generic --> pos-relations
-  style pos-relations fill:#f9f,stroke:#333,stroke-width:4px
+  pos-app-generic --> pos-reverse-relations
+  style pos-reverse-relations fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
 ----------------------------------------------

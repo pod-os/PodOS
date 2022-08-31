@@ -1,4 +1,4 @@
-# pos-demo-app
+# pos-app-generic
 
 
 
@@ -7,36 +7,28 @@
 
 ## Dependencies
 
+### Used by
+
+ - [pos-router](../../components/pos-router)
+
 ### Depends on
 
-- [pos-app](../pos-app)
-- ion-header
-- ion-toolbar
-- ion-title
-- [pos-login](../pos-login)
-- ion-content
-- [pos-router](../pos-router)
-- ion-footer
+- ion-grid
+- ion-row
+- ion-col
+- ion-card
+- ion-card-header
+- ion-card-title
+- [pos-label](../../components/pos-label)
+- ion-card-content
+- [pos-description](../../components/pos-description)
+- [pos-literals](../../components/pos-literals)
+- [pos-relations](../../components/pos-relations)
+- [pos-reverse-relations](../../components/pos-reverse-relations)
 
 ### Graph
 ```mermaid
 graph TD;
-  pos-demo-app --> pos-app
-  pos-demo-app --> ion-header
-  pos-demo-app --> ion-toolbar
-  pos-demo-app --> ion-title
-  pos-demo-app --> pos-login
-  pos-demo-app --> ion-content
-  pos-demo-app --> pos-router
-  pos-demo-app --> ion-footer
-  pos-app --> ion-app
-  pos-login --> pos-resource
-  pos-login --> pos-label
-  pos-login --> ion-button
-  pos-resource --> ion-progress-bar
-  ion-button --> ion-ripple-effect
-  pos-router --> pos-resource
-  pos-router --> pos-app-generic
   pos-app-generic --> ion-grid
   pos-app-generic --> ion-row
   pos-app-generic --> ion-col
@@ -67,12 +59,14 @@ graph TD;
   pos-rich-link --> ion-label
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
+  pos-resource --> ion-progress-bar
   pos-reverse-relations --> ion-item-group
   pos-reverse-relations --> ion-item-divider
   pos-reverse-relations --> ion-label
   pos-reverse-relations --> pos-rich-link
   pos-reverse-relations --> ion-list
-  style pos-demo-app fill:#f9f,stroke:#333,stroke-width:4px
+  pos-router --> pos-app-generic
+  style pos-app-generic fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
 ----------------------------------------------

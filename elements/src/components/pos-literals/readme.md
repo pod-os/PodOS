@@ -16,7 +16,7 @@
 
 ### Used by
 
- - [pos-demo-app](../pos-demo-app)
+ - [pos-app-generic](../../apps/pos-app-generic)
 
 ### Depends on
 
@@ -36,7 +36,7 @@ graph TD;
   pos-literals --> ion-list
   ion-item --> ion-icon
   ion-item --> ion-ripple-effect
-  pos-demo-app --> pos-literals
+  pos-app-generic --> pos-literals
   style pos-literals fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

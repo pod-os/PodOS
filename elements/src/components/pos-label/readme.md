@@ -16,14 +16,14 @@
 
 ### Used by
 
- - [pos-demo-app](../pos-demo-app)
+ - [pos-app-generic](../../apps/pos-app-generic)
  - [pos-login](../pos-login)
  - [pos-rich-link](../pos-rich-link)
 
 ### Graph
 ```mermaid
 graph TD;
-  pos-demo-app --> pos-label
+  pos-app-generic --> pos-label
   pos-login --> pos-label
   pos-rich-link --> pos-label
   style pos-label fill:#f9f,stroke:#333,stroke-width:4px

@@ -37,9 +37,9 @@ Type: `Promise<void>`
 
 ### Used by
 
- - [pos-demo-app](../pos-demo-app)
  - [pos-login](../pos-login)
  - [pos-rich-link](../pos-rich-link)
+ - [pos-router](../pos-router)
 
 ### Depends on
 
@@ -49,9 +49,9 @@ Type: `Promise<void>`
 ```mermaid
 graph TD;
   pos-resource --> ion-progress-bar
-  pos-demo-app --> pos-resource
   pos-login --> pos-resource
   pos-rich-link --> pos-resource
+  pos-router --> pos-resource
   style pos-resource fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
