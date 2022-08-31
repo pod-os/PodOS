@@ -23,6 +23,44 @@ jobs:
       - run: npm run lint
       - run: npm test
       - run: npm run build
+      - name: Save build
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: |
+            .
+            !node_modules
+          retention-days: 1
+
+  npm-publish-build:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: build
+      - uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+      - uses: rlespinasse/github-slug-action@v4
+      - name: Append commit hash to @pod-os/core package version
+        run: 'sed -i -E "s/(\"version\": *\"[^\"]+)/\1-${GITHUB_SHA_SHORT}/" ./core/package.json'
+      - name: Append commit hash to @pod-os/elements package version
+        run: 'sed -i -E "s/(\"version\": *\"[^\"]+)/\1-${GITHUB_SHA_SHORT}/" ./elements/package.json'
+
+      - uses: JS-DevTools/npm-publish@v1
+        name: Publish @pod-os/core
+        with:
+          package: ./core/package.json
+          token: ${{ secrets.NPM_TOKEN }}
+          tag: ${{ env.GITHUB_REF_SLUG }}
+
+      - uses: JS-DevTools/npm-publish@v1
+        name: Publish @pod-os/elements
+        with:
+          package: ./elements/package.json
+          token: ${{ secrets.NPM_TOKEN }}
+          tag: ${{ env.GITHUB_REF_SLUG }}
 
   build-pages:
     runs-on: ubuntu-latest
