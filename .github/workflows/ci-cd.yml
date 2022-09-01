@@ -47,8 +47,8 @@ jobs:
         with:
           node-version: lts/*
       - uses: rlespinasse/github-slug-action@v4
-      - name: Append commit hash to @pod-os/core package version
-        run: 'sed -i -E "s/(\"version\": *\"[^\"]+)/\1-${GITHUB_SHA_SHORT}/" package.json'
+      - name: prerelease version
+        run: npm version prerelease --preid ${GITHUB_SHA_SHORT} --no-git-tag-version
       - uses: JS-DevTools/npm-publish@v1
         name: Publish @pod-os/core
         with:
@@ -66,8 +66,8 @@ jobs:
         with:
           node-version: lts/*
       - uses: rlespinasse/github-slug-action@v4
-      - name: Append commit hash to @pod-os/elements package version
-        run: 'sed -i -E "s/(\"version\": *\"[^\"]+)/\1-${GITHUB_SHA_SHORT}/" package.json'
+      - name: prerelease version
+        run: npm version prerelease --preid ${GITHUB_SHA_SHORT} --no-git-tag-version
       - uses: JS-DevTools/npm-publish@v1
         name: Publish @pod-os/elements
         with:
