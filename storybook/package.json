@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "start-storybook -p 6006",
+    "start": "cross-env STORYBOOK_POD_OS_ELEMENTS_DIST_URL=http://localhost:3333/build STORYBOOK_POD_OS_CORE_DIST_URL=http://localhost:4444 start-storybook -p 6006",
     "build": "build-storybook -o ../gh-pages/storybook"
   },
   "author": "",
@@ -19,5 +19,8 @@
     "@storybook/web-components": "^6.5.9",
     "babel-loader": "^8.2.5",
     "lit-html": "^2.2.6"
+  },
+  "dependencies": {
+    "cross-env": "^7.0.3"
   }
 }
