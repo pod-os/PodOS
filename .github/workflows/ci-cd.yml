@@ -40,7 +40,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     outputs:
-      prereleaseVersion: ${{ steps.prerelease.version }}
+      prereleaseVersion: ${{ steps.prerelease.outputs.version }}
     steps:
       - uses: actions/download-artifact@v3
         with:
@@ -53,6 +53,7 @@ jobs:
         run: |
           echo "::set-output name=version::$(npm version prerelease --preid ${GITHUB_SHA_SHORT} --no-git-tag-version)"
         id: prerelease
+      - run: echo prerelease version is ${{ steps.prerelease.outputs.version }}
       - uses: JS-DevTools/npm-publish@v1
         name: Publish @pod-os/core
         with:
@@ -63,7 +64,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     outputs:
-      prereleaseVersion: ${{ steps.prerelease.version }}
+      prereleaseVersion: ${{ steps.prerelease.outputs.version }}
     steps:
       - uses: actions/download-artifact@v3
         with:
@@ -76,6 +77,7 @@ jobs:
         run: |
           echo "::set-output name=version::$(npm version prerelease --preid ${GITHUB_SHA_SHORT} --no-git-tag-version)"
         id: prerelease
+      - run: echo prerelease version is ${{ steps.prerelease.outputs.version }}
       - uses: JS-DevTools/npm-publish@v1
         name: Publish @pod-os/elements
         with:
@@ -88,6 +90,8 @@ jobs:
       - npm-publish-core-build
     runs-on: ubuntu-latest
     steps:
+      - run: echo elements version is ${{ needs.npm-publish-elements-build.outputs.prereleaseVersion }}
+      - run: echo core version is ${{ needs.npm-publish-core-build.outputs.prereleaseVersion }}
       - uses: actions/checkout@v3
       - name: Setup Pages
         uses: actions/configure-pages@v2
