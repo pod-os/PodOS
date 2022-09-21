@@ -14,10 +14,9 @@ First install:
 npm ci
 ```
 
-Start up core, elements and a development solid server by running:
+Start up elements and a development solid server by running:
 
 ```shell
-npm run start:core
 npm run start:elements
 npm run start:server
 ```

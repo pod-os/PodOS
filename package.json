@@ -10,7 +10,6 @@
     "test": "npm run test --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
-    "start:core": "npm start --workspace core",
     "start:elements": "npm start --workspace elements",
     "start:server": "npm start --workspace dev-solid-server"
   },

@@ -8,7 +8,7 @@ Visit [the latest version of the storybook](https://pod-os.github.io/PodOS/story
 
 ## Start locally
 
-Make sure you start `core` and `elements` first, as described in the [root readme](../Readme.md#run-locally).
+Make sure you start `elements` first, as described in the [root readme](../Readme.md#run-locally).
 
 Then run from within the storybook directory:
 ```

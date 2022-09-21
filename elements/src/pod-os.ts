@@ -1,4 +1,5 @@
+import { PodOS } from '@pod-os/core';
+
 export const createPodOS = () => {
-  // @ts-ignore
-  return window.PodOS ? new window.PodOS.PodOS() : new Error('PodOS missing');
+  return new PodOS();
 };

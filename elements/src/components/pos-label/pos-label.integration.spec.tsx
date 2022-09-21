@@ -1,14 +1,19 @@
-jest.mock('../../pod-os');
-
 import { newSpecPage } from '@stencil/core/testing';
-import { createPodOS } from '../../pod-os';
+import { mockPodOS } from '../../test/mockPodOS';
 import { PosApp } from '../pos-app/pos-app';
 import { PosResource } from '../pos-resource/pos-resource';
 import { PosLabel } from './pos-label';
+import { when } from 'jest-when';
 
 describe('pos-label', () => {
   it('renders label for successfully loaded resource', async () => {
-    mockPodOS('https://resource.test', Promise.resolve(), 'Test Resource');
+    const os = mockPodOS();
+    when(os.fetch).calledWith('https://resource.test').mockReturnValue(Promise.resolve());
+    when(os.store.get)
+      .calledWith('https://resource.test')
+      .mockReturnValue({
+        label: () => 'Test Resource',
+      });
     const page = await newSpecPage({
       components: [PosApp, PosResource, PosLabel],
       html: `<pos-app>
@@ -28,8 +33,14 @@ describe('pos-label', () => {
   });
 
   it('renders label after successfully loading resource', async () => {
+    const os = mockPodOS();
     const loadingPromise = new Promise(resolve => setTimeout(resolve, 1));
-    mockPodOS('https://resource.test', loadingPromise, 'Test Resource');
+    when(os.fetch).calledWith('https://resource.test').mockReturnValue(loadingPromise);
+    when(os.store.get)
+      .calledWith('https://resource.test')
+      .mockReturnValue({
+        label: () => 'Test Resource',
+      });
     const page = await newSpecPage({
       components: [PosApp, PosResource, PosLabel],
       html: `<pos-app>
@@ -51,8 +62,9 @@ describe('pos-label', () => {
   });
 
   it('renders nothing while loading resource', async () => {
+    const os = mockPodOS();
     const loadingPromise = new Promise(resolve => setTimeout(resolve, 1));
-    mockPodOS('https://resource.test', loadingPromise);
+    when(os.fetch).calledWith('https://resource.test').mockReturnValue(loadingPromise);
     const page = await newSpecPage({
       components: [PosApp, PosResource, PosLabel],
       html: `<pos-app>
@@ -71,7 +83,9 @@ describe('pos-label', () => {
   });
 
   it('renders nothing when resource loading failed', async () => {
-    mockPodOS('https://resource.test', Promise.reject(new Error('not found')));
+    const os = mockPodOS();
+    const rejectedPromise = Promise.reject(new Error('not found'));
+    when(os.fetch).calledWith('https://resource.test').mockReturnValue(rejectedPromise);
     const page = await newSpecPage({
       components: [PosApp, PosResource, PosLabel],
       html: `<pos-app>
@@ -87,25 +101,4 @@ describe('pos-label', () => {
       </pos-label>
     `);
   });
-
-  function mockPodOS(expectedUri, fetchResult, label = 'default label') {
-    (createPodOS as jest.Mock).mockReturnValue({
-      fetch: (uri: string) => {
-        if (uri === expectedUri) {
-          return fetchResult;
-        } else {
-          throw new Error(`uri mismatch. Expected: ${expectedUri}, but was: ${uri}`);
-        }
-      },
-      store: {
-        get: (uri: string) => {
-          return {
-            label: () => (uri === expectedUri ? label : 'unexpected label'),
-          };
-        },
-      },
-      trackSession: () => null,
-      handleIncomingRedirect: () => Promise.resolve(),
-    });
-  }
 });

@@ -1,4 +1,6 @@
-jest.mock('../pod-os');
+jest.mock('../pod-os', () => ({
+  createPodOS: jest.fn(),
+}));
 
 import { createPodOS } from '../pod-os';
 import { when } from 'jest-when';
