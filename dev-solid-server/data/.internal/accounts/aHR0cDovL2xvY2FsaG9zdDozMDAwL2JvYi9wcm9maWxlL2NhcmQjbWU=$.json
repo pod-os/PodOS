@@ -1,1 +1,1 @@
-{"useIdp":true,"podBaseUrl":"http://localhost:3000/bob/"}
+{"useIdp":true,"podBaseUrl":"http://localhost:3000/bob/","clientCredentials":[]}
