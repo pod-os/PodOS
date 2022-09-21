@@ -21,7 +21,7 @@ export class PodOS {
     return this.store.fetch(uri);
   }
 
-  trackSession(callback: (session: ISessionInfo) => unknown) {
+  trackSession(callback: (session: ISessionInfo) => unknown): void {
     return this.session.trackSession(callback);
   }
 

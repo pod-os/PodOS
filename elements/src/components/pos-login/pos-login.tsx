@@ -1,3 +1,4 @@
+import { PodOS } from '@pod-os/core/src';
 import { Component, EventEmitter, h, Event, Host, State } from '@stencil/core';
 
 import session from '../../store/session';
@@ -8,13 +9,13 @@ import session from '../../store/session';
 export class PosLogin {
   @Event({ eventName: 'pod-os:init' }) initializeOsEmitter: EventEmitter;
 
-  @State() os: any;
+  @State() os: PodOS;
 
   componentWillLoad() {
     this.initializeOsEmitter.emit(this.setOs);
   }
 
-  setOs = async (os: any) => {
+  setOs = async (os: PodOS) => {
     this.os = os;
   };
 

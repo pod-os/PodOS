@@ -1,3 +1,4 @@
+import { PodOS } from '@pod-os/core';
 import { Component, h, Listen, State } from '@stencil/core';
 import session from '../../store/session';
 import { createPodOS } from '../../pod-os';
@@ -10,7 +11,7 @@ interface InitializeOsEvent extends CustomEvent {
   tag: 'pos-app',
 })
 export class PosApp {
-  @State() os: any;
+  @State() os: PodOS;
 
   componentWillLoad() {
     this.os = createPodOS();

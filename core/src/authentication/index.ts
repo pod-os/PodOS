@@ -39,7 +39,7 @@ export class BrowserSession {
     return this.session.logout();
   }
 
-  async trackSession(callback: (session: ISessionInfo) => unknown) {
+  trackSession(callback: (session: ISessionInfo) => unknown) {
     this.session.onLogin(() => callback(this.session.info));
     this.session.onLogout(() => callback(this.session.info));
     this.session.onSessionRestore(() => callback(this.session.info));
