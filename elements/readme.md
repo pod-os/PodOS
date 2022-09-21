@@ -4,6 +4,41 @@
 
 HTML custom elements (aka web components) for PodOS.
 
+**Using data from Solid Pods as easy as writing HTML!**
+
+## Quick Start
+
+1. Create a plain old html file
+2. Add latest PodOS script tag and stylesheet to the `head`
+3. Add a `<pos-app></pos-app>` to the `body` and use any PodOS element within it.
+4. Host the page on any webserver (like your Solid Pod 😉)
+
+Try this 🤩:
+
+```html
+<!doctype html>
+<html>
+<head>
+  <title>PodOS Quick Start</title>
+  <script type="module" src="https://unpkg.com/@pod-os/elements/dist/elements/elements.esm.js"></script>
+  <link href="https://unpkg.com/@pod-os/elements/dist/elements/elements.css" rel="stylesheet">
+</head>
+<body>
+<pos-app>
+  <ion-content>  <!-- PodOS elements are build on Ionic -->
+    <pos-resource uri="https://solidproject.solidcommunity.net/profile/card#me">
+      <h1>
+        <pos-label/>
+      </h1>
+      <blockquote>
+        <pos-description/>
+      </blockquote>
+    </pos-resource>
+  </ion-content>
+</pos-app>
+</body>
+</html>
+```
 
 ## Development
 
