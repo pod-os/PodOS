@@ -128,3 +128,35 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
+
+  npm-release-latest-core:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: core-build
+      - uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+      - uses: JS-DevTools/npm-publish@v1
+        name: Release @pod-os/core
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          tag: latest
+
+  npm-release-latest-elements:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: elements-build
+      - uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+      - uses: JS-DevTools/npm-publish@v1
+        name: Release @pod-os/elements
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          tag: latest
