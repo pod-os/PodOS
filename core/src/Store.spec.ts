@@ -1,7 +1,7 @@
-import { st, sym } from "rdflib";
-import { Store } from "./Store";
-import { BrowserSession } from "./authentication";
 import { when } from "jest-when";
+import { sym } from "rdflib";
+import { PodOsSession } from "./authentication";
+import { Store } from "./Store";
 
 jest.mock("./authentication");
 
@@ -9,7 +9,7 @@ describe("Store", () => {
   it("fetches and parses turtle data", async () => {
     const mockSession = {
       authenticatedFetch: jest.fn(),
-    } as unknown as BrowserSession;
+    } as unknown as PodOsSession;
     when(mockSession.authenticatedFetch)
       .calledWith("https://pod.test/resource", expect.anything())
       .mockResolvedValue({
@@ -69,7 +69,7 @@ describe("Store", () => {
   it("fetches image type", async () => {
     const mockSession = {
       authenticatedFetch: jest.fn(),
-    } as unknown as BrowserSession;
+    } as unknown as PodOsSession;
     when(mockSession.authenticatedFetch)
       .calledWith("https://pod.test/resource.png", expect.anything())
       .mockResolvedValue({

@@ -1,11 +1,17 @@
 import { ISessionInfo, Session } from "@inrupt/solid-client-authn-browser";
 
-export class BrowserSession {
+export type AuthenticatedFetch = (
+  url: RequestInfo,
+  init?: RequestInit | undefined
+) => Promise<Response>;
+
+export interface PodOsSession {
+  authenticatedFetch: AuthenticatedFetch;
+}
+
+export class BrowserSession implements PodOsSession {
   private readonly session: Session;
-  private readonly _authenticatedFetch: (
-    url: RequestInfo,
-    init?: RequestInit | undefined
-  ) => Promise<Response>;
+  private readonly _authenticatedFetch: AuthenticatedFetch;
 
   get authenticatedFetch(): (
     url: RequestInfo,
