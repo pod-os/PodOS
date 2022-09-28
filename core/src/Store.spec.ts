@@ -1,6 +1,7 @@
 import { sym } from "rdflib";
 import { Store } from "./Store";
 import { BrowserSession } from "./authentication";
+import { when } from "jest-when";
 
 jest.mock("./authentication");
 
@@ -9,24 +10,22 @@ describe("Store", () => {
     const mockSession = {
       authenticatedFetch: jest.fn(),
     } as unknown as BrowserSession;
-    (mockSession.authenticatedFetch as jest.Mock).mockResolvedValue({
-      ok: true,
-      status: 200,
-      statusText: "OK",
-      headers: new Headers({
-        "Content-Type": "text/turtle",
-      }),
-      text: () =>
-        Promise.resolve(
-          '<https://pod.test/resource#it> <https://pod.test/vocab/predicate> "literal value" .'
-        ),
-    });
+    when(mockSession.authenticatedFetch)
+      .calledWith("https://pod.test/resource", expect.anything())
+      .mockResolvedValue({
+        ok: true,
+        status: 200,
+        statusText: "OK",
+        headers: new Headers({
+          "Content-Type": "text/turtle",
+        }),
+        text: () =>
+          Promise.resolve(
+            '<https://pod.test/resource#it> <https://pod.test/vocab/predicate> "literal value" .'
+          ),
+      } as Response);
     const store = new Store(mockSession);
     await store.fetch("https://pod.test/resource");
-    expect(mockSession.authenticatedFetch).toHaveBeenCalledWith(
-      "https://pod.test/resource",
-      expect.anything()
-    );
     expect(
       store.graph.statementsMatching(
         null,
