@@ -1,4 +1,4 @@
-import { sym } from "rdflib";
+import { st, sym } from "rdflib";
 import { Store } from "./Store";
 import { BrowserSession } from "./authentication";
 import { when } from "jest-when";
@@ -64,5 +64,37 @@ describe("Store", () => {
         },
       },
     ]);
+  });
+
+  it("fetches image type", async () => {
+    const mockSession = {
+      authenticatedFetch: jest.fn(),
+    } as unknown as BrowserSession;
+    when(mockSession.authenticatedFetch)
+      .calledWith("https://pod.test/resource.png", expect.anything())
+      .mockResolvedValue({
+        ok: true,
+        status: 200,
+        statusText: "OK",
+        headers: new Headers({
+          "Content-Type": "image/png",
+        }),
+      } as unknown as Response);
+    const store = new Store(mockSession);
+    await store.fetch("https://pod.test/resource.png");
+    expect(
+      store.graph.holds(
+        sym("https://pod.test/resource.png"),
+        sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        sym("http://purl.org/dc/terms/Image")
+      )
+    ).toBe(true);
+    expect(
+      store.graph.holds(
+        sym("https://pod.test/resource.png"),
+        sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        sym("http://www.w3.org/ns/iana/media-types/image/png#Resource")
+      )
+    ).toBe(true);
   });
 });
