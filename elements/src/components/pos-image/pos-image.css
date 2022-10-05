@@ -1,0 +1,11 @@
+:host {
+  --width: 300px;
+  --height: 300px;
+  --border-radius: 0;
+}
+
+img, ion-skeleton-text {
+  border-radius: var(--border-radius);
+  width: var(--width);
+  height: var(--height);
+}

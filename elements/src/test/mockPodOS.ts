@@ -14,6 +14,7 @@ export function mockPodOS() {
   let trackSessionCallback = (_: any) => null;
   const os = {
     fetch: jest.fn(),
+    fetchBlob: jest.fn(),
     store: {
       get: jest.fn(),
     },
