@@ -35,4 +35,31 @@ describe("FileFetcher", () => {
     // then the blob is returned
     expect(result).toEqual(pngBlob);
   });
+
+  it("throws an error when fetching failed", async () => {
+    // given a session
+    const mockSession = {
+      authenticatedFetch: jest.fn(),
+    } as unknown as PodOsSession;
+
+    // and an authenticated fetch for an image url returns a http error code
+    when(mockSession.authenticatedFetch)
+      .calledWith("https://pod.test/image.png")
+      .mockResolvedValue({
+        ok: false,
+        status: 404,
+        statusText: "Not Found",
+        headers: new Headers({
+          "Content-Type": "text/plain",
+        }),
+      } as Response);
+
+    // when fetching a blob for that url with the file fetcher
+    const result = new FileFetcher(mockSession).fetchBlob(
+      "https://pod.test/image.png"
+    );
+
+    // then an error is thrown
+    await expect(result).rejects.toThrow(new Error("404 - Not Found"));
+  });
 });
