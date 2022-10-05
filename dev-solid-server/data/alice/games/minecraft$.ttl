@@ -2,6 +2,7 @@
 @prefix schema: <http://schema.org/> .
 
 :it
+    a schema:VideoGame  ;
     schema:name "Minecraft" ;
     schema:playMode schema:SinglePlayer, schema:MultiPlayer ;
     schema:gamePlatform "Online_gaming_services" ;
