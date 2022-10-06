@@ -8,10 +8,10 @@ export class BrokenFile implements SolidFile {
   ) {}
 
   toString() {
-    return `${this.url} - ${this.status.toString()}`;
+    return `${this.status.toString()} - ${this.url}`;
   }
 
-  blob(): Blob {
-    throw new Error(`No blob available for ${this.toString()}`);
+  blob(): Blob | null {
+    return null;
   }
 }

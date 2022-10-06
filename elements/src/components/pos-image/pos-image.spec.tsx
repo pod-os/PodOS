@@ -95,11 +95,10 @@ describe('pos-image', () => {
   `);
   });
 
-  it('renders broken file', async () => {
+  it('renders error for unaccessible file', async () => {
     const brokenImage = {
-      blob: () => {
-        throw new Error('Broken Image');
-      },
+      blob: () => null,
+      toString: () => '403 - Forbidden - https://pod.test/image.png',
     } as unknown as BrokenFile;
     const page = await newSpecPage({
       components: [PosImage],
@@ -113,7 +112,7 @@ describe('pos-image', () => {
       <pos-image src="https://pod.test/image.png">
         <mock:shadow-root>
           <div class="error">
-            Broken Image
+            403 - Forbidden - https://pod.test/image.png
           </div>
         </mock:shadow-root>
       </pos-image>

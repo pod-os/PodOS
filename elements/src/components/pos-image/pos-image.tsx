@@ -38,8 +38,12 @@ export class PosImage {
     try {
       this.loading = true;
       const file = await this.os.fetchFile(this.src);
-      this.dataUri = URL.createObjectURL(file.blob());
-      this.error = null;
+      if (file.blob()) {
+        this.dataUri = URL.createObjectURL(file.blob());
+        this.error = null;
+      } else {
+        this.error = new Error(file.toString());
+      }
     } catch (err) {
       this.error = err;
     } finally {

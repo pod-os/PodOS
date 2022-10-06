@@ -1,7 +1,7 @@
 export class HttpStatus {
-  constructor(private code: number, private text: string) {}
+  constructor(private code: number, private text?: string) {}
 
   toString() {
-    return `${this.code} - ${this.text}`;
+    return this.text ? `${this.code} - ${this.text}` : this.code.toString();
   }
 }

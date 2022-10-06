@@ -17,4 +17,7 @@ div.error {
   color: red;
   align-items: center;
   justify-content: center;
+  word-break: break-all;
+  padding: 1rem;
+  box-sizing: border-box;
 }
