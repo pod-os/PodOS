@@ -66,7 +66,7 @@ describe("FileFetcher", () => {
     // then the returned file is broken
     expect(file).toBeInstanceOf(BrokenFile);
     expect(file.toString()).toBe(
-      "https://pod.test/image.png - 404 - Not Found"
+      "404 - Not Found - https://pod.test/image.png"
     );
     // and the url is present
     expect(file.url).toEqual("https://pod.test/image.png");
