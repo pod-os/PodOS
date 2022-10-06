@@ -1,3 +1,4 @@
+import { BinaryFile } from '@pod-os/core';
 import { newSpecPage } from '@stencil/core/testing';
 import { Blob } from 'buffer';
 import { when } from 'jest-when';
@@ -6,14 +7,19 @@ import { PosApp } from '../pos-app/pos-app';
 import { PosImage } from './pos-image';
 
 describe('pos-image', () => {
-  it('renders img after successfully loading image data', async () => {
-    const os = mockPodOS();
-    const pngBlob = new Blob(['1'], {
+  let pngBlob;
+  beforeEach(() => {
+    pngBlob = new Blob(['1'], {
       type: 'image/png',
     });
+  });
+
+  it('renders img after successfully loading image data', async () => {
+    const os = mockPodOS();
+    const file = mockBinaryFile(pngBlob);
     jest.spyOn(URL, 'createObjectURL').mockReturnValue('blob:fake-png-data');
-    const loadingPromise = new Promise(resolve => setTimeout(() => resolve(pngBlob), 1));
-    when(os.fetchBlob).calledWith('https://pod.test/image.png').mockReturnValue(loadingPromise);
+    const loadingPromise = new Promise(resolve => setTimeout(() => resolve(file), 1));
+    when(os.fetchFile).calledWith('https://pod.test/image.png').mockReturnValue(loadingPromise);
     const page = await newSpecPage({
       components: [PosApp, PosImage],
       html: `<pos-app>
@@ -38,12 +44,10 @@ describe('pos-image', () => {
 
   it('renders placeholder while loading image data', async () => {
     const os = mockPodOS();
-    const pngBlob = new Blob(['1'], {
-      type: 'image/png',
-    });
+    const file = mockBinaryFile(pngBlob);
     jest.spyOn(URL, 'createObjectURL').mockReturnValue('blob:fake-png-data');
-    const loadingPromise = new Promise(resolve => setTimeout(() => resolve(pngBlob), 1));
-    when(os.fetchBlob).calledWith('https://pod.test/image.png').mockReturnValue(loadingPromise);
+    const loadingPromise = new Promise(resolve => setTimeout(() => resolve(file), 1));
+    when(os.fetchFile).calledWith('https://pod.test/image.png').mockReturnValue(loadingPromise);
     const page = await newSpecPage({
       components: [PosApp, PosImage],
       html: `<pos-app>
@@ -66,7 +70,7 @@ describe('pos-image', () => {
 
   it('renders broken image when fetching image data failed', async () => {
     const os = mockPodOS();
-    when(os.fetchBlob).calledWith('https://pod.test/image.png').mockRejectedValue(new Error('network error'));
+    when(os.fetchFile).calledWith('https://pod.test/image.png').mockRejectedValue(new Error('network error'));
     const page = await newSpecPage({
       components: [PosApp, PosImage],
       html: `<pos-app>
@@ -88,3 +92,9 @@ describe('pos-image', () => {
   `);
   });
 });
+
+function mockBinaryFile(pngBlob) {
+  return {
+    blob: () => pngBlob,
+  } as BinaryFile;
+}

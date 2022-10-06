@@ -1,9 +1,11 @@
 import { ISessionInfo } from "@inrupt/solid-client-authn-browser";
 import { BrowserSession } from "./authentication";
+import { SolidFile } from "./files";
 import { FileFetcher } from "./files/FileFetcher";
 import { Store } from "./Store";
 
 export * from "./authentication";
+export * from "./files";
 
 export class PodOS {
   private readonly session: BrowserSession;
@@ -24,8 +26,8 @@ export class PodOS {
     return this.store.fetch(uri);
   }
 
-  fetchBlob(url: string): Promise<Blob> {
-    return this.fileFetcher.fetchBlob(url);
+  fetchFile(url: string): Promise<SolidFile> {
+    return this.fileFetcher.fetchFile(url);
   }
 
   trackSession(callback: (session: ISessionInfo) => unknown): void {

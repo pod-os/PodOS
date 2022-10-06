@@ -37,8 +37,8 @@ export class PosImage {
   async fetchBlob() {
     try {
       this.loading = true;
-      const blob = await this.os.fetchBlob(this.src);
-      this.dataUri = URL.createObjectURL(blob);
+      const file = await this.os.fetchFile(this.src);
+      this.dataUri = URL.createObjectURL(file.blob());
       this.error = null;
     } catch (err) {
       this.error = err;

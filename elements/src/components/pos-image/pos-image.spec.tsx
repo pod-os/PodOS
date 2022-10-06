@@ -1,5 +1,6 @@
 jest.mock('../../store/session');
 
+import { BinaryFile, BrokenFile } from '@pod-os/core';
 import { newSpecPage } from '@stencil/core/testing';
 import { Blob } from 'buffer';
 import { mockPodOS } from '../../test/mockPodOS';
@@ -9,6 +10,13 @@ import { when } from 'jest-when';
 import session from '../../store/session';
 
 describe('pos-image', () => {
+  let pngBlob;
+  beforeEach(() => {
+    pngBlob = new Blob(['1'], {
+      type: 'image/png',
+    });
+  });
+
   beforeEach(() => {
     jest.spyOn(URL, 'createObjectURL').mockReturnValue('blob:fake-png-data');
   });
@@ -33,7 +41,7 @@ describe('pos-image', () => {
       html: `<pos-image src="https://pod.test/image.png" />`,
     });
     const os = mockPodOS();
-    when(os.fetchBlob)
+    when(os.fetchFile)
       .calledWith('https://pod.test/image.png')
       .mockReturnValue(new Promise(() => null));
     await page.rootInstance.setOs(os);
@@ -48,15 +56,13 @@ describe('pos-image', () => {
   });
 
   it('renders img after loading', async () => {
-    const pngBlob = new Blob(['1'], {
-      type: 'image/png',
-    });
+    const file = mockBinaryFile(pngBlob);
     const page = await newSpecPage({
       components: [PosImage],
       html: `<pos-image src="https://pod.test/image.png" />`,
     });
     const os = mockPodOS();
-    when(os.fetchBlob).calledWith('https://pod.test/image.png').mockResolvedValue(pngBlob);
+    when(os.fetchFile).calledWith('https://pod.test/image.png').mockResolvedValue(file);
     await page.rootInstance.setOs(os);
     await page.waitForChanges();
     expect(URL.createObjectURL).toHaveBeenCalledWith(pngBlob);
@@ -75,7 +81,7 @@ describe('pos-image', () => {
       html: `<pos-image src="https://pod.test/image.png" />`,
     });
     const os = mockPodOS();
-    when(os.fetchBlob).calledWith('https://pod.test/image.png').mockRejectedValue(new Error('network error'));
+    when(os.fetchFile).calledWith('https://pod.test/image.png').mockRejectedValue(new Error('network error'));
     await page.rootInstance.setOs(os);
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
@@ -89,17 +95,40 @@ describe('pos-image', () => {
   `);
   });
 
-  it('updates and loads resource when src changes', async () => {
-    const pngBlob = new Blob(['1'], {
-      type: 'image/png',
-    });
+  it('renders broken file', async () => {
+    const brokenImage = {
+      blob: () => {
+        throw new Error('Broken Image');
+      },
+    } as unknown as BrokenFile;
     const page = await newSpecPage({
       components: [PosImage],
       html: `<pos-image src="https://pod.test/image.png" />`,
     });
     const os = mockPodOS();
-    when(os.fetchBlob).calledWith('https://pod.test/image.png').mockResolvedValue(pngBlob);
-    when(os.fetchBlob)
+    when(os.fetchFile).calledWith('https://pod.test/image.png').mockResolvedValue(brokenImage);
+    await page.rootInstance.setOs(os);
+    await page.waitForChanges();
+    expect(page.root).toEqualHtml(`
+      <pos-image src="https://pod.test/image.png">
+        <mock:shadow-root>
+          <div class="error">
+            Broken Image
+          </div>
+        </mock:shadow-root>
+      </pos-image>
+  `);
+  });
+
+  it('updates and loads resource when src changes', async () => {
+    const file = mockBinaryFile(pngBlob);
+    const page = await newSpecPage({
+      components: [PosImage],
+      html: `<pos-image src="https://pod.test/image.png" />`,
+    });
+    const os = mockPodOS();
+    when(os.fetchFile).calledWith('https://pod.test/image.png').mockResolvedValue(file);
+    when(os.fetchFile)
       .calledWith('https://pod.test/other.png')
       .mockReturnValue(new Promise(() => null));
     await page.rootInstance.setOs(os);
@@ -115,9 +144,7 @@ describe('pos-image', () => {
   });
 
   it('re-fetches resource when session state changes', async () => {
-    const pngBlob = new Blob(['1'], {
-      type: 'image/png',
-    });
+    const file = mockBinaryFile(pngBlob);
     let sessionChanged;
     // @ts-ignore
     session.onChange = (prop, callback) => {
@@ -130,8 +157,8 @@ describe('pos-image', () => {
       html: `<pos-image src="https://pod.test/image.png" />`,
     });
     const os = mockPodOS();
-    when(os.fetchBlob).calledWith('https://pod.test/image.png').mockResolvedValueOnce(pngBlob);
-    when(os.fetchBlob)
+    when(os.fetchFile).calledWith('https://pod.test/image.png').mockResolvedValueOnce(file);
+    when(os.fetchFile)
       .calledWith('https://pod.test/image.png')
       .mockReturnValueOnce(new Promise(() => null));
     await page.rootInstance.setOs(os);
@@ -148,9 +175,10 @@ describe('pos-image', () => {
   });
 
   it('removes error message after successful loading', async () => {
-    const pngBlob = new Blob(['1'], {
-      type: 'image/png',
-    });
+    const file = mockBinaryFile(pngBlob);
+    const unauthorizedFile = {
+      toString: () => 'Unauthorized',
+    } as BrokenFile;
     let sessionChanged;
     // @ts-ignore
     session.onChange = (prop, callback) => {
@@ -163,8 +191,8 @@ describe('pos-image', () => {
       html: `<pos-image src="https://pod.test/image.png" />`,
     });
     const os = mockPodOS();
-    when(os.fetchBlob).calledWith('https://pod.test/image.png').mockRejectedValueOnce(new Error('unauthorized'));
-    when(os.fetchBlob).calledWith('https://pod.test/image.png').mockResolvedValueOnce(pngBlob);
+    when(os.fetchFile).calledWith('https://pod.test/image.png').mockResolvedValueOnce(unauthorizedFile);
+    when(os.fetchFile).calledWith('https://pod.test/image.png').mockResolvedValueOnce(file);
     await page.rootInstance.setOs(os);
     expect(sessionChanged).toBeDefined();
     sessionChanged();
@@ -178,3 +206,9 @@ describe('pos-image', () => {
   `);
   });
 });
+
+function mockBinaryFile(pngBlob) {
+  return {
+    blob: () => pngBlob,
+  } as BinaryFile;
+}

@@ -1,5 +1,7 @@
 import { when } from "jest-when";
 import { PodOsSession } from "../authentication";
+import { BinaryFile } from "./BinaryFile";
+import { BrokenFile } from "./BrokenFile";
 import { FileFetcher } from "./FileFetcher";
 
 describe("FileFetcher", () => {
@@ -27,16 +29,18 @@ describe("FileFetcher", () => {
         blob: () => Promise.resolve(pngBlob),
       } as Response);
 
-    // when fetching a blob for that url with the file fetcher
-    const result = await new FileFetcher(mockSession).fetchBlob(
+    // when fetching a file for that url with the file fetcher
+    const file = await new FileFetcher(mockSession).fetchFile(
       "https://pod.test/image.png"
     );
-
-    // then the blob is returned
-    expect(result).toEqual(pngBlob);
+    // then the returned file contains the blob
+    expect(file).toBeInstanceOf(BinaryFile);
+    expect(file.blob()).toEqual(pngBlob);
+    // and the url
+    expect(file.url).toEqual("https://pod.test/image.png");
   });
 
-  it("throws an error when fetching failed", async () => {
+  it("returns broken file when fetching failed", async () => {
     // given a session
     const mockSession = {
       authenticatedFetch: jest.fn(),
@@ -55,11 +59,16 @@ describe("FileFetcher", () => {
       } as Response);
 
     // when fetching a blob for that url with the file fetcher
-    const result = new FileFetcher(mockSession).fetchBlob(
+    const file = await new FileFetcher(mockSession).fetchFile(
       "https://pod.test/image.png"
     );
 
-    // then an error is thrown
-    await expect(result).rejects.toThrow(new Error("404 - Not Found"));
+    // then the returned file is broken
+    expect(file).toBeInstanceOf(BrokenFile);
+    expect(file.toString()).toBe(
+      "https://pod.test/image.png - 404 - Not Found"
+    );
+    // and the url is present
+    expect(file.url).toEqual("https://pod.test/image.png");
   });
 });
