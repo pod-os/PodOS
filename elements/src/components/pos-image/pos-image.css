@@ -4,8 +4,17 @@
   --border-radius: 0;
 }
 
-img, ion-skeleton-text {
+img, ion-skeleton-text, div.error {
   border-radius: var(--border-radius);
   width: var(--width);
   height: var(--height);
+}
+
+div.error {
+  display: flex;
+  background-color: #eee;
+  border: 1px solid red;
+  color: red;
+  align-items: center;
+  justify-content: center;
 }
