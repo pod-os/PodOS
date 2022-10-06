@@ -1,11 +1,14 @@
 jest.mock('../../store/session');
+jest.mock('./BrokenImage');
 
 import { BinaryFile, BrokenFile } from '@pod-os/core';
 import { newSpecPage } from '@stencil/core/testing';
 import { Blob } from 'buffer';
 import { mockPodOS } from '../../test/mockPodOS';
+import { BrokenImage } from './BrokenImage';
 import { PosImage } from './pos-image';
 import { when } from 'jest-when';
+import { h } from '@stencil/core';
 
 import session from '../../store/session';
 
@@ -100,6 +103,7 @@ describe('pos-image', () => {
       blob: () => null,
       toString: () => '403 - Forbidden - https://pod.test/image.png',
     } as unknown as BrokenFile;
+    when(BrokenImage).mockReturnValue(<div class="error">403 - Forbidden - https://pod.test/image.png</div>);
     const page = await newSpecPage({
       components: [PosImage],
       html: `<pos-image src="https://pod.test/image.png" />`,

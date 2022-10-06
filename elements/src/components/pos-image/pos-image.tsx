@@ -1,3 +1,5 @@
+import { BrokenFile } from '@pod-os/core';
+import { BrokenImage } from './BrokenImage';
 import { PodOS } from '@pod-os/core/src';
 import { Component, Event, EventEmitter, h, Prop, State, Watch } from '@stencil/core';
 import session from '../../store/session';
@@ -14,6 +16,9 @@ export class PosImage {
 
   @State()
   private dataUri: string;
+
+  @State()
+  private brokenFile: BrokenFile;
 
   @State()
   private error: any;
@@ -42,7 +47,7 @@ export class PosImage {
         this.dataUri = URL.createObjectURL(file.blob());
         this.error = null;
       } else {
-        this.error = new Error(file.toString());
+        this.brokenFile = file as BrokenFile;
       }
     } catch (err) {
       this.error = err;
@@ -57,6 +62,9 @@ export class PosImage {
     }
     if (this.error) {
       return <div class="error">{this.error.message}</div>;
+    }
+    if (this.brokenFile) {
+      return <BrokenImage file={this.brokenFile} />;
     }
     return <img src={this.dataUri} />;
   }

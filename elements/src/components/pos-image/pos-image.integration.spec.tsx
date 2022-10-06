@@ -1,4 +1,4 @@
-import { BinaryFile } from '@pod-os/core';
+import { BinaryFile, BrokenFile } from '@pod-os/core';
 import { newSpecPage } from '@stencil/core/testing';
 import { Blob } from 'buffer';
 import { when } from 'jest-when';
@@ -68,7 +68,7 @@ describe('pos-image', () => {
     await loadingPromise;
   });
 
-  it('renders broken image when fetching image data failed', async () => {
+  it('renders error when fetching image data failed', async () => {
     const os = mockPodOS();
     when(os.fetchFile).calledWith('https://pod.test/image.png').mockRejectedValue(new Error('network error'));
     const page = await newSpecPage({
@@ -84,6 +84,34 @@ describe('pos-image', () => {
             <mock:shadow-root>
               <div class="error">
                 network error
+              </div>
+            </mock:shadow-root>
+        </pos-image>
+      </ion-app>
+    </pos-app>
+  `);
+  });
+
+  it('renders broken image when fetching failed with http error', async () => {
+    const os = mockPodOS();
+    const brokenImage = {
+      blob: () => null,
+      toString: () => '403 - Forbidden - https://pod.test/image.png',
+    } as unknown as BrokenFile;
+    when(os.fetchFile).calledWith('https://pod.test/image.png').mockResolvedValue(brokenImage);
+    const page = await newSpecPage({
+      components: [PosApp, PosImage],
+      html: `<pos-app>
+            <pos-image src="https://pod.test/image.png" />
+        </pos-app>`,
+    });
+    expect(page.root).toEqualHtml(`
+      <pos-app>
+      <ion-app>
+        <pos-image src="https://pod.test/image.png">
+            <mock:shadow-root>
+              <div class="error">
+                403 - Forbidden - https://pod.test/image.png
               </div>
             </mock:shadow-root>
         </pos-image>
