@@ -1,4 +1,4 @@
 export interface SolidFile {
-  url: String;
+  url: string;
   blob: () => Blob | null;
 }
