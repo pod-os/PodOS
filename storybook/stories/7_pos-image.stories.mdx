@@ -1,4 +1,6 @@
-import {html} from "lit-html";
+import {
+  html
+} from "lit-html";
 
 import {
   Canvas,
@@ -7,8 +9,12 @@ import {
 } from '@storybook/addon-docs/blocks';
 
 <Meta
-  title="Basics"
-  args={{ uri: "https://solidproject.solidcommunity.net/SPS/assets/img/solid-emblem.svg" }}
+  title="pos-image"
+  args={{
+    url: "https://solidproject.solidcommunity.net/SPS/assets/img/solid-emblem.svg",
+    notFoundUrl: "https://solidproject.solidcommunity.net/public/non-existing-image.png",
+    unauthenticatedUrl: "https://solidproject.solidcommunity.net/private/restricted-access.png"
+  }}
 />
 
 
@@ -16,13 +22,46 @@ import {
 
 Fetches and shows an image. It supports images that are behind access control.
 
+While loading it will show an animated skeleton and afterwords the successfully loaded image:
+
 <Canvas
   withSource="open">
   <Story
-    name="pos-image"
+    name="Display an image"
   >
-    {({uri}) => html`
-      <pos-image src=${uri} />
+    {({url}) => html`
+      <pos-image
+        src=${url}/>
     `}
   </Story>
 </Canvas>
+
+If the file is not found it will display a box with an error message:
+
+<Canvas
+  withSource="open">
+  <Story
+    name="Not Found"
+  >
+    {({notFoundUrl}) => html`
+      <pos-image
+        src=${notFoundUrl}/>
+    `}
+  </Story>
+</Canvas>
+
+If the file is behind access control, but the user is not authenticated it will show that:
+
+<Canvas
+  withSource="open">
+  <Story
+    name="Unauthenticated"
+  >
+    {({unauthenticatedUrl}) => html`
+      <pos-image
+        src=${unauthenticatedUrl}/>
+    `}
+  </Story>
+</Canvas>
+
+After authentication the image will load normally, if the user has the required access rights.

@@ -6,5 +6,14 @@ interface Props {
 }
 
 export const BrokenImage = ({ file }: Props) => {
-  return <div class="error">{file.toString()}</div>;
+  return (
+    <a href={file.url}>
+      <div class="error">
+        <div>
+          <ion-icon name="close-circle-outline"></ion-icon>
+        </div>
+        <div class="message">{file.toString()}</div>
+      </div>
+    </a>
+  );
 };

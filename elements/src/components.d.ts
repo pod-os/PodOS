@@ -37,6 +37,8 @@ export namespace Components {
     }
     interface PosRouter {
     }
+    interface TestComponent {
+    }
 }
 export interface PosDescriptionCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -153,6 +155,12 @@ declare global {
         prototype: HTMLPosRouterElement;
         new (): HTMLPosRouterElement;
     };
+    interface HTMLTestComponentElement extends Components.TestComponent, HTMLStencilElement {
+    }
+    var HTMLTestComponentElement: {
+        prototype: HTMLTestComponentElement;
+        new (): HTMLTestComponentElement;
+    };
     interface HTMLElementTagNameMap {
         "pos-app": HTMLPosAppElement;
         "pos-app-generic": HTMLPosAppGenericElement;
@@ -167,6 +175,7 @@ declare global {
         "pos-reverse-relations": HTMLPosReverseRelationsElement;
         "pos-rich-link": HTMLPosRichLinkElement;
         "pos-router": HTMLPosRouterElement;
+        "test-component": HTMLTestComponentElement;
     }
 }
 declare namespace LocalJSX {
@@ -209,6 +218,8 @@ declare namespace LocalJSX {
     }
     interface PosRouter {
     }
+    interface TestComponent {
+    }
     interface IntrinsicElements {
         "pos-app": PosApp;
         "pos-app-generic": PosAppGeneric;
@@ -223,6 +234,7 @@ declare namespace LocalJSX {
         "pos-reverse-relations": PosReverseRelations;
         "pos-rich-link": PosRichLink;
         "pos-router": PosRouter;
+        "test-component": TestComponent;
     }
 }
 export { LocalJSX as JSX };
@@ -242,6 +254,7 @@ declare module "@stencil/core" {
             "pos-reverse-relations": LocalJSX.PosReverseRelations & JSXBase.HTMLAttributes<HTMLPosReverseRelationsElement>;
             "pos-rich-link": LocalJSX.PosRichLink & JSXBase.HTMLAttributes<HTMLPosRichLinkElement>;
             "pos-router": LocalJSX.PosRouter & JSXBase.HTMLAttributes<HTMLPosRouterElement>;
+            "test-component": LocalJSX.TestComponent & JSXBase.HTMLAttributes<HTMLTestComponentElement>;
         }
     }
 }

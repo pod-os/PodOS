@@ -12,12 +12,30 @@ img, ion-skeleton-text, div.error {
 
 div.error {
   display: flex;
-  background-color: #eee;
+  opacity: 0.8;
+  background: repeating-linear-gradient( -45deg, rgba(150, 0, 0, 0.1), rgba(150, 0, 0, 0.1) 10px, #fff 5px, #fff 25px );
+  flex-direction: column;
   border: 1px solid red;
-  color: red;
+  color: black;
   align-items: center;
   justify-content: center;
   word-break: break-all;
   padding: 1rem;
   box-sizing: border-box;
+  font-size: calc(var(--width) / 15)
+}
+
+div.error ion-icon {
+  color: #282828;
+  --ionicon-stroke-width: calc(var(--width) / 5) ;
+  font-size: calc(var(--width) / 2)
+}
+
+a {
+  text-decoration: none;
+}
+
+div.message {
+  padding: 1rem;
+  background: rgba(44, 44, 44, 0.33);
 }
