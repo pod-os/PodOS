@@ -1,5 +1,5 @@
 export class HttpStatus {
-  constructor(private code: number, private text?: string) {}
+  constructor(public readonly code: number, public readonly text?: string) {}
 
   toString() {
     return this.text ? `${this.code} - ${this.text}` : this.code.toString();

@@ -96,7 +96,9 @@ describe('pos-image', () => {
     const os = mockPodOS();
     const brokenImage = {
       blob: () => null,
-      toString: () => '403 - Forbidden - https://pod.test/image.png',
+      status: {
+        code: 403,
+      },
     } as unknown as BrokenFile;
     when(os.fetchFile).calledWith('https://pod.test/image.png').mockResolvedValue(brokenImage);
     const page = await newSpecPage({
@@ -110,8 +112,16 @@ describe('pos-image', () => {
       <ion-app>
         <pos-image src="https://pod.test/image.png">
             <mock:shadow-root>
-              <div class="error">
-                403 - Forbidden - https://pod.test/image.png
+              <div>
+                <a class="error">
+                  <div>
+                    <ion-icon name="lock-closed-outline"></ion-icon>
+                  </div>
+                  <div class="code">
+                    403
+                  </div>
+                  <div class="text"></div>
+                </a>
               </div>
             </mock:shadow-root>
         </pos-image>

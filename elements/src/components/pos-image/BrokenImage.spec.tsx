@@ -5,19 +5,43 @@ import { BrokenImage } from './BrokenImage';
 
 describe('BrokenImage', () => {
   it('renders an error block with icon, error message and link to the image url', async () => {
-    const brokenFile = { url: 'https://pod.test/image.png', toString: () => 'error message' } as BrokenFile;
+    const brokenFile = {
+      url: 'https://pod.test/image.png',
+      toString: () => 'error message',
+      status: { code: 401, text: 'unauthenticated' },
+    } as unknown as BrokenFile;
     const component = <BrokenImage file={brokenFile} />;
     const page = await renderFunctionalComponent(component);
     expect(page.root).toEqualHtml(`
-      <a href="https://pod.test/image.png">
-        <div class="error">
+      <div>
+        <a class="error" href="https://pod.test/image.png">
           <div>
-            <ion-icon name="close-circle-outline"></ion-icon>
+            <ion-icon name="lock-closed-outline"></ion-icon>
           </div>
-          <div class="message">
-            error message
+          <div class="code">
+            401
           </div>
-        </div>
-      </a>`);
+          <div class="text">
+            unauthenticated
+          </div>
+        </a>
+      </div>`);
+  });
+
+  it.each`
+    code   | iconName
+    ${401} | ${'lock-closed-outline'}
+    ${403} | ${'lock-closed-outline'}
+    ${404} | ${'help-circle-outline'}
+    ${500} | ${'alert-circle-outline'}
+  `(`renders $iconName icon for status $code`, async ({ code, iconName }) => {
+    const brokenFile = {
+      url: 'https://pod.test/image.png',
+      toString: () => 'error message',
+      status: { code, text: 'unauthenticated' },
+    } as unknown as BrokenFile;
+    const component = <BrokenImage file={brokenFile} />;
+    const page = await renderFunctionalComponent(component);
+    expect(page.root.querySelector('ion-icon')).toEqualAttribute('name', iconName);
   });
 });

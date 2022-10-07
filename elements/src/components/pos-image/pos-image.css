@@ -10,7 +10,7 @@ img, ion-skeleton-text, div.error {
   height: var(--height);
 }
 
-div.error {
+.error {
   display: flex;
   opacity: 0.8;
   background: repeating-linear-gradient( -45deg, rgba(150, 0, 0, 0.1), rgba(150, 0, 0, 0.1) 10px, #fff 5px, #fff 25px );
@@ -22,10 +22,9 @@ div.error {
   word-break: break-all;
   padding: 1rem;
   box-sizing: border-box;
-  font-size: calc(var(--width) / 15)
 }
 
-div.error ion-icon {
+.error ion-icon {
   color: #282828;
   --ionicon-stroke-width: calc(var(--width) / 5) ;
   font-size: calc(var(--width) / 2)
@@ -33,9 +32,15 @@ div.error ion-icon {
 
 a {
   text-decoration: none;
+  width: var(--width);
+  height: var(--height);
 }
 
-div.message {
-  padding: 1rem;
-  background: rgba(44, 44, 44, 0.33);
+.code {
+  font-weight: bold;
+  font-size: calc(var(--width) / 8);
+}
+
+.text {
+  font-size: calc(var(--width) / 20)
 }
