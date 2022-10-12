@@ -1,4 +1,10 @@
-import { IndexedFormula, isLiteral, isNamedNode, sym } from "rdflib";
+import {
+  IndexedFormula,
+  isBlankNode,
+  isLiteral,
+  isNamedNode,
+  sym,
+} from "rdflib";
 import { accumulateSubjects } from "./accumulateSubjects";
 import { accumulateValues } from "./accumulateValues";
 
@@ -84,5 +90,55 @@ export class Thing {
       "https://www.w3.org/ns/activitystreams#content",
       "http://www.w3.org/2006/vcard/ns#note"
     );
+  }
+
+  picture() {
+    const directUrl = this.anyValue(
+      "http://schema.org/image",
+      "https://schema.org/image",
+      "http://schema.org/logo",
+      "https://schema.org/logo",
+      "http://www.w3.org/2006/vcard/ns#hasPhoto",
+      "http://www.w3.org/2006/vcard/ns#photo",
+      "http://www.w3.org/2006/vcard/ns#hasLogo",
+      "http://www.w3.org/2006/vcard/ns#logo",
+      "http://xmlns.com/foaf/0.1/img",
+      "http://xmlns.com/foaf/0.1/depiction",
+      "http://xmlns.com/foaf/0.1/thumbnail"
+    );
+    if (directUrl) {
+      return {
+        url: directUrl,
+      };
+    } else {
+      return this.findActivityStreamsPicture();
+    }
+  }
+
+  private findActivityStreamsPicture() {
+    const activityStreamsImage =
+      this.store.any(
+        sym(this.uri),
+        sym("https://www.w3.org/ns/activitystreams#image")
+      ) ||
+      this.store.any(
+        sym(this.uri),
+        sym("https://www.w3.org/ns/activitystreams#icon")
+      );
+    if (
+      !activityStreamsImage ||
+      !(isBlankNode(activityStreamsImage) || isNamedNode(activityStreamsImage))
+    ) {
+      return null;
+    }
+    const url = this.store.anyValue(
+      activityStreamsImage,
+      sym("https://www.w3.org/ns/activitystreams#url")
+    );
+    return url
+      ? {
+          url,
+        }
+      : null;
   }
 }
