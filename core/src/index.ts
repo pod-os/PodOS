@@ -6,6 +6,7 @@ import { Store } from "./Store";
 
 export * from "./authentication";
 export * from "./files";
+export * from "./thing";
 
 export class PodOS {
   private readonly session: BrowserSession;

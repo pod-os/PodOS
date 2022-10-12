@@ -1,0 +1,26 @@
+import { Component, Event, EventEmitter, State, h } from '@stencil/core';
+import { Thing } from '@pod-os/core';
+
+@Component({
+  tag: 'pos-picture',
+  shadow: true,
+})
+export class PosPicture {
+  @State() resource: Thing;
+
+  @Event({ eventName: 'pod-os:resource' }) getResource: EventEmitter;
+
+  componentWillLoad() {
+    this.getResource.emit(this.setResource);
+  }
+
+  setResource = async (resource: any) => {
+    this.resource = resource;
+  };
+
+  render() {
+    const pic = this.resource ? this.resource.picture() : null;
+    if (!pic) return null;
+    return <pos-image src={pic.url}></pos-image>;
+  }
+}

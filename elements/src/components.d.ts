@@ -23,6 +23,8 @@ export namespace Components {
     }
     interface PosLogin {
     }
+    interface PosPicture {
+    }
     interface PosRelations {
     }
     interface PosResource {
@@ -59,6 +61,10 @@ export interface PosLiteralsCustomEvent<T> extends CustomEvent<T> {
 export interface PosLoginCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosLoginElement;
+}
+export interface PosPictureCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosPictureElement;
 }
 export interface PosRelationsCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -125,6 +131,12 @@ declare global {
         prototype: HTMLPosLoginElement;
         new (): HTMLPosLoginElement;
     };
+    interface HTMLPosPictureElement extends Components.PosPicture, HTMLStencilElement {
+    }
+    var HTMLPosPictureElement: {
+        prototype: HTMLPosPictureElement;
+        new (): HTMLPosPictureElement;
+    };
     interface HTMLPosRelationsElement extends Components.PosRelations, HTMLStencilElement {
     }
     var HTMLPosRelationsElement: {
@@ -170,6 +182,7 @@ declare global {
         "pos-label": HTMLPosLabelElement;
         "pos-literals": HTMLPosLiteralsElement;
         "pos-login": HTMLPosLoginElement;
+        "pos-picture": HTMLPosPictureElement;
         "pos-relations": HTMLPosRelationsElement;
         "pos-resource": HTMLPosResourceElement;
         "pos-reverse-relations": HTMLPosReverseRelationsElement;
@@ -201,6 +214,9 @@ declare namespace LocalJSX {
     interface PosLogin {
         "onPod-os:init"?: (event: PosLoginCustomEvent<any>) => void;
     }
+    interface PosPicture {
+        "onPod-os:resource"?: (event: PosPictureCustomEvent<any>) => void;
+    }
     interface PosRelations {
         "onPod-os:resource"?: (event: PosRelationsCustomEvent<any>) => void;
     }
@@ -229,6 +245,7 @@ declare namespace LocalJSX {
         "pos-label": PosLabel;
         "pos-literals": PosLiterals;
         "pos-login": PosLogin;
+        "pos-picture": PosPicture;
         "pos-relations": PosRelations;
         "pos-resource": PosResource;
         "pos-reverse-relations": PosReverseRelations;
@@ -249,6 +266,7 @@ declare module "@stencil/core" {
             "pos-label": LocalJSX.PosLabel & JSXBase.HTMLAttributes<HTMLPosLabelElement>;
             "pos-literals": LocalJSX.PosLiterals & JSXBase.HTMLAttributes<HTMLPosLiteralsElement>;
             "pos-login": LocalJSX.PosLogin & JSXBase.HTMLAttributes<HTMLPosLoginElement>;
+            "pos-picture": LocalJSX.PosPicture & JSXBase.HTMLAttributes<HTMLPosPictureElement>;
             "pos-relations": LocalJSX.PosRelations & JSXBase.HTMLAttributes<HTMLPosRelationsElement>;
             "pos-resource": LocalJSX.PosResource & JSXBase.HTMLAttributes<HTMLPosResourceElement>;
             "pos-reverse-relations": LocalJSX.PosReverseRelations & JSXBase.HTMLAttributes<HTMLPosReverseRelationsElement>;

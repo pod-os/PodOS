@@ -23,17 +23,19 @@
 
 ### Used by
 
- - [pos-app-generic](../../apps/pos-app-generic)
+ - [pos-picture](../pos-picture)
 
 ### Depends on
 
 - ion-skeleton-text
+- ion-icon
 
 ### Graph
 ```mermaid
 graph TD;
   pos-image --> ion-skeleton-text
-  pos-app-generic --> pos-image
+  pos-image --> ion-icon
+  pos-picture --> pos-image
   style pos-image fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
