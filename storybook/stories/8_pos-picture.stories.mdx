@@ -1,0 +1,35 @@
+import {html} from "lit-html";
+
+import {
+  Canvas,
+  Meta,
+  Story
+} from '@storybook/addon-docs/blocks';
+
+<Meta
+  title="Basics"
+  args={{
+    width: "300px",
+    height: "300px",
+    borderRadius: "0",
+    uri: "https://solidproject.solidcommunity.net/profile/card#me"
+  }}
+/>
+
+
+## pos-picture
+
+Renders a picture of the resource.
+
+<Canvas
+  withSource="open">
+  <Story
+    name="pos-picture"
+  >
+    {({uri, width, height, borderRadius}) => html`
+      <pos-resource uri=${uri}>
+        <pos-picture style="--width: ${width}; --height: ${height}; --border-radius: ${borderRadius};" />
+      </pos-resource>
+    `}
+  </Story>
+</Canvas>

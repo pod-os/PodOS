@@ -4,6 +4,7 @@ import { Thing } from '@pod-os/core';
 @Component({
   tag: 'pos-picture',
   shadow: true,
+  styleUrl: 'pos-picture.css',
 })
 export class PosPicture {
   @State() resource: Thing;

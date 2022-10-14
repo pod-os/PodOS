@@ -24,8 +24,9 @@ This is an example of how you can combine a `<pos-resource>` element with any ht
     {({uri}) => html`
 <pos-resource uri=${uri}>
     The URI <a href="${uri}">${uri}</a> identifies <strong/><pos-label /></strong>, which is described as:
-    <blockquote>
-        <pos-description />
+    <blockquote style="display: grid; grid-auto-flow: column; grid-gap: 1rem;">
+        <div><pos-picture style="--width: 150px; --height: 150px;" /></div>
+        <div><pos-description /></div>
     </blockquote>
     <div>
       <h2>Here is a table with some facts about <span><pos-label /></span>:</h2>
