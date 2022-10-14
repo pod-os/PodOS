@@ -19,6 +19,15 @@
 | `pod-os:init` |             | `CustomEvent<any>` |
 
 
+## CSS Custom Properties
+
+| Name              | Description                |
+| ----------------- | -------------------------- |
+| `--border-radius` | Border radius of the image |
+| `--height`        | Height of the image        |
+| `--width`         | Width of the image         |
+
+
 ## Dependencies
 
 ### Used by

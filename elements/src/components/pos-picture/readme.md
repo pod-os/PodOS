@@ -12,6 +12,15 @@
 | `pod-os:resource` |             | `CustomEvent<any>` |
 
 
+## CSS Custom Properties
+
+| Name              | Description                  |
+| ----------------- | ---------------------------- |
+| `--border-radius` | Border radius of the picture |
+| `--height`        | Height of the picture        |
+| `--width`         | Width of the picture         |
+
+
 ## Dependencies
 
 ### Used by
