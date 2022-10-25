@@ -26,6 +26,7 @@
 ### Used by
 
  - [pos-app-generic](../../apps/pos-app-generic)
+ - [pos-login](../pos-login)
 
 ### Depends on
 
@@ -38,6 +39,7 @@ graph TD;
   pos-image --> ion-skeleton-text
   pos-image --> ion-icon
   pos-app-generic --> pos-picture
+  pos-login --> pos-picture
   style pos-picture fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

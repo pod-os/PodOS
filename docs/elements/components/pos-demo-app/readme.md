@@ -31,9 +31,13 @@ graph TD;
   pos-demo-app --> ion-footer
   pos-app --> ion-app
   pos-login --> pos-resource
+  pos-login --> pos-picture
   pos-login --> pos-label
   pos-login --> ion-button
   pos-resource --> ion-progress-bar
+  pos-picture --> pos-image
+  pos-image --> ion-skeleton-text
+  pos-image --> ion-icon
   ion-button --> ion-ripple-effect
   pos-router --> pos-resource
   pos-router --> pos-app-generic
@@ -51,9 +55,6 @@ graph TD;
   pos-app-generic --> pos-relations
   pos-app-generic --> pos-reverse-relations
   ion-card --> ion-ripple-effect
-  pos-picture --> pos-image
-  pos-image --> ion-skeleton-text
-  pos-image --> ion-icon
   pos-literals --> ion-item-group
   pos-literals --> ion-item-divider
   pos-literals --> ion-label
