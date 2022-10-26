@@ -10,8 +10,9 @@
     "test": "npm run test --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
-    "start:elements": "npm start --workspace elements",
-    "start:server": "npm start --workspace dev-solid-server"
+    "dev:core": "npm run build:watch --workspace core",
+    "dev:elements": "npm start --workspace elements",
+    "dev:server": "npm start --workspace dev-solid-server"
   },
   "repository": {
     "type": "git",

@@ -17,8 +17,9 @@ npm ci
 Start up elements and a development solid server by running:
 
 ```shell
-npm run start:elements
-npm run start:server
+npm run dev:core
+npm run dev:elements
+npm run dev:server
 ```
 
 Visit http://localhost:3333/?uri=http%3A%2F%2Flocalhost%3A3000%2Falice%2Fgames%2Fminecraft%23it to view the demo app
