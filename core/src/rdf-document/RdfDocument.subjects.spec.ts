@@ -73,5 +73,19 @@ describe("RdfDocument", () => {
         uri: "http://pod.example/document#it",
       });
     });
+
+    it("do not find subjects, that are not in the document", () => {
+      const store = graph();
+      store.add(
+        sym("http://pod.example/document#it"),
+        sym("http://vocab.test/predicate"),
+        "literal value",
+        sym("http://pod.example/other-document")
+      );
+
+      const document = new RdfDocument("http://pod.example/document", store);
+
+      expect(document.subjects()).toHaveLength(0);
+    });
   });
 });
