@@ -1,4 +1,4 @@
-import { graph, sym } from "rdflib";
+import { blankNode, graph, sym } from "rdflib";
 import { RdfDocument } from "./RdfDocument";
 
 describe("RdfDocument", () => {
@@ -81,6 +81,20 @@ describe("RdfDocument", () => {
         sym("http://vocab.test/predicate"),
         "literal value",
         sym("http://pod.example/other-document")
+      );
+
+      const document = new RdfDocument("http://pod.example/document", store);
+
+      expect(document.subjects()).toHaveLength(0);
+    });
+
+    it("subjects do not include blank nodes", () => {
+      const store = graph();
+      store.add(
+        blankNode(),
+        sym("http://vocab.test/predicate"),
+        "literal value",
+        sym("http://pod.example/document")
       );
 
       const document = new RdfDocument("http://pod.example/document", store);

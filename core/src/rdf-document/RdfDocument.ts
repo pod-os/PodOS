@@ -1,5 +1,5 @@
 import { Thing } from "../thing";
-import { IndexedFormula, sym } from "rdflib";
+import { IndexedFormula, isNamedNode, sym } from "rdflib";
 
 export class RdfDocument extends Thing {
   constructor(readonly uri: string, readonly store: IndexedFormula) {
@@ -13,7 +13,9 @@ export class RdfDocument extends Thing {
       null,
       sym(this.uri)
     );
-    const uris = matches.map((match) => match.subject.value);
+    const uris = matches
+      .filter((match) => isNamedNode(match.subject))
+      .map((match) => match.subject.value);
     const uniqueUris = [...new Set(uris)];
     return uniqueUris.map((uri) => ({
       uri,
