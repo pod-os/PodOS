@@ -8,6 +8,7 @@ import { when } from 'jest-when';
 const alice = {
   webId: 'https://pod.example/alice#me',
   name: 'Alice',
+  picture: 'https://pod.example/alice/me.jpg',
 };
 
 export function mockPodOS() {
@@ -28,6 +29,9 @@ export function mockPodOS() {
     .calledWith(alice.webId)
     .mockReturnValue({
       label: () => alice.name,
+      picture: () => ({
+        url: alice.picture,
+      }),
     });
   (createPodOS as jest.Mock).mockReturnValue(os);
   return os;

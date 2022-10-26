@@ -1,10 +1,12 @@
 import { PodOS } from '@pod-os/core/src';
-import { Component, EventEmitter, h, Event, Host, State } from '@stencil/core';
+import { Component, Event, EventEmitter, h, Host, State } from '@stencil/core';
 
 import session from '../../store/session';
 
 @Component({
   tag: 'pos-login',
+  shadow: true,
+  styleUrl: 'pos-login.css',
 })
 export class PosLogin {
   @Event({ eventName: 'pod-os:init' }) initializeOsEmitter: EventEmitter;
@@ -33,7 +35,10 @@ export class PosLogin {
       <Host>
         {session.state.isLoggedIn ? (
           <pos-resource uri={session.state.webId}>
-            <pos-label />
+            <span class="user-data">
+              <pos-picture />
+              <pos-label />
+            </span>
           </pos-resource>
         ) : (
           ''

@@ -14,14 +14,16 @@ describe('pos-login', () => {
     });
     expect(page.root).toEqualHtml(`
     <pos-login>
-      <ion-button>
-        Login
-      </ion-button>
+      <mock:shadow-root>
+        <ion-button>
+          Login
+        </ion-button>
+      </mock:shadow-root>
     </pos-login>
   `);
   });
 
-  it('renders logout button and label for webId', async () => {
+  it('renders logout button, label and picture for webId', async () => {
     session.state.isLoggedIn = true;
     session.state.webId = 'https://pod.example/alice#me';
     const page = await newSpecPage({
@@ -30,12 +32,17 @@ describe('pos-login', () => {
     });
     expect(page.root).toEqualHtml(`
     <pos-login>
-      <pos-resource uri="https://pod.example/alice#me">
-       <pos-label />
-      </pos-resource>
-      <ion-button>
-        Logout
-      </ion-button>
+      <mock:shadow-root>
+        <pos-resource uri="https://pod.example/alice#me">
+          <span class="user-data">
+            <pos-picture></pos-picture>
+            <pos-label></pos-label>
+          </span>
+        </pos-resource>
+        <ion-button>
+          Logout
+        </ion-button>
+      </mock:shadow-root>
     </pos-login>
   `);
   });

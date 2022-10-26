@@ -2,6 +2,7 @@ import { mockPodOS } from '../../test/mockPodOS';
 import { newSpecPage } from '@stencil/core/testing';
 import { PosApp } from '../pos-app/pos-app';
 import { PosLabel } from '../pos-label/pos-label';
+import { PosPicture } from '../pos-picture/pos-picture';
 import { PosResource } from '../pos-resource/pos-resource';
 import { PosLogin } from './pos-login';
 
@@ -10,7 +11,8 @@ describe('pos-login', () => {
     mockPodOS();
     // given a page with login and session tracking
     const page = await newSpecPage({
-      components: [PosApp, PosLogin, PosLabel, PosResource],
+      supportsShadowDom: false,
+      components: [PosApp, PosLogin, PosLabel, PosResource, PosPicture],
       html: `<pos-app><pos-login></pos-login></pos-app>`,
     });
 
@@ -22,8 +24,14 @@ describe('pos-login', () => {
     await page.waitForChanges();
 
     // then her WebID shows up
-    const label = login.querySelector('pos-resource > pos-label');
-    expect(label.shadowRoot).toEqualText('Alice');
+    const label = login.querySelector('pos-resource pos-label');
+    expect(label).toEqualText('Alice');
+
+    // then her picture shows up
+    const image = login.querySelector('pos-resource pos-image');
+    expect(image).toEqualHtml(`
+          <pos-image src="https://pod.example/alice/me.jpg"></pos-image>
+    `);
 
     // the button becomes a logout button
     expect(button.innerText).toEqual('Logout');
