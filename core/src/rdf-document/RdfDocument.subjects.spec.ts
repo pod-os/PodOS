@@ -51,5 +51,27 @@ describe("RdfDocument", () => {
         uri: "http://pod.example/document#thing-2",
       });
     });
+
+    it("return only one subject if there are multiple statements for it", () => {
+      const store = graph();
+      store.add(
+        sym("http://pod.example/document#it"),
+        sym("http://vocab.test/predicate1"),
+        "literal value",
+        sym("http://pod.example/document")
+      );
+      store.add(
+        sym("http://pod.example/document#it"),
+        sym("http://vocab.test/predicate2"),
+        "literal value",
+        sym("http://pod.example/document")
+      );
+      const document = new RdfDocument("http://pod.example/document", store);
+
+      expect(document.subjects()).toHaveLength(1);
+      expect(document.subjects()).toContainEqual({
+        uri: "http://pod.example/document#it",
+      });
+    });
   });
 });

@@ -13,9 +13,10 @@ export class RdfDocument extends Thing {
       null,
       sym(this.uri)
     );
-
-    return matches.map((match) => ({
-      uri: match.subject.value,
+    const uris = matches.map((match) => match.subject.value);
+    const uniqueUris = [...new Set(uris)];
+    return uniqueUris.map((uri) => ({
+      uri,
     }));
   }
 }
