@@ -1,7 +1,7 @@
 import { graph, sym } from "rdflib";
 import { RdfDocument } from "./RdfDocument";
 
-describe("Document", () => {
+describe("RdfDocument", () => {
   describe("subjects", () => {
     it("does not find any subjects if store is empty", () => {
       const store = graph();
@@ -24,6 +24,31 @@ describe("Document", () => {
       expect(document.subjects()).toHaveLength(1);
       expect(document.subjects()).toContainEqual({
         uri: "http://pod.example/document#it",
+      });
+    });
+
+    it("return all subjects that are found", () => {
+      const store = graph();
+      store.add(
+        sym("http://pod.example/document#thing-1"),
+        sym("http://vocab.test/predicate"),
+        "literal value",
+        sym("http://pod.example/document")
+      );
+      store.add(
+        sym("http://pod.example/document#thing-2"),
+        sym("http://vocab.test/predicate"),
+        "literal value",
+        sym("http://pod.example/document")
+      );
+      const document = new RdfDocument("http://pod.example/document", store);
+
+      expect(document.subjects()).toHaveLength(2);
+      expect(document.subjects()).toContainEqual({
+        uri: "http://pod.example/document#thing-1",
+      });
+      expect(document.subjects()).toContainEqual({
+        uri: "http://pod.example/document#thing-2",
       });
     });
   });

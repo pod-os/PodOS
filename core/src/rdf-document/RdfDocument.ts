@@ -7,12 +7,15 @@ export class RdfDocument extends Thing {
   }
 
   subjects() {
-    const matches = this.store.anyStatementMatching(
+    const matches = this.store.statementsMatching(
       null,
       null,
       null,
       sym(this.uri)
     );
-    return matches ? [{ uri: matches?.subject.value }] : [];
+
+    return matches.map((match) => ({
+      uri: match.subject.value,
+    }));
   }
 }
