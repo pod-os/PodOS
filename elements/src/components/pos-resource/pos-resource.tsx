@@ -2,9 +2,10 @@ import { PodOS, Thing } from '@pod-os/core';
 import { Component, EventEmitter, Event, h, Prop, State, Watch, Listen, Method } from '@stencil/core';
 
 import session from '../../store/session';
+import { ResourceReceiver } from '../events/ResourceAware';
 
-interface GetResourceEvent extends CustomEvent {
-  detail: (Thing) => void;
+interface SubscribeResourceEvent extends CustomEvent {
+  detail: ResourceReceiver;
 }
 
 @Component({
@@ -15,7 +16,7 @@ export class PosResource {
   @State() os: PodOS;
 
   @State() resource: Thing;
-  @State() consumers: GetResourceEvent[] = [];
+  @State() consumers: SubscribeResourceEvent[] = [];
 
   @Prop() uri: string;
 
@@ -39,7 +40,7 @@ export class PosResource {
   };
 
   @Listen('pod-os:resource')
-  async provideResource(event: GetResourceEvent) {
+  async provideResource(event: SubscribeResourceEvent) {
     event.stopPropagation();
     if (this.resource) {
       event.detail(this.resource);

@@ -1,20 +1,21 @@
 import { Relation, Thing } from '@pod-os/core';
 import { Component, h, Event, EventEmitter, State } from '@stencil/core';
+import { ResourceAware, subscribeResource } from '../events/ResourceAware';
 
 @Component({
   tag: 'pos-reverse-relations',
   shadow: true,
 })
-export class PosReverseRelations {
+export class PosReverseRelations implements ResourceAware {
   @State() data: Relation[] = [];
 
-  @Event({ eventName: 'pod-os:resource' }) getResource: EventEmitter;
+  @Event({ eventName: 'pod-os:resource' }) subscribeResource: EventEmitter;
 
   componentWillLoad() {
-    this.getResource.emit(this.setResource);
+    subscribeResource(this);
   }
 
-  setResource = async (resource: Thing) => {
+  receiveResource = (resource: Thing) => {
     this.data = resource.reverseRelations();
   };
 

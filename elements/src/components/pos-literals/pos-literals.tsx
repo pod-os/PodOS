@@ -1,20 +1,22 @@
-import { Thing, Literal } from '@pod-os/core';
-import { Component, h, Event, EventEmitter, State } from '@stencil/core';
+import { Literal, Thing } from '@pod-os/core';
+import { Component, Event, EventEmitter, h, State } from '@stencil/core';
+import { ResourceAware, subscribeResource } from '../events/ResourceAware';
 
 @Component({
   tag: 'pos-literals',
   shadow: true,
 })
-export class PosLiterals {
+export class PosLiterals implements ResourceAware {
   @State() data: Literal[] = [];
 
-  @Event({ eventName: 'pod-os:resource' }) getResource: EventEmitter;
+  @Event({ eventName: 'pod-os:resource' })
+  subscribeResource: EventEmitter;
 
   componentWillLoad() {
-    this.getResource.emit(this.setResource);
+    subscribeResource(this);
   }
 
-  setResource = async (resource: Thing) => {
+  receiveResource = (resource: Thing) => {
     this.data = resource.literals();
   };
 

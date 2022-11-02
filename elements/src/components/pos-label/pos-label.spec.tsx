@@ -19,7 +19,7 @@ describe('pos-label', () => {
       components: [PosLabel],
       html: `<pos-label />`,
     });
-    await page.rootInstance.setResource({
+    await page.rootInstance.receiveResource({
       label: () => 'Test Resource',
     });
     await page.waitForChanges();

@@ -19,7 +19,7 @@ describe('pos-picture', () => {
       components: [PosPicture],
       html: `<pos-picture />`,
     });
-    await page.rootInstance.setResource({
+    await page.rootInstance.receiveResource({
       picture: () => ({
         url: 'https://resource.test/picture.png',
       }),
@@ -37,7 +37,7 @@ describe('pos-picture', () => {
       components: [PosPicture],
       html: `<pos-picture />`,
     });
-    await page.rootInstance.setResource({
+    await page.rootInstance.receiveResource({
       picture: () => null,
     });
     await page.waitForChanges();

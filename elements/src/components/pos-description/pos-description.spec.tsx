@@ -19,7 +19,7 @@ describe('pos-description', () => {
       components: [PosDescription],
       html: `<pos-description />`,
     });
-    await page.rootInstance.setResource({
+    await page.rootInstance.receiveResource({
       description: () => 'Test Resource',
     });
     await page.waitForChanges();

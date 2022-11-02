@@ -23,7 +23,7 @@ describe('pos-reverse-relations', () => {
       components: [PosReverseRelations],
       html: `<pos-reverse-relations />`,
     });
-    await page.rootInstance.setResource({
+    await page.rootInstance.receiveResource({
       reverseRelations: () => [
         {
           predicate: 'http://schema.org/knows',
@@ -45,7 +45,7 @@ describe('pos-reverse-relations', () => {
       components: [PosReverseRelations],
       html: `<pos-reverse-relations />`,
     });
-    await page.rootInstance.setResource({
+    await page.rootInstance.receiveResource({
       reverseRelations: () => [
         {
           predicate: 'http://schema.org/knows',

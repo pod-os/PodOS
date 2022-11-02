@@ -23,7 +23,7 @@ describe('pos-literals', () => {
       components: [PosLiterals],
       html: `<pos-literals />`,
     });
-    await page.rootInstance.setResource({
+    await page.rootInstance.receiveResource({
       literals: () => [
         {
           predicate: 'http://schema.org/name',
@@ -44,7 +44,7 @@ describe('pos-literals', () => {
       components: [PosLiterals],
       html: `<pos-literals />`,
     });
-    await page.rootInstance.setResource({
+    await page.rootInstance.receiveResource({
       literals: () => [
         {
           predicate: 'http://schema.org/name',

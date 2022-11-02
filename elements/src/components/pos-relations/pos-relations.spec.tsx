@@ -23,7 +23,7 @@ describe('pos-relations', () => {
       components: [PosRelations],
       html: `<pos-relations />`,
     });
-    await page.rootInstance.setResource({
+    await page.rootInstance.receiveResource({
       relations: () => [
         {
           predicate: 'http://schema.org/url',
@@ -45,7 +45,7 @@ describe('pos-relations', () => {
       components: [PosRelations],
       html: `<pos-relations />`,
     });
-    await page.rootInstance.setResource({
+    await page.rootInstance.receiveResource({
       relations: () => [
         {
           predicate: 'http://schema.org/url',

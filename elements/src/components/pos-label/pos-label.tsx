@@ -1,20 +1,22 @@
 import { Thing } from '@pod-os/core';
-import { Component, Event, EventEmitter, State } from '@stencil/core';
+import { Component, Event, State } from '@stencil/core';
+import { ResourceAware, ResourceEventEmitter, subscribeResource } from '../events/ResourceAware';
 
 @Component({
   tag: 'pos-label',
   shadow: true,
 })
-export class PosLabel {
+export class PosLabel implements ResourceAware {
   @State() resource: Thing;
 
-  @Event({ eventName: 'pod-os:resource' }) getResource: EventEmitter;
+  @Event({ eventName: 'pod-os:resource' })
+  subscribeResource: ResourceEventEmitter;
 
   componentWillLoad() {
-    this.getResource.emit(this.setResource);
+    subscribeResource(this);
   }
 
-  setResource = async (resource: Thing) => {
+  receiveResource = (resource: Thing) => {
     this.resource = resource;
   };
 
