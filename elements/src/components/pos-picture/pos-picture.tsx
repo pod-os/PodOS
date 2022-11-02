@@ -15,7 +15,7 @@ export class PosPicture {
     this.getResource.emit(this.setResource);
   }
 
-  setResource = async (resource: any) => {
+  setResource = async (resource: Thing) => {
     this.resource = resource;
   };
 

@@ -1,10 +1,10 @@
-import { PodOS } from '@pod-os/core/src';
+import { PodOS, Thing } from '@pod-os/core';
 import { Component, EventEmitter, Event, h, Prop, State, Watch, Listen, Method } from '@stencil/core';
 
 import session from '../../store/session';
 
 interface GetResourceEvent extends CustomEvent {
-  detail: Function;
+  detail: (Thing) => void;
 }
 
 @Component({
@@ -14,8 +14,8 @@ interface GetResourceEvent extends CustomEvent {
 export class PosResource {
   @State() os: PodOS;
 
-  @State() resource: any;
-  @State() consumers: any[] = [];
+  @State() resource: Thing;
+  @State() consumers: GetResourceEvent[] = [];
 
   @Prop() uri: string;
 
@@ -24,7 +24,7 @@ export class PosResource {
   @Event({ eventName: 'pod-os:init' }) initializeOsEmitter: EventEmitter;
 
   @State()
-  private error: any;
+  private error: Error;
 
   @State()
   private loading: boolean = true;

@@ -1,3 +1,4 @@
+import { Relation, Thing } from '@pod-os/core';
 import { Component, h, Event, EventEmitter, State } from '@stencil/core';
 
 @Component({
@@ -5,7 +6,7 @@ import { Component, h, Event, EventEmitter, State } from '@stencil/core';
   shadow: true,
 })
 export class PosReverseRelations {
-  @State() data: any[] = [];
+  @State() data: Relation[] = [];
 
   @Event({ eventName: 'pod-os:resource' }) getResource: EventEmitter;
 
@@ -13,7 +14,7 @@ export class PosReverseRelations {
     this.getResource.emit(this.setResource);
   }
 
-  setResource = async (resource: any) => {
+  setResource = async (resource: Thing) => {
     this.data = resource.reverseRelations();
   };
 

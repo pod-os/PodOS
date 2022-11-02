@@ -8,6 +8,16 @@ import {
 import { accumulateSubjects } from "./accumulateSubjects";
 import { accumulateValues } from "./accumulateValues";
 
+export interface Literal {
+  predicate: string;
+  values: string[];
+}
+
+export interface Relation {
+  predicate: string;
+  uris: string[];
+}
+
 export class Thing {
   constructor(readonly uri: string, readonly store: IndexedFormula) {}
 
@@ -28,7 +38,7 @@ export class Thing {
     return value ?? this.uri;
   }
 
-  literals() {
+  literals(): Literal[] {
     const statements = this.store.statementsMatching(sym(this.uri));
 
     const values = statements
@@ -41,7 +51,7 @@ export class Thing {
     }));
   }
 
-  relations() {
+  relations(): Relation[] {
     const statements = this.store.statementsMatching(sym(this.uri));
 
     const values = statements
@@ -54,7 +64,7 @@ export class Thing {
     }));
   }
 
-  reverseRelations() {
+  reverseRelations(): Relation[] {
     const statements = this.store.statementsMatching(
       undefined,
       undefined,

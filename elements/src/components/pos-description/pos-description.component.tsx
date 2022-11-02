@@ -1,3 +1,4 @@
+import { Thing } from '@pod-os/core';
 import { Component, Event, EventEmitter, State } from '@stencil/core';
 
 @Component({
@@ -5,7 +6,7 @@ import { Component, Event, EventEmitter, State } from '@stencil/core';
   shadow: true,
 })
 export class PosDescription {
-  @State() resource: any;
+  @State() resource: Thing;
 
   @Event({ eventName: 'pod-os:resource' }) getResource: EventEmitter;
 
@@ -13,7 +14,7 @@ export class PosDescription {
     this.getResource.emit(this.setResource);
   }
 
-  setResource = async (resource: any) => {
+  setResource = async (resource: Thing) => {
     this.resource = resource;
   };
 

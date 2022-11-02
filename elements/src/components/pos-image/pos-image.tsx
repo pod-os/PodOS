@@ -21,7 +21,7 @@ export class PosImage {
   private brokenFile: BrokenFile;
 
   @State()
-  private error: any;
+  private error: Error;
 
   @State()
   private loading: boolean = true;

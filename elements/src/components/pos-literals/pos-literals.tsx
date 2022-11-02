@@ -1,3 +1,4 @@
+import { Thing, Literal } from '@pod-os/core';
 import { Component, h, Event, EventEmitter, State } from '@stencil/core';
 
 @Component({
@@ -5,7 +6,7 @@ import { Component, h, Event, EventEmitter, State } from '@stencil/core';
   shadow: true,
 })
 export class PosLiterals {
-  @State() data: any[] = [];
+  @State() data: Literal[] = [];
 
   @Event({ eventName: 'pod-os:resource' }) getResource: EventEmitter;
 
@@ -13,7 +14,7 @@ export class PosLiterals {
     this.getResource.emit(this.setResource);
   }
 
-  setResource = async (resource: any) => {
+  setResource = async (resource: Thing) => {
     this.data = resource.literals();
   };
 
