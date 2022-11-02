@@ -25,6 +25,7 @@
 
  - [pos-relations](../pos-relations)
  - [pos-reverse-relations](../pos-reverse-relations)
+ - [pos-subjects](../pos-subjects)
 
 ### Depends on
 
@@ -47,6 +48,7 @@ graph TD;
   ion-item --> ion-ripple-effect
   pos-relations --> pos-rich-link
   pos-reverse-relations --> pos-rich-link
+  pos-subjects --> pos-rich-link
   style pos-rich-link fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

@@ -32,6 +32,7 @@ graph TD;
   pos-app-generic --> pos-label
   pos-app-generic --> ion-card-content
   pos-app-generic --> pos-description
+  pos-app-generic --> pos-subjects
   pos-app-generic --> pos-literals
   pos-app-generic --> pos-relations
   pos-app-generic --> pos-reverse-relations
@@ -39,23 +40,25 @@ graph TD;
   pos-picture --> pos-image
   pos-image --> ion-skeleton-text
   pos-image --> ion-icon
-  pos-literals --> ion-item-group
-  pos-literals --> ion-item-divider
-  pos-literals --> ion-label
-  pos-literals --> ion-item
-  pos-literals --> ion-list
-  ion-item --> ion-icon
-  ion-item --> ion-ripple-effect
-  pos-relations --> ion-item-group
-  pos-relations --> ion-item-divider
-  pos-relations --> ion-label
-  pos-relations --> pos-rich-link
-  pos-relations --> ion-list
+  pos-subjects --> pos-rich-link
+  pos-subjects --> ion-list
   pos-rich-link --> pos-resource
   pos-rich-link --> ion-item
   pos-rich-link --> ion-label
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
+  ion-item --> ion-icon
+  ion-item --> ion-ripple-effect
+  pos-literals --> ion-item-group
+  pos-literals --> ion-item-divider
+  pos-literals --> ion-label
+  pos-literals --> ion-item
+  pos-literals --> ion-list
+  pos-relations --> ion-item-group
+  pos-relations --> ion-item-divider
+  pos-relations --> ion-label
+  pos-relations --> pos-rich-link
+  pos-relations --> ion-list
   pos-reverse-relations --> ion-item-group
   pos-reverse-relations --> ion-item-divider
   pos-reverse-relations --> ion-label
