@@ -1,5 +1,5 @@
 import { newSpecPage } from '@stencil/core/testing';
-import { PosDescription } from './pos-description.component';
+import { PosDescription } from './pos-description';
 
 describe('pos-description', () => {
   it('is empty initially', async () => {
