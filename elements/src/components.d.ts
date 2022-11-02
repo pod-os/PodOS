@@ -39,6 +39,8 @@ export namespace Components {
     }
     interface PosRouter {
     }
+    interface PosSubjects {
+    }
     interface TestComponent {
     }
 }
@@ -81,6 +83,10 @@ export interface PosReverseRelationsCustomEvent<T> extends CustomEvent<T> {
 export interface PosRichLinkCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosRichLinkElement;
+}
+export interface PosSubjectsCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosSubjectsElement;
 }
 declare global {
     interface HTMLPosAppElement extends Components.PosApp, HTMLStencilElement {
@@ -167,6 +173,12 @@ declare global {
         prototype: HTMLPosRouterElement;
         new (): HTMLPosRouterElement;
     };
+    interface HTMLPosSubjectsElement extends Components.PosSubjects, HTMLStencilElement {
+    }
+    var HTMLPosSubjectsElement: {
+        prototype: HTMLPosSubjectsElement;
+        new (): HTMLPosSubjectsElement;
+    };
     interface HTMLTestComponentElement extends Components.TestComponent, HTMLStencilElement {
     }
     var HTMLTestComponentElement: {
@@ -188,6 +200,7 @@ declare global {
         "pos-reverse-relations": HTMLPosReverseRelationsElement;
         "pos-rich-link": HTMLPosRichLinkElement;
         "pos-router": HTMLPosRouterElement;
+        "pos-subjects": HTMLPosSubjectsElement;
         "test-component": HTMLTestComponentElement;
     }
 }
@@ -234,6 +247,9 @@ declare namespace LocalJSX {
     }
     interface PosRouter {
     }
+    interface PosSubjects {
+        "onPod-os:resource"?: (event: PosSubjectsCustomEvent<any>) => void;
+    }
     interface TestComponent {
     }
     interface IntrinsicElements {
@@ -251,6 +267,7 @@ declare namespace LocalJSX {
         "pos-reverse-relations": PosReverseRelations;
         "pos-rich-link": PosRichLink;
         "pos-router": PosRouter;
+        "pos-subjects": PosSubjects;
         "test-component": TestComponent;
     }
 }
@@ -272,6 +289,7 @@ declare module "@stencil/core" {
             "pos-reverse-relations": LocalJSX.PosReverseRelations & JSXBase.HTMLAttributes<HTMLPosReverseRelationsElement>;
             "pos-rich-link": LocalJSX.PosRichLink & JSXBase.HTMLAttributes<HTMLPosRichLinkElement>;
             "pos-router": LocalJSX.PosRouter & JSXBase.HTMLAttributes<HTMLPosRouterElement>;
+            "pos-subjects": LocalJSX.PosSubjects & JSXBase.HTMLAttributes<HTMLPosSubjectsElement>;
             "test-component": LocalJSX.TestComponent & JSXBase.HTMLAttributes<HTMLTestComponentElement>;
         }
     }

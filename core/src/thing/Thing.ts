@@ -151,4 +151,8 @@ export class Thing {
         }
       : null;
   }
+
+  assume<T>(SpecificThing: new (uri: string, store: IndexedFormula) => T) {
+    return new SpecificThing(this.uri, this.store);
+  }
 }

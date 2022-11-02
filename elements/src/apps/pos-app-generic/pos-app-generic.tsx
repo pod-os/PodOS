@@ -22,6 +22,9 @@ export class PosAppGeneric {
             </ion-card>
           </ion-col>
           <ion-col size="12" size-sm>
+            <pos-subjects />
+          </ion-col>
+          <ion-col size="12" size-sm>
             <pos-literals />
           </ion-col>
           <ion-col size="12" size-sm>
