@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - RdfDocument
 - list subjects of RdfDocument
+- list types of a Thing
 
 ## 0.4.0
 

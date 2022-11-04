@@ -152,6 +152,11 @@ export class Thing {
       : null;
   }
 
+  types(): string[] {
+    let uriMap = this.store.findTypeURIs(sym(this.uri));
+    return Object.keys(uriMap);
+  }
+
   assume<T>(SpecificThing: new (uri: string, store: IndexedFormula) => T) {
     return new SpecificThing(this.uri, this.store);
   }
