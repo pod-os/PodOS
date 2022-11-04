@@ -3,7 +3,7 @@ import { Thing } from "./Thing";
 
 describe("Thing", function () {
   describe("picture", () => {
-    it("if the URI if nothing is found in store", () => {
+    it("is null if nothing is found in store", () => {
       const store = graph();
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
