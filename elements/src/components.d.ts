@@ -10,6 +10,8 @@ export namespace Components {
     }
     interface PosAppGeneric {
     }
+    interface PosAppRdfDocument {
+    }
     interface PosDemoApp {
     }
     interface PosDescription {
@@ -40,6 +42,8 @@ export namespace Components {
     interface PosRouter {
     }
     interface PosSubjects {
+    }
+    interface PosTypeRouter {
     }
     interface TestComponent {
     }
@@ -88,6 +92,10 @@ export interface PosSubjectsCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosSubjectsElement;
 }
+export interface PosTypeRouterCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosTypeRouterElement;
+}
 declare global {
     interface HTMLPosAppElement extends Components.PosApp, HTMLStencilElement {
     }
@@ -100,6 +108,12 @@ declare global {
     var HTMLPosAppGenericElement: {
         prototype: HTMLPosAppGenericElement;
         new (): HTMLPosAppGenericElement;
+    };
+    interface HTMLPosAppRdfDocumentElement extends Components.PosAppRdfDocument, HTMLStencilElement {
+    }
+    var HTMLPosAppRdfDocumentElement: {
+        prototype: HTMLPosAppRdfDocumentElement;
+        new (): HTMLPosAppRdfDocumentElement;
     };
     interface HTMLPosDemoAppElement extends Components.PosDemoApp, HTMLStencilElement {
     }
@@ -179,6 +193,12 @@ declare global {
         prototype: HTMLPosSubjectsElement;
         new (): HTMLPosSubjectsElement;
     };
+    interface HTMLPosTypeRouterElement extends Components.PosTypeRouter, HTMLStencilElement {
+    }
+    var HTMLPosTypeRouterElement: {
+        prototype: HTMLPosTypeRouterElement;
+        new (): HTMLPosTypeRouterElement;
+    };
     interface HTMLTestComponentElement extends Components.TestComponent, HTMLStencilElement {
     }
     var HTMLTestComponentElement: {
@@ -188,6 +208,7 @@ declare global {
     interface HTMLElementTagNameMap {
         "pos-app": HTMLPosAppElement;
         "pos-app-generic": HTMLPosAppGenericElement;
+        "pos-app-rdf-document": HTMLPosAppRdfDocumentElement;
         "pos-demo-app": HTMLPosDemoAppElement;
         "pos-description": HTMLPosDescriptionElement;
         "pos-image": HTMLPosImageElement;
@@ -201,6 +222,7 @@ declare global {
         "pos-rich-link": HTMLPosRichLinkElement;
         "pos-router": HTMLPosRouterElement;
         "pos-subjects": HTMLPosSubjectsElement;
+        "pos-type-router": HTMLPosTypeRouterElement;
         "test-component": HTMLTestComponentElement;
     }
 }
@@ -208,6 +230,8 @@ declare namespace LocalJSX {
     interface PosApp {
     }
     interface PosAppGeneric {
+    }
+    interface PosAppRdfDocument {
     }
     interface PosDemoApp {
     }
@@ -250,11 +274,15 @@ declare namespace LocalJSX {
     interface PosSubjects {
         "onPod-os:resource"?: (event: PosSubjectsCustomEvent<any>) => void;
     }
+    interface PosTypeRouter {
+        "onPod-os:resource"?: (event: PosTypeRouterCustomEvent<any>) => void;
+    }
     interface TestComponent {
     }
     interface IntrinsicElements {
         "pos-app": PosApp;
         "pos-app-generic": PosAppGeneric;
+        "pos-app-rdf-document": PosAppRdfDocument;
         "pos-demo-app": PosDemoApp;
         "pos-description": PosDescription;
         "pos-image": PosImage;
@@ -268,6 +296,7 @@ declare namespace LocalJSX {
         "pos-rich-link": PosRichLink;
         "pos-router": PosRouter;
         "pos-subjects": PosSubjects;
+        "pos-type-router": PosTypeRouter;
         "test-component": TestComponent;
     }
 }
@@ -277,6 +306,7 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "pos-app": LocalJSX.PosApp & JSXBase.HTMLAttributes<HTMLPosAppElement>;
             "pos-app-generic": LocalJSX.PosAppGeneric & JSXBase.HTMLAttributes<HTMLPosAppGenericElement>;
+            "pos-app-rdf-document": LocalJSX.PosAppRdfDocument & JSXBase.HTMLAttributes<HTMLPosAppRdfDocumentElement>;
             "pos-demo-app": LocalJSX.PosDemoApp & JSXBase.HTMLAttributes<HTMLPosDemoAppElement>;
             "pos-description": LocalJSX.PosDescription & JSXBase.HTMLAttributes<HTMLPosDescriptionElement>;
             "pos-image": LocalJSX.PosImage & JSXBase.HTMLAttributes<HTMLPosImageElement>;
@@ -290,6 +320,7 @@ declare module "@stencil/core" {
             "pos-rich-link": LocalJSX.PosRichLink & JSXBase.HTMLAttributes<HTMLPosRichLinkElement>;
             "pos-router": LocalJSX.PosRouter & JSXBase.HTMLAttributes<HTMLPosRouterElement>;
             "pos-subjects": LocalJSX.PosSubjects & JSXBase.HTMLAttributes<HTMLPosSubjectsElement>;
+            "pos-type-router": LocalJSX.PosTypeRouter & JSXBase.HTMLAttributes<HTMLPosTypeRouterElement>;
             "test-component": LocalJSX.TestComponent & JSXBase.HTMLAttributes<HTMLTestComponentElement>;
         }
     }
