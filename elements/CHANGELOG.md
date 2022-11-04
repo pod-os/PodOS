@@ -9,6 +9,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Added
 
 - [pos-subjects](../docs/elements/components/pos-subjects): List subjects mentioned in a document
+- [pos-app-rdf-document](../docs/elements/apps/pos-app-rdf-document): Shows information from rdf documents
+- [pos-type-router](../docs/elements/components/pos-type-router): Routes to apps depending on resource type
 
 ## 0.3.0
 

@@ -17,6 +17,7 @@
 ### Used by
 
  - [pos-app-generic](../../apps/pos-app-generic)
+ - [pos-app-rdf-document](../../apps/pos-app-rdf-document)
  - [pos-login](../pos-login)
  - [pos-rich-link](../pos-rich-link)
 
@@ -24,6 +25,7 @@
 ```mermaid
 graph TD;
   pos-app-generic --> pos-label
+  pos-app-rdf-document --> pos-label
   pos-login --> pos-label
   pos-rich-link --> pos-label
   style pos-label fill:#f9f,stroke:#333,stroke-width:4px

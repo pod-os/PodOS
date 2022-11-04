@@ -14,14 +14,40 @@
 ### Depends on
 
 - [pos-resource](../pos-resource)
-- [pos-app-generic](../../apps/pos-app-generic)
+- [pos-type-router](../pos-type-router)
 
 ### Graph
 ```mermaid
 graph TD;
   pos-router --> pos-resource
-  pos-router --> pos-app-generic
+  pos-router --> pos-type-router
   pos-resource --> ion-progress-bar
+  pos-type-router --> pos-app-rdf-document
+  pos-type-router --> pos-app-generic
+  pos-app-rdf-document --> ion-grid
+  pos-app-rdf-document --> ion-row
+  pos-app-rdf-document --> ion-col
+  pos-app-rdf-document --> pos-subjects
+  pos-app-rdf-document --> ion-card
+  pos-app-rdf-document --> ion-card-header
+  pos-app-rdf-document --> ion-card-title
+  pos-app-rdf-document --> pos-label
+  pos-app-rdf-document --> pos-literals
+  pos-subjects --> pos-rich-link
+  pos-subjects --> ion-list
+  pos-rich-link --> pos-resource
+  pos-rich-link --> ion-item
+  pos-rich-link --> ion-label
+  pos-rich-link --> pos-label
+  pos-rich-link --> pos-description
+  ion-item --> ion-icon
+  ion-item --> ion-ripple-effect
+  ion-card --> ion-ripple-effect
+  pos-literals --> ion-item-group
+  pos-literals --> ion-item-divider
+  pos-literals --> ion-label
+  pos-literals --> ion-item
+  pos-literals --> ion-list
   pos-app-generic --> ion-grid
   pos-app-generic --> ion-row
   pos-app-generic --> ion-col
@@ -32,28 +58,12 @@ graph TD;
   pos-app-generic --> pos-label
   pos-app-generic --> ion-card-content
   pos-app-generic --> pos-description
-  pos-app-generic --> pos-subjects
   pos-app-generic --> pos-literals
   pos-app-generic --> pos-relations
   pos-app-generic --> pos-reverse-relations
-  ion-card --> ion-ripple-effect
   pos-picture --> pos-image
   pos-image --> ion-skeleton-text
   pos-image --> ion-icon
-  pos-subjects --> pos-rich-link
-  pos-subjects --> ion-list
-  pos-rich-link --> pos-resource
-  pos-rich-link --> ion-item
-  pos-rich-link --> ion-label
-  pos-rich-link --> pos-label
-  pos-rich-link --> pos-description
-  ion-item --> ion-icon
-  ion-item --> ion-ripple-effect
-  pos-literals --> ion-item-group
-  pos-literals --> ion-item-divider
-  pos-literals --> ion-label
-  pos-literals --> ion-item
-  pos-literals --> ion-list
   pos-relations --> ion-item-group
   pos-relations --> ion-item-divider
   pos-relations --> ion-label

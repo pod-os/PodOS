@@ -9,7 +9,7 @@
 
 ### Used by
 
- - [pos-router](../../components/pos-router)
+ - [pos-type-router](../../components/pos-type-router)
 
 ### Depends on
 
@@ -23,7 +23,6 @@
 - [pos-label](../../components/pos-label)
 - ion-card-content
 - [pos-description](../../components/pos-description)
-- [pos-subjects](../../components/pos-subjects)
 - [pos-literals](../../components/pos-literals)
 - [pos-relations](../../components/pos-relations)
 - [pos-reverse-relations](../../components/pos-reverse-relations)
@@ -41,7 +40,6 @@ graph TD;
   pos-app-generic --> pos-label
   pos-app-generic --> ion-card-content
   pos-app-generic --> pos-description
-  pos-app-generic --> pos-subjects
   pos-app-generic --> pos-literals
   pos-app-generic --> pos-relations
   pos-app-generic --> pos-reverse-relations
@@ -49,32 +47,30 @@ graph TD;
   pos-picture --> pos-image
   pos-image --> ion-skeleton-text
   pos-image --> ion-icon
-  pos-subjects --> pos-rich-link
-  pos-subjects --> ion-list
+  pos-literals --> ion-item-group
+  pos-literals --> ion-item-divider
+  pos-literals --> ion-label
+  pos-literals --> ion-item
+  pos-literals --> ion-list
+  ion-item --> ion-icon
+  ion-item --> ion-ripple-effect
+  pos-relations --> ion-item-group
+  pos-relations --> ion-item-divider
+  pos-relations --> ion-label
+  pos-relations --> pos-rich-link
+  pos-relations --> ion-list
   pos-rich-link --> pos-resource
   pos-rich-link --> ion-item
   pos-rich-link --> ion-label
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
   pos-resource --> ion-progress-bar
-  ion-item --> ion-icon
-  ion-item --> ion-ripple-effect
-  pos-literals --> ion-item-group
-  pos-literals --> ion-item-divider
-  pos-literals --> ion-label
-  pos-literals --> ion-item
-  pos-literals --> ion-list
-  pos-relations --> ion-item-group
-  pos-relations --> ion-item-divider
-  pos-relations --> ion-label
-  pos-relations --> pos-rich-link
-  pos-relations --> ion-list
   pos-reverse-relations --> ion-item-group
   pos-reverse-relations --> ion-item-divider
   pos-reverse-relations --> ion-label
   pos-reverse-relations --> pos-rich-link
   pos-reverse-relations --> ion-list
-  pos-router --> pos-app-generic
+  pos-type-router --> pos-app-generic
   style pos-app-generic fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

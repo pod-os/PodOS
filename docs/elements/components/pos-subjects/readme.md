@@ -16,7 +16,7 @@
 
 ### Used by
 
- - [pos-app-generic](../../apps/pos-app-generic)
+ - [pos-app-rdf-document](../../apps/pos-app-rdf-document)
 
 ### Depends on
 
@@ -36,7 +36,7 @@ graph TD;
   pos-resource --> ion-progress-bar
   ion-item --> ion-icon
   ion-item --> ion-ripple-effect
-  pos-app-generic --> pos-subjects
+  pos-app-rdf-document --> pos-subjects
   style pos-subjects fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
