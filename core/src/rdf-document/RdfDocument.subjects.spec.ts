@@ -101,5 +101,19 @@ describe("RdfDocument", () => {
 
       expect(document.subjects()).toHaveLength(0);
     });
+
+    it("subjects do not include own document uri", () => {
+      const store = graph();
+      store.add(
+        sym("http://pod.example/document"),
+        sym("http://vocab.test/title"),
+        "document title",
+        sym("http://pod.example/document")
+      );
+
+      const document = new RdfDocument("http://pod.example/document", store);
+
+      expect(document.subjects()).toHaveLength(0);
+    });
   });
 });

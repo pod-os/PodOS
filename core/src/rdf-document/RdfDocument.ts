@@ -20,8 +20,9 @@ export class RdfDocument extends Thing {
     const uris = matches
       .filter((match) => isNamedNode(match.subject))
       .map((match) => match.subject.value);
-    const uniqueUris = [...new Set(uris)];
-    return uniqueUris.map((uri) => ({
+    const uniqueUris = new Set(uris);
+    uniqueUris.delete(this.uri);
+    return [...uniqueUris].map((uri) => ({
       uri,
     }));
   }

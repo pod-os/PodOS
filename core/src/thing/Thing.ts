@@ -153,7 +153,7 @@ export class Thing {
   }
 
   types(): string[] {
-    let uriMap = this.store.findTypeURIs(sym(this.uri));
+    const uriMap = this.store.findTypeURIs(sym(this.uri));
     return Object.keys(uriMap);
   }
 
