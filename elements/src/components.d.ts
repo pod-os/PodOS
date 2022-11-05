@@ -25,6 +25,9 @@ export namespace Components {
     }
     interface PosLogin {
     }
+    interface PosNavigationBar {
+        "uri": string;
+    }
     interface PosPicture {
     }
     interface PosRelations {
@@ -67,6 +70,10 @@ export interface PosLiteralsCustomEvent<T> extends CustomEvent<T> {
 export interface PosLoginCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosLoginElement;
+}
+export interface PosNavigationBarCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosNavigationBarElement;
 }
 export interface PosPictureCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -151,6 +158,12 @@ declare global {
         prototype: HTMLPosLoginElement;
         new (): HTMLPosLoginElement;
     };
+    interface HTMLPosNavigationBarElement extends Components.PosNavigationBar, HTMLStencilElement {
+    }
+    var HTMLPosNavigationBarElement: {
+        prototype: HTMLPosNavigationBarElement;
+        new (): HTMLPosNavigationBarElement;
+    };
     interface HTMLPosPictureElement extends Components.PosPicture, HTMLStencilElement {
     }
     var HTMLPosPictureElement: {
@@ -215,6 +228,7 @@ declare global {
         "pos-label": HTMLPosLabelElement;
         "pos-literals": HTMLPosLiteralsElement;
         "pos-login": HTMLPosLoginElement;
+        "pos-navigation-bar": HTMLPosNavigationBarElement;
         "pos-picture": HTMLPosPictureElement;
         "pos-relations": HTMLPosRelationsElement;
         "pos-resource": HTMLPosResourceElement;
@@ -250,6 +264,10 @@ declare namespace LocalJSX {
     }
     interface PosLogin {
         "onPod-os:init"?: (event: PosLoginCustomEvent<any>) => void;
+    }
+    interface PosNavigationBar {
+        "onPod-os:link"?: (event: PosNavigationBarCustomEvent<any>) => void;
+        "uri"?: string;
     }
     interface PosPicture {
         "onPod-os:resource"?: (event: PosPictureCustomEvent<any>) => void;
@@ -289,6 +307,7 @@ declare namespace LocalJSX {
         "pos-label": PosLabel;
         "pos-literals": PosLiterals;
         "pos-login": PosLogin;
+        "pos-navigation-bar": PosNavigationBar;
         "pos-picture": PosPicture;
         "pos-relations": PosRelations;
         "pos-resource": PosResource;
@@ -313,6 +332,7 @@ declare module "@stencil/core" {
             "pos-label": LocalJSX.PosLabel & JSXBase.HTMLAttributes<HTMLPosLabelElement>;
             "pos-literals": LocalJSX.PosLiterals & JSXBase.HTMLAttributes<HTMLPosLiteralsElement>;
             "pos-login": LocalJSX.PosLogin & JSXBase.HTMLAttributes<HTMLPosLoginElement>;
+            "pos-navigation-bar": LocalJSX.PosNavigationBar & JSXBase.HTMLAttributes<HTMLPosNavigationBarElement>;
             "pos-picture": LocalJSX.PosPicture & JSXBase.HTMLAttributes<HTMLPosPictureElement>;
             "pos-relations": LocalJSX.PosRelations & JSXBase.HTMLAttributes<HTMLPosRelationsElement>;
             "pos-resource": LocalJSX.PosResource & JSXBase.HTMLAttributes<HTMLPosResourceElement>;

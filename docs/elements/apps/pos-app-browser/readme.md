@@ -39,8 +39,11 @@ graph TD;
   pos-image --> ion-skeleton-text
   pos-image --> ion-icon
   ion-button --> ion-ripple-effect
+  pos-router --> pos-navigation-bar
   pos-router --> pos-resource
   pos-router --> pos-type-router
+  pos-navigation-bar --> ion-searchbar
+  ion-searchbar --> ion-icon
   pos-type-router --> pos-app-rdf-document
   pos-type-router --> pos-app-generic
   pos-app-rdf-document --> ion-grid

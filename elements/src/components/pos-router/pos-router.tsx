@@ -35,6 +35,7 @@ export class PosRouter {
     return (
       <Router.Switch>
         <Route path={match('', { exact: false })}>
+          <pos-navigation-bar uri={this.uri}></pos-navigation-bar>
           <pos-resource key={this.uri} uri={this.uri}>
             <pos-type-router />
           </pos-resource>
