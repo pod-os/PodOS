@@ -1,15 +1,15 @@
 import { Component, h } from '@stencil/core';
 
 @Component({
-  tag: 'pos-demo-app',
+  tag: 'pos-app-browser',
 })
-export class PosDemoApp {
+export class PosAppBrowser {
   render() {
     return (
       <pos-app>
         <ion-header>
           <ion-toolbar>
-            <ion-title slot="start">pod os</ion-title>
+            <ion-title slot="start">PodOS</ion-title>
             <pos-login></pos-login>
           </ion-toolbar>
         </ion-header>
@@ -18,7 +18,7 @@ export class PosDemoApp {
         </ion-content>
         <ion-footer>
           <ion-toolbar>
-            <ion-title>Footer</ion-title>
+            <ion-title>PodOS Browser</ion-title>
           </ion-toolbar>
         </ion-footer>
       </pos-app>

@@ -16,7 +16,7 @@
 
 ### Used by
 
- - [pos-demo-app](../pos-demo-app)
+ - [pos-app-browser](../../apps/pos-app-browser)
 
 ### Depends on
 
@@ -37,7 +37,7 @@ graph TD;
   pos-image --> ion-skeleton-text
   pos-image --> ion-icon
   ion-button --> ion-ripple-effect
-  pos-demo-app --> pos-login
+  pos-app-browser --> pos-login
   style pos-login fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

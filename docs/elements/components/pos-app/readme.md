@@ -9,7 +9,7 @@
 
 ### Used by
 
- - [pos-demo-app](../pos-demo-app)
+ - [pos-app-browser](../../apps/pos-app-browser)
 
 ### Depends on
 
@@ -19,7 +19,7 @@
 ```mermaid
 graph TD;
   pos-app --> ion-app
-  pos-demo-app --> pos-app
+  pos-app-browser --> pos-app
   style pos-app fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

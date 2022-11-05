@@ -1,4 +1,4 @@
-# pos-router
+# pos-app-browser
 
 
 
@@ -7,21 +7,40 @@
 
 ## Dependencies
 
-### Used by
-
- - [pos-app-browser](../../apps/pos-app-browser)
-
 ### Depends on
 
-- [pos-resource](../pos-resource)
-- [pos-type-router](../pos-type-router)
+- [pos-app](../../components/pos-app)
+- ion-header
+- ion-toolbar
+- ion-title
+- [pos-login](../../components/pos-login)
+- ion-content
+- [pos-router](../../components/pos-router)
+- ion-footer
 
 ### Graph
 ```mermaid
 graph TD;
+  pos-app-browser --> pos-app
+  pos-app-browser --> ion-header
+  pos-app-browser --> ion-toolbar
+  pos-app-browser --> ion-title
+  pos-app-browser --> pos-login
+  pos-app-browser --> ion-content
+  pos-app-browser --> pos-router
+  pos-app-browser --> ion-footer
+  pos-app --> ion-app
+  pos-login --> pos-resource
+  pos-login --> pos-picture
+  pos-login --> pos-label
+  pos-login --> ion-button
+  pos-resource --> ion-progress-bar
+  pos-picture --> pos-image
+  pos-image --> ion-skeleton-text
+  pos-image --> ion-icon
+  ion-button --> ion-ripple-effect
   pos-router --> pos-resource
   pos-router --> pos-type-router
-  pos-resource --> ion-progress-bar
   pos-type-router --> pos-app-rdf-document
   pos-type-router --> pos-app-generic
   pos-app-rdf-document --> ion-grid
@@ -61,9 +80,6 @@ graph TD;
   pos-app-generic --> pos-literals
   pos-app-generic --> pos-relations
   pos-app-generic --> pos-reverse-relations
-  pos-picture --> pos-image
-  pos-image --> ion-skeleton-text
-  pos-image --> ion-icon
   pos-relations --> ion-item-group
   pos-relations --> ion-item-divider
   pos-relations --> ion-label
@@ -74,8 +90,7 @@ graph TD;
   pos-reverse-relations --> ion-label
   pos-reverse-relations --> pos-rich-link
   pos-reverse-relations --> ion-list
-  pos-app-browser --> pos-router
-  style pos-router fill:#f9f,stroke:#333,stroke-width:4px
+  style pos-app-browser fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
 ----------------------------------------------

@@ -8,11 +8,11 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
     interface PosApp {
     }
+    interface PosAppBrowser {
+    }
     interface PosAppGeneric {
     }
     interface PosAppRdfDocument {
-    }
-    interface PosDemoApp {
     }
     interface PosDescription {
     }
@@ -103,6 +103,12 @@ declare global {
         prototype: HTMLPosAppElement;
         new (): HTMLPosAppElement;
     };
+    interface HTMLPosAppBrowserElement extends Components.PosAppBrowser, HTMLStencilElement {
+    }
+    var HTMLPosAppBrowserElement: {
+        prototype: HTMLPosAppBrowserElement;
+        new (): HTMLPosAppBrowserElement;
+    };
     interface HTMLPosAppGenericElement extends Components.PosAppGeneric, HTMLStencilElement {
     }
     var HTMLPosAppGenericElement: {
@@ -114,12 +120,6 @@ declare global {
     var HTMLPosAppRdfDocumentElement: {
         prototype: HTMLPosAppRdfDocumentElement;
         new (): HTMLPosAppRdfDocumentElement;
-    };
-    interface HTMLPosDemoAppElement extends Components.PosDemoApp, HTMLStencilElement {
-    }
-    var HTMLPosDemoAppElement: {
-        prototype: HTMLPosDemoAppElement;
-        new (): HTMLPosDemoAppElement;
     };
     interface HTMLPosDescriptionElement extends Components.PosDescription, HTMLStencilElement {
     }
@@ -207,9 +207,9 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "pos-app": HTMLPosAppElement;
+        "pos-app-browser": HTMLPosAppBrowserElement;
         "pos-app-generic": HTMLPosAppGenericElement;
         "pos-app-rdf-document": HTMLPosAppRdfDocumentElement;
-        "pos-demo-app": HTMLPosDemoAppElement;
         "pos-description": HTMLPosDescriptionElement;
         "pos-image": HTMLPosImageElement;
         "pos-label": HTMLPosLabelElement;
@@ -229,11 +229,11 @@ declare global {
 declare namespace LocalJSX {
     interface PosApp {
     }
+    interface PosAppBrowser {
+    }
     interface PosAppGeneric {
     }
     interface PosAppRdfDocument {
-    }
-    interface PosDemoApp {
     }
     interface PosDescription {
         "onPod-os:resource"?: (event: PosDescriptionCustomEvent<any>) => void;
@@ -281,9 +281,9 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "pos-app": PosApp;
+        "pos-app-browser": PosAppBrowser;
         "pos-app-generic": PosAppGeneric;
         "pos-app-rdf-document": PosAppRdfDocument;
-        "pos-demo-app": PosDemoApp;
         "pos-description": PosDescription;
         "pos-image": PosImage;
         "pos-label": PosLabel;
@@ -305,9 +305,9 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "pos-app": LocalJSX.PosApp & JSXBase.HTMLAttributes<HTMLPosAppElement>;
+            "pos-app-browser": LocalJSX.PosAppBrowser & JSXBase.HTMLAttributes<HTMLPosAppBrowserElement>;
             "pos-app-generic": LocalJSX.PosAppGeneric & JSXBase.HTMLAttributes<HTMLPosAppGenericElement>;
             "pos-app-rdf-document": LocalJSX.PosAppRdfDocument & JSXBase.HTMLAttributes<HTMLPosAppRdfDocumentElement>;
-            "pos-demo-app": LocalJSX.PosDemoApp & JSXBase.HTMLAttributes<HTMLPosDemoAppElement>;
             "pos-description": LocalJSX.PosDescription & JSXBase.HTMLAttributes<HTMLPosDescriptionElement>;
             "pos-image": LocalJSX.PosImage & JSXBase.HTMLAttributes<HTMLPosImageElement>;
             "pos-label": LocalJSX.PosLabel & JSXBase.HTMLAttributes<HTMLPosLabelElement>;
