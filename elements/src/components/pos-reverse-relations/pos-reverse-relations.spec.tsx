@@ -2,7 +2,6 @@ import { newSpecPage } from '@stencil/core/testing';
 
 import { getByText } from '@testing-library/dom';
 
-import '@testing-library/jest-dom';
 import { PosReverseRelations } from './pos-reverse-relations';
 
 describe('pos-reverse-relations', () => {

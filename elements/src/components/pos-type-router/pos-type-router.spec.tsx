@@ -1,7 +1,6 @@
 jest.mock('@pod-os/core', () => ({}));
 
 import { newSpecPage } from '@stencil/core/testing';
-import '@testing-library/jest-dom';
 
 import { PosTypeRouter } from './pos-type-router';
 

@@ -2,7 +2,6 @@ import { newSpecPage } from '@stencil/core/testing';
 
 import { getByText } from '@testing-library/dom';
 
-import '@testing-library/jest-dom';
 import { PosLiterals } from './pos-literals';
 
 describe('pos-literals', () => {
