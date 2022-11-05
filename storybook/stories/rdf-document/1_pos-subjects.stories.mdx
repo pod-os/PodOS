@@ -1,0 +1,23 @@
+import { html } from "lit-html";
+
+import { Canvas, Meta, Story } from "@storybook/addon-docs/blocks";
+
+<Meta
+  title="RDF document"
+  args={{ uri: "https://solidproject.solidcommunity.net/profile/card" }}
+/>
+
+## pos-subjects
+
+Shows a list of all things that occur as a subject in an RDF document resource. The
+surrounding `<pos-resource>` should therefore refer to an RDF document.
+
+<Canvas withSource="open">
+  <Story name="pos-subjects">
+    {({ uri }) => html`
+      <pos-resource uri=${uri}>
+        <pos-subjects />
+      </pos-resource>
+    `}
+  </Story>
+</Canvas>
