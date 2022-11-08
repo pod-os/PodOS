@@ -1,0 +1,28 @@
+import {html} from "lit-html";
+
+import {
+  Canvas,
+  Meta,
+  Story
+} from '@storybook/addon-docs/blocks';
+
+<Meta
+  title="Navigation"
+  args={{uri: "https://solidproject.solidcommunity.net/profile/card"}}
+/>
+
+
+## pos-rich-link
+
+Links to the given URI and shows a label and description of the resource identified by that URI, if available.
+
+<Canvas
+  withSource="open">
+  <Story
+    name="pos-rich-link"
+  >
+    {({uri}) => html`
+      <pos-rich-link uri=${uri} />
+    `}
+  </Story>
+</Canvas>
