@@ -4,11 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 0.5.0
 
 ### Added
 
 - [pos-app-browser](../docs/elements/apps/pos-app-browser): PodOS browser application
+- [pos-navigation-bar](../docs/elements/components/pos-navigation-bar): Navigate to URI by entering it
 
 ## 0.4.0
 
