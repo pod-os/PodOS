@@ -23,7 +23,7 @@ export class PosNavigationBar {
   render() {
     return (
       <form onSubmit={e => this.onSubmit(e)}>
-        <ion-searchbar enterkeyhint="search" placeholder="Enter URI" value={this.uri} onIonChange={e => this.onChange(e)} />
+        <ion-searchbar enterkeyhint="search" placeholder="Enter URI" value={this.uri} debounce={0} onIonChange={e => this.onChange(e)} />
       </form>
     );
   }
