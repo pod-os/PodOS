@@ -81,4 +81,38 @@ describe('pos-type-badges', () => {
       </pos-type-badges>
   `);
   });
+
+  it('renders only one badge for the same type label from different vocabs', async () => {
+    const page = await newSpecPage({
+      components: [PosTypeBadges],
+      html: `<pos-type-badges />`,
+    });
+    await page.rootInstance.receiveResource({
+      types: () => [
+        {
+          uri: 'https://vocab.test/SomeType',
+          label: 'SomeType',
+        },
+        {
+          uri: 'https://second-vocab.test/SomeType',
+          label: 'SomeType',
+        },
+        {
+          uri: 'https://another-vocab.test/SomeType',
+          label: 'SomeType',
+        },
+      ],
+    });
+    await page.waitForChanges();
+
+    expect(page.root).toEqualHtml(`
+      <pos-type-badges>
+        <mock:shadow-root>
+          <div class="types">
+            <ion-badge>SomeType</ion-badge>
+          </div>
+        </mock:shadow-root>
+      </pos-type-badges>
+  `);
+  });
 });

@@ -9,6 +9,7 @@ import { ResourceAware, subscribeResource } from '../events/ResourceAware';
 })
 export class PosTypeBadges implements ResourceAware {
   @State() data: RdfType[] = [];
+  @State() typeLabels: string[] = [];
 
   @Event({ eventName: 'pod-os:resource' })
   subscribeResource: EventEmitter;
@@ -19,13 +20,14 @@ export class PosTypeBadges implements ResourceAware {
 
   receiveResource = (resource: Thing) => {
     this.data = resource.types();
+    this.typeLabels = [...new Set(resource.types().map(it => it.label))];
   };
 
   render() {
     return (
       <div class="types">
-        {this.data.map(it => (
-          <ion-badge>{it.label}</ion-badge>
+        {this.typeLabels.map(it => (
+          <ion-badge>{it}</ion-badge>
         ))}
       </div>
     );
