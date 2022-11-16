@@ -23,7 +23,7 @@ describe('pos-type-router', () => {
       html: `<pos-type-router />`,
     });
     await page.rootInstance.receiveResource({
-      types: () => ['http://www.w3.org/2007/ont/link#RDFDocument'],
+      types: () => [{ uri: 'http://www.w3.org/2007/ont/link#RDFDocument', label: 'RdfDocument' }],
     });
     await page.waitForChanges();
 

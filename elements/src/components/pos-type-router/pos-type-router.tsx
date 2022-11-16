@@ -1,4 +1,4 @@
-import { Thing } from '@pod-os/core';
+import { RdfType, Thing } from '@pod-os/core';
 import { Component, Event, EventEmitter, h, State } from '@stencil/core';
 import { ResourceAware, subscribeResource } from '../events/ResourceAware';
 
@@ -7,7 +7,7 @@ import { ResourceAware, subscribeResource } from '../events/ResourceAware';
   shadow: true,
 })
 export class PosTypeRouter implements ResourceAware {
-  @State() types: string[];
+  @State() types: RdfType[];
 
   @Event({ eventName: 'pod-os:resource' })
   subscribeResource: EventEmitter;
@@ -25,7 +25,8 @@ export class PosTypeRouter implements ResourceAware {
   }
 
   private renderApp() {
-    if (this.types.includes('http://www.w3.org/2007/ont/link#RDFDocument')) {
+    console.log('types', this.types);
+    if (this.types.some(type => type.uri === 'http://www.w3.org/2007/ont/link#RDFDocument')) {
       return <pos-app-rdf-document />;
     } else {
       return <pos-app-generic />;

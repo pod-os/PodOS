@@ -5,7 +5,6 @@ import {
   isNamedNode,
   sym,
 } from "rdflib";
-import { PredicateType } from "rdflib/lib/types";
 import { accumulateSubjects } from "./accumulateSubjects";
 import { accumulateValues } from "./accumulateValues";
 import { isRdfType } from "./isRdfType";
@@ -18,6 +17,11 @@ export interface Literal {
 export interface Relation {
   predicate: string;
   uris: string[];
+}
+
+export interface RdfType {
+  uri: string;
+  label: string;
 }
 
 export class Thing {
@@ -154,12 +158,19 @@ export class Thing {
       : null;
   }
 
-  types(): string[] {
+  types(): RdfType[] {
     const uriMap = this.store.findTypeURIs(sym(this.uri));
-    return Object.keys(uriMap);
+    return Object.keys(uriMap).map((uri) => ({
+      uri,
+      label: labelForType(uri),
+    }));
   }
 
   assume<T>(SpecificThing: new (uri: string, store: IndexedFormula) => T) {
     return new SpecificThing(this.uri, this.store);
   }
+}
+
+function labelForType(uri: string) {
+  return uri.substring(uri.lastIndexOf("#") + 1);
 }

@@ -17,7 +17,12 @@ describe("Thing", function () {
         sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
         sym("https://vocab.example#TypeA")
       );
-      expect(it.types()).toEqual(["https://vocab.example#TypeA"]);
+      expect(it.types()).toEqual([
+        {
+          uri: "https://vocab.example#TypeA",
+          label: "TypeA",
+        },
+      ]);
     });
 
     it("contains all the types of a resource", () => {
@@ -39,9 +44,18 @@ describe("Thing", function () {
         sym("https://vocab.example#TypeC")
       );
       const types = it.types();
-      expect(types).toContain("https://vocab.example#TypeA");
-      expect(types).toContain("https://vocab.example#TypeB");
-      expect(types).toContain("https://vocab.example#TypeC");
+      expect(types).toContainEqual({
+        uri: "https://vocab.example#TypeA",
+        label: "TypeA",
+      });
+      expect(types).toContainEqual({
+        uri: "https://vocab.example#TypeB",
+        label: "TypeB",
+      });
+      expect(types).toContainEqual({
+        uri: "https://vocab.example#TypeC",
+        label: "TypeC",
+      });
       expect(types).toHaveLength(3);
     });
 
