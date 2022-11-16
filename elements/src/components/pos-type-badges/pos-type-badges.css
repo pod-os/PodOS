@@ -4,6 +4,12 @@
   margin: 0.5rem 0;
 }
 
+.expanded {
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
 ion-badge {
   color: #333;
   background: #eee;

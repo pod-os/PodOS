@@ -11,6 +11,8 @@ export class PosTypeBadges implements ResourceAware {
   @State() data: RdfType[] = [];
   @State() typeLabels: string[] = [];
 
+  @State() isExpanded: boolean = false;
+
   @Event({ eventName: 'pod-os:resource' })
   subscribeResource: EventEmitter;
 
@@ -23,13 +25,27 @@ export class PosTypeBadges implements ResourceAware {
     this.typeLabels = [...new Set(resource.types().map(it => it.label))];
   };
 
+  toggleDetails() {
+    this.isExpanded = !this.isExpanded;
+  }
+
   render() {
-    return (
-      <div class="types">
-        {this.typeLabels.map(it => (
-          <ion-badge>{it}</ion-badge>
-        ))}
-      </div>
-    );
+    if (this.isExpanded) {
+      return (
+        <div class="types expanded">
+          {this.data.map(it => (
+            <ion-badge>{it.uri}</ion-badge>
+          ))}
+        </div>
+      );
+    } else {
+      return (
+        <div class="types">
+          {this.typeLabels.map(it => (
+            <ion-badge>{it}</ion-badge>
+          ))}
+        </div>
+      );
+    }
   }
 }
