@@ -1,5 +1,5 @@
 import { RdfType, Thing } from '@pod-os/core';
-import { Component, Event, EventEmitter, h, State } from '@stencil/core';
+import { Component, Event, EventEmitter, h, Host, State } from '@stencil/core';
 import { ResourceAware, subscribeResource } from '../events/ResourceAware';
 
 @Component({
@@ -30,9 +30,15 @@ export class PosTypeBadges implements ResourceAware {
   }
 
   render() {
+    if (this.data.length == 0) {
+      return null;
+    }
     if (this.isExpanded) {
       return (
         <div class="types expanded">
+          <ion-badge class="toggle" onClick={() => this.toggleDetails()}>
+            <ion-icon name="contract-outline"></ion-icon>
+          </ion-badge>
           {this.data.map(it => (
             <ion-badge>{it.uri}</ion-badge>
           ))}
@@ -40,11 +46,16 @@ export class PosTypeBadges implements ResourceAware {
       );
     } else {
       return (
-        <div class="types">
-          {this.typeLabels.map(it => (
-            <ion-badge>{it}</ion-badge>
-          ))}
-        </div>
+        <Host>
+          <div class="types">
+            {this.typeLabels.map(it => (
+              <ion-badge>{it}</ion-badge>
+            ))}
+            <ion-badge class="toggle" onClick={() => this.toggleDetails()}>
+              <ion-icon name="expand-outline"></ion-icon>
+            </ion-badge>
+          </div>
+        </Host>
       );
     }
   }

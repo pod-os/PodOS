@@ -14,3 +14,11 @@ ion-badge {
   color: #333;
   background: #eee;
 }
+
+ion-badge.toggle {
+  cursor: pointer;
+}
+
+ion-badge.toggle:hover {
+  background: #ddd;
+}
