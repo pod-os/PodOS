@@ -158,5 +158,26 @@ describe("Thing", function () {
         },
       ]);
     });
+
+    it("does not contain rdf types", () => {
+      const store = graph();
+      const uri = "https://jane.doe.example/container/file.ttl#fragment";
+      store.add(
+        sym(uri),
+        sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        sym("https://vocab.example/TypeA")
+      );
+      store.add(
+        sym(uri),
+        sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        sym("https://vocab.example/TypeB")
+      );
+      const it = new Thing(
+        "https://jane.doe.example/container/file.ttl#fragment",
+        store
+      );
+      const result = it.relations();
+      expect(result).toEqual([]);
+    });
   });
 });

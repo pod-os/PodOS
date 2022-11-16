@@ -5,8 +5,10 @@ import {
   isNamedNode,
   sym,
 } from "rdflib";
+import { PredicateType } from "rdflib/lib/types";
 import { accumulateSubjects } from "./accumulateSubjects";
 import { accumulateValues } from "./accumulateValues";
+import { isRdfType } from "./isRdfType";
 
 export interface Literal {
   predicate: string;
@@ -55,7 +57,7 @@ export class Thing {
     const statements = this.store.statementsMatching(sym(this.uri));
 
     const values = statements
-      .filter((it) => isNamedNode(it.object))
+      .filter((it) => isNamedNode(it.object) && !isRdfType(it.predicate))
       .reduce(accumulateValues, {});
 
     return Object.keys(values).map((predicate) => ({
