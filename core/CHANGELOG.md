@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 
 - thing relations do not contain the types anymore
+- thing types now return the URI and a label derived from that URI
 
 ## 0.5.0
 

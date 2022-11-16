@@ -8,6 +8,7 @@ import {
 import { accumulateSubjects } from "./accumulateSubjects";
 import { accumulateValues } from "./accumulateValues";
 import { isRdfType } from "./isRdfType";
+import { labelForType } from "./labelForType";
 
 export interface Literal {
   predicate: string;
@@ -169,8 +170,4 @@ export class Thing {
   assume<T>(SpecificThing: new (uri: string, store: IndexedFormula) => T) {
     return new SpecificThing(this.uri, this.store);
   }
-}
-
-function labelForType(uri: string) {
-  return uri.substring(uri.lastIndexOf("#") + 1);
 }

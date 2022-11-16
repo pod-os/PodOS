@@ -25,7 +25,6 @@ export class PosTypeRouter implements ResourceAware {
   }
 
   private renderApp() {
-    console.log('types', this.types);
     if (this.types.some(type => type.uri === 'http://www.w3.org/2007/ont/link#RDFDocument')) {
       return <pos-app-rdf-document />;
     } else {
