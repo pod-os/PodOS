@@ -11,6 +11,7 @@ export class PosAppGeneric {
           <ion-col size="12" size-sm>
             <ion-card>
               <ion-card-header>
+                <pos-type-badges />
                 <pos-picture />
                 <ion-card-title>
                   <pos-label />

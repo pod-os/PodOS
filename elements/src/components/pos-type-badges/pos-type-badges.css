@@ -1,0 +1,10 @@
+.types {
+  display: flex;
+  gap: 0.25rem;
+  margin: 0.5rem 0;
+}
+
+ion-badge {
+  color: #333;
+  background: #eee;
+}

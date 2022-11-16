@@ -46,6 +46,8 @@ export namespace Components {
     }
     interface PosSubjects {
     }
+    interface PosTypeBadges {
+    }
     interface PosTypeRouter {
     }
     interface TestComponent {
@@ -98,6 +100,10 @@ export interface PosRichLinkCustomEvent<T> extends CustomEvent<T> {
 export interface PosSubjectsCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosSubjectsElement;
+}
+export interface PosTypeBadgesCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosTypeBadgesElement;
 }
 export interface PosTypeRouterCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -206,6 +212,12 @@ declare global {
         prototype: HTMLPosSubjectsElement;
         new (): HTMLPosSubjectsElement;
     };
+    interface HTMLPosTypeBadgesElement extends Components.PosTypeBadges, HTMLStencilElement {
+    }
+    var HTMLPosTypeBadgesElement: {
+        prototype: HTMLPosTypeBadgesElement;
+        new (): HTMLPosTypeBadgesElement;
+    };
     interface HTMLPosTypeRouterElement extends Components.PosTypeRouter, HTMLStencilElement {
     }
     var HTMLPosTypeRouterElement: {
@@ -236,6 +248,7 @@ declare global {
         "pos-rich-link": HTMLPosRichLinkElement;
         "pos-router": HTMLPosRouterElement;
         "pos-subjects": HTMLPosSubjectsElement;
+        "pos-type-badges": HTMLPosTypeBadgesElement;
         "pos-type-router": HTMLPosTypeRouterElement;
         "test-component": HTMLTestComponentElement;
     }
@@ -292,6 +305,9 @@ declare namespace LocalJSX {
     interface PosSubjects {
         "onPod-os:resource"?: (event: PosSubjectsCustomEvent<any>) => void;
     }
+    interface PosTypeBadges {
+        "onPod-os:resource"?: (event: PosTypeBadgesCustomEvent<any>) => void;
+    }
     interface PosTypeRouter {
         "onPod-os:resource"?: (event: PosTypeRouterCustomEvent<any>) => void;
     }
@@ -315,6 +331,7 @@ declare namespace LocalJSX {
         "pos-rich-link": PosRichLink;
         "pos-router": PosRouter;
         "pos-subjects": PosSubjects;
+        "pos-type-badges": PosTypeBadges;
         "pos-type-router": PosTypeRouter;
         "test-component": TestComponent;
     }
@@ -340,6 +357,7 @@ declare module "@stencil/core" {
             "pos-rich-link": LocalJSX.PosRichLink & JSXBase.HTMLAttributes<HTMLPosRichLinkElement>;
             "pos-router": LocalJSX.PosRouter & JSXBase.HTMLAttributes<HTMLPosRouterElement>;
             "pos-subjects": LocalJSX.PosSubjects & JSXBase.HTMLAttributes<HTMLPosSubjectsElement>;
+            "pos-type-badges": LocalJSX.PosTypeBadges & JSXBase.HTMLAttributes<HTMLPosTypeBadgesElement>;
             "pos-type-router": LocalJSX.PosTypeRouter & JSXBase.HTMLAttributes<HTMLPosTypeRouterElement>;
             "test-component": LocalJSX.TestComponent & JSXBase.HTMLAttributes<HTMLTestComponentElement>;
         }

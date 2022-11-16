@@ -18,6 +18,7 @@
 - ion-col
 - ion-card
 - ion-card-header
+- [pos-type-badges](../../components/pos-type-badges)
 - [pos-picture](../../components/pos-picture)
 - ion-card-title
 - [pos-label](../../components/pos-label)
@@ -35,6 +36,7 @@ graph TD;
   pos-app-generic --> ion-col
   pos-app-generic --> ion-card
   pos-app-generic --> ion-card-header
+  pos-app-generic --> pos-type-badges
   pos-app-generic --> pos-picture
   pos-app-generic --> ion-card-title
   pos-app-generic --> pos-label
@@ -44,6 +46,7 @@ graph TD;
   pos-app-generic --> pos-relations
   pos-app-generic --> pos-reverse-relations
   ion-card --> ion-ripple-effect
+  pos-type-badges --> ion-badge
   pos-picture --> pos-image
   pos-image --> ion-skeleton-text
   pos-image --> ion-icon

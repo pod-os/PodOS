@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+## Added
+
+- [pos-type-badges](../docs/elements/components/pos-type-badges): Show rdf types as simple badges
+- Show type badges in [pos-app-generic](../docs/elements/apps/pos-app-generic) and [pos-app-rdf-document](../docs/elements/apps/pos-app-rdf-document)
+
+## Changed
+
+- Remove types from [pos-relations](../docs/elements/components/pos-relations)
+
 ## 0.5.0
 
 ### Added
@@ -52,4 +63,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - pos-rich-link
   - pos-router
 - Apps:
-  - [pos-app-generic](../docs/elements/apps/pos-app-generic):
+  - [pos-app-generic](../docs/elements/apps/pos-app-generic)

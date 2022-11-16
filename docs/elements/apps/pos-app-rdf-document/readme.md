@@ -21,6 +21,7 @@
 - ion-card-header
 - ion-card-title
 - [pos-label](../../components/pos-label)
+- [pos-type-badges](../../components/pos-type-badges)
 - [pos-literals](../../components/pos-literals)
 
 ### Graph
@@ -34,6 +35,7 @@ graph TD;
   pos-app-rdf-document --> ion-card-header
   pos-app-rdf-document --> ion-card-title
   pos-app-rdf-document --> pos-label
+  pos-app-rdf-document --> pos-type-badges
   pos-app-rdf-document --> pos-literals
   pos-subjects --> pos-rich-link
   pos-subjects --> ion-list
@@ -46,6 +48,7 @@ graph TD;
   ion-item --> ion-icon
   ion-item --> ion-ripple-effect
   ion-card --> ion-ripple-effect
+  pos-type-badges --> ion-badge
   pos-literals --> ion-item-group
   pos-literals --> ion-item-divider
   pos-literals --> ion-label
