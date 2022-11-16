@@ -46,10 +46,14 @@ graph TD;
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
   pos-resource --> ion-progress-bar
+  pos-resource --> ion-card
+  pos-resource --> ion-card-header
+  pos-resource --> ion-card-content
+  ion-card --> ion-ripple-effect
   ion-item --> ion-icon
   ion-item --> ion-ripple-effect
-  ion-card --> ion-ripple-effect
   pos-type-badges --> ion-badge
+  pos-type-badges --> ion-icon
   pos-literals --> ion-item-group
   pos-literals --> ion-item-divider
   pos-literals --> ion-label

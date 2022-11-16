@@ -69,13 +69,8 @@ describe('pos-resource', () => {
     when(os.fetch).calledWith('https://resource.test/').mockRejectedValue(new Error('not found'));
     await page.rootInstance.setOs(os);
     await page.waitForChanges();
-    expect(page.root).toEqualHtml(`
-      <pos-resource uri="https://resource.test/">
-        <mock:shadow-root>
-          <div>not found</div>
-        </mock:shadow-root>
-      </pos-resource>
-  `);
+    const errorDetails = page.root.shadowRoot.querySelector('details');
+    expect(errorDetails).toEqualHtml(`<details>not found</details>`);
   });
 
   it('updates and loads resource when uri changes', async () => {
@@ -229,13 +224,12 @@ describe('pos-resource', () => {
         await page.rootInstance.setOs(os);
         page.root.fetch();
         await page.waitForChanges();
-        expect(page.root).toEqualHtml(`
-      <pos-resource lazy uri="https://resource.test/">
-        <mock:shadow-root>
-          <div>not found</div>
-        </mock:shadow-root>
-      </pos-resource>
-  `);
+        const errorDetails = page.root.shadowRoot.querySelector('details');
+        expect(errorDetails).toEqualHtml(`
+        <details>
+          not found
+        </details>
+`);
       });
     });
   });

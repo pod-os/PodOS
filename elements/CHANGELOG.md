@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## Changed
 
 - Remove types from [pos-relations](../docs/elements/components/pos-relations)
+- Better error description when [pos-resource](../docs/elements/components/pos-resource) fails to load
 
 ## 0.5.0
 

@@ -82,7 +82,25 @@ export class PosResource {
       return <ion-progress-bar type="indeterminate" />;
     }
     if (this.error) {
-      return <div>{this.error.message}</div>;
+      return (
+        <ion-card>
+          <ion-card-header>
+            <p>Sorry, something went wrong</p>
+            <p>
+              Status:
+              {
+                // @ts-ignore
+                this.error.status
+              }
+            </p>
+            <details>{this.error.message}</details>
+          </ion-card-header>
+          <ion-card-content>
+            <p>You can try to open the link outside PodOS:</p>
+            <a href={this.uri}>{this.uri}</a>
+          </ion-card-content>
+        </ion-card>
+      );
     }
     return <slot />;
   }

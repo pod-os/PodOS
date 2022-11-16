@@ -33,6 +33,10 @@ graph TD;
   pos-login --> pos-label
   pos-login --> ion-button
   pos-resource --> ion-progress-bar
+  pos-resource --> ion-card
+  pos-resource --> ion-card-header
+  pos-resource --> ion-card-content
+  ion-card --> ion-ripple-effect
   pos-picture --> pos-image
   pos-image --> ion-skeleton-text
   pos-image --> ion-icon

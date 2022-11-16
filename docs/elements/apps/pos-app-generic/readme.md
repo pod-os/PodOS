@@ -47,6 +47,7 @@ graph TD;
   pos-app-generic --> pos-reverse-relations
   ion-card --> ion-ripple-effect
   pos-type-badges --> ion-badge
+  pos-type-badges --> ion-icon
   pos-picture --> pos-image
   pos-image --> ion-skeleton-text
   pos-image --> ion-icon
@@ -68,6 +69,9 @@ graph TD;
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
   pos-resource --> ion-progress-bar
+  pos-resource --> ion-card
+  pos-resource --> ion-card-header
+  pos-resource --> ion-card-content
   pos-reverse-relations --> ion-item-group
   pos-reverse-relations --> ion-item-divider
   pos-reverse-relations --> ion-label

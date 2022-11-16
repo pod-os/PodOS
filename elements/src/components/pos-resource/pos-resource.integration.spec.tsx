@@ -124,9 +124,27 @@ describe('pos-resource with a pos-label child', () => {
   <ion-app>
     <pos-resource uri="https://resource.test">
       <mock:shadow-root>
-        <div>
-          not found
-        </div>
+        <ion-card>
+          <ion-card-header>
+            <p>
+              Sorry, something went wrong
+            </p>
+            <p>
+              Status:
+            </p>
+            <details>
+              not found
+            </details>
+          </ion-card-header>
+          <ion-card-content>
+            <p>
+              You can try to open the link outside PodOS:
+            </p>
+            <a href="https://resource.test">
+              https://resource.test
+            </a>
+          </ion-card-content>
+        </ion-card>
       </mock:shadow-root>
       <pos-label>
         <mock:shadow-root>
@@ -290,9 +308,27 @@ describe('pos-resource with a pos-label child', () => {
       <ion-app>
         <pos-resource lazy uri="https://resource.test">
           <mock:shadow-root>
-             <div>
-               not found
-             </div>
+            <ion-card>
+              <ion-card-header>
+                <p>
+                  Sorry, something went wrong
+                </p>
+                <p>
+                  Status:
+                </p>
+                <details>
+                  not found
+                </details>
+              </ion-card-header>
+              <ion-card-content>
+                <p>
+                  You can try to open the link outside PodOS:
+                </p>
+                <a href="https://resource.test">
+                  https://resource.test
+                </a>
+              </ion-card-content>
+            </ion-card>
           </mock:shadow-root>
           <pos-label>
             <mock:shadow-root>
