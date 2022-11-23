@@ -21,17 +21,20 @@
 
 ## CSS Custom Properties
 
-| Name              | Description                |
-| ----------------- | -------------------------- |
-| `--border-radius` | Border radius of the image |
-| `--height`        | Height of the image        |
-| `--width`         | Width of the image         |
+| Name              | Description                 |
+| ----------------- | --------------------------- |
+| `--border-radius` | Border radius of the image  |
+| `--height`        | Height of the image         |
+| `--max-height`    | Maximum height of the image |
+| `--max-width`     | Maximum width of the image  |
+| `--width`         | Width of the image          |
 
 
 ## Dependencies
 
 ### Used by
 
+ - [pos-app-image-viewer](../../apps/pos-app-image-viewer)
  - [pos-picture](../pos-picture)
 
 ### Depends on
@@ -44,6 +47,7 @@
 graph TD;
   pos-image --> ion-skeleton-text
   pos-image --> ion-icon
+  pos-app-image-viewer --> pos-image
   pos-picture --> pos-image
   style pos-image fill:#f9f,stroke:#333,stroke-width:4px
 ```

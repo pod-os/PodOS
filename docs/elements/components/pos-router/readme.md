@@ -31,6 +31,7 @@ graph TD;
   pos-resource --> ion-card-content
   ion-card --> ion-ripple-effect
   pos-type-router --> pos-app-rdf-document
+  pos-type-router --> pos-app-image-viewer
   pos-type-router --> pos-app-generic
   pos-app-rdf-document --> ion-grid
   pos-app-rdf-document --> ion-row
@@ -58,6 +59,18 @@ graph TD;
   pos-literals --> ion-label
   pos-literals --> ion-item
   pos-literals --> ion-list
+  pos-app-image-viewer --> ion-grid
+  pos-app-image-viewer --> ion-row
+  pos-app-image-viewer --> ion-col
+  pos-app-image-viewer --> pos-image
+  pos-app-image-viewer --> ion-card
+  pos-app-image-viewer --> ion-card-header
+  pos-app-image-viewer --> ion-card-title
+  pos-app-image-viewer --> pos-label
+  pos-app-image-viewer --> pos-type-badges
+  pos-app-image-viewer --> pos-literals
+  pos-image --> ion-skeleton-text
+  pos-image --> ion-icon
   pos-app-generic --> ion-grid
   pos-app-generic --> ion-row
   pos-app-generic --> ion-col
@@ -73,8 +86,6 @@ graph TD;
   pos-app-generic --> pos-relations
   pos-app-generic --> pos-reverse-relations
   pos-picture --> pos-image
-  pos-image --> ion-skeleton-text
-  pos-image --> ion-icon
   pos-relations --> ion-item-group
   pos-relations --> ion-item-divider
   pos-relations --> ion-label
