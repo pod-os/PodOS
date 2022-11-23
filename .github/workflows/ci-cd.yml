@@ -27,13 +27,20 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: core-build
-          path: core
+          path: |
+            core/dist/
+            core/lib/
+            core/types/
+            core/package.json
           retention-days: 1
       - name: Save @pod-os/elements build
         uses: actions/upload-artifact@v3
         with:
           name: elements-build
-          path: elements
+          path: |
+            elements/dist/
+            elements/loader/
+            elements/package.json
           retention-days: 1
 
   npm-publish-core-build:
