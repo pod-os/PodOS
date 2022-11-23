@@ -4,6 +4,8 @@
    * @prop --width: Width of the image
    * @prop --height: Height of the image
    * @prop --border-radius: Border radius of the image
+   * @prop --max-width: Maximum width of the image
+   * @prop --max-height: Maximum height of the image
    */
 }
 
@@ -11,6 +13,8 @@ img, ion-skeleton-text, div.error {
   border-radius: var(--border-radius);
   width: var(--width);
   height: var(--height);
+  max-width: var(--max-width);
+  max-height: var(--max-height);
 }
 
 .error {

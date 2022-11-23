@@ -5,6 +5,11 @@ import { ResourceAware, subscribeResource } from '../../components/events/Resour
 @Component({
   tag: 'pos-app-image-viewer',
   shadow: true,
+  styles: `
+        pos-image {
+          --max-width: 100%;
+        }
+    `,
 })
 export class PosAppImageViewer implements ResourceAware {
   @State() resource: Thing;
