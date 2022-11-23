@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.7.0
+
+## Added
+
+- [pos-app-image-viewer](../docs/elements/apps/pos-app-image-viewer): A viewer for image resources
+- [pos-image](../docs/elements/components/pos-image): New CSS custom properties for max-width and max-height
+
+## Changed
+
+- [pos-type-router](../docs/elements/components/pos-type-router): Route to pos-app-image-viewer for image resources
+
 ## 0.6.0
 
 ## Added
