@@ -12,6 +12,8 @@ export namespace Components {
     }
     interface PosAppGeneric {
     }
+    interface PosAppImageViewer {
+    }
     interface PosAppRdfDocument {
     }
     interface PosDescription {
@@ -52,6 +54,10 @@ export namespace Components {
     }
     interface TestComponent {
     }
+}
+export interface PosAppImageViewerCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosAppImageViewerElement;
 }
 export interface PosDescriptionCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -127,6 +133,12 @@ declare global {
     var HTMLPosAppGenericElement: {
         prototype: HTMLPosAppGenericElement;
         new (): HTMLPosAppGenericElement;
+    };
+    interface HTMLPosAppImageViewerElement extends Components.PosAppImageViewer, HTMLStencilElement {
+    }
+    var HTMLPosAppImageViewerElement: {
+        prototype: HTMLPosAppImageViewerElement;
+        new (): HTMLPosAppImageViewerElement;
     };
     interface HTMLPosAppRdfDocumentElement extends Components.PosAppRdfDocument, HTMLStencilElement {
     }
@@ -234,6 +246,7 @@ declare global {
         "pos-app": HTMLPosAppElement;
         "pos-app-browser": HTMLPosAppBrowserElement;
         "pos-app-generic": HTMLPosAppGenericElement;
+        "pos-app-image-viewer": HTMLPosAppImageViewerElement;
         "pos-app-rdf-document": HTMLPosAppRdfDocumentElement;
         "pos-description": HTMLPosDescriptionElement;
         "pos-image": HTMLPosImageElement;
@@ -259,6 +272,9 @@ declare namespace LocalJSX {
     interface PosAppBrowser {
     }
     interface PosAppGeneric {
+    }
+    interface PosAppImageViewer {
+        "onPod-os:resource"?: (event: PosAppImageViewerCustomEvent<any>) => void;
     }
     interface PosAppRdfDocument {
     }
@@ -317,6 +333,7 @@ declare namespace LocalJSX {
         "pos-app": PosApp;
         "pos-app-browser": PosAppBrowser;
         "pos-app-generic": PosAppGeneric;
+        "pos-app-image-viewer": PosAppImageViewer;
         "pos-app-rdf-document": PosAppRdfDocument;
         "pos-description": PosDescription;
         "pos-image": PosImage;
@@ -343,6 +360,7 @@ declare module "@stencil/core" {
             "pos-app": LocalJSX.PosApp & JSXBase.HTMLAttributes<HTMLPosAppElement>;
             "pos-app-browser": LocalJSX.PosAppBrowser & JSXBase.HTMLAttributes<HTMLPosAppBrowserElement>;
             "pos-app-generic": LocalJSX.PosAppGeneric & JSXBase.HTMLAttributes<HTMLPosAppGenericElement>;
+            "pos-app-image-viewer": LocalJSX.PosAppImageViewer & JSXBase.HTMLAttributes<HTMLPosAppImageViewerElement>;
             "pos-app-rdf-document": LocalJSX.PosAppRdfDocument & JSXBase.HTMLAttributes<HTMLPosAppRdfDocumentElement>;
             "pos-description": LocalJSX.PosDescription & JSXBase.HTMLAttributes<HTMLPosDescriptionElement>;
             "pos-image": LocalJSX.PosImage & JSXBase.HTMLAttributes<HTMLPosImageElement>;
