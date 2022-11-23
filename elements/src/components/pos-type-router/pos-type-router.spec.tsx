@@ -36,6 +36,25 @@ describe('pos-type-router', () => {
 `);
   });
 
+  it('renders image viewer for image resource', async () => {
+    const page = await newSpecPage({
+      components: [PosTypeRouter],
+      html: `<pos-type-router />`,
+    });
+    await page.rootInstance.receiveResource({
+      types: () => [{ uri: 'http://purl.org/dc/terms/Image', label: 'Image' }],
+    });
+    await page.waitForChanges();
+
+    expect(page.root).toEqualHtml(`
+    <pos-type-router>
+      <mock:shadow-root>
+        <pos-app-image-viewer></pos-app-image-viewer>
+      </mock:shadow-root>
+    </pos-type-router>
+`);
+  });
+
   it('renders generic app for ldp resources', async () => {
     const page = await newSpecPage({
       components: [PosTypeRouter],
