@@ -24,7 +24,7 @@
     "@ionic/core": "^6.3.9",
     "@pod-os/core": "^0.6.0",
     "@stencil/core": "^2.19.3",
-    "@stencil/store": "^1.5.0",
+    "@stencil/store": "^2.0.1",
     "jest-when": "^3.5.2",
     "stencil-router-v2": "^0.6.0"
   },
