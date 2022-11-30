@@ -58,6 +58,7 @@ graph TD;
   pos-literals --> ion-list
   ion-item --> ion-icon
   ion-item --> ion-ripple-effect
+  ion-item --> ion-note
   pos-relations --> ion-item-group
   pos-relations --> ion-item-divider
   pos-relations --> ion-label

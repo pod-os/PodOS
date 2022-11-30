@@ -38,6 +38,7 @@ graph TD;
   pos-literals --> ion-list
   ion-item --> ion-icon
   ion-item --> ion-ripple-effect
+  ion-item --> ion-note
   pos-app-generic --> pos-literals
   pos-app-image-viewer --> pos-literals
   pos-app-rdf-document --> pos-literals

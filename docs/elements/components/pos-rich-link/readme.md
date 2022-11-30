@@ -50,6 +50,7 @@ graph TD;
   ion-card --> ion-ripple-effect
   ion-item --> ion-icon
   ion-item --> ion-ripple-effect
+  ion-item --> ion-note
   pos-relations --> pos-rich-link
   pos-reverse-relations --> pos-rich-link
   pos-subjects --> pos-rich-link

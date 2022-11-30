@@ -56,6 +56,7 @@ graph TD;
   pos-literals --> ion-list
   ion-item --> ion-icon
   ion-item --> ion-ripple-effect
+  ion-item --> ion-note
   pos-type-router --> pos-app-image-viewer
   style pos-app-image-viewer fill:#f9f,stroke:#333,stroke-width:4px
 ```

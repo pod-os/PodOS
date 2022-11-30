@@ -70,6 +70,7 @@ graph TD;
   pos-rich-link --> pos-description
   ion-item --> ion-icon
   ion-item --> ion-ripple-effect
+  ion-item --> ion-note
   pos-type-badges --> ion-badge
   pos-type-badges --> ion-icon
   pos-literals --> ion-item-group
