@@ -52,8 +52,6 @@ export namespace Components {
     }
     interface PosTypeRouter {
     }
-    interface TestComponent {
-    }
 }
 export interface PosAppImageViewerCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -236,12 +234,6 @@ declare global {
         prototype: HTMLPosTypeRouterElement;
         new (): HTMLPosTypeRouterElement;
     };
-    interface HTMLTestComponentElement extends Components.TestComponent, HTMLStencilElement {
-    }
-    var HTMLTestComponentElement: {
-        prototype: HTMLTestComponentElement;
-        new (): HTMLTestComponentElement;
-    };
     interface HTMLElementTagNameMap {
         "pos-app": HTMLPosAppElement;
         "pos-app-browser": HTMLPosAppBrowserElement;
@@ -263,7 +255,6 @@ declare global {
         "pos-subjects": HTMLPosSubjectsElement;
         "pos-type-badges": HTMLPosTypeBadgesElement;
         "pos-type-router": HTMLPosTypeRouterElement;
-        "test-component": HTMLTestComponentElement;
     }
 }
 declare namespace LocalJSX {
@@ -327,8 +318,6 @@ declare namespace LocalJSX {
     interface PosTypeRouter {
         "onPod-os:resource"?: (event: PosTypeRouterCustomEvent<any>) => void;
     }
-    interface TestComponent {
-    }
     interface IntrinsicElements {
         "pos-app": PosApp;
         "pos-app-browser": PosAppBrowser;
@@ -350,7 +339,6 @@ declare namespace LocalJSX {
         "pos-subjects": PosSubjects;
         "pos-type-badges": PosTypeBadges;
         "pos-type-router": PosTypeRouter;
-        "test-component": TestComponent;
     }
 }
 export { LocalJSX as JSX };
@@ -377,7 +365,6 @@ declare module "@stencil/core" {
             "pos-subjects": LocalJSX.PosSubjects & JSXBase.HTMLAttributes<HTMLPosSubjectsElement>;
             "pos-type-badges": LocalJSX.PosTypeBadges & JSXBase.HTMLAttributes<HTMLPosTypeBadgesElement>;
             "pos-type-router": LocalJSX.PosTypeRouter & JSXBase.HTMLAttributes<HTMLPosTypeRouterElement>;
-            "test-component": LocalJSX.TestComponent & JSXBase.HTMLAttributes<HTMLTestComponentElement>;
         }
     }
 }
