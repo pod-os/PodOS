@@ -155,6 +155,9 @@ jobs:
   npm-release-latest-elements:
     needs: build
     runs-on: ubuntu-latest
+    outputs:
+      releaseType: ${{ steps.release.outputs.type }}
+      releaseVersion: ${{ steps.release.outputs.version }}
     steps:
       - uses: actions/download-artifact@v3
         with:
@@ -163,7 +166,28 @@ jobs:
         with:
           node-version: lts/*
       - uses: JS-DevTools/npm-publish@v1
+        id: release
         name: Release @pod-os/elements
         with:
           token: ${{ secrets.NPM_TOKEN }}
           tag: latest
+
+  deploy-pod-os-apps:
+    needs: npm-release-latest-elements
+    if: needs.npm-release-latest-elements.outputs.releaseType != 'none'
+    runs-on: ubuntu-latest
+    env:
+      POD_OS_ELEMENTS_VERSION: ${{ needs.npm-release-latest-elements.outputs.releaseVersion }}
+    steps:
+      - run: echo release apps based on @pod-os/elements version ${POD_OS_ELEMENTS_VERSION}
+      - uses: actions/checkout@v3
+      - name: Build PodOS Browser
+        working-directory: ./apps
+        run: make pos-app-browser
+      - name: Deploy PodOS Browser
+        uses: netlify/actions/cli@master
+        with:
+          args: deploy --dir=apps/dist/pos-app-browser --prod
+        env:
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_POD_OS_BROWSER_SITE_ID }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
