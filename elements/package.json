@@ -21,9 +21,9 @@
     "generate": "stencil generate"
   },
   "dependencies": {
-    "@ionic/core": "^6.3.9",
+    "@ionic/core": "^6.4.1",
     "@pod-os/core": "^0.6.0",
-    "@stencil/core": "^2.19.3",
+    "@stencil/core": "^2.20.0",
     "@stencil/store": "^2.0.1",
     "jest-when": "^3.5.2",
     "stencil-router-v2": "^0.6.0"
@@ -34,7 +34,7 @@
     "@types/jest": "^26.0.24",
     "jest": "^26.6.3",
     "jest-cli": "^26.6.3",
-    "prettier": "^2.8.0"
+    "prettier": "^2.8.1"
   },
   "license": "MIT",
   "repository": {
