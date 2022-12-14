@@ -5,6 +5,7 @@
   "main": "index.html",
   "scripts": {
     "start": "serve dist/pos-app-browser",
+    "start:solid-server": "community-solid-server --port 4000 --config @css:config/file.json --rootFilePath ./test-solid-server/data",
     "test": "playwright test",
     "build:latest": "POD_OS_ELEMENTS_VERSION=latest make pos-app-browser"
   },
@@ -13,6 +14,7 @@
   "license": "MIT",
   "devDependencies": {
     "@playwright/test": "^1.28.1",
+    "@solid/community-server": "^5.1.0",
     "serve": "^14.1.2"
   }
 }
