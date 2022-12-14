@@ -20,9 +20,7 @@ export class PosRichLink {
           }}
         >
           <ion-label>
-            <h2>
-              <pos-label />
-            </h2>
+            <pos-label />
             <p>
               <ion-label style={{ maxWidth: '50rem' }}>
                 <pos-description />
