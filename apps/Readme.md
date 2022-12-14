@@ -30,3 +30,15 @@ with every new release of @pod-os/elements.
 #### Custom deployment
 
 Just upload `dist/pod-os-browser/index.html` to your Solid Pod or any webserver.
+
+### End-to-End tests
+
+This repository also contains End-to-End tests for the PodOS Browser
+
+### Run the tests
+
+First build the app as described above, then run
+
+```shell
+npm test
+```
