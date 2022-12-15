@@ -1,0 +1,16 @@
+@prefix :       <#> .
+@prefix schema: <http://schema.org/> .
+
+:it
+    a schema:Thing  ;
+    schema:name "Something" ;
+    schema:image <thing.png>;
+    schema:description  "A very generic item" ;
+    schema:parentItem :parent
+.
+
+:parent
+    a schema:Thing ;
+    schema:name "Related Thing" ;
+    schema:description "This is somehow related to the other thing" ;
+.
