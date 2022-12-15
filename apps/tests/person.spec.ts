@@ -4,10 +4,7 @@ test("show name as heading for a person", async ({ page }) => {
   // when opening PodOS Browser
   await page.goto("/");
 
-  // then the page title is "PodOS Browser"
-  await expect(page).toHaveTitle("PodOS Browser");
-
-  // when I navigate to Alice's WebID
+  // and navigating to Alice's WebID
   const navigationBar = page.getByPlaceholder("Enter URI");
   await navigationBar.fill("http://localhost:4000/alice/profile/card#me");
   await navigationBar.press("Enter");
