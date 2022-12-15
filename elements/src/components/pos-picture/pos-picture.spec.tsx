@@ -20,6 +20,7 @@ describe('pos-picture', () => {
       html: `<pos-picture />`,
     });
     await page.rootInstance.receiveResource({
+      label: () => 'a picture',
       picture: () => ({
         url: 'https://resource.test/picture.png',
       }),
@@ -27,7 +28,7 @@ describe('pos-picture', () => {
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
       <pos-picture>
-        <mock:shadow-root><pos-image src="https://resource.test/picture.png" /></mock:shadow-root>
+        <mock:shadow-root><pos-image src="https://resource.test/picture.png" alt="a picture"/></mock:shadow-root>
       </pos-picture>
   `);
   });

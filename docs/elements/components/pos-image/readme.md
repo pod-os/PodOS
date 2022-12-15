@@ -9,6 +9,7 @@
 
 | Property | Attribute | Description | Type     | Default     |
 | -------- | --------- | ----------- | -------- | ----------- |
+| `alt`    | `alt`     |             | `string` | `undefined` |
 | `src`    | `src`     |             | `string` | `undefined` |
 
 

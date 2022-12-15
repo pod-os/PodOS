@@ -27,10 +27,10 @@ describe('pos-image', () => {
   it('renders loading indicator initially', async () => {
     const page = await newSpecPage({
       components: [PosImage],
-      html: `<pos-image src="https://pod.test/image.png" />`,
+      html: `<pos-image src="https://pod.test/image.png" alt="image" />`,
     });
     expect(page.root).toEqualHtml(`
-      <pos-image src="https://pod.test/image.png">
+      <pos-image src="https://pod.test/image.png" alt="image">
         <mock:shadow-root>
           <ion-skeleton-text animated=""></ion-skeleton-text>
         </mock:shadow-root>
@@ -41,7 +41,7 @@ describe('pos-image', () => {
   it('renders loading indicator while fetching', async () => {
     const page = await newSpecPage({
       components: [PosImage],
-      html: `<pos-image src="https://pod.test/image.png" />`,
+      html: `<pos-image src="https://pod.test/image.png" alt="image" />`,
     });
     const os = mockPodOS();
     when(os.fetchFile)
@@ -50,7 +50,7 @@ describe('pos-image', () => {
     await page.rootInstance.setOs(os);
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
-      <pos-image src="https://pod.test/image.png">
+      <pos-image src="https://pod.test/image.png" alt="image">
         <mock:shadow-root>
           <ion-skeleton-text animated=""></ion-skeleton-text>
         </mock:shadow-root>
@@ -62,7 +62,7 @@ describe('pos-image', () => {
     const file = mockBinaryFile(pngBlob);
     const page = await newSpecPage({
       components: [PosImage],
-      html: `<pos-image src="https://pod.test/image.png" />`,
+      html: `<pos-image src="https://pod.test/image.png" alt="image" />`,
     });
     const os = mockPodOS();
     when(os.fetchFile).calledWith('https://pod.test/image.png').mockResolvedValue(file);
@@ -70,9 +70,9 @@ describe('pos-image', () => {
     await page.waitForChanges();
     expect(URL.createObjectURL).toHaveBeenCalledWith(pngBlob);
     expect(page.root).toEqualHtml(`
-      <pos-image src="https://pod.test/image.png">
+      <pos-image src="https://pod.test/image.png" alt="image">
         <mock:shadow-root>
-          <img src="blob:fake-png-data">
+          <img src="blob:fake-png-data" alt="image">
         </mock:shadow-root>
       </pos-image>
   `);
@@ -98,7 +98,7 @@ describe('pos-image', () => {
   `);
   });
 
-  it('renders error for unaccessible file', async () => {
+  it('renders error for inaccessible file', async () => {
     const brokenImage = {
       blob: () => null,
       toString: () => '403 - Forbidden - https://pod.test/image.png',

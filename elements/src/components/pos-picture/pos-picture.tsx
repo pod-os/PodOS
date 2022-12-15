@@ -23,6 +23,6 @@ export class PosPicture implements ResourceAware {
   render() {
     const pic = this.resource ? this.resource.picture() : null;
     if (!pic) return null;
-    return <pos-image src={pic.url}></pos-image>;
+    return <pos-image src={pic.url} alt={this.resource.label()}></pos-image>;
   }
 }

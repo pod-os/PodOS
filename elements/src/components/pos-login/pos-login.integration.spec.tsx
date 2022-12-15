@@ -30,7 +30,7 @@ describe('pos-login', () => {
     // then her picture shows up
     const image = login.querySelector('pos-resource pos-image');
     expect(image).toEqualHtml(`
-          <pos-image src="https://pod.example/alice/me.jpg"></pos-image>
+          <pos-image alt="Alice" src="https://pod.example/alice/me.jpg"></pos-image>
     `);
 
     // the button becomes a logout button

@@ -12,6 +12,8 @@ import session from '../../store/session';
 export class PosImage {
   @Prop() src: string;
 
+  @Prop() alt: string;
+
   @State() os: PodOS;
 
   @State()
@@ -66,6 +68,6 @@ export class PosImage {
     if (this.brokenFile) {
       return <BrokenImage file={this.brokenFile} />;
     }
-    return <img src={this.dataUri} />;
+    return <img src={this.dataUri} alt={this.alt} />;
   }
 }

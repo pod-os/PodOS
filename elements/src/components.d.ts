@@ -19,6 +19,7 @@ export namespace Components {
     interface PosDescription {
     }
     interface PosImage {
+        "alt": string;
         "src": string;
     }
     interface PosLabel {
@@ -273,6 +274,7 @@ declare namespace LocalJSX {
         "onPod-os:resource"?: (event: PosDescriptionCustomEvent<any>) => void;
     }
     interface PosImage {
+        "alt"?: string;
         "onPod-os:init"?: (event: PosImageCustomEvent<any>) => void;
         "src"?: string;
     }

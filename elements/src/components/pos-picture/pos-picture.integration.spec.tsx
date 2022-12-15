@@ -34,6 +34,7 @@ describe('pos-picture', () => {
     when(os.store.get)
       .calledWith('https://resource.test')
       .mockReturnValue({
+        label: () => 'The resource',
         picture: () => ({
           url: 'https://resource.test/picture.png',
         }),
@@ -52,7 +53,7 @@ describe('pos-picture', () => {
     expect(picture).toEqualHtml(`
       <pos-picture>
         <mock:shadow-root>
-          <pos-image src="https://resource.test/picture.png" />
+          <pos-image src="https://resource.test/picture.png" alt="The resource" />
         </mock:shadow-root>
       </pos-picture>
     `);
