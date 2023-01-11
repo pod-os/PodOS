@@ -21,6 +21,7 @@
 ### Depends on
 
 - [pos-app-rdf-document](../../apps/pos-app-rdf-document)
+- [pos-app-pdf-viewer](../../apps/pos-app-pdf-viewer)
 - [pos-app-image-viewer](../../apps/pos-app-image-viewer)
 - [pos-app-generic](../../apps/pos-app-generic)
 
@@ -28,6 +29,7 @@
 ```mermaid
 graph TD;
   pos-type-router --> pos-app-rdf-document
+  pos-type-router --> pos-app-pdf-viewer
   pos-type-router --> pos-app-image-viewer
   pos-type-router --> pos-app-generic
   pos-app-rdf-document --> ion-grid
@@ -62,6 +64,18 @@ graph TD;
   pos-literals --> ion-label
   pos-literals --> ion-item
   pos-literals --> ion-list
+  pos-app-pdf-viewer --> ion-grid
+  pos-app-pdf-viewer --> ion-row
+  pos-app-pdf-viewer --> ion-col
+  pos-app-pdf-viewer --> pos-pdf
+  pos-app-pdf-viewer --> ion-card
+  pos-app-pdf-viewer --> ion-card-header
+  pos-app-pdf-viewer --> ion-card-title
+  pos-app-pdf-viewer --> pos-label
+  pos-app-pdf-viewer --> pos-type-badges
+  pos-app-pdf-viewer --> pos-literals
+  pos-pdf --> ion-skeleton-text
+  pos-pdf --> ion-icon
   pos-app-image-viewer --> ion-grid
   pos-app-image-viewer --> ion-row
   pos-app-image-viewer --> ion-col

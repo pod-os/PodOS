@@ -18,6 +18,7 @@
 
  - [pos-app-generic](../../apps/pos-app-generic)
  - [pos-app-image-viewer](../../apps/pos-app-image-viewer)
+ - [pos-app-pdf-viewer](../../apps/pos-app-pdf-viewer)
  - [pos-app-rdf-document](../../apps/pos-app-rdf-document)
 
 ### Depends on
@@ -32,6 +33,7 @@ graph TD;
   pos-type-badges --> ion-icon
   pos-app-generic --> pos-type-badges
   pos-app-image-viewer --> pos-type-badges
+  pos-app-pdf-viewer --> pos-type-badges
   pos-app-rdf-document --> pos-type-badges
   style pos-type-badges fill:#f9f,stroke:#333,stroke-width:4px
 ```
