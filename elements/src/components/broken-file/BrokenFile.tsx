@@ -1,11 +1,11 @@
-import { BrokenFile, HttpStatus } from '@pod-os/core';
+import { BrokenFile as BrokenFileData, HttpStatus } from '@pod-os/core';
 import { h } from '@stencil/core';
 
 interface Props {
-  file: BrokenFile;
+  file: BrokenFileData;
 }
 
-export const BrokenImage = ({ file }: Props) => {
+export const BrokenFile = ({ file }: Props) => {
   const iconName = iconForStatus(file.status);
   return (
     <div>

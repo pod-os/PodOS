@@ -24,7 +24,7 @@ describe('pos-app-pdf-viewer', () => {
       uri: 'https://resource.test/document.pdf',
     });
     await page.waitForChanges();
-    const image = page.root.querySelector('a');
-    expect(image).toEqualHtml('<a href="https://resource.test/document.pdf">https://resource.test/document.pdf</a>');
+    const pdf = page.root.querySelector('pos-pdf');
+    expect(pdf).toEqualHtml('<pos-pdf src="https://resource.test/document.pdf" />');
   });
 });

@@ -1,11 +1,11 @@
 jest.mock('../../store/session');
-jest.mock('./BrokenImage');
+jest.mock('../broken-file/BrokenFile');
 
-import { BinaryFile, BrokenFile } from '@pod-os/core';
+import { BinaryFile, BrokenFile as BrokenFileData } from '@pod-os/core';
 import { newSpecPage } from '@stencil/core/testing';
 import { Blob } from 'buffer';
 import { mockPodOS } from '../../test/mockPodOS';
-import { BrokenImage } from './BrokenImage';
+import { BrokenFile } from '../broken-file/BrokenFile';
 import { PosImage } from './pos-image';
 import { when } from 'jest-when';
 import { h } from '@stencil/core';
@@ -102,8 +102,8 @@ describe('pos-image', () => {
     const brokenImage = {
       blob: () => null,
       toString: () => '403 - Forbidden - https://pod.test/image.png',
-    } as unknown as BrokenFile;
-    when(BrokenImage).mockReturnValue(<div class="error">403 - Forbidden - https://pod.test/image.png</div>);
+    } as unknown as BrokenFileData;
+    when(BrokenFile).mockReturnValue(<div class="error">403 - Forbidden - https://pod.test/image.png</div>);
     const page = await newSpecPage({
       components: [PosImage],
       html: `<pos-image src="https://pod.test/image.png" />`,
@@ -181,7 +181,7 @@ describe('pos-image', () => {
     const file = mockBinaryFile(pngBlob);
     const unauthorizedFile = {
       toString: () => 'Unauthorized',
-    } as BrokenFile;
+    } as BrokenFileData;
     let sessionChanged;
     // @ts-ignore
     session.onChange = (prop, callback) => {

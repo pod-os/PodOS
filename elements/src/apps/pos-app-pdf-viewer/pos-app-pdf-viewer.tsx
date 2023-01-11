@@ -28,7 +28,7 @@ export class PosAppPdfViewer implements ResourceAware {
       <ion-grid>
         <ion-row>
           <ion-col size="12" size-sm>
-            <a href={this.resource.uri}>{this.resource.uri}</a>
+            <pos-pdf src={this.resource.uri} />
           </ion-col>
           <ion-col size="12" size-sm>
             <ion-card>

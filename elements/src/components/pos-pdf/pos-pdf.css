@@ -1,0 +1,58 @@
+
+:host {
+  /**
+   * @prop --width: Width of the image
+   * @prop --height: Height of the image
+   * @prop --border-radius: Border radius of the image
+   * @prop --max-width: Maximum width of the image
+   * @prop --max-height: Maximum height of the image
+   */
+}
+
+iframe {
+  width: 100%;
+  height: 100vh;
+}
+
+ion-skeleton-text, div.error {
+  border-radius: var(--border-radius);
+  width: var(--width);
+  height: var(--height);
+  max-width: var(--max-width);
+  max-height: var(--max-height);
+}
+
+.error {
+  display: flex;
+  opacity: 0.8;
+  background: repeating-linear-gradient( -45deg, rgba(150, 0, 0, 0.1), rgba(150, 0, 0, 0.1) 10px, #fff 5px, #fff 25px );
+  flex-direction: column;
+  border: 1px solid red;
+  color: black;
+  align-items: center;
+  justify-content: center;
+  word-break: break-all;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.error ion-icon {
+  color: #282828;
+  --ionicon-stroke-width: calc(var(--width) / 5) ;
+  font-size: calc(var(--width) / 2)
+}
+
+a {
+  text-decoration: none;
+  width: var(--width);
+  height: var(--height);
+}
+
+.code {
+  font-weight: bold;
+  font-size: calc(var(--width) / 8);
+}
+
+.text {
+  font-size: calc(var(--width) / 20)
+}

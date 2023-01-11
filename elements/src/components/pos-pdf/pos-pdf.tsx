@@ -1,15 +1,15 @@
 import { BrokenFile as BrokenFileData } from '@pod-os/core';
-import { BrokenFile } from '../broken-file/BrokenFile';
 import { PodOS } from '@pod-os/core/src';
 import { Component, Event, EventEmitter, h, Prop, State, Watch } from '@stencil/core';
 import session from '../../store/session';
+import { BrokenFile } from '../broken-file/BrokenFile';
 
 @Component({
-  tag: 'pos-image',
-  styleUrl: 'pos-image.css',
+  tag: 'pos-pdf',
+  styleUrl: 'pos-pdf.css',
   shadow: true,
 })
-export class PosImage {
+export class PosPdf {
   @Prop() src: string;
 
   @Prop() alt: string;
@@ -68,6 +68,6 @@ export class PosImage {
     if (this.brokenFile) {
       return <BrokenFile file={this.brokenFile} />;
     }
-    return <img src={this.dataUri} alt={this.alt} />;
+    return <iframe src={this.dataUri} />;
   }
 }

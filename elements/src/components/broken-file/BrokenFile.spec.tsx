@@ -1,16 +1,16 @@
-import { BrokenFile } from '@pod-os/core';
+import { BrokenFile as BrokenFileData } from '@pod-os/core';
 import { h } from '@stencil/core';
 import { renderFunctionalComponent } from '../../test/renderFunctionalComponent';
-import { BrokenImage } from './BrokenImage';
+import { BrokenFile } from './BrokenFile';
 
-describe('BrokenImage', () => {
+describe('BrokenFile', () => {
   it('renders an error block with icon, error message and link to the image url', async () => {
     const brokenFile = {
       url: 'https://pod.test/image.png',
       toString: () => 'error message',
       status: { code: 401, text: 'unauthenticated' },
-    } as unknown as BrokenFile;
-    const component = <BrokenImage file={brokenFile} />;
+    } as unknown as BrokenFileData;
+    const component = <BrokenFile file={brokenFile} />;
     const page = await renderFunctionalComponent(component);
     expect(page.root).toEqualHtml(`
       <div>
@@ -39,8 +39,8 @@ describe('BrokenImage', () => {
       url: 'https://pod.test/image.png',
       toString: () => 'error message',
       status: { code, text: 'unauthenticated' },
-    } as unknown as BrokenFile;
-    const component = <BrokenImage file={brokenFile} />;
+    } as unknown as BrokenFileData;
+    const component = <BrokenFile file={brokenFile} />;
     const page = await renderFunctionalComponent(component);
     expect(page.root.querySelector('ion-icon')).toEqualAttribute('name', iconName);
   });
