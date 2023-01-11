@@ -68,6 +68,6 @@ export class PosPdf {
     if (this.brokenFile) {
       return <BrokenFile file={this.brokenFile} />;
     }
-    return <iframe src={this.dataUri} />;
+    return <iframe src={this.dataUri}></iframe>;
   }
 }
