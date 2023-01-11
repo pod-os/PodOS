@@ -1,0 +1,26 @@
+import { html } from "lit-html";
+
+import { Canvas, Meta, Story } from "@storybook/addon-docs/blocks";
+
+<Meta
+  title="PDF document"
+  args={{ uri: "https://angelo.veltens.org/slides/2019/solid-einfuehrung.pdf" }}
+  parameters={{
+    actions: {
+      handles: ['pod-os:link'],
+    },
+  }}
+/>
+
+## pos-pdf
+
+Renders the contents of a PDF document
+
+<Canvas withSource="open">
+  <Story name="pos-pdf">
+    {({ uri }) => html`
+      <pos-pdf src=${uri}>
+      </pos-pdf>
+    `}
+  </Story>
+</Canvas>
