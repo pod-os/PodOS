@@ -48,7 +48,7 @@ describe('pos-resource', () => {
       html: `<pos-resource uri="https://resource.test/" />`,
     });
     const os = mockPodOS();
-    when(os.fetch).calledWith('https://resource.test/').mockResolvedValue();
+    when(os.fetch).calledWith('https://resource.test/').mockResolvedValue(null);
     await page.rootInstance.setOs(os);
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
@@ -79,7 +79,7 @@ describe('pos-resource', () => {
       html: `<pos-resource uri="https://resource.test/" />`,
     });
     const os = mockPodOS();
-    when(os.fetch).calledWith('https://resource.test/').mockResolvedValue();
+    when(os.fetch).calledWith('https://resource.test/').mockResolvedValue(null);
     when(os.fetch)
       .calledWith('https://other-resource.test')
       .mockReturnValue(new Promise(() => null));
@@ -108,7 +108,7 @@ describe('pos-resource', () => {
       html: `<pos-resource uri="https://resource.test/" />`,
     });
     const os = mockPodOS();
-    when(os.fetch).calledWith('https://resource.test/').mockResolvedValueOnce();
+    when(os.fetch).calledWith('https://resource.test/').mockResolvedValueOnce(null);
     when(os.fetch)
       .calledWith('https://resource.test/')
       .mockReturnValueOnce(new Promise(() => null));
@@ -139,7 +139,7 @@ describe('pos-resource', () => {
     });
     const os = mockPodOS();
     when(os.fetch).calledWith('https://resource.test/').mockRejectedValueOnce(new Error('unauthorized'));
-    when(os.fetch).calledWith('https://resource.test/').mockResolvedValueOnce();
+    when(os.fetch).calledWith('https://resource.test/').mockResolvedValueOnce(null);
     await page.rootInstance.setOs(os);
     expect(sessionChanged).toBeDefined();
     sessionChanged();
@@ -205,7 +205,7 @@ describe('pos-resource', () => {
 
       it('renders slot after loading', async () => {
         const os = mockPodOS();
-        when(os.fetch).calledWith('https://resource.test/').mockResolvedValue();
+        when(os.fetch).calledWith('https://resource.test/').mockResolvedValue(null);
         await page.rootInstance.setOs(os);
         await page.root.fetch();
         await page.waitForChanges();

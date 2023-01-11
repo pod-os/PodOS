@@ -343,7 +343,7 @@ describe('pos-resource with a pos-label child', () => {
 
   it('rerenders child after lazy resource was fetched', async () => {
     const os = mockPodOS();
-    when(os.fetch).calledWith('https://resource.test').mockResolvedValue();
+    when(os.fetch).calledWith('https://resource.test').mockResolvedValue(null);
     when(os.store.get)
       .calledWith('https://resource.test')
       .mockReturnValueOnce({
