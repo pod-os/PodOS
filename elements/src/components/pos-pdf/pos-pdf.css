@@ -1,12 +1,5 @@
 
 :host {
-  /**
-   * @prop --width: Width of the image
-   * @prop --height: Height of the image
-   * @prop --border-radius: Border radius of the image
-   * @prop --max-width: Maximum width of the image
-   * @prop --max-height: Maximum height of the image
-   */
 }
 
 iframe {
@@ -14,14 +7,7 @@ iframe {
   height: 100vh;
 }
 
-ion-skeleton-text, div.error {
-  border-radius: var(--border-radius);
-  width: var(--width);
-  height: var(--height);
-  max-width: var(--max-width);
-  max-height: var(--max-height);
-}
-
+/* consolidate with styles from pos-image */
 .error {
   display: flex;
   opacity: 0.8;
