@@ -55,6 +55,28 @@ describe('pos-type-router', () => {
 `);
   });
 
+  it('renders pdf viewer for pdf resource', async () => {
+    const page = await newSpecPage({
+      components: [PosTypeRouter],
+      html: `<pos-type-router />`,
+    });
+    await page.rootInstance.receiveResource({
+      types: () => [
+        { uri: 'http://purl.org/dc/terms/Image', label: 'Image' },
+        { uri: 'http://www.w3.org/ns/iana/media-types/application/pdf#Resource', label: 'Resource' },
+      ],
+    });
+    await page.waitForChanges();
+
+    expect(page.root).toEqualHtml(`
+    <pos-type-router>
+      <mock:shadow-root>
+        <pos-app-pdf-viewer></pos-app-pdf-viewer>
+      </mock:shadow-root>
+    </pos-type-router>
+`);
+  });
+
   it('renders generic app for ldp resources', async () => {
     const page = await newSpecPage({
       components: [PosTypeRouter],

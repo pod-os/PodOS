@@ -14,7 +14,7 @@ describe('pos-app-image-viewer', () => {
   `);
   });
 
-  it('renders pos-app-image-viewer after resource is received', async () => {
+  it('renders pos-image after resource is received', async () => {
     const page = await newSpecPage({
       components: [PosAppImageViewer],
       html: `<pos-app-image-viewer />`,
