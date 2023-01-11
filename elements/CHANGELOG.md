@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+## Added
+
+- [pos-app-pdf-viewer](../docs/elements/apps/pos-app-pdf-viewer): A viewer for pdf document resources
+- [pos-pdf](../docs/elements/components/pos-pdf): A component to render a PDF document
+
 ## Changed
 
 - [pos-image](../docs/elements/components/pos-image): Added alt attribute
