@@ -3,7 +3,7 @@ import { html } from "lit-html";
 import { Canvas, Meta, Story } from "@storybook/addon-docs/blocks";
 
 <Meta
-  title="PDF document"
+  title="Document"
   args={{ uri: "https://angelo.veltens.org/slides/2019/solid-einfuehrung.pdf" }}
   parameters={{
     actions: {
@@ -12,15 +12,15 @@ import { Canvas, Meta, Story } from "@storybook/addon-docs/blocks";
   }}
 />
 
-## pos-pdf
+## pos-document
 
-Renders the contents of a PDF document
+Renders the contents of a document, like a PDF or an HTML page.
 
 <Canvas withSource="open">
-  <Story name="pos-pdf">
+  <Story name="pos-document">
     {({ uri }) => html`
-      <pos-pdf src=${uri}>
-      </pos-pdf>
+      <pos-document src=${uri}>
+      </pos-document>
     `}
   </Story>
 </Canvas>

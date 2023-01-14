@@ -5,11 +5,11 @@ import session from '../../store/session';
 import { BrokenFile } from '../broken-file/BrokenFile';
 
 @Component({
-  tag: 'pos-pdf',
-  styleUrl: 'pos-pdf.css',
+  tag: 'pos-document',
+  styleUrl: 'pos-document.css',
   shadow: true,
 })
-export class PosPdf {
+export class PosDocument {
   @Prop() src: string;
 
   @Prop() alt: string;

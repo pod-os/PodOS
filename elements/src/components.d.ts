@@ -10,15 +10,19 @@ export namespace Components {
     }
     interface PosAppBrowser {
     }
+    interface PosAppDocumentViewer {
+    }
     interface PosAppGeneric {
     }
     interface PosAppImageViewer {
     }
-    interface PosAppPdfViewer {
-    }
     interface PosAppRdfDocument {
     }
     interface PosDescription {
+    }
+    interface PosDocument {
+        "alt": string;
+        "src": string;
     }
     interface PosImage {
         "alt": string;
@@ -32,10 +36,6 @@ export namespace Components {
     }
     interface PosNavigationBar {
         "uri": string;
-    }
-    interface PosPdf {
-        "alt": string;
-        "src": string;
     }
     interface PosPicture {
     }
@@ -60,17 +60,21 @@ export namespace Components {
     interface PosTypeRouter {
     }
 }
+export interface PosAppDocumentViewerCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosAppDocumentViewerElement;
+}
 export interface PosAppImageViewerCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosAppImageViewerElement;
 }
-export interface PosAppPdfViewerCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLPosAppPdfViewerElement;
-}
 export interface PosDescriptionCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosDescriptionElement;
+}
+export interface PosDocumentCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosDocumentElement;
 }
 export interface PosImageCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -91,10 +95,6 @@ export interface PosLoginCustomEvent<T> extends CustomEvent<T> {
 export interface PosNavigationBarCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosNavigationBarElement;
-}
-export interface PosPdfCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLPosPdfElement;
 }
 export interface PosPictureCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -141,6 +141,12 @@ declare global {
         prototype: HTMLPosAppBrowserElement;
         new (): HTMLPosAppBrowserElement;
     };
+    interface HTMLPosAppDocumentViewerElement extends Components.PosAppDocumentViewer, HTMLStencilElement {
+    }
+    var HTMLPosAppDocumentViewerElement: {
+        prototype: HTMLPosAppDocumentViewerElement;
+        new (): HTMLPosAppDocumentViewerElement;
+    };
     interface HTMLPosAppGenericElement extends Components.PosAppGeneric, HTMLStencilElement {
     }
     var HTMLPosAppGenericElement: {
@@ -153,12 +159,6 @@ declare global {
         prototype: HTMLPosAppImageViewerElement;
         new (): HTMLPosAppImageViewerElement;
     };
-    interface HTMLPosAppPdfViewerElement extends Components.PosAppPdfViewer, HTMLStencilElement {
-    }
-    var HTMLPosAppPdfViewerElement: {
-        prototype: HTMLPosAppPdfViewerElement;
-        new (): HTMLPosAppPdfViewerElement;
-    };
     interface HTMLPosAppRdfDocumentElement extends Components.PosAppRdfDocument, HTMLStencilElement {
     }
     var HTMLPosAppRdfDocumentElement: {
@@ -170,6 +170,12 @@ declare global {
     var HTMLPosDescriptionElement: {
         prototype: HTMLPosDescriptionElement;
         new (): HTMLPosDescriptionElement;
+    };
+    interface HTMLPosDocumentElement extends Components.PosDocument, HTMLStencilElement {
+    }
+    var HTMLPosDocumentElement: {
+        prototype: HTMLPosDocumentElement;
+        new (): HTMLPosDocumentElement;
     };
     interface HTMLPosImageElement extends Components.PosImage, HTMLStencilElement {
     }
@@ -200,12 +206,6 @@ declare global {
     var HTMLPosNavigationBarElement: {
         prototype: HTMLPosNavigationBarElement;
         new (): HTMLPosNavigationBarElement;
-    };
-    interface HTMLPosPdfElement extends Components.PosPdf, HTMLStencilElement {
-    }
-    var HTMLPosPdfElement: {
-        prototype: HTMLPosPdfElement;
-        new (): HTMLPosPdfElement;
     };
     interface HTMLPosPictureElement extends Components.PosPicture, HTMLStencilElement {
     }
@@ -264,17 +264,17 @@ declare global {
     interface HTMLElementTagNameMap {
         "pos-app": HTMLPosAppElement;
         "pos-app-browser": HTMLPosAppBrowserElement;
+        "pos-app-document-viewer": HTMLPosAppDocumentViewerElement;
         "pos-app-generic": HTMLPosAppGenericElement;
         "pos-app-image-viewer": HTMLPosAppImageViewerElement;
-        "pos-app-pdf-viewer": HTMLPosAppPdfViewerElement;
         "pos-app-rdf-document": HTMLPosAppRdfDocumentElement;
         "pos-description": HTMLPosDescriptionElement;
+        "pos-document": HTMLPosDocumentElement;
         "pos-image": HTMLPosImageElement;
         "pos-label": HTMLPosLabelElement;
         "pos-literals": HTMLPosLiteralsElement;
         "pos-login": HTMLPosLoginElement;
         "pos-navigation-bar": HTMLPosNavigationBarElement;
-        "pos-pdf": HTMLPosPdfElement;
         "pos-picture": HTMLPosPictureElement;
         "pos-relations": HTMLPosRelationsElement;
         "pos-resource": HTMLPosResourceElement;
@@ -291,18 +291,23 @@ declare namespace LocalJSX {
     }
     interface PosAppBrowser {
     }
+    interface PosAppDocumentViewer {
+        "onPod-os:resource"?: (event: PosAppDocumentViewerCustomEvent<any>) => void;
+    }
     interface PosAppGeneric {
     }
     interface PosAppImageViewer {
         "onPod-os:resource"?: (event: PosAppImageViewerCustomEvent<any>) => void;
     }
-    interface PosAppPdfViewer {
-        "onPod-os:resource"?: (event: PosAppPdfViewerCustomEvent<any>) => void;
-    }
     interface PosAppRdfDocument {
     }
     interface PosDescription {
         "onPod-os:resource"?: (event: PosDescriptionCustomEvent<any>) => void;
+    }
+    interface PosDocument {
+        "alt"?: string;
+        "onPod-os:init"?: (event: PosDocumentCustomEvent<any>) => void;
+        "src"?: string;
     }
     interface PosImage {
         "alt"?: string;
@@ -321,11 +326,6 @@ declare namespace LocalJSX {
     interface PosNavigationBar {
         "onPod-os:link"?: (event: PosNavigationBarCustomEvent<any>) => void;
         "uri"?: string;
-    }
-    interface PosPdf {
-        "alt"?: string;
-        "onPod-os:init"?: (event: PosPdfCustomEvent<any>) => void;
-        "src"?: string;
     }
     interface PosPicture {
         "onPod-os:resource"?: (event: PosPictureCustomEvent<any>) => void;
@@ -359,17 +359,17 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "pos-app": PosApp;
         "pos-app-browser": PosAppBrowser;
+        "pos-app-document-viewer": PosAppDocumentViewer;
         "pos-app-generic": PosAppGeneric;
         "pos-app-image-viewer": PosAppImageViewer;
-        "pos-app-pdf-viewer": PosAppPdfViewer;
         "pos-app-rdf-document": PosAppRdfDocument;
         "pos-description": PosDescription;
+        "pos-document": PosDocument;
         "pos-image": PosImage;
         "pos-label": PosLabel;
         "pos-literals": PosLiterals;
         "pos-login": PosLogin;
         "pos-navigation-bar": PosNavigationBar;
-        "pos-pdf": PosPdf;
         "pos-picture": PosPicture;
         "pos-relations": PosRelations;
         "pos-resource": PosResource;
@@ -387,17 +387,17 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "pos-app": LocalJSX.PosApp & JSXBase.HTMLAttributes<HTMLPosAppElement>;
             "pos-app-browser": LocalJSX.PosAppBrowser & JSXBase.HTMLAttributes<HTMLPosAppBrowserElement>;
+            "pos-app-document-viewer": LocalJSX.PosAppDocumentViewer & JSXBase.HTMLAttributes<HTMLPosAppDocumentViewerElement>;
             "pos-app-generic": LocalJSX.PosAppGeneric & JSXBase.HTMLAttributes<HTMLPosAppGenericElement>;
             "pos-app-image-viewer": LocalJSX.PosAppImageViewer & JSXBase.HTMLAttributes<HTMLPosAppImageViewerElement>;
-            "pos-app-pdf-viewer": LocalJSX.PosAppPdfViewer & JSXBase.HTMLAttributes<HTMLPosAppPdfViewerElement>;
             "pos-app-rdf-document": LocalJSX.PosAppRdfDocument & JSXBase.HTMLAttributes<HTMLPosAppRdfDocumentElement>;
             "pos-description": LocalJSX.PosDescription & JSXBase.HTMLAttributes<HTMLPosDescriptionElement>;
+            "pos-document": LocalJSX.PosDocument & JSXBase.HTMLAttributes<HTMLPosDocumentElement>;
             "pos-image": LocalJSX.PosImage & JSXBase.HTMLAttributes<HTMLPosImageElement>;
             "pos-label": LocalJSX.PosLabel & JSXBase.HTMLAttributes<HTMLPosLabelElement>;
             "pos-literals": LocalJSX.PosLiterals & JSXBase.HTMLAttributes<HTMLPosLiteralsElement>;
             "pos-login": LocalJSX.PosLogin & JSXBase.HTMLAttributes<HTMLPosLoginElement>;
             "pos-navigation-bar": LocalJSX.PosNavigationBar & JSXBase.HTMLAttributes<HTMLPosNavigationBarElement>;
-            "pos-pdf": LocalJSX.PosPdf & JSXBase.HTMLAttributes<HTMLPosPdfElement>;
             "pos-picture": LocalJSX.PosPicture & JSXBase.HTMLAttributes<HTMLPosPictureElement>;
             "pos-relations": LocalJSX.PosRelations & JSXBase.HTMLAttributes<HTMLPosRelationsElement>;
             "pos-resource": LocalJSX.PosResource & JSXBase.HTMLAttributes<HTMLPosResourceElement>;

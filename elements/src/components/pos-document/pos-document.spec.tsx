@@ -6,13 +6,13 @@ import { newSpecPage } from '@stencil/core/testing';
 import { Blob } from 'buffer';
 import { mockPodOS } from '../../test/mockPodOS';
 import { BrokenFile } from '../broken-file/BrokenFile';
-import { PosPdf } from './pos-pdf';
+import { PosDocument } from './pos-document';
 import { when } from 'jest-when';
 import { h } from '@stencil/core';
 
 import session from '../../store/session';
 
-describe('pos-pdf', () => {
+describe('pos-document', () => {
   let pdfBlob;
   beforeEach(() => {
     pdfBlob = new Blob(['1'], {
@@ -26,22 +26,22 @@ describe('pos-pdf', () => {
 
   it('renders loading indicator initially', async () => {
     const page = await newSpecPage({
-      components: [PosPdf],
-      html: `<pos-pdf src="https://pod.test/test.pdf" />`,
+      components: [PosDocument],
+      html: `<pos-document src="https://pod.test/test.pdf" />`,
     });
     expect(page.root).toEqualHtml(`
-      <pos-pdf src="https://pod.test/test.pdf">
+      <pos-document src="https://pod.test/test.pdf">
         <mock:shadow-root>
           <ion-skeleton-text animated=""></ion-skeleton-text>
         </mock:shadow-root>
-      </pos-pdf>
+      </pos-document>
   `);
   });
 
   it('renders loading indicator while fetching', async () => {
     const page = await newSpecPage({
-      components: [PosPdf],
-      html: `<pos-pdf src="https://pod.test/test.pdf" />`,
+      components: [PosDocument],
+      html: `<pos-document src="https://pod.test/test.pdf" />`,
     });
     const os = mockPodOS();
     when(os.fetchFile)
@@ -50,19 +50,19 @@ describe('pos-pdf', () => {
     await page.rootInstance.setOs(os);
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
-      <pos-pdf src="https://pod.test/test.pdf">
+      <pos-document src="https://pod.test/test.pdf">
         <mock:shadow-root>
           <ion-skeleton-text animated=""></ion-skeleton-text>
         </mock:shadow-root>
-      </pos-pdf>
+      </pos-document>
   `);
   });
 
   it('renders iframe after loading', async () => {
     const file = mockBinaryFile(pdfBlob);
     const page = await newSpecPage({
-      components: [PosPdf],
-      html: `<pos-pdf src="https://pod.test/test.pdf" />`,
+      components: [PosDocument],
+      html: `<pos-document src="https://pod.test/test.pdf" />`,
     });
     const os = mockPodOS();
     when(os.fetchFile).calledWith('https://pod.test/test.pdf').mockResolvedValue(file);
@@ -70,31 +70,31 @@ describe('pos-pdf', () => {
     await page.waitForChanges();
     expect(URL.createObjectURL).toHaveBeenCalledWith(pdfBlob);
     expect(page.root).toEqualHtml(`
-      <pos-pdf src="https://pod.test/test.pdf">
+      <pos-document src="https://pod.test/test.pdf">
         <mock:shadow-root>
           <iframe src="blob:fake-pdf-data"></iframe>
         </mock:shadow-root>
-      </pos-pdf>
+      </pos-document>
   `);
   });
 
   it('renders error when fetch failed', async () => {
     const page = await newSpecPage({
-      components: [PosPdf],
-      html: `<pos-pdf src="https://pod.test/test.pdf" />`,
+      components: [PosDocument],
+      html: `<pos-document src="https://pod.test/test.pdf" />`,
     });
     const os = mockPodOS();
     when(os.fetchFile).calledWith('https://pod.test/test.pdf').mockRejectedValue(new Error('network error'));
     await page.rootInstance.setOs(os);
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
-      <pos-pdf src="https://pod.test/test.pdf">
+      <pos-document src="https://pod.test/test.pdf">
         <mock:shadow-root>
           <div class="error">
             network error
           </div>
         </mock:shadow-root>
-      </pos-pdf>
+      </pos-document>
   `);
   });
 
@@ -105,29 +105,29 @@ describe('pos-pdf', () => {
     } as unknown as BrokenFileData;
     when(BrokenFile).mockReturnValue(<div class="error">403 - Forbidden - https://pod.test/test.pdf</div>);
     const page = await newSpecPage({
-      components: [PosPdf],
-      html: `<pos-pdf src="https://pod.test/test.pdf" />`,
+      components: [PosDocument],
+      html: `<pos-document src="https://pod.test/test.pdf" />`,
     });
     const os = mockPodOS();
     when(os.fetchFile).calledWith('https://pod.test/test.pdf').mockResolvedValue(brokenImage);
     await page.rootInstance.setOs(os);
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
-      <pos-pdf src="https://pod.test/test.pdf">
+      <pos-document src="https://pod.test/test.pdf">
         <mock:shadow-root>
           <div class="error">
             403 - Forbidden - https://pod.test/test.pdf
           </div>
         </mock:shadow-root>
-      </pos-pdf>
+      </pos-document>
   `);
   });
 
   it('updates and loads resource when src changes', async () => {
     const file = mockBinaryFile(pdfBlob);
     const page = await newSpecPage({
-      components: [PosPdf],
-      html: `<pos-pdf src="https://pod.test/test.pdf" />`,
+      components: [PosDocument],
+      html: `<pos-document src="https://pod.test/test.pdf" />`,
     });
     const os = mockPodOS();
     when(os.fetchFile).calledWith('https://pod.test/test.pdf').mockResolvedValue(file);
@@ -138,11 +138,11 @@ describe('pos-pdf', () => {
     page.root.setAttribute('src', 'https://pod.test/other.png');
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
-      <pos-pdf src="https://pod.test/other.png">
+      <pos-document src="https://pod.test/other.png">
         <mock:shadow-root>
           <ion-skeleton-text animated=""></ion-skeleton-text>
         </mock:shadow-root>
-      </pos-pdf>
+      </pos-document>
   `);
   });
 
@@ -156,8 +156,8 @@ describe('pos-pdf', () => {
       }
     };
     const page = await newSpecPage({
-      components: [PosPdf],
-      html: `<pos-pdf src="https://pod.test/test.pdf" />`,
+      components: [PosDocument],
+      html: `<pos-document src="https://pod.test/test.pdf" />`,
     });
     const os = mockPodOS();
     when(os.fetchFile).calledWith('https://pod.test/test.pdf').mockResolvedValueOnce(file);
@@ -169,11 +169,11 @@ describe('pos-pdf', () => {
     sessionChanged();
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
-      <pos-pdf src="https://pod.test/test.pdf">
+      <pos-document src="https://pod.test/test.pdf">
         <mock:shadow-root>
           <ion-skeleton-text animated=""></ion-skeleton-text>
         </mock:shadow-root>
-      </pos-pdf>
+      </pos-document>
   `);
   });
 
@@ -190,8 +190,8 @@ describe('pos-pdf', () => {
       }
     };
     const page = await newSpecPage({
-      components: [PosPdf],
-      html: `<pos-pdf src="https://pod.test/test.pdf" />`,
+      components: [PosDocument],
+      html: `<pos-document src="https://pod.test/test.pdf" />`,
     });
     const os = mockPodOS();
     when(os.fetchFile).calledWith('https://pod.test/test.pdf').mockResolvedValueOnce(unauthorizedFile);
@@ -201,11 +201,11 @@ describe('pos-pdf', () => {
     sessionChanged();
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
-      <pos-pdf src="https://pod.test/test.pdf">
+      <pos-document src="https://pod.test/test.pdf">
         <mock:shadow-root>
           <iframe src="blob:fake-pdf-data"></iframe>
         </mock:shadow-root>
-      </pos-pdf>
+      </pos-document>
   `);
   });
 });

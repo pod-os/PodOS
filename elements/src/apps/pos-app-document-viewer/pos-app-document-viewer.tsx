@@ -3,10 +3,10 @@ import { Component, Event, EventEmitter, h, State } from '@stencil/core';
 import { ResourceAware, subscribeResource } from '../../components/events/ResourceAware';
 
 @Component({
-  tag: 'pos-app-pdf-viewer',
+  tag: 'pos-app-document-viewer',
   shadow: true,
 })
-export class PosAppPdfViewer implements ResourceAware {
+export class PosAppDocumentViewer implements ResourceAware {
   @State() resource: Thing;
 
   @Event({ eventName: 'pod-os:resource' }) subscribeResource: EventEmitter;
@@ -28,7 +28,7 @@ export class PosAppPdfViewer implements ResourceAware {
       <ion-grid>
         <ion-row>
           <ion-col size="12" size-sm>
-            <pos-pdf src={this.resource.uri} />
+            <pos-document src={this.resource.uri} />
           </ion-col>
           <ion-col size="12" size-sm>
             <ion-card>

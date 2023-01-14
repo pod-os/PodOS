@@ -55,7 +55,7 @@ describe('pos-type-router', () => {
 `);
   });
 
-  it('renders pdf viewer for pdf resource', async () => {
+  it('renders document viewer for pdf resource', async () => {
     const page = await newSpecPage({
       components: [PosTypeRouter],
       html: `<pos-type-router />`,
@@ -71,7 +71,26 @@ describe('pos-type-router', () => {
     expect(page.root).toEqualHtml(`
     <pos-type-router>
       <mock:shadow-root>
-        <pos-app-pdf-viewer></pos-app-pdf-viewer>
+        <pos-app-document-viewer></pos-app-document-viewer>
+      </mock:shadow-root>
+    </pos-type-router>
+`);
+  });
+
+  it('renders document viewer for generic document resource', async () => {
+    const page = await newSpecPage({
+      components: [PosTypeRouter],
+      html: `<pos-type-router />`,
+    });
+    await page.rootInstance.receiveResource({
+      types: () => [{ uri: 'http://www.w3.org/2007/ont/link#Document', label: 'Document' }],
+    });
+    await page.waitForChanges();
+
+    expect(page.root).toEqualHtml(`
+    <pos-type-router>
+      <mock:shadow-root>
+        <pos-app-document-viewer></pos-app-document-viewer>
       </mock:shadow-root>
     </pos-type-router>
 `);
