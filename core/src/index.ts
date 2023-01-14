@@ -8,6 +8,7 @@ export * from "./authentication";
 export * from "./files";
 export * from "./thing";
 export * from "./rdf-document";
+export * from "./ldp-container";
 
 export class PodOS {
   private readonly session: BrowserSession;
