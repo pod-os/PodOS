@@ -7,10 +7,6 @@
 
 ## Dependencies
 
-### Used by
-
- - [pos-type-router](../../components/pos-type-router)
-
 ### Depends on
 
 - ion-grid
@@ -78,7 +74,6 @@ graph TD;
   pos-reverse-relations --> ion-label
   pos-reverse-relations --> pos-rich-link
   pos-reverse-relations --> ion-list
-  pos-type-router --> pos-app-generic
   style pos-app-generic fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

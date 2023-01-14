@@ -1,4 +1,4 @@
-# pos-app-image-viewer
+# pos-app-document-viewer
 
 
 
@@ -19,7 +19,7 @@
 - ion-grid
 - ion-row
 - ion-col
-- [pos-image](../../components/pos-image)
+- [pos-document](../../components/pos-document)
 - ion-card
 - ion-card-header
 - ion-card-title
@@ -30,18 +30,18 @@
 ### Graph
 ```mermaid
 graph TD;
-  pos-app-image-viewer --> ion-grid
-  pos-app-image-viewer --> ion-row
-  pos-app-image-viewer --> ion-col
-  pos-app-image-viewer --> pos-image
-  pos-app-image-viewer --> ion-card
-  pos-app-image-viewer --> ion-card-header
-  pos-app-image-viewer --> ion-card-title
-  pos-app-image-viewer --> pos-label
-  pos-app-image-viewer --> pos-type-badges
-  pos-app-image-viewer --> pos-literals
-  pos-image --> ion-skeleton-text
-  pos-image --> ion-icon
+  pos-app-document-viewer --> ion-grid
+  pos-app-document-viewer --> ion-row
+  pos-app-document-viewer --> ion-col
+  pos-app-document-viewer --> pos-document
+  pos-app-document-viewer --> ion-card
+  pos-app-document-viewer --> ion-card-header
+  pos-app-document-viewer --> ion-card-title
+  pos-app-document-viewer --> pos-label
+  pos-app-document-viewer --> pos-type-badges
+  pos-app-document-viewer --> pos-literals
+  pos-document --> ion-skeleton-text
+  pos-document --> ion-icon
   ion-card --> ion-ripple-effect
   pos-type-badges --> ion-badge
   pos-type-badges --> ion-icon
@@ -53,7 +53,7 @@ graph TD;
   ion-item --> ion-icon
   ion-item --> ion-ripple-effect
   ion-item --> ion-note
-  style pos-app-image-viewer fill:#f9f,stroke:#333,stroke-width:4px
+  style pos-app-document-viewer fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
 ----------------------------------------------

@@ -7,10 +7,6 @@
 
 ## Dependencies
 
-### Used by
-
- - [pos-type-router](../../components/pos-type-router)
-
 ### Depends on
 
 - ion-grid
@@ -59,7 +55,6 @@ graph TD;
   pos-literals --> ion-label
   pos-literals --> ion-item
   pos-literals --> ion-list
-  pos-type-router --> pos-app-rdf-document
   style pos-app-rdf-document fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
