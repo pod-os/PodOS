@@ -18,6 +18,7 @@ describe('select app for types', () => {
     ${'http://www.w3.org/ns/iana/media-types/application/pdf#Resource'} | ${'pos-app-document-viewer'}
     ${'http://purl.org/dc/terms/Image'}                                 | ${'pos-app-image-viewer'}
     ${'http://www.w3.org/2007/ont/link#Document'}                       | ${'pos-app-document-viewer'}
+    ${'http://www.w3.org/ns/ldp#Container'}                             | ${'pos-app-ldp-container'}
   `(`selects app $expectedApp app for single type $typeUri`, ({ typeUri, expectedApp }) => {
     const types: RdfType[] = [{ uri: typeUri, label: 'irrelevant here' }];
     const app = selectAppForTypes(types);
@@ -76,5 +77,18 @@ describe('select app for types', () => {
     ];
     const app = selectAppForTypes(types);
     expect(app).toBe(AvailableApps.RdfDocument);
+  });
+
+  it('favours ldp container app over other apps for ldp containers', () => {
+    const types: RdfType[] = [
+      { uri: 'http://www.w3.org/ns/iana/media-types/text/turtle#Resource', label: 'Resource' },
+      { uri: 'http://www.w3.org/2007/ont/link#RDFDocument', label: 'RDFDocument' },
+      { uri: 'http://www.w3.org/2007/ont/link#Document', label: 'Document' },
+      { uri: 'http://www.w3.org/ns/ldp#Resource', label: 'Resource' },
+      { uri: 'http://www.w3.org/ns/ldp#Container', label: 'Container' },
+      { uri: 'http://www.w3.org/ns/ldp#BasicContainer', label: 'BasicContainer' },
+    ];
+    const app = selectAppForTypes(types);
+    expect(app).toBe(AvailableApps.LdpContainer);
   });
 });
