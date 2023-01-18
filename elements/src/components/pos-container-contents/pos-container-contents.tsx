@@ -9,6 +9,8 @@ import { ResourceAware, subscribeResource } from '../events/ResourceAware';
 export class PosContainerContents implements ResourceAware {
   @State() contents: ContainerContent[] = [];
 
+  @Event({ eventName: 'pod-os:link' }) linkEmitter: EventEmitter;
+
   @Event({ eventName: 'pod-os:resource' })
   subscribeResource: EventEmitter;
 
@@ -22,7 +24,22 @@ export class PosContainerContents implements ResourceAware {
   };
 
   render() {
-    const items = this.contents.map(it => <pos-rich-link uri={it.uri} />);
+    const items = this.contents.map(it => (
+      <pos-resource lazy={true} uri={it.uri}>
+        <ion-item
+          href={it.uri}
+          onClick={e => {
+            e.preventDefault();
+            this.linkEmitter.emit(it.uri);
+          }}
+        >
+          <ion-label>
+            {it.name}
+            <p>{it.uri}</p>
+          </ion-label>
+        </ion-item>
+      </pos-resource>
+    ));
     return this.contents.length > 0 ? <ion-list>{items}</ion-list> : null;
   }
 }

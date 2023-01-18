@@ -17,7 +17,7 @@ describe('pos-container-contents', () => {
   `);
   });
 
-  it('renders single file and rich link to it', async () => {
+  it('renders single file and a link to it', async () => {
     const page = await newSpecPage({
       components: [PosContainerContents],
       html: `<pos-container-contents />`,
@@ -34,11 +34,11 @@ describe('pos-container-contents', () => {
     });
     await page.waitForChanges();
 
-    const linkToFile = page.root.shadowRoot.querySelector('pos-rich-link[uri="https://pod.test/container/file"]');
+    const linkToFile = page.root.shadowRoot.querySelector('ion-item[href="https://pod.test/container/file"]');
     expect(linkToFile).not.toBeNull();
   });
 
-  it('renders multiple contents and rich links to them', async () => {
+  it('renders multiple contents and links to them', async () => {
     const page = await newSpecPage({
       components: [PosContainerContents],
       html: `<pos-container-contents />`,
@@ -59,10 +59,10 @@ describe('pos-container-contents', () => {
     });
     await page.waitForChanges();
 
-    const linkToFile = page.root.shadowRoot.querySelector('pos-rich-link[uri="https://pod.test/container/file"]');
+    const linkToFile = page.root.shadowRoot.querySelector('ion-item[href="https://pod.test/container/file"]');
     expect(linkToFile).not.toBeNull();
 
-    const linkToSubdir = page.root.shadowRoot.querySelector('pos-rich-link[uri="https://pod.test/container/subdir/"]');
+    const linkToSubdir = page.root.shadowRoot.querySelector('ion-item[href="https://pod.test/container/subdir/"]');
     expect(linkToSubdir).not.toBeNull();
   });
 });
