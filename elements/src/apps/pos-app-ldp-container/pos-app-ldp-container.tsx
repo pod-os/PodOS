@@ -10,6 +10,10 @@ export class PosAppLdpContainer {
         <ion-row>
           <ion-col size="12" size-sm>
             <pos-container-contents />
+            <details>
+              <summary>All subjects</summary>
+              <pos-subjects />
+            </details>
           </ion-col>
           <ion-col size="12" size-sm>
             <ion-card>
@@ -19,7 +23,6 @@ export class PosAppLdpContainer {
                   <pos-type-badges />
                 </ion-card-title>
                 <pos-literals />
-                <pos-subjects />
               </ion-card-header>
             </ion-card>
           </ion-col>
