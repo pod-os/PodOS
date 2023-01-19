@@ -13,7 +13,7 @@ describe("LDP container", () => {
     });
 
     it("contains a single file without types", () => {
-      let store = graph();
+      const store = graph();
       store.add(
         sym("https://pod.test/container/"),
         sym("http://www.w3.org/ns/ldp#contains"),
@@ -31,7 +31,7 @@ describe("LDP container", () => {
     });
 
     it("contains multiple files / containers", () => {
-      let store = graph();
+      const store = graph();
       store.add(
         sym("https://pod.test/container/"),
         sym("http://www.w3.org/ns/ldp#contains"),
