@@ -22,6 +22,8 @@ export namespace Components {
     }
     interface PosContainerContents {
     }
+    interface PosContainerItem {
+    }
     interface PosDescription {
     }
     interface PosDocument {
@@ -77,6 +79,10 @@ export interface PosAppImageViewerCustomEvent<T> extends CustomEvent<T> {
 export interface PosContainerContentsCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosContainerContentsElement;
+}
+export interface PosContainerItemCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosContainerItemElement;
 }
 export interface PosDescriptionCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -186,6 +192,12 @@ declare global {
     var HTMLPosContainerContentsElement: {
         prototype: HTMLPosContainerContentsElement;
         new (): HTMLPosContainerContentsElement;
+    };
+    interface HTMLPosContainerItemElement extends Components.PosContainerItem, HTMLStencilElement {
+    }
+    var HTMLPosContainerItemElement: {
+        prototype: HTMLPosContainerItemElement;
+        new (): HTMLPosContainerItemElement;
     };
     interface HTMLPosDescriptionElement extends Components.PosDescription, HTMLStencilElement {
     }
@@ -298,6 +310,7 @@ declare global {
         "pos-app-ldp-container": HTMLPosAppLdpContainerElement;
         "pos-app-rdf-document": HTMLPosAppRdfDocumentElement;
         "pos-container-contents": HTMLPosContainerContentsElement;
+        "pos-container-item": HTMLPosContainerItemElement;
         "pos-description": HTMLPosDescriptionElement;
         "pos-document": HTMLPosDocumentElement;
         "pos-image": HTMLPosImageElement;
@@ -336,6 +349,10 @@ declare namespace LocalJSX {
     }
     interface PosContainerContents {
         "onPod-os:resource"?: (event: PosContainerContentsCustomEvent<any>) => void;
+    }
+    interface PosContainerItem {
+        "onPod-os:link"?: (event: PosContainerItemCustomEvent<any>) => void;
+        "onPod-os:resource"?: (event: PosContainerItemCustomEvent<any>) => void;
     }
     interface PosDescription {
         "onPod-os:resource"?: (event: PosDescriptionCustomEvent<any>) => void;
@@ -403,6 +420,7 @@ declare namespace LocalJSX {
         "pos-app-ldp-container": PosAppLdpContainer;
         "pos-app-rdf-document": PosAppRdfDocument;
         "pos-container-contents": PosContainerContents;
+        "pos-container-item": PosContainerItem;
         "pos-description": PosDescription;
         "pos-document": PosDocument;
         "pos-image": PosImage;
@@ -434,6 +452,7 @@ declare module "@stencil/core" {
             "pos-app-ldp-container": LocalJSX.PosAppLdpContainer & JSXBase.HTMLAttributes<HTMLPosAppLdpContainerElement>;
             "pos-app-rdf-document": LocalJSX.PosAppRdfDocument & JSXBase.HTMLAttributes<HTMLPosAppRdfDocumentElement>;
             "pos-container-contents": LocalJSX.PosContainerContents & JSXBase.HTMLAttributes<HTMLPosContainerContentsElement>;
+            "pos-container-item": LocalJSX.PosContainerItem & JSXBase.HTMLAttributes<HTMLPosContainerItemElement>;
             "pos-description": LocalJSX.PosDescription & JSXBase.HTMLAttributes<HTMLPosDescriptionElement>;
             "pos-document": LocalJSX.PosDocument & JSXBase.HTMLAttributes<HTMLPosDocumentElement>;
             "pos-image": LocalJSX.PosImage & JSXBase.HTMLAttributes<HTMLPosImageElement>;

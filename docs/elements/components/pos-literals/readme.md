@@ -19,6 +19,7 @@
  - [pos-app-document-viewer](../../apps/pos-app-document-viewer)
  - [pos-app-generic](../../apps/pos-app-generic)
  - [pos-app-image-viewer](../../apps/pos-app-image-viewer)
+ - [pos-app-ldp-container](../../apps/pos-app-ldp-container)
  - [pos-app-rdf-document](../../apps/pos-app-rdf-document)
 
 ### Depends on
@@ -43,6 +44,7 @@ graph TD;
   pos-app-document-viewer --> pos-literals
   pos-app-generic --> pos-literals
   pos-app-image-viewer --> pos-literals
+  pos-app-ldp-container --> pos-literals
   pos-app-rdf-document --> pos-literals
   style pos-literals fill:#f9f,stroke:#333,stroke-width:4px
 ```

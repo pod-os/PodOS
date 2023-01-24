@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+## Added
+
+- [pos-app-ldp-container](../docs/elements/apps/pos-app-ldp-container): View an LDP container and its contents
+- [pos-container-contents](../docs/elements/components/pos-container-contents): A list of everything a LDP container contains
+
 ## 0.9.0
 
 ## Breaking Changes

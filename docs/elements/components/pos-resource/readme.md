@@ -37,6 +37,7 @@ Type: `Promise<void>`
 
 ### Used by
 
+ - [pos-container-contents](../pos-container-contents)
  - [pos-login](../pos-login)
  - [pos-rich-link](../pos-rich-link)
  - [pos-router](../pos-router)
@@ -56,6 +57,7 @@ graph TD;
   pos-resource --> ion-card-header
   pos-resource --> ion-card-content
   ion-card --> ion-ripple-effect
+  pos-container-contents --> pos-resource
   pos-login --> pos-resource
   pos-rich-link --> pos-resource
   pos-router --> pos-resource
