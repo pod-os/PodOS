@@ -9,7 +9,7 @@ import { ResourceAware, subscribeResource } from '../events/ResourceAware';
 export class PosContainerContents implements ResourceAware {
   @State() contents: ContainerContent[] = [];
 
-  @Event({ eventName: 'pod-os:link' }) linkEmitter: EventEmitter;
+  @State() loading = true;
 
   @Event({ eventName: 'pod-os:resource' })
   subscribeResource: EventEmitter;
@@ -20,26 +20,22 @@ export class PosContainerContents implements ResourceAware {
 
   receiveResource = (resource: Thing) => {
     const doc = resource.assume(LdpContainer);
-    this.contents = doc.contains();
+    this.loading = false;
+    this.contents = doc.contains().sort((a, b) => a.name.localeCompare(b.name));
   };
 
   render() {
+    if (this.loading) return null;
     const items = this.contents.map(it => (
       <pos-resource lazy={true} uri={it.uri}>
-        <ion-item
-          href={it.uri}
-          onClick={e => {
-            e.preventDefault();
-            this.linkEmitter.emit(it.uri);
-          }}
-        >
+        <pos-container-item role="listitem">
           <ion-label>
-            {it.name}
+            <h3>{it.name}</h3>
             <p>{it.uri}</p>
           </ion-label>
-        </ion-item>
+        </pos-container-item>
       </pos-resource>
     ));
-    return this.contents.length > 0 ? <ion-list>{items}</ion-list> : null;
+    return this.contents.length > 0 ? <ion-list>{items}</ion-list> : <p>The container is empty</p>;
   }
 }

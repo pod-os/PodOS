@@ -8,6 +8,7 @@ export enum AvailableApps {
   LdpContainer = 'pos-app-ldp-container',
 }
 
+// TODO: remove duplication with pos-container-contents/selectIconForTypes
 function containsType(types: RdfType[], typeUri: string) {
   return types.some(type => type.uri === typeUri);
 }
