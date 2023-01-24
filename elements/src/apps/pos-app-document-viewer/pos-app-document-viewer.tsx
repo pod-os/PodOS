@@ -35,8 +35,8 @@ export class PosAppDocumentViewer implements ResourceAware {
               <ion-card-header>
                 <ion-card-title>
                   <pos-label />
-                  <pos-type-badges />
                 </ion-card-title>
+                <pos-type-badges />
                 <pos-literals />
               </ion-card-header>
             </ion-card>
