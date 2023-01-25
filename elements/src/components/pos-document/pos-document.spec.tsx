@@ -78,6 +78,22 @@ describe('pos-document', () => {
   `);
   });
 
+  it('emits event after loading', async () => {
+    const onResourceLoaded = jest.fn();
+    const file = mockBinaryFile(pdfBlob);
+    const page = await newSpecPage({
+      components: [PosDocument],
+      html: `<pos-document src="https://pod.test/test.pdf" />`,
+    });
+    page.root.addEventListener('pod-os:resource-loaded', onResourceLoaded);
+    const os = mockPodOS();
+    when(os.fetchFile).calledWith('https://pod.test/test.pdf').mockResolvedValue(file);
+    await page.rootInstance.setOs(os);
+    await page.waitForChanges();
+    expect(onResourceLoaded).toHaveBeenCalled();
+    expect(onResourceLoaded.mock.calls[0][0].detail).toEqual('https://pod.test/test.pdf');
+  });
+
   it('renders error when fetch failed', async () => {
     const page = await newSpecPage({
       components: [PosDocument],

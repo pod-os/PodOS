@@ -30,6 +30,11 @@ export class PosDocument {
 
   @Event({ eventName: 'pod-os:init' }) initializeOsEmitter: EventEmitter;
 
+  /**
+   * Indicates that the resource given in `src` property has been loaded.
+   */
+  @Event({ eventName: 'pod-os:resource-loaded' }) resourceLoadedEmitter: EventEmitter<string>;
+
   componentWillLoad() {
     session.onChange('isLoggedIn', () => this.fetchBlob());
     this.initializeOsEmitter.emit(this.setOs);
@@ -45,6 +50,7 @@ export class PosDocument {
     try {
       this.loading = true;
       const file = await this.os.fetchFile(this.src);
+      this.resourceLoadedEmitter.emit(this.src);
       if (file.blob()) {
         this.dataUri = URL.createObjectURL(file.blob());
         this.error = null;

@@ -1,11 +1,11 @@
 jest.mock('../../store/session');
 
 import { newSpecPage } from '@stencil/core/testing';
-import { mockPodOS } from '../../test/mockPodOS';
-import { PosResource } from './pos-resource';
 import { when } from 'jest-when';
 
 import session from '../../store/session';
+import { mockPodOS } from '../../test/mockPodOS';
+import { PosResource } from './pos-resource';
 
 describe('pos-resource', () => {
   it('renders loading indicator initially', async () => {
@@ -58,6 +58,21 @@ describe('pos-resource', () => {
         </mock:shadow-root>
       </pos-resource>
   `);
+  });
+
+  it('emits event after loading resource', async () => {
+    const onResourceLoaded = jest.fn();
+    const page = await newSpecPage({
+      components: [PosResource],
+      html: `<pos-resource uri="https://resource.test/" />`,
+    });
+    page.root.addEventListener('pod-os:resource-loaded', onResourceLoaded);
+    const os = mockPodOS();
+    when(os.fetch).calledWith('https://resource.test/').mockResolvedValue(null);
+    await page.rootInstance.setOs(os);
+    await page.waitForChanges();
+    expect(onResourceLoaded).toHaveBeenCalled();
+    expect(onResourceLoaded.mock.calls[0][0].detail).toEqual('https://resource.test/');
   });
 
   it('renders error when fetch failed', async () => {

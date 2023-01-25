@@ -24,6 +24,11 @@ export class PosResource {
 
   @Event({ eventName: 'pod-os:init' }) initializeOsEmitter: EventEmitter;
 
+  /**
+   * Indicates that the resource given in `uri` property has been loaded.
+   */
+  @Event({ eventName: 'pod-os:resource-loaded' }) resourceLoadedEmitter: EventEmitter;
+
   @State()
   private error: Error;
 
@@ -64,6 +69,7 @@ export class PosResource {
       if (fetch) {
         this.loading = true;
         await this.os.fetch(this.uri);
+        this.resourceLoadedEmitter.emit(this.uri);
       }
       this.resource = this.os.store.get(this.uri);
       this.error = null;

@@ -78,6 +78,22 @@ describe('pos-image', () => {
   `);
   });
 
+  it('emits event after loading image', async () => {
+    const onResourceLoaded = jest.fn();
+    const file = mockBinaryFile(pngBlob);
+    const page = await newSpecPage({
+      components: [PosImage],
+      html: `<pos-image src="https://pod.test/image.png" alt="image" />`,
+    });
+    page.root.addEventListener('pod-os:resource-loaded', onResourceLoaded);
+    const os = mockPodOS();
+    when(os.fetchFile).calledWith('https://pod.test/image.png').mockResolvedValue(file);
+    await page.rootInstance.setOs(os);
+    await page.waitForChanges();
+    expect(onResourceLoaded).toHaveBeenCalled();
+    expect(onResourceLoaded.mock.calls[0][0].detail).toEqual('https://pod.test/image.png');
+  });
+
   it('renders error when fetch failed', async () => {
     const page = await newSpecPage({
       components: [PosImage],

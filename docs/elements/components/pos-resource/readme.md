@@ -15,9 +15,10 @@
 
 ## Events
 
-| Event         | Description | Type               |
-| ------------- | ----------- | ------------------ |
-| `pod-os:init` |             | `CustomEvent<any>` |
+| Event                    | Description                                                          | Type               |
+| ------------------------ | -------------------------------------------------------------------- | ------------------ |
+| `pod-os:init`            |                                                                      | `CustomEvent<any>` |
+| `pod-os:resource-loaded` | Indicates that the resource given in `uri` property has been loaded. | `CustomEvent<any>` |
 
 
 ## Methods

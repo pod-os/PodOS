@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - [pos-app](../docs/elements/components/pos-app): Decouple pos-app from ionic ion-app, so that basic elements can be used without ionic. If you want to keep the existing behaviour as before you need to manually wrap everything within `<pos-app></pos-app>` in an additional `<ion-app></ion-app>`.
 
+### Added
+
+- New event `pod-os:resource-loaded` is fired after `pos-resource`, `pos-image` or `pos-document` finished loading the requested resource.
+
 ## 0.10.0
 
 ### Added
