@@ -4,59 +4,58 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
+
 ## 0.10.0
 
-## Added
+### Added
 
 - [pos-app-ldp-container](../docs/elements/apps/pos-app-ldp-container): View an LDP container and its contents
 - [pos-container-contents](../docs/elements/components/pos-container-contents): A list of everything a LDP container contains
 
 ## 0.9.0
 
-## Breaking Changes
+### Breaking Changes
 
 - pos-app-pdf-viewer renamed to [pos-app-document-viewer](../docs/elements/apps/pos-app-document-viewer) to reflect that it can show many types of documents.
 - pos-pdf renamed to [pos-document](../docs/elements/components/pos-pdf) to reflect that it can display many kinds of documents.
 
-## Changed
+### Changed
 
 - [pos-type-router](../docs/elements/components/pos-type-router): Route to pos-app-document-viewer for more document resources, like html, markdown and others.
 
 ## 0.8.0
 
-## Added
+### Added
 
 - [pos-app-pdf-viewer](../docs/elements/apps/pos-app-pdf-viewer): A viewer for pdf document resources
 - [pos-pdf](../docs/elements/components/pos-pdf): A component to render a PDF document
 - 
-## Changed
+### Changed
 
 - [pos-type-router](../docs/elements/components/pos-type-router): Route to pos-app-pdf-viewer for pdf resources
-
-## Changed
-
 - [pos-image](../docs/elements/components/pos-image): Added alt attribute
 - [pos-picture](../docs/elements/components/pos-picture): Adds resource label as alt attribute to image
 
 ## 0.7.0
 
-## Added
+### Added
 
 - [pos-app-image-viewer](../docs/elements/apps/pos-app-image-viewer): A viewer for image resources
 - [pos-image](../docs/elements/components/pos-image): New CSS custom properties for max-width and max-height
 
-## Changed
+### Changed
 
 - [pos-type-router](../docs/elements/components/pos-type-router): Route to pos-app-image-viewer for image resources
 
 ## 0.6.0
 
-## Added
+### Added
 
 - [pos-type-badges](../docs/elements/components/pos-type-badges): Show rdf types as simple badges
 - Show type badges in [pos-app-generic](../docs/elements/apps/pos-app-generic) and [pos-app-rdf-document](../docs/elements/apps/pos-app-rdf-document)
 
-## Changed
+### Changed
 
 - Remove types from [pos-relations](../docs/elements/components/pos-relations)
 - Better error description when [pos-resource](../docs/elements/components/pos-resource) fails to load
