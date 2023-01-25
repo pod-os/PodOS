@@ -29,10 +29,6 @@ export class PosApp {
   }
 
   render() {
-    return (
-      <ion-app>
-        <slot />
-      </ion-app>
-    );
+    return <slot />;
   }
 }

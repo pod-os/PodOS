@@ -31,13 +31,11 @@ describe('pos-image', () => {
     expect(URL.createObjectURL).toHaveBeenCalledWith(pngBlob);
     expect(page.root).toEqualHtml(`
     <pos-app>
-      <ion-app>
         <pos-image src="https://pod.test/image.png">
             <mock:shadow-root>
               <img src="blob:fake-png-data" />
             </mock:shadow-root>
         </pos-image>
-      </ion-app>
     </pos-app>
   `);
   });
@@ -56,13 +54,11 @@ describe('pos-image', () => {
     });
     expect(page.root).toEqualHtml(`
       <pos-app>
-      <ion-app>
         <pos-image src="https://pod.test/image.png">
             <mock:shadow-root>
               <ion-skeleton-text animated></ion-skeleton-text>
             </mock:shadow-root>
         </pos-image>
-      </ion-app>
     </pos-app>
   `);
     await loadingPromise;
@@ -79,7 +75,6 @@ describe('pos-image', () => {
     });
     expect(page.root).toEqualHtml(`
       <pos-app>
-      <ion-app>
         <pos-image src="https://pod.test/image.png">
             <mock:shadow-root>
               <div class="error">
@@ -87,7 +82,6 @@ describe('pos-image', () => {
               </div>
             </mock:shadow-root>
         </pos-image>
-      </ion-app>
     </pos-app>
   `);
   });
@@ -109,7 +103,6 @@ describe('pos-image', () => {
     });
     expect(page.root).toEqualHtml(`
       <pos-app>
-      <ion-app>
         <pos-image src="https://pod.test/image.png">
             <mock:shadow-root>
               <div>
@@ -125,7 +118,6 @@ describe('pos-image', () => {
               </div>
             </mock:shadow-root>
         </pos-image>
-      </ion-app>
     </pos-app>
   `);
   });

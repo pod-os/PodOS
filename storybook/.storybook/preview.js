@@ -13,9 +13,11 @@ export const parameters = {
 export const decorators = [
   (story) => html`
     <pos-app>
-      <ion-content>
-        <div style="padding: 1rem">${story()}</div>
-      </ion-content>
+      <ion-app>
+        <ion-content>
+          <div style="padding: 1rem">${story()}</div>
+        </ion-content>
+      </ion-app>
     </pos-app>
   `,
 ];

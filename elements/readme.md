@@ -25,16 +25,18 @@ Try this 🤩:
 </head>
 <body>
 <pos-app>
-  <ion-content>  <!-- PodOS elements are build on Ionic -->
-    <pos-resource uri="https://solidproject.solidcommunity.net/profile/card#me">
-      <h1>
-        <pos-label/>
-      </h1>
-      <blockquote>
-        <pos-description/>
-      </blockquote>
-    </pos-resource>
-  </ion-content>
+    <ion-app> <!-- PodOS elements are build on Ionic -->
+        <ion-content>
+            <pos-resource uri="https://solidproject.solidcommunity.net/profile/card#me">
+                <h1>
+                    <pos-label/>
+                </h1>
+                <blockquote>
+                    <pos-description/>
+                </blockquote>
+            </pos-resource>
+        </ion-content>
+    </ion-app>
 </pos-app>
 </body>
 </html>

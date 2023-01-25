@@ -10,6 +10,7 @@
 ### Depends on
 
 - [pos-app](../../components/pos-app)
+- ion-app
 - ion-header
 - ion-toolbar
 - ion-title
@@ -22,6 +23,7 @@
 ```mermaid
 graph TD;
   pos-app-browser --> pos-app
+  pos-app-browser --> ion-app
   pos-app-browser --> ion-header
   pos-app-browser --> ion-toolbar
   pos-app-browser --> ion-title
@@ -29,7 +31,6 @@ graph TD;
   pos-app-browser --> ion-content
   pos-app-browser --> pos-router
   pos-app-browser --> ion-footer
-  pos-app --> ion-app
   pos-login --> pos-resource
   pos-login --> pos-picture
   pos-login --> pos-label

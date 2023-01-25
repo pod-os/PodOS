@@ -25,7 +25,6 @@ describe('pos-resource with a pos-label child', () => {
     });
     expect(page.root).toEqualHtml(`
     <pos-app>
-      <ion-app>
         <pos-resource uri="https://resource.test">
           <mock:shadow-root>
             <slot></slot>
@@ -36,7 +35,6 @@ describe('pos-resource with a pos-label child', () => {
             </mock:shadow-root>
           </pos-label>
         </pos-resource>
-      </ion-app>
     </pos-app>
   `);
   });
@@ -62,7 +60,6 @@ describe('pos-resource with a pos-label child', () => {
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
     <pos-app>
-      <ion-app>
         <pos-resource uri="https://resource.test">
           <mock:shadow-root>
             <slot></slot>
@@ -73,7 +70,6 @@ describe('pos-resource with a pos-label child', () => {
             </mock:shadow-root>
           </pos-label>
         </pos-resource>
-      </ion-app>
     </pos-app>
   `);
   });
@@ -92,7 +88,6 @@ describe('pos-resource with a pos-label child', () => {
     });
     expect(page.root).toEqualHtml(`
       <pos-app>
-        <ion-app>
           <pos-resource uri="https://resource.test">
             <mock:shadow-root>
               <ion-progress-bar type="indeterminate"></ion-progress-bar>
@@ -102,7 +97,6 @@ describe('pos-resource with a pos-label child', () => {
               </mock:shadow-root>
             </pos-label>
           </pos-resource>
-        </ion-app>
       </pos-app>
   `);
     await loadingPromise;
@@ -121,7 +115,6 @@ describe('pos-resource with a pos-label child', () => {
     });
     expect(page.root).toEqualHtml(`
 <pos-app>
-  <ion-app>
     <pos-resource uri="https://resource.test">
       <mock:shadow-root>
         <ion-card>
@@ -151,7 +144,6 @@ describe('pos-resource with a pos-label child', () => {
         </mock:shadow-root>
       </pos-label>
     </pos-resource>
-  </ion-app>
 </pos-app>
   `);
   });
@@ -176,7 +168,6 @@ describe('pos-resource with a pos-label child', () => {
     });
     expect(page.root).toEqualHtml(`
     <pos-app>
-      <ion-app>
         <pos-resource uri="https://resource.test">
           <mock:shadow-root>
             <slot></slot>
@@ -197,7 +188,6 @@ describe('pos-resource with a pos-label child', () => {
             </pos-label>
           </pos-label>
         </pos-resource>
-      </ion-app>
     </pos-app>
   `);
   });
@@ -225,7 +215,6 @@ describe('pos-resource with a pos-label child', () => {
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
     <pos-app>
-      <ion-app>
         <pos-resource uri="https://resource.test">
           <mock:shadow-root>
             <slot></slot>
@@ -246,7 +235,6 @@ describe('pos-resource with a pos-label child', () => {
             </pos-label>
           </pos-label>
         </pos-resource>
-      </ion-app>
     </pos-app>
   `);
   });
@@ -269,7 +257,6 @@ describe('pos-resource with a pos-label child', () => {
     });
     expect(page.root).toEqualHtml(`
     <pos-app>
-      <ion-app>
         <pos-resource lazy uri="https://resource.test">
           <mock:shadow-root>
             <slot></slot>
@@ -280,7 +267,6 @@ describe('pos-resource with a pos-label child', () => {
             </mock:shadow-root>
           </pos-label>
         </pos-resource>
-      </ion-app>
     </pos-app>
   `);
   });
@@ -305,7 +291,6 @@ describe('pos-resource with a pos-label child', () => {
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
     <pos-app>
-      <ion-app>
         <pos-resource lazy uri="https://resource.test">
           <mock:shadow-root>
             <ion-card>
@@ -336,7 +321,6 @@ describe('pos-resource with a pos-label child', () => {
             </mock:shadow-root>
           </pos-label>
         </pos-resource>
-      </ion-app>
     </pos-app>
   `);
   });
@@ -364,7 +348,6 @@ describe('pos-resource with a pos-label child', () => {
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
     <pos-app>
-      <ion-app>
         <pos-resource lazy uri="https://resource.test">
           <mock:shadow-root>
             <slot></slot>
@@ -375,7 +358,6 @@ describe('pos-resource with a pos-label child', () => {
             </mock:shadow-root>
           </pos-label>
         </pos-resource>
-      </ion-app>
     </pos-app>
   `);
   });
