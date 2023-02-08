@@ -1,13 +1,22 @@
-import { Fetcher, fetcher, graph, IndexedFormula, sym } from "rdflib";
+import {
+  Fetcher,
+  fetcher,
+  graph,
+  IndexedFormula,
+  sym,
+  UpdateManager,
+} from "rdflib";
 import { PodOsSession } from "./authentication";
 import { Thing } from "./thing";
 
 export class Store {
   fetcher: Fetcher;
+  updater: UpdateManager;
   graph: IndexedFormula;
   constructor(session: PodOsSession) {
     this.graph = graph();
     this.fetcher = fetcher(this.graph, { fetch: session.authenticatedFetch });
+    this.updater = new UpdateManager(this.graph);
   }
 
   fetch(uri: string) {
@@ -19,6 +28,7 @@ export class Store {
   }
 
   get(uri: string) {
-    return new Thing(uri, this.graph);
+    const editable = !!this.updater.editable(uri);
+    return new Thing(uri, this.graph, editable);
   }
 }

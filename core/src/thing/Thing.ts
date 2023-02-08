@@ -26,7 +26,14 @@ export interface RdfType {
 }
 
 export class Thing {
-  constructor(readonly uri: string, readonly store: IndexedFormula) {}
+  constructor(
+    readonly uri: string,
+    readonly store: IndexedFormula,
+    /**
+     * Whether the Thing can be edited according to its access control settings
+     */
+    readonly editable: boolean = false
+  ) {}
 
   label() {
     const value = this.anyValue(
