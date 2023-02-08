@@ -7,23 +7,24 @@ import {
 } from '@storybook/addon-docs/blocks';
 
 <Meta
-  title="Basics"
-  args={{uri: "https://solidproject.solidcommunity.net/profile/card#me"}}
+  title="Values"
+  args={{ uri: "https://solidproject.solidcommunity.net/profile/card#me" }}
 />
 
 
-## pos-label
+## pos-description
 
-Renders a human-readable label of the resource.
+Renders a human-readable description of the resource.
+
 
 <Canvas
   withSource="open">
   <Story
-    name="pos-label"
+    name="pos-description"
   >
     {({uri}) => html`
 <pos-resource uri=${uri}>
-   <pos-label />
+   <pos-description />
 </pos-resource>
     `}
   </Story>

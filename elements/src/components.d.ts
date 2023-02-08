@@ -65,6 +65,12 @@ export namespace Components {
     }
     interface PosTypeRouter {
     }
+    interface PosValue {
+        /**
+          * URI of the predicate to get the value from
+         */
+        "predicate": string;
+    }
 }
 export interface PosAppDocumentViewerCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -141,6 +147,10 @@ export interface PosTypeBadgesCustomEvent<T> extends CustomEvent<T> {
 export interface PosTypeRouterCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosTypeRouterElement;
+}
+export interface PosValueCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosValueElement;
 }
 declare global {
     interface HTMLPosAppElement extends Components.PosApp, HTMLStencilElement {
@@ -293,6 +303,12 @@ declare global {
         prototype: HTMLPosTypeRouterElement;
         new (): HTMLPosTypeRouterElement;
     };
+    interface HTMLPosValueElement extends Components.PosValue, HTMLStencilElement {
+    }
+    var HTMLPosValueElement: {
+        prototype: HTMLPosValueElement;
+        new (): HTMLPosValueElement;
+    };
     interface HTMLElementTagNameMap {
         "pos-app": HTMLPosAppElement;
         "pos-app-browser": HTMLPosAppBrowserElement;
@@ -319,6 +335,7 @@ declare global {
         "pos-subjects": HTMLPosSubjectsElement;
         "pos-type-badges": HTMLPosTypeBadgesElement;
         "pos-type-router": HTMLPosTypeRouterElement;
+        "pos-value": HTMLPosValueElement;
     }
 }
 declare namespace LocalJSX {
@@ -412,6 +429,13 @@ declare namespace LocalJSX {
     interface PosTypeRouter {
         "onPod-os:resource"?: (event: PosTypeRouterCustomEvent<any>) => void;
     }
+    interface PosValue {
+        "onPod-os:resource"?: (event: PosValueCustomEvent<any>) => void;
+        /**
+          * URI of the predicate to get the value from
+         */
+        "predicate"?: string;
+    }
     interface IntrinsicElements {
         "pos-app": PosApp;
         "pos-app-browser": PosAppBrowser;
@@ -438,6 +462,7 @@ declare namespace LocalJSX {
         "pos-subjects": PosSubjects;
         "pos-type-badges": PosTypeBadges;
         "pos-type-router": PosTypeRouter;
+        "pos-value": PosValue;
     }
 }
 export { LocalJSX as JSX };
@@ -469,6 +494,7 @@ declare module "@stencil/core" {
             "pos-subjects": LocalJSX.PosSubjects & JSXBase.HTMLAttributes<HTMLPosSubjectsElement>;
             "pos-type-badges": LocalJSX.PosTypeBadges & JSXBase.HTMLAttributes<HTMLPosTypeBadgesElement>;
             "pos-type-router": LocalJSX.PosTypeRouter & JSXBase.HTMLAttributes<HTMLPosTypeRouterElement>;
+            "pos-value": LocalJSX.PosValue & JSXBase.HTMLAttributes<HTMLPosValueElement>;
         }
     }
 }

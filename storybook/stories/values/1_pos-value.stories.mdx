@@ -1,0 +1,30 @@
+import {html} from "lit-html";
+
+import {
+  Canvas,
+  Meta,
+  Story
+} from '@storybook/addon-docs/blocks';
+
+<Meta
+  title="Values"
+  args={{subject: "https://solidproject.solidcommunity.net/profile/card#me", predicate: "http://www.w3.org/2006/vcard/ns#role"}}
+/>
+
+
+## pos-value
+
+Renders any value for the given predicate of the resource.
+
+<Canvas
+  withSource="open">
+  <Story
+    name="pos-value"
+  >
+    {({subject, predicate}) => html`
+<pos-resource uri=${subject}>
+   <pos-value predicate=${predicate}/>
+</pos-resource>
+    `}
+  </Story>
+</Canvas>
