@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - add `editable` property to `Thing`, which declares whether a thing can be edited
 - `addPropertyValue`: A method to add a value to a property of a thing 
+- `listKnownTerms`: A method to list a range of well known terms from commonly used RDF vocabularies
 
 ## 0.7.0
 

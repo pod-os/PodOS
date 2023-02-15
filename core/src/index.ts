@@ -3,6 +3,7 @@ import { BrowserSession } from "./authentication";
 import { SolidFile } from "./files";
 import { FileFetcher } from "./files/FileFetcher";
 import { Store } from "./Store";
+import { listKnownTerms, Term } from "./terms";
 import { Thing } from "./thing";
 
 export * from "./authentication";
@@ -36,6 +37,10 @@ export class PodOS {
 
   addPropertyValue(thing: Thing, property: string, value: string) {
     this.store.addPropertyValue(thing, property, value);
+  }
+
+  listKnownTerms(): Term[] {
+    return listKnownTerms();
   }
 
   trackSession(callback: (session: ISessionInfo) => unknown): void {
