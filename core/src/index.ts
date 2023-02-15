@@ -3,6 +3,7 @@ import { BrowserSession } from "./authentication";
 import { SolidFile } from "./files";
 import { FileFetcher } from "./files/FileFetcher";
 import { Store } from "./Store";
+import { Thing } from "./thing";
 
 export * from "./authentication";
 export * from "./files";
@@ -31,6 +32,10 @@ export class PodOS {
 
   fetchFile(url: string): Promise<SolidFile> {
     return this.fileFetcher.fetchFile(url);
+  }
+
+  addPropertyValue(thing: Thing, property: string, value: string) {
+    this.store.addPropertyValue(thing, property, value);
   }
 
   trackSession(callback: (session: ISessionInfo) => unknown): void {

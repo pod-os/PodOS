@@ -8,7 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
-- add editable property to Thing, which declares whether a Thing can be edited
+- add `editable` property to `Thing`, which declares whether a thing can be edited
+- `addPropertyValue`: A method to add a value to a property of a thing 
 
 ## 0.7.0
 

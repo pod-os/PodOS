@@ -1,6 +1,7 @@
 import { when } from "jest-when";
 import { sym } from "rdflib";
-import { PodOsSession } from "./authentication";
+import { Parser as SparqlParser, Update } from "sparqljs";
+import { AuthenticatedFetch, PodOsSession } from "./authentication";
 import { Store } from "./Store";
 import { Thing } from "./thing";
 
@@ -166,4 +167,68 @@ describe("Store", () => {
       expect(result.editable).toBe(true);
     });
   });
+
+  describe("add property value", () => {
+    it("sends sparql insert via updater", async () => {
+      const fetchMock = jest.fn();
+      const mockSession = {
+        authenticatedFetch: fetchMock,
+      } as unknown as PodOsSession;
+      when(fetchMock)
+        .calledWith("https://pod.test/resource", expect.anything())
+        .mockResolvedValue({
+          ok: true,
+          status: 200,
+          statusText: "OK",
+          headers: new Headers({
+            "Content-Type": "text/turtle",
+            "wac-allow": 'user="read write append control",public="read"',
+            "accept-patch": "application/sparql-update",
+          }),
+          text: () =>
+            Promise.resolve(
+              '<https://pod.test/resource#it> <https://pod.test/vocab/predicate> "literal value" .'
+            ),
+        } as Response);
+      const store = new Store(mockSession);
+      await store.fetch("https://pod.test/resource");
+      const thing = store.get("https://pod.test/resource");
+      await store.addPropertyValue(
+        thing,
+        "https://vocab.example#property",
+        "the value"
+      );
+      thenSparqlUpdateIsSentToUrl(
+        fetchMock,
+        "https://pod.test/resource",
+        `
+      INSERT DATA {
+        <https://pod.test/resource>
+          <https://vocab.example#property> "the value" .
+      }`
+      );
+    });
+  });
 });
+
+export function thenSparqlUpdateIsSentToUrl(
+  fetchMock: jest.Mock<AuthenticatedFetch>,
+  url: string,
+  query: string
+) {
+  expect(fetchMock).toHaveBeenCalled();
+
+  const parser = new SparqlParser();
+
+  const calls = fetchMock.mock.calls;
+  const sparqlUpdateCall = calls.find(
+    (it) => it[0] === url && it[1].method === "PATCH"
+  );
+
+  expect(sparqlUpdateCall).toBeDefined();
+
+  const body = sparqlUpdateCall[1].body;
+  const actualQuery = parser.parse(body) as Update;
+  const expectedQuery = parser.parse(query) as Update;
+  expect(actualQuery).toEqual(expectedQuery);
+}
