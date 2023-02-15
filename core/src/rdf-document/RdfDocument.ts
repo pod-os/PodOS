@@ -6,8 +6,12 @@ export interface Subject {
 }
 
 export class RdfDocument extends Thing {
-  constructor(readonly uri: string, readonly store: IndexedFormula) {
-    super(uri, store);
+  constructor(
+    readonly uri: string,
+    readonly store: IndexedFormula,
+    readonly editable: boolean = false
+  ) {
+    super(uri, store, editable);
   }
 
   subjects() {

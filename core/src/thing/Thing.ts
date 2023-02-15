@@ -174,7 +174,13 @@ export class Thing {
     }));
   }
 
-  assume<T>(SpecificThing: new (uri: string, store: IndexedFormula) => T) {
-    return new SpecificThing(this.uri, this.store);
+  assume<T>(
+    SpecificThing: new (
+      uri: string,
+      store: IndexedFormula,
+      editable: boolean
+    ) => T
+  ) {
+    return new SpecificThing(this.uri, this.store, this.editable);
   }
 }
