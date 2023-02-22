@@ -1,6 +1,7 @@
+import {Thing} from "@pod-os/core";
 import { EventEmitter } from '@stencil/core';
 
-export type ResourceReceiver = (Thing) => void;
+export type ResourceReceiver = (resource: Thing) => void;
 export type ResourceEventEmitter = EventEmitter<ResourceReceiver>;
 
 export interface ResourceAware {

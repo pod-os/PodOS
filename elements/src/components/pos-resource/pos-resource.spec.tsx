@@ -31,7 +31,7 @@ describe('pos-resource', () => {
     when(os.fetch)
       .calledWith('https://resource.test/')
       .mockReturnValue(new Promise(() => null));
-    await page.rootInstance.setOs(os);
+    await page.rootInstance.receivePodOs(os);
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
       <pos-resource uri="https://resource.test/">
@@ -49,7 +49,7 @@ describe('pos-resource', () => {
     });
     const os = mockPodOS();
     when(os.fetch).calledWith('https://resource.test/').mockResolvedValue(null);
-    await page.rootInstance.setOs(os);
+    await page.rootInstance.receivePodOs(os);
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
       <pos-resource uri="https://resource.test/">
@@ -69,7 +69,7 @@ describe('pos-resource', () => {
     page.root.addEventListener('pod-os:resource-loaded', onResourceLoaded);
     const os = mockPodOS();
     when(os.fetch).calledWith('https://resource.test/').mockResolvedValue(null);
-    await page.rootInstance.setOs(os);
+    await page.rootInstance.receivePodOs(os);
     await page.waitForChanges();
     expect(onResourceLoaded).toHaveBeenCalled();
     expect(onResourceLoaded.mock.calls[0][0].detail).toEqual('https://resource.test/');
@@ -82,7 +82,7 @@ describe('pos-resource', () => {
     });
     const os = mockPodOS();
     when(os.fetch).calledWith('https://resource.test/').mockRejectedValue(new Error('not found'));
-    await page.rootInstance.setOs(os);
+    await page.rootInstance.receivePodOs(os);
     await page.waitForChanges();
     const errorDetails = page.root.shadowRoot.querySelector('details');
     expect(errorDetails).toEqualHtml(`<details>not found</details>`);
@@ -98,7 +98,7 @@ describe('pos-resource', () => {
     when(os.fetch)
       .calledWith('https://other-resource.test')
       .mockReturnValue(new Promise(() => null));
-    await page.rootInstance.setOs(os);
+    await page.rootInstance.receivePodOs(os);
     page.root.setAttribute('uri', 'https://other-resource.test');
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
@@ -127,7 +127,7 @@ describe('pos-resource', () => {
     when(os.fetch)
       .calledWith('https://resource.test/')
       .mockReturnValueOnce(new Promise(() => null));
-    await page.rootInstance.setOs(os);
+    await page.rootInstance.receivePodOs(os);
     expect(sessionChanged).toBeDefined();
     sessionChanged();
     await page.waitForChanges();
@@ -155,7 +155,7 @@ describe('pos-resource', () => {
     const os = mockPodOS();
     when(os.fetch).calledWith('https://resource.test/').mockRejectedValueOnce(new Error('unauthorized'));
     when(os.fetch).calledWith('https://resource.test/').mockResolvedValueOnce(null);
-    await page.rootInstance.setOs(os);
+    await page.rootInstance.receivePodOs(os);
     expect(sessionChanged).toBeDefined();
     sessionChanged();
     await page.waitForChanges();
@@ -189,7 +189,7 @@ describe('pos-resource', () => {
     it('renders slot without fetching first', async () => {
       const os = mockPodOS();
       os.fetch.mockRejectedValue(new Error('should not fetch'));
-      await page.rootInstance.setOs(os);
+      await page.rootInstance.receivePodOs(os);
       await page.waitForChanges();
       expect(page.root).toEqualHtml(`
       <pos-resource lazy uri="https://resource.test/">
@@ -206,7 +206,7 @@ describe('pos-resource', () => {
         when(os.fetch)
           .calledWith('https://resource.test/')
           .mockReturnValue(new Promise(() => null));
-        await page.rootInstance.setOs(os);
+        await page.rootInstance.receivePodOs(os);
         page.root.fetch();
         await page.waitForChanges();
         expect(page.root).toEqualHtml(`
@@ -221,7 +221,7 @@ describe('pos-resource', () => {
       it('renders slot after loading', async () => {
         const os = mockPodOS();
         when(os.fetch).calledWith('https://resource.test/').mockResolvedValue(null);
-        await page.rootInstance.setOs(os);
+        await page.rootInstance.receivePodOs(os);
         await page.root.fetch();
         await page.waitForChanges();
         expect(page.root).toEqualHtml(`
@@ -236,7 +236,7 @@ describe('pos-resource', () => {
       it('renders error when fetch failed', async () => {
         const os = mockPodOS();
         when(os.fetch).calledWith('https://resource.test/').mockRejectedValue(new Error('not found'));
-        await page.rootInstance.setOs(os);
+        await page.rootInstance.receivePodOs(os);
         page.root.fetch();
         await page.waitForChanges();
         const errorDetails = page.root.shadowRoot.querySelector('details');

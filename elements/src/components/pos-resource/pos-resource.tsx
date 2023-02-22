@@ -1,7 +1,8 @@
 import { PodOS, Thing } from '@pod-os/core';
-import { Component, EventEmitter, Event, h, Prop, State, Watch, Listen, Method } from '@stencil/core';
+import { Component, Event, EventEmitter, h, Listen, Method, Prop, State, Watch } from '@stencil/core';
 
 import session from '../../store/session';
+import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../events/PodOsAware';
 import { ResourceReceiver } from '../events/ResourceAware';
 
 interface SubscribeResourceEvent extends CustomEvent {
@@ -12,7 +13,7 @@ interface SubscribeResourceEvent extends CustomEvent {
   tag: 'pos-resource',
   shadow: true,
 })
-export class PosResource {
+export class PosResource implements PodOsAware {
   @State() os: PodOS;
 
   @State() resource: Thing;
@@ -22,7 +23,7 @@ export class PosResource {
 
   @Prop() lazy: boolean = false;
 
-  @Event({ eventName: 'pod-os:init' }) initializeOsEmitter: EventEmitter;
+  @Event({ eventName: 'pod-os:init' }) subscribePodOs: PodOsEventEmitter;
 
   /**
    * Indicates that the resource given in `uri` property has been loaded.
@@ -37,10 +38,10 @@ export class PosResource {
 
   componentWillLoad() {
     session.onChange('isLoggedIn', () => this.loadResource());
-    this.initializeOsEmitter.emit(this.setOs);
+    subscribePodOs(this);
   }
 
-  setOs = async (os: PodOS) => {
+  receivePodOs = async (os: PodOS) => {
     this.os = os;
   };
 
