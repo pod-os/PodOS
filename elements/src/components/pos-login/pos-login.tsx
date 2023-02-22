@@ -1,4 +1,4 @@
-import { PodOS } from '@pod-os/core/src';
+import { PodOS } from '@pod-os/core';
 import { Component, Event, EventEmitter, h, Host, State } from '@stencil/core';
 
 import session from '../../store/session';

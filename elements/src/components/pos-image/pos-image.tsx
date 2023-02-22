@@ -1,6 +1,5 @@
-import { BrokenFile as BrokenFileData } from '@pod-os/core';
+import { PodOS, BrokenFile as BrokenFileData } from '@pod-os/core';
 import { BrokenFile } from '../broken-file/BrokenFile';
-import { PodOS } from '@pod-os/core/src';
 import { Component, Event, EventEmitter, h, Prop, State, Watch } from '@stencil/core';
 import session from '../../store/session';
 
