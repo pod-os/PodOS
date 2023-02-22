@@ -44,7 +44,8 @@
   "dependencies": {
     "@inrupt/solid-client-authn-browser": "^1.13.2",
     "buffer": "^6.0.3",
-    "rdflib": "2.2.21"
+    "rdflib": "^2.2.26",
+    "url": "^0.11.0"
   },
   "directories": {
     "lib": "lib"
