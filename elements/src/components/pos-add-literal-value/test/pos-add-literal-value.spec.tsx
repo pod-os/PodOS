@@ -89,5 +89,8 @@ describe('pos-add-literal-value', () => {
 
     // then the value is added to the property of the resource
     expect(mockOs.addPropertyValue).toHaveBeenCalledWith(mockResource, 'https://schema.org/description', 'new value');
+
+    // and the value input is cleared
+    expect(page.rootInstance.currentValue).toBe('');
   });
 });
