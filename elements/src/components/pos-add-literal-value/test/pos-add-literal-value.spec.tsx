@@ -74,6 +74,11 @@ describe('pos-add-literal-value', () => {
 
     await page.waitForChanges();
 
+    // when the user selects a term
+    const termSelect = page.root.querySelector('pos-select-term');
+    fireEvent(termSelect, new CustomEvent('pod-os:term-selected', { detail: { uri: 'https://schema.org/description' } }));
+    expect(page.rootInstance.selectedTermUri).toBe('https://schema.org/description');
+
     // when the user types something into the value input
     const input = page.root.querySelector('ion-input');
     fireEvent(input, new CustomEvent('ionChange', { detail: { value: 'new value' } }));
@@ -83,6 +88,6 @@ describe('pos-add-literal-value', () => {
     fireEvent(input, new CustomEvent('change'));
 
     // then the value is added to the property of the resource
-    expect(mockOs.addPropertyValue).toHaveBeenCalledWith(mockResource, 'https://schema.org/name', 'new value');
+    expect(mockOs.addPropertyValue).toHaveBeenCalledWith(mockResource, 'https://schema.org/description', 'new value');
   });
 });

@@ -13,6 +13,7 @@ export class PosAddLiteralValue implements ResourceAware, PodOsAware {
   @State() resource: Thing;
 
   @State() currentValue: string;
+  @State() selectedTermUri: string;
 
   @Event({ eventName: 'pod-os:init' }) subscribePodOs: PodOsEventEmitter;
 
@@ -35,7 +36,7 @@ export class PosAddLiteralValue implements ResourceAware, PodOsAware {
   };
 
   save() {
-    this.os.addPropertyValue(this.resource, 'https://schema.org/name', this.currentValue);
+    this.os.addPropertyValue(this.resource, this.selectedTermUri, this.currentValue);
   }
 
   render() {
@@ -44,7 +45,7 @@ export class PosAddLiteralValue implements ResourceAware, PodOsAware {
     }
     return (
       <Host>
-        <pos-select-term />
+        <pos-select-term onPod-os:term-selected={ev => (this.selectedTermUri = ev.detail.uri)} />
         <ion-input placeholder="Enter value" onIonChange={ev => (this.currentValue = ev.detail.value.toString())} onChange={() => this.save()}></ion-input>
       </Host>
     );
