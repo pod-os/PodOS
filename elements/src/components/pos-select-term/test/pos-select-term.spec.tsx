@@ -1,4 +1,5 @@
 import { newSpecPage } from '@stencil/core/testing';
+import { fireEvent } from '@testing-library/dom';
 import { PosSelectTerm } from '../pos-select-term';
 
 describe('pos-select-term', () => {
@@ -41,5 +42,31 @@ describe('pos-select-term', () => {
         </mock:shadow-root>
       </pos-select-term>
     `);
+  });
+
+  it('fires event when term is entered', async () => {
+    const page = await newSpecPage({
+      supportsShadowDom: false,
+      components: [PosSelectTerm],
+      html: `<pos-select-term></pos-select-term>`,
+    });
+    page.rootInstance.receivePodOs({
+      listKnownTerms: () => [
+        {
+          uri: 'http://schema.org/name',
+          shorthand: 'schema:name',
+        },
+      ],
+    });
+    await page.waitForChanges();
+
+    const onTermSelected = jest.fn();
+    page.root.addEventListener('pod-os:term-selected', onTermSelected);
+
+    const input = page.root.querySelector('input');
+    fireEvent.change(input, { target: { value: 'http://schema.org/name' } });
+
+    expect(onTermSelected).toHaveBeenCalled();
+    expect(onTermSelected.mock.calls[0][0].detail).toEqual({ uri: 'http://schema.org/name' });
   });
 });
