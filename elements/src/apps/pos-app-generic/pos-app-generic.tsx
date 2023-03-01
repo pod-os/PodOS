@@ -24,6 +24,7 @@ export class PosAppGeneric {
           </ion-col>
           <ion-col size="12" size-sm>
             <pos-literals />
+            <pos-add-literal-value />
           </ion-col>
           <ion-col size="12" size-sm>
             <pos-relations />

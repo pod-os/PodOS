@@ -13,6 +13,7 @@ export * from "./rdf-document";
 export * from "./ldp-container";
 
 export class PodOS {
+  private subscriber: any = {};
   private readonly session: BrowserSession;
   readonly store: Store;
   private fileFetcher: FileFetcher;
@@ -35,12 +36,19 @@ export class PodOS {
     return this.fileFetcher.fetchFile(url);
   }
 
-  addPropertyValue(thing: Thing, property: string, value: string) {
-    this.store.addPropertyValue(thing, property, value);
+  async addPropertyValue(thing: Thing, property: string, value: string) {
+    await this.store.addPropertyValue(thing, property, value);
+    console.log("call subscriber after change of", thing.uri, property, value);
+    this.subscriber[thing.uri]();
   }
 
   listKnownTerms(): Term[] {
     return listKnownTerms();
+  }
+
+  subscribeChanges(uri: string, sub: () => any) {
+    console.log("register subscriber for", uri);
+    this.subscriber[uri] = sub;
   }
 
   trackSession(callback: (session: ISessionInfo) => unknown): void {
