@@ -54,6 +54,39 @@ describe('pos-add-literal-value', () => {
     `);
   });
 
+  it('focusses the input after a term was selected', async () => {
+    // given a page with a pos-add-literal-value component
+    const page = await newSpecPage({
+      supportsShadowDom: false,
+      components: [PosAddLiteralValue],
+      html: `<pos-add-literal-value></pos-add-literal-value>`,
+    });
+
+    // and the component received a PodOs instance
+    const mockOs = {
+      addPropertyValue: jest.fn(),
+    };
+    page.rootInstance.receivePodOs(mockOs);
+
+    // and the current (editable) resource
+    const mockResource = {
+      editable: true,
+    };
+    page.rootInstance.receiveResource(mockResource);
+
+    await page.waitForChanges();
+
+    const input = page.root.querySelector('ion-input');
+    input.setFocus = jest.fn();
+
+    // when the user selects a term
+    const termSelect = page.root.querySelector('pos-select-term');
+    fireEvent(termSelect, new CustomEvent('pod-os:term-selected', { detail: { uri: 'https://schema.org/description' } }));
+
+    // then the input is focussed
+    expect(input.setFocus).toHaveBeenCalled();
+  });
+
   it('changes value and saves value', async () => {
     // given a page with a pos-add-literal-value component
     const page = await newSpecPage({
@@ -76,13 +109,15 @@ describe('pos-add-literal-value', () => {
 
     await page.waitForChanges();
 
+    const input = page.root.querySelector('ion-input');
+    input.setFocus = jest.fn();
+
     // when the user selects a term
     const termSelect = page.root.querySelector('pos-select-term');
     fireEvent(termSelect, new CustomEvent('pod-os:term-selected', { detail: { uri: 'https://schema.org/description' } }));
     expect(page.rootInstance.selectedTermUri).toBe('https://schema.org/description');
 
     // when the user types something into the value input
-    const input = page.root.querySelector('ion-input');
     fireEvent(input, new CustomEvent('ionChange', { detail: { value: 'new value' } }));
     expect(page.rootInstance.currentValue).toBe('new value');
 
