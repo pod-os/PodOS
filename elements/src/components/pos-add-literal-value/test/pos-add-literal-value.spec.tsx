@@ -1,3 +1,4 @@
+import { Literal } from '@pod-os/core';
 import { newSpecPage } from '@stencil/core/testing';
 import { PosAddLiteralValue } from '../pos-add-literal-value';
 import { fireEvent } from '@testing-library/dom';
@@ -93,5 +94,48 @@ describe('pos-add-literal-value', () => {
 
     // and the value input is cleared
     expect(page.rootInstance.currentValue).toBe('');
+  });
+
+  it('fires event after save', async () => {
+    // given a page with a pos-add-literal-value component
+    const page = await newSpecPage({
+      supportsShadowDom: false,
+      components: [PosAddLiteralValue],
+      html: `<pos-add-literal-value></pos-add-literal-value>`,
+    });
+
+    // and the page listens for pod-os:added-literal-value event
+    const eventListener = jest.fn();
+    page.root.addEventListener('pod-os:added-literal-value', eventListener);
+
+    // and the component received a PodOs instance
+    const mockOs = {
+      addPropertyValue: jest.fn(),
+    };
+    page.rootInstance.receivePodOs(mockOs);
+
+    // and the current (editable) resource
+    const mockResource = {
+      editable: true,
+    };
+    page.rootInstance.receiveResource(mockResource);
+
+    await page.waitForChanges();
+
+    // when save is called
+    page.rootInstance.selectedTermUri = 'https://schema.org/name';
+    page.rootInstance.currentValue = 'Test value';
+    page.rootInstance.save();
+
+    // then a pod-os:added-literal-value event with the added literal is received in the listener
+    const literal: Literal = {
+      predicate: 'https://schema.org/name',
+      values: ['Test value'],
+    };
+    expect(eventListener).toHaveBeenCalledWith(
+      expect.objectContaining({
+        detail: literal,
+      }),
+    );
   });
 });

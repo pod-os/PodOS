@@ -1,5 +1,5 @@
-import { PodOS, Thing } from '@pod-os/core';
-import { Component, Host, h, State, Event, Watch } from '@stencil/core';
+import { Literal, PodOS, Thing } from '@pod-os/core';
+import { Component, Host, h, State, Event, Watch, EventEmitter } from '@stencil/core';
 import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../events/PodOsAware';
 import { ResourceAware, ResourceEventEmitter, subscribeResource } from '../events/ResourceAware';
 
@@ -19,6 +19,8 @@ export class PosAddLiteralValue implements ResourceAware, PodOsAware {
 
   @Event({ eventName: 'pod-os:resource' }) subscribeResource: ResourceEventEmitter;
 
+  @Event({ eventName: 'pod-os:added-literal-value' }) addedLiteralValue: EventEmitter;
+
   @Watch('os')
   setName() {}
 
@@ -37,6 +39,11 @@ export class PosAddLiteralValue implements ResourceAware, PodOsAware {
 
   save() {
     this.os.addPropertyValue(this.resource, this.selectedTermUri, this.currentValue);
+    const literal: Literal = {
+      predicate: this.selectedTermUri,
+      values: [this.currentValue],
+    };
+    this.addedLiteralValue.emit(literal);
     this.currentValue = '';
   }
 
