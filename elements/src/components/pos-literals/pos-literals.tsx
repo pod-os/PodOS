@@ -20,6 +20,10 @@ export class PosLiterals implements ResourceAware {
     this.data = resource.literals();
   };
 
+  literalValueAdded(literal: Literal) {
+    this.data = [...this.data, literal];
+  }
+
   render() {
     const items = this.data.map(it => (
       <ion-item-group>
@@ -36,7 +40,7 @@ export class PosLiterals implements ResourceAware {
     return (
       <Host>
         {this.data.length > 0 ? <ion-list>{items}</ion-list> : null}
-        <pos-add-literal-value />
+        <pos-add-literal-value onPod-os:added-literal-value={event => this.literalValueAdded(event.detail)} />
       </Host>
     );
   }

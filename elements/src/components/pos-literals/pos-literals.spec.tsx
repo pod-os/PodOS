@@ -1,8 +1,9 @@
 import { newSpecPage } from '@stencil/core/testing';
 
-import { getByText } from '@testing-library/dom';
+import { fireEvent, getByText } from '@testing-library/dom';
 
 import { PosLiterals } from './pos-literals';
+import { Literal } from '@pod-os/core';
 
 describe('pos-literals', () => {
   it('are empty initially, but include option to add one', async () => {
@@ -67,5 +68,35 @@ describe('pos-literals', () => {
 
     expect(getByText(el, 'the description')).toBeDefined();
     expect(getByText(el, 'http://schema.org/description')).toBeDefined();
+  });
+
+  it('adds newly added predicate to the list', async () => {
+    const page = await newSpecPage({
+      components: [PosLiterals],
+      html: `<pos-literals />`,
+      supportsShadowDom: false,
+    });
+    await page.rootInstance.receiveResource({
+      literals: () => [],
+    });
+    await page.waitForChanges();
+
+    const literal: Literal = {
+      predicate: 'https://schema.org/name',
+      values: ['Alice'],
+    };
+
+    const input = page.root.querySelector('pos-add-literal-value');
+    fireEvent(
+      input,
+      new CustomEvent('pod-os:added-literal-value', {
+        detail: literal,
+      }),
+    );
+
+    await page.waitForChanges();
+
+    expect(getByText(page.root, 'Alice')).toBeDefined();
+    expect(getByText(page.root, 'https://schema.org/name')).toBeDefined();
   });
 });

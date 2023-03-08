@@ -6,6 +6,8 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
+    interface PosAddLiteralValue {
+    }
     interface PosApp {
     }
     interface PosAppBrowser {
@@ -59,6 +61,9 @@ export namespace Components {
     }
     interface PosRouter {
     }
+    interface PosSelectTerm {
+        "placeholder": string;
+    }
     interface PosSubjects {
     }
     interface PosTypeBadges {
@@ -71,6 +76,12 @@ export namespace Components {
          */
         "predicate": string;
     }
+    interface TestComponent {
+    }
+}
+export interface PosAddLiteralValueCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosAddLiteralValueElement;
 }
 export interface PosAppDocumentViewerCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -136,6 +147,10 @@ export interface PosRichLinkCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosRichLinkElement;
 }
+export interface PosSelectTermCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosSelectTermElement;
+}
 export interface PosSubjectsCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosSubjectsElement;
@@ -153,6 +168,12 @@ export interface PosValueCustomEvent<T> extends CustomEvent<T> {
     target: HTMLPosValueElement;
 }
 declare global {
+    interface HTMLPosAddLiteralValueElement extends Components.PosAddLiteralValue, HTMLStencilElement {
+    }
+    var HTMLPosAddLiteralValueElement: {
+        prototype: HTMLPosAddLiteralValueElement;
+        new (): HTMLPosAddLiteralValueElement;
+    };
     interface HTMLPosAppElement extends Components.PosApp, HTMLStencilElement {
     }
     var HTMLPosAppElement: {
@@ -285,6 +306,12 @@ declare global {
         prototype: HTMLPosRouterElement;
         new (): HTMLPosRouterElement;
     };
+    interface HTMLPosSelectTermElement extends Components.PosSelectTerm, HTMLStencilElement {
+    }
+    var HTMLPosSelectTermElement: {
+        prototype: HTMLPosSelectTermElement;
+        new (): HTMLPosSelectTermElement;
+    };
     interface HTMLPosSubjectsElement extends Components.PosSubjects, HTMLStencilElement {
     }
     var HTMLPosSubjectsElement: {
@@ -309,7 +336,14 @@ declare global {
         prototype: HTMLPosValueElement;
         new (): HTMLPosValueElement;
     };
+    interface HTMLTestComponentElement extends Components.TestComponent, HTMLStencilElement {
+    }
+    var HTMLTestComponentElement: {
+        prototype: HTMLTestComponentElement;
+        new (): HTMLTestComponentElement;
+    };
     interface HTMLElementTagNameMap {
+        "pos-add-literal-value": HTMLPosAddLiteralValueElement;
         "pos-app": HTMLPosAppElement;
         "pos-app-browser": HTMLPosAppBrowserElement;
         "pos-app-document-viewer": HTMLPosAppDocumentViewerElement;
@@ -332,13 +366,20 @@ declare global {
         "pos-reverse-relations": HTMLPosReverseRelationsElement;
         "pos-rich-link": HTMLPosRichLinkElement;
         "pos-router": HTMLPosRouterElement;
+        "pos-select-term": HTMLPosSelectTermElement;
         "pos-subjects": HTMLPosSubjectsElement;
         "pos-type-badges": HTMLPosTypeBadgesElement;
         "pos-type-router": HTMLPosTypeRouterElement;
         "pos-value": HTMLPosValueElement;
+        "test-component": HTMLTestComponentElement;
     }
 }
 declare namespace LocalJSX {
+    interface PosAddLiteralValue {
+        "onPod-os:added-literal-value"?: (event: PosAddLiteralValueCustomEvent<any>) => void;
+        "onPod-os:init"?: (event: PosAddLiteralValueCustomEvent<any>) => void;
+        "onPod-os:resource"?: (event: PosAddLiteralValueCustomEvent<any>) => void;
+    }
     interface PosApp {
     }
     interface PosAppBrowser {
@@ -420,6 +461,14 @@ declare namespace LocalJSX {
     }
     interface PosRouter {
     }
+    interface PosSelectTerm {
+        "onPod-os:init"?: (event: PosSelectTermCustomEvent<any>) => void;
+        /**
+          * Fires when a term is entered or selected
+         */
+        "onPod-os:term-selected"?: (event: PosSelectTermCustomEvent<any>) => void;
+        "placeholder"?: string;
+    }
     interface PosSubjects {
         "onPod-os:resource"?: (event: PosSubjectsCustomEvent<any>) => void;
     }
@@ -436,7 +485,10 @@ declare namespace LocalJSX {
          */
         "predicate"?: string;
     }
+    interface TestComponent {
+    }
     interface IntrinsicElements {
+        "pos-add-literal-value": PosAddLiteralValue;
         "pos-app": PosApp;
         "pos-app-browser": PosAppBrowser;
         "pos-app-document-viewer": PosAppDocumentViewer;
@@ -459,16 +511,19 @@ declare namespace LocalJSX {
         "pos-reverse-relations": PosReverseRelations;
         "pos-rich-link": PosRichLink;
         "pos-router": PosRouter;
+        "pos-select-term": PosSelectTerm;
         "pos-subjects": PosSubjects;
         "pos-type-badges": PosTypeBadges;
         "pos-type-router": PosTypeRouter;
         "pos-value": PosValue;
+        "test-component": TestComponent;
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "pos-add-literal-value": LocalJSX.PosAddLiteralValue & JSXBase.HTMLAttributes<HTMLPosAddLiteralValueElement>;
             "pos-app": LocalJSX.PosApp & JSXBase.HTMLAttributes<HTMLPosAppElement>;
             "pos-app-browser": LocalJSX.PosAppBrowser & JSXBase.HTMLAttributes<HTMLPosAppBrowserElement>;
             "pos-app-document-viewer": LocalJSX.PosAppDocumentViewer & JSXBase.HTMLAttributes<HTMLPosAppDocumentViewerElement>;
@@ -491,10 +546,12 @@ declare module "@stencil/core" {
             "pos-reverse-relations": LocalJSX.PosReverseRelations & JSXBase.HTMLAttributes<HTMLPosReverseRelationsElement>;
             "pos-rich-link": LocalJSX.PosRichLink & JSXBase.HTMLAttributes<HTMLPosRichLinkElement>;
             "pos-router": LocalJSX.PosRouter & JSXBase.HTMLAttributes<HTMLPosRouterElement>;
+            "pos-select-term": LocalJSX.PosSelectTerm & JSXBase.HTMLAttributes<HTMLPosSelectTermElement>;
             "pos-subjects": LocalJSX.PosSubjects & JSXBase.HTMLAttributes<HTMLPosSubjectsElement>;
             "pos-type-badges": LocalJSX.PosTypeBadges & JSXBase.HTMLAttributes<HTMLPosTypeBadgesElement>;
             "pos-type-router": LocalJSX.PosTypeRouter & JSXBase.HTMLAttributes<HTMLPosTypeRouterElement>;
             "pos-value": LocalJSX.PosValue & JSXBase.HTMLAttributes<HTMLPosValueElement>;
+            "test-component": LocalJSX.TestComponent & JSXBase.HTMLAttributes<HTMLTestComponentElement>;
         }
     }
 }
