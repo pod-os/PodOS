@@ -1,6 +1,6 @@
 import { newSpecPage } from '@stencil/core/testing';
 
-import { fireEvent, getByText } from '@testing-library/dom';
+import { fireEvent, getAllByText, getByText } from '@testing-library/dom';
 
 import { PosLiterals } from './pos-literals';
 import { Literal } from '@pod-os/core';
@@ -71,6 +71,7 @@ describe('pos-literals', () => {
   });
 
   it('adds newly added predicate to the list', async () => {
+    // given
     const page = await newSpecPage({
       components: [PosLiterals],
       html: `<pos-literals />`,
@@ -81,12 +82,12 @@ describe('pos-literals', () => {
     });
     await page.waitForChanges();
 
+    // when
+    const input = page.root.querySelector('pos-add-literal-value');
     const literal: Literal = {
       predicate: 'https://schema.org/name',
       values: ['Alice'],
     };
-
-    const input = page.root.querySelector('pos-add-literal-value');
     fireEvent(
       input,
       new CustomEvent('pod-os:added-literal-value', {
@@ -96,7 +97,46 @@ describe('pos-literals', () => {
 
     await page.waitForChanges();
 
+    // then
     expect(getByText(page.root, 'Alice')).toBeDefined();
     expect(getByText(page.root, 'https://schema.org/name')).toBeDefined();
+  });
+
+  it('adds newly added predicate value to the existing list without duplicating the predicate', async () => {
+    // given
+    const page = await newSpecPage({
+      components: [PosLiterals],
+      html: `<pos-literals />`,
+      supportsShadowDom: false,
+    });
+    await page.rootInstance.receiveResource({
+      literals: () => [
+        {
+          predicate: 'https://schema.org/name',
+          values: ['Alice'],
+        },
+      ],
+    });
+    await page.waitForChanges();
+
+    // when
+    const input = page.root.querySelector('pos-add-literal-value');
+    const literal: Literal = {
+      predicate: 'https://schema.org/name',
+      values: ['Bernadette'],
+    };
+    fireEvent(
+      input,
+      new CustomEvent('pod-os:added-literal-value', {
+        detail: literal,
+      }),
+    );
+
+    await page.waitForChanges();
+
+    // then
+    expect(getByText(page.root, 'Alice')).toBeDefined();
+    expect(getByText(page.root, 'Bernadette')).toBeDefined();
+    expect(getAllByText(page.root, 'https://schema.org/name')).toHaveLength(1);
   });
 });

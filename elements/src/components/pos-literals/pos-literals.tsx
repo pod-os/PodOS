@@ -20,8 +20,21 @@ export class PosLiterals implements ResourceAware {
     this.data = resource.literals();
   };
 
-  literalValueAdded(literal: Literal) {
-    this.data = [...this.data, literal];
+  literalValueAdded(newLiteral: Literal) {
+    const existing = this.data.find(it => it.predicate === newLiteral.predicate);
+
+    if (!existing) {
+      this.data = [...this.data, newLiteral];
+    } else {
+      this.data = this.data.map(it => {
+        return it.predicate === existing.predicate
+          ? {
+              predicate: existing.predicate,
+              values: [...existing.values, ...newLiteral.values],
+            }
+          : it;
+      });
+    }
   }
 
   render() {
