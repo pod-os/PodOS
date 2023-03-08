@@ -5,14 +5,16 @@ import { getByText } from '@testing-library/dom';
 import { PosLiterals } from './pos-literals';
 
 describe('pos-literals', () => {
-  it('are empty initially', async () => {
+  it('are empty initially, but include option to add one', async () => {
     const page = await newSpecPage({
       components: [PosLiterals],
       html: `<pos-literals />`,
     });
     expect(page.root).toEqualHtml(`
       <pos-literals>
-        <mock:shadow-root></mock:shadow-root>
+        <mock:shadow-root>
+          <pos-add-literal-value />
+        </mock:shadow-root>
       </pos-literals>
   `);
   });

@@ -1,5 +1,5 @@
 import { Literal, Thing } from '@pod-os/core';
-import { Component, Event, EventEmitter, h, State } from '@stencil/core';
+import { Component, Event, EventEmitter, h, Host, State } from '@stencil/core';
 import { ResourceAware, subscribeResource } from '../events/ResourceAware';
 
 @Component({
@@ -33,6 +33,11 @@ export class PosLiterals implements ResourceAware {
         ))}
       </ion-item-group>
     ));
-    return this.data.length > 0 ? <ion-list>{items}</ion-list> : null;
+    return (
+      <Host>
+        {this.data.length > 0 ? <ion-list>{items}</ion-list> : null}
+        <pos-add-literal-value />
+      </Host>
+    );
   }
 }
