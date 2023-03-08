@@ -1,3 +1,13 @@
 :host {
   display: block;
 }
+
+input {
+  border: none;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+input:focus {
+  outline: none;
+}

@@ -45,8 +45,9 @@ describe('pos-add-literal-value', () => {
     expect(page.root).toEqualHtml(`
       <pos-add-literal-value>
         <mock:shadow-root>
-          <pos-select-term></pos-select-term>
-          <ion-input placeholder="Enter value"></ion-input>
+            <ion-icon name="add-circle-outline"></ion-icon>
+            <pos-select-term placeholder="Add literal"></pos-select-term>
+            <ion-input placeholder=""></ion-input>
         </mock:shadow-root>
       </pos-add-literal-value>
     `);

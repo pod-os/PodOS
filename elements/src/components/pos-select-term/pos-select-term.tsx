@@ -1,6 +1,6 @@
 import { PodOS } from '@pod-os/core';
 import { Term } from '@pod-os/core/types/terms';
-import { Component, Event, EventEmitter, h, Host, State, Watch } from '@stencil/core';
+import { Component, Event, EventEmitter, h, Host, Prop, State, Watch } from '@stencil/core';
 import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../events/PodOsAware';
 
 @Component({
@@ -10,6 +10,8 @@ import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../events/PodOsAw
 })
 export class PosSelectTerm implements PodOsAware {
   @State() os: PodOS;
+
+  @Prop() placeholder: string = 'Type to search...';
 
   @State() terms: Term[] = [];
 
@@ -40,7 +42,7 @@ export class PosSelectTerm implements PodOsAware {
   render() {
     return (
       <Host>
-        <input list="terms" placeholder="Type to search..." onChange={ev => this.handleChange(ev)}></input>
+        <input list="terms" placeholder={this.placeholder} onChange={ev => this.handleChange(ev)}></input>
         <datalist id="terms">
           {this.terms.map(term => (
             <option value={term.uri}>{term.shorthand}</option>
