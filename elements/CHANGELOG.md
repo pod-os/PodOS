@@ -9,6 +9,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Added
 
 - [pos-select-term](../docs/elements/components/pos-select-term): An input component to select from a list of common terms
+- [pos-add-literal-value](../docs/elements/components/pos-add-literal-value): An input component to add a value to a property of a resource
+- [pos-error-toast](../docs/elements/components/pos-error-toast): Shows a toast when an error occurs
+
+### Changed
+
+- [pos-literals](../docs/elements/components/pos-literals): Allows to add a property value when resource is editable
 
 ## 0.11.0
 

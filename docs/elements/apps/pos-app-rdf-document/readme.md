@@ -55,6 +55,11 @@ graph TD;
   pos-literals --> ion-label
   pos-literals --> ion-item
   pos-literals --> ion-list
+  pos-literals --> pos-add-literal-value
+  pos-add-literal-value --> ion-icon
+  pos-add-literal-value --> pos-select-term
+  pos-add-literal-value --> ion-input
+  ion-input --> ion-icon
   style pos-app-rdf-document fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

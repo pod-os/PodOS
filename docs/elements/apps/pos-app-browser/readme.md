@@ -10,6 +10,7 @@
 ### Depends on
 
 - [pos-app](../../components/pos-app)
+- [pos-error-toast](../../components/pos-error-toast)
 - ion-app
 - ion-header
 - ion-toolbar
@@ -23,6 +24,7 @@
 ```mermaid
 graph TD;
   pos-app-browser --> pos-app
+  pos-app-browser --> pos-error-toast
   pos-app-browser --> ion-app
   pos-app-browser --> ion-header
   pos-app-browser --> ion-toolbar

@@ -52,9 +52,14 @@ graph TD;
   pos-literals --> ion-label
   pos-literals --> ion-item
   pos-literals --> ion-list
+  pos-literals --> pos-add-literal-value
   ion-item --> ion-icon
   ion-item --> ion-ripple-effect
   ion-item --> ion-note
+  pos-add-literal-value --> ion-icon
+  pos-add-literal-value --> pos-select-term
+  pos-add-literal-value --> ion-input
+  ion-input --> ion-icon
   pos-relations --> ion-item-group
   pos-relations --> ion-item-divider
   pos-relations --> ion-label

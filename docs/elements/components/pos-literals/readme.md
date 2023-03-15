@@ -29,6 +29,7 @@
 - ion-label
 - ion-item
 - ion-list
+- [pos-add-literal-value](../pos-add-literal-value)
 
 ### Graph
 ```mermaid
@@ -38,9 +39,14 @@ graph TD;
   pos-literals --> ion-label
   pos-literals --> ion-item
   pos-literals --> ion-list
+  pos-literals --> pos-add-literal-value
   ion-item --> ion-icon
   ion-item --> ion-ripple-effect
   ion-item --> ion-note
+  pos-add-literal-value --> ion-icon
+  pos-add-literal-value --> pos-select-term
+  pos-add-literal-value --> ion-input
+  ion-input --> ion-icon
   pos-app-document-viewer --> pos-literals
   pos-app-generic --> pos-literals
   pos-app-image-viewer --> pos-literals
