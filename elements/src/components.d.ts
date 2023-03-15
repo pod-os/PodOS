@@ -32,6 +32,8 @@ export namespace Components {
         "alt": string;
         "src": string;
     }
+    interface PosErrorToast {
+    }
     interface PosImage {
         "alt": string;
         "src": string;
@@ -240,6 +242,12 @@ declare global {
         prototype: HTMLPosDocumentElement;
         new (): HTMLPosDocumentElement;
     };
+    interface HTMLPosErrorToastElement extends Components.PosErrorToast, HTMLStencilElement {
+    }
+    var HTMLPosErrorToastElement: {
+        prototype: HTMLPosErrorToastElement;
+        new (): HTMLPosErrorToastElement;
+    };
     interface HTMLPosImageElement extends Components.PosImage, HTMLStencilElement {
     }
     var HTMLPosImageElement: {
@@ -355,6 +363,7 @@ declare global {
         "pos-container-item": HTMLPosContainerItemElement;
         "pos-description": HTMLPosDescriptionElement;
         "pos-document": HTMLPosDocumentElement;
+        "pos-error-toast": HTMLPosErrorToastElement;
         "pos-image": HTMLPosImageElement;
         "pos-label": HTMLPosLabelElement;
         "pos-literals": HTMLPosLiteralsElement;
@@ -377,6 +386,7 @@ declare global {
 declare namespace LocalJSX {
     interface PosAddLiteralValue {
         "onPod-os:added-literal-value"?: (event: PosAddLiteralValueCustomEvent<any>) => void;
+        "onPod-os:error"?: (event: PosAddLiteralValueCustomEvent<any>) => void;
         "onPod-os:init"?: (event: PosAddLiteralValueCustomEvent<any>) => void;
         "onPod-os:resource"?: (event: PosAddLiteralValueCustomEvent<any>) => void;
     }
@@ -414,6 +424,8 @@ declare namespace LocalJSX {
          */
         "onPod-os:resource-loaded"?: (event: PosDocumentCustomEvent<string>) => void;
         "src"?: string;
+    }
+    interface PosErrorToast {
     }
     interface PosImage {
         "alt"?: string;
@@ -500,6 +512,7 @@ declare namespace LocalJSX {
         "pos-container-item": PosContainerItem;
         "pos-description": PosDescription;
         "pos-document": PosDocument;
+        "pos-error-toast": PosErrorToast;
         "pos-image": PosImage;
         "pos-label": PosLabel;
         "pos-literals": PosLiterals;
@@ -535,6 +548,7 @@ declare module "@stencil/core" {
             "pos-container-item": LocalJSX.PosContainerItem & JSXBase.HTMLAttributes<HTMLPosContainerItemElement>;
             "pos-description": LocalJSX.PosDescription & JSXBase.HTMLAttributes<HTMLPosDescriptionElement>;
             "pos-document": LocalJSX.PosDocument & JSXBase.HTMLAttributes<HTMLPosDocumentElement>;
+            "pos-error-toast": LocalJSX.PosErrorToast & JSXBase.HTMLAttributes<HTMLPosErrorToastElement>;
             "pos-image": LocalJSX.PosImage & JSXBase.HTMLAttributes<HTMLPosImageElement>;
             "pos-label": LocalJSX.PosLabel & JSXBase.HTMLAttributes<HTMLPosLabelElement>;
             "pos-literals": LocalJSX.PosLiterals & JSXBase.HTMLAttributes<HTMLPosLiteralsElement>;
