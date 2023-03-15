@@ -20,6 +20,7 @@ export class PosAddLiteralValue implements ResourceAware, PodOsAware {
   @Event({ eventName: 'pod-os:resource' }) subscribeResource: ResourceEventEmitter;
 
   @Event({ eventName: 'pod-os:added-literal-value' }) addedLiteralValue: EventEmitter;
+  @Event({ eventName: 'pod-os:error' }) error: EventEmitter;
 
   @Watch('os')
   setName() {}
@@ -39,14 +40,18 @@ export class PosAddLiteralValue implements ResourceAware, PodOsAware {
     this.os = os;
   };
 
-  save() {
-    this.os.addPropertyValue(this.resource, this.selectedTermUri, this.currentValue);
-    const literal: Literal = {
-      predicate: this.selectedTermUri,
-      values: [this.currentValue],
-    };
-    this.addedLiteralValue.emit(literal);
-    this.currentValue = '';
+  async save() {
+    try {
+      await this.os.addPropertyValue(this.resource, this.selectedTermUri, this.currentValue);
+      const literal: Literal = {
+        predicate: this.selectedTermUri,
+        values: [this.currentValue],
+      };
+      this.addedLiteralValue.emit(literal);
+      this.currentValue = '';
+    } catch (err) {
+      this.error.emit(err);
+    }
   }
 
   onTermSelected(event) {
