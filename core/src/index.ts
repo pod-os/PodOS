@@ -35,8 +35,12 @@ export class PodOS {
     return this.fileFetcher.fetchFile(url);
   }
 
-  addPropertyValue(thing: Thing, property: string, value: string) {
-    this.store.addPropertyValue(thing, property, value);
+  addPropertyValue(
+    thing: Thing,
+    property: string,
+    value: string
+  ): Promise<void> {
+    return this.store.addPropertyValue(thing, property, value);
   }
 
   listKnownTerms(): Term[] {

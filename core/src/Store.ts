@@ -52,10 +52,14 @@ export class Store {
    * @param property
    * @param value
    */
-  addPropertyValue(thing: Thing, property: string, value: string) {
+  addPropertyValue(
+    thing: Thing,
+    property: string,
+    value: string
+  ): Promise<void> {
     return this.updater.update(
       [],
       [st(sym(thing.uri), sym(property), lit(value), sym(thing.uri).doc())]
-    );
+    ) as Promise<void>; // without passing callback updater returns a Promise;
   }
 }
