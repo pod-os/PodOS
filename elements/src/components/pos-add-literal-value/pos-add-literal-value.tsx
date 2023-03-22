@@ -19,7 +19,14 @@ export class PosAddLiteralValue implements ResourceAware, PodOsAware {
 
   @Event({ eventName: 'pod-os:resource' }) subscribeResource: ResourceEventEmitter;
 
+  /**
+   * The entered literal value has been added to the resource and successfully stored to the Pod.
+   */
   @Event({ eventName: 'pod-os:added-literal-value' }) addedLiteralValue: EventEmitter;
+
+  /**
+   * Something went wrong while adding the literal value.
+   */
   @Event({ eventName: 'pod-os:error' }) error: EventEmitter;
 
   @Watch('os')

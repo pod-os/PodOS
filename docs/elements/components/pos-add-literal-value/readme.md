@@ -7,12 +7,12 @@
 
 ## Events
 
-| Event                        | Description | Type               |
-| ---------------------------- | ----------- | ------------------ |
-| `pod-os:added-literal-value` |             | `CustomEvent<any>` |
-| `pod-os:error`               |             | `CustomEvent<any>` |
-| `pod-os:init`                |             | `CustomEvent<any>` |
-| `pod-os:resource`            |             | `CustomEvent<any>` |
+| Event                        | Description                                                                                  | Type               |
+| ---------------------------- | -------------------------------------------------------------------------------------------- | ------------------ |
+| `pod-os:added-literal-value` | The entered literal value has been added to the resource and successfully stored to the Pod. | `CustomEvent<any>` |
+| `pod-os:error`               | Something went wrong while adding the literal value.                                         | `CustomEvent<any>` |
+| `pod-os:init`                |                                                                                              | `CustomEvent<any>` |
+| `pod-os:resource`            |                                                                                              | `CustomEvent<any>` |
 
 
 ## Dependencies

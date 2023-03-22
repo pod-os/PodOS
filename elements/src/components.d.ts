@@ -385,7 +385,13 @@ declare global {
 }
 declare namespace LocalJSX {
     interface PosAddLiteralValue {
+        /**
+          * The entered literal value has been added to the resource and successfully stored to the Pod.
+         */
         "onPod-os:added-literal-value"?: (event: PosAddLiteralValueCustomEvent<any>) => void;
+        /**
+          * Something went wrong while adding the literal value.
+         */
         "onPod-os:error"?: (event: PosAddLiteralValueCustomEvent<any>) => void;
         "onPod-os:init"?: (event: PosAddLiteralValueCustomEvent<any>) => void;
         "onPod-os:resource"?: (event: PosAddLiteralValueCustomEvent<any>) => void;
