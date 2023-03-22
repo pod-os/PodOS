@@ -1,0 +1,34 @@
+import {html} from "lit-html";
+
+import {
+  Canvas,
+  Meta,
+  Story
+} from '@storybook/addon-docs/blocks';
+
+<Meta
+  title="Inputs"
+  args={{ uri: "https://pod-os.solidcommunity.net/public/editable#it" }}
+  parameters={{
+    actions: {
+      handles: ['pod-os:added-literal-value', 'pod-os:term-selected'],
+    },
+  }}
+/>
+
+## pos-add-literal-value
+
+Allows to add a new literal value to the resource in its scope. It only shows up, if the resource is editable to the current user or publicly editable.
+
+<Canvas
+  withSource="open">
+  <Story
+    name="pos-add-literal-value"
+  >
+    {({uri}) => html`
+<pos-resource uri=${uri}>
+   <pos-add-literal-value />
+</pos-resource>
+    `}
+  </Story>
+</Canvas>

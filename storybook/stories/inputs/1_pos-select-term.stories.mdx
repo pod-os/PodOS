@@ -1,0 +1,31 @@
+import {html} from "lit-html";
+
+import {
+  Canvas,
+  Meta,
+  Story
+} from '@storybook/addon-docs/blocks';
+
+<Meta
+  title="Inputs"
+  parameters={{
+    actions: {
+      handles: [ 'pod-os:term-selected'],
+    },
+  }}
+/>
+
+## pos-select-term
+
+Allows to select a term from a list of know vocabulary terms.
+
+<Canvas
+  withSource="open">
+  <Story
+    name="pos-select-term"
+  >
+    {() => html`
+<pos-select-term></pos-select-term>
+    `}
+  </Story>
+</Canvas>
