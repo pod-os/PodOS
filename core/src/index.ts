@@ -48,7 +48,17 @@ export class PodOS {
   }
 
   trackSession(callback: (session: ISessionInfo) => unknown): void {
-    return this.session.trackSession(callback);
+    return this.session.trackSession((session) => {
+      /*
+         Flagging authorization metadata is necessary every time the user
+         logs in or out, so that metadata from previous requests is outdated
+         and not considered to determine whether a resource is editable anymore.
+
+         See: https://github.com/linkeddata/rdflib.js/pull/512
+       */
+      this.store.updater.flagAuthorizationMetadata();
+      callback(session);
+    });
   }
 
   logout() {
