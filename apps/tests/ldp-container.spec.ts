@@ -41,8 +41,20 @@ test("show contents of an LDP container", async ({ page }) => {
   );
 
   // and for each item in the list a icon is shown, indicating whether it is a folder or document
-  await expect(item1.locator("svg")).toHaveText("Folder");
-  await expect(item2.locator("svg")).toHaveText("Document");
-  await expect(item3.locator("svg")).toHaveText("Document");
-  await expect(item4.locator("svg")).toHaveText("Folder");
+  await expect(item1.locator("ion-icon")).toHaveAttribute(
+    "name",
+    "folder-outline"
+  );
+  await expect(item2.locator("ion-icon")).toHaveAttribute(
+    "name",
+    "document-outline"
+  );
+  await expect(item3.locator("ion-icon")).toHaveAttribute(
+    "name",
+    "document-outline"
+  );
+  await expect(item4.locator("ion-icon")).toHaveAttribute(
+    "name",
+    "folder-outline"
+  );
 });
