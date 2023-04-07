@@ -63,3 +63,5 @@ npm test
 
 The tests fire up a Community Solid Server to provide test data, which can be
 found in `./test-solid-server/data`.
+
+Currently, the tests do not clean up the data, so for now a manual git reset has to be performed after running tests that change the data.

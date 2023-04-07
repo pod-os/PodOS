@@ -7,6 +7,7 @@
     "start": "serve dist/pos-app-browser",
     "start:solid-server": "community-solid-server --port 4000 --config @css:config/file.json --rootFilePath ./test-solid-server/data",
     "test": "playwright test",
+    "test:debug": "playwright test --debug --project=chromium",
     "build:latest": "POD_OS_ELEMENTS_VERSION=latest make pos-app-browser"
   },
   "keywords": [],
