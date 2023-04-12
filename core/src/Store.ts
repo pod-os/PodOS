@@ -11,6 +11,7 @@ import {
 import { PodOsSession } from "./authentication";
 import { Thing } from "./thing";
 
+console.log("PodOS changed 2");
 /**
  * The store contains all data that is known locally.
  * It can be used to fetch additional data from the web and also update data and sync it back to editable resources.
@@ -30,11 +31,16 @@ export class Store {
    * @param uri
    */
   fetch(uri: string) {
-    // force fetching due to
-    // https://github.com/linkeddata/rdflib.js/issues/247
-    // and
-    // https://github.com/linkeddata/rdflib.js/issues/441
-    return this.fetcher.load(sym(uri), { force: true });
+    return this.fetcher.load(sym(uri), {
+      // force fetching due to
+      // https://github.com/linkeddata/rdflib.js/issues/247
+      // and
+      // https://github.com/linkeddata/rdflib.js/issues/441
+      force: true,
+      // explicitly omit credentials due to
+      // https://github.com/pod-os/PodOS/issues/17
+      credentials: "omit",
+    });
   }
 
   /**
@@ -59,7 +65,14 @@ export class Store {
   ): Promise<void> {
     return this.updater.update(
       [],
-      [st(sym(thing.uri), sym(property), lit(value), sym(thing.uri).doc())]
+      [st(sym(thing.uri), sym(property), lit(value), sym(thing.uri).doc())],
+      undefined,
+      false,
+      {
+        // explicitly omit credentials due to
+        // https://github.com/pod-os/PodOS/issues/17
+        credentials: "omit",
+      }
     ) as Promise<void>; // without passing callback updater returns a Promise;
   }
 }
