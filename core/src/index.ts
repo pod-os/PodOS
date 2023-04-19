@@ -5,6 +5,7 @@ import { FileFetcher } from "./files/FileFetcher";
 import { Store } from "./Store";
 import { listKnownTerms, Term } from "./terms";
 import { Thing } from "./thing";
+import { UriService } from "./uri/UriService";
 
 export * from "./authentication";
 export * from "./files";
@@ -15,11 +16,13 @@ export * from "./ldp-container";
 export class PodOS {
   private readonly session: BrowserSession;
   readonly store: Store;
+  readonly uriService: UriService;
   private fileFetcher: FileFetcher;
 
   constructor() {
     this.session = new BrowserSession();
     this.store = new Store(this.session);
+    this.uriService = new UriService(this.store);
     this.fileFetcher = new FileFetcher(this.session);
   }
 
@@ -49,6 +52,10 @@ export class PodOS {
 
   addNewThing(uri: string, name: string, type: string) {
     return this.store.addNewThing(uri, name, type);
+  }
+
+  proposeUriForNewThing(referenceUri: string, name: string) {
+    return this.uriService.proposeUriForNewThing(referenceUri, name);
   }
 
   trackSession(callback: (session: ISessionInfo) => unknown): void {

@@ -45,6 +45,7 @@
     "@inrupt/solid-client-authn-browser": "^1.13.4",
     "buffer": "^6.0.3",
     "rdflib": "^2.2.31",
+    "slugify": "^1.6.6",
     "url": "^0.11.0"
   },
   "directories": {
