@@ -4,7 +4,7 @@ import { UriService } from "./UriService";
 describe("UriService", () => {
   describe("propose uri for new thing", () => {
     it("uses the container if the reference uri is a container", () => {
-      const store = { isContainer: () => true } as unknown as Store;
+      const store = {} as Store;
 
       const uriService = new UriService(store);
 
@@ -17,7 +17,7 @@ describe("UriService", () => {
     });
 
     it("uses the file's container if the reference uri is a file", () => {
-      const store = { isContainer: () => false } as unknown as Store;
+      const store = {} as Store;
 
       const uriService = new UriService(store);
 
@@ -30,7 +30,7 @@ describe("UriService", () => {
     });
 
     it("uses the resource container for a non-information resource", () => {
-      const store = { isContainer: () => false } as unknown as Store;
+      const store = {} as Store;
 
       const uriService = new UriService(store);
 
