@@ -10,6 +10,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - Omits implicit credentials when using fetch
 
+### Added
+
+- `addNewThing`: A method to add a basic new thing with a type and a label to the store
+- `proposeUriForNewThing`: Generate a URI for a new thing based on a name and a reference URI (like a container)
+
 ## 0.8.0
 
 ### Added
