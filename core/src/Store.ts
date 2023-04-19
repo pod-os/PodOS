@@ -75,4 +75,31 @@ export class Store {
       }
     ) as Promise<void>; // without passing callback updater returns a Promise;
   }
+
+  addNewThing(uri: string, name: string, type: string) {
+    return this.updater.update(
+      [],
+      [
+        st(
+          sym(uri),
+          sym("https://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym(type),
+          sym(uri).doc()
+        ),
+        st(
+          sym(uri),
+          sym("http://www.w3.org/2000/01/rdf-schema#label"),
+          lit(name),
+          sym(uri).doc()
+        ),
+      ],
+      undefined,
+      false,
+      {
+        // explicitly omit credentials due to
+        // https://github.com/pod-os/PodOS/issues/17
+        credentials: "omit",
+      }
+    );
+  }
 }

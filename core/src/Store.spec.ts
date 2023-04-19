@@ -209,6 +209,47 @@ describe("Store", () => {
       );
     });
   });
+
+  describe("add new thing", () => {
+    it("sends sparql insert via updater", async () => {
+      const fetchMock = jest.fn();
+      const mockSession = {
+        authenticatedFetch: fetchMock,
+      } as unknown as PodOsSession;
+      when(fetchMock)
+        .calledWith("https://pod.test/new-thing", expect.anything())
+        .mockResolvedValue({
+          ok: true,
+          status: 404,
+          statusText: "Not found",
+          headers: new Headers({
+            "Content-Type": "text/plain",
+            "wac-allow": 'user="read write append control",public="read"',
+            "accept-patch": "text/n3, application/sparql-update",
+            allow: "PATCH, PUT",
+          }),
+          text: () => Promise.resolve("Not found"),
+        } as Response);
+
+      const store = new Store(mockSession);
+      await store.addNewThing(
+        "https://pod.test/new-thing#it",
+        "A new thing",
+        "https://vocab.example/Thing"
+      );
+
+      thenSparqlUpdateIsSentToUrl(
+        fetchMock,
+        "https://pod.test/new-thing",
+        `
+      INSERT DATA {
+        <https://pod.test/new-thing#it>
+          <https://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://vocab.example/Thing> ;
+          <http://www.w3.org/2000/01/rdf-schema#label> "A new thing" .
+      }`
+      );
+    });
+  });
 });
 
 export function thenSparqlUpdateIsSentToUrl(

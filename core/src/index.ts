@@ -47,6 +47,10 @@ export class PodOS {
     return listKnownTerms();
   }
 
+  addNewThing(uri: string, name: string, type: string) {
+    return this.store.addNewThing(uri, name, type);
+  }
+
   trackSession(callback: (session: ISessionInfo) => unknown): void {
     return this.session.trackSession((session) => {
       /*
