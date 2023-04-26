@@ -6,6 +6,7 @@ import { Store } from "./Store";
 import { listKnownTerms, Term } from "./terms";
 import { Thing } from "./thing";
 import { UriService } from "./uri/UriService";
+import { UIX } from "https://solidos.github.io/solid-uix/src/uix-core.js";
 
 export * from "./authentication";
 export * from "./files";
@@ -19,7 +20,11 @@ export class PodOS {
   readonly uriService: UriService;
   private fileFetcher: FileFetcher;
 
+  public uix: UIX;
+
   constructor() {
+    this.uix = new UIX();
+    this.uix.init();
     this.session = new BrowserSession();
     this.store = new Store(this.session);
     this.uriService = new UriService(this.store);
