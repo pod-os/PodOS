@@ -21,7 +21,8 @@ export class Store {
   updater: UpdateManager;
   graph: IndexedFormula;
   constructor(session: PodOsSession) {
-    this.graph = graph();
+    // @ts-ignore
+    this.graph = UI.store; // use global store from mashlib to share it with uix
     this.fetcher = fetcher(this.graph, { fetch: session.authenticatedFetch });
     this.updater = new UpdateManager(this.graph);
   }
