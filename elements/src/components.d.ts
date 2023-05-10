@@ -8,6 +8,8 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
     interface PosAddLiteralValue {
     }
+    interface PosAddNewThing {
+    }
     interface PosApp {
     }
     interface PosAppBrowser {
@@ -77,6 +79,8 @@ export namespace Components {
           * URI of the predicate to get the value from
          */
         "predicate": string;
+    }
+    interface TestComponent {
     }
 }
 export interface PosAddLiteralValueCustomEvent<T> extends CustomEvent<T> {
@@ -173,6 +177,12 @@ declare global {
     var HTMLPosAddLiteralValueElement: {
         prototype: HTMLPosAddLiteralValueElement;
         new (): HTMLPosAddLiteralValueElement;
+    };
+    interface HTMLPosAddNewThingElement extends Components.PosAddNewThing, HTMLStencilElement {
+    }
+    var HTMLPosAddNewThingElement: {
+        prototype: HTMLPosAddNewThingElement;
+        new (): HTMLPosAddNewThingElement;
     };
     interface HTMLPosAppElement extends Components.PosApp, HTMLStencilElement {
     }
@@ -342,8 +352,15 @@ declare global {
         prototype: HTMLPosValueElement;
         new (): HTMLPosValueElement;
     };
+    interface HTMLTestComponentElement extends Components.TestComponent, HTMLStencilElement {
+    }
+    var HTMLTestComponentElement: {
+        prototype: HTMLTestComponentElement;
+        new (): HTMLTestComponentElement;
+    };
     interface HTMLElementTagNameMap {
         "pos-add-literal-value": HTMLPosAddLiteralValueElement;
+        "pos-add-new-thing": HTMLPosAddNewThingElement;
         "pos-app": HTMLPosAppElement;
         "pos-app-browser": HTMLPosAppBrowserElement;
         "pos-app-document-viewer": HTMLPosAppDocumentViewerElement;
@@ -372,6 +389,7 @@ declare global {
         "pos-type-badges": HTMLPosTypeBadgesElement;
         "pos-type-router": HTMLPosTypeRouterElement;
         "pos-value": HTMLPosValueElement;
+        "test-component": HTMLTestComponentElement;
     }
 }
 declare namespace LocalJSX {
@@ -386,6 +404,8 @@ declare namespace LocalJSX {
         "onPod-os:error"?: (event: PosAddLiteralValueCustomEvent<any>) => void;
         "onPod-os:init"?: (event: PosAddLiteralValueCustomEvent<any>) => void;
         "onPod-os:resource"?: (event: PosAddLiteralValueCustomEvent<any>) => void;
+    }
+    interface PosAddNewThing {
     }
     interface PosApp {
     }
@@ -494,8 +514,11 @@ declare namespace LocalJSX {
          */
         "predicate"?: string;
     }
+    interface TestComponent {
+    }
     interface IntrinsicElements {
         "pos-add-literal-value": PosAddLiteralValue;
+        "pos-add-new-thing": PosAddNewThing;
         "pos-app": PosApp;
         "pos-app-browser": PosAppBrowser;
         "pos-app-document-viewer": PosAppDocumentViewer;
@@ -524,6 +547,7 @@ declare namespace LocalJSX {
         "pos-type-badges": PosTypeBadges;
         "pos-type-router": PosTypeRouter;
         "pos-value": PosValue;
+        "test-component": TestComponent;
     }
 }
 export { LocalJSX as JSX };
@@ -531,6 +555,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "pos-add-literal-value": LocalJSX.PosAddLiteralValue & JSXBase.HTMLAttributes<HTMLPosAddLiteralValueElement>;
+            "pos-add-new-thing": LocalJSX.PosAddNewThing & JSXBase.HTMLAttributes<HTMLPosAddNewThingElement>;
             "pos-app": LocalJSX.PosApp & JSXBase.HTMLAttributes<HTMLPosAppElement>;
             "pos-app-browser": LocalJSX.PosAppBrowser & JSXBase.HTMLAttributes<HTMLPosAppBrowserElement>;
             "pos-app-document-viewer": LocalJSX.PosAppDocumentViewer & JSXBase.HTMLAttributes<HTMLPosAppDocumentViewerElement>;
@@ -559,6 +584,7 @@ declare module "@stencil/core" {
             "pos-type-badges": LocalJSX.PosTypeBadges & JSXBase.HTMLAttributes<HTMLPosTypeBadgesElement>;
             "pos-type-router": LocalJSX.PosTypeRouter & JSXBase.HTMLAttributes<HTMLPosTypeRouterElement>;
             "pos-value": LocalJSX.PosValue & JSXBase.HTMLAttributes<HTMLPosValueElement>;
+            "test-component": LocalJSX.TestComponent & JSXBase.HTMLAttributes<HTMLTestComponentElement>;
         }
     }
 }
