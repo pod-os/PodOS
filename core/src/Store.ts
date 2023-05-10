@@ -11,7 +11,6 @@ import {
 import { PodOsSession } from "./authentication";
 import { Thing } from "./thing";
 
-console.log("PodOS changed 2");
 /**
  * The store contains all data that is known locally.
  * It can be used to fetch additional data from the web and also update data and sync it back to editable resources.
