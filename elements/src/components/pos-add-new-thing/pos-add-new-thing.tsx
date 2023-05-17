@@ -25,6 +25,7 @@ export class PosAddNewThing {
           <button title="Close" onClick={() => this.closeDialog()}>
             <ion-icon name="close-outline"></ion-icon>
           </button>
+          <pos-new-thing-form />
         </dialog>
       </Host>
     );

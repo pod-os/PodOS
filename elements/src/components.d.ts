@@ -49,6 +49,8 @@ export namespace Components {
     interface PosNavigationBar {
         "uri": string;
     }
+    interface PosNewThingForm {
+    }
     interface PosPicture {
     }
     interface PosRelations {
@@ -286,6 +288,12 @@ declare global {
         prototype: HTMLPosNavigationBarElement;
         new (): HTMLPosNavigationBarElement;
     };
+    interface HTMLPosNewThingFormElement extends Components.PosNewThingForm, HTMLStencilElement {
+    }
+    var HTMLPosNewThingFormElement: {
+        prototype: HTMLPosNewThingFormElement;
+        new (): HTMLPosNewThingFormElement;
+    };
     interface HTMLPosPictureElement extends Components.PosPicture, HTMLStencilElement {
     }
     var HTMLPosPictureElement: {
@@ -378,6 +386,7 @@ declare global {
         "pos-literals": HTMLPosLiteralsElement;
         "pos-login": HTMLPosLoginElement;
         "pos-navigation-bar": HTMLPosNavigationBarElement;
+        "pos-new-thing-form": HTMLPosNewThingFormElement;
         "pos-picture": HTMLPosPictureElement;
         "pos-relations": HTMLPosRelationsElement;
         "pos-resource": HTMLPosResourceElement;
@@ -466,6 +475,8 @@ declare namespace LocalJSX {
         "onPod-os:link"?: (event: PosNavigationBarCustomEvent<any>) => void;
         "uri"?: string;
     }
+    interface PosNewThingForm {
+    }
     interface PosPicture {
         "onPod-os:resource"?: (event: PosPictureCustomEvent<any>) => void;
     }
@@ -536,6 +547,7 @@ declare namespace LocalJSX {
         "pos-literals": PosLiterals;
         "pos-login": PosLogin;
         "pos-navigation-bar": PosNavigationBar;
+        "pos-new-thing-form": PosNewThingForm;
         "pos-picture": PosPicture;
         "pos-relations": PosRelations;
         "pos-resource": PosResource;
@@ -573,6 +585,7 @@ declare module "@stencil/core" {
             "pos-literals": LocalJSX.PosLiterals & JSXBase.HTMLAttributes<HTMLPosLiteralsElement>;
             "pos-login": LocalJSX.PosLogin & JSXBase.HTMLAttributes<HTMLPosLoginElement>;
             "pos-navigation-bar": LocalJSX.PosNavigationBar & JSXBase.HTMLAttributes<HTMLPosNavigationBarElement>;
+            "pos-new-thing-form": LocalJSX.PosNewThingForm & JSXBase.HTMLAttributes<HTMLPosNewThingFormElement>;
             "pos-picture": LocalJSX.PosPicture & JSXBase.HTMLAttributes<HTMLPosPictureElement>;
             "pos-relations": LocalJSX.PosRelations & JSXBase.HTMLAttributes<HTMLPosRelationsElement>;
             "pos-resource": LocalJSX.PosResource & JSXBase.HTMLAttributes<HTMLPosResourceElement>;

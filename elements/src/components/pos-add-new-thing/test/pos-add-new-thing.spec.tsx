@@ -3,7 +3,7 @@ import { screen } from '@testing-library/dom';
 import { PosAddNewThing } from '../pos-add-new-thing';
 
 describe('pos-add-new-thing', () => {
-  it('renders a button and a dialog', async () => {
+  it('renders a button and a dialog with form for new thing', async () => {
     const page = await newSpecPage({
       components: [PosAddNewThing],
       html: `<pos-add-new-thing></pos-add-new-thing>`,
@@ -18,6 +18,7 @@ describe('pos-add-new-thing', () => {
           <button title="Close">
             <ion-icon name="close-outline"></ion-icon>
           </button>
+          <pos-new-thing-form />
         </dialog>
       </mock:shadow-root>
     </pos-add-new-thing>
