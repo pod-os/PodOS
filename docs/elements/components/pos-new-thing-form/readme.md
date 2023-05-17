@@ -1,4 +1,4 @@
-# pos-add-new-thing
+# pos-new-thing-form
 
 
 
@@ -12,20 +12,29 @@
 | `referenceUri` _(required)_ | `reference-uri` |             | `string` | `undefined` |
 
 
+## Events
+
+| Event         | Description | Type               |
+| ------------- | ----------- | ------------------ |
+| `pod-os:init` |             | `CustomEvent<any>` |
+
+
 ## Dependencies
+
+### Used by
+
+ - [pos-add-new-thing](../pos-add-new-thing)
 
 ### Depends on
 
-- ion-icon
-- [pos-new-thing-form](../pos-new-thing-form)
+- [pos-select-term](../pos-select-term)
 
 ### Graph
 ```mermaid
 graph TD;
-  pos-add-new-thing --> ion-icon
-  pos-add-new-thing --> pos-new-thing-form
   pos-new-thing-form --> pos-select-term
-  style pos-add-new-thing fill:#f9f,stroke:#333,stroke-width:4px
+  pos-add-new-thing --> pos-new-thing-form
+  style pos-new-thing-form fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
 ----------------------------------------------

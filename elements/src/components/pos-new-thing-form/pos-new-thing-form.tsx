@@ -1,11 +1,27 @@
-import { Component, h } from '@stencil/core';
+import { PodOS } from '@pod-os/core';
+import { Component, Event, h, Prop, State } from '@stencil/core';
+import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../events/PodOsAware';
 
 @Component({
   tag: 'pos-new-thing-form',
   styleUrl: 'pos-new-thing-form.css',
   shadow: true,
 })
-export class PosNewThingForm {
+export class PosNewThingForm implements PodOsAware {
+  @Prop() referenceUri!: string;
+  @State() os: PodOS;
+  @State() newUri: string;
+  @State() name: string;
+
+  componentWillLoad() {
+    subscribePodOs(this);
+  }
+  receivePodOs = async (os: PodOS) => {
+    this.os = os;
+  };
+
+  @Event({ eventName: 'pod-os:init' }) subscribePodOs: PodOsEventEmitter;
+
   render() {
     return (
       <form>
@@ -15,10 +31,16 @@ export class PosNewThingForm {
         </label>
         <label>
           Name
-          <input type="text" />
+          <input type="text" value={this.name} onInput={e => this.handleChange(e)} />
         </label>
+        <div>{this.newUri}</div>
         <input type="submit" value="Create" />
       </form>
     );
+  }
+
+  handleChange(event) {
+    this.name = event.target.value;
+    this.newUri = this.os.proposeUriForNewThing(this.referenceUri, this.name);
   }
 }

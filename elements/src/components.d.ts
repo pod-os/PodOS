@@ -9,6 +9,7 @@ export namespace Components {
     interface PosAddLiteralValue {
     }
     interface PosAddNewThing {
+        "referenceUri": string;
     }
     interface PosApp {
     }
@@ -50,6 +51,7 @@ export namespace Components {
         "uri": string;
     }
     interface PosNewThingForm {
+        "referenceUri": string;
     }
     interface PosPicture {
     }
@@ -132,6 +134,10 @@ export interface PosLoginCustomEvent<T> extends CustomEvent<T> {
 export interface PosNavigationBarCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosNavigationBarElement;
+}
+export interface PosNewThingFormCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosNewThingFormElement;
 }
 export interface PosPictureCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -415,6 +421,7 @@ declare namespace LocalJSX {
         "onPod-os:resource"?: (event: PosAddLiteralValueCustomEvent<any>) => void;
     }
     interface PosAddNewThing {
+        "referenceUri": string;
     }
     interface PosApp {
     }
@@ -476,6 +483,8 @@ declare namespace LocalJSX {
         "uri"?: string;
     }
     interface PosNewThingForm {
+        "onPod-os:init"?: (event: PosNewThingFormCustomEvent<any>) => void;
+        "referenceUri": string;
     }
     interface PosPicture {
         "onPod-os:resource"?: (event: PosPictureCustomEvent<any>) => void;

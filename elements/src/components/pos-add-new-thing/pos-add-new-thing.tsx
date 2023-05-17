@@ -1,4 +1,4 @@
-import { Component, Host, h } from '@stencil/core';
+import { Component, Host, h, Prop } from '@stencil/core';
 
 @Component({
   tag: 'pos-add-new-thing',
@@ -6,6 +6,8 @@ import { Component, Host, h } from '@stencil/core';
   shadow: true,
 })
 export class PosAddNewThing {
+  @Prop() referenceUri!: string;
+
   private dialog: HTMLDialogElement;
 
   openDialog() {
@@ -25,7 +27,7 @@ export class PosAddNewThing {
           <button title="Close" onClick={() => this.closeDialog()}>
             <ion-icon name="close-outline"></ion-icon>
           </button>
-          <pos-new-thing-form />
+          <pos-new-thing-form referenceUri={this.referenceUri} />
         </dialog>
       </Host>
     );

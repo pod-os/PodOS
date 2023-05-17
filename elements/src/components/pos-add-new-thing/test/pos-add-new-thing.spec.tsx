@@ -6,10 +6,10 @@ describe('pos-add-new-thing', () => {
   it('renders a button and a dialog with form for new thing', async () => {
     const page = await newSpecPage({
       components: [PosAddNewThing],
-      html: `<pos-add-new-thing></pos-add-new-thing>`,
+      html: `<pos-add-new-thing reference-uri="https://pod.test/"></pos-add-new-thing>`,
     });
     expect(page.root).toEqualHtml(`
-     <pos-add-new-thing>
+     <pos-add-new-thing reference-uri="https://pod.test/">
       <mock:shadow-root>
         <button title="Add a new thing">
           <ion-icon name="add-circle-outline"></ion-icon>
@@ -18,7 +18,7 @@ describe('pos-add-new-thing', () => {
           <button title="Close">
             <ion-icon name="close-outline"></ion-icon>
           </button>
-          <pos-new-thing-form />
+          <pos-new-thing-form referenceUri="https://pod.test/" />
         </dialog>
       </mock:shadow-root>
     </pos-add-new-thing>
@@ -28,7 +28,7 @@ describe('pos-add-new-thing', () => {
   it('opens a modal dialog, when the button is clicked', async () => {
     const page = await newSpecPage({
       components: [PosAddNewThing],
-      html: `<pos-add-new-thing></pos-add-new-thing>`,
+      html: `<pos-add-new-thing reference-uri="https://pod.test/"></pos-add-new-thing>`,
       supportsShadowDom: false,
     });
 
@@ -44,7 +44,7 @@ describe('pos-add-new-thing', () => {
   it('closes the modal dialog, when the close button is clicked', async () => {
     const page = await newSpecPage({
       components: [PosAddNewThing],
-      html: `<pos-add-new-thing></pos-add-new-thing>`,
+      html: `<pos-add-new-thing reference-uri="https://pod.test/"></pos-add-new-thing>`,
       supportsShadowDom: false,
     });
 

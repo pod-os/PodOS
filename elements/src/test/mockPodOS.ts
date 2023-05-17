@@ -2,8 +2,8 @@ jest.mock('../pod-os', () => ({
   createPodOS: jest.fn(),
 }));
 
-import { createPodOS } from '../pod-os';
 import { when } from 'jest-when';
+import { createPodOS } from '../pod-os';
 
 const alice = {
   webId: 'https://pod.example/alice#me',
@@ -24,6 +24,8 @@ export function mockPodOS() {
     login: jest.fn().mockImplementation(() => {
       trackSessionCallback({ isLoggedIn: true, webId: alice.webId });
     }),
+    proposeUriForNewThing: jest.fn(),
+    addNewThing: jest.fn(),
   };
   when(os.store.get)
     .calledWith(alice.webId)
