@@ -70,7 +70,9 @@ describe('pos-new-thing-form', () => {
         html: `<pos-new-thing-form reference-uri="https://pod.test/container/"></pos-new-thing-form>`,
         supportsShadowDom: false,
       });
-      const button: HTMLButtonElement = screen.getByDisplayValue('Create');
+
+      const os = mockPodOS();
+      await page.rootInstance.receivePodOs(os);
 
       // when user fills in a name
       const nameField = page.root.querySelector('input[type=text]');
@@ -78,6 +80,7 @@ describe('pos-new-thing-form', () => {
       await page.waitForChanges();
 
       // then the button is disabled
+      const button: HTMLButtonElement = screen.getByDisplayValue('Create');
       expect(button.disabled).toBe(true);
     });
 
@@ -88,7 +91,8 @@ describe('pos-new-thing-form', () => {
         html: `<pos-new-thing-form reference-uri="https://pod.test/container/"></pos-new-thing-form>`,
         supportsShadowDom: false,
       });
-      const button: HTMLButtonElement = screen.getByDisplayValue('Create');
+      const os = mockPodOS();
+      await page.rootInstance.receivePodOs(os);
 
       // when user selects a term
       const termSelect = page.root.querySelector('pos-select-term');
@@ -103,6 +107,7 @@ describe('pos-new-thing-form', () => {
       await page.waitForChanges();
 
       // then the button is enabled
+      const button: HTMLButtonElement = screen.getByDisplayValue('Create');
       expect(button.disabled).toBe(false);
     });
 
@@ -113,7 +118,8 @@ describe('pos-new-thing-form', () => {
         html: `<pos-new-thing-form reference-uri="https://pod.test/container/"></pos-new-thing-form>`,
         supportsShadowDom: false,
       });
-      const button: HTMLButtonElement = screen.getByDisplayValue('Create');
+      const os = mockPodOS();
+      await page.rootInstance.receivePodOs(os);
 
       // when user fills in a name
       const nameField = page.root.querySelector('input[type=text]');
@@ -128,6 +134,7 @@ describe('pos-new-thing-form', () => {
       await page.waitForChanges();
 
       // then the button is enabled
+      const button: HTMLButtonElement = screen.getByDisplayValue('Create');
       expect(button.disabled).toBe(false);
     });
   });
