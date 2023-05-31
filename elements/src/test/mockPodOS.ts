@@ -25,7 +25,7 @@ export function mockPodOS() {
       trackSessionCallback({ isLoggedIn: true, webId: alice.webId });
     }),
     proposeUriForNewThing: jest.fn(),
-    addNewThing: jest.fn(),
+    addNewThing: jest.fn().mockResolvedValue(void null),
   };
   when(os.store.get)
     .calledWith(alice.webId)

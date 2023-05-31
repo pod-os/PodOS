@@ -50,7 +50,7 @@ export class PodOS {
     return listKnownTerms();
   }
 
-  addNewThing(uri: string, name: string, type: string) {
+  addNewThing(uri: string, name: string, type: string): Promise<void> {
     return this.store.addNewThing(uri, name, type);
   }
 

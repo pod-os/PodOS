@@ -1,5 +1,5 @@
 import { PodOS } from '@pod-os/core';
-import { Component, Event, h, Prop, State, Watch } from '@stencil/core';
+import { Component, Event, EventEmitter, h, Prop, State, Watch } from '@stencil/core';
 import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../events/PodOsAware';
 
 @Component({
@@ -16,6 +16,8 @@ export class PosNewThingForm implements PodOsAware {
   @State() selectedTypeUri: string;
 
   @State() canSubmit: boolean = false;
+
+  @Event({ eventName: 'pod-os:link' }) linkEmitter: EventEmitter;
 
   @Watch('name')
   @Watch('selectedTypeUri')
@@ -61,5 +63,6 @@ export class PosNewThingForm implements PodOsAware {
   handleSubmit(event) {
     event.preventDefault();
     this.os.addNewThing(this.newUri, this.name, this.selectedTypeUri);
+    this.linkEmitter.emit(this.newUri);
   }
 }

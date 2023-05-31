@@ -186,6 +186,10 @@ describe('pos-new-thing-form', () => {
         .mockReturnValue('https://pod.test/container/new-thing#it');
       await page.rootInstance.receivePodOs(os);
 
+      // and the page listens for pod-os:link events
+      const linkEventListener = jest.fn();
+      page.root.addEventListener('pod-os:link', linkEventListener);
+
       // when user selects a term and adds a name
       const termSelect = page.root.querySelector('pos-select-term');
       fireEvent(termSelect, new CustomEvent('pod-os:term-selected', { detail: { uri: 'https://schema.org/Thing' } }));
@@ -204,6 +208,12 @@ describe('pos-new-thing-form', () => {
         'https://pod.test/container/new-thing#it',
         'New Thing',
         'https://schema.org/Thing',
+      );
+
+      expect(linkEventListener).toHaveBeenCalledWith(
+        expect.objectContaining({
+          detail: 'https://pod.test/container/new-thing#it',
+        }),
       );
     });
   });

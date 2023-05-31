@@ -484,6 +484,7 @@ declare namespace LocalJSX {
     }
     interface PosNewThingForm {
         "onPod-os:init"?: (event: PosNewThingFormCustomEvent<any>) => void;
+        "onPod-os:link"?: (event: PosNewThingFormCustomEvent<any>) => void;
         "referenceUri": string;
     }
     interface PosPicture {

@@ -75,8 +75,8 @@ export class Store {
     ) as Promise<void>; // without passing callback updater returns a Promise;
   }
 
-  addNewThing(uri: string, name: string, type: string) {
-    return this.updater.update(
+  async addNewThing(uri: string, name: string, type: string): Promise<void> {
+    await this.updater.update(
       [],
       [
         st(
