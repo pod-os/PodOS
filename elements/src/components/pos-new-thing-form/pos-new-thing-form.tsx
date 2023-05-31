@@ -34,7 +34,7 @@ export class PosNewThingForm implements PodOsAware {
 
   render() {
     return (
-      <form>
+      <form onSubmit={e => this.handleSubmit(e)}>
         <label>
           Type
           <pos-select-term onPod-os:term-selected={e => this.onTermSelected(e)} />
@@ -56,5 +56,10 @@ export class PosNewThingForm implements PodOsAware {
 
   onTermSelected(event) {
     this.selectedTypeUri = event.detail.uri;
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    this.os.addNewThing(this.newUri, this.name, this.selectedTypeUri);
   }
 }

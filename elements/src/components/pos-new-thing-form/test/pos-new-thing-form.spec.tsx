@@ -170,4 +170,41 @@ describe('pos-new-thing-form', () => {
         </pos-new-thing-form>`,
     );
   });
+
+  describe('submitting form', () => {
+    it('calls addNewThing with the new uri, name and type of the thing', async () => {
+      // given
+      const page = await newSpecPage({
+        components: [PosNewThingForm],
+        html: `<pos-new-thing-form reference-uri="https://pod.test/container/"></pos-new-thing-form>`,
+        supportsShadowDom: false,
+      });
+
+      const os = mockPodOS();
+      when(os.proposeUriForNewThing)
+        .calledWith('https://pod.test/container/', 'New Thing')
+        .mockReturnValue('https://pod.test/container/new-thing#it');
+      await page.rootInstance.receivePodOs(os);
+
+      // when user selects a term and adds a name
+      const termSelect = page.root.querySelector('pos-select-term');
+      fireEvent(termSelect, new CustomEvent('pod-os:term-selected', { detail: { uri: 'https://schema.org/Thing' } }));
+
+      const nameField = page.root.querySelector('input[type=text]');
+      fireEvent.input(nameField, { target: { value: 'New Thing' } });
+
+      await page.waitForChanges();
+
+      // and submits the form
+      const form: HTMLFormElement = page.root.querySelector('form');
+      fireEvent.submit(form);
+
+      // then addNewThings is called
+      expect(os.addNewThing).toHaveBeenCalledWith(
+        'https://pod.test/container/new-thing#it',
+        'New Thing',
+        'https://schema.org/Thing',
+      );
+    });
+  });
 });
