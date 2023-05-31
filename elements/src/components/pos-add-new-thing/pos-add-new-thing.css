@@ -1,3 +1,12 @@
 :host {
   display: block;
 }
+
+button {
+  width: 2rem;
+  height: 2rem;
+  background-color: #3880ff;
+  color: white;
+  border-radius: 5px;
+  border: none;
+}

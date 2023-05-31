@@ -6,6 +6,7 @@ const Router = createRouter();
 
 @Component({
   tag: 'pos-router',
+  styleUrl: 'pos-router.css',
 })
 export class PosRouter {
   @State() uri;
@@ -35,7 +36,10 @@ export class PosRouter {
     return (
       <Router.Switch>
         <Route path={match('', { exact: false })}>
-          <pos-navigation-bar uri={this.uri}></pos-navigation-bar>
+          <div class="toolbar">
+            <pos-add-new-thing referenceUri={this.uri}></pos-add-new-thing>
+            <pos-navigation-bar uri={this.uri}></pos-navigation-bar>
+          </div>
           <pos-resource key={this.uri} uri={this.uri}>
             <pos-type-router />
           </pos-resource>
