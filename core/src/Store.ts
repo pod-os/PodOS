@@ -81,7 +81,7 @@ export class Store {
       [
         st(
           sym(uri),
-          sym("https://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
           sym(type),
           sym(uri).doc()
         ),
