@@ -60,9 +60,9 @@ export class PosNewThingForm implements PodOsAware {
     this.selectedTypeUri = event.detail.uri;
   }
 
-  handleSubmit(event) {
+  async handleSubmit(event) {
     event.preventDefault();
-    this.os.addNewThing(this.newUri, this.name, this.selectedTypeUri);
+    await this.os.addNewThing(this.newUri, this.name, this.selectedTypeUri);
     this.linkEmitter.emit(this.newUri);
   }
 }

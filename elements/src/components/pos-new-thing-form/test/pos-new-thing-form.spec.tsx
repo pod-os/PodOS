@@ -209,6 +209,7 @@ describe('pos-new-thing-form', () => {
       // and submits the form
       const form: HTMLFormElement = page.root.querySelector('form');
       fireEvent.submit(form);
+      await page.waitForChanges();
 
       // then addNewThings is called
       expect(os.addNewThing).toHaveBeenCalledWith(
