@@ -16,16 +16,16 @@ describe('pos-new-thing-form', () => {
       `
         <pos-new-thing-form reference-uri="https://pod.test/container/">
           <form>
-            <label>
+            <label htmlFor="type">
               Type
-              <pos-select-term></pos-select-term>
             </label>
-            <label>
+            <pos-select-term id="type"></pos-select-term>
+            <label htmlFor="name">
               Name
-              <input type="text">
             </label>
-            <div></div>
-            <input type="submit" value="Create" disabled />
+            <input id="name" type="text">
+            <div id="new-uri"></div>
+            <input type="submit" value="Create" disabled>
           </form>
         </pos-new-thing-form>`,
     );
@@ -163,15 +163,17 @@ describe('pos-new-thing-form', () => {
       `
         <pos-new-thing-form reference-uri="https://pod.test/container/">
           <form>
-            <label>
+            <label htmlFor="type">
               Type
-              <pos-select-term></pos-select-term>
             </label>
-            <label>
+            <pos-select-term id="type"></pos-select-term>
+            <label htmlFor="name">
               Name
-              <input type="text" value="New Thing">
             </label>
-            <div>https://pod.test/container/new-thing#it</div>
+            <input id="name" type="text" value="New Thing">
+            <div id="new-uri">
+              https://pod.test/container/new-thing#it
+            </div>
             <input type="submit" value="Create" disabled />
           </form>
         </pos-new-thing-form>`,

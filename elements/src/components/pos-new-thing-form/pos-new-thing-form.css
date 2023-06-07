@@ -1,3 +1,27 @@
 :host {
   display: block;
 }
+
+
+form {
+  display: grid;
+  grid-template-columns: var(--size-16) 1fr;
+  grid-gap: var(--scale-0);
+}
+
+label {
+  grid-column: 1 / 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+input,
+pos-select-term,
+button {
+  grid-column: 2 / 3;
+}
+
+#new-uri {
+  grid-column: 1/3;
+}
