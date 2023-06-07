@@ -11,8 +11,8 @@ describe('pos-select-term', () => {
     expect(page.root).toEqualHtml(`
       <pos-select-term>
         <mock:shadow-root>
-          <input list="terms" placeholder="Type to search...">
-          <datalist id="terms"></datalist>
+          <input part="input" list="terms" placeholder="Type to search...">
+          <datalist part="terms" id="terms"></datalist>
         </mock:shadow-root>
       </pos-select-term>
     `);
@@ -35,8 +35,8 @@ describe('pos-select-term', () => {
     expect(page.root).toEqualHtml(`
       <pos-select-term>
         <mock:shadow-root>
-          <input list="terms" placeholder="Type to search...">
-          <datalist id="terms">
+          <input part="input" list="terms" placeholder="Type to search...">
+          <datalist part="terms" id="terms">
             <option value="http://schema.org/name">schema:name</option>
           </datalist>
         </mock:shadow-root>

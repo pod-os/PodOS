@@ -38,7 +38,7 @@ export class PosNewThingForm implements PodOsAware {
     return (
       <form onSubmit={e => this.handleSubmit(e)}>
         <label htmlFor="type">Type</label>
-        <pos-select-term id="type" onPod-os:term-selected={e => this.onTermSelected(e)} />
+        <pos-select-term id="type" placeholder="" onPod-os:term-selected={e => this.onTermSelected(e)} />
         <label htmlFor="name">Name</label>
         <input id="name" type="text" value={this.name} onInput={e => this.handleChange(e)} />
         <div id="new-uri">{this.newUri}</div>

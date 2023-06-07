@@ -22,14 +22,14 @@ button {
   grid-column: 2 / 3;
 }
 
-input {
+input, pos-select-term::part(input) {
   outline: var(--pos-input-outline);
   padding: var(--scale-000);
   border: none;
   border-radius: var(--radius-xs);
 }
 
-input:focus-within {
+input:focus-within, pos-select-term::part(input):focus-within {
   outline: var(--pos-input-focus-outline);
 }
 

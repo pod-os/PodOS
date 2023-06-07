@@ -42,8 +42,8 @@ export class PosSelectTerm implements PodOsAware {
   render() {
     return (
       <Host>
-        <input list="terms" placeholder={this.placeholder} onChange={ev => this.handleChange(ev)}></input>
-        <datalist id="terms">
+        <input part="input" list="terms" placeholder={this.placeholder} onChange={ev => this.handleChange(ev)}></input>
+        <datalist part="terms" id="terms">
           {this.terms.map(term => (
             <option value={term.uri}>{term.shorthand}</option>
           ))}

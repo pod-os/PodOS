@@ -19,7 +19,7 @@ describe('pos-new-thing-form', () => {
             <label htmlFor="type">
               Type
             </label>
-            <pos-select-term id="type"></pos-select-term>
+            <pos-select-term id="type" placeholder=""></pos-select-term>
             <label htmlFor="name">
               Name
             </label>
@@ -166,7 +166,7 @@ describe('pos-new-thing-form', () => {
             <label htmlFor="type">
               Type
             </label>
-            <pos-select-term id="type"></pos-select-term>
+            <pos-select-term id="type" placeholder=""></pos-select-term>
             <label htmlFor="name">
               Name
             </label>
