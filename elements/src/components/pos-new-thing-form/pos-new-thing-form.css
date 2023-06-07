@@ -22,6 +22,37 @@ button {
   grid-column: 2 / 3;
 }
 
+input {
+  outline: var(--pos-input-outline);
+  padding: var(--scale-000);
+  border: none;
+  border-radius: var(--radius-xs);
+}
+
+input:focus-within {
+  outline: var(--pos-input-focus-outline);
+}
+
 #new-uri {
   grid-column: 1/3;
+}
+
+input#create {
+  outline: none;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  color: var(--pos-primary-text-color);
+  background-color: var(--pos-primary-color);
+}
+
+input#create:disabled {
+  cursor: default;
+  color: var(--pos-disabled-text-color);
+  background-color: var(--pos-disabled-color);
+  box-shadow: none
+}
+
+input#create:hover:not(:disabled) {
+  filter: brightness(110%);
+  box-shadow: var(--shadow-md);
 }

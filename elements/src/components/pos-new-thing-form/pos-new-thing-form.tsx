@@ -42,7 +42,7 @@ export class PosNewThingForm implements PodOsAware {
         <label htmlFor="name">Name</label>
         <input id="name" type="text" value={this.name} onInput={e => this.handleChange(e)} />
         <div id="new-uri">{this.newUri}</div>
-        <input type="submit" value="Create" disabled={!this.canSubmit} />
+        <input id="create" type="submit" value="Create" disabled={!this.canSubmit} />
       </form>
     );
   }
