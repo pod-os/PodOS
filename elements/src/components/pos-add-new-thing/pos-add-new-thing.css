@@ -23,6 +23,9 @@ button#new:hover {
 
 dialog {
   background-color: var(--pos-background-color);
+  border: none;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
 }
 
 dialog #title {
