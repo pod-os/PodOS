@@ -9,19 +9,24 @@ describe('pos-add-new-thing', () => {
       html: `<pos-add-new-thing reference-uri="https://pod.test/"></pos-add-new-thing>`,
     });
     expect(page.root).toEqualHtml(`
-     <pos-add-new-thing reference-uri="https://pod.test/">
-      <mock:shadow-root>
-        <button title="Add a new thing">
-          <ion-icon name="add-circle-outline"></ion-icon>
+<pos-add-new-thing reference-uri="https://pod.test/">
+    <mock:shadow-root>
+        <button id="new" title="Add a new thing">
+            <ion-icon name="add-circle-outline"></ion-icon>
         </button>
         <dialog>
-          <button title="Close">
-            <ion-icon name="close-outline"></ion-icon>
-          </button>
-          <pos-new-thing-form referenceUri="https://pod.test/" />
+            <header>
+                <span id="title">
+                  Add a new thing
+                </span>
+                <button id="close" title="Close">
+                    <ion-icon name="close-outline"></ion-icon>
+                </button>
+            </header>
+            <pos-new-thing-form referenceUri="https://pod.test/" />
         </dialog>
-      </mock:shadow-root>
-    </pos-add-new-thing>
+    </mock:shadow-root>
+</pos-add-new-thing>
     `);
   });
 

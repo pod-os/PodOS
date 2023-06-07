@@ -1,2 +1,10 @@
 /* Core CSS required for Ionic components to work properly */
 @import "~@ionic/core/css/ionic.bundle.css";
+
+@import "~pollen-css/pollen.css";
+
+:root {
+  font-family: var(--font-sans);
+  --pos-primary-color: var(--color-blue-700);
+  --pos-background-color: var(--color-grey-50);
+}

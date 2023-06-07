@@ -2,11 +2,62 @@
   display: block;
 }
 
-button {
-  width: 2rem;
-  height: 2rem;
-  background-color: #3880ff;
-  color: white;
-  border-radius: 5px;
+button#new {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: none;
+  width: var(--scale-5);
+  height: var(--scale-5);
+  background-color: var(--pos-primary-color);
+  color: var(--color-grey-50);
+  font-size: var(--scale-6);
+  border-radius: var(--radius-xs);
 }
+
+button#new:hover {
+  filter: brightness(110%);
+  box-shadow: var(--shadow-sm);
+}
+
+dialog {
+  background-color: var(--pos-background-color);
+}
+
+dialog #title {
+  font-size: var(--scale-0);
+  font-weight: var(--weight-semibold);
+  flex-grow: 1;
+
+}
+
+dialog header {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  gap: var(--scale-0);
+  border-bottom-style: inset;
+}
+
+button#close {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  font-size: var(--scale-3);
+  color: var(--color-grey-500);
+}
+
+button#close:hover {
+  color: var(--color-grey-800);
+}
+
+
+pos-new-thing-form {
+  margin: var(--scale-3)
+}
+

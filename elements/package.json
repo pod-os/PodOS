@@ -26,6 +26,7 @@
     "@stencil/core": "^2.22.3",
     "@stencil/store": "^2.0.4",
     "jest-when": "^3.5.2",
+    "pollen-css": "^4.6.2",
     "stencil-router-v2": "^0.6.0"
   },
   "devDependencies": {

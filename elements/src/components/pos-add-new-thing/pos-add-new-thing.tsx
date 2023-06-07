@@ -20,13 +20,16 @@ export class PosAddNewThing {
   render() {
     return (
       <Host>
-        <button title="Add a new thing" onClick={() => this.openDialog()}>
+        <button id="new" title="Add a new thing" onClick={() => this.openDialog()}>
           <ion-icon name="add-circle-outline"></ion-icon>
         </button>
         <dialog ref={el => (this.dialog = el as HTMLDialogElement)}>
-          <button title="Close" onClick={() => this.closeDialog()}>
-            <ion-icon name="close-outline"></ion-icon>
-          </button>
+          <header>
+            <span id="title">Add a new thing</span>
+            <button id="close" title="Close" onClick={() => this.closeDialog()}>
+              <ion-icon name="close-outline"></ion-icon>
+            </button>
+          </header>
           <pos-new-thing-form referenceUri={this.referenceUri} />
         </dialog>
       </Host>
