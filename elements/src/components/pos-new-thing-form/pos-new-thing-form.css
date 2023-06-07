@@ -27,6 +27,8 @@ input, pos-select-term::part(input) {
   padding: var(--scale-000);
   border: none;
   border-radius: var(--radius-xs);
+  width: var(--size-full);
+  box-sizing: border-box;
 }
 
 input:focus-within, pos-select-term::part(input):focus-within {
@@ -35,6 +37,13 @@ input:focus-within, pos-select-term::part(input):focus-within {
 
 #new-uri {
   grid-column: 1/3;
+  cursor: default;
+  word-break: break-all;
+  color: var(--color-grey-800);
+  font-weight: var(--weight-light);
+  background: var(--color-grey-100);
+  padding: var(--scale-000);
+  border-radius: var(--radius-xs);
 }
 
 input#create {

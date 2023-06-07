@@ -24,7 +24,6 @@ describe('pos-new-thing-form', () => {
               Name
             </label>
             <input id="name" type="text">
-            <div id="new-uri"></div>
             <input id="create" type="submit" value="Create" disabled>
           </form>
         </pos-new-thing-form>`,
@@ -171,7 +170,7 @@ describe('pos-new-thing-form', () => {
               Name
             </label>
             <input id="name" type="text" value="New Thing">
-            <div id="new-uri">
+            <div id="new-uri" title="This will be the URI of the new thing">
               https://pod.test/container/new-thing#it
             </div>
             <input id="create" type="submit" value="Create" disabled />

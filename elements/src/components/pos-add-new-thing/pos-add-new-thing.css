@@ -1,4 +1,5 @@
 :host {
+  font-family: var(--font-sans);
   display: block;
 }
 
@@ -26,13 +27,13 @@ dialog {
   border: none;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);
+  max-width: var(--width-xs);
 }
 
 dialog #title {
-  font-size: var(--scale-0);
-  font-weight: var(--weight-semibold);
   flex-grow: 1;
-
+  font-weight: var(--weight-light);
+  font-size: var(--scale-2);
 }
 
 dialog header {
@@ -42,6 +43,7 @@ dialog header {
   align-items: center;
   gap: var(--scale-0);
   border-bottom-style: inset;
+  padding-bottom: var(--scale-0);
 }
 
 button#close {

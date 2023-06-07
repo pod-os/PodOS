@@ -12,7 +12,4 @@
   --pos-background-color: var(--color-grey-50);
   --pos-input-outline: var(--size-px) solid var(--color-grey-700);
   --pos-input-focus-outline: var(--size-px) solid var(--pos-primary-color);
-
-  font-family: var(--font-sans);
-  color: var(--pos-normal-text-color);
 }
