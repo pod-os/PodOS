@@ -2,7 +2,6 @@
   display: block;
 }
 
-
 form {
   display: grid;
   grid-template-columns: var(--size-16) 1fr;
@@ -61,7 +60,7 @@ input#create:disabled {
   box-shadow: none
 }
 
-input#create:hover:not(:disabled) {
+input#create:hover:not(:disabled), input#create:focus {
   filter: brightness(110%);
   box-shadow: var(--shadow-md);
 }

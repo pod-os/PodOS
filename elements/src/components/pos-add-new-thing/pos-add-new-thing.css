@@ -17,7 +17,8 @@ button#new {
   border-radius: var(--radius-xs);
 }
 
-button#new:hover {
+button#new:hover, button#new:focus {
+  outline: none;
   filter: brightness(110%);
   box-shadow: var(--shadow-sm);
 }
