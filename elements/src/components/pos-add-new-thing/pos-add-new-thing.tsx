@@ -26,7 +26,7 @@ export class PosAddNewThing {
         <dialog ref={el => (this.dialog = el as HTMLDialogElement)}>
           <header>
             <span id="title">Add a new thing</span>
-            <button id="close" title="Close" onClick={() => this.closeDialog()}>
+            <button tabindex={-1} id="close" title="Close" onClick={() => this.closeDialog()}>
               <ion-icon name="close-outline"></ion-icon>
             </button>
           </header>

@@ -483,6 +483,7 @@ declare namespace LocalJSX {
         "uri"?: string;
     }
     interface PosNewThingForm {
+        "onPod-os:error"?: (event: PosNewThingFormCustomEvent<any>) => void;
         "onPod-os:init"?: (event: PosNewThingFormCustomEvent<any>) => void;
         "onPod-os:link"?: (event: PosNewThingFormCustomEvent<any>) => void;
         "referenceUri": string;

@@ -19,7 +19,7 @@ describe('pos-add-new-thing', () => {
                 <span id="title">
                   Add a new thing
                 </span>
-                <button id="close" title="Close">
+                <button tabindex="-1" id="close" title="Close">
                     <ion-icon name="close-outline"></ion-icon>
                 </button>
             </header>

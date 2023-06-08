@@ -5,7 +5,9 @@ import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../events/PodOsAw
 @Component({
   tag: 'pos-new-thing-form',
   styleUrl: 'pos-new-thing-form.css',
-  shadow: true,
+  shadow: {
+    delegatesFocus: true,
+  },
 })
 export class PosNewThingForm implements PodOsAware {
   @Prop() referenceUri!: string;
@@ -18,6 +20,7 @@ export class PosNewThingForm implements PodOsAware {
   @State() canSubmit: boolean = false;
 
   @Event({ eventName: 'pod-os:link' }) linkEmitter: EventEmitter;
+  @Event({ eventName: 'pod-os:error' }) errorEmitter: EventEmitter;
 
   @Watch('name')
   @Watch('selectedTypeUri')
@@ -36,7 +39,7 @@ export class PosNewThingForm implements PodOsAware {
 
   render() {
     return (
-      <form onSubmit={e => this.handleSubmit(e)}>
+      <form method="dialog" onSubmit={e => this.handleSubmit(e)}>
         <label htmlFor="type">Type</label>
         <pos-select-term id="type" placeholder="" onPod-os:term-selected={e => this.onTermSelected(e)} />
         <label htmlFor="name">Name</label>
@@ -61,8 +64,12 @@ export class PosNewThingForm implements PodOsAware {
   }
 
   async handleSubmit(event) {
-    event.preventDefault();
-    await this.os.addNewThing(this.newUri, this.name, this.selectedTypeUri);
-    this.linkEmitter.emit(this.newUri);
+    try {
+      await this.os.addNewThing(this.newUri, this.name, this.selectedTypeUri);
+      this.linkEmitter.emit(this.newUri);
+    } catch (error) {
+      event.preventDefault();
+      this.errorEmitter.emit(error);
+    }
   }
 }

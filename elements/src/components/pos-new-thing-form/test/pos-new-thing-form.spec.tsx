@@ -15,7 +15,7 @@ describe('pos-new-thing-form', () => {
     expect(page.root).toEqualHtml(
       `
         <pos-new-thing-form reference-uri="https://pod.test/container/">
-          <form>
+          <form method="dialog">
             <label htmlFor="type">
               Type
             </label>
@@ -161,7 +161,7 @@ describe('pos-new-thing-form', () => {
     expect(page.root).toEqualHtml(
       `
         <pos-new-thing-form reference-uri="https://pod.test/container/">
-          <form>
+          <form method="dialog">
             <label htmlFor="type">
               Type
             </label>
@@ -224,6 +224,54 @@ describe('pos-new-thing-form', () => {
           detail: 'https://pod.test/container/new-thing#it',
         }),
       );
+    });
+
+    it('emits an error if thing could not be created', async () => {
+      // given
+      const page = await newSpecPage({
+        components: [PosNewThingForm],
+        html: `<pos-new-thing-form reference-uri="https://pod.test/container/"></pos-new-thing-form>`,
+        supportsShadowDom: false,
+      });
+
+      const os = mockPodOS();
+      when(os.proposeUriForNewThing)
+        .calledWith('https://pod.test/container/', 'New Thing')
+        .mockReturnValue('https://pod.test/container/new-thing#it');
+      when(os.addNewThing).mockRejectedValue(new Error('simulated error for test'));
+      await page.rootInstance.receivePodOs(os);
+
+      // and the page listens for pod-os:link events
+      const linkEventListener = jest.fn();
+      page.root.addEventListener('pod-os:link', linkEventListener);
+
+      // and the page listens for pod-os:error events
+      const errorEventListener = jest.fn();
+      page.root.addEventListener('pod-os:error', errorEventListener);
+
+      // when user selects a term and adds a name
+      const termSelect = page.root.querySelector('pos-select-term');
+      fireEvent(termSelect, new CustomEvent('pod-os:term-selected', { detail: { uri: 'https://schema.org/Thing' } }));
+
+      const nameField = page.root.querySelector('input[type=text]');
+      fireEvent.input(nameField, { target: { value: 'New Thing' } });
+
+      await page.waitForChanges();
+
+      // and submits the form
+      const form: HTMLFormElement = page.root.querySelector('form');
+      fireEvent.submit(form);
+      await page.waitForChanges();
+
+      // then an error is emitted
+      expect(errorEventListener).toHaveBeenCalledWith(
+        expect.objectContaining({
+          detail: new Error('simulated error for test'),
+        }),
+      );
+
+      // and no redirect occurs
+      expect(linkEventListener).not.toHaveBeenCalled();
     });
   });
 });

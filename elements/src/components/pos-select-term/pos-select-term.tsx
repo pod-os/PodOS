@@ -6,7 +6,9 @@ import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../events/PodOsAw
 @Component({
   tag: 'pos-select-term',
   styleUrl: 'pos-select-term.css',
-  shadow: true,
+  shadow: {
+    delegatesFocus: true,
+  },
 })
 export class PosSelectTerm implements PodOsAware {
   @State() os: PodOS;
