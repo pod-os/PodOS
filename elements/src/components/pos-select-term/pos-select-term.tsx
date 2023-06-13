@@ -15,6 +15,8 @@ export class PosSelectTerm implements PodOsAware {
 
   @Prop() placeholder: string = 'Type to search...';
 
+  @Prop() value: string = '';
+
   @State() terms: Term[] = [];
 
   @Event({ eventName: 'pod-os:init' }) subscribePodOs: PodOsEventEmitter;
@@ -44,7 +46,13 @@ export class PosSelectTerm implements PodOsAware {
   render() {
     return (
       <Host>
-        <input part="input" list="terms" placeholder={this.placeholder} onChange={ev => this.handleChange(ev)}></input>
+        <input
+          part="input"
+          list="terms"
+          placeholder={this.placeholder}
+          value={this.value}
+          onChange={ev => this.handleChange(ev)}
+        ></input>
         <datalist part="terms" id="terms">
           {this.terms.map(term => (
             <option value={term.uri}>{term.shorthand}</option>

@@ -71,6 +71,7 @@ export namespace Components {
     }
     interface PosSelectTerm {
         "placeholder": string;
+        "value": string;
     }
     interface PosSubjects {
     }
@@ -83,8 +84,6 @@ export namespace Components {
           * URI of the predicate to get the value from
          */
         "predicate": string;
-    }
-    interface TestComponent {
     }
 }
 export interface PosAddLiteralValueCustomEvent<T> extends CustomEvent<T> {
@@ -366,12 +365,6 @@ declare global {
         prototype: HTMLPosValueElement;
         new (): HTMLPosValueElement;
     };
-    interface HTMLTestComponentElement extends Components.TestComponent, HTMLStencilElement {
-    }
-    var HTMLTestComponentElement: {
-        prototype: HTMLTestComponentElement;
-        new (): HTMLTestComponentElement;
-    };
     interface HTMLElementTagNameMap {
         "pos-add-literal-value": HTMLPosAddLiteralValueElement;
         "pos-add-new-thing": HTMLPosAddNewThingElement;
@@ -404,7 +397,6 @@ declare global {
         "pos-type-badges": HTMLPosTypeBadgesElement;
         "pos-type-router": HTMLPosTypeRouterElement;
         "pos-value": HTMLPosValueElement;
-        "test-component": HTMLTestComponentElement;
     }
 }
 declare namespace LocalJSX {
@@ -519,6 +511,7 @@ declare namespace LocalJSX {
          */
         "onPod-os:term-selected"?: (event: PosSelectTermCustomEvent<any>) => void;
         "placeholder"?: string;
+        "value"?: string;
     }
     interface PosSubjects {
         "onPod-os:resource"?: (event: PosSubjectsCustomEvent<any>) => void;
@@ -535,8 +528,6 @@ declare namespace LocalJSX {
           * URI of the predicate to get the value from
          */
         "predicate"?: string;
-    }
-    interface TestComponent {
     }
     interface IntrinsicElements {
         "pos-add-literal-value": PosAddLiteralValue;
@@ -570,7 +561,6 @@ declare namespace LocalJSX {
         "pos-type-badges": PosTypeBadges;
         "pos-type-router": PosTypeRouter;
         "pos-value": PosValue;
-        "test-component": TestComponent;
     }
 }
 export { LocalJSX as JSX };
@@ -608,7 +598,6 @@ declare module "@stencil/core" {
             "pos-type-badges": LocalJSX.PosTypeBadges & JSXBase.HTMLAttributes<HTMLPosTypeBadgesElement>;
             "pos-type-router": LocalJSX.PosTypeRouter & JSXBase.HTMLAttributes<HTMLPosTypeRouterElement>;
             "pos-value": LocalJSX.PosValue & JSXBase.HTMLAttributes<HTMLPosValueElement>;
-            "test-component": LocalJSX.TestComponent & JSXBase.HTMLAttributes<HTMLTestComponentElement>;
         }
     }
 }

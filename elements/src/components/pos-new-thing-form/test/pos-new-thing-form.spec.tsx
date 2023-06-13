@@ -1,3 +1,4 @@
+import { PodOS } from '@pod-os/core';
 import { newSpecPage } from '@stencil/core/testing';
 import { fireEvent, screen } from '@testing-library/dom';
 import { when } from 'jest-when';
@@ -180,98 +181,128 @@ describe('pos-new-thing-form', () => {
   });
 
   describe('submitting form', () => {
-    it('calls addNewThing with the new uri, name and type of the thing', async () => {
-      // given
-      const page = await newSpecPage({
-        components: [PosNewThingForm],
-        html: `<pos-new-thing-form reference-uri="https://pod.test/container/"></pos-new-thing-form>`,
-        supportsShadowDom: false,
+    describe('successfully', () => {
+      let page;
+      let os;
+      let linkEventListener;
+
+      beforeEach(async () => {
+        // given
+        page = await newSpecPage({
+          components: [PosNewThingForm],
+          html: `<pos-new-thing-form reference-uri="https://pod.test/container/"></pos-new-thing-form>`,
+          supportsShadowDom: false,
+        });
+
+        os = mockPodOS();
+        when(os.proposeUriForNewThing)
+          .calledWith('https://pod.test/container/', 'New Thing')
+          .mockReturnValue('https://pod.test/container/new-thing#it');
+        await page.rootInstance.receivePodOs(os);
+
+        // and the page listens for pod-os:link events
+        linkEventListener = jest.fn();
+        page.root.addEventListener('pod-os:link', linkEventListener);
+
+        // when user selects a term and adds a name
+        const termSelect = page.root.querySelector('pos-select-term');
+        fireEvent(termSelect, new CustomEvent('pod-os:term-selected', { detail: { uri: 'https://schema.org/Thing' } }));
+
+        const nameField = page.root.querySelector('input[type=text]');
+        fireEvent.input(nameField, { target: { value: 'New Thing' } });
+
+        await page.waitForChanges();
+
+        // and submits the form
+        const form: HTMLFormElement = page.root.querySelector('form');
+        fireEvent.submit(form);
+        await page.waitForChanges();
       });
 
-      const os = mockPodOS();
-      when(os.proposeUriForNewThing)
-        .calledWith('https://pod.test/container/', 'New Thing')
-        .mockReturnValue('https://pod.test/container/new-thing#it');
-      await page.rootInstance.receivePodOs(os);
+      it('calls addNewThing', () => {
+        expect(os.addNewThing).toHaveBeenCalledWith(
+          'https://pod.test/container/new-thing#it',
+          'New Thing',
+          'https://schema.org/Thing',
+        );
+      });
 
-      // and the page listens for pod-os:link events
-      const linkEventListener = jest.fn();
-      page.root.addEventListener('pod-os:link', linkEventListener);
+      it('redirects to the new thing', () => {
+        expect(linkEventListener).toHaveBeenCalledWith(
+          expect.objectContaining({
+            detail: 'https://pod.test/container/new-thing#it',
+          }),
+        );
+      });
 
-      // when user selects a term and adds a name
-      const termSelect = page.root.querySelector('pos-select-term');
-      fireEvent(termSelect, new CustomEvent('pod-os:term-selected', { detail: { uri: 'https://schema.org/Thing' } }));
-
-      const nameField = page.root.querySelector('input[type=text]');
-      fireEvent.input(nameField, { target: { value: 'New Thing' } });
-
-      await page.waitForChanges();
-
-      // and submits the form
-      const form: HTMLFormElement = page.root.querySelector('form');
-      fireEvent.submit(form);
-      await page.waitForChanges();
-
-      // then addNewThings is called
-      expect(os.addNewThing).toHaveBeenCalledWith(
-        'https://pod.test/container/new-thing#it',
-        'New Thing',
-        'https://schema.org/Thing',
-      );
-
-      expect(linkEventListener).toHaveBeenCalledWith(
-        expect.objectContaining({
-          detail: 'https://pod.test/container/new-thing#it',
-        }),
-      );
+      it('resets the form', async () => {
+        expect(page.rootInstance.name).toBe('');
+        expect(page.rootInstance.newUri).toBe('');
+        expect(page.rootInstance.selectedTypeUri).toBe('');
+      });
     });
 
-    it('emits an error if thing could not be created', async () => {
-      // given
-      const page = await newSpecPage({
-        components: [PosNewThingForm],
-        html: `<pos-new-thing-form reference-uri="https://pod.test/container/"></pos-new-thing-form>`,
-        supportsShadowDom: false,
+    describe('with error', () => {
+      let page;
+      let os: Partial<PodOS>;
+      let linkEventListener;
+      let errorEventListener;
+
+      beforeEach(async () => {
+        // given
+        page = await newSpecPage({
+          components: [PosNewThingForm],
+          html: `<pos-new-thing-form reference-uri="https://pod.test/container/"></pos-new-thing-form>`,
+          supportsShadowDom: false,
+        });
+
+        os = mockPodOS() as unknown as PodOS;
+        when(os.proposeUriForNewThing)
+          .calledWith('https://pod.test/container/', 'New Thing')
+          .mockReturnValue('https://pod.test/container/new-thing#it');
+        when(os.addNewThing).mockRejectedValue(new Error('simulated error for test'));
+        await page.rootInstance.receivePodOs(os);
+
+        // and the page listens for pod-os:link events
+        linkEventListener = jest.fn();
+        page.root.addEventListener('pod-os:link', linkEventListener);
+
+        // and the page listens for pod-os:error events
+        errorEventListener = jest.fn();
+        page.root.addEventListener('pod-os:error', errorEventListener);
+
+        // when user selects a term and adds a name
+        const termSelect = page.root.querySelector('pos-select-term');
+        fireEvent(termSelect, new CustomEvent('pod-os:term-selected', { detail: { uri: 'https://schema.org/Thing' } }));
+
+        const nameField = page.root.querySelector('input[type=text]');
+        fireEvent.input(nameField, { target: { value: 'New Thing' } });
+
+        await page.waitForChanges();
+
+        // and submits the form
+        const form: HTMLFormElement = page.root.querySelector('form');
+        fireEvent.submit(form);
+        await page.waitForChanges();
       });
 
-      const os = mockPodOS();
-      when(os.proposeUriForNewThing)
-        .calledWith('https://pod.test/container/', 'New Thing')
-        .mockReturnValue('https://pod.test/container/new-thing#it');
-      when(os.addNewThing).mockRejectedValue(new Error('simulated error for test'));
-      await page.rootInstance.receivePodOs(os);
+      it('emits an error event', () => {
+        expect(errorEventListener).toHaveBeenCalledWith(
+          expect.objectContaining({
+            detail: new Error('simulated error for test'),
+          }),
+        );
+      });
 
-      // and the page listens for pod-os:link events
-      const linkEventListener = jest.fn();
-      page.root.addEventListener('pod-os:link', linkEventListener);
+      it('does not redirect', () => {
+        expect(linkEventListener).not.toHaveBeenCalled();
+      });
 
-      // and the page listens for pod-os:error events
-      const errorEventListener = jest.fn();
-      page.root.addEventListener('pod-os:error', errorEventListener);
-
-      // when user selects a term and adds a name
-      const termSelect = page.root.querySelector('pos-select-term');
-      fireEvent(termSelect, new CustomEvent('pod-os:term-selected', { detail: { uri: 'https://schema.org/Thing' } }));
-
-      const nameField = page.root.querySelector('input[type=text]');
-      fireEvent.input(nameField, { target: { value: 'New Thing' } });
-
-      await page.waitForChanges();
-
-      // and submits the form
-      const form: HTMLFormElement = page.root.querySelector('form');
-      fireEvent.submit(form);
-      await page.waitForChanges();
-
-      // then an error is emitted
-      expect(errorEventListener).toHaveBeenCalledWith(
-        expect.objectContaining({
-          detail: new Error('simulated error for test'),
-        }),
-      );
-
-      // and no redirect occurs
-      expect(linkEventListener).not.toHaveBeenCalled();
+      it('does not reset the form', () => {
+        expect(page.rootInstance.name).toBe('New Thing');
+        expect(page.rootInstance.newUri).toBe('https://pod.test/container/new-thing#it');
+        expect(page.rootInstance.selectedTypeUri).toBe('https://schema.org/Thing');
+      });
     });
   });
 });

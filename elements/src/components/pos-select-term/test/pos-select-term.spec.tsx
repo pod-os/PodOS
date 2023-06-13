@@ -11,11 +11,20 @@ describe('pos-select-term', () => {
     expect(page.root).toEqualHtml(`
       <pos-select-term>
         <mock:shadow-root>
-          <input part="input" list="terms" placeholder="Type to search...">
+          <input part="input" value="" list="terms" placeholder="Type to search...">
           <datalist part="terms" id="terms"></datalist>
         </mock:shadow-root>
       </pos-select-term>
     `);
+  });
+
+  it('uses passed value as input value', async () => {
+    const page = await newSpecPage({
+      components: [PosSelectTerm],
+      html: `<pos-select-term value="initial"></pos-select-term>`,
+      supportsShadowDom: false,
+    });
+    expect(page.root.querySelector('input').value).toEqual('initial');
   });
 
   it('renders list of terms after os is available', async () => {
@@ -35,7 +44,7 @@ describe('pos-select-term', () => {
     expect(page.root).toEqualHtml(`
       <pos-select-term>
         <mock:shadow-root>
-          <input part="input" list="terms" placeholder="Type to search...">
+          <input part="input" value="" list="terms" placeholder="Type to search...">
           <datalist part="terms" id="terms">
             <option value="http://schema.org/name">schema:name</option>
           </datalist>

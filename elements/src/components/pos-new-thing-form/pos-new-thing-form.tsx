@@ -41,7 +41,12 @@ export class PosNewThingForm implements PodOsAware {
     return (
       <form method="dialog" onSubmit={e => this.handleSubmit(e)}>
         <label htmlFor="type">Type</label>
-        <pos-select-term id="type" placeholder="" onPod-os:term-selected={e => this.onTermSelected(e)} />
+        <pos-select-term
+          id="type"
+          placeholder=""
+          value={this.selectedTypeUri}
+          onPod-os:term-selected={e => this.onTermSelected(e)}
+        />
         <label htmlFor="name">Name</label>
         <input id="name" type="text" value={this.name} onInput={e => this.handleChange(e)} />
         {this.newUri ? (
@@ -67,9 +72,16 @@ export class PosNewThingForm implements PodOsAware {
     try {
       await this.os.addNewThing(this.newUri, this.name, this.selectedTypeUri);
       this.linkEmitter.emit(this.newUri);
+      this.reset();
     } catch (error) {
       event.preventDefault();
       this.errorEmitter.emit(error);
     }
+  }
+
+  private reset() {
+    this.name = '';
+    this.newUri = '';
+    this.selectedTypeUri = '';
   }
 }
