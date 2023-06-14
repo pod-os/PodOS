@@ -1,9 +1,5 @@
-import { expect, Page, test } from "@playwright/test";
-
-interface Credentials {
-  email: string;
-  password: string;
-}
+import { expect, test } from "@playwright/test";
+import { Credentials, signIn } from "./actions/signIn";
 
 const alice: Credentials = {
   email: "alice@mail.example",
@@ -47,25 +43,3 @@ test("can add a literal value", async ({ page }) => {
     .filter({ hasText: "https://property.example" });
   await expect(newItem).toContainText("my literal value");
 });
-
-async function signIn(
-  page: Page,
-  credentials: Credentials,
-  idp: string = "http://localhost:4000"
-) {
-  const originalLocation = page.url();
-  page.on("dialog", (dialog) => {
-    dialog.accept(idp);
-  });
-  const loginButton = page.locator("pos-login").getByRole("button");
-  await loginButton.click();
-
-  await expect(page).toHaveURL("http://localhost:4000/idp/login/");
-
-  await page.getByLabel("Email").type("alice@mail.example");
-  await page.getByLabel("Password").type("alice");
-  await page.getByRole("button", { name: "Log in" }).click();
-  await page.getByRole("button", { name: "Authorize" }).click();
-
-  await expect(page).toHaveURL(originalLocation);
-}
