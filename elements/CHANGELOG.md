@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- [pos-add-new-thing](../docs/elements/components/pos-add-new-thing): A button and dialog to add a new thing
+- [pos-new-thing-form](../docs/elements/components/pos-new-thing-form): A form to add a new thing by type and name
+
+### Changed
+
+- [pos-router](../docs/elements/components/pos-router): Allow to add a thing based on the current location
+- [pos-select-term](../docs/elements/components/pos-select-term): Delegates focus to internal input. Can receive a value via attribute.
+
 ## 0.12.0
 
 ### Added

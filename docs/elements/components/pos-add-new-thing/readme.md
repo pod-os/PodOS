@@ -14,6 +14,10 @@
 
 ## Dependencies
 
+### Used by
+
+ - [pos-router](../pos-router)
+
 ### Depends on
 
 - ion-icon
@@ -25,6 +29,7 @@ graph TD;
   pos-add-new-thing --> ion-icon
   pos-add-new-thing --> pos-new-thing-form
   pos-new-thing-form --> pos-select-term
+  pos-router --> pos-add-new-thing
   style pos-add-new-thing fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

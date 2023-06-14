@@ -10,6 +10,7 @@
 | Property      | Attribute     | Description | Type     | Default               |
 | ------------- | ------------- | ----------- | -------- | --------------------- |
 | `placeholder` | `placeholder` |             | `string` | `'Type to search...'` |
+| `value`       | `value`       |             | `string` | `''`                  |
 
 
 ## Events
@@ -18,6 +19,14 @@
 | ---------------------- | ---------------------------------------- | ------------------ |
 | `pod-os:init`          |                                          | `CustomEvent<any>` |
 | `pod-os:term-selected` | Fires when a term is entered or selected | `CustomEvent<any>` |
+
+
+## Shadow Parts
+
+| Part      | Description |
+| --------- | ----------- |
+| `"input"` |             |
+| `"terms"` |             |
 
 
 ## Dependencies

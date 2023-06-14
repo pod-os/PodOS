@@ -14,9 +14,11 @@
 
 ## Events
 
-| Event         | Description | Type               |
-| ------------- | ----------- | ------------------ |
-| `pod-os:init` |             | `CustomEvent<any>` |
+| Event          | Description | Type               |
+| -------------- | ----------- | ------------------ |
+| `pod-os:error` |             | `CustomEvent<any>` |
+| `pod-os:init`  |             | `CustomEvent<any>` |
+| `pod-os:link`  |             | `CustomEvent<any>` |
 
 
 ## Dependencies
