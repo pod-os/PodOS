@@ -1,6 +1,6 @@
 {
   "name": "@pod-os/elements",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "description": "Custom elements for usage with Solid Pods",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@ionic/core": "^6.6.3",
-    "@pod-os/core": "^0.8.0",
+    "@pod-os/core": "^0.9.0",
     "@stencil/core": "^2.22.3",
     "@stencil/store": "^2.0.4",
     "jest-when": "^3.5.2",
