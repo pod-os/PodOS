@@ -1,0 +1,32 @@
+import {html} from "lit-html";
+
+import {
+  Canvas,
+  Meta,
+  Story
+} from '@storybook/addon-docs/blocks';
+
+<Meta
+  title="Inputs"
+  args={{ referenceUri: "https://pod-os.solidcommunity.net/public/editable#it" }}
+  parameters={{
+    actions: {
+      handles: ['pod-os:term-selected', 'pod-os:link'],
+    },
+  }}
+/>
+
+## pos-add-new-thing
+
+Allows to add a new thing to a Pod
+
+<Canvas
+  withSource="open">
+  <Story
+    name="pos-add-new-thing"
+  >
+    {({referenceUri}) => html`
+   <pos-add-new-thing reference-uri="${referenceUri}" />
+    `}
+  </Story>
+</Canvas>
