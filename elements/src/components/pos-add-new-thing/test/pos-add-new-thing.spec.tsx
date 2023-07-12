@@ -54,6 +54,7 @@ describe('pos-add-new-thing', () => {
     });
 
     const dialog = page.root.querySelector('dialog');
+    dialog.showModal = jest.fn();
     dialog.close = jest.fn();
 
     const button = screen.getByTitle('Add a new thing');
