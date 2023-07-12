@@ -12,10 +12,10 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "lint": "eslint ./src",
-    "build:bundle": "rimraf lib && esbuild src/index.ts --outfile=lib/index.js --bundle --target=esnext --global-name=PodOS",
-    "build:esm": "rimraf dist && esbuild src/index.ts --outdir=dist --bundle --splitting --format=esm",
+    "build:bundle": "rimraf lib && node esbuild/build-bundle.mjs",
+    "build:esm": "rimraf dist && node esbuild/build-esm.mjs",
     "build:types": "rimraf types && tsc --emitDeclarationOnly --outDir types",
-    "build:watch": "npm run build:esm -- --watch",
+    "build:watch": "node esbuild/watch-esm.mjs",
     "build": " npm run build:bundle && npm run build:types && npm run build:esm"
   },
   "keywords": [
