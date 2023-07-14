@@ -31,6 +31,10 @@ export namespace Components {
     }
     interface PosDescription {
     }
+    interface PosDialog {
+        "close": () => Promise<void>;
+        "showModal": () => Promise<void>;
+    }
     interface PosDocument {
         "alt": string;
         "src": string;
@@ -251,6 +255,12 @@ declare global {
         prototype: HTMLPosDescriptionElement;
         new (): HTMLPosDescriptionElement;
     };
+    interface HTMLPosDialogElement extends Components.PosDialog, HTMLStencilElement {
+    }
+    var HTMLPosDialogElement: {
+        prototype: HTMLPosDialogElement;
+        new (): HTMLPosDialogElement;
+    };
     interface HTMLPosDocumentElement extends Components.PosDocument, HTMLStencilElement {
     }
     var HTMLPosDocumentElement: {
@@ -378,6 +388,7 @@ declare global {
         "pos-container-contents": HTMLPosContainerContentsElement;
         "pos-container-item": HTMLPosContainerItemElement;
         "pos-description": HTMLPosDescriptionElement;
+        "pos-dialog": HTMLPosDialogElement;
         "pos-document": HTMLPosDocumentElement;
         "pos-error-toast": HTMLPosErrorToastElement;
         "pos-image": HTMLPosImageElement;
@@ -440,6 +451,8 @@ declare namespace LocalJSX {
     }
     interface PosDescription {
         "onPod-os:resource"?: (event: PosDescriptionCustomEvent<any>) => void;
+    }
+    interface PosDialog {
     }
     interface PosDocument {
         "alt"?: string;
@@ -542,6 +555,7 @@ declare namespace LocalJSX {
         "pos-container-contents": PosContainerContents;
         "pos-container-item": PosContainerItem;
         "pos-description": PosDescription;
+        "pos-dialog": PosDialog;
         "pos-document": PosDocument;
         "pos-error-toast": PosErrorToast;
         "pos-image": PosImage;
@@ -579,6 +593,7 @@ declare module "@stencil/core" {
             "pos-container-contents": LocalJSX.PosContainerContents & JSXBase.HTMLAttributes<HTMLPosContainerContentsElement>;
             "pos-container-item": LocalJSX.PosContainerItem & JSXBase.HTMLAttributes<HTMLPosContainerItemElement>;
             "pos-description": LocalJSX.PosDescription & JSXBase.HTMLAttributes<HTMLPosDescriptionElement>;
+            "pos-dialog": LocalJSX.PosDialog & JSXBase.HTMLAttributes<HTMLPosDialogElement>;
             "pos-document": LocalJSX.PosDocument & JSXBase.HTMLAttributes<HTMLPosDocumentElement>;
             "pos-error-toast": LocalJSX.PosErrorToast & JSXBase.HTMLAttributes<HTMLPosErrorToastElement>;
             "pos-image": LocalJSX.PosImage & JSXBase.HTMLAttributes<HTMLPosImageElement>;
