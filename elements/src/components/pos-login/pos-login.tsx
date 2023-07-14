@@ -1,5 +1,5 @@
 import { PodOS } from '@pod-os/core';
-import { Component, Event, EventEmitter, h, Host, State } from '@stencil/core';
+import { Component, Event, EventEmitter, h, Host, Listen, State } from '@stencil/core';
 
 import session from '../../store/session';
 
@@ -21,13 +21,19 @@ export class PosLogin {
     this.os = os;
   };
 
-  login() {
-    const idp = session.state.getIdpUrl();
-    this.os.login(idp);
+  login(event: CustomEvent<string>) {
+    const idpUrl = event.detail
+    this.os.login(idpUrl);
   }
 
   logout() {
     this.os.logout();
+  }
+
+  private dialog: HTMLPosDialogElement;
+
+  openDialog() {
+    this.dialog.showModal()
   }
 
   render() {
@@ -43,8 +49,12 @@ export class PosLogin {
         ) : (
           ''
         )}
-        {!session.state.isLoggedIn && <ion-button onClick={() => this.login()}>Login</ion-button>}
+        {!session.state.isLoggedIn && <ion-button onClick={() => this.openDialog()}>Login</ion-button>}
         {session.state.isLoggedIn && <ion-button onClick={() => this.logout()}>Logout</ion-button>}
+        <pos-dialog ref={el => (this.dialog = el as HTMLPosDialogElement)}>
+          <span>Please enter your Identity Provider URL</span>
+          <pos-login-form  onIdpUrlSelected={ev=>this.login(ev)} />
+        </pos-dialog>
       </Host>
     );
   }
