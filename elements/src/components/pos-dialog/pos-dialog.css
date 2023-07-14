@@ -1,0 +1,57 @@
+:host {
+  font-family: var(--font-sans);
+  display: block;
+}
+
+button#new {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  width: var(--scale-5);
+  height: var(--scale-5);
+  background-color: var(--pos-primary-color);
+  color: var(--color-grey-50);
+  font-size: var(--scale-6);
+  border-radius: var(--radius-xs);
+}
+
+dialog {
+  background-color: var(--pos-background-color);
+  border: none;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  max-width: var(--width-xs);
+}
+
+dialog #title {
+  flex-grow: 1;
+  font-weight: var(--weight-light);
+  font-size: var(--scale-2);
+}
+
+dialog header {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  gap: var(--scale-0);
+  border-bottom-style: inset;
+  padding-bottom: var(--scale-0);
+}
+
+button#close {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  font-size: var(--scale-3);
+  color: var(--color-grey-500);
+}
+
+button#close:hover {
+  color: var(--color-grey-800);
+}
