@@ -55,7 +55,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: lts/*
-      - uses: rlespinasse/github-slug-action@v4
+      - uses: rlespinasse/github-slug-action@v4.4.1
       - name: prerelease version
         run: |
           echo "::set-output name=version::$(npm version prerelease --preid ${GITHUB_SHA_SHORT} --no-git-tag-version)"
@@ -79,7 +79,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: lts/*
-      - uses: rlespinasse/github-slug-action@v4
+      - uses: rlespinasse/github-slug-action@v4.4.1
       - name: prerelease version
         run: |
           echo "::set-output name=version::$(npm version prerelease --preid ${GITHUB_SHA_SHORT} --no-git-tag-version)"
