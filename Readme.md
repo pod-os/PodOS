@@ -30,3 +30,8 @@ The development Solid server is running at http://localhost:3000/
 * [Development Solid Server](./dev-solid-server)
 * [Test Data](./dev-solid-server/data)
 * [Test Users](./dev-solid-server/Readme.md#Users)
+
+
+## Contributing
+
+You want to contribute? Great! Take a look into our [contributing guide](./CONTRIBUTING.md)
