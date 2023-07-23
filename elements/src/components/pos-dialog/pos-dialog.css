@@ -27,6 +27,10 @@ dialog header {
   padding-bottom: var(--scale-0);
 }
 
+dialog [name='dialog-content']::slotted(*) {
+  margin: var(--scale-3);
+}
+
 button#close {
   cursor: pointer;
   display: flex;
