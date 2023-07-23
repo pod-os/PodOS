@@ -26,7 +26,9 @@ graph TD;
   pos-router --> pos-resource
   pos-router --> pos-type-router
   pos-add-new-thing --> ion-icon
+  pos-add-new-thing --> pos-dialog
   pos-add-new-thing --> pos-new-thing-form
+  pos-dialog --> ion-icon
   pos-new-thing-form --> pos-select-term
   pos-navigation-bar --> ion-searchbar
   pos-navigation-bar --> pos-rich-link
