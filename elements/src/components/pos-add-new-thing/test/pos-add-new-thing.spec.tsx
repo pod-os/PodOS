@@ -14,17 +14,12 @@ describe('pos-add-new-thing', () => {
         <button id="new" title="Add a new thing">
             <ion-icon name="add-circle-outline"></ion-icon>
         </button>
-        <dialog>
-            <header>
-                <span id="title">
-                  Add a new thing
+        <pos-dialog>
+                <span slot="dialog-title">
+                      Add a new thing
                 </span>
-                <button tabindex="-1" id="close" title="Close">
-                    <ion-icon name="close-outline"></ion-icon>
-                </button>
-            </header>
-            <pos-new-thing-form referenceUri="https://pod.test/" />
-        </dialog>
+            <pos-new-thing-form referenceUri="https://pod.test/" slot="dialog-content"/>
+        </pos-dialog>
     </mock:shadow-root>
 </pos-add-new-thing>
     `);
@@ -37,32 +32,12 @@ describe('pos-add-new-thing', () => {
       supportsShadowDom: false,
     });
 
-    const dialog = page.root.querySelector('dialog');
+    const dialog = page.root.querySelector('pos-dialog');
     dialog.showModal = jest.fn();
 
     const button = screen.getByTitle('Add a new thing');
     button.click();
 
     expect(dialog.showModal).toHaveBeenCalled();
-  });
-
-  it('closes the modal dialog, when the close button is clicked', async () => {
-    const page = await newSpecPage({
-      components: [PosAddNewThing],
-      html: `<pos-add-new-thing reference-uri="https://pod.test/"></pos-add-new-thing>`,
-      supportsShadowDom: false,
-    });
-
-    const dialog = page.root.querySelector('dialog');
-    dialog.showModal = jest.fn();
-    dialog.close = jest.fn();
-
-    const button = screen.getByTitle('Add a new thing');
-    button.click();
-
-    const closeButton = screen.getByTitle('Close');
-    closeButton.click();
-
-    expect(dialog.close).toHaveBeenCalled();
   });
 });
