@@ -23,7 +23,3 @@ button#new:hover, button#new:focus {
   box-shadow: var(--shadow-sm);
 }
 
-pos-new-thing-form {
-  margin: var(--scale-3)
-}
-
