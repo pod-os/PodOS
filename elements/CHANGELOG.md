@@ -6,9 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+### Added
+
+- [pos-dialog]: A dialog component with a common style
+
 ### Changed
 
 - [pos-app](../docs/elements/components/pos-app): After login `pos-app` now loads the preferences file that is linked in the user's WebID profile (if any).
+- [pos-add-new-thing]: Refactored to use [pos-dialog]
+
+[pos-add-new-thing]: ../docs/elements/components/pos-add-new-thing
+[pos-dialog]: ../docs/elements/components/pos-dialog
 
 ## 0.13.0
 
