@@ -1,5 +1,8 @@
 import { Component, Host, h, Method } from '@stencil/core';
 
+/**
+ * Styled wrapper around native dialog element, with slots `dialog-title` and `dialog-content`
+ */
 @Component({
   tag: 'pos-dialog',
   styleUrl: 'pos-dialog.css',
