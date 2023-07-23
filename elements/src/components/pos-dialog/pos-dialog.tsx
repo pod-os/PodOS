@@ -24,13 +24,13 @@ export class PosDialog {
         <dialog ref={el => (this.dialog = el as HTMLDialogElement)}>
           <header>
             <span id="title">
-              <slot />
+              <slot name="dialog-title" />
             </span>
             <button tabindex={-1} id="close" title="Close" onClick={() => this.close()}>
               <ion-icon name="close-outline"></ion-icon>
             </button>
           </header>
-          <slot />
+          <slot name="dialog-content" />
         </dialog>
       </Host>
     );
