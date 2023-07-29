@@ -52,8 +52,8 @@ export class PosLogin {
         {!session.state.isLoggedIn && <ion-button onClick={() => this.openDialog()}>Login</ion-button>}
         {session.state.isLoggedIn && <ion-button onClick={() => this.logout()}>Logout</ion-button>}
         <pos-dialog ref={el => (this.dialog = el as HTMLPosDialogElement)}>
-          <span>Please enter your Identity Provider URL</span>
-          <pos-login-form  onIdpUrlSelected={ev=>this.login(ev)} />
+          <span slot="dialog-title">Please enter your Identity Provider URL</span>
+          <pos-login-form  onIdpUrlSelected={ev=>this.login(ev)} slot="dialog-content"/>
         </pos-dialog>
       </Host>
     );
