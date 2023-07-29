@@ -24,6 +24,8 @@
 - [pos-picture](../pos-picture)
 - [pos-label](../pos-label)
 - ion-button
+- [pos-dialog](../pos-dialog)
+- [pos-login-form](../pos-login-form)
 
 ### Graph
 ```mermaid
@@ -32,6 +34,8 @@ graph TD;
   pos-login --> pos-picture
   pos-login --> pos-label
   pos-login --> ion-button
+  pos-login --> pos-dialog
+  pos-login --> pos-login-form
   pos-resource --> ion-progress-bar
   pos-resource --> ion-card
   pos-resource --> ion-card-header
@@ -41,6 +45,7 @@ graph TD;
   pos-image --> ion-skeleton-text
   pos-image --> ion-icon
   ion-button --> ion-ripple-effect
+  pos-dialog --> ion-icon
   pos-app-browser --> pos-login
   style pos-login fill:#f9f,stroke:#333,stroke-width:4px
 ```

@@ -11,6 +11,9 @@ export class PosLoginForm {
 
   @State() canSubmit: boolean = true;
 
+  /**
+   * Emits the selected IDP URL to use for login
+   */
   @Event({ eventName: 'idpUrlSelected' }) idpUrlSelected: EventEmitter;
   @Event({ eventName: 'pod-os:error' }) errorEmitter: EventEmitter;
 
