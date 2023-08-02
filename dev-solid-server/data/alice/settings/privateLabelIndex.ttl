@@ -1,0 +1,19 @@
+@prefix :       <#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+
+
+
+</games/minecraft#it>
+    rdfs:label "Minecraft" .
+
+</alice/profile/card#me>
+    rdfs:label "Alice" .
+
+</documents/test.pdf>
+    rdfs:label "test.pdf" .
+
+</documents/page.html>
+    rdfs:label "Web Page" .
+
+</documents/notes.md>
+    rdfs:label "notes.md" .
