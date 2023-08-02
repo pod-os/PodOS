@@ -16,9 +16,12 @@ export class PosApp {
   componentWillLoad() {
     this.os = createPodOS();
     this.os.handleIncomingRedirect();
-    this.os.trackSession(sessionInfo => {
+    this.os.trackSession(async sessionInfo => {
       session.state.isLoggedIn = sessionInfo.isLoggedIn;
       session.state.webId = sessionInfo.webId;
+      if (sessionInfo.isLoggedIn) {
+        await this.os.loadPreferences(sessionInfo.webId);
+      }
     });
   }
 
