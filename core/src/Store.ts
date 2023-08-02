@@ -101,4 +101,20 @@ export class Store {
       },
     );
   }
+
+  /**
+   * Loads the preferences file for the given WebID
+   * @param webId
+   */
+  loadPreferences(webId: string) {
+    const preferences = this.graph.anyValue(
+      sym(webId),
+      sym("http://www.w3.org/ns/pim/space#preferencesFile"),
+      undefined,
+      sym(webId).doc(),
+    );
+    if (preferences) {
+      return this.fetch(preferences);
+    }
+  }
 }

@@ -72,6 +72,10 @@ export class PodOS {
     });
   }
 
+  loadPreferences(webId: string) {
+    return this.store.loadPreferences(webId);
+  }
+
   logout() {
     return this.session.logout();
   }
