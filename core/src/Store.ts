@@ -60,7 +60,7 @@ export class Store {
   addPropertyValue(
     thing: Thing,
     property: string,
-    value: string
+    value: string,
   ): Promise<void> {
     return this.updater.update(
       [],
@@ -71,7 +71,7 @@ export class Store {
         // explicitly omit credentials due to
         // https://github.com/pod-os/PodOS/issues/17
         credentials: "omit",
-      }
+      },
     ) as Promise<void>; // without passing callback updater returns a Promise;
   }
 
@@ -83,13 +83,13 @@ export class Store {
           sym(uri),
           sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
           sym(type),
-          sym(uri).doc()
+          sym(uri).doc(),
         ),
         st(
           sym(uri),
           sym("http://www.w3.org/2000/01/rdf-schema#label"),
           lit(name),
-          sym(uri).doc()
+          sym(uri).doc(),
         ),
       ],
       undefined,
@@ -98,7 +98,7 @@ export class Store {
         // explicitly omit credentials due to
         // https://github.com/pod-os/PodOS/issues/17
         credentials: "omit",
-      }
+      },
     );
   }
 }

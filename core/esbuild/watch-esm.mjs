@@ -1,6 +1,6 @@
-import * as esbuild from 'esbuild'
+import * as esbuild from "esbuild";
 
-import {config} from './esm-config.mjs';
+import { config } from "./esm-config.mjs";
 
-const context = await esbuild.context(config)
+const context = await esbuild.context(config);
 await context.watch();

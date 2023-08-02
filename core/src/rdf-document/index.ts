@@ -1,1 +1,1 @@
-export * from './RdfDocument';
+export * from "./RdfDocument";

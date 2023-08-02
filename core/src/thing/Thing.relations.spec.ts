@@ -7,7 +7,7 @@ describe("Thing", function () {
       const store = graph();
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
-        store
+        store,
       );
       expect(it.relations()).toEqual([]);
     });
@@ -18,11 +18,11 @@ describe("Thing", function () {
       store.add(
         sym(uri),
         sym("http://vocab.test/predicate"),
-        sym("https://pod.example/resource")
+        sym("https://pod.example/resource"),
       );
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
-        store
+        store,
       );
       const result = it.relations();
       expect(result).toEqual([
@@ -39,16 +39,16 @@ describe("Thing", function () {
       store.add(
         sym(uri),
         sym("http://vocab.test/first"),
-        sym("https://pod.example/first")
+        sym("https://pod.example/first"),
       );
       store.add(
         sym(uri),
         sym("http://vocab.test/second"),
-        sym("https://pod.example/second")
+        sym("https://pod.example/second"),
       );
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
-        store
+        store,
       );
       const result = it.relations();
       expect(result).toEqual([
@@ -69,16 +69,16 @@ describe("Thing", function () {
       store.add(
         sym(uri),
         sym("http://vocab.test/predicate"),
-        sym("https://pod.example/first")
+        sym("https://pod.example/first"),
       );
       store.add(
         sym(uri),
         sym("http://vocab.test/predicate"),
-        sym("https://pod.example/second")
+        sym("https://pod.example/second"),
       );
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
-        store
+        store,
       );
       const result = it.relations();
       expect(result).toEqual([
@@ -95,26 +95,26 @@ describe("Thing", function () {
       store.add(
         sym(uri),
         sym("http://vocab.test/first"),
-        sym("https://pod.example/first/1")
+        sym("https://pod.example/first/1"),
       );
       store.add(
         sym(uri),
         sym("http://vocab.test/second"),
-        sym("https://pod.example/second/1")
+        sym("https://pod.example/second/1"),
       );
       store.add(
         sym(uri),
         sym("http://vocab.test/second"),
-        sym("https://pod.example/second/2")
+        sym("https://pod.example/second/2"),
       );
       store.add(
         sym(uri),
         sym("http://vocab.test/third"),
-        sym("https://pod.example/third/1")
+        sym("https://pod.example/third/1"),
       );
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
-        store
+        store,
       );
       const result = it.relations();
       expect(result).toEqual([
@@ -142,13 +142,13 @@ describe("Thing", function () {
       store.add(
         sym(uri),
         sym("http://vocab.test/predicate"),
-        sym("https://pod.example/resource")
+        sym("https://pod.example/resource"),
       );
       store.add(sym(uri), sym("http://vocab.test/literal"), "literal value");
       store.add(sym(uri), sym("http://vocab.test/blank"), blankNode("blank"));
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
-        store
+        store,
       );
       const result = it.relations();
       expect(result).toEqual([
@@ -165,16 +165,16 @@ describe("Thing", function () {
       store.add(
         sym(uri),
         sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-        sym("https://vocab.example/TypeA")
+        sym("https://vocab.example/TypeA"),
       );
       store.add(
         sym(uri),
         sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-        sym("https://vocab.example/TypeB")
+        sym("https://vocab.example/TypeB"),
       );
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
-        store
+        store,
       );
       const result = it.relations();
       expect(result).toEqual([]);

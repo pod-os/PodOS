@@ -32,7 +32,7 @@ export class Thing {
     /**
      * Whether the Thing can be edited according to its access control settings
      */
-    readonly editable: boolean = false
+    readonly editable: boolean = false,
   ) {}
 
   label() {
@@ -47,7 +47,7 @@ export class Thing {
       "http://www.w3.org/2000/01/rdf-schema#label",
       "https://www.w3.org/ns/activitystreams#name",
       "http://schema.org/caption",
-      "https://schema.org/caption"
+      "https://schema.org/caption",
     );
     return value ?? this.uri;
   }
@@ -82,7 +82,7 @@ export class Thing {
     const statements = this.store.statementsMatching(
       undefined,
       undefined,
-      sym(this.uri)
+      sym(this.uri),
     );
 
     const values = statements.reduce(accumulateSubjects, {});
@@ -112,7 +112,7 @@ export class Thing {
       "http://www.w3.org/2000/01/rdf-schema#comment",
       "https://www.w3.org/ns/activitystreams#summary",
       "https://www.w3.org/ns/activitystreams#content",
-      "http://www.w3.org/2006/vcard/ns#note"
+      "http://www.w3.org/2006/vcard/ns#note",
     );
   }
 
@@ -128,7 +128,7 @@ export class Thing {
       "http://www.w3.org/2006/vcard/ns#logo",
       "http://xmlns.com/foaf/0.1/img",
       "http://xmlns.com/foaf/0.1/depiction",
-      "http://xmlns.com/foaf/0.1/thumbnail"
+      "http://xmlns.com/foaf/0.1/thumbnail",
     );
     if (directUrl) {
       return {
@@ -143,11 +143,11 @@ export class Thing {
     const activityStreamsImage =
       this.store.any(
         sym(this.uri),
-        sym("https://www.w3.org/ns/activitystreams#image")
+        sym("https://www.w3.org/ns/activitystreams#image"),
       ) ||
       this.store.any(
         sym(this.uri),
-        sym("https://www.w3.org/ns/activitystreams#icon")
+        sym("https://www.w3.org/ns/activitystreams#icon"),
       );
     if (
       !activityStreamsImage ||
@@ -157,7 +157,7 @@ export class Thing {
     }
     const url = this.store.anyValue(
       activityStreamsImage,
-      sym("https://www.w3.org/ns/activitystreams#url")
+      sym("https://www.w3.org/ns/activitystreams#url"),
     );
     return url
       ? {
@@ -178,8 +178,8 @@ export class Thing {
     SpecificThing: new (
       uri: string,
       store: IndexedFormula,
-      editable: boolean
-    ) => T
+      editable: boolean,
+    ) => T,
   ) {
     return new SpecificThing(this.uri, this.store, this.editable);
   }

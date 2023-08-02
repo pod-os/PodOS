@@ -11,7 +11,7 @@ interface Accumulator {
  */
 export const accumulateSubjects = (
   accumulator: Accumulator,
-  current: Statement
+  current: Statement,
 ) => {
   const existing = accumulator[current.predicate.uri];
   return {

@@ -7,7 +7,7 @@ describe("Thing", function () {
       const store = graph();
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
-        store
+        store,
       );
       expect(it.reverseRelations()).toEqual([]);
     });
@@ -18,11 +18,11 @@ describe("Thing", function () {
       store.add(
         sym("https://pod.example/resource"),
         sym("http://vocab.test/predicate"),
-        sym(uri)
+        sym(uri),
       );
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
-        store
+        store,
       );
       const result = it.reverseRelations();
       expect(result).toEqual([
@@ -39,16 +39,16 @@ describe("Thing", function () {
       store.add(
         sym("https://pod.example/first"),
         sym("http://vocab.test/first"),
-        sym(uri)
+        sym(uri),
       );
       store.add(
         sym("https://pod.example/second"),
         sym("http://vocab.test/second"),
-        sym(uri)
+        sym(uri),
       );
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
-        store
+        store,
       );
       const result = it.reverseRelations();
       expect(result).toEqual([
@@ -69,16 +69,16 @@ describe("Thing", function () {
       store.add(
         sym("https://pod.example/first"),
         sym("http://vocab.test/predicate"),
-        sym(uri)
+        sym(uri),
       );
       store.add(
         sym("https://pod.example/second"),
         sym("http://vocab.test/predicate"),
-        sym(uri)
+        sym(uri),
       );
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
-        store
+        store,
       );
       const result = it.reverseRelations();
       expect(result).toEqual([
@@ -95,26 +95,26 @@ describe("Thing", function () {
       store.add(
         sym("https://pod.example/first/1"),
         sym("http://vocab.test/first"),
-        sym(uri)
+        sym(uri),
       );
       store.add(
         sym("https://pod.example/second/1"),
         sym("http://vocab.test/second"),
-        sym(uri)
+        sym(uri),
       );
       store.add(
         sym("https://pod.example/second/2"),
         sym("http://vocab.test/second"),
-        sym(uri)
+        sym(uri),
       );
       store.add(
         sym("https://pod.example/third/1"),
         sym("http://vocab.test/third"),
-        sym(uri)
+        sym(uri),
       );
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
-        store
+        store,
       );
       const result = it.reverseRelations();
       expect(result).toEqual([

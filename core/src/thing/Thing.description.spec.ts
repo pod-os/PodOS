@@ -7,7 +7,7 @@ describe("Thing", function () {
       const store = graph();
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
-        store
+        store,
       );
       expect(it.description()).toBeUndefined();
     });
@@ -28,7 +28,7 @@ describe("Thing", function () {
       store.add(sym(uri), sym(predicate), "literal value");
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
-        store
+        store,
       );
       const result = it.description();
       expect(result).toEqual("literal value");

@@ -7,7 +7,7 @@ describe("accumulate subjects", () => {
       sym("https://subject.test"),
       sym("https://predicate.test"),
       sym("https://object.test"),
-      sym("https://graph.test")
+      sym("https://graph.test"),
     );
     const result = [s].reduce(accumulateSubjects, {});
     expect(result).toEqual({
@@ -20,17 +20,17 @@ describe("accumulate subjects", () => {
       sym("https://subject1.test"),
       sym("https://predicate1.test"),
       sym("https://object.test"),
-      sym("https://graph.test")
+      sym("https://graph.test"),
     );
     const secondStatement: Statement = new Statement(
       sym("https://subject2.test"),
       sym("https://predicate2.test"),
       sym("https://object.test"),
-      sym("https://graph.test")
+      sym("https://graph.test"),
     );
     const result = [firstStatement, secondStatement].reduce(
       accumulateSubjects,
-      {}
+      {},
     );
     expect(result).toEqual({
       "https://predicate1.test": ["https://subject1.test"],
@@ -43,20 +43,23 @@ describe("accumulate subjects", () => {
       sym("https://subject1.test"),
       sym("https://predicate.test"),
       sym("https://object.test"),
-      sym("https://graph.test")
+      sym("https://graph.test"),
     );
     const secondStatement: Statement = new Statement(
       sym("https://subject2.test"),
       sym("https://predicate.test"),
       sym("https://object.test"),
-      sym("https://graph.test")
+      sym("https://graph.test"),
     );
     const result = [firstStatement, secondStatement].reduce(
       accumulateSubjects,
-      {}
+      {},
     );
     expect(result).toEqual({
-      "https://predicate.test": ["https://subject1.test", "https://subject2.test"],
+      "https://predicate.test": [
+        "https://subject1.test",
+        "https://subject2.test",
+      ],
     });
   });
 });

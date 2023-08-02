@@ -2,7 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to
+[Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## 0.9.0
 
@@ -12,16 +14,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
-- `addNewThing`: A method to add a basic new thing with a type and a label to the store
-- `proposeUriForNewThing`: Generate a URI for a new thing based on a name and a reference URI (like a container)
+- `addNewThing`: A method to add a basic new thing with a type and a label to
+  the store
+- `proposeUriForNewThing`: Generate a URI for a new thing based on a name and a
+  reference URI (like a container)
 
 ## 0.8.0
 
 ### Added
 
-- add `editable` property to `Thing`, which declares whether a thing can be edited
-- `addPropertyValue`: A method to add a value to a property of a thing 
-- `listKnownTerms`: A method to list a range of well known terms from commonly used RDF vocabularies
+- add `editable` property to `Thing`, which declares whether a thing can be
+  edited
+- `addPropertyValue`: A method to add a value to a property of a thing
+- `listKnownTerms`: A method to list a range of well known terms from commonly
+  used RDF vocabularies
 
 ## 0.7.0
 
@@ -49,7 +55,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
-- get picture of a thing 
+- get picture of a thing
 
 ## 0.3.0
 

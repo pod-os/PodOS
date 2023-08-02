@@ -16,7 +16,7 @@ describe("RdfDocument", () => {
         sym("http://pod.example/document#it"),
         sym("http://vocab.test/predicate"),
         "literal value",
-        sym("http://pod.example/document")
+        sym("http://pod.example/document"),
       );
 
       const document = new RdfDocument("http://pod.example/document", store);
@@ -33,13 +33,13 @@ describe("RdfDocument", () => {
         sym("http://pod.example/document#thing-1"),
         sym("http://vocab.test/predicate"),
         "literal value",
-        sym("http://pod.example/document")
+        sym("http://pod.example/document"),
       );
       store.add(
         sym("http://pod.example/document#thing-2"),
         sym("http://vocab.test/predicate"),
         "literal value",
-        sym("http://pod.example/document")
+        sym("http://pod.example/document"),
       );
       const document = new RdfDocument("http://pod.example/document", store);
 
@@ -58,13 +58,13 @@ describe("RdfDocument", () => {
         sym("http://pod.example/document#it"),
         sym("http://vocab.test/predicate1"),
         "literal value",
-        sym("http://pod.example/document")
+        sym("http://pod.example/document"),
       );
       store.add(
         sym("http://pod.example/document#it"),
         sym("http://vocab.test/predicate2"),
         "literal value",
-        sym("http://pod.example/document")
+        sym("http://pod.example/document"),
       );
       const document = new RdfDocument("http://pod.example/document", store);
 
@@ -80,7 +80,7 @@ describe("RdfDocument", () => {
         sym("http://pod.example/document#it"),
         sym("http://vocab.test/predicate"),
         "literal value",
-        sym("http://pod.example/other-document")
+        sym("http://pod.example/other-document"),
       );
 
       const document = new RdfDocument("http://pod.example/document", store);
@@ -94,7 +94,7 @@ describe("RdfDocument", () => {
         blankNode(),
         sym("http://vocab.test/predicate"),
         "literal value",
-        sym("http://pod.example/document")
+        sym("http://pod.example/document"),
       );
 
       const document = new RdfDocument("http://pod.example/document", store);
@@ -108,7 +108,7 @@ describe("RdfDocument", () => {
         sym("http://pod.example/document"),
         sym("http://vocab.test/title"),
         "document title",
-        sym("http://pod.example/document")
+        sym("http://pod.example/document"),
       );
 
       const document = new RdfDocument("http://pod.example/document", store);

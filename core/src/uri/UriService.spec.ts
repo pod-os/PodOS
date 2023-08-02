@@ -10,7 +10,7 @@ describe("UriService", () => {
 
       const result = uriService.proposeUriForNewThing(
         "https://pod.test/container/",
-        "A new thing"
+        "A new thing",
       );
 
       expect(result).toBe("https://pod.test/container/a-new-thing#it");
@@ -23,7 +23,7 @@ describe("UriService", () => {
 
       const result = uriService.proposeUriForNewThing(
         "https://pod.test/container/file",
-        "A new thing"
+        "A new thing",
       );
 
       expect(result).toBe("https://pod.test/container/a-new-thing#it");
@@ -36,7 +36,7 @@ describe("UriService", () => {
 
       const result = uriService.proposeUriForNewThing(
         "https://pod.test/container/file#it",
-        "A new thing"
+        "A new thing",
       );
 
       expect(result).toBe("https://pod.test/container/a-new-thing#it");

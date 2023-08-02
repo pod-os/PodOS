@@ -7,7 +7,7 @@ describe("Thing", function () {
       const store = graph();
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
-        store
+        store,
       );
       expect(it.anyValue("https://vocab.test/predicate")).toBeUndefined();
     });
@@ -19,7 +19,7 @@ describe("Thing", function () {
       store.add(sym(uri), sym(predicate), "literal value");
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
-        store
+        store,
       );
       expect(it.anyValue(predicate)).toBe("literal value");
     });
@@ -32,7 +32,7 @@ describe("Thing", function () {
       store.add(sym(uri), sym(predicate), "second value");
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
-        store
+        store,
       );
       expect(it.anyValue(predicate)).toBe("first value");
     });
@@ -46,7 +46,7 @@ describe("Thing", function () {
       store.add(sym(uri), sym(secondPredicate), "second value");
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
-        store
+        store,
       );
       expect(it.anyValue(firstPredicate, secondPredicate)).toBe("first value");
     });
@@ -59,7 +59,7 @@ describe("Thing", function () {
       store.add(sym(uri), sym(secondPredicate), "second value");
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
-        store
+        store,
       );
       expect(it.anyValue(firstPredicate, secondPredicate)).toBe("second value");
     });

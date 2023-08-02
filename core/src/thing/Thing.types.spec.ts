@@ -15,7 +15,7 @@ describe("Thing", function () {
       store.add(
         sym("https://jane.doe.example/resource#it"),
         sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-        sym("https://vocab.example#TypeA")
+        sym("https://vocab.example#TypeA"),
       );
       expect(it.types()).toEqual([
         {
@@ -31,17 +31,17 @@ describe("Thing", function () {
       store.add(
         sym("https://jane.doe.example/resource#it"),
         sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-        sym("https://vocab.example#TypeA")
+        sym("https://vocab.example#TypeA"),
       );
       store.add(
         sym("https://jane.doe.example/resource#it"),
         sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-        sym("https://vocab.example#TypeB")
+        sym("https://vocab.example#TypeB"),
       );
       store.add(
         sym("https://jane.doe.example/resource#it"),
         sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-        sym("https://vocab.example#TypeC")
+        sym("https://vocab.example#TypeC"),
       );
       const types = it.types();
       expect(types).toContainEqual({
@@ -65,12 +65,12 @@ describe("Thing", function () {
       store.add(
         sym("https://jane.doe.example/resource#other"),
         sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-        sym("https://vocab.example#TypeA")
+        sym("https://vocab.example#TypeA"),
       );
       store.add(
         sym("https://jane.doe.example/resource#it"),
         sym("https://vocab.example#notAType"),
-        sym("https://vocab.example#TypeB")
+        sym("https://vocab.example#TypeB"),
       );
       expect(it.types()).toEqual([]);
     });

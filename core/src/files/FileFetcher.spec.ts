@@ -31,7 +31,7 @@ describe("FileFetcher", () => {
 
     // when fetching a file for that url with the file fetcher
     const file = await new FileFetcher(mockSession).fetchFile(
-      "https://pod.test/image.png"
+      "https://pod.test/image.png",
     );
     // then the returned file contains the blob
     expect(file).toBeInstanceOf(BinaryFile);
@@ -60,13 +60,13 @@ describe("FileFetcher", () => {
 
     // when fetching a blob for that url with the file fetcher
     const file = await new FileFetcher(mockSession).fetchFile(
-      "https://pod.test/image.png"
+      "https://pod.test/image.png",
     );
 
     // then the returned file is broken
     expect(file).toBeInstanceOf(BrokenFile);
     expect(file.toString()).toBe(
-      "404 - Not Found - https://pod.test/image.png"
+      "404 - Not Found - https://pod.test/image.png",
     );
     // and the url is present
     expect(file.url).toEqual("https://pod.test/image.png");

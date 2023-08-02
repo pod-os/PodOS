@@ -7,10 +7,10 @@ describe("Thing", function () {
       const store = graph();
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
-        store
+        store,
       );
       expect(it.label()).toBe(
-        "https://jane.doe.example/container/file.ttl#fragment"
+        "https://jane.doe.example/container/file.ttl#fragment",
       );
     });
 
@@ -32,7 +32,7 @@ describe("Thing", function () {
       store.add(sym(uri), sym(predicate), "literal value");
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
-        store
+        store,
       );
       const result = it.label();
       expect(result).toEqual("literal value");

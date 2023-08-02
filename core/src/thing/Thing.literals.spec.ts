@@ -7,7 +7,7 @@ describe("Thing", function () {
       const store = graph();
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
-        store
+        store,
       );
       expect(it.literals()).toEqual([]);
     });
@@ -18,7 +18,7 @@ describe("Thing", function () {
       store.add(sym(uri), sym("http://vocab.test/predicate"), "literal value");
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
-        store
+        store,
       );
       const result = it.literals();
       expect(result).toEqual([
@@ -36,7 +36,7 @@ describe("Thing", function () {
       store.add(sym(uri), sym("http://vocab.test/second"), "second value");
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
-        store
+        store,
       );
       const result = it.literals();
       expect(result).toEqual([
@@ -58,7 +58,7 @@ describe("Thing", function () {
       store.add(sym(uri), sym("http://vocab.test/predicate"), "second value");
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
-        store
+        store,
       );
       const result = it.literals();
       expect(result).toEqual([
@@ -78,7 +78,7 @@ describe("Thing", function () {
       store.add(sym(uri), sym("http://vocab.test/third"), "value 3-1");
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
-        store
+        store,
       );
       const result = it.literals();
       expect(result).toEqual([
@@ -104,12 +104,12 @@ describe("Thing", function () {
       store.add(
         sym(uri),
         sym("http://vocab.test/url"),
-        sym("https://url.test/")
+        sym("https://url.test/"),
       );
       store.add(sym(uri), sym("http://vocab.test/blank"), blankNode("blank"));
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
-        store
+        store,
       );
       const result = it.literals();
       expect(result).toEqual([

@@ -9,7 +9,7 @@ export class RdfDocument extends Thing {
   constructor(
     readonly uri: string,
     readonly store: IndexedFormula,
-    readonly editable: boolean = false
+    readonly editable: boolean = false,
   ) {
     super(uri, store, editable);
   }
@@ -19,7 +19,7 @@ export class RdfDocument extends Thing {
       null,
       null,
       null,
-      sym(this.uri)
+      sym(this.uri),
     );
     const uris = matches
       .filter((match) => isNamedNode(match.subject))

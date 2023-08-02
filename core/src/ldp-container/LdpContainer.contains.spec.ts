@@ -6,7 +6,7 @@ describe("LDP container", () => {
     it("contains nothing if store is empty", () => {
       const container = new LdpContainer(
         "https://pod.test/container/",
-        graph()
+        graph(),
       );
       const result = container.contains();
       expect(result).toEqual([]);
@@ -18,7 +18,7 @@ describe("LDP container", () => {
         sym("https://pod.test/container/"),
         sym("http://www.w3.org/ns/ldp#contains"),
         sym("https://pod.test/container/file"),
-        sym("https://pod.test/container/")
+        sym("https://pod.test/container/"),
       );
       const container = new LdpContainer("https://pod.test/container/", store);
       const result = container.contains();
@@ -36,27 +36,27 @@ describe("LDP container", () => {
         sym("https://pod.test/container/"),
         sym("http://www.w3.org/ns/ldp#contains"),
         sym("https://pod.test/container/file"),
-        sym("https://pod.test/container/")
+        sym("https://pod.test/container/"),
       );
       store.add(
         sym("https://pod.test/container/"),
         sym("http://www.w3.org/ns/ldp#contains"),
         sym("https://pod.test/container/a/"),
-        sym("https://pod.test/container/")
+        sym("https://pod.test/container/"),
       );
 
       store.add(
         sym("https://pod.test/container/"),
         sym("http://www.w3.org/ns/ldp#contains"),
         sym("https://pod.test/container/b/"),
-        sym("https://pod.test/container/")
+        sym("https://pod.test/container/"),
       );
 
       store.add(
         sym("https://pod.test/container/"),
         sym("http://www.w3.org/ns/ldp#contains"),
         sym("https://pod.test/container/c/"),
-        sym("https://pod.test/container/")
+        sym("https://pod.test/container/"),
       );
       const container = new LdpContainer("https://pod.test/container/", store);
       const result = container.contains();

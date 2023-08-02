@@ -9,7 +9,7 @@ export class LdpContainer extends Thing {
   constructor(
     readonly uri: string,
     readonly store: IndexedFormula,
-    readonly editable: boolean = false
+    readonly editable: boolean = false,
   ) {
     super(uri, store, editable);
   }
@@ -19,13 +19,13 @@ export class LdpContainer extends Thing {
       sym(this.uri),
       sym("http://www.w3.org/ns/ldp#contains"),
       null,
-      sym(this.uri)
+      sym(this.uri),
     );
     return contains.map((content) => ({
       uri: content.object.value,
       name: content.object.value.replace(
         new RegExp(`${this.uri}([^/]*)/?`),
-        "$1"
+        "$1",
       ),
     }));
   }

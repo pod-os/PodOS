@@ -24,7 +24,7 @@ describe("Store", () => {
           }),
           text: () =>
             Promise.resolve(
-              '<https://pod.test/resource#it> <https://pod.test/vocab/predicate> "literal value" .'
+              '<https://pod.test/resource#it> <https://pod.test/vocab/predicate> "literal value" .',
             ),
         } as Response);
       const store = new Store(mockSession);
@@ -34,8 +34,8 @@ describe("Store", () => {
           null,
           null,
           null,
-          sym("https://pod.test/resource")
-        )
+          sym("https://pod.test/resource"),
+        ),
       ).toEqual([
         {
           graph: {
@@ -89,15 +89,15 @@ describe("Store", () => {
         store.graph.holds(
           sym("https://pod.test/resource.png"),
           sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-          sym("http://purl.org/dc/terms/Image")
-        )
+          sym("http://purl.org/dc/terms/Image"),
+        ),
       ).toBe(true);
       expect(
         store.graph.holds(
           sym("https://pod.test/resource.png"),
           sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-          sym("http://www.w3.org/ns/iana/media-types/image/png#Resource")
-        )
+          sym("http://www.w3.org/ns/iana/media-types/image/png#Resource"),
+        ),
       ).toBe(true);
     });
   });
@@ -121,7 +121,7 @@ describe("Store", () => {
           }),
           text: () =>
             Promise.resolve(
-              '<https://pod.test/resource#it> <https://pod.test/vocab/predicate> "literal value" .'
+              '<https://pod.test/resource#it> <https://pod.test/vocab/predicate> "literal value" .',
             ),
         } as Response);
 
@@ -154,7 +154,7 @@ describe("Store", () => {
           }),
           text: () =>
             Promise.resolve(
-              '<https://pod.test/resource#it> <https://pod.test/vocab/predicate> "literal value" .'
+              '<https://pod.test/resource#it> <https://pod.test/vocab/predicate> "literal value" .',
             ),
         } as Response);
 
@@ -187,7 +187,7 @@ describe("Store", () => {
           }),
           text: () =>
             Promise.resolve(
-              '<https://pod.test/resource#it> <https://pod.test/vocab/predicate> "literal value" .'
+              '<https://pod.test/resource#it> <https://pod.test/vocab/predicate> "literal value" .',
             ),
         } as Response);
       const store = new Store(mockSession);
@@ -196,7 +196,7 @@ describe("Store", () => {
       await store.addPropertyValue(
         thing,
         "https://vocab.example#property",
-        "the value"
+        "the value",
       );
       thenSparqlUpdateIsSentToUrl(
         fetchMock,
@@ -205,7 +205,7 @@ describe("Store", () => {
       INSERT DATA {
         <https://pod.test/resource>
           <https://vocab.example#property> "the value" .
-      }`
+      }`,
       );
     });
   });
@@ -235,7 +235,7 @@ describe("Store", () => {
       await store.addNewThing(
         "https://pod.test/new-thing#it",
         "A new thing",
-        "https://vocab.example/Thing"
+        "https://vocab.example/Thing",
       );
 
       thenSparqlUpdateIsSentToUrl(
@@ -246,7 +246,7 @@ describe("Store", () => {
         <https://pod.test/new-thing#it>
           <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://vocab.example/Thing> ;
           <http://www.w3.org/2000/01/rdf-schema#label> "A new thing" .
-      }`
+      }`,
       );
     });
   });
@@ -255,7 +255,7 @@ describe("Store", () => {
 export function thenSparqlUpdateIsSentToUrl(
   fetchMock: jest.Mock<AuthenticatedFetch>,
   url: string,
-  query: string
+  query: string,
 ) {
   expect(fetchMock).toHaveBeenCalled();
 
@@ -263,7 +263,7 @@ export function thenSparqlUpdateIsSentToUrl(
 
   const calls = fetchMock.mock.calls;
   const sparqlUpdateCall = calls.find(
-    (it) => it[0] === url && it[1].method === "PATCH"
+    (it) => it[0] === url && it[1].method === "PATCH",
   );
 
   expect(sparqlUpdateCall).toBeDefined();

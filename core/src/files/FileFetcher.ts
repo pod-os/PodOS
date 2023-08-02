@@ -15,7 +15,7 @@ export class FileFetcher {
     } else {
       return new BrokenFile(
         url,
-        new HttpStatus(response.status, response.statusText)
+        new HttpStatus(response.status, response.statusText),
       );
     }
   }

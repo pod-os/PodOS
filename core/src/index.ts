@@ -41,7 +41,7 @@ export class PodOS {
   addPropertyValue(
     thing: Thing,
     property: string,
-    value: string
+    value: string,
   ): Promise<void> {
     return this.store.addPropertyValue(thing, property, value);
   }

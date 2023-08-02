@@ -7,7 +7,7 @@ describe("Thing", function () {
       const store = graph();
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
-        store
+        store,
       );
       expect(it.picture()).toBe(null);
     });
@@ -30,11 +30,11 @@ describe("Thing", function () {
       store.add(
         sym(uri),
         sym(predicate),
-        sym("https://jane.doe.example/container/pic.jpg")
+        sym("https://jane.doe.example/container/pic.jpg"),
       );
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
-        store
+        store,
       );
       const result = it.picture();
       expect(result).toEqual({
@@ -55,16 +55,16 @@ describe("Thing", function () {
         store.add(
           imageNode,
           sym("https://www.w3.org/ns/activitystreams#url"),
-          sym("https://jane.doe.example/container/pic.jpg")
+          sym("https://jane.doe.example/container/pic.jpg"),
         );
         const it = new Thing(
           "https://jane.doe.example/container/file.ttl#fragment",
-          store
+          store,
         );
         expect(it.picture()).toEqual({
           url: "https://jane.doe.example/container/pic.jpg",
         });
-      }
+      },
     );
 
     it.each([
@@ -76,22 +76,22 @@ describe("Thing", function () {
         const store = graph();
         const subject = "https://jane.doe.example/container/file.ttl#fragment";
         const imageNode = sym(
-          "https://jane.doe.example/container/file.ttl#image"
+          "https://jane.doe.example/container/file.ttl#image",
         );
         store.add(sym(subject), sym(predicate), imageNode);
         store.add(
           imageNode,
           sym("https://www.w3.org/ns/activitystreams#url"),
-          sym("https://jane.doe.example/container/pic.jpg")
+          sym("https://jane.doe.example/container/pic.jpg"),
         );
         const it = new Thing(
           "https://jane.doe.example/container/file.ttl#fragment",
-          store
+          store,
         );
         expect(it.picture()).toEqual({
           url: "https://jane.doe.example/container/pic.jpg",
         });
-      }
+      },
     );
   });
 });
