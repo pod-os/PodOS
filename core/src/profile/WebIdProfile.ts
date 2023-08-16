@@ -18,4 +18,26 @@ export class WebIdProfile extends Thing {
       sym(this.webId).doc(),
     );
   }
+
+  getPrivateLabelIndex() {
+    const index = this.store.anyValue(
+      sym(this.webId),
+      sym("http://www.w3.org/ns/solid/terms#privateLabelIndex"),
+      undefined,
+      sym(this.webId).doc(),
+    );
+    if (index) {
+      return index;
+    } else {
+      const preferences = this.getPreferencesFile();
+      if (preferences) {
+        return this.store.anyValue(
+          sym(this.webId),
+          sym("http://www.w3.org/ns/solid/terms#privateLabelIndex"),
+          undefined,
+          sym(preferences),
+        );
+      }
+    }
+  }
 }

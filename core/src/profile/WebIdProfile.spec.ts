@@ -33,4 +33,56 @@ describe("WebID profile", () => {
       expect(profile.getPreferencesFile()).toBeUndefined();
     });
   });
+
+  describe("private label index", () => {
+    it("is undefined when nothing in store", () => {
+      const profile = new WebIdProfile("https://alice.test#me", graph(), false);
+      expect(profile.getPrivateLabelIndex()).toBeUndefined();
+    });
+    it("is read from private label index triple in profile document", () => {
+      const store = graph();
+      store.add(
+        sym("https://alice.test#me"),
+        sym("http://www.w3.org/ns/solid/terms#privateLabelIndex"),
+        sym("https://alice.test/privateLabelIndex.ttl"),
+        sym("https://alice.test"),
+      );
+      const profile = new WebIdProfile("https://alice.test#me", store, false);
+      expect(profile.getPrivateLabelIndex()).toBe(
+        "https://alice.test/privateLabelIndex.ttl",
+      );
+    });
+
+    it("is read from private label index triple in preferences file", () => {
+      const store = graph();
+      store.add(
+        sym("https://alice.test#me"),
+        sym("http://www.w3.org/ns/pim/space#preferencesFile"),
+        sym("https://alice.test/preferences"),
+        sym("https://alice.test"),
+      );
+      store.add(
+        sym("https://alice.test#me"),
+        sym("http://www.w3.org/ns/solid/terms#privateLabelIndex"),
+        sym("https://alice.test/privateLabelIndex.ttl"),
+        sym("https://alice.test/preferences"),
+      );
+      const profile = new WebIdProfile("https://alice.test#me", store, false);
+      expect(profile.getPrivateLabelIndex()).toBe(
+        "https://alice.test/privateLabelIndex.ttl",
+      );
+    });
+
+    it("private label index triple from elsewhere are ignored", () => {
+      const store = graph();
+      store.add(
+        sym("https://alice.test#me"),
+        sym("http://www.w3.org/ns/solid/terms#privateLabelIndex"),
+        sym("https://alice.test/privateLabelIndex.ttl"),
+        sym("https://evil.test"),
+      );
+      const profile = new WebIdProfile("https://alice.test#me", store, false);
+      expect(profile.getPrivateLabelIndex()).toBeUndefined();
+    });
+  });
 });
