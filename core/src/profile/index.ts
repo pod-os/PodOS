@@ -1,0 +1,1 @@
+export { WebIdProfile } from "./WebIdProfile";

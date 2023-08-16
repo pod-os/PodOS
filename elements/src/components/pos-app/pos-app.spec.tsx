@@ -8,7 +8,7 @@ import { createPodOS } from '../../pod-os';
 
 describe('pos-app', () => {
   describe('load preferences', () => {
-    const mockLoadPreferences = jest.fn();
+    const mockFetchProfile = jest.fn();
     let trackSessionCallback;
 
     beforeEach(() => {
@@ -17,7 +17,7 @@ describe('pos-app', () => {
       (createPodOS as jest.Mock).mockReturnValue({
         handleIncomingRedirect: () => {},
         trackSession: callback => (trackSessionCallback = callback),
-        loadPreferences: mockLoadPreferences,
+        fetchProfile: mockFetchProfile,
       });
     });
 
@@ -33,7 +33,7 @@ describe('pos-app', () => {
         webId: 'https://pod.test/alice#me',
       });
 
-      expect(mockLoadPreferences).not.toHaveBeenCalled();
+      expect(mockFetchProfile).not.toHaveBeenCalled();
     });
 
     it('loads the preferences after login', async () => {
@@ -48,7 +48,7 @@ describe('pos-app', () => {
         webId: 'https://pod.test/alice#me',
       });
 
-      expect(mockLoadPreferences).toHaveBeenCalledWith('https://pod.test/alice#me');
+      expect(mockFetchProfile).toHaveBeenCalledWith('https://pod.test/alice#me');
     });
   });
 });

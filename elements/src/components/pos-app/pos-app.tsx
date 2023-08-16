@@ -20,7 +20,7 @@ export class PosApp {
       session.state.isLoggedIn = sessionInfo.isLoggedIn;
       session.state.webId = sessionInfo.webId;
       if (sessionInfo.isLoggedIn) {
-        await this.os.loadPreferences(sessionInfo.webId);
+        await this.os.fetchProfile(sessionInfo.webId);
       }
     });
   }

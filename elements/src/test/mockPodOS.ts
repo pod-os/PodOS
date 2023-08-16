@@ -26,7 +26,7 @@ export function mockPodOS() {
     }),
     proposeUriForNewThing: jest.fn(),
     addNewThing: jest.fn().mockResolvedValue(void null),
-    loadPreferences: jest.fn()
+    fetchProfile: jest.fn(),
   };
   when(os.store.get)
     .calledWith(alice.webId)

@@ -2,6 +2,7 @@ import { ISessionInfo } from "@inrupt/solid-client-authn-browser";
 import { BrowserSession } from "./authentication";
 import { SolidFile } from "./files";
 import { FileFetcher } from "./files/FileFetcher";
+import { WebIdProfile } from "./profile";
 import { Store } from "./Store";
 import { listKnownTerms, Term } from "./terms";
 import { Thing } from "./thing";
@@ -12,6 +13,7 @@ export * from "./files";
 export * from "./thing";
 export * from "./rdf-document";
 export * from "./ldp-container";
+export * from "./profile";
 
 export class PodOS {
   private readonly session: BrowserSession;
@@ -72,8 +74,17 @@ export class PodOS {
     });
   }
 
-  loadPreferences(webId: string) {
-    return this.store.loadPreferences(webId);
+  /**
+   * Fetch the WebId profile and preferences file for the given WebID
+   * @param webId
+   */
+  async fetchProfile(webId: string) {
+    await this.fetch(webId);
+    const profile: WebIdProfile = this.store.get(webId).assume(WebIdProfile);
+    const preferences = profile.getPreferencesFile();
+    if (preferences) {
+      await this.fetch(preferences);
+    }
   }
 
   logout() {
