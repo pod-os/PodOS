@@ -518,8 +518,7 @@ declare namespace LocalJSX {
         /**
           * Emits the selected IDP URL to use for login
          */
-        "onIdpUrlSelected"?: (event: PosLoginFormCustomEvent<any>) => void;
-        "onPod-os:error"?: (event: PosLoginFormCustomEvent<any>) => void;
+        "onPod-os:idp-url-selected"?: (event: PosLoginFormCustomEvent<any>) => void;
     }
     interface PosNavigationBar {
         "onPod-os:link"?: (event: PosNavigationBarCustomEvent<any>) => void;
