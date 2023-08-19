@@ -7,7 +7,7 @@ import { Component, Event, EventEmitter, h, Prop, State, Watch } from '@stencil/
   },
 })
 export class PosLoginForm {
-  @State() idpUrl: string = "http://localhost:3000";
+  @State() idpUrl: string = "";
 
   @State() canSubmit: boolean = true;
 
