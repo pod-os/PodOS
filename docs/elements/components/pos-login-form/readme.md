@@ -7,10 +7,9 @@
 
 ## Events
 
-| Event            | Description                                 | Type               |
-| ---------------- | ------------------------------------------- | ------------------ |
-| `idpUrlSelected` | Emits the selected IDP URL to use for login | `CustomEvent<any>` |
-| `pod-os:error`   |                                             | `CustomEvent<any>` |
+| Event                     | Description                                 | Type               |
+| ------------------------- | ------------------------------------------- | ------------------ |
+| `pod-os:idp-url-selected` | Emits the selected IDP URL to use for login | `CustomEvent<any>` |
 
 
 ## Dependencies

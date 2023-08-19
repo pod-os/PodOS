@@ -14,8 +14,7 @@ export class PosLoginForm {
   /**
    * Emits the selected IDP URL to use for login
    */
-  @Event({ eventName: 'idpUrlSelected' }) idpUrlSelected: EventEmitter;
-  @Event({ eventName: 'pod-os:error' }) errorEmitter: EventEmitter;
+  @Event({ eventName: 'pod-os:idp-url-selected' }) idpUrlSelected: EventEmitter;
 
   @Watch('idpUrl')
   validate() {
@@ -24,7 +23,7 @@ export class PosLoginForm {
 
   render(): any {
     return (
-      <form method="dialog" onSubmit={e => this.handleSubmit(e)}>
+      <form method="dialog" onSubmit={() => this.handleSubmit()}>
         <label htmlFor="idpUrl">URL</label>
         <input id="idpUrl" type="text" value={this.idpUrl} onInput={e => this.handleChange(e)} />
         <input id="login" type="submit" value="Login" disabled={!this.canSubmit} />
@@ -37,13 +36,8 @@ export class PosLoginForm {
     this.idpUrl = event.target.value;
   }
 
-  async handleSubmit(event) {
-    try {
+  async handleSubmit() {
       this.idpUrlSelected.emit(this.idpUrl);
-    } catch (error) {
-      event.preventDefault();
-      this.errorEmitter.emit(error);
-    }
   }
 
 }
