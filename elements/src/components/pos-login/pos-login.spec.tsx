@@ -18,6 +18,12 @@ describe('pos-login', () => {
         <ion-button>
           Login
         </ion-button>
+        <pos-dialog>
+          <span slot="title">
+            Please enter your Identity Provider URL
+          </span>
+          <pos-login-form slot="content"></pos-login-form>
+        </pos-dialog>
       </mock:shadow-root>
     </pos-login>
   `);
@@ -42,6 +48,12 @@ describe('pos-login', () => {
         <ion-button>
           Logout
         </ion-button>
+        <pos-dialog>
+        <span slot="title">
+          Please enter your Identity Provider URL
+        </span>
+        <pos-login-form slot="content"></pos-login-form>
+      </pos-dialog>
       </mock:shadow-root>
     </pos-login>
   `);
