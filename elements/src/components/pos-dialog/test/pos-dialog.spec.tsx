@@ -13,9 +13,7 @@ describe('pos-dialog', () => {
 <pos-dialog>
         <dialog>
             <header>
-                <span id="title">
-                    <span slot="title">Title</span>
-                </span>
+                <span slot="title">Title</span>
                 <button tabindex="-1" id="close" title="Close">
                     <ion-icon name="close-outline"></ion-icon>
                 </button>

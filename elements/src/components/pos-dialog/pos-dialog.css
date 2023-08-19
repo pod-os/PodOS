@@ -11,7 +11,7 @@ dialog {
   max-width: var(--width-xs);
 }
 
-dialog #title {
+dialog slot[name='title']::slotted(*) {
   flex-grow: 1;
   font-weight: var(--weight-light);
   font-size: var(--scale-2);

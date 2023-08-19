@@ -26,9 +26,7 @@ export class PosDialog {
       <Host>
         <dialog ref={el => (this.dialog = el as HTMLDialogElement)}>
           <header>
-            <span id="title">
-              <slot name="title" />
-            </span>
+            <slot name="title" />
             <button tabindex={-1} id="close" title="Close" onClick={() => this.close()}>
               <ion-icon name="close-outline"></ion-icon>
             </button>
