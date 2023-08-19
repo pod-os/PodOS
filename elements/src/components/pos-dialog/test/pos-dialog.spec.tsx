@@ -7,28 +7,21 @@ describe('pos-dialog', () => {
     const page = await newSpecPage({
       components: [PosDialog],
       html: `<pos-dialog><span slot="title">Title</span><span slot="content">Content</span></pos-dialog>`,
+      supportsShadowDom: false
     });
     expect(page.root).toEqualHtml(`
 <pos-dialog>
-    <mock:shadow-root>
         <dialog>
             <header>
                 <span id="title">
-                    <slot name="title"/>
+                    <span slot="title">Title</span>
                 </span>
                 <button tabindex="-1" id="close" title="Close">
                     <ion-icon name="close-outline"></ion-icon>
                 </button>
             </header>
-            <slot name="content"/>
+            <span slot="content">Content</span>
         </dialog>
-    </mock:shadow-root>
-    <span slot="title">
-        Title
-    </span>
-    <span slot="content">
-        Content
-    </span>
 </pos-dialog>
     `);
   });
