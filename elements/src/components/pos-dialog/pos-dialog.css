@@ -27,7 +27,7 @@ dialog header {
   padding-bottom: var(--scale-0);
 }
 
-dialog [name='dialog-content']::slotted(*) {
+dialog [name='content']::slotted(*) {
   margin: var(--scale-3);
 }
 

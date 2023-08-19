@@ -1,7 +1,7 @@
 import { Component, Host, h, Method } from '@stencil/core';
 
 /**
- * Styled wrapper around native dialog element, with slots `dialog-title` and `dialog-content`
+ * Styled wrapper around native dialog element, with slots `title` and `content`
  */
 @Component({
   tag: 'pos-dialog',
@@ -27,13 +27,13 @@ export class PosDialog {
         <dialog ref={el => (this.dialog = el as HTMLDialogElement)}>
           <header>
             <span id="title">
-              <slot name="dialog-title" />
+              <slot name="title" />
             </span>
             <button tabindex={-1} id="close" title="Close" onClick={() => this.close()}>
               <ion-icon name="close-outline"></ion-icon>
             </button>
           </header>
-          <slot name="dialog-content" />
+          <slot name="content" />
         </dialog>
       </Host>
     );

@@ -6,7 +6,7 @@ describe('pos-dialog', () => {
   it('renders a dialog with the given slot content', async () => {
     const page = await newSpecPage({
       components: [PosDialog],
-      html: `<pos-dialog><span slot="dialog-title">Title</span><span slot="dialog-content">Content</span></pos-dialog>`,
+      html: `<pos-dialog><span slot="title">Title</span><span slot="content">Content</span></pos-dialog>`,
     });
     expect(page.root).toEqualHtml(`
 <pos-dialog>
@@ -14,19 +14,19 @@ describe('pos-dialog', () => {
         <dialog>
             <header>
                 <span id="title">
-                    <slot name="dialog-title"/>
+                    <slot name="title"/>
                 </span>
                 <button tabindex="-1" id="close" title="Close">
                     <ion-icon name="close-outline"></ion-icon>
                 </button>
             </header>
-            <slot name="dialog-content"/>
+            <slot name="content"/>
         </dialog>
     </mock:shadow-root>
-    <span slot="dialog-title">
+    <span slot="title">
         Title
     </span>
-    <span slot="dialog-content">
+    <span slot="content">
         Content
     </span>
 </pos-dialog>
@@ -36,7 +36,7 @@ describe('pos-dialog', () => {
   it('showModal method calls showModal of the underlying dialog', async () => {
     const page = await newSpecPage({
       components: [PosDialog],
-      html: `<pos-dialog><span slot="dialog-title">Title</span><span slot="dialog-content">Content</span></pos-dialog>`,
+      html: `<pos-dialog><span slot="title">Title</span><span slot="content">Content</span></pos-dialog>`,
       supportsShadowDom: false,
     });
 
@@ -51,7 +51,7 @@ describe('pos-dialog', () => {
   it('close method closes the modal dialog', async () => {
     const page = await newSpecPage({
       components: [PosDialog],
-      html: `<pos-dialog><span slot="dialog-title">Title</span><span slot="dialog-content">Content</span></pos-dialog>`,
+      html: `<pos-dialog><span slot="title">Title</span><span slot="content">Content</span></pos-dialog>`,
       supportsShadowDom: false,
     });
 
@@ -66,7 +66,7 @@ describe('pos-dialog', () => {
   it('closes the modal dialog, when the close button is clicked', async () => {
     const page = await newSpecPage({
       components: [PosDialog],
-      html: `<pos-dialog><span slot="dialog-title">Title</span><span slot="dialog-content">Content</span></pos-dialog>`,
+      html: `<pos-dialog><span slot="title">Title</span><span slot="content">Content</span></pos-dialog>`,
       supportsShadowDom: false,
     });
 

@@ -21,8 +21,8 @@ export class PosAddNewThing {
           <ion-icon name="add-circle-outline"></ion-icon>
         </button>
         <pos-dialog ref={el => (this.dialog = el as HTMLPosDialogElement)}>
-          <span slot="dialog-title">Add a new thing</span>
-          <pos-new-thing-form slot="dialog-content" referenceUri={this.referenceUri} />
+          <span slot="title">Add a new thing</span>
+          <pos-new-thing-form slot="content" referenceUri={this.referenceUri} />
         </pos-dialog>
       </Host>
     );

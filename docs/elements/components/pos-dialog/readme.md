@@ -7,7 +7,7 @@
 
 ## Overview
 
-Styled wrapper around native dialog element, with slots `dialog-title` and `dialog-content`
+Styled wrapper around native dialog element, with slots `title` and `content`
 
 ## Methods
 
