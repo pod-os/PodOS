@@ -25,8 +25,14 @@ export class PosLoginForm {
     return (
       <form method="dialog" onSubmit={() => this.handleSubmit()}>
         <label htmlFor="idpUrl">URL</label>
-        <input id="idpUrl" type="text" value={this.idpUrl} onInput={e => this.handleChange(e)} />
+        <input id="idpUrl" type="text" value={this.idpUrl} onInput={e => this.handleChange(e)} list="suggestedIssuers" />
         <input id="login" type="submit" value="Login" disabled={!this.canSubmit} />
+        <datalist id="suggestedIssuers">
+          <option value="https://solidcommunity.net">Solid Community</option>
+          <option value="https://solidweb.org">Solid Web</option>
+          <option value="https://inrupt.net">Inrupt.net</option>
+          <option value="https://login.inrupt.com">pod.Inrupt.com</option>
+        </datalist>
       </form>
     );
   }
