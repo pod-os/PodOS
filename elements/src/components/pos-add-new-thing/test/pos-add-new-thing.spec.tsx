@@ -15,10 +15,10 @@ describe('pos-add-new-thing', () => {
             <ion-icon name="add-circle-outline"></ion-icon>
         </button>
         <pos-dialog>
-                <span slot="dialog-title">
+                <span slot="title">
                       Add a new thing
                 </span>
-            <pos-new-thing-form referenceUri="https://pod.test/" slot="dialog-content"/>
+            <pos-new-thing-form referenceUri="https://pod.test/" slot="content"/>
         </pos-dialog>
     </mock:shadow-root>
 </pos-add-new-thing>

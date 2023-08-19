@@ -32,7 +32,7 @@ export namespace Components {
     interface PosDescription {
     }
     /**
-     * Styled wrapper around native dialog element, with slots `dialog-title` and `dialog-content`
+     * Styled wrapper around native dialog element, with slots `title` and `content`
      */
     interface PosDialog {
         "close": () => Promise<void>;
@@ -259,7 +259,7 @@ declare global {
         new (): HTMLPosDescriptionElement;
     };
     /**
-     * Styled wrapper around native dialog element, with slots `dialog-title` and `dialog-content`
+     * Styled wrapper around native dialog element, with slots `title` and `content`
      */
     interface HTMLPosDialogElement extends Components.PosDialog, HTMLStencilElement {
     }
@@ -459,7 +459,7 @@ declare namespace LocalJSX {
         "onPod-os:resource"?: (event: PosDescriptionCustomEvent<any>) => void;
     }
     /**
-     * Styled wrapper around native dialog element, with slots `dialog-title` and `dialog-content`
+     * Styled wrapper around native dialog element, with slots `title` and `content`
      */
     interface PosDialog {
     }
@@ -603,7 +603,7 @@ declare module "@stencil/core" {
             "pos-container-item": LocalJSX.PosContainerItem & JSXBase.HTMLAttributes<HTMLPosContainerItemElement>;
             "pos-description": LocalJSX.PosDescription & JSXBase.HTMLAttributes<HTMLPosDescriptionElement>;
             /**
-             * Styled wrapper around native dialog element, with slots `dialog-title` and `dialog-content`
+             * Styled wrapper around native dialog element, with slots `title` and `content`
              */
             "pos-dialog": LocalJSX.PosDialog & JSXBase.HTMLAttributes<HTMLPosDialogElement>;
             "pos-document": LocalJSX.PosDocument & JSXBase.HTMLAttributes<HTMLPosDocumentElement>;
