@@ -3,6 +3,8 @@ import { BrowserSession } from "./authentication";
 import { SolidFile } from "./files";
 import { FileFetcher } from "./files/FileFetcher";
 import { WebIdProfile } from "./profile";
+import { LabelIndex } from "./search/LabelIndex";
+import { SearchIndex } from "./search/SearchIndex";
 import { Store } from "./Store";
 import { listKnownTerms, Term } from "./terms";
 import { Thing } from "./thing";
@@ -85,6 +87,22 @@ export class PodOS {
     if (preferences) {
       await this.fetch(preferences);
     }
+    return profile;
+  }
+
+  /**
+   * Fetch the private label index for the given profile and build a search index from it
+   * @param webId
+   */
+  async buildSearchIndex(profile: WebIdProfile) {
+    const labelIndexUri = profile.getPrivateLabelIndex();
+    const indexes = [];
+    if (labelIndexUri) {
+      await this.fetch(labelIndexUri);
+      const labelIndex = this.store.get(labelIndexUri).assume(LabelIndex);
+      indexes.push(labelIndex);
+    }
+    return new SearchIndex(indexes);
   }
 
   logout() {
