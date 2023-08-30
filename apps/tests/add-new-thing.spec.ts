@@ -13,7 +13,7 @@ test("can add a new thing", async ({ page }) => {
   // and navigating to a container
   const navigationBar = page.getByPlaceholder("Enter URI");
   await navigationBar.fill(
-    "http://localhost:4000/alice/acb50d31-42af-4d4c-9ead-e2d5e70d7317/"
+    "http://localhost:4000/alice/acb50d31-42af-4d4c-9ead-e2d5e70d7317/",
   );
   await navigationBar.press("Enter");
 
@@ -42,10 +42,13 @@ test("can add a new thing", async ({ page }) => {
 
   // then I am at the page showing the new thing
   await expect(navigationBar).toHaveValue(
-    "http://localhost:4000/alice/acb50d31-42af-4d4c-9ead-e2d5e70d7317/my-new-thing#it"
+    "http://localhost:4000/alice/acb50d31-42af-4d4c-9ead-e2d5e70d7317/my-new-thing#it",
   );
 
   // and page shows a heading with the resource name
   const heading = await page.getByRole("heading");
   await expect(heading).toHaveText("My new Thing");
+
+  // and the new-thing dialog is gone
+  await expect(dialog).not.toBeVisible();
 });
