@@ -11,6 +11,7 @@ and this project adheres to
 ### Added
 
 - `loadPreferencesFile`: A method to load the preferences file mentioned in the WebID profile document
+- `buildSearchIndex`: Create a search index to perform a text search for items in the private label index
 
 ## 0.9.0
 
