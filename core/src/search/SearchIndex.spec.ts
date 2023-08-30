@@ -1,4 +1,3 @@
-import { graph, sym } from "rdflib";
 import { LabelIndex } from "./LabelIndex";
 import { SearchIndex } from "./SearchIndex";
 
@@ -14,26 +13,26 @@ describe("search index", () => {
       const index = new SearchIndex([
         {
           getIndexedItems: () => [],
-        } as LabelIndex,
+        } as unknown as LabelIndex,
       ]);
       const result = index.search("anything");
       expect(result).toEqual([]);
     });
 
-    it("should find an item that is an exact match", () => {
+    it("finds an item that is an exact match", () => {
       const index = new SearchIndex([
         {
           getIndexedItems: () => [
             { uri: "https://pod.example/item#it", label: "item" },
           ],
-        } as LabelIndex,
+        } as unknown as LabelIndex,
       ]);
       const result = index.search("item");
       expect(result).toHaveLength(1);
       expect(result[0].ref).toEqual("https://pod.example/item#it");
     });
 
-    it("exact match should be first match, even if others are similar", () => {
+    it("exact match is the first match, even if others are similar", () => {
       const index = new SearchIndex([
         {
           getIndexedItems: () => [
@@ -41,7 +40,7 @@ describe("search index", () => {
             { uri: "https://pod.example/item#b", label: "Item B" },
             { uri: "https://pod.example/item#c", label: "Item C" },
           ],
-        } as LabelIndex,
+        } as unknown as LabelIndex,
       ]);
       const result = index.search("Item A");
       expect(result).toHaveLength(3);
@@ -51,5 +50,24 @@ describe("search index", () => {
       expect(result[1].ref).toEqual("https://pod.example/item#b");
       expect(result[2].ref).toEqual("https://pod.example/item#c");
     });
+
+    it.each(["donau", "dampf", "schiff", "fahrt", "pfsch", "aud", "fff"])(
+      "finds parts in a word (e.g. %s within Donaudampfschifffahrt)",
+      (query) => {
+        const index = new SearchIndex([
+          {
+            getIndexedItems: () => [
+              {
+                uri: "https://pod.example/item#it",
+                label: "Donaudampfschifffahrt",
+              },
+            ],
+          } as unknown as LabelIndex,
+        ]);
+        const result = index.search(query);
+        expect(result).toHaveLength(1);
+        expect(result[0].ref).toEqual("https://pod.example/item#it");
+      },
+    );
   });
 });

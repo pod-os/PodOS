@@ -16,6 +16,7 @@ export * from "./thing";
 export * from "./rdf-document";
 export * from "./ldp-container";
 export * from "./profile";
+export * from "./search";
 
 export class PodOS {
   private readonly session: BrowserSession;

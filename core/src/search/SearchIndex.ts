@@ -21,6 +21,6 @@ export class SearchIndex {
   }
 
   search(query: string) {
-    return this.index.search(query);
+    return this.index.search("*" + query + "*");
   }
 }
