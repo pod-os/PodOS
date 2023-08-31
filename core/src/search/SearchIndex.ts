@@ -1,8 +1,8 @@
 import { LabelIndex } from "./LabelIndex";
-import lunr from "lunr";
+import lunr, { Index } from "lunr";
 
 export class SearchIndex {
-  private index: any;
+  private index: Index;
   constructor(indexes: LabelIndex[]) {
     this.index = lunr(function () {
       this.ref("uri");

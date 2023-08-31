@@ -1,6 +1,5 @@
 import { IndexedFormula, sym } from "rdflib";
 import { RdfDocument } from "../rdf-document";
-import { Thing } from "../thing";
 
 export class LabelIndex extends RdfDocument {
   constructor(
