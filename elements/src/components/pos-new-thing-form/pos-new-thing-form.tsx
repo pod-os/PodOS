@@ -46,6 +46,7 @@ export class PosNewThingForm implements PodOsAware {
           placeholder=""
           value={this.selectedTypeUri}
           onPod-os:term-selected={e => this.onTermSelected(e)}
+          autofocus
         />
         <label htmlFor="name">Name</label>
         <input id="name" type="text" value={this.name} onInput={e => this.handleChange(e)} />
