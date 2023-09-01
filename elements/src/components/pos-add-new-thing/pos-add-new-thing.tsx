@@ -1,4 +1,4 @@
-import { Component, Host, h, Prop } from '@stencil/core';
+import { Component, Host, h, Listen, Prop } from '@stencil/core';
 
 @Component({
   tag: 'pos-add-new-thing',
@@ -12,6 +12,11 @@ export class PosAddNewThing {
 
   openDialog() {
     this.dialog.showModal();
+  }
+
+  @Listen('pod-os:link')
+  closeDialog(){
+    this.dialog.close()
   }
 
   render() {
