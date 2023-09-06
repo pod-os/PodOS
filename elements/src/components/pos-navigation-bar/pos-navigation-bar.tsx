@@ -1,5 +1,7 @@
-import { PodOS } from '@pod-os/core';
+import { PodOS, SearchIndex } from '@pod-os/core';
 import { Component, Event, EventEmitter, h, Prop, State } from '@stencil/core';
+
+import session from '../../store/session';
 import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../events/PodOsAware';
 
 @Component({
@@ -16,8 +18,15 @@ export class PosNavigationBar implements PodOsAware {
 
   @Event({ eventName: 'pod-os:link' }) linkEmitter: EventEmitter;
 
+  @State() searchIndex?: SearchIndex = undefined;
+
   componentWillLoad() {
     subscribePodOs(this);
+    session.onChange('isLoggedIn', async isLoggedIn => {
+      if (isLoggedIn) {
+        this.searchIndex = await this.os.buildSearchIndex(session.state.profile);
+      }
+    });
   }
 
   receivePodOs = async (os: PodOS) => {
@@ -26,6 +35,8 @@ export class PosNavigationBar implements PodOsAware {
 
   private onChange(event) {
     this.value = event.detail.value;
+    const result = this.searchIndex?.search(this.value);
+    console.log(result);
   }
 
   private onSubmit(event) {

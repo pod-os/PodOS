@@ -471,6 +471,7 @@ declare namespace LocalJSX {
         "onPod-os:init"?: (event: PosLoginCustomEvent<any>) => void;
     }
     interface PosNavigationBar {
+        "onPod-os:init"?: (event: PosNavigationBarCustomEvent<any>) => void;
         "onPod-os:link"?: (event: PosNavigationBarCustomEvent<any>) => void;
         "uri"?: string;
     }
