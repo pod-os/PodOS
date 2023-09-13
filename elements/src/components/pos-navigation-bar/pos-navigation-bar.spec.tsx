@@ -118,6 +118,22 @@ describe('pos-navigation-bar', () => {
       // then no suggestions are shown
       expect(page.root.querySelector('.suggestions')).toBeNull();
     });
+
+    it('clears the suggestions when clicked anywhere in document', async () => {
+      // given the user entered a text into the searchbar
+      await type(page, 'test');
+
+      // and suggestions are shown
+      expect(page.root.querySelector('.suggestions')).toBeDefined();
+
+      // when the user clicks anywhere
+      const searchBar = page.root.querySelector('ion-searchbar');
+      page.doc.click();
+      await page.waitForChanges();
+
+      // then no suggestions are shown
+      expect(page.root.querySelector('.suggestions')).toBeNull();
+    });
   });
 });
 

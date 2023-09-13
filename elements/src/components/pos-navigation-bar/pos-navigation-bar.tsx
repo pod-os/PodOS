@@ -1,5 +1,5 @@
 import { PodOS, SearchIndex } from '@pod-os/core';
-import { Component, Event, EventEmitter, h, Prop, State } from '@stencil/core';
+import { Component, Event, EventEmitter, h, Listen, Prop, State } from '@stencil/core';
 
 import session from '../../store/session';
 import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../events/PodOsAware';
@@ -41,6 +41,11 @@ export class PosNavigationBar implements PodOsAware {
     if (this.searchIndex) {
       this.suggestions = this.value ? this.searchIndex.search(this.value) : [];
     }
+  }
+
+  @Listen('click', { target: 'document' })
+  onClick(ev) {
+    this.suggestions = [];
   }
 
   private onSubmit(event) {
