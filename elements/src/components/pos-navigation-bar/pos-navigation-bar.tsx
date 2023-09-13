@@ -7,6 +7,7 @@ import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../events/PodOsAw
 @Component({
   tag: 'pos-navigation-bar',
   shadow: true,
+  styleUrl: 'pos-navigation-bar.css',
 })
 export class PosNavigationBar implements PodOsAware {
   @State() os: PodOS;
@@ -19,6 +20,8 @@ export class PosNavigationBar implements PodOsAware {
   @Event({ eventName: 'pod-os:link' }) linkEmitter: EventEmitter;
 
   @State() searchIndex?: SearchIndex = undefined;
+
+  @State() suggestions = [];
 
   componentWillLoad() {
     subscribePodOs(this);
@@ -35,8 +38,9 @@ export class PosNavigationBar implements PodOsAware {
 
   private onChange(event) {
     this.value = event.detail.value;
-    const result = this.searchIndex?.search(this.value);
-    console.log(result);
+    if (this.searchIndex) {
+      this.suggestions = this.searchIndex.search(this.value);
+    }
   }
 
   private onSubmit(event) {
@@ -52,8 +56,19 @@ export class PosNavigationBar implements PodOsAware {
           placeholder="Enter URI"
           value={this.uri}
           debounce={0}
-          onIonChange={e => this.onChange(e)}
+          onIonInput={e => this.onChange(e)}
         />
+        {this.suggestions.length > 0 ? (
+          <div class="suggestions">
+            <ol>
+              {this.suggestions.map(it => (
+                <li>
+                  <pos-rich-link uri={it.ref}></pos-rich-link>
+                </li>
+              ))}
+            </ol>
+          </div>
+        ) : null}
       </form>
     );
   }
