@@ -39,7 +39,7 @@ export class PosNavigationBar implements PodOsAware {
   private onChange(event) {
     this.value = event.detail.value;
     if (this.searchIndex) {
-      this.suggestions = this.searchIndex.search(this.value);
+      this.suggestions = this.value ? this.searchIndex.search(this.value) : [];
     }
   }
 
