@@ -38,14 +38,29 @@ export class PosNavigationBar implements PodOsAware {
 
   private onChange(event) {
     this.value = event.detail.value;
-    if (this.searchIndex) {
-      this.suggestions = this.value ? this.searchIndex.search(this.value) : [];
-    }
+    this.search();
   }
 
   @Listen('click', { target: 'document' })
-  onClick(ev) {
+  @Listen('pod-os:link')
+  clearSuggestions() {
     this.suggestions = [];
+  }
+
+  @Listen('click')
+  onClickSelf(event) {
+    event.stopPropagation();
+  }
+
+  @Listen('focus')
+  onFocus() {
+    this.search();
+  }
+
+  private search() {
+    if (this.searchIndex) {
+      this.suggestions = this.value ? this.searchIndex.search(this.value) : [];
+    }
   }
 
   private onSubmit(event) {

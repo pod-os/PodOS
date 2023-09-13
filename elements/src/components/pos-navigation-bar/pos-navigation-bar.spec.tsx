@@ -110,7 +110,7 @@ describe('pos-navigation-bar', () => {
       await type(page, 'test');
 
       // and suggestions are shown
-      expect(page.root.querySelector('.suggestions')).toBeDefined();
+      expect(page.root.querySelectorAll('.suggestions li')).toHaveLength(2);
 
       // when the input is cleared
       await type(page, '');
@@ -119,19 +119,67 @@ describe('pos-navigation-bar', () => {
       expect(page.root.querySelector('.suggestions')).toBeNull();
     });
 
-    it('clears the suggestions when clicked anywhere in document', async () => {
+    it('shows the suggestions when focused', async () => {
+      // given the user entered a text into the searchbar
+      await type(page, 'test');
+
+      // then clicked elsewhere to hide suggestions
+      page.doc.click();
+      await page.waitForChanges();
+      expect(page.root.querySelector('.suggestions')).toBeNull();
+
+      // when the user clicks into the search bar again
+      const searchBar = page.root.querySelector('ion-searchbar');
+      searchBar.focus();
+      await page.waitForChanges();
+
+      // then suggestions are shown
+      expect(page.root.querySelectorAll('.suggestions li')).toHaveLength(2);
+    });
+
+    it('does not clear suggestions when clicked on itself', async () => {
       // given the user entered a text into the searchbar
       await type(page, 'test');
 
       // and suggestions are shown
-      expect(page.root.querySelector('.suggestions')).toBeDefined();
+      expect(page.root.querySelectorAll('.suggestions li')).toHaveLength(2);
+
+      // when the user clicks into the search bar
+      const searchBar = page.root.querySelector('ion-searchbar');
+      searchBar.click();
+      await page.waitForChanges();
+
+      // then suggestions are shown
+      expect(page.root.querySelectorAll('.suggestions li')).toHaveLength(2);
+    });
+
+    it('clears the suggestions when clicked elsewhere in the document', async () => {
+      // given the user entered a text into the searchbar
+      await type(page, 'test');
+
+      // and suggestions are shown
+      expect(page.root.querySelectorAll('.suggestions li')).toHaveLength(2);
 
       // when the user clicks anywhere
-      const searchBar = page.root.querySelector('ion-searchbar');
       page.doc.click();
       await page.waitForChanges();
 
-      // then no suggestions are shown
+      // then the suggestions are cleared
+      expect(page.root.querySelector('.suggestions')).toBeNull();
+    });
+
+    it('clears the suggestions when navigating elsewhere', async () => {
+      // given the user entered a text into the searchbar
+      await type(page, 'test');
+
+      // and suggestions are shown
+      expect(page.root.querySelectorAll('.suggestions li')).toHaveLength(2);
+
+      // when the user clicks on a link
+      fireEvent(page.root, new CustomEvent('pod-os:link', { detail: 'any' }));
+      await page.waitForChanges();
+
+      // then the suggestions are cleared
       expect(page.root.querySelector('.suggestions')).toBeNull();
     });
   });
