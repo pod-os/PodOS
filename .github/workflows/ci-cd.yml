@@ -44,6 +44,7 @@ jobs:
           retention-days: 1
 
   npm-publish-core-build:
+    if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
     outputs:
@@ -68,6 +69,7 @@ jobs:
           tag: ${{ env.GITHUB_REF_SLUG }}
 
   npm-publish-elements-build:
+    if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
     outputs:
@@ -92,6 +94,7 @@ jobs:
           tag: ${{ env.GITHUB_REF_SLUG }}
 
   build-pages:
+    if: github.ref == 'refs/heads/main'
     needs:
       - npm-publish-elements-build
       - npm-publish-core-build
@@ -122,6 +125,7 @@ jobs:
           path: 'gh-pages'
 
   deploy-pages:
+    if: github.ref == 'refs/heads/main'
     permissions:
       contents: read
       pages: write
@@ -137,6 +141,7 @@ jobs:
         uses: actions/deploy-pages@v1
 
   npm-release-latest-core:
+    if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -153,6 +158,7 @@ jobs:
           tag: latest
 
   npm-release-latest-elements:
+    if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
     outputs:
