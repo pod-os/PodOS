@@ -3,17 +3,17 @@
 
 
 
-</games/minecraft#it>
+</alice/games/minecraft#it>
     rdfs:label "Minecraft" .
 
 </alice/profile/card#me>
-    rdfs:label "Alice" .
+    rdfs:label "Alice".
 
-</documents/test.pdf>
+</alice/documents/test.pdf>
     rdfs:label "test.pdf" .
 
-</documents/page.html>
+</alice/documents/page.html>
     rdfs:label "Web Page" .
 
-</documents/notes.md>
+</alice/documents/notes.md>
     rdfs:label "notes.md" .
