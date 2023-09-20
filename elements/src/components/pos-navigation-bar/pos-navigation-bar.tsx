@@ -28,6 +28,8 @@ export class PosNavigationBar implements PodOsAware {
     session.onChange('isLoggedIn', async isLoggedIn => {
       if (isLoggedIn) {
         this.searchIndex = await this.os.buildSearchIndex(session.state.profile);
+      } else {
+        this.searchIndex?.clear();
       }
     });
   }

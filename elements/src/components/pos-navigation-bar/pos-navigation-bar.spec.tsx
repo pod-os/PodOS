@@ -49,9 +49,10 @@ describe('pos-navigation-bar', () => {
   describe('searching when logged in', () => {
     let page;
     let mockSearchIndex;
+    let session;
     beforeEach(async () => {
       // given a fake session store
-      const session = mockSessionStore();
+      session = mockSessionStore();
 
       // and a page with a navigation nar
       page = await newSpecPage({
@@ -70,6 +71,7 @@ describe('pos-navigation-bar', () => {
             ref: 'https://result.test/2',
           },
         ]),
+        clear: jest.fn(),
       };
       page.rootInstance.receivePodOs({
         buildSearchIndex: jest.fn().mockReturnValue(mockSearchIndex),
@@ -181,6 +183,14 @@ describe('pos-navigation-bar', () => {
 
       // then the suggestions are cleared
       expect(page.root.querySelector('.suggestions')).toBeNull();
+    });
+
+    it('clears the index when logging out', async () => {
+      // when the user signs out
+      await session.sessionChanged(false);
+
+      // then the search index is cleared
+      expect(mockSearchIndex.clear).toHaveBeenCalled();
     });
   });
 });
