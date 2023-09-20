@@ -1,5 +1,6 @@
 import { newSpecPage } from '@stencil/core/testing';
 import { fireEvent } from '@testing-library/dom';
+import { mockSessionStore } from '../../test/mockSessionStore';
 import { PosNavigationBar } from './pos-navigation-bar';
 
 describe('pos-navigation-bar', () => {
@@ -31,8 +32,7 @@ describe('pos-navigation-bar', () => {
     page.root.addEventListener('pod-os:link', linkEventListener);
 
     // when the user enters a URI into the searchbar
-    const searchBar = page.root.querySelector('ion-searchbar');
-    fireEvent(searchBar, new CustomEvent('ionChange', { detail: { value: 'https://resource.test/' } }));
+    await type(page, 'https://resource.test/');
 
     // and then submits the form
     const form = page.root.querySelector('form');
@@ -45,4 +45,158 @@ describe('pos-navigation-bar', () => {
       }),
     );
   });
+
+  describe('searching when logged in', () => {
+    let page;
+    let mockSearchIndex;
+    let session;
+    beforeEach(async () => {
+      // given a fake session store
+      session = mockSessionStore();
+
+      // and a page with a navigation nar
+      page = await newSpecPage({
+        supportsShadowDom: false,
+        components: [PosNavigationBar],
+        html: `<pos-navigation-bar uri="https://pod.example/resource" />`,
+      });
+
+      // and a fake search index giving 2 results
+      mockSearchIndex = {
+        search: jest.fn().mockReturnValue([
+          {
+            ref: 'https://result.test/1',
+          },
+          {
+            ref: 'https://result.test/2',
+          },
+        ]),
+        clear: jest.fn(),
+      };
+      page.rootInstance.receivePodOs({
+        buildSearchIndex: jest.fn().mockReturnValue(mockSearchIndex),
+      });
+
+      // and the user is signed in
+      await session.sessionChanged(true);
+
+      // and therefore the search index is defined
+      expect(page.rootInstance.searchIndex).toBeDefined();
+    });
+
+    it(' searches for the typed text and shows suggestions', async () => {
+      // when the user enters a text into the searchbar
+      await type(page, 'test');
+
+      // then the search is triggered
+      expect(mockSearchIndex.search).toHaveBeenCalledWith('test');
+
+      // and the results are shown as suggestions
+      let suggestions = page.root.querySelector('.suggestions');
+      expect(suggestions).toEqualHtml(
+        `<div class="suggestions">
+  <ol>
+    <li>
+      <pos-rich-link uri="https://result.test/1"></pos-rich-link>
+    </li>
+    <li>
+      <pos-rich-link uri="https://result.test/2"></pos-rich-link>
+    </li>
+  </ol>
+</div>`,
+      );
+    });
+
+    it('clears the suggestions when nothing is entered', async () => {
+      // given the user entered a text into the searchbar
+      await type(page, 'test');
+
+      // and suggestions are shown
+      expect(page.root.querySelectorAll('.suggestions li')).toHaveLength(2);
+
+      // when the input is cleared
+      await type(page, '');
+
+      // then no suggestions are shown
+      expect(page.root.querySelector('.suggestions')).toBeNull();
+    });
+
+    it('shows the suggestions when focused', async () => {
+      // given the user entered a text into the searchbar
+      await type(page, 'test');
+
+      // then clicked elsewhere to hide suggestions
+      page.doc.click();
+      await page.waitForChanges();
+      expect(page.root.querySelector('.suggestions')).toBeNull();
+
+      // when the user clicks into the search bar again
+      const searchBar = page.root.querySelector('ion-searchbar');
+      searchBar.focus();
+      await page.waitForChanges();
+
+      // then suggestions are shown
+      expect(page.root.querySelectorAll('.suggestions li')).toHaveLength(2);
+    });
+
+    it('does not clear suggestions when clicked on itself', async () => {
+      // given the user entered a text into the searchbar
+      await type(page, 'test');
+
+      // and suggestions are shown
+      expect(page.root.querySelectorAll('.suggestions li')).toHaveLength(2);
+
+      // when the user clicks into the search bar
+      const searchBar = page.root.querySelector('ion-searchbar');
+      searchBar.click();
+      await page.waitForChanges();
+
+      // then suggestions are shown
+      expect(page.root.querySelectorAll('.suggestions li')).toHaveLength(2);
+    });
+
+    it('clears the suggestions when clicked elsewhere in the document', async () => {
+      // given the user entered a text into the searchbar
+      await type(page, 'test');
+
+      // and suggestions are shown
+      expect(page.root.querySelectorAll('.suggestions li')).toHaveLength(2);
+
+      // when the user clicks anywhere
+      page.doc.click();
+      await page.waitForChanges();
+
+      // then the suggestions are cleared
+      expect(page.root.querySelector('.suggestions')).toBeNull();
+    });
+
+    it('clears the suggestions when navigating elsewhere', async () => {
+      // given the user entered a text into the searchbar
+      await type(page, 'test');
+
+      // and suggestions are shown
+      expect(page.root.querySelectorAll('.suggestions li')).toHaveLength(2);
+
+      // when the user clicks on a link
+      fireEvent(page.root, new CustomEvent('pod-os:link', { detail: 'any' }));
+      await page.waitForChanges();
+
+      // then the suggestions are cleared
+      expect(page.root.querySelector('.suggestions')).toBeNull();
+    });
+
+    it('clears the index when logging out', async () => {
+      // when the user signs out
+      await session.sessionChanged(false);
+
+      // then the search index is cleared
+      expect(mockSearchIndex.clear).toHaveBeenCalled();
+    });
+  });
 });
+
+async function type(page, text: string) {
+  const searchBar = page.root.querySelector('ion-searchbar');
+  fireEvent(searchBar, new CustomEvent('ionInput', { detail: { value: text } }));
+  await page.waitForChanges();
+}

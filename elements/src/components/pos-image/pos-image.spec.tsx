@@ -1,10 +1,10 @@
-jest.mock('../../store/session');
 jest.mock('../broken-file/BrokenFile');
 
 import { BinaryFile, BrokenFile as BrokenFileData } from '@pod-os/core';
 import { newSpecPage } from '@stencil/core/testing';
 import { Blob } from 'buffer';
 import { mockPodOS } from '../../test/mockPodOS';
+import { mockSessionStore } from '../../test/mockSessionStore';
 import { BrokenFile } from '../broken-file/BrokenFile';
 import { PosImage } from './pos-image';
 import { when } from 'jest-when';
@@ -164,13 +164,7 @@ describe('pos-image', () => {
 
   it('re-fetches resource when session state changes', async () => {
     const file = mockBinaryFile(pngBlob);
-    let sessionChanged;
-    // @ts-ignore
-    session.onChange = (prop, callback) => {
-      if (prop === 'isLoggedIn') {
-        sessionChanged = callback;
-      }
-    };
+    const session = mockSessionStore();
     const page = await newSpecPage({
       components: [PosImage],
       html: `<pos-image src="https://pod.test/image.png" />`,
@@ -181,8 +175,8 @@ describe('pos-image', () => {
       .calledWith('https://pod.test/image.png')
       .mockReturnValueOnce(new Promise(() => null));
     await page.rootInstance.setOs(os);
-    expect(sessionChanged).toBeDefined();
-    sessionChanged();
+    expect(session.sessionChanged).toBeDefined();
+    session.sessionChanged();
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
       <pos-image src="https://pod.test/image.png">

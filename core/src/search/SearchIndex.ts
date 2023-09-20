@@ -6,6 +6,7 @@ export class SearchIndex {
   constructor(indexes: LabelIndex[]) {
     this.index = lunr(function () {
       this.ref("uri");
+      this.field("uri");
       this.field("label");
       this.metadataWhitelist = ["position"];
 
@@ -20,7 +21,14 @@ export class SearchIndex {
     });
   }
 
-  search(query: string) {
-    return this.index.search("*" + query + "*");
+  search(term: string) {
+    const escapedTerm = term.replace(/[~^+:]/g, (x) => `\\${x}`);
+    return this.index.search(
+      `${escapedTerm}^100 ${escapedTerm}*^20 *${escapedTerm}^10 *${escapedTerm}*^5`,
+    );
+  }
+
+  clear() {
+    this.index = lunr(() => {});
   }
 }

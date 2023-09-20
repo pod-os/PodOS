@@ -1,10 +1,9 @@
-jest.mock('../../store/session');
-
 import { newSpecPage } from '@stencil/core/testing';
 import { when } from 'jest-when';
 
 import session from '../../store/session';
 import { mockPodOS } from '../../test/mockPodOS';
+import { mockSessionStore } from '../../test/mockSessionStore';
 import { PosResource } from './pos-resource';
 
 describe('pos-resource', () => {
@@ -111,13 +110,7 @@ describe('pos-resource', () => {
   });
 
   it('re-fetches resource when session state changes', async () => {
-    let sessionChanged;
-    // @ts-ignore
-    session.onChange = (prop, callback) => {
-      if (prop === 'isLoggedIn') {
-        sessionChanged = callback;
-      }
-    };
+    const session = mockSessionStore();
     const page = await newSpecPage({
       components: [PosResource],
       html: `<pos-resource uri="https://resource.test/" />`,
@@ -128,8 +121,8 @@ describe('pos-resource', () => {
       .calledWith('https://resource.test/')
       .mockReturnValueOnce(new Promise(() => null));
     await page.rootInstance.receivePodOs(os);
-    expect(sessionChanged).toBeDefined();
-    sessionChanged();
+    expect(session.sessionChanged).toBeDefined();
+    session.sessionChanged();
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
       <pos-resource uri="https://resource.test/">
@@ -141,13 +134,7 @@ describe('pos-resource', () => {
   });
 
   it('removes error message after successful loading', async () => {
-    let sessionChanged;
-    // @ts-ignore
-    session.onChange = (prop, callback) => {
-      if (prop === 'isLoggedIn') {
-        sessionChanged = callback;
-      }
-    };
+    const session = mockSessionStore();
     const page = await newSpecPage({
       components: [PosResource],
       html: `<pos-resource uri="https://resource.test/" />`,
@@ -156,8 +143,8 @@ describe('pos-resource', () => {
     when(os.fetch).calledWith('https://resource.test/').mockRejectedValueOnce(new Error('unauthorized'));
     when(os.fetch).calledWith('https://resource.test/').mockResolvedValueOnce(null);
     await page.rootInstance.receivePodOs(os);
-    expect(sessionChanged).toBeDefined();
-    sessionChanged();
+    expect(session.sessionChanged).toBeDefined();
+    session.sessionChanged();
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
       <pos-resource uri="https://resource.test/">

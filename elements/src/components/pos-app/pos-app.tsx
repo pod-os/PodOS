@@ -17,11 +17,12 @@ export class PosApp {
     this.os = createPodOS();
     this.os.handleIncomingRedirect();
     this.os.trackSession(async sessionInfo => {
-      session.state.isLoggedIn = sessionInfo.isLoggedIn;
       session.state.webId = sessionInfo.webId;
       if (sessionInfo.isLoggedIn) {
-        await this.os.fetchProfile(sessionInfo.webId);
+        const profile = await this.os.fetchProfile(sessionInfo.webId);
+        session.state.profile = profile
       }
+      session.state.isLoggedIn = sessionInfo.isLoggedIn;
     });
   }
 
