@@ -103,7 +103,7 @@ describe("search index", () => {
       expect(result[0].ref).toEqual("https://pod.example/profile#me");
     });
 
-    fit("find labels with dashes", () => {
+    it("find labels with dashes", () => {
       const index = new SearchIndex([
         {
           getIndexedItems: () => [
@@ -119,7 +119,7 @@ describe("search index", () => {
       expect(result[0].ref).toEqual("https://pod.example/thing#it");
     });
 
-    fit("find labels with special chars", () => {
+    it("find labels with special chars", () => {
       const index = new SearchIndex([
         {
           getIndexedItems: () => [
@@ -147,6 +147,44 @@ describe("search index", () => {
       const result = index.search("alice");
       expect(result).toHaveLength(1);
       expect(result[0].ref).toEqual("https://pod.example/profile#me");
+    });
+
+    describe("max results", () => {
+      it("returns max 10 results by default", () => {
+        const index = new SearchIndex([
+          {
+            getIndexedItems: () => [
+              { uri: "https://pod.example/1#it", label: "match-1" },
+              { uri: "https://pod.example/2#it", label: "match-2" },
+              { uri: "https://pod.example/3#it", label: "match-3" },
+              { uri: "https://pod.example/4#it", label: "match-4" },
+              { uri: "https://pod.example/5#it", label: "match-5" },
+              { uri: "https://pod.example/6#it", label: "match-6" },
+              { uri: "https://pod.example/7#it", label: "match-7" },
+              { uri: "https://pod.example/8#it", label: "match-8" },
+              { uri: "https://pod.example/9#it", label: "match-9" },
+              { uri: "https://pod.example/10#it", label: "match-10" },
+              { uri: "https://pod.example/11#it", label: "match-11" },
+            ],
+          } as unknown as LabelIndex,
+        ]);
+        const result = index.search("match");
+        expect(result).toHaveLength(10);
+      });
+
+      it("returns configured max results", () => {
+        const index = new SearchIndex([
+          {
+            getIndexedItems: () => [
+              { uri: "https://pod.example/1#it", label: "match-1" },
+              { uri: "https://pod.example/2#it", label: "match-2" },
+              { uri: "https://pod.example/3#it", label: "match-3" },
+            ],
+          } as unknown as LabelIndex,
+        ]);
+        const result = index.search("match", 2);
+        expect(result).toHaveLength(2);
+      });
     });
   });
 

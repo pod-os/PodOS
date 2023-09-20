@@ -21,11 +21,13 @@ export class SearchIndex {
     });
   }
 
-  search(term: string) {
+  search(term: string, maxResults = 10) {
     const escapedTerm = term.replace(/[~^+:]/g, (x) => `\\${x}`);
-    return this.index.search(
-      `${escapedTerm}^100 ${escapedTerm}*^20 *${escapedTerm}^10 *${escapedTerm}*^5`,
-    );
+    return this.index
+      .search(
+        `${escapedTerm}^100 ${escapedTerm}*^20 *${escapedTerm}^10 *${escapedTerm}*^5`,
+      )
+      .slice(0, maxResults);
   }
 
   clear() {
