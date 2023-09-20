@@ -6,8 +6,10 @@
   "scripts": {
     "start": "serve dist/pos-app-browser",
     "start:solid-server": "community-solid-server --port 4000 --config @css:config/file.json --rootFilePath ./test-solid-server/data",
-    "test": "playwright test",
-    "test:debug": "playwright test --debug --project=chromium",
+    "test": "playwright test --config playwright-app.config.ts",
+    "test:elements":  "playwright test --config playwright-elements.config.ts",
+    "test:debug": "playwright test --config playwright-app.config.ts --debug --project=chromium",
+    "test:elements:debug": "playwright test --config playwright-elements.config.ts --debug --project=chromium",
     "build:latest": "POD_OS_ELEMENTS_VERSION=latest make pos-app-browser"
   },
   "keywords": [],

@@ -59,6 +59,12 @@ First build the app as described above, then run
 npm test
 ```
 
+It is also possible to run the tests against the local dev server of [PodOS elements](../elements). To do this you have to start PodOS elements locally as described in the README there. After that run:
+
+```shell
+npm run test:elements
+```
+
 #### Test data
 
 The tests fire up a Community Solid Server to provide test data, which can be
