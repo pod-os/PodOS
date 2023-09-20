@@ -70,4 +70,19 @@ describe("search index", () => {
       },
     );
   });
+
+  describe("clear", () => {
+    it("does not find anything after clearing", () => {
+      const index = new SearchIndex([
+        {
+          getIndexedItems: () => [
+            { uri: "https://pod.example/item#it", label: "item" },
+          ],
+        } as unknown as LabelIndex,
+      ]);
+      index.clear();
+      const result = index.search("item");
+      expect(result).toHaveLength(0);
+    });
+  });
 });
