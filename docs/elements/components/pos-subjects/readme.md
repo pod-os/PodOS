@@ -30,8 +30,6 @@ graph TD;
   pos-subjects --> pos-rich-link
   pos-subjects --> ion-list
   pos-rich-link --> pos-resource
-  pos-rich-link --> ion-item
-  pos-rich-link --> ion-label
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
   pos-resource --> ion-progress-bar
@@ -39,9 +37,6 @@ graph TD;
   pos-resource --> ion-card-header
   pos-resource --> ion-card-content
   ion-card --> ion-ripple-effect
-  ion-item --> ion-icon
-  ion-item --> ion-ripple-effect
-  ion-item --> ion-note
   pos-app-ldp-container --> pos-subjects
   pos-app-rdf-document --> pos-subjects
   style pos-subjects fill:#f9f,stroke:#333,stroke-width:4px

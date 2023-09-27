@@ -52,8 +52,6 @@ graph TD;
   pos-subjects --> pos-rich-link
   pos-subjects --> ion-list
   pos-rich-link --> pos-resource
-  pos-rich-link --> ion-item
-  pos-rich-link --> ion-label
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
   pos-type-badges --> ion-badge

@@ -54,7 +54,11 @@ graph TD;
   pos-add-new-thing --> pos-new-thing-form
   pos-new-thing-form --> pos-select-term
   pos-navigation-bar --> ion-searchbar
+  pos-navigation-bar --> pos-rich-link
   ion-searchbar --> ion-icon
+  pos-rich-link --> pos-resource
+  pos-rich-link --> pos-label
+  pos-rich-link --> pos-description
   style pos-app-browser fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

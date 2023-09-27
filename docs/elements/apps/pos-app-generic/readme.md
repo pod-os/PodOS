@@ -66,8 +66,6 @@ graph TD;
   pos-relations --> pos-rich-link
   pos-relations --> ion-list
   pos-rich-link --> pos-resource
-  pos-rich-link --> ion-item
-  pos-rich-link --> ion-label
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
   pos-resource --> ion-progress-bar

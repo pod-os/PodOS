@@ -3,6 +3,7 @@ import { Component, Event, EventEmitter, h, Prop } from '@stencil/core';
 @Component({
   tag: 'pos-rich-link',
   shadow: true,
+  styleUrl: 'pos-rich-link.css',
 })
 export class PosRichLink {
   @Prop() uri: string;
@@ -11,27 +12,24 @@ export class PosRichLink {
 
   render() {
     return (
-      <pos-resource lazy={true} uri={this.uri}>
-        <ion-item
-          href={this.uri}
-          onClick={e => {
-            e.preventDefault();
-            this.linkEmitter.emit(this.uri);
-          }}
-        >
-          <ion-label>
+      <a
+        class="container"
+        href={this.uri}
+        onClick={e => {
+          e.preventDefault();
+          this.linkEmitter.emit(this.uri);
+        }}
+      >
+        <pos-resource lazy={true} uri={this.uri}>
+          <p class="content">
             <pos-label />
-            <p>
-              <ion-label style={{ maxWidth: '50rem' }}>
-                <pos-description />
-              </ion-label>
-            </p>
-            <p>
-              <a href={this.uri}>{this.uri}</a>
-            </p>
-          </ion-label>
-        </ion-item>
-      </pos-resource>
+            <pos-description />
+            <a class="uri" href={this.uri}>
+              {this.uri}
+            </a>
+          </p>
+        </pos-resource>
+      </a>
     );
   }
 }

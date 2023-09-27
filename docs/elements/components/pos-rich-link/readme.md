@@ -23,6 +23,7 @@
 
 ### Used by
 
+ - [pos-navigation-bar](../pos-navigation-bar)
  - [pos-relations](../pos-relations)
  - [pos-reverse-relations](../pos-reverse-relations)
  - [pos-subjects](../pos-subjects)
@@ -30,8 +31,6 @@
 ### Depends on
 
 - [pos-resource](../pos-resource)
-- ion-item
-- ion-label
 - [pos-label](../pos-label)
 - [pos-description](../pos-description)
 
@@ -39,8 +38,6 @@
 ```mermaid
 graph TD;
   pos-rich-link --> pos-resource
-  pos-rich-link --> ion-item
-  pos-rich-link --> ion-label
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
   pos-resource --> ion-progress-bar
@@ -48,9 +45,7 @@ graph TD;
   pos-resource --> ion-card-header
   pos-resource --> ion-card-content
   ion-card --> ion-ripple-effect
-  ion-item --> ion-icon
-  ion-item --> ion-ripple-effect
-  ion-item --> ion-note
+  pos-navigation-bar --> pos-rich-link
   pos-relations --> pos-rich-link
   pos-reverse-relations --> pos-rich-link
   pos-subjects --> pos-rich-link

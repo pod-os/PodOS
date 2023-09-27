@@ -36,8 +36,6 @@ graph TD;
   pos-subjects --> pos-rich-link
   pos-subjects --> ion-list
   pos-rich-link --> pos-resource
-  pos-rich-link --> ion-item
-  pos-rich-link --> ion-label
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
   pos-resource --> ion-progress-bar
@@ -45,9 +43,6 @@ graph TD;
   pos-resource --> ion-card-header
   pos-resource --> ion-card-content
   ion-card --> ion-ripple-effect
-  ion-item --> ion-icon
-  ion-item --> ion-ripple-effect
-  ion-item --> ion-note
   pos-type-badges --> ion-badge
   pos-type-badges --> ion-icon
   pos-literals --> ion-item-group
@@ -56,6 +51,9 @@ graph TD;
   pos-literals --> ion-item
   pos-literals --> ion-list
   pos-literals --> pos-add-literal-value
+  ion-item --> ion-icon
+  ion-item --> ion-ripple-effect
+  ion-item --> ion-note
   pos-add-literal-value --> ion-icon
   pos-add-literal-value --> pos-select-term
   pos-add-literal-value --> ion-input
