@@ -17,3 +17,10 @@
   box-shadow: var(--shadow-xl);
 }
 
+.suggestions li.selected pos-rich-link {
+  --background-color: var(--color-blue);
+  --hover-color: var(--color-blue-700);
+  --label-color: white;
+  --description-color: var(--color-grey-200);
+  --uri-color: var(--color-grey-200);
+}

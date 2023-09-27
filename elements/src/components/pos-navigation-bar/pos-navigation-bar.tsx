@@ -23,6 +23,8 @@ export class PosNavigationBar implements PodOsAware {
 
   @State() suggestions = [];
 
+  @State() selectedIndex = -1;
+
   componentWillLoad() {
     subscribePodOs(this);
     session.onChange('isLoggedIn', async isLoggedIn => {
@@ -63,6 +65,12 @@ export class PosNavigationBar implements PodOsAware {
   handleKeyDown(ev: KeyboardEvent) {
     if (ev.key === 'Escape') {
       this.clearSuggestions();
+    } else if (ev.key === 'ArrowDown') {
+      ev.preventDefault();
+      this.selectedIndex = Math.min(this.selectedIndex + 1, this.suggestions.length - 1);
+    } else if (ev.key === 'ArrowUp') {
+      ev.preventDefault();
+      this.selectedIndex = Math.max(this.selectedIndex - 1, 0);
     }
   }
 
@@ -91,8 +99,8 @@ export class PosNavigationBar implements PodOsAware {
         {this.suggestions.length > 0 ? (
           <div class="suggestions">
             <ol>
-              {this.suggestions.map(it => (
-                <li>
+              {this.suggestions.map((it, index) => (
+                <li class={index === this.selectedIndex ? 'selected' : ''}>
                   <pos-rich-link uri={it.ref}></pos-rich-link>
                 </li>
               ))}

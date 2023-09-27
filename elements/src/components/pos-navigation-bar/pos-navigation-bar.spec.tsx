@@ -139,6 +139,81 @@ describe('pos-navigation-bar', () => {
       expect(page.root.querySelectorAll('.suggestions li')).toHaveLength(2);
     });
 
+    describe('keyboard selection', () => {
+      it('selects the first suggestion when pressing key down', async () => {
+        // when the user enters a text into the searchbar
+        await type(page, 'test');
+
+        // and then presses the down arrow key
+        await pressKey(page, 'ArrowDown');
+
+        // then the first suggestion is selected
+        let suggestions = page.root.querySelectorAll('.suggestions li');
+        expect(suggestions[0]).toHaveClass('selected');
+        expect(suggestions[1]).not.toHaveClass('selected');
+      });
+
+      it('selects the second suggestion when pressing key down twice', async () => {
+        // when the user enters a text into the searchbar
+        await type(page, 'test');
+
+        // and then presses the down arrow key twice
+        await pressKey(page, 'ArrowDown');
+        await pressKey(page, 'ArrowDown');
+
+        // then the first suggestion is selected
+        let suggestions = page.root.querySelectorAll('.suggestions li');
+        expect(suggestions[0]).not.toHaveClass('selected');
+        expect(suggestions[1]).toHaveClass('selected');
+      });
+
+      it('selects the first suggestion when moving down twice than up', async () => {
+        // when the user enters a text into the searchbar
+        await type(page, 'test');
+
+        // and then presses the down arrow key twice
+        await pressKey(page, 'ArrowDown');
+        await pressKey(page, 'ArrowDown');
+        await pressKey(page, 'ArrowUp');
+
+        // then the first suggestion is selected
+        let suggestions = page.root.querySelectorAll('.suggestions li');
+        expect(suggestions[0]).toHaveClass('selected');
+        expect(suggestions[1]).not.toHaveClass('selected');
+      });
+
+      it('cannot move further up than top result', async () => {
+        // when the user enters a text into the searchbar
+        await type(page, 'test');
+
+        // and then presses the down arrow key twice
+        await pressKey(page, 'ArrowDown');
+        await pressKey(page, 'ArrowUp');
+        await pressKey(page, 'ArrowUp');
+
+        // then the first suggestion is selected
+        let suggestions = page.root.querySelectorAll('.suggestions li');
+        expect(suggestions[0]).toHaveClass('selected');
+        expect(suggestions[1]).not.toHaveClass('selected');
+      });
+
+      it('cannot move further down than the last result', async () => {
+        // when the user enters a text into the searchbar
+        await type(page, 'test');
+
+        // and then presses the down arrow key twice
+        await pressKey(page, 'ArrowDown');
+        await pressKey(page, 'ArrowDown');
+        await pressKey(page, 'ArrowDown');
+
+        // then the first suggestion is selected
+        let suggestions = page.root.querySelectorAll('.suggestions li');
+        expect(suggestions).toHaveLength(2);
+        expect(suggestions[0]).not.toHaveClass('selected');
+        expect(suggestions[1]).toHaveClass('selected');
+      });
+    });
+
     it('does not clear suggestions when clicked on itself', async () => {
       // given the user entered a text into the searchbar
       await type(page, 'test');
@@ -178,11 +253,7 @@ describe('pos-navigation-bar', () => {
       expect(page.root.querySelectorAll('.suggestions li')).toHaveLength(2);
 
       // when the user presses escape
-      const keyEvent = new KeyboardEvent('keydown', {
-        key: 'Escape',
-      });
-      page.root.dispatchEvent(keyEvent);
-      await page.waitForChanges();
+      await pressKey(page, 'Escape');
 
       // then the suggestions are cleared
       expect(page.root.querySelector('.suggestions')).toBeNull();
@@ -216,5 +287,13 @@ describe('pos-navigation-bar', () => {
 async function type(page, text: string) {
   const searchBar = page.root.querySelector('ion-searchbar');
   fireEvent(searchBar, new CustomEvent('ionInput', { detail: { value: text } }));
+  await page.waitForChanges();
+}
+
+async function pressKey(page, key: string) {
+  const keyEvent = new KeyboardEvent('keydown', {
+    key,
+  });
+  page.root.dispatchEvent(keyEvent);
   await page.waitForChanges();
 }
