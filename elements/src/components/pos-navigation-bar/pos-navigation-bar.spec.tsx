@@ -274,6 +274,30 @@ describe('pos-navigation-bar', () => {
       expect(page.root.querySelector('.suggestions')).toBeNull();
     });
 
+    it('navigates to selected suggestion when the form is submitted', async () => {
+      // given the page listens for pod-os:link events
+      const linkEventListener = jest.fn();
+      page.root.addEventListener('pod-os:link', linkEventListener);
+
+      // when the user enters a text into the searchbar
+      await type(page, 'test');
+
+      // and then presses the down arrow key to select the first result
+      await pressKey(page, 'ArrowDown');
+
+      // and then submits the form
+      const form = page.root.querySelector('form');
+      fireEvent(form, new CustomEvent('submit', {}));
+
+      // then a pod-os:link event with the URI of the selected item is received in the listener
+      expect(linkEventListener).toHaveBeenCalledTimes(1);
+      expect(linkEventListener).toHaveBeenCalledWith(
+        expect.objectContaining({
+          detail: 'https://result.test/1',
+        }),
+      );
+    });
+
     it('clears the index when logging out', async () => {
       // when the user signs out
       await session.sessionChanged(false);

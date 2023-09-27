@@ -82,7 +82,11 @@ export class PosNavigationBar implements PodOsAware {
 
   private onSubmit(event) {
     event.preventDefault();
-    this.linkEmitter.emit(this.value);
+    if (this.suggestions && this.selectedIndex > -1) {
+      this.linkEmitter.emit(this.suggestions[this.selectedIndex].ref);
+    } else {
+      this.linkEmitter.emit(this.value);
+    }
   }
 
   render() {
