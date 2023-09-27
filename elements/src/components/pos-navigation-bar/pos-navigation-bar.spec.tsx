@@ -170,6 +170,24 @@ describe('pos-navigation-bar', () => {
       expect(page.root.querySelector('.suggestions')).toBeNull();
     });
 
+    it('clears the suggestions when escape is pressed', async () => {
+      // given the user entered a text into the searchbar
+      await type(page, 'test');
+
+      // and suggestions are shown
+      expect(page.root.querySelectorAll('.suggestions li')).toHaveLength(2);
+
+      // when the user presses escape
+      const keyEvent = new KeyboardEvent('keydown', {
+        key: 'Escape',
+      });
+      page.root.dispatchEvent(keyEvent);
+      await page.waitForChanges();
+
+      // then the suggestions are cleared
+      expect(page.root.querySelector('.suggestions')).toBeNull();
+    });
+
     it('clears the suggestions when navigating elsewhere', async () => {
       // given the user entered a text into the searchbar
       await type(page, 'test');

@@ -59,6 +59,13 @@ export class PosNavigationBar implements PodOsAware {
     this.search();
   }
 
+  @Listen('keydown')
+  handleKeyDown(ev: KeyboardEvent) {
+    if (ev.key === 'Escape') {
+      this.clearSuggestions();
+    }
+  }
+
   private search() {
     if (this.searchIndex) {
       this.suggestions = this.value ? this.searchIndex.search(this.value) : [];
