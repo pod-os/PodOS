@@ -49,6 +49,7 @@ export class PosNavigationBar implements PodOsAware {
   @Listen('pod-os:link')
   clearSuggestions() {
     this.suggestions = [];
+    this.selectedIndex = -1;
   }
 
   @Listen('click')

@@ -212,6 +212,28 @@ describe('pos-navigation-bar', () => {
         expect(suggestions[0]).not.toHaveClass('selected');
         expect(suggestions[1]).toHaveClass('selected');
       });
+
+      it('resets the selection when losing focus', async () => {
+        // given the user entered a text into the searchbar
+        await type(page, 'test');
+        await pressKey(page, 'ArrowDown');
+
+        // then clicked elsewhere to hide suggestions
+        page.doc.click();
+        await page.waitForChanges();
+        expect(page.root.querySelector('.suggestions')).toBeNull();
+
+        // when the user clicks into the search bar again
+        const searchBar = page.root.querySelector('ion-searchbar');
+        searchBar.focus();
+        await page.waitForChanges();
+
+        // then suggestions are shown
+        const selections = page.root.querySelectorAll('.suggestions li');
+        expect(selections).toHaveLength(2);
+        expect(selections[0]).not.toHaveClass('selected');
+        expect(selections[1]).not.toHaveClass('selected');
+      });
     });
 
     it('does not clear suggestions when clicked on itself', async () => {
