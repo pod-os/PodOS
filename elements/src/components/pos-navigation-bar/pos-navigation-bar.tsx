@@ -75,9 +75,10 @@ export class PosNavigationBar implements PodOsAware {
       <form onSubmit={e => this.onSubmit(e)}>
         <ion-searchbar
           enterkeyhint="search"
-          placeholder="Enter URI"
+          placeholder="Search or enter URI"
           value={this.uri}
-          debounce={0}
+          debounce={300}
+          onIonChange={e => this.onChange(e)}
           onIonInput={e => this.onChange(e)}
         />
         {this.suggestions.length > 0 ? (
