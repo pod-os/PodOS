@@ -1,0 +1,11 @@
+@prefix :       <#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+
+</alice/profile/card#me>
+    rdfs:label "Alice" .
+
+</alice/container/readme.md>
+    rdfs:label "Readme" .
+
+</alice/public/generic/resource#it>
+    rdfs:label "Something" .

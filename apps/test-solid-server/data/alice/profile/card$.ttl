@@ -1,12 +1,15 @@
-@prefix foaf: <http://xmlns.com/foaf/0.1/>.
-@prefix solid: <http://www.w3.org/ns/solid/terms#>.
+@prefix foaf:      <http://xmlns.com/foaf/0.1/>.
+@prefix solid:     <http://www.w3.org/ns/solid/terms#>.
+@prefix pim:       <http://www.w3.org/ns/pim/space#> .
 
 <>
-    a foaf:PersonalProfileDocument;
-    foaf:maker <http://localhost:4000/alice/profile/card#me>;
-    foaf:primaryTopic <http://localhost:4000/alice/profile/card#me>.
+    a foaf:PersonalProfileDocument ;
+    foaf:maker <http://localhost:4000/alice/profile/card#me> ;
+    foaf:primaryTopic <http://localhost:4000/alice/profile/card#me> .
 
 <http://localhost:4000/alice/profile/card#me>
-    foaf:name "Alice";
-    solid:oidcIssuer <http://localhost:4000/>;
-    a foaf:Person.
+    a foaf:Person ;
+    foaf:name "Alice" ;
+    solid:oidcIssuer <http://localhost:4000/> ;
+    pim:preferencesFile </alice/settings/prefs.ttl> ;
+.

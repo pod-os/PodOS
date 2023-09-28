@@ -1,0 +1,8 @@
+@prefix :      <#>.
+@prefix solid: <http://www.w3.org/ns/solid/terms#>.
+@prefix c:     </alice/profile/card#>.
+
+
+c:me
+    solid:privateLabelIndex <privateLabelIndex.ttl> ;
+.
