@@ -1,10 +1,6 @@
 import { expect, test } from "@playwright/test";
-import { Credentials, signIn } from "./actions/signIn";
-
-const alice: Credentials = {
-  email: "alice@mail.example",
-  password: "alice",
-};
+import { signIn } from "./actions/signIn";
+import { alice } from "./fixtures/credentials";
 
 test("can add a literal value", async ({ page }) => {
   // when opening PodOS Browser
@@ -13,7 +9,7 @@ test("can add a literal value", async ({ page }) => {
   // and navigating to a generic resource
   const navigationBar = page.getByPlaceholder("Enter URI");
   await navigationBar.fill(
-    "http://localhost:4000/alice/public/generic/resource#it"
+    "http://localhost:4000/alice/public/generic/resource#it",
   );
   await navigationBar.press("Enter");
 

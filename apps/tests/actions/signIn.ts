@@ -1,6 +1,7 @@
 import { expect, Page } from "@playwright/test";
 
 export interface Credentials {
+  name: string;
   email: string;
   password: string;
 }
@@ -8,7 +9,7 @@ export interface Credentials {
 export async function signIn(
   page: Page,
   credentials: Credentials,
-  idp: string = "http://localhost:4000"
+  idp: string = "http://localhost:4000",
 ) {
   const originalLocation = page.url();
   page.on("dialog", (dialog) => {
@@ -19,10 +20,15 @@ export async function signIn(
 
   await expect(page).toHaveURL("http://localhost:4000/idp/login/");
 
-  await page.getByLabel("Email").type("alice@mail.example");
-  await page.getByLabel("Password").type("alice");
+  await page.getByLabel("Email").type(credentials.email);
+  await page.getByLabel("Password").type(credentials.password);
   await page.getByRole("button", { name: "Log in" }).click();
   await page.getByRole("button", { name: "Authorize" }).click();
 
   await expect(page).toHaveURL(originalLocation);
+  const name = page
+    .getByRole("banner")
+    .locator("pos-label")
+    .filter({ hasText: credentials.name });
+  await expect(name).toBeVisible();
 }

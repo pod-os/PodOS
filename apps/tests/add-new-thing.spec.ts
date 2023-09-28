@@ -1,10 +1,6 @@
-import { expect, Page, test } from "@playwright/test";
-import { Credentials, signIn } from "./actions/signIn";
-
-const alice: Credentials = {
-  email: "alice@mail.example",
-  password: "alice",
-};
+import { expect, test } from "@playwright/test";
+import { signIn } from "./actions/signIn";
+import { alice } from "./fixtures/credentials";
 
 test("can add a new thing", async ({ page }) => {
   // when opening PodOS Browser
