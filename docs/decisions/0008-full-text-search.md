@@ -4,8 +4,8 @@
 
 Users should be able to find things by name / label. The PodOS navigation bar
 should be enhanced to a search bar, where users can enter plain text instead of
-full URIs. Also users shall be able to link things to one another and there need
-to find them by a name they remember instead of a crypting URI.
+full URIs. Also, users shall be able to link things to one another and there need
+to find them by a name they remember instead of a cryptic URI.
 
 ## Considered Options
 
