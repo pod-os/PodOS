@@ -23,7 +23,7 @@ The index itself is just a RDF document containing statements in the form
 <subject> rdfs:label "Label literal" .
 ```
 
-All the labels will be indexed by the PodOS search and make the `<subject>` findable.
+All the labels and subject URIs will be indexed by the PodOS search and make the `<subject>` findable.
 
 Be aware that the term `solid:privateLabelIndex` is not part of the official vocabulary yet, but used by PodOS anyhow as a Proof of Concept. Consider it to be experimental and unstable.
 
