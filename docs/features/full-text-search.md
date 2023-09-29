@@ -1,4 +1,4 @@
-# Text Search
+# Full text search
 
 PodOS can do a text search for things by their name. To do this, it makes use of a label index. This index is not covered by any standard, yet, and therefore described here shortly.
 
