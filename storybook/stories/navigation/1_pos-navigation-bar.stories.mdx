@@ -33,3 +33,27 @@ An input field to navigate to a specific resource.
     `}
   </Story>
 </Canvas>
+
+## Full text search
+
+For search to work, you need to be signed in and have a [private label index](https://github.com/pod-os/PodOS/blob/main/docs/features/full-text-search.md).
+
+> ATTENTION: To be able to log in from here, you have to go to the `Canvas` tab and click
+> the `Open canvas in new tab` button in the upper right corner of the page
+
+<Canvas
+  withSource="open">
+  <Story
+    name="pos-navigation-bar with search"
+  >
+    {({uri}) => html`
+      <header>
+        <pos-login />
+      </header>
+      <main>
+        <pos-navigation-bar
+          uri="" />
+      </main>
+    `}
+  </Story>
+</Canvas>
