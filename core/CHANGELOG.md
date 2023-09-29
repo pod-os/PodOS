@@ -12,6 +12,8 @@ and this project adheres to
 
 - `loadPreferencesFile`: A method to load the preferences file mentioned in the WebID profile document
 - `buildSearchIndex`: Create a search index to perform a text search for items in the private label index
+- `SearchIndex`: A fast, in-memory search index based on data from label indexes
+- `WebIdProfile`: A class to help find the preferences document and private label index of a given WebID
 
 ## 0.9.0
 

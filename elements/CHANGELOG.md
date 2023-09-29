@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - [pos-app](../docs/elements/components/pos-app): After login `pos-app` now loads the preferences file that is linked in the user's WebID profile (if any).
 - [pos-rich-link](../docs/elements/components/pos-rich-link): Redesigned & removed dependency on ionic. Added variables to apply custom styles.
+- [pos-navigation-bar](../docs/elements/components/pos-navigation-bar): Added full text search for users that have a label index.
 
 ## 0.13.0
 

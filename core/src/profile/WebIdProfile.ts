@@ -1,6 +1,9 @@
 import { IndexedFormula, sym } from "rdflib";
 import { Thing } from "../thing";
 
+/**
+ * Allows to find things related to the WebID and their profile document
+ */
 export class WebIdProfile extends Thing {
   constructor(
     readonly webId: string,
@@ -10,6 +13,9 @@ export class WebIdProfile extends Thing {
     super(webId, store, editable);
   }
 
+  /**
+   * Returns te URI of the preferences document
+   */
   getPreferencesFile() {
     return this.store.anyValue(
       sym(this.webId),
@@ -19,6 +25,9 @@ export class WebIdProfile extends Thing {
     );
   }
 
+  /**
+   * Returns the URI of a private label index
+   */
   getPrivateLabelIndex() {
     const index = this.store.anyValue(
       sym(this.webId),
