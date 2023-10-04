@@ -34,10 +34,10 @@ describe("WebID profile", () => {
     });
   });
 
-  describe("private label index", () => {
-    it("is undefined when nothing in store", () => {
+  describe("private label indexes", () => {
+    it("are empty when nothing in store", () => {
       const profile = new WebIdProfile("https://alice.test#me", graph(), false);
-      expect(profile.getPrivateLabelIndex()).toBeUndefined();
+      expect(profile.getPrivateLabelIndexes()).toEqual([]);
     });
     it("is read from private label index triple in profile document", () => {
       const store = graph();
@@ -48,9 +48,9 @@ describe("WebID profile", () => {
         sym("https://alice.test"),
       );
       const profile = new WebIdProfile("https://alice.test#me", store, false);
-      expect(profile.getPrivateLabelIndex()).toBe(
+      expect(profile.getPrivateLabelIndexes()).toEqual([
         "https://alice.test/privateLabelIndex.ttl",
-      );
+      ]);
     });
 
     it("is read from private label index triple in preferences file", () => {
@@ -68,9 +68,9 @@ describe("WebID profile", () => {
         sym("https://alice.test/preferences"),
       );
       const profile = new WebIdProfile("https://alice.test#me", store, false);
-      expect(profile.getPrivateLabelIndex()).toBe(
+      expect(profile.getPrivateLabelIndexes()).toEqual([
         "https://alice.test/privateLabelIndex.ttl",
-      );
+      ]);
     });
 
     it("private label index triple from elsewhere are ignored", () => {
@@ -82,7 +82,7 @@ describe("WebID profile", () => {
         sym("https://evil.test"),
       );
       const profile = new WebIdProfile("https://alice.test#me", store, false);
-      expect(profile.getPrivateLabelIndex()).toBeUndefined();
+      expect(profile.getPrivateLabelIndexes()).toEqual([]);
     });
   });
 });

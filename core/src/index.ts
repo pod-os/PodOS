@@ -96,11 +96,11 @@ export class PodOS {
    * @param webId
    */
   async buildSearchIndex(profile: WebIdProfile) {
-    const labelIndexUri = profile.getPrivateLabelIndex();
+    const labelIndexUris = profile.getPrivateLabelIndexes();
     const indexes = [];
-    if (labelIndexUri) {
-      await this.fetch(labelIndexUri);
-      const labelIndex = this.store.get(labelIndexUri).assume(LabelIndex);
+    if (labelIndexUris.length > 0) {
+      await this.fetch(labelIndexUris[0]);
+      const labelIndex = this.store.get(labelIndexUris[0]).assume(LabelIndex);
       indexes.push(labelIndex);
     }
     return new SearchIndex(indexes);

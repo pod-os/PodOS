@@ -26,9 +26,9 @@ export class WebIdProfile extends Thing {
   }
 
   /**
-   * Returns the URI of a private label index
+   * Returns the URIs of the private label indexes
    */
-  getPrivateLabelIndex() {
+  getPrivateLabelIndexes(): string[] {
     const index = this.store.anyValue(
       sym(this.webId),
       sym("http://www.w3.org/ns/solid/terms#privateLabelIndex"),
@@ -36,16 +36,19 @@ export class WebIdProfile extends Thing {
       sym(this.webId).doc(),
     );
     if (index) {
-      return index;
+      return [index];
     } else {
       const preferences = this.getPreferencesFile();
       if (preferences) {
-        return this.store.anyValue(
+        const value = this.store.anyValue(
           sym(this.webId),
           sym("http://www.w3.org/ns/solid/terms#privateLabelIndex"),
           undefined,
           sym(preferences),
         );
+        return value ? [value] : [];
+      } else {
+        return [];
       }
     }
   }
