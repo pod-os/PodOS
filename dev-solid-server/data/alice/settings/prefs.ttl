@@ -4,5 +4,5 @@
 
 
 c:me
-    solid:privateLabelIndex <privateLabelIndex.ttl> ;
+    solid:privateLabelIndex <privateLabelIndex.ttl>, <hugePrivateLabelIndex.ttl> ;
 .
