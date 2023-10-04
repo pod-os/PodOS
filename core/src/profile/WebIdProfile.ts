@@ -29,14 +29,14 @@ export class WebIdProfile extends Thing {
    * Returns the URIs of the private label indexes
    */
   getPrivateLabelIndexes(): string[] {
-    const index = this.store.anyValue(
+    const nodes = this.store.each(
       sym(this.webId),
       sym("http://www.w3.org/ns/solid/terms#privateLabelIndex"),
       undefined,
       sym(this.webId).doc(),
     );
-    if (index) {
-      return [index];
+    if (nodes.length > 0) {
+      return nodes.map((it) => it.value);
     } else {
       const preferences = this.getPreferencesFile();
       if (preferences) {
