@@ -40,13 +40,13 @@ export class WebIdProfile extends Thing {
     } else {
       const preferences = this.getPreferencesFile();
       if (preferences) {
-        const value = this.store.anyValue(
+        const nodes = this.store.each(
           sym(this.webId),
           sym("http://www.w3.org/ns/solid/terms#privateLabelIndex"),
           undefined,
           sym(preferences),
         );
-        return value ? [value] : [];
+        return nodes.map((it) => it.value);
       } else {
         return [];
       }
