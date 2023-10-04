@@ -149,6 +149,27 @@ describe("search index", () => {
       expect(result[0].ref).toEqual("https://pod.example/profile#me");
     });
 
+    describe("multiple indexes", () => {
+      it("finds resuls from both indexes", () => {
+        const index = new SearchIndex([
+          {
+            getIndexedItems: () => [
+              { uri: "https://pod.example/ec51a17#it", label: "item one" },
+            ],
+          } as unknown as LabelIndex,
+          {
+            getIndexedItems: () => [
+              { uri: "https://pod.example/9cc2c105#it", label: "item two" },
+            ],
+          } as unknown as LabelIndex,
+        ]);
+        const result = index.search("item");
+        expect(result).toHaveLength(2);
+        expect(result[0].ref).toEqual("https://pod.example/ec51a17#it");
+        expect(result[1].ref).toEqual("https://pod.example/9cc2c105#it");
+      });
+    });
+
     describe("max results", () => {
       it("returns max 10 results by default", () => {
         const index = new SearchIndex([
