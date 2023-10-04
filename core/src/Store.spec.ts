@@ -102,6 +102,206 @@ describe("Store", () => {
     });
   });
 
+  describe("fetch all", () => {
+    it("fetches and parses turtle data", async () => {
+      // given
+      const mockSession = {
+        authenticatedFetch: jest.fn(),
+      } as unknown as PodOsSession;
+      when(mockSession.authenticatedFetch)
+        .calledWith("https://pod.test/resource1", expect.anything())
+        .mockResolvedValue({
+          ok: true,
+          status: 200,
+          statusText: "OK",
+          headers: new Headers({
+            "Content-Type": "text/turtle",
+          }),
+          text: () =>
+            Promise.resolve(
+              '<https://pod.test/resource1#it> <https://pod.test/vocab/predicate> "literal value 1" .',
+            ),
+        } as Response);
+      when(mockSession.authenticatedFetch)
+        .calledWith("https://pod.test/resource2", expect.anything())
+        .mockResolvedValue({
+          ok: true,
+          status: 200,
+          statusText: "OK",
+          headers: new Headers({
+            "Content-Type": "text/turtle",
+          }),
+          text: () =>
+            Promise.resolve(
+              '<https://pod.test/resource2#it> <https://pod.test/vocab/predicate> "literal value 2" .',
+            ),
+        } as Response);
+      const store = new Store(mockSession);
+      // when
+      await store.fetchAll([
+        "https://pod.test/resource1",
+        "https://pod.test/resource2",
+      ]);
+      // then
+      expect(
+        store.graph.statementsMatching(
+          null,
+          null,
+          null,
+          sym("https://pod.test/resource1"),
+        ),
+      ).toEqual([
+        {
+          graph: {
+            classOrder: 5,
+            termType: "NamedNode",
+            value: "https://pod.test/resource1",
+          },
+          object: {
+            classOrder: 1,
+            datatype: {
+              classOrder: 5,
+              termType: "NamedNode",
+              value: "http://www.w3.org/2001/XMLSchema#string",
+            },
+            isVar: 0,
+            language: "",
+            termType: "Literal",
+            value: "literal value 1",
+          },
+          predicate: {
+            classOrder: 5,
+            termType: "NamedNode",
+            value: "https://pod.test/vocab/predicate",
+          },
+          subject: {
+            classOrder: 5,
+            termType: "NamedNode",
+            value: "https://pod.test/resource1#it",
+          },
+        },
+      ]);
+      expect(
+        store.graph.statementsMatching(
+          null,
+          null,
+          null,
+          sym("https://pod.test/resource2"),
+        ),
+      ).toEqual([
+        {
+          graph: {
+            classOrder: 5,
+            termType: "NamedNode",
+            value: "https://pod.test/resource2",
+          },
+          object: {
+            classOrder: 1,
+            datatype: {
+              classOrder: 5,
+              termType: "NamedNode",
+              value: "http://www.w3.org/2001/XMLSchema#string",
+            },
+            isVar: 0,
+            language: "",
+            termType: "Literal",
+            value: "literal value 2",
+          },
+          predicate: {
+            classOrder: 5,
+            termType: "NamedNode",
+            value: "https://pod.test/vocab/predicate",
+          },
+          subject: {
+            classOrder: 5,
+            termType: "NamedNode",
+            value: "https://pod.test/resource2#it",
+          },
+        },
+      ]);
+    });
+
+    it("fetches data from second resource even if first failed", async () => {
+      // given
+      const mockSession = {
+        authenticatedFetch: jest.fn(),
+      } as unknown as PodOsSession;
+      when(mockSession.authenticatedFetch)
+        .calledWith("https://pod.test/resource1", expect.anything())
+        .mockResolvedValue({
+          ok: false,
+          status: 500,
+          statusText: "Internal Server Error",
+          headers: new Headers({
+            "Content-Type": "text/plain",
+          }),
+          text: () => Promise.resolve("Internal Server Error"),
+        } as Response);
+      when(mockSession.authenticatedFetch)
+        .calledWith("https://pod.test/resource2", expect.anything())
+        .mockResolvedValue({
+          ok: true,
+          status: 200,
+          statusText: "OK",
+          headers: new Headers({
+            "Content-Type": "text/turtle",
+          }),
+          text: () =>
+            Promise.resolve(
+              '<https://pod.test/resource2#it> <https://pod.test/vocab/predicate> "literal value 2" .',
+            ),
+        } as Response);
+      const store = new Store(mockSession);
+      // when
+      const result = await store.fetchAll([
+        "https://pod.test/resource1",
+        "https://pod.test/resource2",
+      ]);
+      // then
+      expect(result.length).toBe(2);
+      expect(result[0].status).toBe("rejected");
+      expect(result[1].status).toBe("fulfilled");
+      expect(
+        store.graph.statementsMatching(
+          null,
+          null,
+          null,
+          sym("https://pod.test/resource2"),
+        ),
+      ).toEqual([
+        {
+          graph: {
+            classOrder: 5,
+            termType: "NamedNode",
+            value: "https://pod.test/resource2",
+          },
+          object: {
+            classOrder: 1,
+            datatype: {
+              classOrder: 5,
+              termType: "NamedNode",
+              value: "http://www.w3.org/2001/XMLSchema#string",
+            },
+            isVar: 0,
+            language: "",
+            termType: "Literal",
+            value: "literal value 2",
+          },
+          predicate: {
+            classOrder: 5,
+            termType: "NamedNode",
+            value: "https://pod.test/vocab/predicate",
+          },
+          subject: {
+            classOrder: 5,
+            termType: "NamedNode",
+            value: "https://pod.test/resource2#it",
+          },
+        },
+      ]);
+    });
+  });
+
   describe("get", () => {
     it("returns a new read-only Thing", async () => {
       const mockSession = {

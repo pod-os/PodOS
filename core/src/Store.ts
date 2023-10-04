@@ -44,6 +44,15 @@ export class Store {
   }
 
   /**
+   * Fetch all the given URIs in parallel and put the data to the store
+   * @param uris
+   */
+  fetchAll(uris: string[]) {
+    const responses = uris.map((uri) => this.fetch(uri));
+    return Promise.allSettled(responses);
+  }
+
+  /**
    * Retrieve the thing identified by the given URI from the store
    * @param uri
    */

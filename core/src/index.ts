@@ -39,6 +39,10 @@ export class PodOS {
     return this.store.fetch(uri);
   }
 
+  fetchAll(uris: string[]) {
+    return this.store.fetchAll(uris);
+  }
+
   fetchFile(url: string): Promise<SolidFile> {
     return this.fileFetcher.fetchFile(url);
   }
