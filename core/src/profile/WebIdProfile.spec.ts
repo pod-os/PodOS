@@ -121,6 +121,34 @@ describe("WebID profile", () => {
       ]);
     });
 
+    it("reads both private label indexes from profile and preferences file", () => {
+      const store = graph();
+      store.add(
+        sym("https://alice.test#me"),
+        sym("http://www.w3.org/ns/pim/space#preferencesFile"),
+        sym("https://alice.test/preferences"),
+        sym("https://alice.test"),
+      );
+      store.add(
+        sym("https://alice.test#me"),
+        sym("http://www.w3.org/ns/solid/terms#privateLabelIndex"),
+        sym("https://alice.test/preferencesPrivateLabelIndex.ttl"),
+        sym("https://alice.test/preferences"),
+      );
+      store.add(
+        sym("https://alice.test#me"),
+        sym("http://www.w3.org/ns/solid/terms#privateLabelIndex"),
+        sym("https://alice.test/profilePrivateLabelIndex.ttl"),
+        sym("https://alice.test"),
+      );
+
+      const profile = new WebIdProfile("https://alice.test#me", store, false);
+      expect(profile.getPrivateLabelIndexes()).toEqual([
+        "https://alice.test/profilePrivateLabelIndex.ttl",
+        "https://alice.test/preferencesPrivateLabelIndex.ttl",
+      ]);
+    });
+
     it("private label index triple from elsewhere are ignored", () => {
       const store = graph();
       store.add(
