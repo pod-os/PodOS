@@ -2,7 +2,7 @@
 
 PodOS can do a text search for things by their name. To do this, it makes use of a label index. This index is not covered by any standard, yet, and therefore described here shortly.
 
-To enable the search feature a user has to link an index file via `solid:privateLabelIndex` to their WebID like this:
+To enable the search feature a user has to link on or more index files via `solid:privateLabelIndex` to their WebID like this:
 
 ```turtle
 @prefix solid: <http://www.w3.org/ns/solid/terms#>.

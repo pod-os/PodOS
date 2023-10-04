@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.11.0
+
+### Added
+
+- `fetchAll`: a function to fetch multiple resources in parallel
+
+### Changed
+
+- `WebIdProfile`: removed `getPrivateLabelIndex` in favour of `getPrivateLabelIndexes` to get all label indexes, not just one
+
 ## 0.10.0
 
 ### Added
