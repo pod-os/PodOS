@@ -4,21 +4,26 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env STORYBOOK_POD_OS_ELEMENTS_DIST_URL=http://localhost:3333/build start-storybook -p 6006",
-    "build": "build-storybook -o ../gh-pages/storybook"
+    "start": "cross-env STORYBOOK_POD_OS_ELEMENTS_DIST_URL=http://localhost:3333/build storybook dev -p 6006",
+    "build": "storybook build -o ../gh-pages/storybook"
   },
   "author": "",
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.22.9",
-    "@storybook/addon-actions": "^6.5.16",
-    "@storybook/addon-essentials": "^6.5.16",
-    "@storybook/addon-links": "^6.5.16",
-    "@storybook/builder-webpack5": "^6.5.16",
-    "@storybook/manager-webpack5": "^6.5.16",
-    "@storybook/web-components": "^6.5.16",
+    "@babel/preset-env": "^7.22.9",
+    "@babel/preset-typescript": "^7.22.5",
+    "@storybook/addon-actions": "^7.1.0",
+    "@storybook/addon-essentials": "^7.1.0",
+    "@storybook/addon-links": "^7.1.0",
+    "@storybook/addon-mdx-gfm": "^7.1.0",
+    "@storybook/web-components": "^7.1.0",
+    "@storybook/web-components-webpack5": "^7.1.0",
     "babel-loader": "^9.1.3",
-    "lit-html": "^2.7.5"
+    "lit-html": "^2.7.5",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "storybook": "^7.1.0"
   },
   "dependencies": {
     "cross-env": "^7.0.3"
