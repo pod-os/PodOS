@@ -5,3 +5,4 @@ node_modules/
 /playwright/.cache/
 test-solid-server/data/.internal/idp/adapter
 test-solid-server/data/.internal/locks
+test-solid-server/data/.internal/accounts/cookies
