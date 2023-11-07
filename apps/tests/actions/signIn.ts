@@ -32,7 +32,7 @@ export async function signIn(
     })
     .click();
 
-  await expect(page.getByText("Pod OS at localhost:3000")).toBeVisible();
+  await expect(page.getByText("Pod OS at localhost")).toBeVisible();
   await page.getByRole("button", { name: "Authorize" }).click();
 
   await expect(page).toHaveURL(originalLocation);
