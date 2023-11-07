@@ -1,3 +1,4 @@
 node_modules
 data/.internal/idp/adapter
 data/.internal/locks
+data/.internal/accounts/cookies

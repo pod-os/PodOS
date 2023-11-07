@@ -7,7 +7,7 @@ Community Solid Server for local development
 You can start the server from pod-os root folder via:
 
 ```shell
-npm run start:server
+npm run dev:server
 ```
 
 or from here by just
@@ -23,4 +23,4 @@ npm start
 | alice@pod-os.test | alice    | http://localhost:3000/alice/profile/card#me |
 | bob@pod-os.test   | bob      | http://localhost:3000/bob/profile/card#me   |
 
-To register a new account visit http://localhost:3000/idp/register/
+To register a new account visit http://localhost:3000/.account/login/password/register/
