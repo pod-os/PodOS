@@ -179,7 +179,21 @@ export interface PosValueCustomEvent<T> extends CustomEvent<T> {
     target: HTMLPosValueElement;
 }
 declare global {
+    interface HTMLPosAddLiteralValueElementEventMap {
+        "pod-os:init": any;
+        "pod-os:resource": any;
+        "pod-os:added-literal-value": any;
+        "pod-os:error": any;
+    }
     interface HTMLPosAddLiteralValueElement extends Components.PosAddLiteralValue, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosAddLiteralValueElementEventMap>(type: K, listener: (this: HTMLPosAddLiteralValueElement, ev: PosAddLiteralValueCustomEvent<HTMLPosAddLiteralValueElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosAddLiteralValueElementEventMap>(type: K, listener: (this: HTMLPosAddLiteralValueElement, ev: PosAddLiteralValueCustomEvent<HTMLPosAddLiteralValueElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosAddLiteralValueElement: {
         prototype: HTMLPosAddLiteralValueElement;
@@ -203,7 +217,18 @@ declare global {
         prototype: HTMLPosAppBrowserElement;
         new (): HTMLPosAppBrowserElement;
     };
+    interface HTMLPosAppDocumentViewerElementEventMap {
+        "pod-os:resource": any;
+    }
     interface HTMLPosAppDocumentViewerElement extends Components.PosAppDocumentViewer, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosAppDocumentViewerElementEventMap>(type: K, listener: (this: HTMLPosAppDocumentViewerElement, ev: PosAppDocumentViewerCustomEvent<HTMLPosAppDocumentViewerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosAppDocumentViewerElementEventMap>(type: K, listener: (this: HTMLPosAppDocumentViewerElement, ev: PosAppDocumentViewerCustomEvent<HTMLPosAppDocumentViewerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosAppDocumentViewerElement: {
         prototype: HTMLPosAppDocumentViewerElement;
@@ -215,7 +240,18 @@ declare global {
         prototype: HTMLPosAppGenericElement;
         new (): HTMLPosAppGenericElement;
     };
+    interface HTMLPosAppImageViewerElementEventMap {
+        "pod-os:resource": any;
+    }
     interface HTMLPosAppImageViewerElement extends Components.PosAppImageViewer, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosAppImageViewerElementEventMap>(type: K, listener: (this: HTMLPosAppImageViewerElement, ev: PosAppImageViewerCustomEvent<HTMLPosAppImageViewerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosAppImageViewerElementEventMap>(type: K, listener: (this: HTMLPosAppImageViewerElement, ev: PosAppImageViewerCustomEvent<HTMLPosAppImageViewerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosAppImageViewerElement: {
         prototype: HTMLPosAppImageViewerElement;
@@ -233,25 +269,71 @@ declare global {
         prototype: HTMLPosAppRdfDocumentElement;
         new (): HTMLPosAppRdfDocumentElement;
     };
+    interface HTMLPosContainerContentsElementEventMap {
+        "pod-os:resource": any;
+    }
     interface HTMLPosContainerContentsElement extends Components.PosContainerContents, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosContainerContentsElementEventMap>(type: K, listener: (this: HTMLPosContainerContentsElement, ev: PosContainerContentsCustomEvent<HTMLPosContainerContentsElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosContainerContentsElementEventMap>(type: K, listener: (this: HTMLPosContainerContentsElement, ev: PosContainerContentsCustomEvent<HTMLPosContainerContentsElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosContainerContentsElement: {
         prototype: HTMLPosContainerContentsElement;
         new (): HTMLPosContainerContentsElement;
     };
+    interface HTMLPosContainerItemElementEventMap {
+        "pod-os:link": any;
+        "pod-os:resource": any;
+    }
     interface HTMLPosContainerItemElement extends Components.PosContainerItem, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosContainerItemElementEventMap>(type: K, listener: (this: HTMLPosContainerItemElement, ev: PosContainerItemCustomEvent<HTMLPosContainerItemElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosContainerItemElementEventMap>(type: K, listener: (this: HTMLPosContainerItemElement, ev: PosContainerItemCustomEvent<HTMLPosContainerItemElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosContainerItemElement: {
         prototype: HTMLPosContainerItemElement;
         new (): HTMLPosContainerItemElement;
     };
+    interface HTMLPosDescriptionElementEventMap {
+        "pod-os:resource": any;
+    }
     interface HTMLPosDescriptionElement extends Components.PosDescription, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosDescriptionElementEventMap>(type: K, listener: (this: HTMLPosDescriptionElement, ev: PosDescriptionCustomEvent<HTMLPosDescriptionElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosDescriptionElementEventMap>(type: K, listener: (this: HTMLPosDescriptionElement, ev: PosDescriptionCustomEvent<HTMLPosDescriptionElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosDescriptionElement: {
         prototype: HTMLPosDescriptionElement;
         new (): HTMLPosDescriptionElement;
     };
+    interface HTMLPosDocumentElementEventMap {
+        "pod-os:init": any;
+        "pod-os:resource-loaded": string;
+    }
     interface HTMLPosDocumentElement extends Components.PosDocument, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosDocumentElementEventMap>(type: K, listener: (this: HTMLPosDocumentElement, ev: PosDocumentCustomEvent<HTMLPosDocumentElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosDocumentElementEventMap>(type: K, listener: (this: HTMLPosDocumentElement, ev: PosDocumentCustomEvent<HTMLPosDocumentElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosDocumentElement: {
         prototype: HTMLPosDocumentElement;
@@ -263,67 +345,193 @@ declare global {
         prototype: HTMLPosErrorToastElement;
         new (): HTMLPosErrorToastElement;
     };
+    interface HTMLPosImageElementEventMap {
+        "pod-os:init": any;
+        "pod-os:resource-loaded": string;
+    }
     interface HTMLPosImageElement extends Components.PosImage, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosImageElementEventMap>(type: K, listener: (this: HTMLPosImageElement, ev: PosImageCustomEvent<HTMLPosImageElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosImageElementEventMap>(type: K, listener: (this: HTMLPosImageElement, ev: PosImageCustomEvent<HTMLPosImageElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosImageElement: {
         prototype: HTMLPosImageElement;
         new (): HTMLPosImageElement;
     };
+    interface HTMLPosLabelElementEventMap {
+        "pod-os:resource": any;
+    }
     interface HTMLPosLabelElement extends Components.PosLabel, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosLabelElementEventMap>(type: K, listener: (this: HTMLPosLabelElement, ev: PosLabelCustomEvent<HTMLPosLabelElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosLabelElementEventMap>(type: K, listener: (this: HTMLPosLabelElement, ev: PosLabelCustomEvent<HTMLPosLabelElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosLabelElement: {
         prototype: HTMLPosLabelElement;
         new (): HTMLPosLabelElement;
     };
+    interface HTMLPosLiteralsElementEventMap {
+        "pod-os:resource": any;
+    }
     interface HTMLPosLiteralsElement extends Components.PosLiterals, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosLiteralsElementEventMap>(type: K, listener: (this: HTMLPosLiteralsElement, ev: PosLiteralsCustomEvent<HTMLPosLiteralsElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosLiteralsElementEventMap>(type: K, listener: (this: HTMLPosLiteralsElement, ev: PosLiteralsCustomEvent<HTMLPosLiteralsElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosLiteralsElement: {
         prototype: HTMLPosLiteralsElement;
         new (): HTMLPosLiteralsElement;
     };
+    interface HTMLPosLoginElementEventMap {
+        "pod-os:init": any;
+    }
     interface HTMLPosLoginElement extends Components.PosLogin, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosLoginElementEventMap>(type: K, listener: (this: HTMLPosLoginElement, ev: PosLoginCustomEvent<HTMLPosLoginElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosLoginElementEventMap>(type: K, listener: (this: HTMLPosLoginElement, ev: PosLoginCustomEvent<HTMLPosLoginElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosLoginElement: {
         prototype: HTMLPosLoginElement;
         new (): HTMLPosLoginElement;
     };
+    interface HTMLPosNavigationBarElementEventMap {
+        "pod-os:init": any;
+        "pod-os:link": any;
+    }
     interface HTMLPosNavigationBarElement extends Components.PosNavigationBar, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosNavigationBarElementEventMap>(type: K, listener: (this: HTMLPosNavigationBarElement, ev: PosNavigationBarCustomEvent<HTMLPosNavigationBarElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosNavigationBarElementEventMap>(type: K, listener: (this: HTMLPosNavigationBarElement, ev: PosNavigationBarCustomEvent<HTMLPosNavigationBarElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosNavigationBarElement: {
         prototype: HTMLPosNavigationBarElement;
         new (): HTMLPosNavigationBarElement;
     };
+    interface HTMLPosNewThingFormElementEventMap {
+        "pod-os:link": any;
+        "pod-os:error": any;
+        "pod-os:init": any;
+    }
     interface HTMLPosNewThingFormElement extends Components.PosNewThingForm, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosNewThingFormElementEventMap>(type: K, listener: (this: HTMLPosNewThingFormElement, ev: PosNewThingFormCustomEvent<HTMLPosNewThingFormElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosNewThingFormElementEventMap>(type: K, listener: (this: HTMLPosNewThingFormElement, ev: PosNewThingFormCustomEvent<HTMLPosNewThingFormElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosNewThingFormElement: {
         prototype: HTMLPosNewThingFormElement;
         new (): HTMLPosNewThingFormElement;
     };
+    interface HTMLPosPictureElementEventMap {
+        "pod-os:resource": any;
+    }
     interface HTMLPosPictureElement extends Components.PosPicture, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosPictureElementEventMap>(type: K, listener: (this: HTMLPosPictureElement, ev: PosPictureCustomEvent<HTMLPosPictureElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosPictureElementEventMap>(type: K, listener: (this: HTMLPosPictureElement, ev: PosPictureCustomEvent<HTMLPosPictureElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosPictureElement: {
         prototype: HTMLPosPictureElement;
         new (): HTMLPosPictureElement;
     };
+    interface HTMLPosRelationsElementEventMap {
+        "pod-os:resource": any;
+    }
     interface HTMLPosRelationsElement extends Components.PosRelations, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosRelationsElementEventMap>(type: K, listener: (this: HTMLPosRelationsElement, ev: PosRelationsCustomEvent<HTMLPosRelationsElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosRelationsElementEventMap>(type: K, listener: (this: HTMLPosRelationsElement, ev: PosRelationsCustomEvent<HTMLPosRelationsElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosRelationsElement: {
         prototype: HTMLPosRelationsElement;
         new (): HTMLPosRelationsElement;
     };
+    interface HTMLPosResourceElementEventMap {
+        "pod-os:init": any;
+        "pod-os:resource-loaded": any;
+    }
     interface HTMLPosResourceElement extends Components.PosResource, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosResourceElementEventMap>(type: K, listener: (this: HTMLPosResourceElement, ev: PosResourceCustomEvent<HTMLPosResourceElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosResourceElementEventMap>(type: K, listener: (this: HTMLPosResourceElement, ev: PosResourceCustomEvent<HTMLPosResourceElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosResourceElement: {
         prototype: HTMLPosResourceElement;
         new (): HTMLPosResourceElement;
     };
+    interface HTMLPosReverseRelationsElementEventMap {
+        "pod-os:resource": any;
+    }
     interface HTMLPosReverseRelationsElement extends Components.PosReverseRelations, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosReverseRelationsElementEventMap>(type: K, listener: (this: HTMLPosReverseRelationsElement, ev: PosReverseRelationsCustomEvent<HTMLPosReverseRelationsElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosReverseRelationsElementEventMap>(type: K, listener: (this: HTMLPosReverseRelationsElement, ev: PosReverseRelationsCustomEvent<HTMLPosReverseRelationsElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosReverseRelationsElement: {
         prototype: HTMLPosReverseRelationsElement;
         new (): HTMLPosReverseRelationsElement;
     };
+    interface HTMLPosRichLinkElementEventMap {
+        "pod-os:link": any;
+    }
     interface HTMLPosRichLinkElement extends Components.PosRichLink, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosRichLinkElementEventMap>(type: K, listener: (this: HTMLPosRichLinkElement, ev: PosRichLinkCustomEvent<HTMLPosRichLinkElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosRichLinkElementEventMap>(type: K, listener: (this: HTMLPosRichLinkElement, ev: PosRichLinkCustomEvent<HTMLPosRichLinkElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosRichLinkElement: {
         prototype: HTMLPosRichLinkElement;
@@ -335,31 +543,87 @@ declare global {
         prototype: HTMLPosRouterElement;
         new (): HTMLPosRouterElement;
     };
+    interface HTMLPosSelectTermElementEventMap {
+        "pod-os:init": any;
+        "pod-os:term-selected": any;
+    }
     interface HTMLPosSelectTermElement extends Components.PosSelectTerm, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosSelectTermElementEventMap>(type: K, listener: (this: HTMLPosSelectTermElement, ev: PosSelectTermCustomEvent<HTMLPosSelectTermElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosSelectTermElementEventMap>(type: K, listener: (this: HTMLPosSelectTermElement, ev: PosSelectTermCustomEvent<HTMLPosSelectTermElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosSelectTermElement: {
         prototype: HTMLPosSelectTermElement;
         new (): HTMLPosSelectTermElement;
     };
+    interface HTMLPosSubjectsElementEventMap {
+        "pod-os:resource": any;
+    }
     interface HTMLPosSubjectsElement extends Components.PosSubjects, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosSubjectsElementEventMap>(type: K, listener: (this: HTMLPosSubjectsElement, ev: PosSubjectsCustomEvent<HTMLPosSubjectsElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosSubjectsElementEventMap>(type: K, listener: (this: HTMLPosSubjectsElement, ev: PosSubjectsCustomEvent<HTMLPosSubjectsElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosSubjectsElement: {
         prototype: HTMLPosSubjectsElement;
         new (): HTMLPosSubjectsElement;
     };
+    interface HTMLPosTypeBadgesElementEventMap {
+        "pod-os:resource": any;
+    }
     interface HTMLPosTypeBadgesElement extends Components.PosTypeBadges, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosTypeBadgesElementEventMap>(type: K, listener: (this: HTMLPosTypeBadgesElement, ev: PosTypeBadgesCustomEvent<HTMLPosTypeBadgesElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosTypeBadgesElementEventMap>(type: K, listener: (this: HTMLPosTypeBadgesElement, ev: PosTypeBadgesCustomEvent<HTMLPosTypeBadgesElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosTypeBadgesElement: {
         prototype: HTMLPosTypeBadgesElement;
         new (): HTMLPosTypeBadgesElement;
     };
+    interface HTMLPosTypeRouterElementEventMap {
+        "pod-os:resource": any;
+    }
     interface HTMLPosTypeRouterElement extends Components.PosTypeRouter, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosTypeRouterElementEventMap>(type: K, listener: (this: HTMLPosTypeRouterElement, ev: PosTypeRouterCustomEvent<HTMLPosTypeRouterElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosTypeRouterElementEventMap>(type: K, listener: (this: HTMLPosTypeRouterElement, ev: PosTypeRouterCustomEvent<HTMLPosTypeRouterElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosTypeRouterElement: {
         prototype: HTMLPosTypeRouterElement;
         new (): HTMLPosTypeRouterElement;
     };
+    interface HTMLPosValueElementEventMap {
+        "pod-os:resource": any;
+    }
     interface HTMLPosValueElement extends Components.PosValue, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosValueElementEventMap>(type: K, listener: (this: HTMLPosValueElement, ev: PosValueCustomEvent<HTMLPosValueElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosValueElementEventMap>(type: K, listener: (this: HTMLPosValueElement, ev: PosValueCustomEvent<HTMLPosValueElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosValueElement: {
         prototype: HTMLPosValueElement;
