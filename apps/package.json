@@ -16,9 +16,9 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@playwright/test": "^1.28.1",
-    "@solid/community-server": "^7.0.1",
-    "netlify-cli": "^16.4.2",
-    "serve": "^14.1.2"
+    "@playwright/test": "^1.40.1",
+    "@solid/community-server": "^7.0.3",
+    "netlify-cli": "^16.9.3",
+    "serve": "^14.2.1"
   }
 }
