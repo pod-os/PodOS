@@ -425,7 +425,7 @@ describe("Store", () => {
           headers: new Headers({
             "Content-Type": "text/plain",
             "wac-allow": 'user="read write append control",public="read"',
-            "accept-patch": "text/n3, application/sparql-update",
+            "accept-patch": "application/sparql-update",
             allow: "PATCH, PUT",
           }),
           text: () => Promise.resolve("Not found"),
