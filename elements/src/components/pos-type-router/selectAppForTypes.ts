@@ -6,6 +6,7 @@ export enum AvailableApps {
   DocumentViewer = 'pos-app-document-viewer',
   ImageViewer = 'pos-app-image-viewer',
   LdpContainer = 'pos-app-ldp-container',
+  AddressBook = 'pos-app-address-book',
 }
 
 // TODO: remove duplication with pos-container-contents/selectIconForTypes
@@ -24,6 +25,8 @@ export function selectAppForTypes(types: RdfType[]) {
     return AvailableApps.ImageViewer;
   } else if (containsType(types, 'http://www.w3.org/2007/ont/link#Document')) {
     return AvailableApps.DocumentViewer;
+  } else if (containsType(types, 'http://www.w3.org/2006/vcard/ns#AddressBook')) {
+    return AvailableApps.AddressBook;
   } else {
     return AvailableApps.Generic;
   }

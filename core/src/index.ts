@@ -1,4 +1,5 @@
 import { ISessionInfo } from "@inrupt/solid-client-authn-browser";
+import { ContactsModule } from "@solid-data-modules/contacts-rdflib";
 import { BrowserSession } from "./authentication";
 import { SolidFile } from "./files";
 import { FileFetcher } from "./files/FileFetcher";
@@ -117,5 +118,14 @@ export class PodOS {
 
   login(oidcIssuer = "http://localhost:3000") {
     return this.session.login(oidcIssuer);
+  }
+
+  async contactsModule(): Promise<ContactsModule> {
+    const module = await import("@solid-data-modules/contacts-rdflib");
+    return new module.default.ContactsModuleRdfLib({
+      store: this.store.graph,
+      fetcher: this.store.fetcher,
+      updater: this.store.updater,
+    });
   }
 }

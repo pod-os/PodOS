@@ -13,6 +13,8 @@ export namespace Components {
     }
     interface PosApp {
     }
+    interface PosAppAddressBook {
+    }
     interface PosAppBrowser {
     }
     interface PosAppDocumentViewer {
@@ -89,6 +91,10 @@ export namespace Components {
 export interface PosAddLiteralValueCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosAddLiteralValueElement;
+}
+export interface PosAppAddressBookCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosAppAddressBookElement;
 }
 export interface PosAppDocumentViewerCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -210,6 +216,24 @@ declare global {
     var HTMLPosAppElement: {
         prototype: HTMLPosAppElement;
         new (): HTMLPosAppElement;
+    };
+    interface HTMLPosAppAddressBookElementEventMap {
+        "pod-os:init": any;
+        "pod-os:resource": any;
+    }
+    interface HTMLPosAppAddressBookElement extends Components.PosAppAddressBook, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosAppAddressBookElementEventMap>(type: K, listener: (this: HTMLPosAppAddressBookElement, ev: PosAppAddressBookCustomEvent<HTMLPosAppAddressBookElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosAppAddressBookElementEventMap>(type: K, listener: (this: HTMLPosAppAddressBookElement, ev: PosAppAddressBookCustomEvent<HTMLPosAppAddressBookElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLPosAppAddressBookElement: {
+        prototype: HTMLPosAppAddressBookElement;
+        new (): HTMLPosAppAddressBookElement;
     };
     interface HTMLPosAppBrowserElement extends Components.PosAppBrowser, HTMLStencilElement {
     }
@@ -633,6 +657,7 @@ declare global {
         "pos-add-literal-value": HTMLPosAddLiteralValueElement;
         "pos-add-new-thing": HTMLPosAddNewThingElement;
         "pos-app": HTMLPosAppElement;
+        "pos-app-address-book": HTMLPosAppAddressBookElement;
         "pos-app-browser": HTMLPosAppBrowserElement;
         "pos-app-document-viewer": HTMLPosAppDocumentViewerElement;
         "pos-app-generic": HTMLPosAppGenericElement;
@@ -680,6 +705,10 @@ declare namespace LocalJSX {
         "referenceUri": string;
     }
     interface PosApp {
+    }
+    interface PosAppAddressBook {
+        "onPod-os:init"?: (event: PosAppAddressBookCustomEvent<any>) => void;
+        "onPod-os:resource"?: (event: PosAppAddressBookCustomEvent<any>) => void;
     }
     interface PosAppBrowser {
     }
@@ -798,6 +827,7 @@ declare namespace LocalJSX {
         "pos-add-literal-value": PosAddLiteralValue;
         "pos-add-new-thing": PosAddNewThing;
         "pos-app": PosApp;
+        "pos-app-address-book": PosAppAddressBook;
         "pos-app-browser": PosAppBrowser;
         "pos-app-document-viewer": PosAppDocumentViewer;
         "pos-app-generic": PosAppGeneric;
@@ -835,6 +865,7 @@ declare module "@stencil/core" {
             "pos-add-literal-value": LocalJSX.PosAddLiteralValue & JSXBase.HTMLAttributes<HTMLPosAddLiteralValueElement>;
             "pos-add-new-thing": LocalJSX.PosAddNewThing & JSXBase.HTMLAttributes<HTMLPosAddNewThingElement>;
             "pos-app": LocalJSX.PosApp & JSXBase.HTMLAttributes<HTMLPosAppElement>;
+            "pos-app-address-book": LocalJSX.PosAppAddressBook & JSXBase.HTMLAttributes<HTMLPosAppAddressBookElement>;
             "pos-app-browser": LocalJSX.PosAppBrowser & JSXBase.HTMLAttributes<HTMLPosAppBrowserElement>;
             "pos-app-document-viewer": LocalJSX.PosAppDocumentViewer & JSXBase.HTMLAttributes<HTMLPosAppDocumentViewerElement>;
             "pos-app-generic": LocalJSX.PosAppGeneric & JSXBase.HTMLAttributes<HTMLPosAppGenericElement>;
