@@ -26,6 +26,7 @@
     "generate": "stencil generate"
   },
   "dependencies": {
+    "@pod-os/elements": "^0.15.1",
     "@stencil/core": "^4.12.1"
   },
   "devDependencies": {

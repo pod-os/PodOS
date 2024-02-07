@@ -6,19 +6,32 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
+    interface PosAppContacts {
+    }
 }
 declare global {
+    interface HTMLPosAppContactsElement extends Components.PosAppContacts, HTMLStencilElement {
+    }
+    var HTMLPosAppContactsElement: {
+        prototype: HTMLPosAppContactsElement;
+        new (): HTMLPosAppContactsElement;
+    };
     interface HTMLElementTagNameMap {
+        "pos-app-contacts": HTMLPosAppContactsElement;
     }
 }
 declare namespace LocalJSX {
+    interface PosAppContacts {
+    }
     interface IntrinsicElements {
+        "pos-app-contacts": PosAppContacts;
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "pos-app-contacts": LocalJSX.PosAppContacts & JSXBase.HTMLAttributes<HTMLPosAppContactsElement>;
         }
     }
 }
