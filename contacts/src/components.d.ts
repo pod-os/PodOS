@@ -5,13 +5,14 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { AddressBook } from "@solid-data-modules/contacts-rdflib";
-export { AddressBook } from "@solid-data-modules/contacts-rdflib";
+import { ContactsModule } from "@solid-data-modules/contacts-rdflib";
+export { ContactsModule } from "@solid-data-modules/contacts-rdflib";
 export namespace Components {
     interface PosContacts {
     }
     interface PosContactsAddressBook {
-        "addressBook": AddressBook;
+        "contactsModule": ContactsModule;
+        "uri": string;
     }
     interface PosContactsApp {
     }
@@ -61,7 +62,8 @@ declare namespace LocalJSX {
         "onPod-os:init"?: (event: PosContactsCustomEvent<any>) => void;
     }
     interface PosContactsAddressBook {
-        "addressBook"?: AddressBook;
+        "contactsModule"?: ContactsModule;
+        "uri"?: string;
     }
     interface PosContactsApp {
     }
