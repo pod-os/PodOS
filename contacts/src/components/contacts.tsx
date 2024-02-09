@@ -53,6 +53,12 @@ export class Contacts implements PodOsAware {
           <Route path="/address-book">
             <pos-contacts-address-book contactsModule={this.contactsModule} uri={this.uri} />
           </Route>
+          <Route path="/contact">
+            <pos-contacts-contact contactsModule={this.contactsModule} uri={this.uri} />
+          </Route>
+          <Route path="/group">
+            <pos-contacts-group contactsModule={this.contactsModule} uri={this.uri} />
+          </Route>
         </Router.Switch>
       </Host>
     );

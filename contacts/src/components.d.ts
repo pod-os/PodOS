@@ -16,6 +16,14 @@ export namespace Components {
     }
     interface PosContactsApp {
     }
+    interface PosContactsContact {
+        "contactsModule": ContactsModule;
+        "uri": string;
+    }
+    interface PosContactsGroup {
+        "contactsModule": ContactsModule;
+        "uri": string;
+    }
 }
 export interface PosContactsCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -51,10 +59,24 @@ declare global {
         prototype: HTMLPosContactsAppElement;
         new (): HTMLPosContactsAppElement;
     };
+    interface HTMLPosContactsContactElement extends Components.PosContactsContact, HTMLStencilElement {
+    }
+    var HTMLPosContactsContactElement: {
+        prototype: HTMLPosContactsContactElement;
+        new (): HTMLPosContactsContactElement;
+    };
+    interface HTMLPosContactsGroupElement extends Components.PosContactsGroup, HTMLStencilElement {
+    }
+    var HTMLPosContactsGroupElement: {
+        prototype: HTMLPosContactsGroupElement;
+        new (): HTMLPosContactsGroupElement;
+    };
     interface HTMLElementTagNameMap {
         "pos-contacts": HTMLPosContactsElement;
         "pos-contacts-address-book": HTMLPosContactsAddressBookElement;
         "pos-contacts-app": HTMLPosContactsAppElement;
+        "pos-contacts-contact": HTMLPosContactsContactElement;
+        "pos-contacts-group": HTMLPosContactsGroupElement;
     }
 }
 declare namespace LocalJSX {
@@ -67,10 +89,20 @@ declare namespace LocalJSX {
     }
     interface PosContactsApp {
     }
+    interface PosContactsContact {
+        "contactsModule"?: ContactsModule;
+        "uri"?: string;
+    }
+    interface PosContactsGroup {
+        "contactsModule"?: ContactsModule;
+        "uri"?: string;
+    }
     interface IntrinsicElements {
         "pos-contacts": PosContacts;
         "pos-contacts-address-book": PosContactsAddressBook;
         "pos-contacts-app": PosContactsApp;
+        "pos-contacts-contact": PosContactsContact;
+        "pos-contacts-group": PosContactsGroup;
     }
 }
 export { LocalJSX as JSX };
@@ -80,6 +112,8 @@ declare module "@stencil/core" {
             "pos-contacts": LocalJSX.PosContacts & JSXBase.HTMLAttributes<HTMLPosContactsElement>;
             "pos-contacts-address-book": LocalJSX.PosContactsAddressBook & JSXBase.HTMLAttributes<HTMLPosContactsAddressBookElement>;
             "pos-contacts-app": LocalJSX.PosContactsApp & JSXBase.HTMLAttributes<HTMLPosContactsAppElement>;
+            "pos-contacts-contact": LocalJSX.PosContactsContact & JSXBase.HTMLAttributes<HTMLPosContactsContactElement>;
+            "pos-contacts-group": LocalJSX.PosContactsGroup & JSXBase.HTMLAttributes<HTMLPosContactsGroupElement>;
         }
     }
 }
