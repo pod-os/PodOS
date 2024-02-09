@@ -5,33 +5,79 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { AddressBook } from "@solid-data-modules/contacts-rdflib";
+export { AddressBook } from "@solid-data-modules/contacts-rdflib";
 export namespace Components {
-    interface PosAppContacts {
+    interface PosContacts {
+    }
+    interface PosContactsAddressBook {
+        "addressBook": AddressBook;
+    }
+    interface PosContactsApp {
     }
 }
+export interface PosContactsCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosContactsElement;
+}
 declare global {
-    interface HTMLPosAppContactsElement extends Components.PosAppContacts, HTMLStencilElement {
+    interface HTMLPosContactsElementEventMap {
+        "pod-os:init": any;
     }
-    var HTMLPosAppContactsElement: {
-        prototype: HTMLPosAppContactsElement;
-        new (): HTMLPosAppContactsElement;
+    interface HTMLPosContactsElement extends Components.PosContacts, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosContactsElementEventMap>(type: K, listener: (this: HTMLPosContactsElement, ev: PosContactsCustomEvent<HTMLPosContactsElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosContactsElementEventMap>(type: K, listener: (this: HTMLPosContactsElement, ev: PosContactsCustomEvent<HTMLPosContactsElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLPosContactsElement: {
+        prototype: HTMLPosContactsElement;
+        new (): HTMLPosContactsElement;
+    };
+    interface HTMLPosContactsAddressBookElement extends Components.PosContactsAddressBook, HTMLStencilElement {
+    }
+    var HTMLPosContactsAddressBookElement: {
+        prototype: HTMLPosContactsAddressBookElement;
+        new (): HTMLPosContactsAddressBookElement;
+    };
+    interface HTMLPosContactsAppElement extends Components.PosContactsApp, HTMLStencilElement {
+    }
+    var HTMLPosContactsAppElement: {
+        prototype: HTMLPosContactsAppElement;
+        new (): HTMLPosContactsAppElement;
     };
     interface HTMLElementTagNameMap {
-        "pos-app-contacts": HTMLPosAppContactsElement;
+        "pos-contacts": HTMLPosContactsElement;
+        "pos-contacts-address-book": HTMLPosContactsAddressBookElement;
+        "pos-contacts-app": HTMLPosContactsAppElement;
     }
 }
 declare namespace LocalJSX {
-    interface PosAppContacts {
+    interface PosContacts {
+        "onPod-os:init"?: (event: PosContactsCustomEvent<any>) => void;
+    }
+    interface PosContactsAddressBook {
+        "addressBook"?: AddressBook;
+    }
+    interface PosContactsApp {
     }
     interface IntrinsicElements {
-        "pos-app-contacts": PosAppContacts;
+        "pos-contacts": PosContacts;
+        "pos-contacts-address-book": PosContactsAddressBook;
+        "pos-contacts-app": PosContactsApp;
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "pos-app-contacts": LocalJSX.PosAppContacts & JSXBase.HTMLAttributes<HTMLPosAppContactsElement>;
+            "pos-contacts": LocalJSX.PosContacts & JSXBase.HTMLAttributes<HTMLPosContactsElement>;
+            "pos-contacts-address-book": LocalJSX.PosContactsAddressBook & JSXBase.HTMLAttributes<HTMLPosContactsAddressBookElement>;
+            "pos-contacts-app": LocalJSX.PosContactsApp & JSXBase.HTMLAttributes<HTMLPosContactsAppElement>;
         }
     }
 }

@@ -3,9 +3,9 @@ import { Component, h } from '@stencil/core';
 import '@pod-os/elements';
 
 @Component({
-  tag: 'pos-app-contacts',
+  tag: 'pos-contacts-app',
 })
-export class PosAppContacts {
+export class App {
   render() {
     return (
       <pos-app>
@@ -13,7 +13,9 @@ export class PosAppContacts {
           <h1>Contacts</h1>
           <pos-login></pos-login>
         </header>
-        <main></main>
+        <main>
+          <pos-contacts />
+        </main>
         <footer></footer>
       </pos-app>
     );

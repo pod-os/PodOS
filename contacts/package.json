@@ -26,7 +26,9 @@
     "generate": "stencil generate"
   },
   "dependencies": {
+    "@pod-os/core": "^0.11.1",
     "@pod-os/elements": "^0.15.1",
+    "@solid-data-modules/contacts-rdflib": "^0.3.0",
     "@stencil/core": "^4.12.1"
   },
   "devDependencies": {

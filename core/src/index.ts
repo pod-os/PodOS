@@ -1,7 +1,9 @@
 import { ISessionInfo } from "@inrupt/solid-client-authn-browser";
+import { ContactsModule } from "@solid-data-modules/contacts-rdflib";
 import { BrowserSession } from "./authentication";
 import { SolidFile } from "./files";
 import { FileFetcher } from "./files/FileFetcher";
+import { loadContactsModule } from "./modules/contacts";
 import { WebIdProfile } from "./profile";
 import { LabelIndex } from "./search/LabelIndex";
 import { SearchIndex } from "./search/SearchIndex";
@@ -117,5 +119,9 @@ export class PodOS {
 
   login(oidcIssuer = "http://localhost:3000") {
     return this.session.login(oidcIssuer);
+  }
+
+  loadContactsModule(): Promise<ContactsModule> {
+    return loadContactsModule(this.store);
   }
 }
