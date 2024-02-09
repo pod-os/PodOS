@@ -1,6 +1,6 @@
-import { ContactsModule } from '@solid-data-modules/contacts-rdflib';
-import { Component, h, Prop } from '@stencil/core';
-
+import { ContactsModule, FullGroup } from '@solid-data-modules/contacts-rdflib';
+import { Component, h, Host, Prop, State, Watch } from '@stencil/core';
+import { href } from 'stencil-router-v2';
 @Component({
   tag: 'pos-contacts-group',
 })
@@ -10,7 +10,31 @@ export class Group {
 
   @Prop()
   contactsModule: ContactsModule;
+
+  @State()
+  group: FullGroup;
+
+  async componentWillLoad() {
+    await this.loadGroup();
+  }
+
+  @Watch('uri')
+  async loadGroup() {
+    this.group = await this.contactsModule.readGroup(this.uri);
+  }
+
   render() {
-    return <h2>group {this.uri}</h2>;
+    return (
+      <Host>
+        <h2>{this.group.name}</h2>
+        <ul>
+          {this.group.members.map(it => (
+            <li>
+              <a {...href(`/contact?uri=${encodeURIComponent(it.uri)}`)}>{it.name || it.uri}</a>
+            </li>
+          ))}
+        </ul>
+      </Host>
+    );
   }
 }

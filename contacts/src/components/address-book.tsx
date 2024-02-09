@@ -38,7 +38,7 @@ export class PosContactsAddressBook {
         <ul>
           {this.addressBook.contacts.map(it => (
             <li>
-              <a {...href(`/contact?uri=${encodeURIComponent(it.uri)}`)}>{it.name}</a>
+              <a {...href(`/contact?uri=${encodeURIComponent(it.uri)}`)}>{it.name || it.uri}</a>
             </li>
           ))}
         </ul>
@@ -46,7 +46,7 @@ export class PosContactsAddressBook {
         <ul>
           {this.addressBook.groups.map(it => (
             <li>
-              <a {...href(`/group?uri=${encodeURIComponent(it.uri)}`)}>{it.name}</a>
+              <a {...href(`/group?uri=${encodeURIComponent(it.uri)}`)}>{it.name || it.uri}</a>
             </li>
           ))}
         </ul>
