@@ -1,9 +1,10 @@
 import { AddressBook, ContactsModule } from '@solid-data-modules/contacts-rdflib';
 import { Component, h, Host, Prop, State, Watch } from '@stencil/core';
-import { href } from 'stencil-router-v2';
 
 @Component({
   tag: 'pos-contacts-address-book',
+  styleUrl: 'address-book.css',
+  shadow: true,
 })
 export class PosContactsAddressBook {
   @Prop()
@@ -30,26 +31,16 @@ export class PosContactsAddressBook {
     }
     return (
       <Host>
-        <h2>{this.addressBook.title}</h2>
-        <p>
-          <a href={this.addressBook.uri}>{this.addressBook.uri}</a>
-        </p>
-        <h3>Contacts</h3>
-        <ul>
-          {this.addressBook.contacts.map(it => (
-            <li>
-              <a {...href(`/contact?uri=${encodeURIComponent(it.uri)}`)}>{it.name || it.uri}</a>
-            </li>
-          ))}
-        </ul>
-        <h3>Groups</h3>
-        <ul>
-          {this.addressBook.groups.map(it => (
-            <li>
-              <a {...href(`/group?uri=${encodeURIComponent(it.uri)}`)}>{it.name || it.uri}</a>
-            </li>
-          ))}
-        </ul>
+        <header>
+          <h1>{this.addressBook.title}</h1>
+          <pos-login></pos-login>
+        </header>
+        <aside>
+          <pos-contacts-group-list groups={this.addressBook.groups} />
+        </aside>
+        <main>
+          <pos-contacts-contact-list contacts={this.addressBook.contacts} />
+        </main>
       </Host>
     );
   }

@@ -28,8 +28,9 @@
   "dependencies": {
     "@pod-os/core": "^0.11.1",
     "@pod-os/elements": "^0.15.1",
-    "@solid-data-modules/contacts-rdflib": "^0.3.0",
-    "@stencil/core": "^4.12.1"
+    "@solid-data-modules/contacts-rdflib": "^0.4.0-rc",
+    "@stencil/core": "^4.12.1",
+    "pollen-css": "^4.6.2"
   },
   "devDependencies": {
     "@types/jest": "^29.5.6",

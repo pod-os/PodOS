@@ -1,6 +1,6 @@
 import { PodOS } from '@pod-os/core';
 import { ContactsModule } from '@solid-data-modules/contacts-rdflib';
-import { Component, Event, h, Host, State } from '@stencil/core';
+import { Component, Event, h, Host, Listen, State } from '@stencil/core';
 
 import { createRouter, match, Route } from 'stencil-router-v2';
 import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../events/PodOsAware';
@@ -9,6 +9,7 @@ const Router = createRouter();
 
 @Component({
   tag: 'pos-contacts',
+  shadow: true,
 })
 export class Contacts implements PodOsAware {
   @State() contactsModule: ContactsModule;
@@ -18,9 +19,9 @@ export class Contacts implements PodOsAware {
   @State()
   uri: string;
 
-  private openAddressBook() {
-    const uri = prompt('Please enter URI of an address book');
-    Router.push('/address-book?uri=' + encodeURIComponent(uri));
+  @Listen('pod-os-contacts:open-address-book')
+  openAddressBook(event: CustomEvent) {
+    Router.push('/address-book?uri=' + encodeURIComponent(event.detail));
   }
 
   componentWillLoad() {
@@ -45,11 +46,10 @@ export class Contacts implements PodOsAware {
     }
     return (
       <Host>
-        <nav>
-          <button onClick={this.openAddressBook}>open address book</button>
-        </nav>
         <Router.Switch>
-          <Route path={match('/', { exact: true })}></Route>
+          <Route path={match('/', { exact: true })}>
+            <pos-contacts-welcome-page />
+          </Route>
           <Route path="/address-book">
             <pos-contacts-address-book contactsModule={this.contactsModule} uri={this.uri} />
           </Route>

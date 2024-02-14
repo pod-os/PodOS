@@ -9,14 +9,7 @@ export class App {
   render() {
     return (
       <pos-app>
-        <header>
-          <h1>Contacts</h1>
-          <pos-login></pos-login>
-        </header>
-        <main>
-          <pos-contacts />
-        </main>
-        <footer></footer>
+        <pos-contacts />
       </pos-app>
     );
   }
