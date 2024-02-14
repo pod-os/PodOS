@@ -2,7 +2,7 @@ import { Component, Event, EventEmitter, h, Host } from '@stencil/core';
 
 @Component({
   tag: 'pos-contacts-welcome-page',
-  shadow: true,
+  styleUrl: './welcome-page.css',
 })
 export class WelcomePage {
   @Event({ eventName: 'pod-os-contacts:open-address-book' }) openAddressBook: EventEmitter<string>;
@@ -17,12 +17,10 @@ export class WelcomePage {
       <Host>
         <header>
           <h1>PodOS contacts</h1>
-        </header>
-        <nav>
-          <button onClick={() => this.promptAndOpen()}>open address book</button>
-        </nav>
-        <main>
           <pos-login></pos-login>
+        </header>
+        <main>
+          <button onClick={() => this.promptAndOpen()}>open address book</button>
         </main>
       </Host>
     );

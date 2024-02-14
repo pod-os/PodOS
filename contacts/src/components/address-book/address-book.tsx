@@ -35,9 +35,9 @@ export class PosContactsAddressBook {
           <h1>{this.addressBook.title}</h1>
           <pos-login></pos-login>
         </header>
-        <aside>
+        <nav>
           <pos-contacts-group-list groups={this.addressBook.groups} />
-        </aside>
+        </nav>
         <main>
           <pos-contacts-contact-list contacts={this.addressBook.contacts} />
         </main>
