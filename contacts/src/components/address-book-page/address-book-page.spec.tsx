@@ -2,7 +2,7 @@ import { h } from '@stencil/core';
 import { newSpecPage } from '@stencil/core/testing';
 import { AddressBookPage } from './address-book-page';
 
-import { getByRole } from '@testing-library/dom';
+import { fireEvent, getByRole } from '@testing-library/dom';
 
 describe('address-book-page', () => {
   it('shows loading indicator while there is no address book', async () => {
@@ -44,9 +44,42 @@ describe('address-book-page', () => {
     });
 
     it('the main part shows the contact list', async () => {
-      const nav = getByRole(page.root, 'main');
-      expect(nav.firstChild).toEqualHtml(`
+      const main = getByRole(page.root, 'main');
+      expect(main.firstChild).toEqualHtml(`
         <pos-contacts-contact-list></pos-contacts-contact-list>
+      `);
+    });
+  });
+
+  describe('contact selection', () => {
+    let page;
+    beforeEach(async () => {
+      const module = {
+        readAddressBook: jest.fn().mockReturnValue({}),
+      };
+      page = await newSpecPage({
+        components: [AddressBookPage],
+        template: () => <pos-contacts-address-book-page contactsModule={module}></pos-contacts-address-book-page>,
+        supportsShadowDom: false,
+      });
+    });
+
+    it('shows a selected contact', async () => {
+      fireEvent(
+        page.root,
+        new CustomEvent('pod-os-contacts:contact-selected', {
+          detail: {
+            uri: 'https://alice.test',
+          },
+        }),
+      );
+      await page.waitForChanges();
+      expect(page.rootInstance.selectedContact).toEqual({
+        uri: 'https://alice.test',
+      });
+      const main = getByRole(page.root, 'main');
+      expect(main.firstChild).toEqualHtml(`
+        <pos-contacts-contact uri='https://alice.test'></pos-contacts-contact>
       `);
     });
   });
