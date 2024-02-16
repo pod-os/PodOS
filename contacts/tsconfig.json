@@ -14,12 +14,17 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "jsx": "react",
-    "jsxFactory": "h"
+    "jsxFactory": "h",
+    "skipLibCheck": true // https://github.com/ionic-team/stencil-ds-output-targets/issues/261
   },
   "include": [
-    "src"
+    "src",
+    "./jest-setup.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "src/test/**/*",
+    "**/*.spec.ts",
+    "**/*.spec.tsx"
   ]
 }
