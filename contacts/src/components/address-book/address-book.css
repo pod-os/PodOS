@@ -1,7 +1,9 @@
 :host {
+  --header-height: var(--size-14);
+  --content-height: calc(100vh - var(--header-height) - var(--size-10));
   display: grid;
   grid-template-columns: var(--size-80) auto;
-  grid-template-rows: var(--size-14) auto;
+  grid-template-rows: var(--header-height) auto;
   height: 100%;
   grid-template-areas:
     "header header"
@@ -19,8 +21,14 @@ header {
 
 nav {
   grid-area: menu;
+  height: var(--content-height);
+  overflow: auto;
 }
 
 main {
   grid-area: main;
+  height: var(--content-height);
+  overflow: auto;
+  background-color: white;
+  border-radius: var(--radius-xl);
 }

@@ -4,6 +4,8 @@ import { href } from 'stencil-router-v2';
 
 @Component({
   tag: 'pos-contacts-group-list',
+  styleUrl: './group-list.css',
+  shadow: true,
 })
 export class GroupList {
   @Prop()

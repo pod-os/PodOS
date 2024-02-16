@@ -1,0 +1,40 @@
+:host {
+  --text-color: var(--color-grey-800);
+  --hover-color: rgb(57 107 186 / 27%);
+}
+
+ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-1);
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
+li {
+  transition: all 300ms var(--ease-in-out-sine);
+  display: flex;
+  margin-left: var(--size-4);
+  margin-right: var(--size-4);
+  max-height: 50%;
+  border-radius: var(--radius-full);
+}
+
+li a {
+  width: 100%;
+  padding: var(--size-4) var(--size-10);
+}
+
+li:hover {
+  background: var(--hover-color)
+}
+
+a {
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+a:visited {
+  color: var(--text-color);
+}

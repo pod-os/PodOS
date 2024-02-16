@@ -4,6 +4,8 @@ import { href } from 'stencil-router-v2';
 
 @Component({
   tag: 'pos-contacts-contact-list',
+  styleUrl: './contact-list.css',
+  shadow: true,
 })
 export class ContactList {
   @Prop()
