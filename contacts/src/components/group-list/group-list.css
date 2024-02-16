@@ -1,6 +1,6 @@
 :host {
   --text-color: var(--color-grey-800);
-  --hover-color: rgb(57 107 186 / 27%);
+  --hover-color: rgb(230 237 250 / 100%);
 }
 
 ul {
