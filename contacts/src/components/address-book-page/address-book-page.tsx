@@ -2,11 +2,11 @@ import { AddressBook, ContactsModule } from '@solid-data-modules/contacts-rdflib
 import { Component, h, Host, Prop, State, Watch } from '@stencil/core';
 
 @Component({
-  tag: 'pos-contacts-address-book',
-  styleUrl: 'address-book.css',
+  tag: 'pos-contacts-address-book-page',
+  styleUrl: 'address-book-page.css',
   shadow: true,
 })
-export class PosContactsAddressBook {
+export class AddressBookPage {
   @Prop()
   uri: string;
 

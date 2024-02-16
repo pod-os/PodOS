@@ -10,7 +10,7 @@ export { Contact, ContactsModule, Group } from "@solid-data-modules/contacts-rdf
 export namespace Components {
     interface PosContacts {
     }
-    interface PosContactsAddressBook {
+    interface PosContactsAddressBookPage {
         "contactsModule": ContactsModule;
         "uri": string;
     }
@@ -59,11 +59,11 @@ declare global {
         prototype: HTMLPosContactsElement;
         new (): HTMLPosContactsElement;
     };
-    interface HTMLPosContactsAddressBookElement extends Components.PosContactsAddressBook, HTMLStencilElement {
+    interface HTMLPosContactsAddressBookPageElement extends Components.PosContactsAddressBookPage, HTMLStencilElement {
     }
-    var HTMLPosContactsAddressBookElement: {
-        prototype: HTMLPosContactsAddressBookElement;
-        new (): HTMLPosContactsAddressBookElement;
+    var HTMLPosContactsAddressBookPageElement: {
+        prototype: HTMLPosContactsAddressBookPageElement;
+        new (): HTMLPosContactsAddressBookPageElement;
     };
     interface HTMLPosContactsAppElement extends Components.PosContactsApp, HTMLStencilElement {
     }
@@ -114,7 +114,7 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "pos-contacts": HTMLPosContactsElement;
-        "pos-contacts-address-book": HTMLPosContactsAddressBookElement;
+        "pos-contacts-address-book-page": HTMLPosContactsAddressBookPageElement;
         "pos-contacts-app": HTMLPosContactsAppElement;
         "pos-contacts-contact": HTMLPosContactsContactElement;
         "pos-contacts-contact-list": HTMLPosContactsContactListElement;
@@ -127,7 +127,7 @@ declare namespace LocalJSX {
     interface PosContacts {
         "onPod-os:init"?: (event: PosContactsCustomEvent<any>) => void;
     }
-    interface PosContactsAddressBook {
+    interface PosContactsAddressBookPage {
         "contactsModule"?: ContactsModule;
         "uri"?: string;
     }
@@ -152,7 +152,7 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "pos-contacts": PosContacts;
-        "pos-contacts-address-book": PosContactsAddressBook;
+        "pos-contacts-address-book-page": PosContactsAddressBookPage;
         "pos-contacts-app": PosContactsApp;
         "pos-contacts-contact": PosContactsContact;
         "pos-contacts-contact-list": PosContactsContactList;
@@ -166,7 +166,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "pos-contacts": LocalJSX.PosContacts & JSXBase.HTMLAttributes<HTMLPosContactsElement>;
-            "pos-contacts-address-book": LocalJSX.PosContactsAddressBook & JSXBase.HTMLAttributes<HTMLPosContactsAddressBookElement>;
+            "pos-contacts-address-book-page": LocalJSX.PosContactsAddressBookPage & JSXBase.HTMLAttributes<HTMLPosContactsAddressBookPageElement>;
             "pos-contacts-app": LocalJSX.PosContactsApp & JSXBase.HTMLAttributes<HTMLPosContactsAppElement>;
             "pos-contacts-contact": LocalJSX.PosContactsContact & JSXBase.HTMLAttributes<HTMLPosContactsContactElement>;
             "pos-contacts-contact-list": LocalJSX.PosContactsContactList & JSXBase.HTMLAttributes<HTMLPosContactsContactListElement>;
