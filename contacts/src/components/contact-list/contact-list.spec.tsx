@@ -1,3 +1,5 @@
+import { h } from '@stencil/core';
+
 import { newSpecPage } from '@stencil/core/testing';
 
 import { getByRole } from '@testing-library/dom';
