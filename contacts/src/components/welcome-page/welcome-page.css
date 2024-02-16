@@ -4,7 +4,6 @@
   grid-template-areas:
     "header"
     "main"
-    "menu"
 }
 
 header {
@@ -13,14 +12,41 @@ header {
   grid-area: header;
   align-items: center;
   justify-content: space-between;
+  padding: var(--size-10);
 }
 
-nav {
-  grid-area: menu;
-}
 
 main {
   grid-area: main;
+  margin: var(--size-10);
+  background-color: white;
+  border-radius: var(--radius-xl);
+  padding: var(--size-4)
 }
+
+button.open {
+  color: white;
+  font-size: var(--scale-1);
+  border-radius: var(--radius-lg);
+  font-weight: var(--weight-bold);
+  padding: var(--size-4);
+  background-color: var(--color-blue-700);
+  border: 1px solid var(--color-blue-500);
+  box-shadow: var(--shadow-md);
+}
+
+
+button.open:hover {
+  cursor: pointer;
+  filter: brightness(110%);
+}
+
+.toolbar {
+  display: flex;
+  justify-items: center;
+  align-content: center;
+  gap: var(--size-4);
+}
+
 
 
