@@ -1,6 +1,8 @@
 :host {
   display: grid;
-  grid-template-columns: 18rem auto;
+  grid-template-columns: var(--size-80) auto;
+  grid-template-rows: var(--size-14) auto;
+  height: 100%;
   grid-template-areas:
     "header header"
     "menu main"
@@ -12,6 +14,7 @@ header {
   grid-area: header;
   align-items: center;
   justify-content: space-between;
+  padding: var(--size-4);
 }
 
 nav {
