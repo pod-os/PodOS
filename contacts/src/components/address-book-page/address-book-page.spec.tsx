@@ -1,3 +1,5 @@
+import { ContactsModule } from '@solid-data-modules/contacts-rdflib';
+
 // noinspection ES6UnusedImports
 import { h } from '@stencil/core';
 
@@ -10,7 +12,7 @@ describe('address-book-page', () => {
   it('shows loading indicator while there is no address book', async () => {
     const module = {
       readAddressBook: jest.fn(),
-    };
+    } as unknown as ContactsModule;
     const page = await newSpecPage({
       components: [AddressBookPage],
       template: () => <pos-contacts-address-book-page contactsModule={module}></pos-contacts-address-book-page>,
@@ -30,7 +32,7 @@ describe('address-book-page', () => {
     beforeEach(async () => {
       const module = {
         readAddressBook: jest.fn().mockReturnValue({}),
-      };
+      } as unknown as ContactsModule;
       page = await newSpecPage({
         components: [AddressBookPage],
         template: () => <pos-contacts-address-book-page contactsModule={module}></pos-contacts-address-book-page>,
@@ -58,7 +60,7 @@ describe('address-book-page', () => {
     beforeEach(async () => {
       const module = {
         readAddressBook: jest.fn().mockReturnValue({}),
-      };
+      } as unknown as ContactsModule;
       page = await newSpecPage({
         components: [AddressBookPage],
         template: () => <pos-contacts-address-book-page contactsModule={module}></pos-contacts-address-book-page>,

@@ -1,4 +1,4 @@
-import { FullContact } from '@solid-data-modules/contacts-rdflib';
+import { ContactsModule, FullContact } from '@solid-data-modules/contacts-rdflib';
 
 // noinspection ES6UnusedImports
 import { h } from '@stencil/core';
@@ -7,13 +7,11 @@ import { getByRole } from '@testing-library/dom';
 import { when } from 'jest-when';
 import { ContactDetails } from './contact-details';
 
-import '@testing-library/jest-dom';
-
 describe('contact details', () => {
   it('shows loading indicator while there is no contact', async () => {
-    const module = {
+    const module: ContactsModule = {
       readContact: jest.fn(),
-    };
+    } as unknown as ContactsModule;
     const page = await newSpecPage({
       components: [ContactDetails],
       template: () => <pos-contacts-contact-details uri="https://contact.example" contactsModule={module}></pos-contacts-contact-details>,
@@ -31,9 +29,9 @@ describe('contact details', () => {
   describe('loaded contact', () => {
     let page;
     beforeEach(async () => {
-      const module = {
+      const module: ContactsModule = {
         readContact: jest.fn(),
-      };
+      } as unknown as ContactsModule;
       const contact: FullContact = {
         emails: [],
         name: 'Alice',

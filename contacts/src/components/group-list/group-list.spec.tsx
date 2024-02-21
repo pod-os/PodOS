@@ -4,8 +4,6 @@ import { newSpecPage } from '@stencil/core/testing';
 import { getByRole } from '@testing-library/dom';
 import { GroupList } from './group-list';
 
-import '@testing-library/jest-dom';
-
 describe('group-list', () => {
   it('renders an empty list without groups', async () => {
     const page = await newSpecPage({

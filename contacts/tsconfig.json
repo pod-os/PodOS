@@ -1,13 +1,11 @@
 {
   "compilerOptions": {
+    "types": ["jest", "@testing-library/jest-dom"],
     "allowSyntheticDefaultImports": true,
     "allowUnreachableCode": false,
     "declaration": false,
     "experimentalDecorators": true,
-    "lib": [
-      "dom",
-      "es2017"
-    ],
+    "lib": ["dom", "es2017"],
     "moduleResolution": "node",
     "module": "esnext",
     "target": "es2017",
@@ -15,16 +13,8 @@
     "noUnusedParameters": true,
     "jsx": "react",
     "jsxFactory": "h",
-    "skipLibCheck": true // https://github.com/ionic-team/stencil-ds-output-targets/issues/261
+    "skipLibCheck": true, // https://github.com/ionic-team/stencil-ds-output-targets/issues/261
   },
-  "include": [
-    "src",
-    "./jest-setup.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "src/test/**/*",
-    "**/*.spec.ts",
-    "**/*.spec.tsx"
-  ]
+  "include": ["src"],
+  "exclude": ["node_modules", "src/test/**/*"],
 }

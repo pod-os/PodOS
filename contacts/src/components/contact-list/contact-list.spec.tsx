@@ -5,8 +5,6 @@ import { newSpecPage } from '@stencil/core/testing';
 import { getByRole } from '@testing-library/dom';
 import { ContactList } from './contact-list';
 
-import '@testing-library/jest-dom';
-
 describe('contact-list', () => {
   it('renders an empty list without contacts', async () => {
     const page = await newSpecPage({
