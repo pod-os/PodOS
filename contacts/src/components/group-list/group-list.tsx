@@ -1,5 +1,5 @@
 import { Group } from '@solid-data-modules/contacts-rdflib';
-import { Component, h, Prop } from '@stencil/core';
+import { Component, Event, EventEmitter, h, Prop } from '@stencil/core';
 
 @Component({
   tag: 'pos-contacts-group-list',
@@ -9,12 +9,23 @@ import { Component, h, Prop } from '@stencil/core';
 export class GroupList {
   @Prop()
   groups: Group[];
+
+  @Event({ eventName: 'pod-os-contacts:group-selected' }) groupSelected: EventEmitter<Group>;
+
   render() {
     return (
       <ul>
         {this.groups.map(it => (
           <li>
-            <a href={it.uri}>{it.name || it.uri}</a>
+            <a
+              href={it.uri}
+              onClick={e => {
+                e.preventDefault();
+                this.groupSelected.emit(it);
+              }}
+            >
+              {it.name || it.uri}
+            </a>
           </li>
         ))}
       </ul>

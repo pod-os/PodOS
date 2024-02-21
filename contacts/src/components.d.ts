@@ -51,6 +51,10 @@ export interface PosContactsContactListCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosContactsContactListElement;
 }
+export interface PosContactsGroupListCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosContactsGroupListElement;
+}
 export interface PosContactsRouterCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosContactsRouterElement;
@@ -124,7 +128,18 @@ declare global {
         prototype: HTMLPosContactsGroupElement;
         new (): HTMLPosContactsGroupElement;
     };
+    interface HTMLPosContactsGroupListElementEventMap {
+        "pod-os-contacts:group-selected": Group;
+    }
     interface HTMLPosContactsGroupListElement extends Components.PosContactsGroupList, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosContactsGroupListElementEventMap>(type: K, listener: (this: HTMLPosContactsGroupListElement, ev: PosContactsGroupListCustomEvent<HTMLPosContactsGroupListElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosContactsGroupListElementEventMap>(type: K, listener: (this: HTMLPosContactsGroupListElement, ev: PosContactsGroupListCustomEvent<HTMLPosContactsGroupListElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosContactsGroupListElement: {
         prototype: HTMLPosContactsGroupListElement;
@@ -213,6 +228,7 @@ declare namespace LocalJSX {
     }
     interface PosContactsGroupList {
         "groups"?: Group[];
+        "onPod-os-contacts:group-selected"?: (event: PosContactsGroupListCustomEvent<Group>) => void;
     }
     interface PosContactsPhoneNumbers {
         "phoneNumbers": PhoneNumber[];
