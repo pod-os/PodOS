@@ -5,8 +5,8 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { Contact, ContactsModule, Email, Group } from "@solid-data-modules/contacts-rdflib";
-export { Contact, ContactsModule, Email, Group } from "@solid-data-modules/contacts-rdflib";
+import { Contact, ContactsModule, Email, Group, PhoneNumber } from "@solid-data-modules/contacts-rdflib";
+export { Contact, ContactsModule, Email, Group, PhoneNumber } from "@solid-data-modules/contacts-rdflib";
 export namespace Components {
     interface PosContactsAddressBookPage {
         "contactsModule": ContactsModule;
@@ -36,6 +36,7 @@ export namespace Components {
         "groups": Group[];
     }
     interface PosContactsPhoneNumbers {
+        "phoneNumbers": PhoneNumber[];
     }
     interface PosContactsRouter {
     }
@@ -198,6 +199,7 @@ declare namespace LocalJSX {
         "groups"?: Group[];
     }
     interface PosContactsPhoneNumbers {
+        "phoneNumbers": PhoneNumber[];
     }
     interface PosContactsRouter {
         "onPod-os:init"?: (event: PosContactsRouterCustomEvent<any>) => void;

@@ -31,7 +31,7 @@ export class ContactDetails {
     return (
       <Host>
         <h2>{this.contact.name}</h2>
-        <pos-contacts-phone-numbers />
+        <pos-contacts-phone-numbers phoneNumbers={this.contact.phoneNumbers} />
         <pos-contacts-email-addresses emailAddresses={this.contact.emails} />
       </Host>
     );
