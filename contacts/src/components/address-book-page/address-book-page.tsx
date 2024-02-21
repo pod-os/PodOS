@@ -59,7 +59,7 @@ export class AddressBookPage {
         </nav>
         <main>
           {this.selectedContact ? (
-            <pos-contacts-contact contactsModule={this.contactsModule} uri={this.selectedContact.uri}></pos-contacts-contact>
+            <pos-contacts-contact-details contactsModule={this.contactsModule} uri={this.selectedContact.uri}></pos-contacts-contact-details>
           ) : (
             <pos-contacts-contact-list contacts={this.addressBook.contacts} />
           )}

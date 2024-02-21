@@ -81,7 +81,7 @@ describe('address-book-page', () => {
       });
       const main = getByRole(page.root, 'main');
       expect(main.firstChild).toEqualHtml(`
-        <pos-contacts-contact uri='https://alice.test'></pos-contacts-contact>
+        <pos-contacts-contact-details uri='https://alice.test'></pos-contacts-contact-details>
       `);
     });
   });

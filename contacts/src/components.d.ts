@@ -20,8 +20,14 @@ export namespace Components {
         "contactsModule": ContactsModule;
         "uri": string;
     }
+    interface PosContactsContactDetails {
+        "contactsModule": ContactsModule;
+        "uri": string;
+    }
     interface PosContactsContactList {
         "contacts": Contact[];
+    }
+    interface PosContactsEmailAddresses {
     }
     interface PosContactsGroup {
         "contactsModule": ContactsModule;
@@ -29,6 +35,8 @@ export namespace Components {
     }
     interface PosContactsGroupList {
         "groups": Group[];
+    }
+    interface PosContactsPhoneNumbers {
     }
     interface PosContactsRouter {
     }
@@ -87,6 +95,12 @@ declare global {
         prototype: HTMLPosContactsContactElement;
         new (): HTMLPosContactsContactElement;
     };
+    interface HTMLPosContactsContactDetailsElement extends Components.PosContactsContactDetails, HTMLStencilElement {
+    }
+    var HTMLPosContactsContactDetailsElement: {
+        prototype: HTMLPosContactsContactDetailsElement;
+        new (): HTMLPosContactsContactDetailsElement;
+    };
     interface HTMLPosContactsContactListElementEventMap {
         "pod-os-contacts:contact-selected": Contact;
     }
@@ -104,6 +118,12 @@ declare global {
         prototype: HTMLPosContactsContactListElement;
         new (): HTMLPosContactsContactListElement;
     };
+    interface HTMLPosContactsEmailAddressesElement extends Components.PosContactsEmailAddresses, HTMLStencilElement {
+    }
+    var HTMLPosContactsEmailAddressesElement: {
+        prototype: HTMLPosContactsEmailAddressesElement;
+        new (): HTMLPosContactsEmailAddressesElement;
+    };
     interface HTMLPosContactsGroupElement extends Components.PosContactsGroup, HTMLStencilElement {
     }
     var HTMLPosContactsGroupElement: {
@@ -115,6 +135,12 @@ declare global {
     var HTMLPosContactsGroupListElement: {
         prototype: HTMLPosContactsGroupListElement;
         new (): HTMLPosContactsGroupListElement;
+    };
+    interface HTMLPosContactsPhoneNumbersElement extends Components.PosContactsPhoneNumbers, HTMLStencilElement {
+    }
+    var HTMLPosContactsPhoneNumbersElement: {
+        prototype: HTMLPosContactsPhoneNumbersElement;
+        new (): HTMLPosContactsPhoneNumbersElement;
     };
     interface HTMLPosContactsRouterElementEventMap {
         "pod-os:init": any;
@@ -155,9 +181,12 @@ declare global {
         "pos-contacts-address-book-page": HTMLPosContactsAddressBookPageElement;
         "pos-contacts-app": HTMLPosContactsAppElement;
         "pos-contacts-contact": HTMLPosContactsContactElement;
+        "pos-contacts-contact-details": HTMLPosContactsContactDetailsElement;
         "pos-contacts-contact-list": HTMLPosContactsContactListElement;
+        "pos-contacts-email-addresses": HTMLPosContactsEmailAddressesElement;
         "pos-contacts-group": HTMLPosContactsGroupElement;
         "pos-contacts-group-list": HTMLPosContactsGroupListElement;
+        "pos-contacts-phone-numbers": HTMLPosContactsPhoneNumbersElement;
         "pos-contacts-router": HTMLPosContactsRouterElement;
         "pos-contacts-welcome-page": HTMLPosContactsWelcomePageElement;
     }
@@ -176,9 +205,15 @@ declare namespace LocalJSX {
         "contactsModule"?: ContactsModule;
         "uri"?: string;
     }
+    interface PosContactsContactDetails {
+        "contactsModule"?: ContactsModule;
+        "uri"?: string;
+    }
     interface PosContactsContactList {
         "contacts"?: Contact[];
         "onPod-os-contacts:contact-selected"?: (event: PosContactsContactListCustomEvent<Contact>) => void;
+    }
+    interface PosContactsEmailAddresses {
     }
     interface PosContactsGroup {
         "contactsModule"?: ContactsModule;
@@ -186,6 +221,8 @@ declare namespace LocalJSX {
     }
     interface PosContactsGroupList {
         "groups"?: Group[];
+    }
+    interface PosContactsPhoneNumbers {
     }
     interface PosContactsRouter {
         "onPod-os:init"?: (event: PosContactsRouterCustomEvent<any>) => void;
@@ -198,9 +235,12 @@ declare namespace LocalJSX {
         "pos-contacts-address-book-page": PosContactsAddressBookPage;
         "pos-contacts-app": PosContactsApp;
         "pos-contacts-contact": PosContactsContact;
+        "pos-contacts-contact-details": PosContactsContactDetails;
         "pos-contacts-contact-list": PosContactsContactList;
+        "pos-contacts-email-addresses": PosContactsEmailAddresses;
         "pos-contacts-group": PosContactsGroup;
         "pos-contacts-group-list": PosContactsGroupList;
+        "pos-contacts-phone-numbers": PosContactsPhoneNumbers;
         "pos-contacts-router": PosContactsRouter;
         "pos-contacts-welcome-page": PosContactsWelcomePage;
     }
@@ -213,9 +253,12 @@ declare module "@stencil/core" {
             "pos-contacts-address-book-page": LocalJSX.PosContactsAddressBookPage & JSXBase.HTMLAttributes<HTMLPosContactsAddressBookPageElement>;
             "pos-contacts-app": LocalJSX.PosContactsApp & JSXBase.HTMLAttributes<HTMLPosContactsAppElement>;
             "pos-contacts-contact": LocalJSX.PosContactsContact & JSXBase.HTMLAttributes<HTMLPosContactsContactElement>;
+            "pos-contacts-contact-details": LocalJSX.PosContactsContactDetails & JSXBase.HTMLAttributes<HTMLPosContactsContactDetailsElement>;
             "pos-contacts-contact-list": LocalJSX.PosContactsContactList & JSXBase.HTMLAttributes<HTMLPosContactsContactListElement>;
+            "pos-contacts-email-addresses": LocalJSX.PosContactsEmailAddresses & JSXBase.HTMLAttributes<HTMLPosContactsEmailAddressesElement>;
             "pos-contacts-group": LocalJSX.PosContactsGroup & JSXBase.HTMLAttributes<HTMLPosContactsGroupElement>;
             "pos-contacts-group-list": LocalJSX.PosContactsGroupList & JSXBase.HTMLAttributes<HTMLPosContactsGroupListElement>;
+            "pos-contacts-phone-numbers": LocalJSX.PosContactsPhoneNumbers & JSXBase.HTMLAttributes<HTMLPosContactsPhoneNumbersElement>;
             "pos-contacts-router": LocalJSX.PosContactsRouter & JSXBase.HTMLAttributes<HTMLPosContactsRouterElement>;
             "pos-contacts-welcome-page": LocalJSX.PosContactsWelcomePage & JSXBase.HTMLAttributes<HTMLPosContactsWelcomePageElement>;
         }
