@@ -9,8 +9,10 @@ export class WelcomePage {
   @Event({ eventName: 'pod-os-contacts:open-address-book' }) openAddressBook: EventEmitter<string>;
 
   promptAndOpen() {
-    const uri = prompt('Please enter URI of an address book');
-    this.openAddressBook.emit(uri);
+    const uri = prompt('Please enter URI of an address book', 'http://localhost:3000/alice/public-contacts/index.ttl#this');
+    if (uri) {
+      this.openAddressBook.emit(uri);
+    }
   }
 
   render() {
