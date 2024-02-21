@@ -59,7 +59,11 @@ export class AddressBookPage {
         </nav>
         <main>
           {this.selectedContact ? (
-            <pos-contacts-contact-details contactsModule={this.contactsModule} uri={this.selectedContact.uri}></pos-contacts-contact-details>
+            <pos-contacts-contact-details
+              onPod-os-contacts:contact-closed={() => this.closeContact()}
+              contactsModule={this.contactsModule}
+              uri={this.selectedContact.uri}
+            ></pos-contacts-contact-details>
           ) : (
             <pos-contacts-contact-list contacts={this.addressBook.contacts} />
           )}
@@ -74,5 +78,9 @@ export class AddressBookPage {
 
   private closeMenu() {
     this.menuOpen = false;
+  }
+
+  private closeContact() {
+    this.selectedContact = null;
   }
 }

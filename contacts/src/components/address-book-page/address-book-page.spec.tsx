@@ -86,5 +86,21 @@ describe('address-book-page', () => {
         <pos-contacts-contact-details uri='https://alice.test'></pos-contacts-contact-details>
       `);
     });
+
+    it('removes selected contact when closed', async () => {
+      page.rootInstance.selectedContact = {
+        uri: 'https://alice.test',
+      };
+
+      await page.waitForChanges();
+      const main = getByRole(page.root, 'main');
+      expect(main.firstChild).toEqualHtml(`
+        <pos-contacts-contact-details uri='https://alice.test'></pos-contacts-contact-details>
+      `);
+
+      fireEvent(main.firstChild, new CustomEvent('pod-os-contacts:contact-closed'));
+
+      expect(page.rootInstance.selectedContact).toEqual(null);
+    });
   });
 });
