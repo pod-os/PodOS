@@ -24,17 +24,16 @@ button.menu {
   }
 
   button.menu {
-    font-size: var(--scale-10);
-    border:none;
+    border: none;
     cursor: pointer;
     background: none;
     border-radius: var(--radius-sm);
     display: flex;
     justify-content: center;
     align-items: center;
-    width: var(--size-8);
-    height: var(--size-8);
     color: var(--color-primary);
+    padding: var(--size-2);
+    font-size: var(--scale-3);
   }
 
   button.menu:hover {
