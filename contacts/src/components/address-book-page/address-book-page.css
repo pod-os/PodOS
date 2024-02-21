@@ -52,7 +52,8 @@ button.menu {
   }
 
   nav.active {
-    width: var(--size-80);
+    width: var(--size-64);
+    max-width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
