@@ -17,12 +17,12 @@
 
 ### Used by
 
- - [pos-contacts](.)
+ - [pos-contacts-router](router)
 
 ### Graph
 ```mermaid
 graph TD;
-  pos-contacts --> pos-contacts-group
+  pos-contacts-router --> pos-contacts-group
   style pos-contacts-group fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
