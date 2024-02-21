@@ -24,12 +24,15 @@ export namespace Components {
     }
     interface PosContactsContactList {
         "contacts": Contact[];
-        "groupUri"?: string;
     }
     interface PosContactsEmailAddresses {
         "emailAddresses": Email[];
     }
     interface PosContactsGroup {
+        "contactsModule": ContactsModule;
+        "uri": string;
+    }
+    interface PosContactsGroupDetails {
         "contactsModule": ContactsModule;
         "uri": string;
     }
@@ -129,6 +132,12 @@ declare global {
         prototype: HTMLPosContactsGroupElement;
         new (): HTMLPosContactsGroupElement;
     };
+    interface HTMLPosContactsGroupDetailsElement extends Components.PosContactsGroupDetails, HTMLStencilElement {
+    }
+    var HTMLPosContactsGroupDetailsElement: {
+        prototype: HTMLPosContactsGroupDetailsElement;
+        new (): HTMLPosContactsGroupDetailsElement;
+    };
     interface HTMLPosContactsGroupListElementEventMap {
         "pod-os-contacts:group-selected": Group;
     }
@@ -194,6 +203,7 @@ declare global {
         "pos-contacts-contact-list": HTMLPosContactsContactListElement;
         "pos-contacts-email-addresses": HTMLPosContactsEmailAddressesElement;
         "pos-contacts-group": HTMLPosContactsGroupElement;
+        "pos-contacts-group-details": HTMLPosContactsGroupDetailsElement;
         "pos-contacts-group-list": HTMLPosContactsGroupListElement;
         "pos-contacts-phone-numbers": HTMLPosContactsPhoneNumbersElement;
         "pos-contacts-router": HTMLPosContactsRouterElement;
@@ -212,13 +222,12 @@ declare namespace LocalJSX {
         "uri"?: string;
     }
     interface PosContactsContactDetails {
-        "contactsModule"?: ContactsModule;
+        "contactsModule": ContactsModule;
         "onPod-os-contacts:contact-closed"?: (event: PosContactsContactDetailsCustomEvent<void>) => void;
-        "uri"?: string;
+        "uri": string;
     }
     interface PosContactsContactList {
         "contacts": Contact[];
-        "groupUri"?: string;
         "onPod-os-contacts:contact-selected"?: (event: PosContactsContactListCustomEvent<Contact>) => void;
     }
     interface PosContactsEmailAddresses {
@@ -227,6 +236,10 @@ declare namespace LocalJSX {
     interface PosContactsGroup {
         "contactsModule"?: ContactsModule;
         "uri"?: string;
+    }
+    interface PosContactsGroupDetails {
+        "contactsModule": ContactsModule;
+        "uri": string;
     }
     interface PosContactsGroupList {
         "groups"?: Group[];
@@ -249,6 +262,7 @@ declare namespace LocalJSX {
         "pos-contacts-contact-list": PosContactsContactList;
         "pos-contacts-email-addresses": PosContactsEmailAddresses;
         "pos-contacts-group": PosContactsGroup;
+        "pos-contacts-group-details": PosContactsGroupDetails;
         "pos-contacts-group-list": PosContactsGroupList;
         "pos-contacts-phone-numbers": PosContactsPhoneNumbers;
         "pos-contacts-router": PosContactsRouter;
@@ -266,6 +280,7 @@ declare module "@stencil/core" {
             "pos-contacts-contact-list": LocalJSX.PosContactsContactList & JSXBase.HTMLAttributes<HTMLPosContactsContactListElement>;
             "pos-contacts-email-addresses": LocalJSX.PosContactsEmailAddresses & JSXBase.HTMLAttributes<HTMLPosContactsEmailAddressesElement>;
             "pos-contacts-group": LocalJSX.PosContactsGroup & JSXBase.HTMLAttributes<HTMLPosContactsGroupElement>;
+            "pos-contacts-group-details": LocalJSX.PosContactsGroupDetails & JSXBase.HTMLAttributes<HTMLPosContactsGroupDetailsElement>;
             "pos-contacts-group-list": LocalJSX.PosContactsGroupList & JSXBase.HTMLAttributes<HTMLPosContactsGroupListElement>;
             "pos-contacts-phone-numbers": LocalJSX.PosContactsPhoneNumbers & JSXBase.HTMLAttributes<HTMLPosContactsPhoneNumbersElement>;
             "pos-contacts-router": LocalJSX.PosContactsRouter & JSXBase.HTMLAttributes<HTMLPosContactsRouterElement>;

@@ -7,10 +7,10 @@ import { Component, h, Host, Prop, State, Watch, Event, EventEmitter } from '@st
 })
 export class ContactDetails {
   @Prop()
-  uri: string;
+  uri!: string;
 
   @Prop()
-  contactsModule: ContactsModule;
+  contactsModule!: ContactsModule;
 
   @State()
   private contact: FullContact;

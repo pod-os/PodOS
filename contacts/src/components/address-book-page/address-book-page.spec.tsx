@@ -136,7 +136,7 @@ describe('address-book-page', () => {
       });
       const main = getByRole(page.root, 'main');
       expect(main.firstChild).toEqualHtml(`
-        <pos-contacts-contact-list groupUri='https://alice.test/group/1'></pos-contacts-contact-list>
+        <pos-contacts-group-details uri='https://alice.test/group/1'></pos-contacts-group-details>
       `);
     });
   });

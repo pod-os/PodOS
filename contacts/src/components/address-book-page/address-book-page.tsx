@@ -74,7 +74,7 @@ export class AddressBookPage {
               uri={this.selectedContact.uri}
             ></pos-contacts-contact-details>
           ) : this.selectedGroup ? (
-            <pos-contacts-contact-list groupUri={this.selectedGroup.uri} contacts={this.addressBook.contacts} />
+            <pos-contacts-group-details uri={this.selectedGroup.uri} contactsModule={this.contactsModule} />
           ) : (
             <pos-contacts-contact-list contacts={this.addressBook.contacts} />
           )}

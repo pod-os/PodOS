@@ -10,9 +10,6 @@ export class ContactList {
   @Prop()
   contacts!: Contact[];
 
-  @Prop()
-  groupUri?: string;
-
   @Event({ eventName: 'pod-os-contacts:contact-selected' }) contactSelected: EventEmitter<Contact>;
 
   render() {
