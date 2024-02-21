@@ -70,6 +70,17 @@ header {
   align-items: center;
   justify-content: space-between;
   padding: var(--size-4);
+  max-width: 100vw;
+
+  hgroup {
+    min-width: 0;
+    h1 {
+      font-size: var(--scale-fluid-3);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
 }
 
 nav {

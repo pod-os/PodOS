@@ -46,7 +46,9 @@ export class AddressBookPage {
           <button class="menu" onClick={() => this.openMenu()}>
             <ion-icon name="menu-outline"></ion-icon>
           </button>
-          <h1>{this.addressBook.title}</h1>
+          <hgroup>
+            <h1>{this.addressBook.title}</h1>
+          </hgroup>
           <pos-login></pos-login>
         </header>
         <nav class={this.menuOpen ? 'active' : ''}>
