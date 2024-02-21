@@ -8,7 +8,10 @@ import { Component, Event, EventEmitter, h, Prop } from '@stencil/core';
 })
 export class ContactList {
   @Prop()
-  contacts: Contact[];
+  contacts!: Contact[];
+
+  @Prop()
+  groupUri?: string;
 
   @Event({ eventName: 'pod-os-contacts:contact-selected' }) contactSelected: EventEmitter<Contact>;
 

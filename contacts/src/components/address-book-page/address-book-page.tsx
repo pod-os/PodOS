@@ -1,4 +1,4 @@
-import { AddressBook, Contact, ContactsModule } from '@solid-data-modules/contacts-rdflib';
+import { AddressBook, Contact, ContactsModule, Group } from '@solid-data-modules/contacts-rdflib';
 import { Component, h, Host, Listen, Prop, State, Watch } from '@stencil/core';
 
 @Component({
@@ -20,6 +20,9 @@ export class AddressBookPage {
   selectedContact: Contact;
 
   @State()
+  selectedGroup: Group;
+
+  @State()
   private menuOpen = false;
 
   async componentWillLoad() {
@@ -29,6 +32,12 @@ export class AddressBookPage {
   @Listen('pod-os-contacts:contact-selected')
   async onContactSelected(event: CustomEvent<Contact>) {
     this.selectedContact = event.detail;
+  }
+
+  @Listen('pod-os-contacts:group-selected')
+  async onGroupSelected(event: CustomEvent<Group>) {
+    this.selectedContact = null;
+    this.selectedGroup = event.detail;
   }
 
   @Watch('uri')
@@ -64,6 +73,8 @@ export class AddressBookPage {
               contactsModule={this.contactsModule}
               uri={this.selectedContact.uri}
             ></pos-contacts-contact-details>
+          ) : this.selectedGroup ? (
+            <pos-contacts-contact-list groupUri={this.selectedGroup.uri} contacts={this.addressBook.contacts} />
           ) : (
             <pos-contacts-contact-list contacts={this.addressBook.contacts} />
           )}

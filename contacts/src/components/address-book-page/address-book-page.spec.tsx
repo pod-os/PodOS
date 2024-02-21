@@ -103,4 +103,41 @@ describe('address-book-page', () => {
       expect(page.rootInstance.selectedContact).toEqual(null);
     });
   });
+
+  describe('group selection', () => {
+    let page;
+    beforeEach(async () => {
+      const module = {
+        readAddressBook: jest.fn().mockReturnValue({}),
+      } as unknown as ContactsModule;
+      page = await newSpecPage({
+        components: [AddressBookPage],
+        template: () => <pos-contacts-address-book-page contactsModule={module}></pos-contacts-address-book-page>,
+        supportsShadowDom: false,
+      });
+    });
+
+    it('clears the selected contact and shows selected group', async () => {
+      page.rootInstance.selectedContact = {
+        uri: 'https://alice.test',
+      };
+      fireEvent(
+        page.root,
+        new CustomEvent('pod-os-contacts:group-selected', {
+          detail: {
+            uri: 'https://alice.test/group/1',
+          },
+        }),
+      );
+      await page.waitForChanges();
+      expect(page.rootInstance.selectedContact).toEqual(null);
+      expect(page.rootInstance.selectedGroup).toEqual({
+        uri: 'https://alice.test/group/1',
+      });
+      const main = getByRole(page.root, 'main');
+      expect(main.firstChild).toEqualHtml(`
+        <pos-contacts-contact-list groupUri='https://alice.test/group/1'></pos-contacts-contact-list>
+      `);
+    });
+  });
 });

@@ -24,6 +24,7 @@ export namespace Components {
     }
     interface PosContactsContactList {
         "contacts": Contact[];
+        "groupUri"?: string;
     }
     interface PosContactsEmailAddresses {
         "emailAddresses": Email[];
@@ -216,7 +217,8 @@ declare namespace LocalJSX {
         "uri"?: string;
     }
     interface PosContactsContactList {
-        "contacts"?: Contact[];
+        "contacts": Contact[];
+        "groupUri"?: string;
         "onPod-os-contacts:contact-selected"?: (event: PosContactsContactListCustomEvent<Contact>) => void;
     }
     interface PosContactsEmailAddresses {
