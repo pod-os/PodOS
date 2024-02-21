@@ -9,7 +9,7 @@ export class App {
   render() {
     return (
       <pos-app>
-        <pos-contacts />
+        <pos-contacts-router />
       </pos-app>
     );
   }

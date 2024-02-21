@@ -3,15 +3,15 @@ import { ContactsModule } from '@solid-data-modules/contacts-rdflib';
 import { Component, Event, h, Host, Listen, State } from '@stencil/core';
 
 import { createRouter, match, Route } from 'stencil-router-v2';
-import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../events/PodOsAware';
+import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../../events/PodOsAware';
 
 const Router = createRouter();
 
 @Component({
-  tag: 'pos-contacts',
+  tag: 'pos-contacts-router',
   shadow: true,
 })
-export class Contacts implements PodOsAware {
+export class ContactsRouter implements PodOsAware {
   @State() contactsModule: ContactsModule;
 
   @Event({ eventName: 'pod-os:init' }) subscribePodOs: PodOsEventEmitter;

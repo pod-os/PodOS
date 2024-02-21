@@ -30,6 +30,8 @@ export namespace Components {
     interface PosContactsGroupList {
         "groups": Group[];
     }
+    interface PosContactsRouter {
+    }
     interface PosContactsWelcomePage {
     }
 }
@@ -40,6 +42,10 @@ export interface PosContactsCustomEvent<T> extends CustomEvent<T> {
 export interface PosContactsContactListCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosContactsContactListElement;
+}
+export interface PosContactsRouterCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosContactsRouterElement;
 }
 export interface PosContactsWelcomePageCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -110,6 +116,23 @@ declare global {
         prototype: HTMLPosContactsGroupListElement;
         new (): HTMLPosContactsGroupListElement;
     };
+    interface HTMLPosContactsRouterElementEventMap {
+        "pod-os:init": any;
+    }
+    interface HTMLPosContactsRouterElement extends Components.PosContactsRouter, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosContactsRouterElementEventMap>(type: K, listener: (this: HTMLPosContactsRouterElement, ev: PosContactsRouterCustomEvent<HTMLPosContactsRouterElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosContactsRouterElementEventMap>(type: K, listener: (this: HTMLPosContactsRouterElement, ev: PosContactsRouterCustomEvent<HTMLPosContactsRouterElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLPosContactsRouterElement: {
+        prototype: HTMLPosContactsRouterElement;
+        new (): HTMLPosContactsRouterElement;
+    };
     interface HTMLPosContactsWelcomePageElementEventMap {
         "pod-os-contacts:open-address-book": string;
     }
@@ -135,6 +158,7 @@ declare global {
         "pos-contacts-contact-list": HTMLPosContactsContactListElement;
         "pos-contacts-group": HTMLPosContactsGroupElement;
         "pos-contacts-group-list": HTMLPosContactsGroupListElement;
+        "pos-contacts-router": HTMLPosContactsRouterElement;
         "pos-contacts-welcome-page": HTMLPosContactsWelcomePageElement;
     }
 }
@@ -163,6 +187,9 @@ declare namespace LocalJSX {
     interface PosContactsGroupList {
         "groups"?: Group[];
     }
+    interface PosContactsRouter {
+        "onPod-os:init"?: (event: PosContactsRouterCustomEvent<any>) => void;
+    }
     interface PosContactsWelcomePage {
         "onPod-os-contacts:open-address-book"?: (event: PosContactsWelcomePageCustomEvent<string>) => void;
     }
@@ -174,6 +201,7 @@ declare namespace LocalJSX {
         "pos-contacts-contact-list": PosContactsContactList;
         "pos-contacts-group": PosContactsGroup;
         "pos-contacts-group-list": PosContactsGroupList;
+        "pos-contacts-router": PosContactsRouter;
         "pos-contacts-welcome-page": PosContactsWelcomePage;
     }
 }
@@ -188,6 +216,7 @@ declare module "@stencil/core" {
             "pos-contacts-contact-list": LocalJSX.PosContactsContactList & JSXBase.HTMLAttributes<HTMLPosContactsContactListElement>;
             "pos-contacts-group": LocalJSX.PosContactsGroup & JSXBase.HTMLAttributes<HTMLPosContactsGroupElement>;
             "pos-contacts-group-list": LocalJSX.PosContactsGroupList & JSXBase.HTMLAttributes<HTMLPosContactsGroupListElement>;
+            "pos-contacts-router": LocalJSX.PosContactsRouter & JSXBase.HTMLAttributes<HTMLPosContactsRouterElement>;
             "pos-contacts-welcome-page": LocalJSX.PosContactsWelcomePage & JSXBase.HTMLAttributes<HTMLPosContactsWelcomePageElement>;
         }
     }
