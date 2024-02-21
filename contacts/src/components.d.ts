@@ -5,11 +5,9 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { Contact, ContactsModule, Group } from "@solid-data-modules/contacts-rdflib";
-export { Contact, ContactsModule, Group } from "@solid-data-modules/contacts-rdflib";
+import { Contact, ContactsModule, Email, Group } from "@solid-data-modules/contacts-rdflib";
+export { Contact, ContactsModule, Email, Group } from "@solid-data-modules/contacts-rdflib";
 export namespace Components {
-    interface PosContacts {
-    }
     interface PosContactsAddressBookPage {
         "contactsModule": ContactsModule;
         "uri": string;
@@ -28,6 +26,7 @@ export namespace Components {
         "contacts": Contact[];
     }
     interface PosContactsEmailAddresses {
+        "emailAddresses": Email[];
     }
     interface PosContactsGroup {
         "contactsModule": ContactsModule;
@@ -43,10 +42,6 @@ export namespace Components {
     interface PosContactsWelcomePage {
     }
 }
-export interface PosContactsCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLPosContactsElement;
-}
 export interface PosContactsContactListCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosContactsContactListElement;
@@ -60,23 +55,6 @@ export interface PosContactsWelcomePageCustomEvent<T> extends CustomEvent<T> {
     target: HTMLPosContactsWelcomePageElement;
 }
 declare global {
-    interface HTMLPosContactsElementEventMap {
-        "pod-os:init": any;
-    }
-    interface HTMLPosContactsElement extends Components.PosContacts, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLPosContactsElementEventMap>(type: K, listener: (this: HTMLPosContactsElement, ev: PosContactsCustomEvent<HTMLPosContactsElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLPosContactsElementEventMap>(type: K, listener: (this: HTMLPosContactsElement, ev: PosContactsCustomEvent<HTMLPosContactsElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLPosContactsElement: {
-        prototype: HTMLPosContactsElement;
-        new (): HTMLPosContactsElement;
-    };
     interface HTMLPosContactsAddressBookPageElement extends Components.PosContactsAddressBookPage, HTMLStencilElement {
     }
     var HTMLPosContactsAddressBookPageElement: {
@@ -177,7 +155,6 @@ declare global {
         new (): HTMLPosContactsWelcomePageElement;
     };
     interface HTMLElementTagNameMap {
-        "pos-contacts": HTMLPosContactsElement;
         "pos-contacts-address-book-page": HTMLPosContactsAddressBookPageElement;
         "pos-contacts-app": HTMLPosContactsAppElement;
         "pos-contacts-contact": HTMLPosContactsContactElement;
@@ -192,9 +169,6 @@ declare global {
     }
 }
 declare namespace LocalJSX {
-    interface PosContacts {
-        "onPod-os:init"?: (event: PosContactsCustomEvent<any>) => void;
-    }
     interface PosContactsAddressBookPage {
         "contactsModule"?: ContactsModule;
         "uri"?: string;
@@ -214,6 +188,7 @@ declare namespace LocalJSX {
         "onPod-os-contacts:contact-selected"?: (event: PosContactsContactListCustomEvent<Contact>) => void;
     }
     interface PosContactsEmailAddresses {
+        "emailAddresses": Email[];
     }
     interface PosContactsGroup {
         "contactsModule"?: ContactsModule;
@@ -231,7 +206,6 @@ declare namespace LocalJSX {
         "onPod-os-contacts:open-address-book"?: (event: PosContactsWelcomePageCustomEvent<string>) => void;
     }
     interface IntrinsicElements {
-        "pos-contacts": PosContacts;
         "pos-contacts-address-book-page": PosContactsAddressBookPage;
         "pos-contacts-app": PosContactsApp;
         "pos-contacts-contact": PosContactsContact;
@@ -249,7 +223,6 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "pos-contacts": LocalJSX.PosContacts & JSXBase.HTMLAttributes<HTMLPosContactsElement>;
             "pos-contacts-address-book-page": LocalJSX.PosContactsAddressBookPage & JSXBase.HTMLAttributes<HTMLPosContactsAddressBookPageElement>;
             "pos-contacts-app": LocalJSX.PosContactsApp & JSXBase.HTMLAttributes<HTMLPosContactsAppElement>;
             "pos-contacts-contact": LocalJSX.PosContactsContact & JSXBase.HTMLAttributes<HTMLPosContactsContactElement>;

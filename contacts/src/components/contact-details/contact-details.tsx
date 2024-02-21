@@ -32,7 +32,7 @@ export class ContactDetails {
       <Host>
         <h2>{this.contact.name}</h2>
         <pos-contacts-phone-numbers />
-        <pos-contacts-email-addresses />
+        <pos-contacts-email-addresses emailAddresses={this.contact.emails} />
       </Host>
     );
   }
