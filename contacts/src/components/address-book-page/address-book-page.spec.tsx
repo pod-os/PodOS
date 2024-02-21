@@ -1,8 +1,10 @@
+// noinspection ES6UnusedImports
 import { h } from '@stencil/core';
+
 import { newSpecPage } from '@stencil/core/testing';
-import { AddressBookPage } from './address-book-page';
 
 import { fireEvent, getByRole } from '@testing-library/dom';
+import { AddressBookPage } from './address-book-page';
 
 describe('address-book-page', () => {
   it('shows loading indicator while there is no address book', async () => {
@@ -38,7 +40,7 @@ describe('address-book-page', () => {
 
     it('the navigation shows the group list', async () => {
       const nav = getByRole(page.root, 'navigation');
-      expect(nav.firstChild).toEqualHtml(`
+      expect(nav.lastChild).toEqualHtml(`
         <pos-contacts-group-list></pos-contacts-group-list>
       `);
     });

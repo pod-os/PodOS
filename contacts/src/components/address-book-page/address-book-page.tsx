@@ -19,6 +19,9 @@ export class AddressBookPage {
   @State()
   selectedContact: Contact;
 
+  @State()
+  private menuOpen = false;
+
   async componentWillLoad() {
     await this.loadAddressBook();
   }
@@ -40,10 +43,16 @@ export class AddressBookPage {
     return (
       <Host>
         <header>
+          <button class="menu" onClick={() => this.openMenu()}>
+            <ion-icon name="menu-outline"></ion-icon>
+          </button>
           <h1>{this.addressBook.title}</h1>
           <pos-login></pos-login>
         </header>
-        <nav>
+        <nav class={this.menuOpen ? 'active' : ''}>
+          <button class="menu" onClick={() => this.closeMenu()}>
+            <ion-icon name="close-outline"></ion-icon>
+          </button>
           <pos-contacts-group-list groups={this.addressBook.groups} />
         </nav>
         <main>
@@ -55,5 +64,13 @@ export class AddressBookPage {
         </main>
       </Host>
     );
+  }
+
+  private openMenu() {
+    this.menuOpen = true;
+  }
+
+  private closeMenu() {
+    this.menuOpen = false;
   }
 }

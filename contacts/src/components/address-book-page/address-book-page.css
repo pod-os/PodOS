@@ -1,6 +1,7 @@
 :host {
   --header-height: var(--size-14);
   --content-height: calc(100vh - var(--header-height) - var(--size-10));
+  --color-primary: var(--color-blue-700);
   display: grid;
   grid-template-columns: var(--size-80) auto;
   grid-template-rows: var(--header-height) auto;
@@ -9,6 +10,58 @@
     "header header"
     "menu main"
 }
+
+button.menu {
+  display: none;
+}
+
+@media only screen and (max-width: 600px) {
+
+  :host {
+    grid-template-areas:
+    "header header"
+    "main main"
+  }
+
+  button.menu {
+    font-size: var(--scale-10);
+    border:none;
+    cursor: pointer;
+    background: none;
+    border-radius: var(--radius-sm);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: var(--size-8);
+    height: var(--size-8);
+    color: var(--color-primary);
+  }
+
+  button.menu:hover {
+    background: var(--color-grey-100);
+  }
+
+  nav {
+    transition: width 100ms linear;
+    position: absolute;
+    background-color: var(--color-grey-50);
+    box-shadow: var(--shadow-lg);
+    width: 0;
+    border: 1px solid var(--color-grey-100);
+    border-radius: var(--radius-lg);
+  }
+
+  nav.active {
+    width: var(--size-80);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-end;
+    gap: 1rem;
+    padding: 1rem;
+  }
+}
+
 
 header {
   display: flex;
