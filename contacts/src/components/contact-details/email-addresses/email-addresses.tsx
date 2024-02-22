@@ -18,7 +18,9 @@ export class EmailAddresses {
         <ion-icon aria-hidden="true" size="large" name="mail-outline"></ion-icon>
         <ul>
           {this.emailAddresses.map(email => (
-            <li>{email.value}</li>
+            <li>
+              <a href={`mailto:${email.value}`}>{email.value}</a>
+            </li>
           ))}
         </ul>
       </section>

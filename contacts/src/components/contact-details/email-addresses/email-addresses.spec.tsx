@@ -36,6 +36,25 @@ describe('email addresses', () => {
     expect(mail.textContent).toEqual('alice@mail.test');
   });
 
+  it('allows to send an email to an address', async () => {
+    const page = await newSpecPage({
+      components: [EmailAddresses],
+      template: () => (
+        <pos-contacts-email-addresses
+          emailAddresses={[
+            {
+              uri: 'https://contact.test#mail1',
+              value: 'alice@mail.test',
+            },
+          ]}
+        ></pos-contacts-email-addresses>
+      ),
+      supportsShadowDom: false,
+    });
+    const link: HTMLLinkElement = getByRole(page.root, 'link');
+    expect(link.href).toEqual('mailto:alice@mail.test');
+  });
+
   it('shows all the e-mail addresses', async () => {
     const page = await newSpecPage({
       components: [EmailAddresses],
