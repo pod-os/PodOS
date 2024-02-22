@@ -3,6 +3,8 @@ import { Component, h, Prop } from '@stencil/core';
 
 @Component({
   tag: 'pos-contacts-phone-numbers',
+  styleUrl: './phone-numbers.css',
+  shadow: true,
 })
 export class PhoneNumbers {
   @Prop()
@@ -13,11 +15,14 @@ export class PhoneNumbers {
       return null;
     }
     return (
-      <ul>
-        {this.phoneNumbers.map(phoneNumber => (
-          <li>{phoneNumber.value}</li>
-        ))}
-      </ul>
+      <section aria-label="phone numbers">
+        <ion-icon aria-hidden="true" size="large" name="call-outline"></ion-icon>
+        <ul>
+          {this.phoneNumbers.map(phoneNumber => (
+            <li>{phoneNumber.value}</li>
+          ))}
+        </ul>
+      </section>
     );
   }
 }

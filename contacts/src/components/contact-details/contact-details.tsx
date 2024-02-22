@@ -4,6 +4,7 @@ import { Component, h, Host, Prop, State, Watch, Event, EventEmitter } from '@st
 @Component({
   tag: 'pos-contacts-contact-details',
   styleUrl: './contact-details.css',
+  shadow: true,
 })
 export class ContactDetails {
   @Prop()
@@ -33,12 +34,19 @@ export class ContactDetails {
 
     return (
       <Host>
-        <button aria-label="Back to address book" onClick={() => this.closeContact.emit()}>
-          back
-        </button>
-        <h2>{this.contact.name}</h2>
-        <pos-contacts-phone-numbers phoneNumbers={this.contact.phoneNumbers} />
-        <pos-contacts-email-addresses emailAddresses={this.contact.emails} />
+        <header>
+          <button class="back" aria-label="Back to address book" onClick={() => this.closeContact.emit()}>
+            <ion-icon aria-hidden="true" name="arrow-back-outline"></ion-icon>
+          </button>
+          <div class="overview">
+            <ion-icon size="large" name="person-circle-outline"></ion-icon>
+            <h2>{this.contact.name}</h2>
+          </div>
+        </header>
+        <section>
+          <pos-contacts-phone-numbers phoneNumbers={this.contact.phoneNumbers} />
+          <pos-contacts-email-addresses emailAddresses={this.contact.emails} />
+        </section>
       </Host>
     );
   }

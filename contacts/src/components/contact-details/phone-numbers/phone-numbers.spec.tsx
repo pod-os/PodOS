@@ -9,11 +9,11 @@ describe('phone numbers', () => {
     const page = await newSpecPage({
       components: [PhoneNumbers],
       template: () => <pos-contacts-phone-numbers phoneNumbers={[]}></pos-contacts-phone-numbers>,
-      supportsShadowDom: false,
     });
     expect(page.root).toEqualHtml(`
-      <pos-contacts-phone-numbers>
-      </pos-contacts-phone-numbers>
+     <pos-contacts-phone-numbers>
+        <mock:shadow-root></mock:shadow-root>
+     </pos-contacts-phone-numbers>
     `);
   });
 

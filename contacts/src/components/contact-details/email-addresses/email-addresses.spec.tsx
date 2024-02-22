@@ -9,10 +9,10 @@ describe('email addresses', () => {
     const page = await newSpecPage({
       components: [EmailAddresses],
       template: () => <pos-contacts-email-addresses emailAddresses={[]}></pos-contacts-email-addresses>,
-      supportsShadowDom: false,
     });
     expect(page.root).toEqualHtml(`
       <pos-contacts-email-addresses>
+       <mock:shadow-root></mock:shadow-root>
       </pos-contacts-email-addresses>
     `);
   });
