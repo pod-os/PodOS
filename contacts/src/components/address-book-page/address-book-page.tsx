@@ -52,8 +52,8 @@ export class AddressBookPage {
     return (
       <Host>
         <header>
-          <button class="menu" onClick={() => this.openMenu()}>
-            <ion-icon name="menu-outline"></ion-icon>
+          <button class="menu" aria-label="open side navigation" onClick={() => this.openMenu()}>
+            <ion-icon aria-hidden="true" name="menu-outline"></ion-icon>
           </button>
           <hgroup>
             <h1>{this.addressBook.title}</h1>
@@ -61,8 +61,8 @@ export class AddressBookPage {
           <pos-login></pos-login>
         </header>
         <nav class={this.menuOpen ? 'active' : ''}>
-          <button class="menu" onClick={() => this.closeMenu()}>
-            <ion-icon name="close-outline"></ion-icon>
+          <button class="menu" aria-label="close side navigation" onClick={() => this.closeMenu()}>
+            <ion-icon aria-hidden="true" name="close-outline"></ion-icon>
           </button>
           <pos-contacts-group-list groups={this.addressBook.groups} />
         </nav>
