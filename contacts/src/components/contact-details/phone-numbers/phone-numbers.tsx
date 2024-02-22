@@ -19,7 +19,9 @@ export class PhoneNumbers {
         <ion-icon aria-hidden="true" size="large" name="call-outline"></ion-icon>
         <ul>
           {this.phoneNumbers.map(phoneNumber => (
-            <li>{phoneNumber.value}</li>
+            <li>
+              <a href={`tel:${phoneNumber.value}`}>{phoneNumber.value}</a>
+            </li>
           ))}
         </ul>
       </section>

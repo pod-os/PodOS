@@ -36,6 +36,25 @@ describe('phone numbers', () => {
     expect(phoneNumber.textContent).toEqual('+1234');
   });
 
+  it('allows to call a phone number', async () => {
+    const page = await newSpecPage({
+      components: [PhoneNumbers],
+      template: () => (
+        <pos-contacts-phone-numbers
+          phoneNumbers={[
+            {
+              uri: 'https://contact.test#phone1',
+              value: '+1234',
+            },
+          ]}
+        ></pos-contacts-phone-numbers>
+      ),
+      supportsShadowDom: false,
+    });
+    const link: HTMLLinkElement = getByRole(page.root, 'link');
+    expect(link.href).toEqual('tel:+1234');
+  });
+
   it('shows all the phone numbers', async () => {
     const page = await newSpecPage({
       components: [PhoneNumbers],
