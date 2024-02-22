@@ -59,6 +59,7 @@ button.menu {
     align-items: flex-end;
     gap: 1rem;
     padding: 1rem;
+    z-index: var(--layer-top);
   }
 }
 
