@@ -19,8 +19,8 @@ export class ContactDetails {
   @Event({ eventName: 'pod-os-contacts:contact-closed' })
   closeContact: EventEmitter<void>;
 
-  async componentWillLoad() {
-    await this.loadContact();
+  componentWillLoad() {
+    this.loadContact();
   }
 
   @Watch('uri')

@@ -25,8 +25,8 @@ export class AddressBookPage {
   @State()
   private menuOpen = false;
 
-  async componentWillLoad() {
-    await this.loadAddressBook();
+  componentWillLoad() {
+    this.loadAddressBook();
   }
 
   @Listen('pod-os-contacts:contact-selected')

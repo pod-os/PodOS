@@ -14,8 +14,8 @@ export class Group {
   @State()
   group: FullGroup;
 
-  async componentWillLoad() {
-    await this.loadGroup();
+  componentWillLoad() {
+    this.loadGroup();
   }
 
   @Watch('uri')

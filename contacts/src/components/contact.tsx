@@ -14,8 +14,8 @@ export class Contact {
   @State()
   contact: FullContact;
 
-  async componentWillLoad() {
-    await this.loadContact();
+  componentWillLoad() {
+    this.loadContact();
   }
 
   @Watch('uri')
