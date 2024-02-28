@@ -19,10 +19,10 @@ describe('contact details', () => {
     });
     expect(page.root).toEqualHtml(`
       <pos-contacts-contact-details>
-        <div>
-          Loading contact...
+        <div class="loading">
+          <pos-contacts-loading-spinner></pos-contacts-loading-spinner>
         </div>
-      </pos-contacts-address-book-page>
+      </pos-contacts-contact-details>
     `);
   });
 

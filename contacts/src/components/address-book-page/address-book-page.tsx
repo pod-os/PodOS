@@ -47,7 +47,11 @@ export class AddressBookPage {
 
   render() {
     if (!this.addressBook) {
-      return <div>Loading address book...</div>;
+      return (
+        <main class="loading">
+          <pos-contacts-loading-spinner />
+        </main>
+      );
     }
     return (
       <Host>

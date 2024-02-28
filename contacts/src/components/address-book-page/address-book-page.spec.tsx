@@ -20,9 +20,9 @@ describe('address-book-page', () => {
     });
     expect(page.root).toEqualHtml(`
       <pos-contacts-address-book-page>
-        <div>
-          Loading address book...
-        </div>
+        <main class='loading'>
+            <pos-contacts-loading-spinner></pos-contacts-loading-spinner>
+        </main>
       </pos-contacts-address-book-page>
     `);
   });

@@ -97,3 +97,13 @@ main {
   background-color: white;
   border-radius: var(--radius-xl);
 }
+
+.loading {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  pos-contacts-loading-spinner {
+    --spinner-size: var(--size-36);
+  }
+}

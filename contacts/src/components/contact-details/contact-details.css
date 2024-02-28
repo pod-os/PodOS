@@ -63,3 +63,13 @@ button.back {
 button.back:hover {
   background: var(--color-grey-100);
 }
+
+.loading {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  pos-contacts-loading-spinner {
+    --spinner-size: var(--size-36);
+  }
+}

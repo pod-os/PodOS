@@ -29,7 +29,11 @@ export class ContactDetails {
   }
   render() {
     if (!this.contact) {
-      return <div>Loading contact...</div>;
+      return (
+        <div class="loading">
+          <pos-contacts-loading-spinner />
+        </div>
+      );
     }
 
     return (

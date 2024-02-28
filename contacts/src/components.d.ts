@@ -39,6 +39,9 @@ export namespace Components {
     interface PosContactsGroupList {
         "groups": Group[];
     }
+    interface PosContactsLoadingSpinner {
+        "defer": number;
+    }
     interface PosContactsPhoneNumbers {
         "phoneNumbers": PhoneNumber[];
     }
@@ -155,6 +158,12 @@ declare global {
         prototype: HTMLPosContactsGroupListElement;
         new (): HTMLPosContactsGroupListElement;
     };
+    interface HTMLPosContactsLoadingSpinnerElement extends Components.PosContactsLoadingSpinner, HTMLStencilElement {
+    }
+    var HTMLPosContactsLoadingSpinnerElement: {
+        prototype: HTMLPosContactsLoadingSpinnerElement;
+        new (): HTMLPosContactsLoadingSpinnerElement;
+    };
     interface HTMLPosContactsPhoneNumbersElement extends Components.PosContactsPhoneNumbers, HTMLStencilElement {
     }
     var HTMLPosContactsPhoneNumbersElement: {
@@ -205,6 +214,7 @@ declare global {
         "pos-contacts-group": HTMLPosContactsGroupElement;
         "pos-contacts-group-details": HTMLPosContactsGroupDetailsElement;
         "pos-contacts-group-list": HTMLPosContactsGroupListElement;
+        "pos-contacts-loading-spinner": HTMLPosContactsLoadingSpinnerElement;
         "pos-contacts-phone-numbers": HTMLPosContactsPhoneNumbersElement;
         "pos-contacts-router": HTMLPosContactsRouterElement;
         "pos-contacts-welcome-page": HTMLPosContactsWelcomePageElement;
@@ -245,6 +255,9 @@ declare namespace LocalJSX {
         "groups"?: Group[];
         "onPod-os-contacts:group-selected"?: (event: PosContactsGroupListCustomEvent<Group>) => void;
     }
+    interface PosContactsLoadingSpinner {
+        "defer"?: number;
+    }
     interface PosContactsPhoneNumbers {
         "phoneNumbers": PhoneNumber[];
     }
@@ -264,6 +277,7 @@ declare namespace LocalJSX {
         "pos-contacts-group": PosContactsGroup;
         "pos-contacts-group-details": PosContactsGroupDetails;
         "pos-contacts-group-list": PosContactsGroupList;
+        "pos-contacts-loading-spinner": PosContactsLoadingSpinner;
         "pos-contacts-phone-numbers": PosContactsPhoneNumbers;
         "pos-contacts-router": PosContactsRouter;
         "pos-contacts-welcome-page": PosContactsWelcomePage;
@@ -282,6 +296,7 @@ declare module "@stencil/core" {
             "pos-contacts-group": LocalJSX.PosContactsGroup & JSXBase.HTMLAttributes<HTMLPosContactsGroupElement>;
             "pos-contacts-group-details": LocalJSX.PosContactsGroupDetails & JSXBase.HTMLAttributes<HTMLPosContactsGroupDetailsElement>;
             "pos-contacts-group-list": LocalJSX.PosContactsGroupList & JSXBase.HTMLAttributes<HTMLPosContactsGroupListElement>;
+            "pos-contacts-loading-spinner": LocalJSX.PosContactsLoadingSpinner & JSXBase.HTMLAttributes<HTMLPosContactsLoadingSpinnerElement>;
             "pos-contacts-phone-numbers": LocalJSX.PosContactsPhoneNumbers & JSXBase.HTMLAttributes<HTMLPosContactsPhoneNumbersElement>;
             "pos-contacts-router": LocalJSX.PosContactsRouter & JSXBase.HTMLAttributes<HTMLPosContactsRouterElement>;
             "pos-contacts-welcome-page": LocalJSX.PosContactsWelcomePage & JSXBase.HTMLAttributes<HTMLPosContactsWelcomePageElement>;
