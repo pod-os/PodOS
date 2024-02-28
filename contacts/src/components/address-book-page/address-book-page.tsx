@@ -23,6 +23,9 @@ export class AddressBookPage {
   selectedGroup: Group;
 
   @State()
+  error: any;
+
+  @State()
   private menuOpen = false;
 
   componentWillLoad() {
@@ -42,10 +45,22 @@ export class AddressBookPage {
 
   @Watch('uri')
   async loadAddressBook() {
-    this.addressBook = await this.contactsModule.readAddressBook(this.uri);
+    try {
+      this.addressBook = await this.contactsModule.readAddressBook(this.uri);
+    } catch (e) {
+      this.error = e;
+    }
   }
 
   render() {
+    if (this.error) {
+      return (
+        <main class="error">
+          <h2>Loading the address book failed.</h2>
+          <pos-resource uri={this.uri}></pos-resource>
+        </main>
+      );
+    }
     if (!this.addressBook) {
       return (
         <main class="loading">

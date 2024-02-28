@@ -55,6 +55,29 @@ describe('address-book-page', () => {
     });
   });
 
+  describe('when loading the address book failed', () => {
+    it('the main part shows an error', async () => {
+      const module = {
+        readAddressBook: jest.fn().mockRejectedValue({ error: 'fake error for testing' }),
+      } as unknown as ContactsModule;
+      const page = await newSpecPage({
+        components: [AddressBookPage],
+        template: () => <pos-contacts-address-book-page contactsModule={module}></pos-contacts-address-book-page>,
+        supportsShadowDom: false,
+      });
+      await page.waitForChanges();
+      const main = getByRole(page.root, 'main');
+      expect(main).toEqualHtml(`
+        <main class="error">
+          <h2>
+            Loading the address book failed.
+          </h2>
+          <pos-resource></pos-resource>
+        </main>
+      `);
+    });
+  });
+
   describe('contact selection', () => {
     let page;
     beforeEach(async () => {

@@ -98,12 +98,29 @@ main {
   border-radius: var(--radius-xl);
 }
 
-.loading {
+
+
+main.error, main.loading {
   display: flex;
   height: 100%;
   align-items: center;
   justify-content: center;
+}
+
+main.loading {
   pos-contacts-loading-spinner {
     --spinner-size: var(--size-36);
   }
+}
+
+main.error {
+  flex-direction: column;
+  background: var(--color-red-700);
+  color: white;
+  pre {
+    border-radius: var(--radius-md);
+    border: var(--size-1) solid var(--color-grey-500);
+    padding: var(--size-4);
+    background: var(--color-grey-800);
+  };
 }
