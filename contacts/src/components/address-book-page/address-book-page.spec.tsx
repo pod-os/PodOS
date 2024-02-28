@@ -56,7 +56,7 @@ describe('address-book-page', () => {
   });
 
   describe('when loading the address book failed', () => {
-    it('the main part shows an error', async () => {
+    it('the main part shows an error, login and retry', async () => {
       const module = {
         readAddressBook: jest.fn().mockRejectedValue({ error: 'fake error for testing' }),
       } as unknown as ContactsModule;
@@ -72,6 +72,14 @@ describe('address-book-page', () => {
           <h2>
             Loading the address book failed.
           </h2>
+          <pos-login></pos-login>
+          <p>
+            You might need to log in and then
+            <button class="retry">
+              <ion-icon name="reload-outline"></ion-icon>
+              retry
+            </button>
+          </p>
           <pos-resource></pos-resource>
         </main>
       `);

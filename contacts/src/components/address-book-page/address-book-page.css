@@ -117,6 +117,29 @@ main.error {
   flex-direction: column;
   background: var(--color-red-700);
   color: white;
+  p {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--size-2);
+  }
+  button.retry {
+    display: flex;
+    align-items: center;
+    gap: var(--size-2);
+    color: black;
+    font-size: var(--scale-1);
+    border-radius: var(--radius-lg);
+    font-weight: var(--weight-bold);
+    padding: var(--size-1);
+    background-color: var(--color-grey-200);
+    border: 1px dotted var(--color-grey-800);
+    box-shadow: var(--shadow-md);
+  }
+  button.retry:hover {
+    cursor: pointer;
+    filter: brightness(110%);
+  }
   pre {
     border-radius: var(--radius-md);
     border: var(--size-1) solid var(--color-grey-500);

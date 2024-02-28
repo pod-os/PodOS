@@ -46,6 +46,7 @@ export class AddressBookPage {
   @Watch('uri')
   async loadAddressBook() {
     try {
+      this.error = null;
       this.addressBook = await this.contactsModule.readAddressBook(this.uri);
     } catch (e) {
       this.error = e;
@@ -57,6 +58,15 @@ export class AddressBookPage {
       return (
         <main class="error">
           <h2>Loading the address book failed.</h2>
+          <pos-login></pos-login>
+          <p>
+            You might need to log in and then
+            <button class="retry" onClick={() => this.retry()}>
+              <ion-icon name="reload-outline"></ion-icon>
+              retry
+            </button>
+          </p>
+
           <pos-resource uri={this.uri}></pos-resource>
         </main>
       );
@@ -112,5 +122,9 @@ export class AddressBookPage {
 
   private closeContact() {
     this.selectedContact = null;
+  }
+
+  private async retry() {
+    await this.loadAddressBook();
   }
 }
