@@ -21,8 +21,10 @@
 
 ### Depends on
 
-- ion-icon
 - pos-login
+- ion-icon
+- pos-resource
+- [pos-contacts-loading-spinner](../loading-spinner)
 - [pos-contacts-group-list](../group-list)
 - [pos-contacts-contact-details](../contact-details)
 - [pos-contacts-group-details](../contact-details/group-details)
@@ -31,8 +33,10 @@
 ### Graph
 ```mermaid
 graph TD;
-  pos-contacts-address-book-page --> ion-icon
   pos-contacts-address-book-page --> pos-login
+  pos-contacts-address-book-page --> ion-icon
+  pos-contacts-address-book-page --> pos-resource
+  pos-contacts-address-book-page --> pos-contacts-loading-spinner
   pos-contacts-address-book-page --> pos-contacts-group-list
   pos-contacts-address-book-page --> pos-contacts-contact-details
   pos-contacts-address-book-page --> pos-contacts-group-details
@@ -49,8 +53,12 @@ graph TD;
   pos-picture --> pos-image
   pos-image --> ion-skeleton-text
   ion-button --> ion-ripple-effect
+  pos-contacts-contact-details --> pos-contacts-loading-spinner
+  pos-contacts-contact-details --> ion-icon
   pos-contacts-contact-details --> pos-contacts-phone-numbers
   pos-contacts-contact-details --> pos-contacts-email-addresses
+  pos-contacts-phone-numbers --> ion-icon
+  pos-contacts-email-addresses --> ion-icon
   pos-contacts-router --> pos-contacts-address-book-page
   style pos-contacts-address-book-page fill:#f9f,stroke:#333,stroke-width:4px
 ```
