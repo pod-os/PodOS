@@ -1,12 +1,34 @@
-# PodOS - An operating system for your personal online datastore
+![PodOS Logo](./assets/logo-text.svg)
+
+# PodOS - Your personal online data operating system
 
 ![CI](https://github.com/pod-os/PodOS/actions/workflows/ci-cd.yml/badge.svg)
 
-* [PodOS core](./core)
-* [PodOS elements](./elements)
+
+PodOS is an online operating system that helps you to access and mange your data on the web.
+
+Thanks to the [Solid Protocol](https://solidproject.org), PodOS can access data anywhere on the web and you stay in full control of where to store it.
+
+PodOS consists of:
+
+* [PodOS elements](./elements) - A collection of web components to facilitate your data
+* [PodOS core](./core) - Core logic to access and manipulate data on Solid Pods
 * [Documentation](./docs)
 
-## Run locally
+## Using PodOS
+
+The simplest way to use PodOS is by using one of the hosted apps PodOS provides:
+
+- [PodOS browser](https://pod-os-browser.netlify.app) - A generic data browser
+- [PodOS contacts](https://pod-os-contacts.netlify.app) - address book & contacts manager (🚧 under construction)
+
+Another way to use PodOS is to use the [PodOS elements](./elements) on your site. You do not have to be a programmer to do that! It is as easy as adding some additional tags to an HTML page. Check it out!
+
+## Developing PodOS
+
+This section is relevant if you want to contribute to the source code of PodOS.
+
+### Run locally
 
 First install:
 
@@ -32,6 +54,6 @@ The development Solid server is running at http://localhost:3000/
 * [Test Users](./dev-solid-server/Readme.md#Users)
 
 
-## Contributing
+### Contributing
 
 You want to contribute? Great! Take a look into our [contributing guide](./CONTRIBUTING.md)
