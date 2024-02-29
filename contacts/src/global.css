@@ -1,0 +1,8 @@
+@import "~pollen-css/pollen.css";
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-grey-50);
+  margin: 0;
+  height: 100vh;
+}

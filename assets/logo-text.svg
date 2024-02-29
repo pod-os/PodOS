@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="206.17302mm"
+   height="55.25547mm"
+   viewBox="0 0 206.17302 55.25547"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25)"
+   sodipodi:docname="logo-text.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="1.0507202"
+     inkscape:cx="350.23596"
+     inkscape:cy="66.620971"
+     inkscape:window-width="1920"
+     inkscape:window-height="1016"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-3.4019349,-24.473558)">
+    <g
+       id="g14"
+       transform="matrix(0.55321791,0,0,0.55321791,-21.384244,5.239144)">
+      <path
+         d="M 54.064045,123.40359 V 57.257762 l 39.6875,-13.22917 39.687505,13.22917 v 66.145828 z"
+         style="fill:#008bf8;stroke:#008bf8;stroke-width:18.5208"
+         stroke-linejoin="round"
+         id="path1" />
+      <path
+         d="M 67.293211,110.17443 V 70.486932 l 26.458334,-7.9375 26.458335,7.9375 V 110.17443 H 75.230711 v 18.52083 h -7.9375 z"
+         style="fill:#ffffff;stroke:#ffffff;stroke-width:11.9062"
+         stroke-linejoin="round"
+         id="path2-0" />
+      <path
+         d="m 80.522378,96.945262 v -13.22917 l 13.229167,-5.29166 13.229165,5.29166 v 13.22917 z"
+         style="fill:#dc0073;stroke:#dc0073;stroke-width:5.29167"
+         stroke-linejoin="round"
+         id="path3-6" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-size:52.8782px;line-height:1.25;font-family:Genos;-inkscape-font-specification:Genos;fill:#333333;stroke-width:1.32196"
+       x="60.77581"
+       y="60.046345"
+       id="text3"><tspan
+         sodipodi:role="line"
+         id="tspan3"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-family:Genos;-inkscape-font-specification:'Genos Semi-Bold';fill:#333333;stroke-width:1.32196"
+         x="60.77581"
+         y="60.046345">PodOS</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:12.7738px;line-height:1.25;font-family:Genos;-inkscape-font-specification:Genos;fill:#333333;stroke-width:2.87773"
+       x="63.900974"
+       y="72.163887"
+       id="text1"><tspan
+         sodipodi:role="line"
+         id="tspan1"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.7738px;font-family:Genos;-inkscape-font-specification:Genos;fill:#333333;stroke-width:2.87773"
+         x="63.900974"
+         y="72.163887">Your personal online data OS</tspan></text>
+  </g>
+</svg>

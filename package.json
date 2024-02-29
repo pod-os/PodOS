@@ -12,6 +12,7 @@
     "build": "npm run build --workspaces --if-present",
     "dev:core": "npm run build:watch --workspace core",
     "dev:elements": "npm start --workspace elements",
+    "dev:contacts": "npm start --workspace contacts",
     "dev:server": "npm start --workspace dev-solid-server"
   },
   "repository": {
@@ -38,6 +39,7 @@
   "workspaces": [
     "core",
     "elements",
-    "dev-solid-server"
+    "dev-solid-server",
+    "contacts"
   ]
 }
