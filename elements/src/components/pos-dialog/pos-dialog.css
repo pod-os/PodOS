@@ -1,7 +1,4 @@
-:host {
-  font-family: var(--font-sans);
-  display: block;
-}
+
 
 dialog {
   background-color: var(--pos-background-color);
@@ -11,23 +8,26 @@ dialog {
   max-width: var(--width-xs);
 }
 
-dialog slot[name='title']::slotted(*) {
+dialog header > :first-child {
+  /* This is the title slot*/
   flex-grow: 1;
   font-weight: var(--weight-light);
   font-size: var(--scale-2);
+  font-family: var(--font-sans);
 }
 
 dialog header {
   display: flex;
   flex-direction: row;
-  justify-content: start;
+  justify-content: space-between;
   align-items: center;
   gap: var(--scale-0);
   border-bottom-style: inset;
   padding-bottom: var(--scale-0);
 }
 
-dialog [name='content']::slotted(*) {
+dialog > :last-child {
+  /* This is the content slot*/
   margin: var(--scale-3);
 }
 

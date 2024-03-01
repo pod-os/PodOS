@@ -6,7 +6,7 @@ import { Component, Host, h, Method } from '@stencil/core';
 @Component({
   tag: 'pos-dialog',
   styleUrl: 'pos-dialog.css',
-  shadow: true,
+  shadow: false, // shadow dom prevents the html dialog from working normally (autofocus, close on submit)
 })
 export class PosDialog {
   private dialog: HTMLDialogElement;
