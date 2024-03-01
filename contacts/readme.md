@@ -1,4 +1,9 @@
-# <img src="../assets/logo.png" alt="image" style="width:30px;height:auto;"> PodOS contacts
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../assets/logo-text-white.svg">
+  <img alt="PodOS Logo" src="../assets/logo-text.svg">
+</picture>
+
+# PodOS contacts
 
 A contacts manager for Solid based on PodOS
 
