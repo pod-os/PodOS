@@ -1,0 +1,30 @@
+import {html} from "lit-html";
+
+import {
+  Canvas,
+  Meta,
+  Story
+} from '@storybook/addon-docs/blocks';
+
+<Meta
+  title="Inputs"
+/>
+
+## pos-dialog
+
+Styled wrapper around native dialog element
+
+<Canvas
+  withSource="open">
+  <Story
+    name="pos-dialog"
+  >
+    {() => html`
+<button type="button" onClick="this.parentNode.querySelector('pos-dialog').showModal()">Click to open dialog</button>
+  <pos-dialog>
+      <span slot="title">The title of the dialog</span>
+      <div slot="content">The content of the dialog.</div>
+  </pos-dialog>
+    `}
+  </Story>
+</Canvas>

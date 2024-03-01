@@ -8,30 +8,22 @@ import { Component, Host, h, Prop } from '@stencil/core';
 export class PosAddNewThing {
   @Prop() referenceUri!: string;
 
-  private dialog: HTMLDialogElement;
+  private dialog: HTMLPosDialogElement;
 
   openDialog() {
     this.dialog.showModal();
   }
 
-  closeDialog() {
-    this.dialog.close();
-  }
   render() {
     return (
       <Host>
         <button id="new" title="Add a new thing" onClick={() => this.openDialog()}>
           <ion-icon name="add-circle-outline"></ion-icon>
         </button>
-        <dialog ref={el => (this.dialog = el as HTMLDialogElement)}>
-          <header>
-            <span id="title">Add a new thing</span>
-            <button tabindex={-1} id="close" title="Close" onClick={() => this.closeDialog()}>
-              <ion-icon name="close-outline"></ion-icon>
-            </button>
-          </header>
-          <pos-new-thing-form referenceUri={this.referenceUri} />
-        </dialog>
+        <pos-dialog ref={el => (this.dialog = el as HTMLPosDialogElement)}>
+          <span slot="title">Add a new thing</span>
+          <pos-new-thing-form slot="content" referenceUri={this.referenceUri} />
+        </pos-dialog>
       </Host>
     );
   }

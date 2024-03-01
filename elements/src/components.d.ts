@@ -31,6 +31,13 @@ export namespace Components {
     }
     interface PosDescription {
     }
+    /**
+     * Styled wrapper around native dialog element, with slots `title` and `content`
+     */
+    interface PosDialog {
+        "close": () => Promise<void>;
+        "showModal": () => Promise<void>;
+    }
     interface PosDocument {
         "alt": string;
         "src": string;
@@ -320,6 +327,15 @@ declare global {
     var HTMLPosDescriptionElement: {
         prototype: HTMLPosDescriptionElement;
         new (): HTMLPosDescriptionElement;
+    };
+    /**
+     * Styled wrapper around native dialog element, with slots `title` and `content`
+     */
+    interface HTMLPosDialogElement extends Components.PosDialog, HTMLStencilElement {
+    }
+    var HTMLPosDialogElement: {
+        prototype: HTMLPosDialogElement;
+        new (): HTMLPosDialogElement;
     };
     interface HTMLPosDocumentElementEventMap {
         "pod-os:init": any;
@@ -642,6 +658,7 @@ declare global {
         "pos-container-contents": HTMLPosContainerContentsElement;
         "pos-container-item": HTMLPosContainerItemElement;
         "pos-description": HTMLPosDescriptionElement;
+        "pos-dialog": HTMLPosDialogElement;
         "pos-document": HTMLPosDocumentElement;
         "pos-error-toast": HTMLPosErrorToastElement;
         "pos-image": HTMLPosImageElement;
@@ -704,6 +721,11 @@ declare namespace LocalJSX {
     }
     interface PosDescription {
         "onPod-os:resource"?: (event: PosDescriptionCustomEvent<any>) => void;
+    }
+    /**
+     * Styled wrapper around native dialog element, with slots `title` and `content`
+     */
+    interface PosDialog {
     }
     interface PosDocument {
         "alt"?: string;
@@ -807,6 +829,7 @@ declare namespace LocalJSX {
         "pos-container-contents": PosContainerContents;
         "pos-container-item": PosContainerItem;
         "pos-description": PosDescription;
+        "pos-dialog": PosDialog;
         "pos-document": PosDocument;
         "pos-error-toast": PosErrorToast;
         "pos-image": PosImage;
@@ -844,6 +867,10 @@ declare module "@stencil/core" {
             "pos-container-contents": LocalJSX.PosContainerContents & JSXBase.HTMLAttributes<HTMLPosContainerContentsElement>;
             "pos-container-item": LocalJSX.PosContainerItem & JSXBase.HTMLAttributes<HTMLPosContainerItemElement>;
             "pos-description": LocalJSX.PosDescription & JSXBase.HTMLAttributes<HTMLPosDescriptionElement>;
+            /**
+             * Styled wrapper around native dialog element, with slots `title` and `content`
+             */
+            "pos-dialog": LocalJSX.PosDialog & JSXBase.HTMLAttributes<HTMLPosDialogElement>;
             "pos-document": LocalJSX.PosDocument & JSXBase.HTMLAttributes<HTMLPosDocumentElement>;
             "pos-error-toast": LocalJSX.PosErrorToast & JSXBase.HTMLAttributes<HTMLPosErrorToastElement>;
             "pos-image": LocalJSX.PosImage & JSXBase.HTMLAttributes<HTMLPosImageElement>;
