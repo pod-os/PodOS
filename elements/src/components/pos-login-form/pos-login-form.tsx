@@ -7,7 +7,7 @@ import { Component, Event, EventEmitter, h, Prop, State, Watch } from '@stencil/
   },
 })
 export class PosLoginForm {
-  @State() idpUrl: string = "";
+  @State() idpUrl: string = '';
 
   @State() canSubmit: boolean = true;
 
@@ -25,25 +25,38 @@ export class PosLoginForm {
     return (
       <form method="dialog" onSubmit={() => this.handleSubmit()}>
         <label htmlFor="idpUrl">URL</label>
-        <input id="idpUrl" type="text" value={this.idpUrl} onInput={e => this.handleChange(e)} list="suggestedIssuers" />
-        <input id="login" type="submit" value="Login" disabled={!this.canSubmit} />
+        <input
+          id="idpUrl"
+          type="text"
+          value={this.idpUrl}
+          onInput={e => this.handleChange(e)}
+          list="suggestedIssuers"
+        />
+        <button id="login" type="submit" disabled={!this.canSubmit}>
+          Login
+        </button>
         <datalist id="suggestedIssuers">
-          <option value="https://solidcommunity.net">Solid Community</option>
-          <option value="https://solidweb.org">Solid Web</option>
-          <option value="https://inrupt.net">Inrupt.net</option>
-          <option value="https://login.inrupt.com">pod.Inrupt.com</option>
+          <option value="https://solidcommunity.net">solidcommunity.net</option>
+          <option value="https://solidweb.org">solidweb.org</option>
+          <option value="https://solidweb.me">solidweb.me</option>
+          <option value="https://inrupt.net">inrupt.net</option>
+          <option value="https://login.inrupt.com">Inrupt PodSpaces</option>
+          <option value="https://trinpod.us">trinpod.us</option>
+          <option value="https://use.id">use.id</option>
+          <option value="https://solid.redpencil.io">redpencil.io</option>
+          <option value="https://datapod.grant.io">Data Pod (grant.io)</option>
+          <option value="https://teamid.live">teamid.live</option>
         </datalist>
       </form>
     );
   }
 
   handleChange(event) {
-    this.validate()
+    this.validate();
     this.idpUrl = event.target.value;
   }
 
   async handleSubmit() {
-      this.idpUrlSelected.emit(this.idpUrl);
+    this.idpUrlSelected.emit(this.idpUrl);
   }
-
 }
