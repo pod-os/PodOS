@@ -12,11 +12,12 @@ export async function signIn(
   idp: string = "http://localhost:4000",
 ) {
   const originalLocation = page.url();
-  page.on("dialog", (dialog) => {
-    dialog.accept(idp);
-  });
   const loginButton = page.locator("pos-login").getByRole("button");
   await loginButton.click();
+
+  const idpUrl = page.getByLabel("Please enter your Identity Provider");
+  await idpUrl.fill("http://localhost:4000");
+  await idpUrl.press("Enter");
 
   await expect(page).toHaveURL(
     "http://localhost:4000/.account/login/password/",
