@@ -20,3 +20,27 @@ pos-login-form {
 dialog {
   margin-top: var(--size-10);
 }
+
+button#login, button#logout {
+  outline: none;
+  text-transform: uppercase;
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--letter-xl);
+  border: none;
+  box-sizing: border-box;
+  border-radius: var(--radius-xs);
+  padding: var(--scale-000);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  color: var(--pos-primary-text-color);
+  background-color: var(--pos-primary-color);
+}
+
+button#login:focus-within, button#logout:focus-within {
+  outline: var(--pos-input-focus-outline);
+}
+
+button#login:focus, button#login:hover, button#logout:focus, button#logout:hover {
+  filter: brightness(110%);
+  box-shadow: var(--shadow-md);
+}

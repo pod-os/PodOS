@@ -24,7 +24,7 @@ describe('pos-login', () => {
 
     // when alice clicks the log in button
     const login = page.root.querySelector('pos-login');
-    const button: HTMLButtonElement = login.querySelector('ion-button');
+    const button: HTMLButtonElement = login.querySelector('button');
     expect(button.innerText).toEqual('Login');
     button.click();
 
