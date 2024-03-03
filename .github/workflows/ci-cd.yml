@@ -24,6 +24,7 @@ jobs:
       - run: npm run build
       - run: npm test
       - name: Save @pod-os/core build
+        if: github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@v3
         with:
           name: core-build
@@ -34,6 +35,7 @@ jobs:
             core/package.json
           retention-days: 1
       - name: Save @pod-os/elements build
+        if: github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@v3
         with:
           name: elements-build
