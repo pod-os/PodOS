@@ -1,4 +1,4 @@
-import { Component, Event, EventEmitter, h, Prop, State, Watch } from '@stencil/core';
+import { Component, Event, EventEmitter, h, State, Watch } from '@stencil/core';
 
 @Component({
   tag: 'pos-login-form',
@@ -9,7 +9,7 @@ import { Component, Event, EventEmitter, h, Prop, State, Watch } from '@stencil/
 export class PosLoginForm {
   @State() idpUrl: string = '';
 
-  @State() canSubmit: boolean = true;
+  @State() canSubmit: boolean = false;
 
   /**
    * Emits the selected IDP URL to use for login
@@ -32,9 +32,6 @@ export class PosLoginForm {
           onInput={e => this.handleChange(e)}
           list="suggestedIssuers"
         />
-        <button id="login" type="submit" disabled={!this.canSubmit}>
-          Login
-        </button>
         <datalist id="suggestedIssuers">
           <option value="https://solidcommunity.net">solidcommunity.net</option>
           <option value="https://solidweb.org">solidweb.org</option>
@@ -47,6 +44,7 @@ export class PosLoginForm {
           <option value="https://datapod.grant.io">Data Pod (grant.io)</option>
           <option value="https://teamid.live">teamid.live</option>
         </datalist>
+        <input id="login" type="submit" value="Create" disabled={!this.canSubmit} />
       </form>
     );
   }
