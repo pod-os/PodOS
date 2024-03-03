@@ -36,7 +36,6 @@ graph TD;
   pos-login --> pos-resource
   pos-login --> pos-picture
   pos-login --> pos-label
-  pos-login --> ion-button
   pos-login --> pos-dialog
   pos-login --> pos-login-form
   pos-resource --> ion-progress-bar
@@ -47,7 +46,6 @@ graph TD;
   pos-picture --> pos-image
   pos-image --> ion-skeleton-text
   pos-image --> ion-icon
-  ion-button --> ion-ripple-effect
   pos-dialog --> ion-icon
   pos-router --> pos-add-new-thing
   pos-router --> pos-navigation-bar
