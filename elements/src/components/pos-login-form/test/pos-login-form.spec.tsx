@@ -16,7 +16,7 @@ describe('pos-login-form', () => {
     <label htmlfor="idpUrl">
       URL
     </label>
-    <input id="idpUrl" list="suggestedIssuers" type="text" value="">
+    <input id="idpUrl" list="suggestedIssuers" type="url" required value="">
     <datalist id="suggestedIssuers">
       <option value="https://solidcommunity.net">
         solidcommunity.net

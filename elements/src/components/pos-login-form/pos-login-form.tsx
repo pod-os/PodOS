@@ -27,8 +27,9 @@ export class PosLoginForm {
         <label htmlFor="idpUrl">URL</label>
         <input
           id="idpUrl"
-          type="text"
+          type="url"
           value={this.idpUrl}
+          required={true}
           onInput={e => this.handleChange(e)}
           list="suggestedIssuers"
         />

@@ -54,6 +54,8 @@ export namespace Components {
     }
     interface PosLogin {
     }
+    interface PosLoginForm {
+    }
     interface PosNavigationBar {
         "uri": string;
     }
@@ -136,6 +138,10 @@ export interface PosLiteralsCustomEvent<T> extends CustomEvent<T> {
 export interface PosLoginCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosLoginElement;
+}
+export interface PosLoginFormCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosLoginFormElement;
 }
 export interface PosNavigationBarCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -430,6 +436,23 @@ declare global {
         prototype: HTMLPosLoginElement;
         new (): HTMLPosLoginElement;
     };
+    interface HTMLPosLoginFormElementEventMap {
+        "pod-os:idp-url-selected": any;
+    }
+    interface HTMLPosLoginFormElement extends Components.PosLoginForm, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosLoginFormElementEventMap>(type: K, listener: (this: HTMLPosLoginFormElement, ev: PosLoginFormCustomEvent<HTMLPosLoginFormElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosLoginFormElementEventMap>(type: K, listener: (this: HTMLPosLoginFormElement, ev: PosLoginFormCustomEvent<HTMLPosLoginFormElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLPosLoginFormElement: {
+        prototype: HTMLPosLoginFormElement;
+        new (): HTMLPosLoginFormElement;
+    };
     interface HTMLPosNavigationBarElementEventMap {
         "pod-os:init": any;
         "pod-os:link": any;
@@ -665,6 +688,7 @@ declare global {
         "pos-label": HTMLPosLabelElement;
         "pos-literals": HTMLPosLiteralsElement;
         "pos-login": HTMLPosLoginElement;
+        "pos-login-form": HTMLPosLoginFormElement;
         "pos-navigation-bar": HTMLPosNavigationBarElement;
         "pos-new-thing-form": HTMLPosNewThingFormElement;
         "pos-picture": HTMLPosPictureElement;
@@ -756,6 +780,12 @@ declare namespace LocalJSX {
     interface PosLogin {
         "onPod-os:init"?: (event: PosLoginCustomEvent<any>) => void;
     }
+    interface PosLoginForm {
+        /**
+          * Emits the selected IDP URL to use for login
+         */
+        "onPod-os:idp-url-selected"?: (event: PosLoginFormCustomEvent<any>) => void;
+    }
     interface PosNavigationBar {
         "onPod-os:init"?: (event: PosNavigationBarCustomEvent<any>) => void;
         "onPod-os:link"?: (event: PosNavigationBarCustomEvent<any>) => void;
@@ -836,6 +866,7 @@ declare namespace LocalJSX {
         "pos-label": PosLabel;
         "pos-literals": PosLiterals;
         "pos-login": PosLogin;
+        "pos-login-form": PosLoginForm;
         "pos-navigation-bar": PosNavigationBar;
         "pos-new-thing-form": PosNewThingForm;
         "pos-picture": PosPicture;
@@ -877,6 +908,7 @@ declare module "@stencil/core" {
             "pos-label": LocalJSX.PosLabel & JSXBase.HTMLAttributes<HTMLPosLabelElement>;
             "pos-literals": LocalJSX.PosLiterals & JSXBase.HTMLAttributes<HTMLPosLiteralsElement>;
             "pos-login": LocalJSX.PosLogin & JSXBase.HTMLAttributes<HTMLPosLoginElement>;
+            "pos-login-form": LocalJSX.PosLoginForm & JSXBase.HTMLAttributes<HTMLPosLoginFormElement>;
             "pos-navigation-bar": LocalJSX.PosNavigationBar & JSXBase.HTMLAttributes<HTMLPosNavigationBarElement>;
             "pos-new-thing-form": LocalJSX.PosNewThingForm & JSXBase.HTMLAttributes<HTMLPosNewThingFormElement>;
             "pos-picture": LocalJSX.PosPicture & JSXBase.HTMLAttributes<HTMLPosPictureElement>;
