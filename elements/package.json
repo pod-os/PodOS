@@ -21,21 +21,21 @@
     "generate": "stencil generate"
   },
   "dependencies": {
-    "@ionic/core": "^7.6.4",
-    "@pod-os/core": "^0.11.0",
-    "@stencil/core": "^4.9.1",
-    "@stencil/store": "^2.0.12",
+    "@ionic/core": "^7.7.3",
+    "@pod-os/core": "^0.11.1",
+    "@stencil/core": "^4.12.4",
+    "@stencil/store": "^2.0.14",
     "pollen-css": "^4.6.2",
     "stencil-router-v2": "^0.6.0"
   },
   "devDependencies": {
     "@testing-library/dom": "^9.3.4",
-    "@testing-library/jest-dom": "^6.2.0",
-    "@types/jest": "^29.5.11",
+    "@testing-library/jest-dom": "^6.4.2",
+    "@types/jest": "^29.5.12",
     "jest": "^29.7.0",
     "jest-cli": "^29.7.0",
     "jest-when": "^3.6.0",
-    "prettier": "^3.2.1"
+    "prettier": "^3.2.5"
   },
   "license": "MIT",
   "repository": {

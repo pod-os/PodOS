@@ -36,7 +36,8 @@ graph TD;
   pos-login --> pos-resource
   pos-login --> pos-picture
   pos-login --> pos-label
-  pos-login --> ion-button
+  pos-login --> pos-dialog
+  pos-login --> pos-login-form
   pos-resource --> ion-progress-bar
   pos-resource --> ion-card
   pos-resource --> ion-card-header
@@ -45,7 +46,7 @@ graph TD;
   pos-picture --> pos-image
   pos-image --> ion-skeleton-text
   pos-image --> ion-icon
-  ion-button --> ion-ripple-effect
+  pos-dialog --> ion-icon
   pos-router --> pos-add-new-thing
   pos-router --> pos-navigation-bar
   pos-router --> pos-resource
@@ -53,7 +54,6 @@ graph TD;
   pos-add-new-thing --> ion-icon
   pos-add-new-thing --> pos-dialog
   pos-add-new-thing --> pos-new-thing-form
-  pos-dialog --> ion-icon
   pos-new-thing-form --> pos-select-term
   pos-navigation-bar --> ion-searchbar
   pos-navigation-bar --> pos-rich-link

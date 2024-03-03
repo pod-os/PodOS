@@ -10,7 +10,7 @@ test("finds a thing based on the label index", async ({ page }) => {
   await signIn(page, alice);
 
   // when searching for a text
-  const navigationBar = page.getByPlaceholder("Search");
+  const navigationBar = page.getByPlaceholder("Search or enter URI");
   await navigationBar.fill("ometh");
 
   // and choosing the first result

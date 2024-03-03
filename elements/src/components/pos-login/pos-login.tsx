@@ -21,13 +21,19 @@ export class PosLogin {
     this.os = os;
   };
 
-  login() {
-    const idp = session.state.getIdpUrl();
-    this.os.login(idp);
+  login(event: CustomEvent<string>) {
+    const idpUrl = event.detail;
+    this.os.login(idpUrl);
   }
 
   logout() {
     this.os.logout();
+  }
+
+  private dialog: HTMLPosDialogElement;
+
+  openDialog() {
+    this.dialog.showModal();
   }
 
   render() {
@@ -43,8 +49,20 @@ export class PosLogin {
         ) : (
           ''
         )}
-        {!session.state.isLoggedIn && <ion-button onClick={() => this.login()}>Login</ion-button>}
-        {session.state.isLoggedIn && <ion-button onClick={() => this.logout()}>Logout</ion-button>}
+        {!session.state.isLoggedIn && (
+          <button id="login" onClick={() => this.openDialog()}>
+            Login
+          </button>
+        )}
+        {session.state.isLoggedIn && (
+          <button id="logout" onClick={() => this.logout()}>
+            Logout
+          </button>
+        )}
+        <pos-dialog ref={el => (this.dialog = el as HTMLPosDialogElement)}>
+          <span slot="title">Sign in to your Pod</span>
+          <pos-login-form onPod-os:idp-url-selected={ev => this.login(ev)} slot="content" />
+        </pos-dialog>
       </Host>
     );
   }

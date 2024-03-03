@@ -27,14 +27,14 @@
     "@pod-os/core": "^0.11.1",
     "@pod-os/elements": "^0.15.1",
     "@solid-data-modules/contacts-rdflib": "^0.4.0",
-    "@stencil/core": "^4.12.2",
+    "@stencil/core": "^4.12.4",
     "pollen-css": "^4.6.2"
   },
   "devDependencies": {
     "@testing-library/dom": "^9.3.4",
     "@testing-library/jest-dom": "^6.4.2",
-    "@types/jest": "^29.5.6",
-    "@types/node": "^16.18.11",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^16.18.86",
     "jest": "^29.7.0",
     "jest-cli": "^29.7.0",
     "jest-when": "^3.6.0",

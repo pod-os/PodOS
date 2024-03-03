@@ -28,7 +28,7 @@ dialog header {
 
 dialog > :last-child {
   /* This is the content slot*/
-  margin: var(--scale-3);
+  margin-top: var(--scale-3);
 }
 
 button#close {

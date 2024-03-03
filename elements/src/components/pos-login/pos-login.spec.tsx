@@ -15,9 +15,15 @@ describe('pos-login', () => {
     expect(page.root).toEqualHtml(`
     <pos-login>
       <mock:shadow-root>
-        <ion-button>
+        <button id='login'>
           Login
-        </ion-button>
+        </button>
+        <pos-dialog>
+          <span slot="title">
+            Sign in to your Pod
+          </span>
+          <pos-login-form slot="content"></pos-login-form>
+        </pos-dialog>
       </mock:shadow-root>
     </pos-login>
   `);
@@ -39,9 +45,15 @@ describe('pos-login', () => {
             <pos-label></pos-label>
           </span>
         </pos-resource>
-        <ion-button>
+        <button id='logout'>
           Logout
-        </ion-button>
+        </button>
+        <pos-dialog>
+        <span slot="title">
+          Sign in to your Pod
+        </span>
+        <pos-login-form slot="content"></pos-login-form>
+      </pos-dialog>
       </mock:shadow-root>
     </pos-login>
   `);
