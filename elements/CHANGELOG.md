@@ -9,6 +9,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Added
 
 - [pos-dialog](../docs/elements/components/pos-dialog): A dialog component with a common style
+- [pos-login-form](../docs/elements/components/pos-login-form): A form to select a identity provider for logging in
+
+### Changed
+
+- [pos-login](../docs/elements/components/pos-login): Now shows a dedicated login dialog using [pos-login-form](../docs/elements/components/pos-login-form) instead of a browser prompt
 
 ## 0.15.0
 
