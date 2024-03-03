@@ -1,0 +1,25 @@
+import {html} from "lit-html";
+
+import {
+  Canvas,
+  Meta,
+  Story
+} from '@storybook/addon-docs/blocks';
+
+<Meta
+  title="Login"
+/>
+
+
+## pos-login-form
+
+Allows the user to enter or select the URL of their Identity Provider
+
+<Canvas
+  withSource="open">
+  <Story
+    name="pos-login-form"
+  >
+    {() => html`<pos-login-form onPod-os:idp-url-selected="alert()" />`}
+  </Story>
+</Canvas>
