@@ -20,7 +20,7 @@ describe('pos-login', () => {
         </ion-button>
         <pos-dialog>
           <span slot="title">
-            Please enter your Identity Provider URL
+            Sign in to your Pod
           </span>
           <pos-login-form slot="content"></pos-login-form>
         </pos-dialog>
@@ -50,7 +50,7 @@ describe('pos-login', () => {
         </ion-button>
         <pos-dialog>
         <span slot="title">
-          Please enter your Identity Provider URL
+          Sign in to your Pod
         </span>
         <pos-login-form slot="content"></pos-login-form>
       </pos-dialog>

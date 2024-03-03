@@ -1,0 +1,43 @@
+:host {
+  display: block;
+  margin: 0
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4);
+}
+
+input {
+  outline: var(--pos-input-outline);
+  padding: var(--scale-000);
+  border: none;
+  border-radius: var(--radius-xs);
+  width: var(--size-full);
+  box-sizing: border-box;
+}
+
+input:focus-within {
+  outline: var(--pos-input-focus-outline);
+}
+
+input#login {
+  outline: none;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  color: var(--pos-primary-text-color);
+  background-color: var(--pos-primary-color);
+}
+
+input#login:disabled {
+  cursor: default;
+  color: var(--pos-disabled-text-color);
+  background-color: var(--pos-disabled-color);
+  box-shadow: none
+}
+
+input#login:hover:not(:disabled), input#login:focus {
+  filter: brightness(110%);
+  box-shadow: var(--shadow-md);
+}

@@ -14,9 +14,9 @@ describe('pos-login-form', () => {
       <pos-login-form>
   <form method="dialog">
     <label htmlfor="idpUrl">
-      URL
+      Please enter your Identity Provider
     </label>
-    <input id="idpUrl" list="suggestedIssuers" type="url" required value="">
+    <input id="idpUrl" list="suggestedIssuers" placeholder="Type to search..." type="url" required value="">
     <datalist id="suggestedIssuers">
       <option value="https://solidcommunity.net">
         solidcommunity.net
@@ -49,7 +49,7 @@ describe('pos-login-form', () => {
         teamid.live
       </option>
     </datalist>
-    <input disabled="" id="login" type="submit" value="Create">
+    <input disabled="" id="login" type="submit" value="Login">
   </form>
 </pos-login-form>
     `);

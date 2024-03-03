@@ -5,6 +5,7 @@ import { Component, Event, EventEmitter, h, State, Watch } from '@stencil/core';
   shadow: {
     delegatesFocus: true,
   },
+  styleUrl: 'pos-login-form.css',
 })
 export class PosLoginForm {
   @State() idpUrl: string = '';
@@ -24,7 +25,7 @@ export class PosLoginForm {
   render(): any {
     return (
       <form method="dialog" onSubmit={() => this.handleSubmit()}>
-        <label htmlFor="idpUrl">URL</label>
+        <label htmlFor="idpUrl">Please enter your Identity Provider</label>
         <input
           id="idpUrl"
           type="url"
@@ -32,6 +33,7 @@ export class PosLoginForm {
           required={true}
           onInput={e => this.handleChange(e)}
           list="suggestedIssuers"
+          placeholder="Type to search..."
         />
         <datalist id="suggestedIssuers">
           <option value="https://solidcommunity.net">solidcommunity.net</option>
@@ -45,7 +47,7 @@ export class PosLoginForm {
           <option value="https://datapod.grant.io">Data Pod (grant.io)</option>
           <option value="https://teamid.live">teamid.live</option>
         </datalist>
-        <input id="login" type="submit" value="Create" disabled={!this.canSubmit} />
+        <input id="login" type="submit" value="Login" disabled={!this.canSubmit} />
       </form>
     );
   }

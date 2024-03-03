@@ -12,3 +12,11 @@
   --height: 40px;
   --border-radius: 50%;
 }
+
+pos-login-form {
+  margin: var(--size-2)
+}
+
+dialog {
+  margin-top: var(--size-10);
+}
