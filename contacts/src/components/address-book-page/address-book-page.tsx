@@ -93,6 +93,7 @@ export class AddressBookPage {
           <button class="menu" aria-label="close side navigation" onClick={() => this.closeMenu()}>
             <ion-icon aria-hidden="true" name="close-outline"></ion-icon>
           </button>
+          <pos-contacts-create-new-contact />
           <pos-contacts-group-list groups={this.addressBook.groups} />
         </nav>
         <main>
