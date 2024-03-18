@@ -27,6 +27,8 @@ export namespace Components {
     }
     interface PosContactsCreateNewContact {
     }
+    interface PosContactsCreateNewContactForm {
+    }
     interface PosContactsEmailAddresses {
         "emailAddresses": Email[];
     }
@@ -131,6 +133,12 @@ declare global {
         prototype: HTMLPosContactsCreateNewContactElement;
         new (): HTMLPosContactsCreateNewContactElement;
     };
+    interface HTMLPosContactsCreateNewContactFormElement extends Components.PosContactsCreateNewContactForm, HTMLStencilElement {
+    }
+    var HTMLPosContactsCreateNewContactFormElement: {
+        prototype: HTMLPosContactsCreateNewContactFormElement;
+        new (): HTMLPosContactsCreateNewContactFormElement;
+    };
     interface HTMLPosContactsEmailAddressesElement extends Components.PosContactsEmailAddresses, HTMLStencilElement {
     }
     var HTMLPosContactsEmailAddressesElement: {
@@ -219,6 +227,7 @@ declare global {
         "pos-contacts-contact-details": HTMLPosContactsContactDetailsElement;
         "pos-contacts-contact-list": HTMLPosContactsContactListElement;
         "pos-contacts-create-new-contact": HTMLPosContactsCreateNewContactElement;
+        "pos-contacts-create-new-contact-form": HTMLPosContactsCreateNewContactFormElement;
         "pos-contacts-email-addresses": HTMLPosContactsEmailAddressesElement;
         "pos-contacts-group": HTMLPosContactsGroupElement;
         "pos-contacts-group-details": HTMLPosContactsGroupDetailsElement;
@@ -250,6 +259,8 @@ declare namespace LocalJSX {
         "onPod-os-contacts:contact-selected"?: (event: PosContactsContactListCustomEvent<Contact>) => void;
     }
     interface PosContactsCreateNewContact {
+    }
+    interface PosContactsCreateNewContactForm {
     }
     interface PosContactsEmailAddresses {
         "emailAddresses": Email[];
@@ -285,6 +296,7 @@ declare namespace LocalJSX {
         "pos-contacts-contact-details": PosContactsContactDetails;
         "pos-contacts-contact-list": PosContactsContactList;
         "pos-contacts-create-new-contact": PosContactsCreateNewContact;
+        "pos-contacts-create-new-contact-form": PosContactsCreateNewContactForm;
         "pos-contacts-email-addresses": PosContactsEmailAddresses;
         "pos-contacts-group": PosContactsGroup;
         "pos-contacts-group-details": PosContactsGroupDetails;
@@ -305,6 +317,7 @@ declare module "@stencil/core" {
             "pos-contacts-contact-details": LocalJSX.PosContactsContactDetails & JSXBase.HTMLAttributes<HTMLPosContactsContactDetailsElement>;
             "pos-contacts-contact-list": LocalJSX.PosContactsContactList & JSXBase.HTMLAttributes<HTMLPosContactsContactListElement>;
             "pos-contacts-create-new-contact": LocalJSX.PosContactsCreateNewContact & JSXBase.HTMLAttributes<HTMLPosContactsCreateNewContactElement>;
+            "pos-contacts-create-new-contact-form": LocalJSX.PosContactsCreateNewContactForm & JSXBase.HTMLAttributes<HTMLPosContactsCreateNewContactFormElement>;
             "pos-contacts-email-addresses": LocalJSX.PosContactsEmailAddresses & JSXBase.HTMLAttributes<HTMLPosContactsEmailAddressesElement>;
             "pos-contacts-group": LocalJSX.PosContactsGroup & JSXBase.HTMLAttributes<HTMLPosContactsGroupElement>;
             "pos-contacts-group-details": LocalJSX.PosContactsGroupDetails & JSXBase.HTMLAttributes<HTMLPosContactsGroupDetailsElement>;

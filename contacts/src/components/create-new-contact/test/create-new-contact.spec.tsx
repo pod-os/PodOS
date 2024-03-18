@@ -35,4 +35,9 @@ describe('create new contact', () => {
       </h2>
     `);
   });
+
+  it('dialog contains a form to create a new contact', () => {
+    const dialog = page.root.querySelector('pos-contacts-create-new-contact-form');
+    expect(dialog).not.toBeNull();
+  });
 });

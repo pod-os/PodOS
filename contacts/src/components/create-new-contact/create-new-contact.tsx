@@ -17,7 +17,7 @@ export class CreateNewContact {
         </button>
         <pos-dialog ref={el => (this.dialog = el as HTMLPosDialogElement)}>
           <h2 slot="title">Create new contact</h2>
-          <div slot="content">Coming soon...</div>
+          <pos-contacts-create-new-contact-form slot="content" />
         </pos-dialog>
       </Host>
     );
