@@ -1,5 +1,7 @@
 @import "~pollen-css/pollen.css";
 
+@import "~@pod-os/elements/dist/elements/elements.css";
+
 body {
   font-family: var(--font-sans);
   background-color: var(--color-grey-50);

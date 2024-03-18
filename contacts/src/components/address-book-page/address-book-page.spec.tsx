@@ -47,6 +47,12 @@ describe('address-book-page', () => {
       `);
     });
 
+    it('the navigation allows to create a new contact', async () => {
+      const nav = getByRole(page.root, 'navigation');
+      const createNewContact = nav.querySelector('pos-contacts-create-new-contact');
+      expect(createNewContact).not.toBeNull();
+    });
+
     it('the main part shows the contact list', async () => {
       const main = getByRole(page.root, 'main');
       expect(main.firstChild).toEqualHtml(`

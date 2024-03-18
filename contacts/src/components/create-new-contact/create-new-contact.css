@@ -1,0 +1,29 @@
+:host {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--size-4);
+}
+
+button.create {
+  display: flex;
+  gap: var(--size-1);
+  padding: var(--size-4);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--letter-xl);
+  background-color: var(--pos-primary-color);
+  color: var(--pos-primary-text-color);
+  border-radius: var(--radius-xs);
+  outline: none;
+  border: none;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+}
+
+button.create:focus-within {
+  outline: var(--pos-input-focus-outline);
+}
+
+button.create:focus-within, button.create:focus, button.create:hover{
+  filter: brightness(110%);
+  box-shadow: var(--shadow-md);
+}

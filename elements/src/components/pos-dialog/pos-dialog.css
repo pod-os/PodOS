@@ -14,6 +14,7 @@ dialog header > :first-child {
   font-weight: var(--weight-light);
   font-size: var(--scale-2);
   font-family: var(--font-sans);
+  margin: 0;
 }
 
 dialog header {
@@ -23,11 +24,12 @@ dialog header {
   align-items: center;
   gap: var(--scale-0);
   border-bottom-style: inset;
-  padding-bottom: var(--scale-0);
+  padding: 0 0 var(--scale-0) 0;
 }
 
 dialog > :last-child {
   /* This is the content slot*/
+  display: block;
   margin-top: var(--scale-3);
 }
 
