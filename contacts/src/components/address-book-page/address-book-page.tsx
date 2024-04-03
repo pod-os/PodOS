@@ -43,6 +43,13 @@ export class AddressBookPage {
     this.selectedGroup = event.detail;
   }
 
+  @Listen('pod-os-contacts:contact-created')
+  async onContactCreated(event: CustomEvent<Contact>) {
+    const contact = event.detail;
+    this.addressBook.contacts.push(contact);
+    this.selectedContact = contact;
+  }
+
   @Watch('uri')
   async loadAddressBook() {
     try {

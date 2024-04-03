@@ -5,8 +5,8 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { Contact, ContactsModule, Email, Group, NewContact, PhoneNumber } from "@solid-data-modules/contacts-rdflib";
-export { Contact, ContactsModule, Email, Group, NewContact, PhoneNumber } from "@solid-data-modules/contacts-rdflib";
+import { Contact, ContactsModule, Email, Group, PhoneNumber } from "@solid-data-modules/contacts-rdflib";
+export { Contact, ContactsModule, Email, Group, PhoneNumber } from "@solid-data-modules/contacts-rdflib";
 export namespace Components {
     interface PosContactsAddressBookPage {
         "contactsModule": ContactsModule;
@@ -141,7 +141,7 @@ declare global {
     };
     interface HTMLPosContactsCreateNewContactFormElementEventMap {
         "pod-os:module": any;
-        "pod-os-contacts:contact-created": NewContact;
+        "pod-os-contacts:contact-created": Contact;
         "pod-os:error": any;
     }
     interface HTMLPosContactsCreateNewContactFormElement extends Components.PosContactsCreateNewContactForm, HTMLStencilElement {
@@ -282,7 +282,7 @@ declare namespace LocalJSX {
     }
     interface PosContactsCreateNewContactForm {
         "addressBookUri": string;
-        "onPod-os-contacts:contact-created"?: (event: PosContactsCreateNewContactFormCustomEvent<NewContact>) => void;
+        "onPod-os-contacts:contact-created"?: (event: PosContactsCreateNewContactFormCustomEvent<Contact>) => void;
         "onPod-os:error"?: (event: PosContactsCreateNewContactFormCustomEvent<any>) => void;
         "onPod-os:module"?: (event: PosContactsCreateNewContactFormCustomEvent<any>) => void;
     }

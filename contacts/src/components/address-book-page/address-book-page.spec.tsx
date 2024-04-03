@@ -75,25 +75,25 @@ describe('address-book-page', () => {
       await page.waitForChanges();
       const main = getByRole(page.root, 'main');
       expect(main).toEqualHtml(`
-        <main class="error">
+        <main class='error'>
           <h2>
             Loading the address book failed.
           </h2>
           <pos-login></pos-login>
           <p>
             You might need to log in and then
-            <button class="retry">
-              <ion-icon name="reload-outline"></ion-icon>
+            <button class='retry'>
+              <ion-icon name='reload-outline'></ion-icon>
               retry
             </button>
           </p>
-          <pos-resource uri="https://pod.test/contacts#it"></pos-resource>
+          <pos-resource uri='https://pod.test/contacts#it'></pos-resource>
         </main>
       `);
     });
   });
 
-  describe('contact selection', () => {
+  describe('event handling', () => {
     let page;
     beforeEach(async () => {
       const module = {
@@ -106,76 +106,128 @@ describe('address-book-page', () => {
       });
     });
 
-    it('shows a selected contact', async () => {
-      fireEvent(
-        page.root,
-        new CustomEvent('pod-os-contacts:contact-selected', {
-          detail: {
-            uri: 'https://alice.test',
-          },
-        }),
-      );
-      await page.waitForChanges();
-      expect(page.rootInstance.selectedContact).toEqual({
-        uri: 'https://alice.test',
-      });
-      const main = getByRole(page.root, 'main');
-      expect(main.firstChild).toEqualHtml(`
+    describe('contact selection', () => {
+      it('shows a selected contact', async () => {
+        fireEvent(
+          page.root,
+          new CustomEvent('pod-os-contacts:contact-selected', {
+            detail: {
+              uri: 'https://alice.test',
+            },
+          }),
+        );
+        await page.waitForChanges();
+        expect(page.rootInstance.selectedContact).toEqual({
+          uri: 'https://alice.test',
+        });
+        const main = getByRole(page.root, 'main');
+        expect(main.firstChild).toEqualHtml(`
         <pos-contacts-contact-details uri='https://alice.test'></pos-contacts-contact-details>
       `);
-    });
+      });
 
-    it('removes selected contact when closed', async () => {
-      page.rootInstance.selectedContact = {
-        uri: 'https://alice.test',
-      };
+      it('removes selected contact when closed', async () => {
+        page.rootInstance.selectedContact = {
+          uri: 'https://alice.test',
+        };
 
-      await page.waitForChanges();
-      const main = getByRole(page.root, 'main');
-      expect(main.firstChild).toEqualHtml(`
+        await page.waitForChanges();
+        const main = getByRole(page.root, 'main');
+        expect(main.firstChild).toEqualHtml(`
         <pos-contacts-contact-details uri='https://alice.test'></pos-contacts-contact-details>
       `);
 
-      fireEvent(main.firstChild, new CustomEvent('pod-os-contacts:contact-closed'));
+        fireEvent(main.firstChild, new CustomEvent('pod-os-contacts:contact-closed'));
 
-      expect(page.rootInstance.selectedContact).toEqual(null);
-    });
-  });
-
-  describe('group selection', () => {
-    let page;
-    beforeEach(async () => {
-      const module = {
-        readAddressBook: jest.fn().mockReturnValue({}),
-      } as unknown as ContactsModule;
-      page = await newSpecPage({
-        components: [AddressBookPage],
-        template: () => <pos-contacts-address-book-page uri="https://pod.test/contacts#it" contactsModule={module}></pos-contacts-address-book-page>,
-        supportsShadowDom: false,
+        expect(page.rootInstance.selectedContact).toEqual(null);
       });
     });
 
-    it('clears the selected contact and shows selected group', async () => {
-      page.rootInstance.selectedContact = {
-        uri: 'https://alice.test',
-      };
-      fireEvent(
-        page.root,
-        new CustomEvent('pod-os-contacts:group-selected', {
-          detail: {
-            uri: 'https://alice.test/group/1',
-          },
-        }),
-      );
-      await page.waitForChanges();
-      expect(page.rootInstance.selectedContact).toEqual(null);
-      expect(page.rootInstance.selectedGroup).toEqual({
-        uri: 'https://alice.test/group/1',
-      });
-      const main = getByRole(page.root, 'main');
-      expect(main.firstChild).toEqualHtml(`
+    describe('group selection', () => {
+      it('clears the selected contact and shows selected group', async () => {
+        page.rootInstance.selectedContact = {
+          uri: 'https://alice.test',
+        };
+        fireEvent(
+          page.root,
+          new CustomEvent('pod-os-contacts:group-selected', {
+            detail: {
+              uri: 'https://alice.test/group/1',
+            },
+          }),
+        );
+        await page.waitForChanges();
+        expect(page.rootInstance.selectedContact).toEqual(null);
+        expect(page.rootInstance.selectedGroup).toEqual({
+          uri: 'https://alice.test/group/1',
+        });
+        const main = getByRole(page.root, 'main');
+        expect(main.firstChild).toEqualHtml(`
         <pos-contacts-group-details uri='https://alice.test/group/1'></pos-contacts-group-details>
       `);
+      });
+    });
+
+    describe('contact created', () => {
+      it('shows the selected contact', async () => {
+        page.rootInstance.selectedContact = null;
+        page.rootInstance.addressBook = {
+          contacts: [],
+        };
+        fireEvent(
+          page.root,
+          new CustomEvent('pod-os-contacts:contact-created', {
+            detail: {
+              uri: 'https://alice.test/contact/1',
+              name: 'Bob',
+            },
+          }),
+        );
+        await page.waitForChanges();
+        expect(page.rootInstance.selectedContact).toEqual({
+          uri: 'https://alice.test/contact/1',
+          name: 'Bob',
+        });
+
+        const main = getByRole(page.root, 'main');
+        expect(main.firstChild).toEqualHtml(`
+        <pos-contacts-contact-details uri='https://alice.test/contact/1'></pos-contacts-contact-details>
+      `);
+      });
+
+      it('adds the created contact to the list', async () => {
+        page.rootInstance.selectedContact = null;
+        page.rootInstance.addressBook = {
+          contacts: [
+            {
+              uri: 'https://alice.test/contact/1',
+              name: 'Bob',
+            },
+          ],
+        };
+        fireEvent(
+          page.root,
+          new CustomEvent('pod-os-contacts:contact-created', {
+            detail: {
+              uri: 'https://alice.test/contact/2',
+              name: 'Claire',
+            },
+          }),
+        );
+        await page.waitForChanges();
+        expect(page.rootInstance.addressBook).toEqual({
+          contacts: [
+            {
+              uri: 'https://alice.test/contact/1',
+              name: 'Bob',
+            },
+            {
+              uri: 'https://alice.test/contact/2',
+              name: 'Claire',
+            },
+          ],
+        });
+      });
     });
   });
 });

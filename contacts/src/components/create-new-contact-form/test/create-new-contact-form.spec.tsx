@@ -67,7 +67,7 @@ describe('create new contact form', () => {
   describe('contact-created event', () => {
     it('emits event when contact was created successfully', async () => {
       const module = {
-        createNewContact: jest.fn().mockResolvedValue(undefined),
+        createNewContact: jest.fn().mockResolvedValue('https://pod.test/new-contact#it'),
       } as unknown as ContactsModule;
 
       const listener = jest.fn();
@@ -85,6 +85,7 @@ describe('create new contact form', () => {
       expect(listener).toHaveBeenCalledWith(
         expect.objectContaining({
           detail: {
+            uri: 'https://pod.test/new-contact#it',
             name: 'Bob',
           },
         }),

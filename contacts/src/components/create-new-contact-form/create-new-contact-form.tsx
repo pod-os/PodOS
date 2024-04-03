@@ -1,4 +1,4 @@
-import { ContactsModule, NewContact } from '@solid-data-modules/contacts-rdflib';
+import { Contact, ContactsModule, NewContact } from '@solid-data-modules/contacts-rdflib';
 import { Component, Event, EventEmitter, h, Prop, State } from '@stencil/core';
 import { PodOsModuleAware, PodOsModuleEventEmitter, subscribePodOsModule } from '../../events/PodOsModuleAware';
 
@@ -24,7 +24,7 @@ export class CreateNewContactForm implements PodOsModuleAware<ContactsModule> {
   subscribeModule: PodOsModuleEventEmitter<ContactsModule>;
 
   @Event({ eventName: 'pod-os-contacts:contact-created' })
-  contactCreated: EventEmitter<NewContact>;
+  contactCreated: EventEmitter<Contact>;
 
   @Event({ eventName: 'pod-os:error' }) errorEmitter: EventEmitter;
 
@@ -38,11 +38,14 @@ export class CreateNewContactForm implements PodOsModuleAware<ContactsModule> {
 
   async handleSubmit() {
     try {
-      await this.contactsModule.createNewContact({
+      const uri = await this.contactsModule.createNewContact({
         contact: this.newContact,
         addressBookUri: this.addressBookUri,
       });
-      this.contactCreated.emit(this.newContact);
+      this.contactCreated.emit({
+        uri,
+        name: this.newContact.name,
+      });
     } catch (e) {
       this.errorEmitter.emit(e);
     }
