@@ -36,7 +36,8 @@ graph TD;
   pos-login --> pos-resource
   pos-login --> pos-picture
   pos-login --> pos-label
-  pos-login --> ion-button
+  pos-login --> pos-dialog
+  pos-login --> pos-login-form
   pos-resource --> ion-progress-bar
   pos-resource --> ion-card
   pos-resource --> ion-card-header
@@ -44,15 +45,19 @@ graph TD;
   ion-card --> ion-ripple-effect
   pos-picture --> pos-image
   pos-image --> ion-skeleton-text
-  ion-button --> ion-ripple-effect
+  pos-dialog --> ion-icon
   pos-contacts-address-book-page --> pos-login
   pos-contacts-address-book-page --> ion-icon
   pos-contacts-address-book-page --> pos-resource
   pos-contacts-address-book-page --> pos-contacts-loading-spinner
+  pos-contacts-address-book-page --> pos-contacts-create-new-contact
   pos-contacts-address-book-page --> pos-contacts-group-list
   pos-contacts-address-book-page --> pos-contacts-contact-details
   pos-contacts-address-book-page --> pos-contacts-group-details
   pos-contacts-address-book-page --> pos-contacts-contact-list
+  pos-contacts-create-new-contact --> ion-icon
+  pos-contacts-create-new-contact --> pos-dialog
+  pos-contacts-create-new-contact --> pos-contacts-create-new-contact-form
   pos-contacts-contact-details --> pos-contacts-loading-spinner
   pos-contacts-contact-details --> ion-icon
   pos-contacts-contact-details --> pos-contacts-phone-numbers
