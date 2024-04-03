@@ -8,7 +8,7 @@ import { Component, h, Host, Listen, Prop, State, Watch } from '@stencil/core';
 })
 export class AddressBookPage {
   @Prop()
-  uri: string;
+  uri!: string;
 
   @Prop()
   contactsModule: ContactsModule;
@@ -93,7 +93,7 @@ export class AddressBookPage {
           <button class="menu" aria-label="close side navigation" onClick={() => this.closeMenu()}>
             <ion-icon aria-hidden="true" name="close-outline"></ion-icon>
           </button>
-          <pos-contacts-create-new-contact />
+          <pos-contacts-create-new-contact addressBookUri={this.uri} />
           <pos-contacts-group-list groups={this.addressBook.groups} />
         </nav>
         <main>

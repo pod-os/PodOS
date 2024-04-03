@@ -26,8 +26,10 @@ export namespace Components {
         "contacts": Contact[];
     }
     interface PosContactsCreateNewContact {
+        "addressBookUri": string;
     }
     interface PosContactsCreateNewContactForm {
+        "addressBookUri": string;
     }
     interface PosContactsEmailAddresses {
         "emailAddresses": Email[];
@@ -61,6 +63,10 @@ export interface PosContactsContactDetailsCustomEvent<T> extends CustomEvent<T> 
 export interface PosContactsContactListCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosContactsContactListElement;
+}
+export interface PosContactsCreateNewContactFormCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosContactsCreateNewContactFormElement;
 }
 export interface PosContactsGroupListCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -133,7 +139,18 @@ declare global {
         prototype: HTMLPosContactsCreateNewContactElement;
         new (): HTMLPosContactsCreateNewContactElement;
     };
+    interface HTMLPosContactsCreateNewContactFormElementEventMap {
+        "pod-os:module": any;
+    }
     interface HTMLPosContactsCreateNewContactFormElement extends Components.PosContactsCreateNewContactForm, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosContactsCreateNewContactFormElementEventMap>(type: K, listener: (this: HTMLPosContactsCreateNewContactFormElement, ev: PosContactsCreateNewContactFormCustomEvent<HTMLPosContactsCreateNewContactFormElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosContactsCreateNewContactFormElementEventMap>(type: K, listener: (this: HTMLPosContactsCreateNewContactFormElement, ev: PosContactsCreateNewContactFormCustomEvent<HTMLPosContactsCreateNewContactFormElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosContactsCreateNewContactFormElement: {
         prototype: HTMLPosContactsCreateNewContactFormElement;
@@ -241,7 +258,7 @@ declare global {
 declare namespace LocalJSX {
     interface PosContactsAddressBookPage {
         "contactsModule"?: ContactsModule;
-        "uri"?: string;
+        "uri": string;
     }
     interface PosContactsApp {
     }
@@ -259,8 +276,11 @@ declare namespace LocalJSX {
         "onPod-os-contacts:contact-selected"?: (event: PosContactsContactListCustomEvent<Contact>) => void;
     }
     interface PosContactsCreateNewContact {
+        "addressBookUri": string;
     }
     interface PosContactsCreateNewContactForm {
+        "addressBookUri": string;
+        "onPod-os:module"?: (event: PosContactsCreateNewContactFormCustomEvent<any>) => void;
     }
     interface PosContactsEmailAddresses {
         "emailAddresses": Email[];

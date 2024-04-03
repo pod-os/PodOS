@@ -1,4 +1,4 @@
-import { Component, h, Host } from '@stencil/core';
+import { Component, h, Host, Prop } from '@stencil/core';
 
 @Component({
   tag: 'pos-contacts-create-new-contact',
@@ -7,6 +7,9 @@ import { Component, h, Host } from '@stencil/core';
 })
 export class CreateNewContact {
   private dialog: HTMLPosDialogElement;
+
+  @Prop()
+  addressBookUri!: string;
 
   render() {
     return (
@@ -17,7 +20,7 @@ export class CreateNewContact {
         </button>
         <pos-dialog ref={el => (this.dialog = el as HTMLPosDialogElement)}>
           <h2 slot="title">Create new contact</h2>
-          <pos-contacts-create-new-contact-form slot="content" />
+          <pos-contacts-create-new-contact-form addressBookUri={this.addressBookUri} slot="content" />
         </pos-dialog>
       </Host>
     );

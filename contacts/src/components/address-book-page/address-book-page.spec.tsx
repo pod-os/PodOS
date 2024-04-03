@@ -15,7 +15,7 @@ describe('address-book-page', () => {
     } as unknown as ContactsModule;
     const page = await newSpecPage({
       components: [AddressBookPage],
-      template: () => <pos-contacts-address-book-page contactsModule={module}></pos-contacts-address-book-page>,
+      template: () => <pos-contacts-address-book-page uri="https://pod.test/contacts#it" contactsModule={module}></pos-contacts-address-book-page>,
       supportsShadowDom: false,
     });
     expect(page.root).toEqualHtml(`
@@ -35,7 +35,7 @@ describe('address-book-page', () => {
       } as unknown as ContactsModule;
       page = await newSpecPage({
         components: [AddressBookPage],
-        template: () => <pos-contacts-address-book-page contactsModule={module}></pos-contacts-address-book-page>,
+        template: () => <pos-contacts-address-book-page uri="https://pod.test/contacts#it" contactsModule={module}></pos-contacts-address-book-page>,
         supportsShadowDom: false,
       });
     });
@@ -47,10 +47,11 @@ describe('address-book-page', () => {
       `);
     });
 
-    it('the navigation allows to create a new contact', async () => {
+    it('the navigation allows to create a new contact in the address book', async () => {
       const nav = getByRole(page.root, 'navigation');
       const createNewContact = nav.querySelector('pos-contacts-create-new-contact');
       expect(createNewContact).not.toBeNull();
+      expect(createNewContact.getAttribute('addressBookUri')).toEqual('https://pod.test/contacts#it');
     });
 
     it('the main part shows the contact list', async () => {
@@ -68,7 +69,7 @@ describe('address-book-page', () => {
       } as unknown as ContactsModule;
       const page = await newSpecPage({
         components: [AddressBookPage],
-        template: () => <pos-contacts-address-book-page contactsModule={module}></pos-contacts-address-book-page>,
+        template: () => <pos-contacts-address-book-page uri="https://pod.test/contacts#it" contactsModule={module}></pos-contacts-address-book-page>,
         supportsShadowDom: false,
       });
       await page.waitForChanges();
@@ -86,7 +87,7 @@ describe('address-book-page', () => {
               retry
             </button>
           </p>
-          <pos-resource></pos-resource>
+          <pos-resource uri="https://pod.test/contacts#it"></pos-resource>
         </main>
       `);
     });
@@ -100,7 +101,7 @@ describe('address-book-page', () => {
       } as unknown as ContactsModule;
       page = await newSpecPage({
         components: [AddressBookPage],
-        template: () => <pos-contacts-address-book-page contactsModule={module}></pos-contacts-address-book-page>,
+        template: () => <pos-contacts-address-book-page uri="https://pod.test/contacts#it" contactsModule={module}></pos-contacts-address-book-page>,
         supportsShadowDom: false,
       });
     });
@@ -149,7 +150,7 @@ describe('address-book-page', () => {
       } as unknown as ContactsModule;
       page = await newSpecPage({
         components: [AddressBookPage],
-        template: () => <pos-contacts-address-book-page contactsModule={module}></pos-contacts-address-book-page>,
+        template: () => <pos-contacts-address-book-page uri="https://pod.test/contacts#it" contactsModule={module}></pos-contacts-address-book-page>,
         supportsShadowDom: false,
       });
     });

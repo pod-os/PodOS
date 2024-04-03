@@ -8,7 +8,7 @@ describe('create new contact', () => {
   beforeEach(async () => {
     page = await newSpecPage({
       components: [CreateNewContact],
-      template: () => <pos-contacts-create-new-contact></pos-contacts-create-new-contact>,
+      template: () => <pos-contacts-create-new-contact addressBookUri="https://pod.test/contacts#it"></pos-contacts-create-new-contact>,
       supportsShadowDom: false,
     });
   });
@@ -39,5 +39,6 @@ describe('create new contact', () => {
   it('dialog contains a form to create a new contact', () => {
     const dialog = page.root.querySelector('pos-contacts-create-new-contact-form');
     expect(dialog).not.toBeNull();
+    expect(dialog.getAttribute('addressBookUri')).toEqual('https://pod.test/contacts#it');
   });
 });
