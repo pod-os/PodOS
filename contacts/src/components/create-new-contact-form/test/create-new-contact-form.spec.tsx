@@ -63,4 +63,51 @@ describe('create new contact form', () => {
       addressBookUri: 'https://pod.test/contacts#this',
     });
   });
+
+  describe('contact-created event', () => {
+    it('emits event when contact was created successfully', async () => {
+      const module = {
+        createNewContact: jest.fn().mockResolvedValue(undefined),
+      } as unknown as ContactsModule;
+
+      const listener = jest.fn();
+      page.root.addEventListener('pod-os-contacts:contact-created', listener);
+
+      const errorListener = jest.fn();
+      page.root.addEventListener('pod-os:error', errorListener);
+
+      page.rootInstance.receiveModule(module);
+      page.rootInstance.newContact = { name: 'Bob' };
+      await page.rootInstance.handleSubmit();
+
+      expect(errorListener).not.toHaveBeenCalled();
+
+      expect(listener).toHaveBeenCalledWith(
+        expect.objectContaining({
+          detail: {
+            name: 'Bob',
+          },
+        }),
+      );
+    });
+
+    it('emits error event when contact creation fails', async () => {
+      const module = {
+        createNewContact: jest.fn().mockRejectedValue(new Error('simulated error')),
+      } as unknown as ContactsModule;
+
+      const listener = jest.fn();
+      page.root.addEventListener('pod-os-contacts:contact-created', listener);
+
+      const errorListener = jest.fn();
+      page.root.addEventListener('pod-os:error', errorListener);
+
+      page.rootInstance.receiveModule(module);
+      page.rootInstance.newContact = { name: 'Bob' };
+      await page.rootInstance.handleSubmit();
+
+      expect(listener).not.toHaveBeenCalled();
+      expect(errorListener).toHaveBeenCalledWith(expect.objectContaining({ detail: new Error('simulated error') }));
+    });
+  });
 });

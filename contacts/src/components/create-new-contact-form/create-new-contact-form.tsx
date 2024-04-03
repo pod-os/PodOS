@@ -1,5 +1,5 @@
-import { ContactsModule } from '@solid-data-modules/contacts-rdflib';
-import { Component, Event, h, Prop, State } from '@stencil/core';
+import { ContactsModule, NewContact } from '@solid-data-modules/contacts-rdflib';
+import { Component, Event, EventEmitter, h, Prop, State } from '@stencil/core';
 import { PodOsModuleAware, PodOsModuleEventEmitter, subscribePodOsModule } from '../../events/PodOsModuleAware';
 
 @Component({
@@ -14,18 +14,19 @@ export class CreateNewContactForm implements PodOsModuleAware<ContactsModule> {
   private contactsModule: ContactsModule;
 
   @State()
-  private name: string = '';
-
-  @State()
-  private phoneNumber: string | null = null;
-
-  @State()
-  private emailAddress: string | null = null;
+  private newContact: NewContact = {
+    name: '',
+  };
 
   @Prop()
   addressBookUri!: string;
   @Event({ eventName: 'pod-os:module' })
   subscribeModule: PodOsModuleEventEmitter<ContactsModule>;
+
+  @Event({ eventName: 'pod-os-contacts:contact-created' })
+  contactCreated: EventEmitter<NewContact>;
+
+  @Event({ eventName: 'pod-os:error' }) errorEmitter: EventEmitter;
 
   componentWillLoad() {
     subscribePodOsModule('contacts', this);
@@ -35,27 +36,28 @@ export class CreateNewContactForm implements PodOsModuleAware<ContactsModule> {
     this.contactsModule = module;
   };
 
-  handleSubmit() {
-    this.contactsModule.createNewContact({
-      contact: {
-        name: this.name,
-        email: this.emailAddress,
-        phoneNumber: this.phoneNumber,
-      },
-      addressBookUri: this.addressBookUri,
-    });
+  async handleSubmit() {
+    try {
+      await this.contactsModule.createNewContact({
+        contact: this.newContact,
+        addressBookUri: this.addressBookUri,
+      });
+      this.contactCreated.emit(this.newContact);
+    } catch (e) {
+      this.errorEmitter.emit(e);
+    }
   }
 
   handleNameChanged(event) {
-    this.name = event.target.value;
+    this.newContact.name = event.target.value;
   }
 
   handlePhoneNumberChanged(event) {
-    this.phoneNumber = event.target.value;
+    this.newContact.phoneNumber = event.target.value;
   }
 
   private handleEmailAddressChanged(event) {
-    this.emailAddress = event.target.value;
+    this.newContact.email = event.target.value;
   }
 
   render() {
