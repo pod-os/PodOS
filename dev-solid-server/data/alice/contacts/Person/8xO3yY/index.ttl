@@ -1,0 +1,11 @@
+<#this>
+    <http://www.w3.org/2006/vcard/ns#fn> "Bob" ;
+    a <http://www.w3.org/2006/vcard/ns#Individual> ;
+    <http://www.w3.org/2006/vcard/ns#hasEmail> <#email> ;
+    <http://www.w3.org/2006/vcard/ns#hasTelephone> <#phone> .
+
+<#email>
+    <http://www.w3.org/2006/vcard/ns#value> <mailto:bob@mail.test> .
+
+<#phone>
+    <http://www.w3.org/2006/vcard/ns#value> <tel:123456789> .
