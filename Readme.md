@@ -22,8 +22,8 @@ PodOS consists of:
 
 The simplest way to use PodOS is by using one of the hosted apps PodOS provides:
 
-- [PodOS browser](https://pod-os-browser.netlify.app) - A generic data browser
-- [PodOS contacts](https://pod-os-contacts.netlify.app) - address book & contacts manager (🚧 under construction)
+- [PodOS browser](https://browser.pod-os.org) - A generic data browser
+- [PodOS contacts](https://contacts.pod-os.org) - address book & contacts manager (🚧 under construction)
 
 Another way to use PodOS is to use the [PodOS elements](./elements) on your site. You do not have to be a programmer to do that! It is as easy as adding some additional tags to an HTML page. Check it out!
 

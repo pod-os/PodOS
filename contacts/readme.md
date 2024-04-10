@@ -7,4 +7,4 @@
 
 A contacts manager for Solid based on PodOS
 
-Live Version: https://pod-os-contacts.netlify.app/
+Live Version: https://contacts.pod-os.org
