@@ -29,7 +29,8 @@ graph TD;
   pos-login --> pos-resource
   pos-login --> pos-picture
   pos-login --> pos-label
-  pos-login --> ion-button
+  pos-login --> pos-dialog
+  pos-login --> pos-login-form
   pos-resource --> ion-progress-bar
   pos-resource --> ion-card
   pos-resource --> ion-card-header
@@ -37,7 +38,7 @@ graph TD;
   ion-card --> ion-ripple-effect
   pos-picture --> pos-image
   pos-image --> ion-skeleton-text
-  ion-button --> ion-ripple-effect
+  pos-dialog --> ion-icon
   pos-contacts-router --> pos-contacts-welcome-page
   style pos-contacts-welcome-page fill:#f9f,stroke:#333,stroke-width:4px
 ```

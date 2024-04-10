@@ -27,12 +27,15 @@ main {
 button.open {
   color: white;
   font-size: var(--scale-1);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xs);
   font-weight: var(--weight-bold);
   padding: var(--size-4);
   background-color: var(--color-blue-700);
   border: 1px solid var(--color-blue-500);
   box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  gap: var(--size-2);
 }
 
 
@@ -45,7 +48,8 @@ button.open:hover {
   display: flex;
   justify-items: center;
   align-content: center;
-  gap: var(--size-4);
+  gap: var(--size-2);
+  height: var(--size-10);
 }
 
 

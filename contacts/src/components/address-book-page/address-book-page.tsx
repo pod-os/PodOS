@@ -8,7 +8,7 @@ import { Component, h, Host, Listen, Prop, State, Watch } from '@stencil/core';
 })
 export class AddressBookPage {
   @Prop()
-  uri: string;
+  uri!: string;
 
   @Prop()
   contactsModule: ContactsModule;
@@ -41,6 +41,13 @@ export class AddressBookPage {
   async onGroupSelected(event: CustomEvent<Group>) {
     this.selectedContact = null;
     this.selectedGroup = event.detail;
+  }
+
+  @Listen('pod-os-contacts:contact-created')
+  async onContactCreated(event: CustomEvent<Contact>) {
+    const contact = event.detail;
+    this.addressBook.contacts.push(contact);
+    this.selectedContact = contact;
   }
 
   @Watch('uri')
@@ -93,6 +100,7 @@ export class AddressBookPage {
           <button class="menu" aria-label="close side navigation" onClick={() => this.closeMenu()}>
             <ion-icon aria-hidden="true" name="close-outline"></ion-icon>
           </button>
+          <pos-contacts-create-new-contact addressBookUri={this.uri} />
           <pos-contacts-group-list groups={this.addressBook.groups} />
         </nav>
         <main>

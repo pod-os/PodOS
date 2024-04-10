@@ -1,0 +1,47 @@
+form {
+  display: grid;
+  grid-template-columns: var(--size-16) 1fr;
+  grid-gap: var(--scale-0);
+}
+
+
+label {
+  grid-column: 1 / 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+input {
+  grid-column: 2 / 3;
+  outline: var(--pos-input-outline);
+  padding: var(--scale-000);
+  border: none;
+  border-radius: var(--radius-xs);
+  width: var(--size-full);
+  box-sizing: border-box;
+}
+
+input:focus-within {
+  outline: var(--pos-input-focus-outline);
+}
+
+input#create {
+  outline: none;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  color: var(--pos-primary-text-color);
+  background-color: var(--pos-primary-color);
+}
+
+input#create:disabled {
+  cursor: default;
+  color: var(--pos-disabled-text-color);
+  background-color: var(--pos-disabled-color);
+  box-shadow: none
+}
+
+input#create:hover:not(:disabled), input#create:focus {
+  filter: brightness(110%);
+  box-shadow: var(--shadow-md);
+}
