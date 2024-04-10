@@ -1,0 +1,51 @@
+name: Contacts CI/CD
+
+on:
+  push:
+    paths:
+      - contacts/**
+      - .github/workflows/contacts-ci-cd.yml
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 20 ]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - run: npm ci
+      - run: npm test -w contacts
+      - run: npm run build -w contacts
+
+      - run: cp contacts/deployment/* contacts/dist/
+        if: github.ref == 'refs/heads/main'
+      - name: Save @pod-os/contacts build
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v3
+        with:
+          name: contacts-build
+          path: |
+            contacts/dist/
+            contacts/package.json
+          retention-days: 1
+
+  deploy-pod-os-contacts-app:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: contacts-build
+      - name: Deploy PodOS Contacts
+        working-directory: ./apps
+        run: npx netlify-cli deploy --site=pod-os-contacts --dir=contacts/dist --prod
+        env:
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_POD_OS_CONTACTS_SITE_ID }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
