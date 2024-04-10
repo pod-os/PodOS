@@ -28,6 +28,7 @@
     "@pod-os/elements": "^0.16.0",
     "@solid-data-modules/contacts-rdflib": "^0.4.0",
     "@stencil/core": "^4.12.4",
+    "netlify-cli": "^17.22.1",
     "pollen-css": "^4.6.2"
   },
   "devDependencies": {
