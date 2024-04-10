@@ -21,7 +21,7 @@ jobs:
 
       - run: npm ci
       - run: npm test -w contacts
-      - run: npm run build -w contacts
+      - run: npm run build
 
       - run: cp contacts/deployment/* contacts/dist/
         if: github.ref == 'refs/heads/main'
