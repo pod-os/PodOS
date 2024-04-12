@@ -1,0 +1,11 @@
+{
+  "id": "/",
+  "name": "PodOS Contacts",
+  "short_name": "Contacts",
+  "description": "Manage contacts stored on your Solid pod.",
+  "start_url": "/",
+  "theme_color": "#008BF8",
+  "background_color": "#fff",
+  "display": "standalone",
+  "icons": []
+}

@@ -22,16 +22,15 @@ jobs:
       - run: npm ci
       - run: npm test -w contacts
       - run: npm run build
+      - run: npm run build:pwa -w contacts
 
-      - run: cp contacts/deployment/* contacts/dist/
-        if: github.ref == 'refs/heads/main'
-      - name: Save @pod-os/contacts build
+      - name: Save @pod-os/contacts www
         if: github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@v3
         with:
-          name: contacts-build
+          name: contacts-www
           path: |
-            contacts/dist/
+            contacts/www/
             contacts/package.json
           retention-days: 1
 
@@ -42,9 +41,9 @@ jobs:
     steps:
       - uses: actions/download-artifact@v3
         with:
-          name: contacts-build
+          name: contacts-www
       - name: Deploy PodOS Contacts
-        run: npx netlify-cli deploy --site=pod-os-contacts --dir=dist --prod
+        run: npx netlify-cli deploy --site=pod-os-contacts --dir=www --prod
         env:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_POD_OS_CONTACTS_SITE_ID }}
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
