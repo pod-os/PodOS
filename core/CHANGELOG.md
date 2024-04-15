@@ -8,7 +8,13 @@ and this project adheres to
 
 ## Unreleased
 
+### Added
+
 - `loadContactsModule`: asynchronously load the contacts data-module
+
+### Changed
+
+- `trackSession`: Callback receives an authenticated fetch as second parameter when logged in
 
 ## 0.11.0
 
