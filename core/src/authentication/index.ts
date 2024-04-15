@@ -1,4 +1,8 @@
-import { ISessionInfo, Session } from "@inrupt/solid-client-authn-browser";
+import {
+  EVENTS,
+  ISessionInfo,
+  Session,
+} from "@inrupt/solid-client-authn-browser";
 
 export type AuthenticatedFetch = (
   url: RequestInfo,
@@ -46,9 +50,9 @@ export class BrowserSession implements PodOsSession {
   }
 
   trackSession(callback: (session: ISessionInfo) => unknown) {
-    this.session.onLogin(() => callback(this.session.info));
-    this.session.onLogout(() => callback(this.session.info));
-    this.session.onSessionRestore(() => callback(this.session.info));
+    this.session.on(EVENTS.LOGIN, () => callback(this.session.info));
+    this.session.on(EVENTS.LOGOUT, () => callback(this.session.info));
+    this.session.on(EVENTS.SESSION_RESTORED, () => callback(this.session.info));
     callback(this.session.info);
   }
 }
