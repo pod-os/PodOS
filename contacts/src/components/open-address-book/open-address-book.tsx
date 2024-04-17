@@ -20,6 +20,12 @@ export class OpenAddressBook {
   @Prop()
   webId: string | undefined;
 
+  @Listen('pod-os:link')
+  openFromLink(event: CustomEvent<string>) {
+    console.log(event);
+    this.openAddressBook.emit(event.detail);
+  }
+
   promptAndOpen() {
     const uri = prompt('Please enter URI of an address book', 'http://localhost:3000/alice/public-contacts/index.ttl#this');
     if (uri) {

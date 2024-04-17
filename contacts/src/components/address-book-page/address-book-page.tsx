@@ -3,7 +3,7 @@ import { Component, h, Host, Listen, Prop, State, Watch } from '@stencil/core';
 
 @Component({
   tag: 'pos-contacts-address-book-page',
-  styleUrl: 'address-book-page.css',
+  styleUrl: './address-book-page.css',
   shadow: true,
 })
 export class AddressBookPage {
