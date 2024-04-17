@@ -9,6 +9,8 @@ export type AuthenticatedFetch = (
   init?: RequestInit | undefined,
 ) => Promise<Response>;
 
+export type SessionInfo = ISessionInfo;
+
 export interface PodOsSession {
   authenticatedFetch: AuthenticatedFetch;
 }
@@ -49,7 +51,7 @@ export class BrowserSession implements PodOsSession {
     return this.session.logout();
   }
 
-  trackSession(callback: (session: ISessionInfo) => unknown) {
+  trackSession(callback: (session: SessionInfo) => unknown) {
     this.session.on(EVENTS.LOGIN, () => callback(this.session.info));
     this.session.on(EVENTS.LOGOUT, () => callback(this.session.info));
     this.session.on(EVENTS.SESSION_RESTORED, () => callback(this.session.info));
