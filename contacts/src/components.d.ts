@@ -45,8 +45,14 @@ export namespace Components {
     interface PosContactsGroupList {
         "groups": Group[];
     }
+    interface PosContactsListAddressBooks {
+        "webId": string;
+    }
     interface PosContactsLoadingSpinner {
         "defer": number;
+    }
+    interface PosContactsOpenAddressBook {
+        "webId": string | undefined;
     }
     interface PosContactsPhoneNumbers {
         "phoneNumbers": PhoneNumber[];
@@ -72,13 +78,13 @@ export interface PosContactsGroupListCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosContactsGroupListElement;
 }
+export interface PosContactsOpenAddressBookCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosContactsOpenAddressBookElement;
+}
 export interface PosContactsRouterCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosContactsRouterElement;
-}
-export interface PosContactsWelcomePageCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLPosContactsWelcomePageElement;
 }
 declare global {
     interface HTMLPosContactsAddressBookPageElement extends Components.PosContactsAddressBookPage, HTMLStencilElement {
@@ -193,11 +199,34 @@ declare global {
         prototype: HTMLPosContactsGroupListElement;
         new (): HTMLPosContactsGroupListElement;
     };
+    interface HTMLPosContactsListAddressBooksElement extends Components.PosContactsListAddressBooks, HTMLStencilElement {
+    }
+    var HTMLPosContactsListAddressBooksElement: {
+        prototype: HTMLPosContactsListAddressBooksElement;
+        new (): HTMLPosContactsListAddressBooksElement;
+    };
     interface HTMLPosContactsLoadingSpinnerElement extends Components.PosContactsLoadingSpinner, HTMLStencilElement {
     }
     var HTMLPosContactsLoadingSpinnerElement: {
         prototype: HTMLPosContactsLoadingSpinnerElement;
         new (): HTMLPosContactsLoadingSpinnerElement;
+    };
+    interface HTMLPosContactsOpenAddressBookElementEventMap {
+        "pod-os-contacts:open-address-book": string;
+    }
+    interface HTMLPosContactsOpenAddressBookElement extends Components.PosContactsOpenAddressBook, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosContactsOpenAddressBookElementEventMap>(type: K, listener: (this: HTMLPosContactsOpenAddressBookElement, ev: PosContactsOpenAddressBookCustomEvent<HTMLPosContactsOpenAddressBookElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosContactsOpenAddressBookElementEventMap>(type: K, listener: (this: HTMLPosContactsOpenAddressBookElement, ev: PosContactsOpenAddressBookCustomEvent<HTMLPosContactsOpenAddressBookElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLPosContactsOpenAddressBookElement: {
+        prototype: HTMLPosContactsOpenAddressBookElement;
+        new (): HTMLPosContactsOpenAddressBookElement;
     };
     interface HTMLPosContactsPhoneNumbersElement extends Components.PosContactsPhoneNumbers, HTMLStencilElement {
     }
@@ -222,18 +251,7 @@ declare global {
         prototype: HTMLPosContactsRouterElement;
         new (): HTMLPosContactsRouterElement;
     };
-    interface HTMLPosContactsWelcomePageElementEventMap {
-        "pod-os-contacts:open-address-book": string;
-    }
     interface HTMLPosContactsWelcomePageElement extends Components.PosContactsWelcomePage, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLPosContactsWelcomePageElementEventMap>(type: K, listener: (this: HTMLPosContactsWelcomePageElement, ev: PosContactsWelcomePageCustomEvent<HTMLPosContactsWelcomePageElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLPosContactsWelcomePageElementEventMap>(type: K, listener: (this: HTMLPosContactsWelcomePageElement, ev: PosContactsWelcomePageCustomEvent<HTMLPosContactsWelcomePageElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosContactsWelcomePageElement: {
         prototype: HTMLPosContactsWelcomePageElement;
@@ -251,7 +269,9 @@ declare global {
         "pos-contacts-group": HTMLPosContactsGroupElement;
         "pos-contacts-group-details": HTMLPosContactsGroupDetailsElement;
         "pos-contacts-group-list": HTMLPosContactsGroupListElement;
+        "pos-contacts-list-address-books": HTMLPosContactsListAddressBooksElement;
         "pos-contacts-loading-spinner": HTMLPosContactsLoadingSpinnerElement;
+        "pos-contacts-open-address-book": HTMLPosContactsOpenAddressBookElement;
         "pos-contacts-phone-numbers": HTMLPosContactsPhoneNumbersElement;
         "pos-contacts-router": HTMLPosContactsRouterElement;
         "pos-contacts-welcome-page": HTMLPosContactsWelcomePageElement;
@@ -301,8 +321,15 @@ declare namespace LocalJSX {
         "groups"?: Group[];
         "onPod-os-contacts:group-selected"?: (event: PosContactsGroupListCustomEvent<Group>) => void;
     }
+    interface PosContactsListAddressBooks {
+        "webId": string;
+    }
     interface PosContactsLoadingSpinner {
         "defer"?: number;
+    }
+    interface PosContactsOpenAddressBook {
+        "onPod-os-contacts:open-address-book"?: (event: PosContactsOpenAddressBookCustomEvent<string>) => void;
+        "webId"?: string | undefined;
     }
     interface PosContactsPhoneNumbers {
         "phoneNumbers": PhoneNumber[];
@@ -311,7 +338,6 @@ declare namespace LocalJSX {
         "onPod-os:init"?: (event: PosContactsRouterCustomEvent<any>) => void;
     }
     interface PosContactsWelcomePage {
-        "onPod-os-contacts:open-address-book"?: (event: PosContactsWelcomePageCustomEvent<string>) => void;
     }
     interface IntrinsicElements {
         "pos-contacts-address-book-page": PosContactsAddressBookPage;
@@ -325,7 +351,9 @@ declare namespace LocalJSX {
         "pos-contacts-group": PosContactsGroup;
         "pos-contacts-group-details": PosContactsGroupDetails;
         "pos-contacts-group-list": PosContactsGroupList;
+        "pos-contacts-list-address-books": PosContactsListAddressBooks;
         "pos-contacts-loading-spinner": PosContactsLoadingSpinner;
+        "pos-contacts-open-address-book": PosContactsOpenAddressBook;
         "pos-contacts-phone-numbers": PosContactsPhoneNumbers;
         "pos-contacts-router": PosContactsRouter;
         "pos-contacts-welcome-page": PosContactsWelcomePage;
@@ -346,7 +374,9 @@ declare module "@stencil/core" {
             "pos-contacts-group": LocalJSX.PosContactsGroup & JSXBase.HTMLAttributes<HTMLPosContactsGroupElement>;
             "pos-contacts-group-details": LocalJSX.PosContactsGroupDetails & JSXBase.HTMLAttributes<HTMLPosContactsGroupDetailsElement>;
             "pos-contacts-group-list": LocalJSX.PosContactsGroupList & JSXBase.HTMLAttributes<HTMLPosContactsGroupListElement>;
+            "pos-contacts-list-address-books": LocalJSX.PosContactsListAddressBooks & JSXBase.HTMLAttributes<HTMLPosContactsListAddressBooksElement>;
             "pos-contacts-loading-spinner": LocalJSX.PosContactsLoadingSpinner & JSXBase.HTMLAttributes<HTMLPosContactsLoadingSpinnerElement>;
+            "pos-contacts-open-address-book": LocalJSX.PosContactsOpenAddressBook & JSXBase.HTMLAttributes<HTMLPosContactsOpenAddressBookElement>;
             "pos-contacts-phone-numbers": LocalJSX.PosContactsPhoneNumbers & JSXBase.HTMLAttributes<HTMLPosContactsPhoneNumbersElement>;
             "pos-contacts-router": LocalJSX.PosContactsRouter & JSXBase.HTMLAttributes<HTMLPosContactsRouterElement>;
             "pos-contacts-welcome-page": LocalJSX.PosContactsWelcomePage & JSXBase.HTMLAttributes<HTMLPosContactsWelcomePageElement>;

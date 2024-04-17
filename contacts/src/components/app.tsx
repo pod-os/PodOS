@@ -1,4 +1,4 @@
-import { Component, h } from '@stencil/core';
+import { Component, h, Listen } from '@stencil/core';
 
 import '@pod-os/elements';
 
@@ -6,6 +6,11 @@ import '@pod-os/elements';
   tag: 'pos-contacts-app',
 })
 export class App {
+  @Listen('pod-os:session-changed')
+  sessionChanged(ev) {
+    console.log('app session changed', ev.detail);
+  }
+
   render() {
     return (
       <pos-app>

@@ -1,0 +1,33 @@
+#container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-5);
+  align-items: flex-start;
+}
+
+#sign-in {
+  display: flex;
+  gap: var(--size-1);
+  align-items: center;
+  color: var(--color-grey-800);
+  font-weight: var(--weight-light);
+}
+
+button.open {
+  white-space: nowrap;
+  font-size: var(--scale-1);
+  border-radius: var(--radius-xs);
+  padding: var(--size-2);
+  background-color: white;
+  color: var(--pos-primary-color);
+  border: 1px solid var(--color-blue-700);
+  display: flex;
+  align-items: center;
+  gap: var(--size-2);
+}
+
+
+button.open:hover {
+  background-color: var(--color-grey-50);
+  filter: brightness(90%);
+}

@@ -15,33 +15,12 @@ header {
   padding: var(--size-10);
 }
 
-
 main {
   grid-area: main;
   margin: var(--size-10);
   background-color: white;
   border-radius: var(--radius-xl);
   padding: var(--size-4)
-}
-
-button.open {
-  color: white;
-  font-size: var(--scale-1);
-  border-radius: var(--radius-xs);
-  font-weight: var(--weight-bold);
-  padding: var(--size-4);
-  background-color: var(--color-blue-700);
-  border: 1px solid var(--color-blue-500);
-  box-shadow: var(--shadow-md);
-  display: flex;
-  align-items: center;
-  gap: var(--size-2);
-}
-
-
-button.open:hover {
-  cursor: pointer;
-  filter: brightness(110%);
 }
 
 .toolbar {
