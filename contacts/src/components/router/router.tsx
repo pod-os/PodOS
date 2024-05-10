@@ -26,7 +26,7 @@ export class ContactsRouter {
 
   async componentWillLoad() {
     const os = await usePodOS(this.el);
-    await os.loadContactsModule();
+    this.contactsModule = await os.loadContactsModule();
     this.updateUri();
     Router.onChange('url', () => {
       this.updateUri();
