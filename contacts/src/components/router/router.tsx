@@ -1,9 +1,8 @@
-import { PodOS } from '@pod-os/core';
 import { ContactsModule } from '@solid-data-modules/contacts-rdflib';
-import { Component, Event, h, Host, Listen, State } from '@stencil/core';
+import { Component, Element, h, Host, Listen, State } from '@stencil/core';
 
 import { createRouter, match, Route } from 'stencil-router-v2';
-import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../../events/PodOsAware';
+import { usePodOS } from '../../events/usePodOS';
 
 const Router = createRouter();
 
@@ -11,10 +10,11 @@ const Router = createRouter();
   tag: 'pos-contacts-router',
   shadow: true,
 })
-export class ContactsRouter implements PodOsAware {
+export class ContactsRouter {
   @State() contactsModule: ContactsModule;
 
-  @Event({ eventName: 'pod-os:init' }) subscribePodOs: PodOsEventEmitter;
+  @Element()
+  el: HTMLElement;
 
   @State()
   uri: string;
@@ -24,8 +24,9 @@ export class ContactsRouter implements PodOsAware {
     Router.push('/address-book?uri=' + encodeURIComponent(event.detail));
   }
 
-  componentWillLoad() {
-    subscribePodOs(this);
+  async componentWillLoad() {
+    const os = await usePodOS(this.el);
+    await os.loadContactsModule();
     this.updateUri();
     Router.onChange('url', () => {
       this.updateUri();
@@ -36,14 +37,7 @@ export class ContactsRouter implements PodOsAware {
     this.uri = new URLSearchParams(window.location.search).get('uri');
   }
 
-  receivePodOs = async (os: PodOS) => {
-    this.contactsModule = await os.loadContactsModule();
-  };
-
   render() {
-    if (!this.contactsModule) {
-      return <div>Loading contacts module...</div>;
-    }
     return (
       <Host>
         <Router.Switch>
