@@ -39,7 +39,7 @@ export class OpenAddressBook {
   }
 
   promptAndOpen() {
-    const uri = prompt('Please enter URI of an address book', 'http://localhost:3000/alice/public-contacts/index.ttl#this');
+    const uri = prompt('Please enter URI of an address book', 'https://');
     if (uri) {
       this.openAddressBook.emit(uri);
     }
