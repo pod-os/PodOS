@@ -14,8 +14,7 @@ and this project adheres to
 
 ### Changed
 
-- `trackSession`: Callback receives an authenticated fetch as second parameter when logged in
-- `observeSession`: Returns an rxjs observable that allows to observe the current session state and all changes to it
+- `observeSession`: Returns a rxjs observable that allows to observe the current session state and all changes to it
 
 ## 0.11.0
 

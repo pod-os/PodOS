@@ -1,10 +1,6 @@
 import { ContactsModule } from "@solid-data-modules/contacts-rdflib";
 import { BehaviorSubject } from "rxjs";
-import {
-  AuthenticatedFetch,
-  BrowserSession,
-  SessionInfo,
-} from "./authentication";
+import { BrowserSession, SessionInfo } from "./authentication";
 import { SolidFile } from "./files";
 import { FileFetcher } from "./files/FileFetcher";
 import { loadContactsModule } from "./modules/contacts";
@@ -77,13 +73,8 @@ export class PodOS {
    * @deprecated use observeSession instead
    * @param callback
    */
-  trackSession(
-    callback: (
-      session: SessionInfo,
-      authenticatedFetch: AuthenticatedFetch,
-    ) => unknown,
-  ): void {
-    return this.session.trackSession((sessionInfo: SessionInfo) => {
+  trackSession(callback: (session: SessionInfo) => unknown): void {
+    return this.session.trackSession((session) => {
       /*
          Flagging authorization metadata is necessary every time the user
          logs in or out, so that metadata from previous requests is outdated
@@ -92,7 +83,7 @@ export class PodOS {
          See: https://github.com/linkeddata/rdflib.js/pull/512
        */
       this.store.updater.flagAuthorizationMetadata();
-      callback(sessionInfo, this.session.authenticatedFetch);
+      callback(session);
     });
   }
 
