@@ -34,7 +34,6 @@ export class OpenAddressBook {
 
   @Listen('pod-os:link')
   openFromLink(event: CustomEvent<string>) {
-    console.log(event);
     this.openAddressBook.emit(event.detail);
   }
 
