@@ -31,9 +31,9 @@ describe("observe session", () => {
     const subject = observeSession(session);
 
     // and login occurs
-    // @ts-ignore allow to write session info
+    // @ts-expect-error allow to write session info
     session["info"] = { isLoggedIn: true, sessionId: "test-session-id" };
-    // @ts-ignore allow to emit for testing
+    // @ts-expect-error allow to emit for testing
     session.events.emit(EVENTS.LOGIN);
 
     // the current session value is changed to logged in
@@ -54,9 +54,9 @@ describe("observe session", () => {
     const subject = observeSession(session);
 
     // and logout occurs
-    // @ts-ignore allow to write session info
+    // @ts-expect-error allow to write session info
     session["info"] = { isLoggedIn: false, sessionId: "test-session-id" };
-    // @ts-ignore allow to emit for testing
+    // @ts-expect-error allow to emit for testing
     session.events.emit(EVENTS.LOGOUT);
 
     // the current session value is changed to logged in
@@ -77,9 +77,9 @@ describe("observe session", () => {
     const subject = observeSession(session);
 
     // and session restore occurs
-    // @ts-ignore allow to write session info
+    // @ts-expect-error allow to write session info
     session["info"] = { isLoggedIn: true, sessionId: "test-session-id" };
-    // @ts-ignore allow to emit for testing
+    // @ts-expect-error allow to emit for testing
     session.events.emit(EVENTS.SESSION_RESTORED);
 
     // the current session value is changed to logged in

@@ -12,7 +12,7 @@ export function observeSession(session: Session): BehaviorSubject<SessionInfo> {
   const logout = fromEvent(session.events, EVENTS.LOGOUT);
   const sessionRestored = fromEvent(session.events, EVENTS.SESSION_RESTORED);
   merge(login, logout, sessionRestored)
-    .pipe(map((it) => sessionInfoSubject.next(session.info)))
+    .pipe(map(() => sessionInfoSubject.next(session.info)))
     .subscribe();
   return sessionInfoSubject;
 }
