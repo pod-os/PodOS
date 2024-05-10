@@ -52,7 +52,6 @@ export namespace Components {
         "defer": number;
     }
     interface PosContactsOpenAddressBook {
-        "webId": string | undefined;
     }
     interface PosContactsPhoneNumbers {
         "phoneNumbers": PhoneNumber[];
@@ -345,7 +344,6 @@ declare namespace LocalJSX {
     }
     interface PosContactsOpenAddressBook {
         "onPod-os-contacts:open-address-book"?: (event: PosContactsOpenAddressBookCustomEvent<string>) => void;
-        "webId"?: string | undefined;
     }
     interface PosContactsPhoneNumbers {
         "phoneNumbers": PhoneNumber[];

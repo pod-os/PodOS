@@ -1,5 +1,7 @@
 import { SessionInfo } from '@pod-os/core';
-import { Component, Event, EventEmitter, h, Listen, Prop, State } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, h, Listen, State } from '@stencil/core';
+import { Subject, takeUntil } from 'rxjs';
+import { usePodOS } from '../../events/usePodOS';
 
 @Component({
   tag: 'pos-contacts-open-address-book',
@@ -9,16 +11,26 @@ import { Component, Event, EventEmitter, h, Listen, Prop, State } from '@stencil
 export class OpenAddressBook {
   @Event({ eventName: 'pod-os-contacts:open-address-book' }) openAddressBook: EventEmitter<string>;
 
+  @Element() el: HTMLElement;
+
   @State()
   sessionInfo: SessionInfo | undefined;
 
-  @Listen('pod-os:session-changed', { target: 'window' })
-  sessionChanged(event: CustomEvent<SessionInfo>) {
-    this.sessionInfo = event.detail;
+  private readonly disconnected$ = new Subject<void>();
+
+  async componentWillLoad() {
+    const os = await usePodOS(this.el);
+    os.observeSession()
+      .pipe(takeUntil(this.disconnected$))
+      .subscribe(sessionInfo => {
+        this.sessionInfo = { ...sessionInfo };
+      });
   }
 
-  @Prop()
-  webId: string | undefined;
+  disconnectedCallback() {
+    this.disconnected$.next();
+    this.disconnected$.unsubscribe();
+  }
 
   @Listen('pod-os:link')
   openFromLink(event: CustomEvent<string>) {

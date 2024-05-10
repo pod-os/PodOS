@@ -1,12 +1,24 @@
-import { SessionInfo } from '@pod-os/core';
+jest.mock('../../../events/usePodOS');
+
+import { PodOS, SessionInfo } from '@pod-os/core';
 import { h } from '@stencil/core';
 import { newSpecPage } from '@stencil/core/testing';
-import { fireEvent } from '@testing-library/dom';
+import { when } from 'jest-when';
+import { BehaviorSubject } from 'rxjs';
+import { usePodOS } from '../../../events/usePodOS';
 import { OpenAddressBook } from '../open-address-book';
 
 describe('open address book', () => {
   let page;
+  const sessionInfo$ = new BehaviorSubject<SessionInfo>({
+    sessionId: 'test-session',
+    isLoggedIn: false,
+    webId: '',
+  });
   beforeEach(async () => {
+    when(usePodOS).mockResolvedValue({
+      observeSession: () => sessionInfo$,
+    } as unknown as PodOS);
     page = await newSpecPage({
       components: [OpenAddressBook],
       template: () => <pos-contacts-open-address-book />,
@@ -31,17 +43,11 @@ describe('open address book', () => {
   });
 
   it('lists address books after login', async () => {
-    const sessionInfo: SessionInfo = {
+    sessionInfo$.next({
       isLoggedIn: true,
       webId: 'https://alice.test/profile/card#me',
       sessionId: 'test',
-    };
-    fireEvent(
-      window,
-      new CustomEvent('pod-os:session-changed', {
-        detail: sessionInfo,
-      }),
-    );
+    });
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
     <pos-contacts-open-address-book>
