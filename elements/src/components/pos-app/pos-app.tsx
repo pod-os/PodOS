@@ -2,6 +2,7 @@ import { PodOS } from '@pod-os/core';
 import { Component, h, Listen, State } from '@stencil/core';
 import session from '../../store/session';
 import { createPodOS } from '../../pod-os';
+import { Subject, takeUntil } from 'rxjs';
 
 interface InitializeOsEvent extends CustomEvent {
   detail: Function;
@@ -20,17 +21,27 @@ interface RequestModuleEvent extends CustomEvent {
 export class PosApp {
   @State() os: PodOS;
 
+  private readonly disconnected$ = new Subject<void>();
+
   componentWillLoad() {
     this.os = createPodOS();
     this.os.handleIncomingRedirect();
-    this.os.trackSession(async sessionInfo => {
-      session.state.webId = sessionInfo.webId;
-      if (sessionInfo.isLoggedIn) {
-        const profile = await this.os.fetchProfile(sessionInfo.webId);
-        session.state.profile = profile;
-      }
-      session.state.isLoggedIn = sessionInfo.isLoggedIn;
-    });
+    this.os
+      .observeSession()
+      .pipe(takeUntil(this.disconnected$))
+      .subscribe(async sessionInfo => {
+        session.state.webId = sessionInfo.webId;
+        if (sessionInfo.isLoggedIn) {
+          const profile = await this.os.fetchProfile(sessionInfo.webId);
+          session.state.profile = profile;
+        }
+        session.state.isLoggedIn = sessionInfo.isLoggedIn;
+      });
+  }
+
+  disconnectedCallback() {
+    this.disconnected$.next();
+    this.disconnected$.unsubscribe();
   }
 
   @Listen('pod-os:init')
