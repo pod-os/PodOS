@@ -5,13 +5,6 @@
 <!-- Auto Generated Below -->
 
 
-## Events
-
-| Event         | Description | Type               |
-| ------------- | ----------- | ------------------ |
-| `pod-os:init` |             | `CustomEvent<any>` |
-
-
 ## Dependencies
 
 ### Used by
@@ -33,6 +26,7 @@ graph TD;
   pos-contacts-router --> pos-contacts-contact
   pos-contacts-router --> pos-contacts-group
   pos-contacts-welcome-page --> pos-login
+  pos-contacts-welcome-page --> pos-contacts-open-address-book
   pos-login --> pos-resource
   pos-login --> pos-picture
   pos-login --> pos-label
@@ -46,6 +40,13 @@ graph TD;
   pos-picture --> pos-image
   pos-image --> ion-skeleton-text
   pos-dialog --> ion-icon
+  pos-contacts-open-address-book --> pos-contacts-list-address-books
+  pos-contacts-open-address-book --> pos-login
+  pos-contacts-open-address-book --> ion-icon
+  pos-contacts-list-address-books --> pos-rich-link
+  pos-rich-link --> pos-resource
+  pos-rich-link --> pos-label
+  pos-rich-link --> pos-description
   pos-contacts-address-book-page --> pos-login
   pos-contacts-address-book-page --> ion-icon
   pos-contacts-address-book-page --> pos-resource

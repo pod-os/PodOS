@@ -5,13 +5,6 @@
 <!-- Auto Generated Below -->
 
 
-## Events
-
-| Event                               | Description | Type                  |
-| ----------------------------------- | ----------- | --------------------- |
-| `pod-os-contacts:open-address-book` |             | `CustomEvent<string>` |
-
-
 ## Dependencies
 
 ### Used by
@@ -21,11 +14,13 @@
 ### Depends on
 
 - pos-login
+- [pos-contacts-open-address-book](../open-address-book)
 
 ### Graph
 ```mermaid
 graph TD;
   pos-contacts-welcome-page --> pos-login
+  pos-contacts-welcome-page --> pos-contacts-open-address-book
   pos-login --> pos-resource
   pos-login --> pos-picture
   pos-login --> pos-label
@@ -39,6 +34,13 @@ graph TD;
   pos-picture --> pos-image
   pos-image --> ion-skeleton-text
   pos-dialog --> ion-icon
+  pos-contacts-open-address-book --> pos-contacts-list-address-books
+  pos-contacts-open-address-book --> pos-login
+  pos-contacts-open-address-book --> ion-icon
+  pos-contacts-list-address-books --> pos-rich-link
+  pos-rich-link --> pos-resource
+  pos-rich-link --> pos-label
+  pos-rich-link --> pos-description
   pos-contacts-router --> pos-contacts-welcome-page
   style pos-contacts-welcome-page fill:#f9f,stroke:#333,stroke-width:4px
 ```
