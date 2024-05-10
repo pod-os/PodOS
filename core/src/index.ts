@@ -1,4 +1,5 @@
 import { ContactsModule } from "@solid-data-modules/contacts-rdflib";
+import { BehaviorSubject } from "rxjs";
 import {
   AuthenticatedFetch,
   BrowserSession,
@@ -72,6 +73,10 @@ export class PodOS {
     return this.uriService.proposeUriForNewThing(referenceUri, name);
   }
 
+  /**
+   * @deprecated use observeSession instead
+   * @param callback
+   */
   trackSession(
     callback: (
       session: SessionInfo,
@@ -89,6 +94,13 @@ export class PodOS {
       this.store.updater.flagAuthorizationMetadata();
       callback(sessionInfo, this.session.authenticatedFetch);
     });
+  }
+
+  /**
+   * returns a behavior subject that can be used to observe changes in the session state
+   */
+  observeSession(): BehaviorSubject<SessionInfo> {
+    return this.session.observeSession();
   }
 
   /**

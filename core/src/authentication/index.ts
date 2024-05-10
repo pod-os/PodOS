@@ -3,6 +3,8 @@ import {
   ISessionInfo,
   Session,
 } from "@inrupt/solid-client-authn-browser";
+import { BehaviorSubject } from "rxjs";
+import { observeSession } from "./observeSession";
 
 export type AuthenticatedFetch = (
   url: RequestInfo,
@@ -19,6 +21,8 @@ export class BrowserSession implements PodOsSession {
   private readonly session: Session;
   private readonly _authenticatedFetch: AuthenticatedFetch;
 
+  private readonly sessionInfo$: BehaviorSubject<SessionInfo>;
+
   get authenticatedFetch(): (
     url: RequestInfo,
     init?: RequestInit | undefined,
@@ -28,6 +32,7 @@ export class BrowserSession implements PodOsSession {
 
   constructor() {
     this.session = new Session();
+    this.sessionInfo$ = observeSession(this.session);
     this._authenticatedFetch = this.session.fetch;
   }
 
@@ -56,5 +61,9 @@ export class BrowserSession implements PodOsSession {
     this.session.on(EVENTS.LOGOUT, () => callback(this.session.info));
     this.session.on(EVENTS.SESSION_RESTORED, () => callback(this.session.info));
     callback(this.session.info);
+  }
+
+  observeSession(): BehaviorSubject<SessionInfo> {
+    return this.sessionInfo$;
   }
 }
