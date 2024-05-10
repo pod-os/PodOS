@@ -56,6 +56,7 @@ export class AddressBookPage {
       this.error = null;
       this.addressBook = await this.contactsModule.readAddressBook(this.uri);
     } catch (e) {
+      console.log(e);
       this.error = e;
     }
   }

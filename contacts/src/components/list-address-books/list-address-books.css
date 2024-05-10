@@ -2,4 +2,31 @@ ul {
   margin: 0;
   padding: 0;
   list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-3);
+}
+
+a {
+  font-size: var(--scale-1);
+  border-radius: var(--radius-xs);
+  padding: var(--size-4);
+  background-color: white;
+  color: var(--pos-primary-color);
+  border: 1px solid var(--color-blue-700);
+  display: flex;
+  align-items: center;
+  gap: var(--size-2);
+  text-decoration: none;
+}
+
+a:hover {
+  background-color: var(--color-grey-50);
+  filter: brightness(90%);
+}
+
+.label {
+  display: flex;
+  gap: var(--size-2);
+  align-items: center;
 }

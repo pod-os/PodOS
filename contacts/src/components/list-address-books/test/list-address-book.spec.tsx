@@ -59,12 +59,19 @@ describe('list address books', () => {
 
     expect(page.root).toEqualHtml(`
     <pos-contacts-list-address-books>
-      <ul>
+    <ul>
+      <a href="https://alice.test/private/contacts/1">
         <li>
-          <pos-rich-link uri="https://alice.test/private/contacts/1"></pos-rich-link>
+          <pos-resource uri="https://alice.test/private/contacts/1">
+            <div class="label">
+              <ion-icon name="book-outline"></ion-icon>
+              <pos-label></pos-label>
+            </div>
+          </pos-resource>
         </li>
-      </ul>
-    </pos-contacts-list-address-books>`);
+      </a>
+    </ul>
+  </pos-contacts-list-address-books>`);
   });
 
   it('lists a single public address book', async () => {
@@ -84,11 +91,18 @@ describe('list address books', () => {
 
     expect(page.root).toEqualHtml(`
     <pos-contacts-list-address-books>
-      <ul>
+    <ul>
+      <a href="https://alice.test/public/contacts/1">
         <li>
-          <pos-rich-link uri="https://alice.test/public/contacts/1"></pos-rich-link>
+          <pos-resource uri="https://alice.test/public/contacts/1">
+            <div class="label">
+              <ion-icon name="book-outline"></ion-icon>
+              <pos-label></pos-label>
+            </div>
+          </pos-resource>
         </li>
-      </ul>
+      </a>
+    </ul>
     </pos-contacts-list-address-books>`);
   });
 
@@ -109,17 +123,38 @@ describe('list address books', () => {
 
     expect(page.root).toEqualHtml(`
     <pos-contacts-list-address-books>
-      <ul>
+    <ul>
+      <a href="https://alice.test/private/contacts/1">
         <li>
-          <pos-rich-link uri="https://alice.test/private/contacts/1"></pos-rich-link>
+          <pos-resource uri="https://alice.test/private/contacts/1">
+            <div class="label">
+              <ion-icon name="book-outline"></ion-icon>
+              <pos-label></pos-label>
+            </div>
+          </pos-resource>
         </li>
+      </a>
+      <a href="https://alice.test/private/contacts/2">
         <li>
-          <pos-rich-link uri="https://alice.test/private/contacts/2"></pos-rich-link>
+          <pos-resource uri="https://alice.test/private/contacts/2">
+            <div class="label">
+              <ion-icon name="book-outline"></ion-icon>
+              <pos-label></pos-label>
+            </div>
+          </pos-resource>
         </li>
+      </a>
+      <a href="https://alice.test/public/contacts/1">
         <li>
-          <pos-rich-link uri="https://alice.test/public/contacts/1"></pos-rich-link>
+          <pos-resource uri="https://alice.test/public/contacts/1">
+            <div class="label">
+              <ion-icon name="book-outline"></ion-icon>
+              <pos-label></pos-label>
+            </div>
+          </pos-resource>
         </li>
-      </ul>
-    </pos-contacts-list-address-books>`);
+      </a>
+    </ul>
+  </pos-contacts-list-address-books>`);
   });
 });

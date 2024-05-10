@@ -1,5 +1,5 @@
 import { AddressBookLists, ContactsModule } from '@solid-data-modules/contacts-rdflib';
-import { Component, Event, h, Prop, State, Watch } from '@stencil/core';
+import { Component, Event, EventEmitter, h, Prop, State, Watch } from '@stencil/core';
 import { PodOsModuleAware, PodOsModuleEventEmitter, subscribePodOsModule } from '../../events/PodOsModuleAware';
 
 @Component({
@@ -16,6 +16,8 @@ export class ListAddressBooks implements PodOsModuleAware<ContactsModule> {
 
   @Event({ eventName: 'pod-os:module' })
   subscribeModule: PodOsModuleEventEmitter<ContactsModule>;
+
+  @Event({ eventName: 'pod-os:link' }) linkEmitter: EventEmitter;
 
   @State()
   private addressBookLists: AddressBookLists;
@@ -44,9 +46,22 @@ export class ListAddressBooks implements PodOsModuleAware<ContactsModule> {
     return (
       <ul>
         {allUris.map(uri => (
-          <li>
-            <pos-rich-link uri={uri}></pos-rich-link>
-          </li>
+          <a
+            href={uri}
+            onClick={e => {
+              e.preventDefault();
+              this.linkEmitter.emit(uri);
+            }}
+          >
+            <li>
+              <pos-resource uri={uri}>
+                <div class="label">
+                  <ion-icon name="book-outline"></ion-icon>
+                  <pos-label />
+                </div>
+              </pos-resource>
+            </li>
+          </a>
         ))}
       </ul>
     );

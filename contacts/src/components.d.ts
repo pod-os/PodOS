@@ -200,6 +200,7 @@ declare global {
     };
     interface HTMLPosContactsListAddressBooksElementEventMap {
         "pod-os:module": any;
+        "pod-os:link": any;
     }
     interface HTMLPosContactsListAddressBooksElement extends Components.PosContactsListAddressBooks, HTMLStencilElement {
         addEventListener<K extends keyof HTMLPosContactsListAddressBooksElementEventMap>(type: K, listener: (this: HTMLPosContactsListAddressBooksElement, ev: PosContactsListAddressBooksCustomEvent<HTMLPosContactsListAddressBooksElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -321,6 +322,7 @@ declare namespace LocalJSX {
         "onPod-os-contacts:group-selected"?: (event: PosContactsGroupListCustomEvent<Group>) => void;
     }
     interface PosContactsListAddressBooks {
+        "onPod-os:link"?: (event: PosContactsListAddressBooksCustomEvent<any>) => void;
         "onPod-os:module"?: (event: PosContactsListAddressBooksCustomEvent<any>) => void;
         "webId": string;
     }
