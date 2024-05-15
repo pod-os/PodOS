@@ -3,6 +3,7 @@ jest.mock('../pod-os', () => ({
 }));
 
 import { when } from 'jest-when';
+import { BehaviorSubject, EMPTY } from 'rxjs';
 import { createPodOS } from '../pod-os';
 
 const alice = {
@@ -12,22 +13,22 @@ const alice = {
 };
 
 export function mockPodOS() {
-  let trackSessionCallback = (_: any) => null;
+  const sessionInfo$ = new BehaviorSubject({ isLoggedIn: false, webId: '' });
   const os = {
     fetch: jest.fn(),
     fetchFile: jest.fn(),
     store: {
       get: jest.fn(),
     },
-    trackSession: jest.fn().mockImplementation(cb => (trackSessionCallback = cb)),
+    observeSession: () => sessionInfo$,
     handleIncomingRedirect: jest.fn(),
     login: jest.fn().mockImplementation(() => {
-      trackSessionCallback({ isLoggedIn: true, webId: alice.webId });
+      sessionInfo$.next({ isLoggedIn: true, webId: alice.webId });
     }),
     proposeUriForNewThing: jest.fn(),
     addNewThing: jest.fn().mockResolvedValue(void null),
     fetchProfile: jest.fn(),
-    buildSearchIndex: jest.fn()
+    buildSearchIndex: jest.fn(),
   };
   when(os.store.get)
     .calledWith(alice.webId)

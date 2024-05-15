@@ -4,20 +4,22 @@ jest.mock('../../pod-os', () => ({
 
 import { newSpecPage } from '@stencil/core/testing';
 import { fireEvent } from '@testing-library/dom';
+import { BehaviorSubject, EMPTY } from 'rxjs';
 import { PosApp } from './pos-app';
 import { createPodOS } from '../../pod-os';
 
 describe('pos-app', () => {
   describe('load preferences', () => {
     const mockFetchProfile = jest.fn();
-    let trackSessionCallback;
+    let sessionInfo$;
 
     beforeEach(() => {
+      sessionInfo$ = new BehaviorSubject({ isLoggedIn: false, webId: '' });
       jest.resetAllMocks();
 
       (createPodOS as jest.Mock).mockReturnValue({
         handleIncomingRedirect: () => {},
-        trackSession: callback => (trackSessionCallback = callback),
+        observeSession: () => sessionInfo$,
         fetchProfile: mockFetchProfile,
       });
     });
@@ -29,7 +31,7 @@ describe('pos-app', () => {
         supportsShadowDom: false,
       });
 
-      trackSessionCallback({
+      sessionInfo$.next({
         isLoggedIn: false,
         webId: 'https://pod.test/alice#me',
       });
@@ -44,7 +46,7 @@ describe('pos-app', () => {
         supportsShadowDom: false,
       });
 
-      trackSessionCallback({
+      sessionInfo$.next({
         isLoggedIn: true,
         webId: 'https://pod.test/alice#me',
       });
@@ -59,7 +61,7 @@ describe('pos-app', () => {
         jest.resetAllMocks();
         (createPodOS as jest.Mock).mockReturnValue({
           handleIncomingRedirect: () => {},
-          trackSession: () => {},
+          observeSession: () => EMPTY,
           loadContactsModule: mockLoadContactsModule,
         });
       });
