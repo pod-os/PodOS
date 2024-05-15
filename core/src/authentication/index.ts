@@ -55,6 +55,9 @@ export class BrowserSession implements PodOsSession {
     return this.session.logout();
   }
 
+  /**
+   * @deprecated use observeSession instead
+   */
   trackSession(callback: (session: SessionInfo) => unknown) {
     this.session.on(EVENTS.LOGIN, () => callback(this.session.info));
     this.session.on(EVENTS.LOGOUT, () => callback(this.session.info));
@@ -64,5 +67,9 @@ export class BrowserSession implements PodOsSession {
 
   observeSession(): BehaviorSubject<SessionInfo> {
     return this.sessionInfo$;
+  }
+
+  onSessionRestore(callback: (url: string) => void) {
+    this.session.on(EVENTS.SESSION_RESTORED, callback);
   }
 }

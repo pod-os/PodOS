@@ -11,11 +11,13 @@ and this project adheres to
 ### Added
 
 - `loadContactsModule`: asynchronously load the contacts data-module
+- `onSessionRestore`: Register a callback to get notified about restored sessions
+- `observeSession`: Returns a rxjs observable that allows to observe the current session state and all changes to it
 
 ### Changed
 
-- `observeSession`: Returns a rxjs observable that allows to observe the current session state and all changes to it
 - `handleIncomingRedirect`: Added parameter `restorePreviousSession` to allow automatic session restore
+- `trackSession`: Deprecated in favor of `observeSession`
 
 ## 0.11.0
 

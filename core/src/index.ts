@@ -94,6 +94,14 @@ export class PodOS {
   }
 
   /**
+   * Calls the provided callback with the original URL that was open before the silent auth redirect
+   * @param callback
+   */
+  onSessionRestore(callback: (url: string) => unknown): void {
+    this.session.onSessionRestore(callback);
+  }
+
+  /**
    * Fetch the WebId profile and preferences file for the given WebID
    * @param webId
    */
