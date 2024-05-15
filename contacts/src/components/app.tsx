@@ -8,7 +8,7 @@ import '@pod-os/elements';
 export class App {
   render() {
     return (
-      <pos-app>
+      <pos-app restore-previous-session={true}>
         <pos-contacts-router />
       </pos-app>
     );
