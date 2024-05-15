@@ -24,6 +24,11 @@ export class ContactsRouter {
     Router.push('/address-book?uri=' + encodeURIComponent(event.detail));
   }
 
+  @Listen('pod-os:session-restored', { target: 'window' })
+  sessionRestored(e) {
+    Router.push(e.detail.url);
+  }
+
   async componentWillLoad() {
     const os = await usePodOS(this.el);
     this.contactsModule = await os.loadContactsModule();
