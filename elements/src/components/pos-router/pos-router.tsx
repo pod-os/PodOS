@@ -16,6 +16,11 @@ export class PosRouter {
     this.navigate(e.detail);
   }
 
+  @Listen('pod-os:session-restored', { target: 'window' })
+  sessionRestored(e) {
+    Router.push(e.detail.url);
+  }
+
   componentWillLoad() {
     this.updateUri();
     Router.onChange('url', () => {

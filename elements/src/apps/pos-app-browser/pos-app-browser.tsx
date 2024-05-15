@@ -6,7 +6,7 @@ import { Component, h } from '@stencil/core';
 export class PosAppBrowser {
   render() {
     return (
-      <pos-app>
+      <pos-app restorePreviousSession={true}>
         <pos-error-toast>
           <ion-app>
             <ion-header>

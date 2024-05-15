@@ -12,6 +12,13 @@
 | `restorePreviousSession` | `restore-previous-session` |             | `boolean` | `false` |
 
 
+## Events
+
+| Event                     | Description                             | Type                            |
+| ------------------------- | --------------------------------------- | ------------------------------- |
+| `pod-os:session-restored` | Fired whenever the session was restored | `CustomEvent<{ url: string; }>` |
+
+
 ## Dependencies
 
 ### Used by
