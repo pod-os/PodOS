@@ -27,7 +27,6 @@ export class PosApp {
 
   componentWillLoad() {
     this.os = createPodOS();
-    console.log('pos-app', this.restorePreviousSession);
     this.os.handleIncomingRedirect(this.restorePreviousSession);
     this.os
       .observeSession()

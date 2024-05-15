@@ -32,7 +32,6 @@ export class PosRouter {
   }
 
   render() {
-    console.log('render router', this.uri);
     return (
       <Router.Switch>
         <Route path={match('', { exact: false })}>
