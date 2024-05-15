@@ -1,3 +1,7 @@
+jest.mock('../../events/usePodOS');
+jest.mock('../../utils/debounceTime');
+
+import { PodOS, SessionInfo } from '@pod-os/core';
 import { ContactsModule } from '@solid-data-modules/contacts-rdflib';
 
 // noinspection ES6UnusedImports
@@ -6,9 +10,29 @@ import { h } from '@stencil/core';
 import { newSpecPage } from '@stencil/core/testing';
 
 import { fireEvent, getByRole } from '@testing-library/dom';
+import { when } from 'jest-when';
+import { BehaviorSubject, tap } from 'rxjs';
+import { usePodOS } from '../../events/usePodOS';
 import { AddressBookPage } from './address-book-page';
 
+// noinspection ES6PreferShortImport
+import { debounceTime } from '../../utils/debounceTime';
+
 describe('address-book-page', () => {
+  let sessionInfo$;
+
+  beforeEach(() => {
+    when(debounceTime).mockReturnValue(tap()); // disable the debounce time for testing
+    sessionInfo$ = new BehaviorSubject<SessionInfo>({
+      sessionId: 'test-session',
+      isLoggedIn: false,
+      webId: '',
+    });
+    when(usePodOS).mockResolvedValue({
+      observeSession: () => sessionInfo$,
+    } as unknown as PodOS);
+  });
+
   it('shows loading indicator while there is no address book', async () => {
     const module = {
       readAddressBook: jest.fn(),
@@ -87,8 +111,30 @@ describe('address-book-page', () => {
               retry
             </button>
           </p>
-          <pos-resource uri='https://pod.test/contacts#it'></pos-resource>
         </main>
+      `);
+    });
+
+    it('retries to fetch the address book after login', async () => {
+      const readAddressBook = jest.fn().mockRejectedValueOnce({ error: 'fake error for testing' }).mockResolvedValueOnce({});
+      const module = {
+        readAddressBook: readAddressBook,
+      } as unknown as ContactsModule;
+      const page = await newSpecPage({
+        components: [AddressBookPage],
+        template: () => <pos-contacts-address-book-page uri="https://pod.test/contacts#it" contactsModule={module}></pos-contacts-address-book-page>,
+        supportsShadowDom: false,
+      });
+      await page.waitForChanges();
+      sessionInfo$.next({
+        sessionId: 'test-session',
+        isLoggedIn: true,
+        webId: 'any',
+      });
+      await page.waitForChanges();
+      const main = getByRole(page.root, 'main');
+      expect(main.firstChild).toEqualHtml(`
+        <pos-contacts-contact-list></pos-contacts-contact-list>
       `);
     });
   });

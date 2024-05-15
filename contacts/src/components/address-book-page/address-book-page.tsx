@@ -1,5 +1,9 @@
 import { AddressBook, Contact, ContactsModule, Group } from '@solid-data-modules/contacts-rdflib';
-import { Component, h, Host, Listen, Prop, State, Watch } from '@stencil/core';
+import { Component, Element, h, Host, Listen, Prop, State, Watch } from '@stencil/core';
+import { Subject, takeUntil, tap } from 'rxjs';
+import { usePodOS } from '../../events/usePodOS';
+// noinspection ES6PreferShortImport needs to be mocked
+import { debounceTime } from '../../utils/debounceTime';
 
 @Component({
   tag: 'pos-contacts-address-book-page',
@@ -7,6 +11,8 @@ import { Component, h, Host, Listen, Prop, State, Watch } from '@stencil/core';
   shadow: true,
 })
 export class AddressBookPage {
+  @Element() el: HTMLElement;
+
   @Prop()
   uri!: string;
 
@@ -28,8 +34,19 @@ export class AddressBookPage {
   @State()
   private menuOpen = false;
 
-  componentWillLoad() {
-    this.loadAddressBook();
+  private readonly disconnected$ = new Subject<void>();
+
+  async componentWillLoad() {
+    const os = await usePodOS(this.el);
+    os.observeSession()
+      .pipe(
+        takeUntil(this.disconnected$),
+        debounceTime(300), // make sure the session state has "settled" after redirect
+        tap(() => {
+          this.loadAddressBook();
+        }),
+      )
+      .subscribe();
   }
 
   @Listen('pod-os-contacts:contact-selected')
@@ -53,6 +70,7 @@ export class AddressBookPage {
   @Watch('uri')
   async loadAddressBook() {
     try {
+      this.addressBook = null;
       this.error = null;
       this.addressBook = await this.contactsModule.readAddressBook(this.uri);
     } catch (e) {
@@ -74,8 +92,6 @@ export class AddressBookPage {
               retry
             </button>
           </p>
-
-          <pos-resource uri={this.uri}></pos-resource>
         </main>
       );
     }
