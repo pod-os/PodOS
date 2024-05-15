@@ -3,7 +3,6 @@ import {
   ISessionInfo,
   Session,
 } from "@inrupt/solid-client-authn-browser";
-import { IHandleIncomingRedirectOptions } from "@inrupt/solid-client-authn-browser/src/Session";
 import { BehaviorSubject } from "rxjs";
 import { observeSession } from "./observeSession";
 
