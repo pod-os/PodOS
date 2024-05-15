@@ -21,6 +21,7 @@ export function mockPodOS() {
       get: jest.fn(),
     },
     observeSession: () => sessionInfo$,
+    onSessionRestore: () => {},
     handleIncomingRedirect: jest.fn(),
     login: jest.fn().mockImplementation(() => {
       sessionInfo$.next({ isLoggedIn: true, webId: alice.webId });

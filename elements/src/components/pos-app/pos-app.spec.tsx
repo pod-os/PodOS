@@ -5,8 +5,8 @@ jest.mock('../../pod-os', () => ({
 import { newSpecPage } from '@stencil/core/testing';
 import { fireEvent } from '@testing-library/dom';
 import { BehaviorSubject, EMPTY } from 'rxjs';
-import { PosApp } from './pos-app';
 import { createPodOS } from '../../pod-os';
+import { PosApp } from './pos-app';
 
 describe('pos-app', () => {
   describe('load preferences', () => {
@@ -20,6 +20,7 @@ describe('pos-app', () => {
       (createPodOS as jest.Mock).mockReturnValue({
         handleIncomingRedirect: () => {},
         observeSession: () => sessionInfo$,
+        onSessionRestore: () => {},
         fetchProfile: mockFetchProfile,
       });
     });
@@ -62,6 +63,7 @@ describe('pos-app', () => {
         (createPodOS as jest.Mock).mockReturnValue({
           handleIncomingRedirect: () => {},
           observeSession: () => EMPTY,
+          onSessionRestore: () => {},
           loadContactsModule: mockLoadContactsModule,
         });
       });
@@ -106,6 +108,7 @@ describe('pos-app', () => {
 
   describe('handle incoming redirect', () => {
     const mockHandleIncomingRedirect = jest.fn();
+    let sessionRestoredCallback;
     let sessionInfo$;
 
     beforeEach(() => {
@@ -115,6 +118,7 @@ describe('pos-app', () => {
       (createPodOS as jest.Mock).mockReturnValue({
         handleIncomingRedirect: mockHandleIncomingRedirect,
         observeSession: () => sessionInfo$,
+        onSessionRestore: callback => (sessionRestoredCallback = callback),
         fetchProfile: () => null,
       });
     });
@@ -162,6 +166,29 @@ describe('pos-app', () => {
       });
 
       expect(mockHandleIncomingRedirect).toHaveBeenCalledWith(false);
+    });
+
+    it('fires session-restored event', async () => {
+      const onSessionRestored = jest.fn();
+      const page = await newSpecPage({
+        components: [PosApp],
+        html: `<pos-app>item body</pos-app>`,
+        supportsShadowDom: false,
+      });
+
+      page.root.addEventListener('pod-os:session-restored', onSessionRestored);
+
+      await page.waitForChanges();
+
+      sessionRestoredCallback('https://origin-url.test');
+
+      expect(onSessionRestored).toHaveBeenCalledWith(
+        expect.objectContaining({
+          detail: {
+            url: 'https://origin-url.test',
+          },
+        }),
+      );
     });
   });
 });

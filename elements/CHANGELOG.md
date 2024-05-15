@@ -6,9 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+### Changed
+
 - [pos-app](../docs/elements/components/pos-app)
   - Can now handle new events of type `pod-os:module`, to asynchronously load a module and pass it to the component that triggered the event. Currently only the `contacts` module is supported.
   - new property `restore-previous-session` allows to restore the session after a refresh or opening in new tab
+  - fires new event `pod-os:session-restored` whenever a session is restored
 
 ## 0.16.0
 

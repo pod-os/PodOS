@@ -1,5 +1,5 @@
 import { PodOS } from '@pod-os/core';
-import { Component, h, Listen, Prop, State } from '@stencil/core';
+import { Component, h, Listen, Prop, State, Event, EventEmitter } from '@stencil/core';
 import session from '../../store/session';
 import { createPodOS } from '../../pod-os';
 import { Subject, takeUntil } from 'rxjs';
@@ -23,10 +23,18 @@ export class PosApp {
 
   @Prop() restorePreviousSession: boolean = false;
 
+  /**
+   * Fired whenever the session was restored
+   */
+  @Event({ eventName: 'pod-os:session-restored' }) sessionRestoredEmitter: EventEmitter<{ url: string }>;
+
   private readonly disconnected$ = new Subject<void>();
 
   componentWillLoad() {
     this.os = createPodOS();
+    this.os.onSessionRestore(url => {
+      this.sessionRestoredEmitter.emit({ url });
+    });
     this.os.handleIncomingRedirect(this.restorePreviousSession);
     this.os
       .observeSession()
