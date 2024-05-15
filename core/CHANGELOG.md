@@ -15,6 +15,7 @@ and this project adheres to
 ### Changed
 
 - `observeSession`: Returns a rxjs observable that allows to observe the current session state and all changes to it
+- `handleIncomingRedirect`: Added parameter `restorePreviousSession` to allow automatic session restore
 
 ## 0.11.0
 

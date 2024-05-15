@@ -3,6 +3,7 @@ import {
   ISessionInfo,
   Session,
 } from "@inrupt/solid-client-authn-browser";
+import { IHandleIncomingRedirectOptions } from "@inrupt/solid-client-authn-browser/src/Session";
 import { BehaviorSubject } from "rxjs";
 import { observeSession } from "./observeSession";
 
@@ -36,11 +37,9 @@ export class BrowserSession implements PodOsSession {
     this._authenticatedFetch = this.session.fetch;
   }
 
-  async handleIncomingRedirect() {
+  async handleIncomingRedirect(restorePreviousSession = false) {
     return this.session.handleIncomingRedirect({
-      // session restore disabled, due to
-      // https://github.com/inrupt/solid-client-authn-js/issues/1647
-      restorePreviousSession: false,
+      restorePreviousSession,
     });
   }
 

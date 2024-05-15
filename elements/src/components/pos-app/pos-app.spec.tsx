@@ -103,4 +103,65 @@ describe('pos-app', () => {
       });
     });
   });
+
+  describe('handle incoming redirect', () => {
+    const mockHandleIncomingRedirect = jest.fn();
+    let sessionInfo$;
+
+    beforeEach(() => {
+      sessionInfo$ = new BehaviorSubject({ isLoggedIn: false, webId: '' });
+      jest.resetAllMocks();
+
+      (createPodOS as jest.Mock).mockReturnValue({
+        handleIncomingRedirect: mockHandleIncomingRedirect,
+        observeSession: () => sessionInfo$,
+        fetchProfile: () => null,
+      });
+    });
+
+    it('does not restore previous session by default', async () => {
+      await newSpecPage({
+        components: [PosApp],
+        html: `<pos-app>item body</pos-app>`,
+        supportsShadowDom: false,
+      });
+
+      sessionInfo$.next({
+        isLoggedIn: false,
+        webId: 'https://pod.test/alice#me',
+      });
+
+      expect(mockHandleIncomingRedirect).toHaveBeenCalledWith(false);
+    });
+
+    it('restores previous session if prop tells so', async () => {
+      await newSpecPage({
+        components: [PosApp],
+        html: `<pos-app restore-previous-session>item body</pos-app>`,
+        supportsShadowDom: false,
+      });
+
+      sessionInfo$.next({
+        isLoggedIn: false,
+        webId: 'https://pod.test/alice#me',
+      });
+
+      expect(mockHandleIncomingRedirect).toHaveBeenCalledWith(true);
+    });
+
+    it('does not restore previous session if prop states explicitly not to', async () => {
+      await newSpecPage({
+        components: [PosApp],
+        html: `<pos-app restore-previous-session='false'>item body</pos-app>`,
+        supportsShadowDom: false,
+      });
+
+      sessionInfo$.next({
+        isLoggedIn: false,
+        webId: 'https://pod.test/alice#me',
+      });
+
+      expect(mockHandleIncomingRedirect).toHaveBeenCalledWith(false);
+    });
+  });
 });

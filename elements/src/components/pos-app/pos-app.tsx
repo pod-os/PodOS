@@ -1,5 +1,5 @@
 import { PodOS } from '@pod-os/core';
-import { Component, h, Listen, State } from '@stencil/core';
+import { Component, h, Listen, Prop, State } from '@stencil/core';
 import session from '../../store/session';
 import { createPodOS } from '../../pod-os';
 import { Subject, takeUntil } from 'rxjs';
@@ -21,11 +21,14 @@ interface RequestModuleEvent extends CustomEvent {
 export class PosApp {
   @State() os: PodOS;
 
+  @Prop() restorePreviousSession: boolean = false;
+
   private readonly disconnected$ = new Subject<void>();
 
   componentWillLoad() {
     this.os = createPodOS();
-    this.os.handleIncomingRedirect();
+    console.log('pos-app', this.restorePreviousSession);
+    this.os.handleIncomingRedirect(this.restorePreviousSession);
     this.os
       .observeSession()
       .pipe(takeUntil(this.disconnected$))

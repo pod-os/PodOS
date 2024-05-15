@@ -12,6 +12,7 @@ export namespace Components {
         "referenceUri": string;
     }
     interface PosApp {
+        "restorePreviousSession": boolean;
     }
     interface PosAppBrowser {
     }
@@ -721,6 +722,7 @@ declare namespace LocalJSX {
         "referenceUri": string;
     }
     interface PosApp {
+        "restorePreviousSession"?: boolean;
     }
     interface PosAppBrowser {
     }

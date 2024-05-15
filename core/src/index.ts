@@ -5,8 +5,7 @@ import { SolidFile } from "./files";
 import { FileFetcher } from "./files/FileFetcher";
 import { loadContactsModule } from "./modules/contacts";
 import { WebIdProfile } from "./profile";
-import { LabelIndex } from "./search/LabelIndex";
-import { SearchIndex } from "./search/SearchIndex";
+import { LabelIndex, SearchIndex } from "./search";
 import { Store } from "./Store";
 import { listKnownTerms, Term } from "./terms";
 import { Thing } from "./thing";
@@ -33,8 +32,8 @@ export class PodOS {
     this.fileFetcher = new FileFetcher(this.session);
   }
 
-  handleIncomingRedirect() {
-    this.session.handleIncomingRedirect();
+  handleIncomingRedirect(restorePreviousSession = false) {
+    this.session.handleIncomingRedirect(restorePreviousSession);
   }
 
   fetch(uri: string) {

@@ -5,6 +5,13 @@
 <!-- Auto Generated Below -->
 
 
+## Properties
+
+| Property                 | Attribute                  | Description | Type      | Default |
+| ------------------------ | -------------------------- | ----------- | --------- | ------- |
+| `restorePreviousSession` | `restore-previous-session` |             | `boolean` | `false` |
+
+
 ## Dependencies
 
 ### Used by
