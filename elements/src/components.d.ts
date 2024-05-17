@@ -15,6 +15,7 @@ export namespace Components {
         "restorePreviousSession": boolean;
     }
     interface PosAppBrowser {
+        "restorePreviousSession": boolean;
     }
     interface PosAppDocumentViewer {
     }
@@ -744,6 +745,7 @@ declare namespace LocalJSX {
         "restorePreviousSession"?: boolean;
     }
     interface PosAppBrowser {
+        "restorePreviousSession"?: boolean;
     }
     interface PosAppDocumentViewer {
         "onPod-os:resource"?: (event: PosAppDocumentViewerCustomEvent<any>) => void;
