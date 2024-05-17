@@ -1,5 +1,5 @@
 import { ContactsModule } from "@solid-data-modules/contacts-rdflib";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, tap } from "rxjs";
 import { BrowserSession, SessionInfo } from "./authentication";
 import { SolidFile } from "./files";
 import { FileFetcher } from "./files/FileFetcher";
@@ -28,8 +28,27 @@ export class PodOS {
   constructor() {
     this.session = new BrowserSession();
     this.store = new Store(this.session);
+    this.flagAuthorizationMetaDataOnSessionChange();
     this.uriService = new UriService(this.store);
     this.fileFetcher = new FileFetcher(this.session);
+  }
+
+  /*
+     Flagging authorization metadata is necessary every time the user
+     logs in or out, so that metadata from previous requests is outdated
+     and not considered to determine whether a resource is editable anymore.
+
+     See: https://github.com/linkeddata/rdflib.js/pull/512
+  */
+  private flagAuthorizationMetaDataOnSessionChange() {
+    this.session
+      .observeSession()
+      .pipe(
+        tap(() => {
+          this.store.updater.flagAuthorizationMetadata();
+        }),
+      )
+      .subscribe();
   }
 
   handleIncomingRedirect(restorePreviousSession = false) {
@@ -74,14 +93,6 @@ export class PodOS {
    */
   trackSession(callback: (session: SessionInfo) => unknown): void {
     return this.session.trackSession((session) => {
-      /*
-         Flagging authorization metadata is necessary every time the user
-         logs in or out, so that metadata from previous requests is outdated
-         and not considered to determine whether a resource is editable anymore.
-
-         See: https://github.com/linkeddata/rdflib.js/pull/512
-       */
-      this.store.updater.flagAuthorizationMetadata();
       callback(session);
     });
   }
