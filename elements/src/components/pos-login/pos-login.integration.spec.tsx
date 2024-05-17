@@ -51,6 +51,7 @@ describe('pos-login', () => {
     `);
 
     // and the button becomes a logout button
-    expect(button.innerText).toEqual('Logout');
+    const updatedButton: HTMLButtonElement = login.querySelector('button');
+    expect(updatedButton.innerText).toEqual('Logout');
   });
 });
