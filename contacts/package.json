@@ -25,7 +25,7 @@
     "build:pwa": "pwa-asset-generator ../assets/logo.png ./www/icons --index ./www/index.html --manifest ./www/manifest.json"
   },
   "dependencies": {
-    "@pod-os/core": "^0.11.1",
+    "@pod-os/core": "^0.12.0",
     "@pod-os/elements": "^0.16.0",
     "@solid-data-modules/contacts-rdflib": "^0.5.0",
     "@stencil/core": "^4.18.1",
