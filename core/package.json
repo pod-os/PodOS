@@ -42,7 +42,7 @@
     "typescript-eslint": "^7.9.0"
   },
   "dependencies": {
-    "@inrupt/solid-client-authn-browser": "^1.17.5",
+    "@inrupt/solid-client-authn-browser": "^2.2.0",
     "@solid-data-modules/contacts-rdflib": "^0.6.0",
     "@types/lunr": "^2.3.7",
     "buffer": "^6.0.3",

@@ -58,9 +58,11 @@ export class BrowserSession implements PodOsSession {
    * @deprecated use observeSession instead
    */
   trackSession(callback: (session: SessionInfo) => unknown) {
-    this.session.on(EVENTS.LOGIN, () => callback(this.session.info));
-    this.session.on(EVENTS.LOGOUT, () => callback(this.session.info));
-    this.session.on(EVENTS.SESSION_RESTORED, () => callback(this.session.info));
+    this.session.events.on(EVENTS.LOGIN, () => callback(this.session.info));
+    this.session.events.on(EVENTS.LOGOUT, () => callback(this.session.info));
+    this.session.events.on(EVENTS.SESSION_RESTORED, () =>
+      callback(this.session.info),
+    );
     callback(this.session.info);
   }
 
@@ -69,6 +71,6 @@ export class BrowserSession implements PodOsSession {
   }
 
   onSessionRestore(callback: (url: string) => void) {
-    this.session.on(EVENTS.SESSION_RESTORED, callback);
+    this.session.events.on(EVENTS.SESSION_RESTORED, callback);
   }
 }
