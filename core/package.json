@@ -39,7 +39,7 @@
     "rimraf": "^5.0.10",
     "sparqljs": "^3.7.3",
     "typescript": "^5.4.5",
-    "typescript-eslint": "^7.9.0"
+    "typescript-eslint": "^7.18.0"
   },
   "dependencies": {
     "@inrupt/solid-client-authn-browser": "^2.2.0",
