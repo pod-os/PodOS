@@ -37,7 +37,7 @@ img, ion-skeleton-text, div.error {
   font-size: calc(var(--width) / 2)
 }
 
-a {
+a.error {
   text-decoration: none;
   width: var(--width);
   height: var(--height);

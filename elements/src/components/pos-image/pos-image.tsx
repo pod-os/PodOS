@@ -1,8 +1,13 @@
-import { PodOS, BrokenFile as BrokenFileData } from '@pod-os/core';
+import { BrokenFile as BrokenFileData, PodOS } from '@pod-os/core';
 import { BrokenFile } from '../broken-file/BrokenFile';
 import { Component, Event, EventEmitter, h, Prop, State, Watch } from '@stencil/core';
 import session from '../../store/session';
 
+/**
+ * Tries fetch an image with the solid authentication, and can visualize http errors like 403 or 404 if this fails.
+ * Falls back to classic <img src="..."> on network errors like CORS.
+ * Renders a normal link if even this fails.
+ */
 @Component({
   tag: 'pos-image',
   styleUrl: 'pos-image.css',
@@ -22,7 +27,10 @@ export class PosImage {
   private brokenFile: BrokenFileData;
 
   @State()
-  private error: Error;
+  private networkError: Error;
+
+  @State()
+  private imageError: Event;
 
   @State()
   private loading: boolean = true;
@@ -48,31 +56,49 @@ export class PosImage {
   async fetchBlob() {
     try {
       this.loading = true;
+      this.imageError = null;
+      this.networkError = null;
+      this.brokenFile = null;
       const file = await this.os.fetchFile(this.src);
       this.resourceLoadedEmitter.emit(this.src);
       if (file.blob()) {
         this.dataUri = URL.createObjectURL(file.blob());
-        this.error = null;
       } else {
         this.brokenFile = file as BrokenFileData;
       }
     } catch (err) {
-      this.error = err;
+      this.networkError = err;
     } finally {
       this.loading = false;
     }
+  }
+
+  onImageError(err: Event) {
+    this.networkError = null;
+    this.imageError = err;
   }
 
   render() {
     if (this.loading) {
       return <ion-skeleton-text animated={true}></ion-skeleton-text>;
     }
-    if (this.error) {
-      return <div class="error">{this.error.message}</div>;
+    if (this.networkError) {
+      // probably a CORS error
+      return <img alt={this.alt} src={this.src} onError={err => this.onImageError(err)} />;
     }
     if (this.brokenFile) {
+      // fetching worked, but HTTP response was not ok
       return <BrokenFile file={this.brokenFile} />;
     }
+    if (this.imageError) {
+      // if even the loading via classic <img src="..."> failed, render a link
+      return (
+        <div class="error">
+          <a href={this.src}>{this.src}</a>
+        </div>
+      );
+    }
+
     return <img src={this.dataUri} alt={this.alt} />;
   }
 }

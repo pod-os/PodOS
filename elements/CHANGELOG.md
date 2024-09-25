@@ -6,7 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
-### 0.17.0
+- [pos-image](../docs/elements/components/pos-image)
+  - fall back to normal img tag with src on CORS errors
+
+## 0.17.0
 
 - [pos-app](../docs/elements/components/pos-app)
   - Can now handle new events of type `pod-os:module`, to asynchronously load a module and pass it to the component that triggered the event. Currently only the `contacts` module is supported.

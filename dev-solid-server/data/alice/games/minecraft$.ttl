@@ -1,34 +1,24 @@
-@prefix :       <#> .
-@prefix schema: <http://schema.org/> .
+@prefix : <http://localhost:3000/alice/games/minecraft#>.
+@prefix schema: <http://schema.org/>.
 
-:it
-    a schema:VideoGame  ;
-    schema:name "Minecraft" ;
-    schema:playMode schema:SinglePlayer, schema:MultiPlayer ;
-    schema:gamePlatform "Online_gaming_services" ;
-    schema:url <http://www.mineplex.com/> ;
-    schema:description "Minecraft is a sandbox video game developed by the Swedish video game developer Mojang Studios. The game was created by Markus \"Notch\" Persson in the Java programming language." ;
-    schema:video :video-1, :video-2 ;
-    schema:gameServer :mineplex ;
-.
-
-:video-1
-    a schema:VideoObject ;
-    schema:caption "CHALLENGE ACCEPTED! #6 [Hot Pepper Challenge!]" ;
-    schema:description "How many Jalapeno can I eat without crying? ZERO. Today's challenge is for every chest I open, I have to eat a Jalapeno and... I HAVE TO WIN. This video was painful" ;
-    schema:url <http://www.youtube.com/watch?v=0q6a9aFk3XY> ;
-.
-
-:video-2
-    a schema:VideoObject ;
-    schema:caption "CHALLENGE ACCEPTED! #7 [Cinnamon Challenge!]" ;
-    schema:description "What better way to celebrate the day of love than to choke and die on cinnamon. Welcome to the 7th episode of Challenge Accepted, where you guys challenge me in the comments to do something crazy and I do it. Today's challenge: Every time I die in Super Smash Mobs, I have to do the cinnamon challenge... Yep, this is happening." ;
-    schema:url <https://www.youtube.com/watch?v=XShDk9DtNYM> ;
-.
-
-:mineplex
-    schema:name "mineplex" ;
-    schema:url "123.45.678.90:2342" ;
-    schema:playersOnline 5361 ;
-    schema:serverStatus schema:Online ;
-.
+<#it> a schema:VideoGame;
+    schema:name "Minecraft";
+    schema:playMode schema:SinglePlayer, schema:MultiPlayer;
+    schema:gamePlatform "Online_gaming_services";
+    schema:url <http://www.mineplex.com/>;
+    schema:description "Minecraft is a sandbox video game developed by the Swedish video game developer Mojang Studios. The game was created by Markus \"Notch\" Persson in the Java programming language.";
+    schema:video <#video-1>, <#video-2>;
+    schema:gameServer <#mineplex>;
+    schema:image <https://image.api.playstation.com/vulcan/ap/rnd/202407/0401/670c294ded3baf4fa11068db2ec6758c63f7daeb266a35a1.png>.
+<#video-1> a schema:VideoObject;
+    schema:url <http://www.youtube.com/watch?v=0q6a9aFk3XY>;
+    schema:description "How many Jalapeno can I eat without crying? ZERO. Today's challenge is for every chest I open, I have to eat a Jalapeno and... I HAVE TO WIN. This video was painful";
+    schema:caption "CHALLENGE ACCEPTED! #6 [Hot Pepper Challenge!]".
+<#video-2> a schema:VideoObject;
+    schema:url <https://www.youtube.com/watch?v=XShDk9DtNYM>;
+    schema:description "What better way to celebrate the day of love than to choke and die on cinnamon. Welcome to the 7th episode of Challenge Accepted, where you guys challenge me in the comments to do something crazy and I do it. Today's challenge: Every time I die in Super Smash Mobs, I have to do the cinnamon challenge... Yep, this is happening.";
+    schema:caption "CHALLENGE ACCEPTED! #7 [Cinnamon Challenge!]".
+<#mineplex> schema:name "mineplex";
+    schema:url "123.45.678.90:2342";
+    schema:playersOnline 5361;
+    schema:serverStatus schema:Online.

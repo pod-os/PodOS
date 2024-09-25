@@ -64,7 +64,7 @@ describe('pos-image', () => {
     await loadingPromise;
   });
 
-  it('renders error when fetching image data failed', async () => {
+  it('renders img tag with src when fetching image data failed', async () => {
     const os = mockPodOS();
     when(os.fetchFile).calledWith('https://pod.test/image.png').mockRejectedValue(new Error('network error'));
     const page = await newSpecPage({
@@ -77,9 +77,7 @@ describe('pos-image', () => {
       <pos-app>
         <pos-image src="https://pod.test/image.png">
             <mock:shadow-root>
-              <div class="error">
-                network error
-              </div>
+              <img src="https://pod.test/image.png" />
             </mock:shadow-root>
         </pos-image>
     </pos-app>

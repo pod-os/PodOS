@@ -46,6 +46,11 @@ export namespace Components {
     }
     interface PosErrorToast {
     }
+    /**
+     * Tries fetch an image with the solid authentication, and can visualize http errors like 403 or 404 if this fails.
+     * Falls back to classic <img src="..."> on network errors like CORS.
+     * Renders a normal link if even this fails.
+     */
     interface PosImage {
         "alt": string;
         "src": string;
@@ -388,6 +393,11 @@ declare global {
         "pod-os:init": any;
         "pod-os:resource-loaded": string;
     }
+    /**
+     * Tries fetch an image with the solid authentication, and can visualize http errors like 403 or 404 if this fails.
+     * Falls back to classic <img src="..."> on network errors like CORS.
+     * Renders a normal link if even this fails.
+     */
     interface HTMLPosImageElement extends Components.PosImage, HTMLStencilElement {
         addEventListener<K extends keyof HTMLPosImageElementEventMap>(type: K, listener: (this: HTMLPosImageElement, ev: PosImageCustomEvent<HTMLPosImageElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
@@ -785,6 +795,11 @@ declare namespace LocalJSX {
     }
     interface PosErrorToast {
     }
+    /**
+     * Tries fetch an image with the solid authentication, and can visualize http errors like 403 or 404 if this fails.
+     * Falls back to classic <img src="..."> on network errors like CORS.
+     * Renders a normal link if even this fails.
+     */
     interface PosImage {
         "alt"?: string;
         "onPod-os:init"?: (event: PosImageCustomEvent<any>) => void;
@@ -927,6 +942,11 @@ declare module "@stencil/core" {
             "pos-dialog": LocalJSX.PosDialog & JSXBase.HTMLAttributes<HTMLPosDialogElement>;
             "pos-document": LocalJSX.PosDocument & JSXBase.HTMLAttributes<HTMLPosDocumentElement>;
             "pos-error-toast": LocalJSX.PosErrorToast & JSXBase.HTMLAttributes<HTMLPosErrorToastElement>;
+            /**
+             * Tries fetch an image with the solid authentication, and can visualize http errors like 403 or 404 if this fails.
+             * Falls back to classic <img src="..."> on network errors like CORS.
+             * Renders a normal link if even this fails.
+             */
             "pos-image": LocalJSX.PosImage & JSXBase.HTMLAttributes<HTMLPosImageElement>;
             "pos-label": LocalJSX.PosLabel & JSXBase.HTMLAttributes<HTMLPosLabelElement>;
             "pos-literals": LocalJSX.PosLiterals & JSXBase.HTMLAttributes<HTMLPosLiteralsElement>;

@@ -8,6 +8,7 @@ import { mockSessionStore } from '../../test/mockSessionStore';
 import { BrokenFile } from '../broken-file/BrokenFile';
 import { PosImage } from './pos-image';
 import { when } from 'jest-when';
+
 import { h } from '@stencil/core';
 
 import session from '../../store/session';
@@ -94,7 +95,7 @@ describe('pos-image', () => {
     expect(onResourceLoaded.mock.calls[0][0].detail).toEqual('https://pod.test/image.png');
   });
 
-  it('renders error when fetch failed', async () => {
+  it('renders html img tag with src when fetch failed', async () => {
     const page = await newSpecPage({
       components: [PosImage],
       html: `<pos-image src="https://pod.test/image.png" />`,
@@ -106,8 +107,30 @@ describe('pos-image', () => {
     expect(page.root).toEqualHtml(`
       <pos-image src="https://pod.test/image.png">
         <mock:shadow-root>
-          <div class="error">
-            network error
+          <img src="https://pod.test/image.png" />
+        </mock:shadow-root>
+      </pos-image>
+  `);
+  });
+
+  it('renders a link when img tag fails to load image', async () => {
+    const page = await newSpecPage({
+      components: [PosImage],
+      html: `<pos-image src="https://pod.test/image.png" />`,
+    });
+    const os = mockPodOS();
+    when(os.fetchFile).calledWith('https://pod.test/image.png').mockRejectedValue(new Error('network error'));
+    await page.rootInstance.setOs(os);
+    await page.waitForChanges();
+    page.rootInstance.onImageError({});
+    await page.waitForChanges();
+    expect(page.root).toEqualHtml(`
+      <pos-image src="https://pod.test/image.png">
+        <mock:shadow-root>
+           <div class="error">
+            <a href="https://pod.test/image.png">
+              https://pod.test/image.png
+            </a>
           </div>
         </mock:shadow-root>
       </pos-image>
