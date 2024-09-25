@@ -1,6 +1,6 @@
-@import "~pollen-css/pollen.css";
+@import '~pollen-css/dist/pollen.css';
 
-@import "~@pod-os/elements/dist/elements/elements.css";
+@import '~@pod-os/elements/dist/elements/elements.css';
 
 body {
   font-family: var(--font-sans);

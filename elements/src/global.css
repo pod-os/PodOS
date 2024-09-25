@@ -1,13 +1,13 @@
 /* Core CSS required for Ionic components to work properly */
-@import "~@ionic/core/css/ionic.bundle.css";
+@import '~@ionic/core/css/ionic.bundle.css';
 
-@import "~pollen-css/pollen.css";
+@import '~pollen-css/dist/pollen.css';
 
 :root {
   --pos-primary-text-color: var(--color-grey-50);
   --pos-normal-text-color: var(--color-grey-900);
   --pos-disabled-text-color: var(--color-grey-600);
-  --pos-primary-color: var(--color-blue-700);
+  --pos-primary-color: var(--color-blue-500);
   --pos-disabled-color: var(--color-grey-100);
   --pos-background-color: var(--color-grey-50);
   --pos-input-outline: var(--size-px) solid var(--color-grey-700);
