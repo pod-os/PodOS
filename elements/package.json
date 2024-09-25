@@ -23,7 +23,7 @@
   "dependencies": {
     "@ionic/core": "^7.8.6",
     "@pod-os/core": "^0.12.0",
-    "@stencil/core": "^4.18.1",
+    "@stencil/core": "^4.21.0",
     "@stencil/store": "^2.0.16",
     "pollen-css": "^4.6.2",
     "rxjs": "^7.8.1",
