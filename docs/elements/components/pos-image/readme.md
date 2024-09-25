@@ -5,6 +5,12 @@
 <!-- Auto Generated Below -->
 
 
+## Overview
+
+Tries fetch an image with the solid authentication, and can visualize http errors like 403 or 404 if this fails.
+Falls back to classic <img src="..."> on network errors like CORS.
+Renders a normal link if even this fails.
+
 ## Properties
 
 | Property | Attribute | Description | Type     | Default     |
