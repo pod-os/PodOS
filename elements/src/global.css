@@ -1,7 +1,13 @@
 /* Core CSS required for Ionic components to work properly */
-@import '~@ionic/core/css/ionic.bundle.css';
 
 @import '~pollen-css/dist/pollen.css';
+
+body {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
 
 :root {
   --pos-primary-text-color: var(--color-grey-50);

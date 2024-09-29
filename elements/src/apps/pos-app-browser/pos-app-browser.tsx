@@ -1,33 +1,27 @@
-import { Component, h, Prop } from '@stencil/core';
+import { Component, h, Host, Prop } from '@stencil/core';
 
 @Component({
   tag: 'pos-app-browser',
+  styleUrl: 'pos-app-browser.css',
 })
 export class PosAppBrowser {
   @Prop() restorePreviousSession: boolean = false;
 
   render() {
     return (
-      <pos-app restorePreviousSession={this.restorePreviousSession}>
-        <pos-error-toast>
-          <ion-app>
-            <ion-header>
-              <ion-toolbar>
-                <ion-title slot="start">PodOS</ion-title>
-                <pos-login></pos-login>
-              </ion-toolbar>
-            </ion-header>
-            <ion-content>
+      <Host>
+        <pos-app restorePreviousSession={this.restorePreviousSession}>
+          <pos-error-toast>
+            <header>
+              <pos-login></pos-login>
+            </header>
+            <main>
               <pos-router />
-            </ion-content>
-            <ion-footer>
-              <ion-toolbar>
-                <ion-title>PodOS Browser</ion-title>
-              </ion-toolbar>
-            </ion-footer>
-          </ion-app>
-        </pos-error-toast>
-      </pos-app>
+            </main>
+            <footer>PodOS Browser</footer>
+          </pos-error-toast>
+        </pos-app>
+      </Host>
     );
   }
 }
