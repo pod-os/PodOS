@@ -1,15 +1,25 @@
-import { Component, h, Listen, State } from '@stencil/core';
+import { Component, Event, EventEmitter, h, Listen, State } from '@stencil/core';
 
 import { createRouter, match, Route } from 'stencil-router-v2';
 
 const Router = createRouter();
 
+/**
+ * The responsibility of pos-router is to handle the `uri` query param, that specifies the URI of the resource that is currently opened.
+ * It reads this query param and informs other components about changes via the `pod-os:route-changed` event.
+ * It also intercepts the URLs from `pod-os:link` events and pushes them as a new `uri` parameter.
+ */
 @Component({
   tag: 'pos-router',
   styleUrl: 'pos-router.css',
 })
 export class PosRouter {
   @State() uri;
+
+  /**
+   * Emits the new URI that is active
+   */
+  @Event({ eventName: 'pod-os:route-changed' }) routeChanged: EventEmitter<string>;
 
   @Listen('pod-os:link')
   linkClicked(e) {
@@ -34,19 +44,14 @@ export class PosRouter {
 
   updateUri() {
     this.uri = new URLSearchParams(window.location.search).get('uri') || window.location.href;
+    this.routeChanged.emit(this.uri);
   }
 
   render() {
     return (
       <Router.Switch>
         <Route path={match('', { exact: false })}>
-          <div class="toolbar">
-            <pos-add-new-thing referenceUri={this.uri}></pos-add-new-thing>
-            <pos-navigation-bar uri={this.uri}></pos-navigation-bar>
-          </div>
-          <pos-resource key={this.uri} uri={this.uri}>
-            <pos-type-router />
-          </pos-resource>
+          <slot></slot>
         </Route>
       </Router.Switch>
     );

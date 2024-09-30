@@ -83,6 +83,11 @@ export namespace Components {
     interface PosRichLink {
         "uri": string;
     }
+    /**
+     * The responsibility of pos-router is to handle the `uri` query param, that specifies the URI of the resource that is currently opened.
+     * It reads this query param and informs other components about changes via the `pod-os:route-changed` event.
+     * It also intercepts the URLs from `pod-os:link` events and pushes them as a new `uri` parameter.
+     */
     interface PosRouter {
     }
     interface PosSelectTerm {
@@ -181,6 +186,10 @@ export interface PosReverseRelationsCustomEvent<T> extends CustomEvent<T> {
 export interface PosRichLinkCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosRichLinkElement;
+}
+export interface PosRouterCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosRouterElement;
 }
 export interface PosSelectTermCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -603,7 +612,23 @@ declare global {
         prototype: HTMLPosRichLinkElement;
         new (): HTMLPosRichLinkElement;
     };
+    interface HTMLPosRouterElementEventMap {
+        "pod-os:route-changed": string;
+    }
+    /**
+     * The responsibility of pos-router is to handle the `uri` query param, that specifies the URI of the resource that is currently opened.
+     * It reads this query param and informs other components about changes via the `pod-os:route-changed` event.
+     * It also intercepts the URLs from `pod-os:link` events and pushes them as a new `uri` parameter.
+     */
     interface HTMLPosRouterElement extends Components.PosRouter, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosRouterElementEventMap>(type: K, listener: (this: HTMLPosRouterElement, ev: PosRouterCustomEvent<HTMLPosRouterElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosRouterElementEventMap>(type: K, listener: (this: HTMLPosRouterElement, ev: PosRouterCustomEvent<HTMLPosRouterElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosRouterElement: {
         prototype: HTMLPosRouterElement;
@@ -857,7 +882,16 @@ declare namespace LocalJSX {
         "onPod-os:link"?: (event: PosRichLinkCustomEvent<any>) => void;
         "uri"?: string;
     }
+    /**
+     * The responsibility of pos-router is to handle the `uri` query param, that specifies the URI of the resource that is currently opened.
+     * It reads this query param and informs other components about changes via the `pod-os:route-changed` event.
+     * It also intercepts the URLs from `pod-os:link` events and pushes them as a new `uri` parameter.
+     */
     interface PosRouter {
+        /**
+          * Emits the new URI that is active
+         */
+        "onPod-os:route-changed"?: (event: PosRouterCustomEvent<string>) => void;
     }
     interface PosSelectTerm {
         "onPod-os:init"?: (event: PosSelectTermCustomEvent<any>) => void;
@@ -959,6 +993,11 @@ declare module "@stencil/core" {
             "pos-resource": LocalJSX.PosResource & JSXBase.HTMLAttributes<HTMLPosResourceElement>;
             "pos-reverse-relations": LocalJSX.PosReverseRelations & JSXBase.HTMLAttributes<HTMLPosReverseRelationsElement>;
             "pos-rich-link": LocalJSX.PosRichLink & JSXBase.HTMLAttributes<HTMLPosRichLinkElement>;
+            /**
+             * The responsibility of pos-router is to handle the `uri` query param, that specifies the URI of the resource that is currently opened.
+             * It reads this query param and informs other components about changes via the `pod-os:route-changed` event.
+             * It also intercepts the URLs from `pod-os:link` events and pushes them as a new `uri` parameter.
+             */
             "pos-router": LocalJSX.PosRouter & JSXBase.HTMLAttributes<HTMLPosRouterElement>;
             "pos-select-term": LocalJSX.PosSelectTerm & JSXBase.HTMLAttributes<HTMLPosSelectTermElement>;
             "pos-subjects": LocalJSX.PosSubjects & JSXBase.HTMLAttributes<HTMLPosSubjectsElement>;

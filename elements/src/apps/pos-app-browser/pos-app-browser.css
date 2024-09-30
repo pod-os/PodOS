@@ -1,4 +1,4 @@
-pos-error-toast {
+pos-router {
   margin: 0;
   padding: 0;
   display: flex;
@@ -13,7 +13,7 @@ footer {
 
 header {
   display: flex;
-  justify-content: end;
+  align-items: center;
 }
 
 main {
