@@ -1,6 +1,6 @@
 import { Component, Event, EventEmitter, h, Listen, State } from '@stencil/core';
 
-import { createRouter, match, Route } from 'stencil-router-v2';
+import { createRouter } from 'stencil-router-v2';
 
 const Router = createRouter();
 
@@ -48,12 +48,6 @@ export class PosRouter {
   }
 
   render() {
-    return (
-      <Router.Switch>
-        <Route path={match('', { exact: false })}>
-          <slot></slot>
-        </Route>
-      </Router.Switch>
-    );
+    return <slot></slot>;
   }
 }
