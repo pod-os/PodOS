@@ -1,6 +1,5 @@
 :host {
-  display: flex;
-  gap: 10px;
+  display: block;
 }
 .user-data {
   align-items: center;
@@ -14,14 +13,15 @@
 }
 
 pos-login-form {
-  margin: var(--size-2)
+  margin: var(--size-2);
 }
 
 dialog {
   margin-top: var(--size-10);
 }
 
-button#login, button#logout {
+button#login,
+button#logout {
   outline: none;
   text-transform: uppercase;
   font-weight: var(--weight-bold);
@@ -36,11 +36,15 @@ button#login, button#logout {
   background-color: var(--pos-primary-color);
 }
 
-button#login:focus-within, button#logout:focus-within {
+button#login:focus-within,
+button#logout:focus-within {
   outline: var(--pos-input-focus-outline);
 }
 
-button#login:focus, button#login:hover, button#logout:focus, button#logout:hover {
+button#login:focus,
+button#login:hover,
+button#logout:focus,
+button#logout:hover {
   filter: brightness(110%);
   box-shadow: var(--shadow-md);
 }

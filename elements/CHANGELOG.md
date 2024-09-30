@@ -20,6 +20,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 </pos-router>
 ```
 
+## Fixed
+
+- [pos-login](../docs/elements/components/pos-login): Now uses `display:block` to layout correctly
+
+
 ## 0.18.0
 
 - [pos-image](../docs/elements/components/pos-image)
