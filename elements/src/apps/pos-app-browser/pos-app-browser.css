@@ -18,16 +18,25 @@ pos-login {
 
 header,
 footer {
+  display: flex;
+  gap: var(--size-1);
   height: auto;
+  justify-content: center;
+  align-items: center;
   padding: var(--size-1);
 }
 
+footer svg {
+  width: var(--size-5);
+  height: var(--size-5);
+}
+
+footer {
+  font-size: var(--scale-fluid-000);
+}
+
 header {
-  display: flex;
-  gap: var(--size-1);
   flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
   padding: 0 var(--size-8);
 }
 
