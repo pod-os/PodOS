@@ -20,6 +20,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 </pos-router>
 ```
 
+### Changed
+
+- [pos-login](../docs/elements/components/pos-login): Minor styling adjustments
+
 ## 0.18.0
 
 - [pos-image](../docs/elements/components/pos-image)
