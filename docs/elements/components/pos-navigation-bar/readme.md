@@ -24,7 +24,7 @@
 
 ### Used by
 
- - [pos-router](../pos-router)
+ - [pos-app-browser](../../apps/pos-app-browser)
 
 ### Depends on
 
@@ -45,7 +45,7 @@ graph TD;
   pos-resource --> ion-card-header
   pos-resource --> ion-card-content
   ion-card --> ion-ripple-effect
-  pos-router --> pos-navigation-bar
+  pos-app-browser --> pos-navigation-bar
   style pos-navigation-bar fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
