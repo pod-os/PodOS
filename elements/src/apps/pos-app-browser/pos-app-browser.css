@@ -5,6 +5,17 @@ pos-router {
   flex-direction: column;
   height: 100vh;
 }
+
+pos-navigation-bar {
+  max-width: var(--width-sm);
+  margin: 0;
+}
+
+pos-add-new-thing,
+pos-login {
+  flex: 0 1 auto; /* Behält die Breite des Inhalts bei */
+}
+
 header,
 footer {
   height: auto;
@@ -13,11 +24,32 @@ footer {
 
 header {
   display: flex;
+  gap: var(--size-1);
+  flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
+  padding: 0 var(--size-8);
 }
 
 main {
   flex: 1;
   max-height: 100vh;
   overflow: auto;
+}
+
+@media (max-width: 640px) {
+  header {
+    padding: 0 var(--size-1) var(--size-1);
+    justify-content: space-between;
+  }
+
+  pos-navigation-bar {
+    flex-basis: 100%;
+    order: 0;
+  }
+
+  pos-add-new-thing,
+  pos-login {
+    order: 1;
+  }
 }
