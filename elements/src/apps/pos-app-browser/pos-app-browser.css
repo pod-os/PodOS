@@ -7,7 +7,7 @@ pos-router {
 }
 
 pos-navigation-bar {
-  max-width: var(--width-sm);
+  max-width: var(--width-lg);
   margin: 0;
 }
 
