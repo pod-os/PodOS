@@ -16,12 +16,12 @@
 
 ### Used by
 
- - [pos-router](../pos-router)
+ - [pos-app-browser](../../apps/pos-app-browser)
 
 ### Graph
 ```mermaid
 graph TD;
-  pos-router --> pos-type-router
+  pos-app-browser --> pos-type-router
   style pos-type-router fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

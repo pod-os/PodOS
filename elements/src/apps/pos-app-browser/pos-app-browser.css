@@ -1,0 +1,64 @@
+pos-router {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+pos-navigation-bar {
+  max-width: var(--width-lg);
+  margin: 0;
+}
+
+pos-add-new-thing,
+pos-login {
+  flex: 0 1 auto; /* Behält die Breite des Inhalts bei */
+}
+
+header,
+footer {
+  display: flex;
+  gap: var(--size-1);
+  height: auto;
+  justify-content: center;
+  align-items: center;
+  padding: var(--size-1);
+}
+
+footer svg {
+  width: var(--size-5);
+  height: var(--size-5);
+}
+
+footer {
+  font-size: var(--scale-fluid-000);
+}
+
+header {
+  flex-wrap: wrap;
+  padding: 0 var(--size-8);
+}
+
+main {
+  flex: 1;
+  max-height: 100vh;
+  overflow: auto;
+}
+
+@media (max-width: 640px) {
+  header {
+    padding: 0 var(--size-1) var(--size-1);
+    justify-content: space-between;
+  }
+
+  pos-navigation-bar {
+    flex-basis: 100%;
+    order: 0;
+  }
+
+  pos-add-new-thing,
+  pos-login {
+    order: 1;
+  }
+}

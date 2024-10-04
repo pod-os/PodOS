@@ -18,49 +18,28 @@
 
 - [pos-app](../../components/pos-app)
 - [pos-error-toast](../../components/pos-error-toast)
-- ion-app
-- ion-header
-- ion-toolbar
-- ion-title
-- [pos-login](../../components/pos-login)
-- ion-content
 - [pos-router](../../components/pos-router)
-- ion-footer
+- [pos-add-new-thing](../../components/pos-add-new-thing)
+- [pos-navigation-bar](../../components/pos-navigation-bar)
+- [pos-login](../../components/pos-login)
+- [pos-resource](../../components/pos-resource)
+- [pos-type-router](../../components/pos-type-router)
 
 ### Graph
 ```mermaid
 graph TD;
   pos-app-browser --> pos-app
   pos-app-browser --> pos-error-toast
-  pos-app-browser --> ion-app
-  pos-app-browser --> ion-header
-  pos-app-browser --> ion-toolbar
-  pos-app-browser --> ion-title
-  pos-app-browser --> pos-login
-  pos-app-browser --> ion-content
   pos-app-browser --> pos-router
-  pos-app-browser --> ion-footer
-  pos-login --> pos-resource
-  pos-login --> pos-picture
-  pos-login --> pos-label
-  pos-login --> pos-dialog
-  pos-login --> pos-login-form
-  pos-resource --> ion-progress-bar
-  pos-resource --> ion-card
-  pos-resource --> ion-card-header
-  pos-resource --> ion-card-content
-  ion-card --> ion-ripple-effect
-  pos-picture --> pos-image
-  pos-image --> ion-skeleton-text
-  pos-image --> ion-icon
-  pos-dialog --> ion-icon
-  pos-router --> pos-add-new-thing
-  pos-router --> pos-navigation-bar
-  pos-router --> pos-resource
-  pos-router --> pos-type-router
+  pos-app-browser --> pos-add-new-thing
+  pos-app-browser --> pos-navigation-bar
+  pos-app-browser --> pos-login
+  pos-app-browser --> pos-resource
+  pos-app-browser --> pos-type-router
   pos-add-new-thing --> ion-icon
   pos-add-new-thing --> pos-dialog
   pos-add-new-thing --> pos-new-thing-form
+  pos-dialog --> ion-icon
   pos-new-thing-form --> pos-select-term
   pos-navigation-bar --> ion-searchbar
   pos-navigation-bar --> pos-rich-link
@@ -68,6 +47,19 @@ graph TD;
   pos-rich-link --> pos-resource
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
+  pos-resource --> ion-progress-bar
+  pos-resource --> ion-card
+  pos-resource --> ion-card-header
+  pos-resource --> ion-card-content
+  ion-card --> ion-ripple-effect
+  pos-login --> pos-resource
+  pos-login --> pos-picture
+  pos-login --> pos-label
+  pos-login --> pos-dialog
+  pos-login --> pos-login-form
+  pos-picture --> pos-image
+  pos-image --> ion-skeleton-text
+  pos-image --> ion-icon
   style pos-app-browser fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

@@ -15,9 +15,11 @@ describe('pos-login', () => {
     expect(page.root).toEqualHtml(`
     <pos-login>
       <mock:shadow-root>
-        <button id='login'>
-          Login
-        </button>
+        <div class="container">
+          <button id='login'>
+            Login
+          </button>
+        </div>
         <pos-dialog>
           <span slot="title">
             Sign in to your Pod
@@ -39,15 +41,17 @@ describe('pos-login', () => {
     expect(page.root).toEqualHtml(`
     <pos-login>
       <mock:shadow-root>
-        <pos-resource uri="https://pod.example/alice#me">
-          <span class="user-data">
-            <pos-picture></pos-picture>
-            <pos-label></pos-label>
-          </span>
-        </pos-resource>
-        <button id='logout'>
-          Logout
-        </button>
+        <div class="container">
+          <pos-resource uri="https://pod.example/alice#me">
+            <span class="user-data">
+              <pos-picture></pos-picture>
+              <pos-label></pos-label>
+            </span>
+          </pos-resource>
+          <button id='logout'>
+            Logout
+          </button>
+        </div>
         <pos-dialog>
         <span slot="title">
           Sign in to your Pod

@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### BREAKING CHANGES
+
+- [pos-router](../docs/elements/components/pos-router)
+  - new event `pod-os:route-changed`, that fires whenever the `uri` query param changes
+  - The router does not include a `pos-resource` and `pos-type-router` anymore. You have to include them yourself, if you want to restore the old behaviour:
+
+```tsx
+<pos-router onPod-os:route-changed={e => this.uri = e.detail}>
+  <pos-resource uri={this.uri}>
+    <pos-type-router />
+  </pos-resource>
+</pos-router>
+```
+
+### Changed
+
+- [pos-login](../docs/elements/components/pos-login): Minor styling adjustments
+
 ## 0.18.0
 
 - [pos-image](../docs/elements/components/pos-image)

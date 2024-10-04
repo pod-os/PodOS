@@ -38,10 +38,10 @@ Type: `Promise<void>`
 
 ### Used by
 
+ - [pos-app-browser](../../apps/pos-app-browser)
  - [pos-container-contents](../pos-container-contents)
  - [pos-login](../pos-login)
  - [pos-rich-link](../pos-rich-link)
- - [pos-router](../pos-router)
 
 ### Depends on
 
@@ -58,10 +58,10 @@ graph TD;
   pos-resource --> ion-card-header
   pos-resource --> ion-card-content
   ion-card --> ion-ripple-effect
+  pos-app-browser --> pos-resource
   pos-container-contents --> pos-resource
   pos-login --> pos-resource
   pos-rich-link --> pos-resource
-  pos-router --> pos-resource
   style pos-resource fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

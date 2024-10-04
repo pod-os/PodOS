@@ -1,6 +1,7 @@
-:host {
+.container {
   display: flex;
-  gap: 10px;
+  align-items: center;
+  gap: var(--size-2);
 }
 .user-data {
   align-items: center;
@@ -14,33 +15,36 @@
 }
 
 pos-login-form {
-  margin: var(--size-2)
+  margin: var(--size-2);
 }
 
 dialog {
   margin-top: var(--size-10);
 }
 
-button#login, button#logout {
+button#login,
+button#logout {
   outline: none;
-  text-transform: uppercase;
   font-weight: var(--weight-bold);
   letter-spacing: var(--letter-xl);
   border: none;
   box-sizing: border-box;
   border-radius: var(--radius-xs);
-  padding: var(--scale-000);
+  padding: var(--size-2);
   box-shadow: var(--shadow-sm);
-  cursor: pointer;
   color: var(--pos-primary-text-color);
   background-color: var(--pos-primary-color);
 }
 
-button#login:focus-within, button#logout:focus-within {
+button#login:focus-within,
+button#logout:focus-within {
   outline: var(--pos-input-focus-outline);
 }
 
-button#login:focus, button#login:hover, button#logout:focus, button#logout:hover {
+button#login:focus,
+button#login:hover,
+button#logout:focus,
+button#logout:hover {
   filter: brightness(110%);
   box-shadow: var(--shadow-md);
 }

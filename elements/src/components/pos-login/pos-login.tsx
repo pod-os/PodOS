@@ -39,26 +39,28 @@ export class PosLogin {
   render() {
     return (
       <Host>
-        {session.state.isLoggedIn ? (
-          <pos-resource uri={session.state.webId}>
-            <span class="user-data">
-              <pos-picture />
-              <pos-label />
-            </span>
-          </pos-resource>
-        ) : (
-          ''
-        )}
-        {!session.state.isLoggedIn && (
-          <button id="login" onClick={() => this.openDialog()}>
-            Login
-          </button>
-        )}
-        {session.state.isLoggedIn && (
-          <button id="logout" onClick={() => this.logout()}>
-            Logout
-          </button>
-        )}
+        <div class="container">
+          {session.state.isLoggedIn ? (
+            <pos-resource uri={session.state.webId}>
+              <span class="user-data">
+                <pos-picture />
+                <pos-label />
+              </span>
+            </pos-resource>
+          ) : (
+            ''
+          )}
+          {!session.state.isLoggedIn && (
+            <button id="login" onClick={() => this.openDialog()}>
+              Login
+            </button>
+          )}
+          {session.state.isLoggedIn && (
+            <button id="logout" onClick={() => this.logout()}>
+              Logout
+            </button>
+          )}
+        </div>
         <pos-dialog ref={el => (this.dialog = el as HTMLPosDialogElement)}>
           <span slot="title">Sign in to your Pod</span>
           <pos-login-form onPod-os:idp-url-selected={ev => this.login(ev)} slot="content" />
