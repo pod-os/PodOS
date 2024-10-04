@@ -13,7 +13,14 @@ import { Canvas, Meta, Story } from "@storybook/addon-docs/blocks";
       "https://solidproject.solidcommunity.net/public/non-existing-image.png",
     unauthenticatedUrl:
       "https://solidproject.solidcommunity.net/private/restricted-access.png",
+    objectFit: "cover"
   }}
+  argTypes= {{
+      objectFit: {
+        options: ['cover', 'fill', 'contain', 'none', 'scale-down'],
+        control: { type: 'select' },
+      },
+    }}
 />
 
 ## pos-image
@@ -25,8 +32,8 @@ loaded image:
 
 <Canvas withSource="open">
   <Story name="Display an image">
-    {({ url, width, height, borderRadius }) => html`
-      <pos-image style="--width: ${width}; --height: ${height}; --border-radius: ${borderRadius};" src=${url} />
+    {({ url, width, height, borderRadius, objectFit}) => html`
+      <pos-image style="--width: ${width}; --height: ${height}; --border-radius: ${borderRadius}; --object-fit: ${objectFit};" src=${url} />
     `}
   </Story>
 </Canvas>
@@ -35,7 +42,7 @@ If the file is not found it will display a box with an error message:
 
 <Canvas withSource="open">
   <Story name="Not Found">
-    {({ notFoundUrl, width, height, borderRadius }) => html` <pos-image style="--width: ${width}; --height: ${height}; --border-radius: ${borderRadius};" src=${notFoundUrl} /> `}
+    {({ notFoundUrl, width, height, borderRadius, objectFit}) => html` <pos-image style="--width: ${width}; --height: ${height}; --border-radius: ${borderRadius}; --object-fit: ${objectFit};" src=${notFoundUrl} /> `}
   </Story>
 </Canvas>
 
@@ -44,8 +51,8 @@ show that:
 
 <Canvas withSource="open">
   <Story name="Unauthenticated">
-    {({ unauthenticatedUrl, width, height, borderRadius }) => html`
-      <pos-image style="--width: ${width}; --height: ${height}; --border-radius: ${borderRadius};" src=${unauthenticatedUrl} />
+    {({ unauthenticatedUrl, width, height, borderRadius, objectFit}) => html`
+      <pos-image style="--width: ${width}; --height: ${height}; --border-radius: ${borderRadius}; --object-fit: ${objectFit};" src=${unauthenticatedUrl} />
     `}
   </Story>
 </Canvas>
