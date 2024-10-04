@@ -25,6 +25,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - [pos-login](../docs/elements/components/pos-login): Minor styling adjustments
 - [pos-app-browser](../docs/elements/apps/pos-app-browser)
   - redesign of header, footer and navigation bar
+- [pos-image](../docs/elements/components/pos-image)
+  - new CSS variable --object-fit to apply [object-fit](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit) to the img (defaults to `cover`)
 
 ## 0.18.0
 
