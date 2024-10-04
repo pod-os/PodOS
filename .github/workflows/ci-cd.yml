@@ -118,7 +118,7 @@ jobs:
       - name: Build storybook
         working-directory: ./storybook
         env:
-          STORYBOOK_POD_OS_ELEMENTS_DIST_URL: https://unpkg.com/@pod-os/elements@${{ needs.npm-publish-elements-build.outputs.prereleaseVersion }}/dist/elements
+          STORYBOOK_POD_OS_ELEMENTS_DIST_URL: https://esm.sh/@pod-os/elements@${{ needs.npm-publish-elements-build.outputs.prereleaseVersion }}/dist/elements
         run: npm run build
 
       - name: Upload pages
