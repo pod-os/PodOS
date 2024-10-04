@@ -4,9 +4,9 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 0.19.0
 
-### BREAKING CHANGES
+### ⚠ BREAKING CHANGES
 
 - [pos-router](../docs/elements/components/pos-router)
   - new event `pod-os:route-changed`, that fires whenever the `uri` query param changes
