@@ -28,10 +28,10 @@ Try this 🤩:
   <title>PodOS Quick Start</title>
   <script
     type="module"
-    src="https://esm.sh/@pod-os/elements/dist/elements/elements.esm.js"
+    src="https://cdn.jsdelivr.net/npm/@pod-os/elements/dist/elements/elements.esm.js"
   ></script>
   <link
-    href="https://esm.sh/@pod-os/elements/dist/elements/elements.css"
+    href="https://cdn.jsdelivr.net/npm/@pod-os/elements/dist/elements/elements.css"
     rel="stylesheet"
   />
 </head>
