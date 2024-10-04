@@ -23,6 +23,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 
 - [pos-login](../docs/elements/components/pos-login): Minor styling adjustments
+- [pos-app-browser](../docs/elements/apps/pos-app-browser)
+  - redesign of header, footer and navigation bar
 
 ## 0.18.0
 
