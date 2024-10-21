@@ -1,0 +1,12 @@
+:host {
+  border: var(--size-px) solid var(--color-grey-100);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--size-8);
+  max-width: var(--size-96);
+  background: var(--color-white);
+}
+
+.links {
+  max-width: 80vw;
+}
