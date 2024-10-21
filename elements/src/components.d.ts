@@ -15,6 +15,9 @@ export namespace Components {
         "restorePreviousSession": boolean;
     }
     interface PosAppBrowser {
+        /**
+          * The mode the app is running in:  - standalone:  use this when you deploy it as a standalone web application - pod: use this when you host this app as a default interface for you pod
+         */
         "mode": 'standalone' | 'pod';
         "restorePreviousSession": boolean;
     }
@@ -95,6 +98,9 @@ export namespace Components {
      * It also intercepts the URLs from `pod-os:link` events and pushes them as a new `uri` parameter.
      */
     interface PosRouter {
+        /**
+          * The mode defines what default URI will be used, if no URI param is given  - standalone: reroute to pod-os:dashboard - pod: reroute to the URI that is shown in the actual browser
+         */
         "mode": 'standalone' | 'pod';
     }
     interface PosSelectTerm {
@@ -801,6 +807,9 @@ declare namespace LocalJSX {
         "restorePreviousSession"?: boolean;
     }
     interface PosAppBrowser {
+        /**
+          * The mode the app is running in:  - standalone:  use this when you deploy it as a standalone web application - pod: use this when you host this app as a default interface for you pod
+         */
         "mode"?: 'standalone' | 'pod';
         "restorePreviousSession"?: boolean;
     }
@@ -915,6 +924,9 @@ declare namespace LocalJSX {
      * It also intercepts the URLs from `pod-os:link` events and pushes them as a new `uri` parameter.
      */
     interface PosRouter {
+        /**
+          * The mode defines what default URI will be used, if no URI param is given  - standalone: reroute to pod-os:dashboard - pod: reroute to the URI that is shown in the actual browser
+         */
         "mode"?: 'standalone' | 'pod';
         /**
           * Emits the new URI that is active

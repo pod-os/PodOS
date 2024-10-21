@@ -6,6 +6,13 @@ import { Component, h, Host, Prop, State } from '@stencil/core';
 })
 export class PosAppBrowser {
   @Prop() restorePreviousSession: boolean = false;
+
+  /**
+   * The mode the app is running in:
+   *
+   * - standalone:  use this when you deploy it as a standalone web application
+   * - pod: use this when you host this app as a default interface for you pod
+   */
   @Prop() mode: 'standalone' | 'pod' = 'standalone';
 
   @State() uri = '';

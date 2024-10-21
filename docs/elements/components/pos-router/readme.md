@@ -11,6 +11,13 @@ The responsibility of pos-router is to handle the `uri` query param, that specif
 It reads this query param and informs other components about changes via the `pod-os:route-changed` event.
 It also intercepts the URLs from `pod-os:link` events and pushes them as a new `uri` parameter.
 
+## Properties
+
+| Property | Attribute | Description                                                                                                                                                                       | Type                    | Default        |
+| -------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- | -------------- |
+| `mode`   | `mode`    | The mode defines what default URI will be used, if no URI param is given  - standalone: reroute to pod-os:dashboard - pod: reroute to the URI that is shown in the actual browser | `"pod" \| "standalone"` | `'standalone'` |
+
+
 ## Events
 
 | Event                  | Description                      | Type                  |

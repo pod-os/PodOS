@@ -7,9 +7,10 @@
 
 ## Properties
 
-| Property                 | Attribute                  | Description | Type      | Default |
-| ------------------------ | -------------------------- | ----------- | --------- | ------- |
-| `restorePreviousSession` | `restore-previous-session` |             | `boolean` | `false` |
+| Property                 | Attribute                  | Description                                                                                                                                                                           | Type                    | Default        |
+| ------------------------ | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- | -------------- |
+| `mode`                   | `mode`                     | The mode the app is running in:  - standalone:  use this when you deploy it as a standalone web application - pod: use this when you host this app as a default interface for you pod | `"pod" \| "standalone"` | `'standalone'` |
+| `restorePreviousSession` | `restore-previous-session` |                                                                                                                                                                                       | `boolean`               | `false`        |
 
 
 ## Dependencies
@@ -22,6 +23,7 @@
 - [pos-add-new-thing](../../components/pos-add-new-thing)
 - [pos-navigation-bar](../../components/pos-navigation-bar)
 - [pos-login](../../components/pos-login)
+- [pos-internal-router](../../components/pos-internal-router)
 - [pos-resource](../../components/pos-resource)
 - [pos-type-router](../../components/pos-type-router)
 
@@ -34,6 +36,7 @@ graph TD;
   pos-app-browser --> pos-add-new-thing
   pos-app-browser --> pos-navigation-bar
   pos-app-browser --> pos-login
+  pos-app-browser --> pos-internal-router
   pos-app-browser --> pos-resource
   pos-app-browser --> pos-type-router
   pos-add-new-thing --> ion-icon
@@ -60,6 +63,7 @@ graph TD;
   pos-picture --> pos-image
   pos-image --> ion-skeleton-text
   pos-image --> ion-icon
+  pos-internal-router --> pos-app-dashboard
   style pos-app-browser fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

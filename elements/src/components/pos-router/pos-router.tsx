@@ -14,6 +14,12 @@ const Router = createRouter();
   styleUrl: 'pos-router.css',
 })
 export class PosRouter {
+  /**
+   * The mode defines what default URI will be used, if no URI param is given
+   *
+   * - standalone: reroute to pod-os:dashboard
+   * - pod: reroute to the URI that is shown in the actual browser
+   */
   @Prop() mode: 'standalone' | 'pod' = 'standalone';
 
   @State() uri;
