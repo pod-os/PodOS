@@ -35,6 +35,7 @@ Renders a normal link if even this fails.
 | `--height`        | Height of the image         |
 | `--max-height`    | Maximum height of the image |
 | `--max-width`     | Maximum width of the image  |
+| `--object-fit`    | CSS object-fit of the image |
 | `--width`         | Width of the image          |
 
 
