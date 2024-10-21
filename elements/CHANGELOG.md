@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### ⚠ BREAKING CHANGES
+
+- [pos-app-browser](../docs/elements/apps/pos-app-browser)
+  - new `mode` property, defaulting to `standalone`, if you want to preserve the old behaviour, set it to `pod` instead. Otherwise, the app will show the new dashboard component, if now `uri` query param is present.
+- [pos-router](../docs/elements/components/pos-router)
+  - new `mode` property, defaulting to `standalone`, if you want to preserve the old behaviour, set it to `pod` instead. Otherwise, the router will route to the new dashboard component, if now `uri` query param is present.
+
+### Added
+
+- [pos-internal-router](../docs/elements/components/pos-internal-router)
+  - a router that handles internal URIs starting with `pod-os:`
+- [pos-app-dashboard](../docs/elements/apps/pos-app-dashboard)
+  - A dashboard app, that can serve as an entry point to PodOS
+
 ## 0.19.0
 
 ### ⚠ BREAKING CHANGES
