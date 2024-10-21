@@ -1,4 +1,4 @@
-import { Component, Event, EventEmitter, h, Listen, State } from '@stencil/core';
+import { Component, Event, EventEmitter, h, Listen, Prop, State } from '@stencil/core';
 
 import { createRouter } from 'stencil-router-v2';
 
@@ -14,6 +14,8 @@ const Router = createRouter();
   styleUrl: 'pos-router.css',
 })
 export class PosRouter {
+  @Prop() mode: 'standalone' | 'pod' = 'standalone';
+
   @State() uri;
 
   /**
@@ -43,7 +45,9 @@ export class PosRouter {
   }
 
   updateUri() {
-    this.uri = new URLSearchParams(window.location.search).get('uri') || window.location.href;
+    this.uri =
+      new URLSearchParams(window.location.search).get('uri') ||
+      (this.mode === 'standalone' ? 'pod-os:dashboard' : window.location.href);
     this.routeChanged.emit(this.uri);
   }
 

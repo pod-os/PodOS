@@ -30,11 +30,11 @@ describe('pos-router', () => {
   `);
   });
 
-  it('emits pod-os:route-changed when URI is updated', async () => {
+  it('changes route to current URI in pod mode, if no explicit URI is given', async () => {
     const onRouteChange = jest.fn();
     const page = await newSpecPage({
       components: [PosRouter],
-      html: `<pos-router></pos-router>`,
+      html: `<pos-router mode="pod"></pos-router>`,
     });
 
     page.root.addEventListener('pod-os:route-changed', onRouteChange);
@@ -43,6 +43,23 @@ describe('pos-router', () => {
     expect(onRouteChange).toHaveBeenCalledWith(
       expect.objectContaining({
         detail: 'http://testing.stenciljs.com/',
+      }),
+    );
+  });
+
+  it('changes route to pod-os:dashboard in standalone mode, if no explicit URI is given', async () => {
+    const onRouteChange = jest.fn();
+    const page = await newSpecPage({
+      components: [PosRouter],
+      html: `<pos-router mode="standalone"></pos-router>`,
+    });
+
+    page.root.addEventListener('pod-os:route-changed', onRouteChange);
+    page.rootInstance.updateUri();
+
+    expect(onRouteChange).toHaveBeenCalledWith(
+      expect.objectContaining({
+        detail: 'pod-os:dashboard',
       }),
     );
   });

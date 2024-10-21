@@ -18,6 +18,7 @@ export const config: Config = {
     },
     {
       type: 'www',
+      copy: [{ src: 'pod-index.html' }],
       serviceWorker: null, // disable service workers
     },
   ],

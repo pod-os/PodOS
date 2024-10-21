@@ -6,6 +6,7 @@ import { Component, h, Host, Prop, State } from '@stencil/core';
 })
 export class PosAppBrowser {
   @Prop() restorePreviousSession: boolean = false;
+  @Prop() mode: 'standalone' | 'pod' = 'standalone';
 
   @State() uri = '';
 
@@ -14,16 +15,20 @@ export class PosAppBrowser {
       <Host>
         <pos-app restorePreviousSession={this.restorePreviousSession}>
           <pos-error-toast>
-            <pos-router onPod-os:route-changed={e => (this.uri = e.detail)}>
+            <pos-router mode={this.mode} onPod-os:route-changed={e => (this.uri = e.detail)}>
               <header>
                 <pos-add-new-thing referenceUri={this.uri}></pos-add-new-thing>
                 <pos-navigation-bar uri={this.uri}></pos-navigation-bar>
                 <pos-login></pos-login>
               </header>
               <main>
-                <pos-resource key={this.uri} uri={this.uri}>
-                  <pos-type-router />
-                </pos-resource>
+                {this.uri.startsWith('pod-os:') ? (
+                  <pos-internal-router uri={this.uri} />
+                ) : (
+                  <pos-resource key={this.uri} uri={this.uri}>
+                    <pos-type-router />
+                  </pos-resource>
+                )}
               </main>
               <footer>
                 <Logo />

@@ -40,11 +40,11 @@
       ]
     },
     {
-      "comment": "Serve Databrowser as default representation",
+      "comment": "Serve PodOS Browser as default representation",
       "@id": "urn:solid-server:default:DefaultUiConverter",
       "@type": "ConstantConverter",
       "contentType": "text/html",
-      "filePath": "../elements/www/index.html",
+      "filePath": "../elements/www/pod-index.html",
       "options_container": true,
       "options_document": true,
       "options_minQuality": 1,

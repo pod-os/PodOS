@@ -15,7 +15,10 @@ export namespace Components {
         "restorePreviousSession": boolean;
     }
     interface PosAppBrowser {
+        "mode": 'standalone' | 'pod';
         "restorePreviousSession": boolean;
+    }
+    interface PosAppDashboard {
     }
     interface PosAppDocumentViewer {
     }
@@ -55,6 +58,9 @@ export namespace Components {
         "alt": string;
         "src": string;
     }
+    interface PosInternalRouter {
+        "uri": string;
+    }
     interface PosLabel {
     }
     interface PosLiterals {
@@ -89,6 +95,7 @@ export namespace Components {
      * It also intercepts the URLs from `pod-os:link` events and pushes them as a new `uri` parameter.
      */
     interface PosRouter {
+        "mode": 'standalone' | 'pod';
     }
     interface PosSelectTerm {
         "placeholder": string;
@@ -261,6 +268,12 @@ declare global {
         prototype: HTMLPosAppBrowserElement;
         new (): HTMLPosAppBrowserElement;
     };
+    interface HTMLPosAppDashboardElement extends Components.PosAppDashboard, HTMLStencilElement {
+    }
+    var HTMLPosAppDashboardElement: {
+        prototype: HTMLPosAppDashboardElement;
+        new (): HTMLPosAppDashboardElement;
+    };
     interface HTMLPosAppDocumentViewerElementEventMap {
         "pod-os:resource": any;
     }
@@ -420,6 +433,12 @@ declare global {
     var HTMLPosImageElement: {
         prototype: HTMLPosImageElement;
         new (): HTMLPosImageElement;
+    };
+    interface HTMLPosInternalRouterElement extends Components.PosInternalRouter, HTMLStencilElement {
+    }
+    var HTMLPosInternalRouterElement: {
+        prototype: HTMLPosInternalRouterElement;
+        new (): HTMLPosInternalRouterElement;
     };
     interface HTMLPosLabelElementEventMap {
         "pod-os:resource": any;
@@ -725,6 +744,7 @@ declare global {
         "pos-add-new-thing": HTMLPosAddNewThingElement;
         "pos-app": HTMLPosAppElement;
         "pos-app-browser": HTMLPosAppBrowserElement;
+        "pos-app-dashboard": HTMLPosAppDashboardElement;
         "pos-app-document-viewer": HTMLPosAppDocumentViewerElement;
         "pos-app-generic": HTMLPosAppGenericElement;
         "pos-app-image-viewer": HTMLPosAppImageViewerElement;
@@ -737,6 +757,7 @@ declare global {
         "pos-document": HTMLPosDocumentElement;
         "pos-error-toast": HTMLPosErrorToastElement;
         "pos-image": HTMLPosImageElement;
+        "pos-internal-router": HTMLPosInternalRouterElement;
         "pos-label": HTMLPosLabelElement;
         "pos-literals": HTMLPosLiteralsElement;
         "pos-login": HTMLPosLoginElement;
@@ -780,7 +801,10 @@ declare namespace LocalJSX {
         "restorePreviousSession"?: boolean;
     }
     interface PosAppBrowser {
+        "mode"?: 'standalone' | 'pod';
         "restorePreviousSession"?: boolean;
+    }
+    interface PosAppDashboard {
     }
     interface PosAppDocumentViewer {
         "onPod-os:resource"?: (event: PosAppDocumentViewerCustomEvent<any>) => void;
@@ -833,6 +857,9 @@ declare namespace LocalJSX {
          */
         "onPod-os:resource-loaded"?: (event: PosImageCustomEvent<string>) => void;
         "src"?: string;
+    }
+    interface PosInternalRouter {
+        "uri"?: string;
     }
     interface PosLabel {
         "onPod-os:resource"?: (event: PosLabelCustomEvent<any>) => void;
@@ -888,6 +915,7 @@ declare namespace LocalJSX {
      * It also intercepts the URLs from `pod-os:link` events and pushes them as a new `uri` parameter.
      */
     interface PosRouter {
+        "mode"?: 'standalone' | 'pod';
         /**
           * Emits the new URI that is active
          */
@@ -923,6 +951,7 @@ declare namespace LocalJSX {
         "pos-add-new-thing": PosAddNewThing;
         "pos-app": PosApp;
         "pos-app-browser": PosAppBrowser;
+        "pos-app-dashboard": PosAppDashboard;
         "pos-app-document-viewer": PosAppDocumentViewer;
         "pos-app-generic": PosAppGeneric;
         "pos-app-image-viewer": PosAppImageViewer;
@@ -935,6 +964,7 @@ declare namespace LocalJSX {
         "pos-document": PosDocument;
         "pos-error-toast": PosErrorToast;
         "pos-image": PosImage;
+        "pos-internal-router": PosInternalRouter;
         "pos-label": PosLabel;
         "pos-literals": PosLiterals;
         "pos-login": PosLogin;
@@ -962,6 +992,7 @@ declare module "@stencil/core" {
             "pos-add-new-thing": LocalJSX.PosAddNewThing & JSXBase.HTMLAttributes<HTMLPosAddNewThingElement>;
             "pos-app": LocalJSX.PosApp & JSXBase.HTMLAttributes<HTMLPosAppElement>;
             "pos-app-browser": LocalJSX.PosAppBrowser & JSXBase.HTMLAttributes<HTMLPosAppBrowserElement>;
+            "pos-app-dashboard": LocalJSX.PosAppDashboard & JSXBase.HTMLAttributes<HTMLPosAppDashboardElement>;
             "pos-app-document-viewer": LocalJSX.PosAppDocumentViewer & JSXBase.HTMLAttributes<HTMLPosAppDocumentViewerElement>;
             "pos-app-generic": LocalJSX.PosAppGeneric & JSXBase.HTMLAttributes<HTMLPosAppGenericElement>;
             "pos-app-image-viewer": LocalJSX.PosAppImageViewer & JSXBase.HTMLAttributes<HTMLPosAppImageViewerElement>;
@@ -982,6 +1013,7 @@ declare module "@stencil/core" {
              * Renders a normal link if even this fails.
              */
             "pos-image": LocalJSX.PosImage & JSXBase.HTMLAttributes<HTMLPosImageElement>;
+            "pos-internal-router": LocalJSX.PosInternalRouter & JSXBase.HTMLAttributes<HTMLPosInternalRouterElement>;
             "pos-label": LocalJSX.PosLabel & JSXBase.HTMLAttributes<HTMLPosLabelElement>;
             "pos-literals": LocalJSX.PosLiterals & JSXBase.HTMLAttributes<HTMLPosLiteralsElement>;
             "pos-login": LocalJSX.PosLogin & JSXBase.HTMLAttributes<HTMLPosLoginElement>;
