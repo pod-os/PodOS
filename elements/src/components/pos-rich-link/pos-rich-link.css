@@ -1,17 +1,14 @@
 :host {
   --background-color: white;
   --hover-color: var(--color-grey-200);
-  --label-color: var(--color-blue-700);
+  --label-color: var(--color-grey-900);
   --description-color: var(--color-grey-900);
   --uri-color: var(--color-grey-600);
+  --font-family: var(--font-sans);
 }
 
 a.container {
   text-decoration: none;
-}
-
-a {
-  color: var(--color-black);
 }
 
 p.content {
@@ -30,9 +27,13 @@ p.content:hover {
 
 pos-label {
   color: var(--label-color);
+  max-width: var(--prose-lg);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   font-size: var(--scale-fluid-1);
-  font-weight: var(--weight-regular);
   text-decoration: underline;
+  text-decoration-thickness: var(--size-px);
   margin-bottom: var(--size-1);
 }
 
@@ -52,5 +53,3 @@ a.uri {
   font-size: var(--scale-fluid-00);
   margin-top: var(--size-1);
 }
-
-
