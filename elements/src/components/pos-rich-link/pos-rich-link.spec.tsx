@@ -35,7 +35,7 @@ describe('pos-rich-link', () => {
       const link = resource.querySelector('a');
       expect(link).not.toBeNull();
       expect(link).toEqualAttribute('href', 'https://pod.example/resource');
-      expect(link.innerText).toEqual('https://pod.example/resource');
+      expect(link.innerHTML).toEqual('<pos-label></pos-label>');
     });
   });
 });

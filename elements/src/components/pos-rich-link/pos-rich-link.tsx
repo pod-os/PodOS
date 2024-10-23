@@ -24,9 +24,6 @@ export class PosRichLink {
           <p class="content">
             <pos-label />
             <pos-description />
-            <a class="uri" href={this.uri}>
-              {this.uri}
-            </a>
           </p>
         </pos-resource>
       </a>
