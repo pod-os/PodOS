@@ -49,7 +49,14 @@ export class Thing {
       "http://schema.org/caption",
       "https://schema.org/caption",
     );
-    return value ?? this.uri;
+    if (value) {
+      return value;
+    }
+    const url = new URL(this.uri);
+    if (isTooGeneric(url.hash)) {
+      return (getFilename(url) || url.host + url.pathname) + url.hash;
+    }
+    return url.hash || getFilename(url) || url.host;
   }
 
   literals(): Literal[] {
@@ -182,5 +189,19 @@ export class Thing {
     ) => T,
   ) {
     return new SpecificThing(this.uri, this.store, this.editable);
+  }
+}
+
+function isTooGeneric(fragment: string) {
+  const genericFragments = ["#it", "#this", "#me", "#i"];
+  return genericFragments.includes(fragment);
+}
+
+function getFilename(url: URL) {
+  if (url.pathname.endsWith("/")) {
+    const containerName = url.pathname.split("/").at(-2);
+    return containerName ? containerName + "/" : null;
+  } else {
+    return url.pathname.split("/").pop();
   }
 }

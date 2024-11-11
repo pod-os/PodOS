@@ -3,15 +3,53 @@ import { Thing } from "./Thing";
 
 describe("Thing", function () {
   describe("label", () => {
-    it("is the URI if nothing is found in store", () => {
-      const store = graph();
-      const it = new Thing(
+    describe("if nothing is found in the store", () => {
+      it.each([
         "https://jane.doe.example/container/file.ttl#fragment",
-        store,
-      );
-      expect(it.label()).toBe(
-        "https://jane.doe.example/container/file.ttl#fragment",
-      );
+        "https://jane.doe.example#fragment",
+      ])("the fragment is used", (uri) => {
+        const store = graph();
+        const it = new Thing(uri, store);
+        expect(it.label()).toBe("#fragment");
+      });
+
+      it("the file name is used, if no fragment is given", () => {
+        const store = graph();
+        const it = new Thing(
+          "https://jane.doe.example/container/file.ttl",
+          store,
+        );
+        expect(it.label()).toBe("file.ttl");
+      });
+
+      it("container name is used if no file is present", () => {
+        const store = graph();
+        const it = new Thing("https://jane.doe.example/container/", store);
+        expect(it.label()).toBe("container/");
+      });
+
+      describe("if fragments are too generic", () => {
+        it.each([
+          { uri: "https://jane.doe.example/resource#it", label: "resource#it" },
+          {
+            uri: "https://jane.doe.example/resource#this",
+            label: "resource#this",
+          },
+          { uri: "https://jane.doe.example/profile/card#me", label: "card#me" },
+          { uri: "https://jane.doe.example/#i", label: "jane.doe.example/#i" },
+          { uri: "https://jane.doe.example/profile/#me", label: "profile/#me" },
+        ])("file and fragment are both used", ({ uri, label }) => {
+          const store = graph();
+          const it = new Thing(uri, store);
+          expect(it.label()).toBe(label);
+        });
+      });
+
+      it("the host name is used, if no path is given", () => {
+        const store = graph();
+        const it = new Thing("https://jane.doe.example/", store);
+        expect(it.label()).toBe("jane.doe.example");
+      });
     });
 
     it.each([
