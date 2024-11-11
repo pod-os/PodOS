@@ -1,5 +1,6 @@
 import { newSpecPage } from '@stencil/core/testing';
 import { PosRichLink } from './pos-rich-link';
+import { getByText } from '@testing-library/dom';
 
 describe('pos-rich-link', () => {
   let page;
@@ -36,6 +37,15 @@ describe('pos-rich-link', () => {
       expect(link).not.toBeNull();
       expect(link).toEqualAttribute('href', 'https://pod.example/resource');
       expect(link.innerHTML).toEqual('<pos-label></pos-label>');
+    });
+
+    it('shows the host of the link', () => {
+      const resource = page.root.shadowRoot.querySelector('pos-resource');
+      expect(getByText(resource, 'pod.example')).toEqualHtml(`
+      <span class="url">
+        pod.example
+      </span>
+      `);
     });
   });
 });

@@ -23,6 +23,7 @@ export class PosRichLink {
           >
             <pos-label />
           </a>
+          <span class="url">{new URL(this.uri).host}</span>
           <pos-description />
         </p>
       </pos-resource>
