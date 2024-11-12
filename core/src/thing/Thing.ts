@@ -9,6 +9,7 @@ import { accumulateSubjects } from "./accumulateSubjects";
 import { accumulateValues } from "./accumulateValues";
 import { isRdfType } from "./isRdfType";
 import { labelForType } from "./labelForType";
+import { labelFromUri } from "./labelFromUri";
 
 export interface Literal {
   predicate: string;
@@ -17,6 +18,7 @@ export interface Literal {
 
 export interface Relation {
   predicate: string;
+  label: string;
   uris: string[];
 }
 
@@ -52,11 +54,7 @@ export class Thing {
     if (value) {
       return value;
     }
-    const url = new URL(this.uri);
-    if (isTooGeneric(url.hash)) {
-      return (getFilename(url) || url.host + url.pathname) + url.hash;
-    }
-    return url.hash || getFilename(url) || url.host;
+    return labelFromUri(this.uri);
   }
 
   literals(): Literal[] {
@@ -189,19 +187,5 @@ export class Thing {
     ) => T,
   ) {
     return new SpecificThing(this.uri, this.store, this.editable);
-  }
-}
-
-function isTooGeneric(fragment: string) {
-  const genericFragments = ["#it", "#this", "#me", "#i"];
-  return genericFragments.includes(fragment);
-}
-
-function getFilename(url: URL) {
-  if (url.pathname.endsWith("/")) {
-    const containerName = url.pathname.split("/").at(-2);
-    return containerName ? containerName + "/" : null;
-  } else {
-    return url.pathname.split("/").pop();
   }
 }
