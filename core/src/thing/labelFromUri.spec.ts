@@ -6,7 +6,7 @@ describe("label from URI", () => {
     "https://jane.doe.example#fragment",
   ])("the fragment is used", (uri) => {
     const result = labelFromUri(uri);
-    expect(result).toBe("#fragment");
+    expect(result).toBe("fragment");
   });
 
   it("the file name is used, if no fragment is given", () => {

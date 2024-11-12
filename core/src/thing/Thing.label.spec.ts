@@ -10,7 +10,7 @@ describe("Thing", function () {
       ])("the fragment is used", (uri) => {
         const store = graph();
         const it = new Thing(uri, store);
-        expect(it.label()).toBe("#fragment");
+        expect(it.label()).toBe("fragment");
       });
 
       it("the file name is used, if no fragment is given", () => {

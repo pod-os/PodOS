@@ -3,7 +3,12 @@ export function labelFromUri(uri: string) {
   if (isTooGeneric(url.hash)) {
     return (getFilename(url) || url.host + url.pathname) + url.hash;
   }
-  return url.hash || getFilename(url) || url.host;
+
+  return labelFromFragment(url.hash) || getFilename(url) || url.host;
+}
+
+function labelFromFragment(fragment: string | null) {
+  return fragment ? fragment.split("#")[1] : null;
 }
 
 function isTooGeneric(fragment: string) {
