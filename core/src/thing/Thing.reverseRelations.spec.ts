@@ -28,6 +28,7 @@ describe("Thing", function () {
       expect(result).toEqual([
         {
           predicate: "http://vocab.test/predicate",
+          label: "predicate",
           uris: ["https://pod.example/resource"],
         },
       ]);
@@ -54,10 +55,12 @@ describe("Thing", function () {
       expect(result).toEqual([
         {
           predicate: "http://vocab.test/first",
+          label: "first",
           uris: ["https://pod.example/first"],
         },
         {
           predicate: "http://vocab.test/second",
+          label: "second",
           uris: ["https://pod.example/second"],
         },
       ]);
@@ -84,6 +87,7 @@ describe("Thing", function () {
       expect(result).toEqual([
         {
           predicate: "http://vocab.test/predicate",
+          label: "predicate",
           uris: ["https://pod.example/first", "https://pod.example/second"],
         },
       ]);
@@ -120,10 +124,12 @@ describe("Thing", function () {
       expect(result).toEqual([
         {
           predicate: "http://vocab.test/first",
+          label: "first",
           uris: ["https://pod.example/first/1"],
         },
         {
           predicate: "http://vocab.test/second",
+          label: "second",
           uris: [
             "https://pod.example/second/1",
             "https://pod.example/second/2",
@@ -131,6 +137,7 @@ describe("Thing", function () {
         },
         {
           predicate: "http://vocab.test/third",
+          label: "third",
           uris: ["https://pod.example/third/1"],
         },
       ]);

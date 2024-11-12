@@ -79,6 +79,7 @@ export class Thing {
 
     return Object.keys(values).map((predicate) => ({
       predicate,
+      label: labelFromUri(predicate),
       uris: values[predicate],
     }));
   }
@@ -94,6 +95,7 @@ export class Thing {
 
     return Object.keys(values).map((predicate) => ({
       predicate,
+      label: labelFromUri(predicate),
       uris: values[predicate],
     }));
   }
