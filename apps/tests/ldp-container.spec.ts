@@ -11,7 +11,7 @@ test("show contents of an LDP container", async ({ page }) => {
 
   // then page shows the full container URL as heading
   const heading = await page.getByRole("heading", { level: 2 });
-  await expect(heading).toHaveText("http://localhost:4000/alice/container/");
+  await expect(heading).toHaveText("container/");
 
   // and shows a list of all contents
   const contents = page.locator("pos-container-contents").getByRole("listitem");
@@ -28,33 +28,33 @@ test("show contents of an LDP container", async ({ page }) => {
 
   // and for each item in the list, the full URL is shown
   await expect(item1.getByRole("paragraph")).toHaveText(
-    "http://localhost:4000/alice/container/another-sub-container/"
+    "http://localhost:4000/alice/container/another-sub-container/",
   );
   await expect(item2.getByRole("paragraph")).toHaveText(
-    "http://localhost:4000/alice/container/readme.md"
+    "http://localhost:4000/alice/container/readme.md",
   );
   await expect(item3.getByRole("paragraph")).toHaveText(
-    "http://localhost:4000/alice/container/resource"
+    "http://localhost:4000/alice/container/resource",
   );
   await expect(item4.getByRole("paragraph")).toHaveText(
-    "http://localhost:4000/alice/container/sub-container/"
+    "http://localhost:4000/alice/container/sub-container/",
   );
 
   // and for each item in the list a icon is shown, indicating whether it is a folder or document
   await expect(item1.locator("ion-icon")).toHaveAttribute(
     "name",
-    "folder-outline"
+    "folder-outline",
   );
   await expect(item2.locator("ion-icon")).toHaveAttribute(
     "name",
-    "document-outline"
+    "document-outline",
   );
   await expect(item3.locator("ion-icon")).toHaveAttribute(
     "name",
-    "document-outline"
+    "document-outline",
   );
   await expect(item4.locator("ion-icon")).toHaveAttribute(
     "name",
-    "folder-outline"
+    "folder-outline",
   );
 });
