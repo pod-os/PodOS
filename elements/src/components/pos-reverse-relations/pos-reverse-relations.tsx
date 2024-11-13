@@ -23,7 +23,7 @@ export class PosReverseRelations implements ResourceAware {
     const items = this.data.map(it => (
       <ion-item-group>
         <ion-item-divider>
-          <ion-label>is {it.predicate} of</ion-label>
+          <ion-label title={it.predicate}>is {it.label} of</ion-label>
         </ion-item-divider>
         {it.uris.map(uri => (
           <pos-rich-link uri={uri} />

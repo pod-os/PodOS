@@ -26,6 +26,7 @@ describe('pos-relations', () => {
       relations: () => [
         {
           predicate: 'http://schema.org/url',
+          label: 'url',
           uris: ['https://person.test/alice'],
         },
       ],
@@ -34,7 +35,7 @@ describe('pos-relations', () => {
 
     const el: HTMLElement = page.root.shadowRoot as unknown as HTMLElement;
 
-    expect(getByText(el, 'http://schema.org/url')).toBeDefined();
+    expect(getByText(el, 'url')).toBeDefined();
     const linkToAlice = page.root.shadowRoot.querySelector('pos-rich-link[uri="https://person.test/alice"]');
     expect(linkToAlice).not.toBeNull();
   });
@@ -48,10 +49,12 @@ describe('pos-relations', () => {
       relations: () => [
         {
           predicate: 'http://schema.org/url',
+          label: 'url',
           uris: ['https://person.test/alice', 'https://person.test/bernadette'],
         },
         {
           predicate: 'https://www.w3.org/ns/activitystreams#attachment',
+          label: 'attachment',
           uris: ['https://resource.test/attachment'],
         },
       ],
@@ -60,14 +63,16 @@ describe('pos-relations', () => {
 
     const el: HTMLElement = page.root.shadowRoot as unknown as HTMLElement;
 
-    expect(getByText(el, 'http://schema.org/url')).toBeDefined();
+    expect(getByText(el, 'url')).toBeDefined();
     const linkToAlice = page.root.shadowRoot.querySelector('pos-rich-link[uri="https://person.test/alice"]');
     expect(linkToAlice).not.toBeNull();
     const linkToBernadette = page.root.shadowRoot.querySelector('pos-rich-link[uri="https://person.test/bernadette"]');
     expect(linkToBernadette).not.toBeNull();
 
-    expect(getByText(el, 'https://www.w3.org/ns/activitystreams#attachment')).toBeDefined();
-    const linkToAttachment = page.root.shadowRoot.querySelector('pos-rich-link[uri="https://resource.test/attachment"]');
+    expect(getByText(el, 'attachment')).toBeDefined();
+    const linkToAttachment = page.root.shadowRoot.querySelector(
+      'pos-rich-link[uri="https://resource.test/attachment"]',
+    );
     expect(linkToAttachment).not.toBeNull();
   });
 });

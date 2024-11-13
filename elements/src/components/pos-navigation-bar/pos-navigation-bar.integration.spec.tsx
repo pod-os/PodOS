@@ -1,6 +1,6 @@
 import { SearchIndex, WebIdProfile } from '@pod-os/core';
 import { newSpecPage } from '@stencil/core/testing';
-import { fireEvent , getByText} from '@testing-library/dom';
+import { fireEvent, getByText } from '@testing-library/dom';
 import { when } from 'jest-when';
 import session from '../../store/session';
 import { mockPodOS } from '../../test/mockPodOS';
@@ -9,7 +9,6 @@ import { PosRichLink } from '../pos-rich-link/pos-rich-link';
 import { PosNavigationBar } from './pos-navigation-bar';
 
 describe('pos-navigation-bar', () => {
-
   it('can search after login', async () => {
     // given PodOS
     const os = mockPodOS();
@@ -19,13 +18,17 @@ describe('pos-navigation-bar', () => {
     os.buildSearchIndex.mockResolvedValue(searchIndex);
 
     // and a search for "test" gives a result
-    when(searchIndex.search).calledWith("test").mockReturnValue([{
-      ref: "https://result.test"
-    }])
+    when(searchIndex.search)
+      .calledWith('test')
+      .mockReturnValue([
+        {
+          ref: 'https://result.test',
+        },
+      ]);
 
     // and a user profile can be fetched
-    const profile = {fake: 'profile of the user'} as WebIdProfile
-    os.fetchProfile.mockResolvedValue(profile)
+    const profile = { fake: 'profile of the user' } as WebIdProfile;
+    os.fetchProfile.mockResolvedValue(profile);
 
     // and a page with a navigation bar
     const page = await newSpecPage({
@@ -44,7 +47,7 @@ describe('pos-navigation-bar', () => {
 
     // then the search index is built based on the user profile
     expect(os.buildSearchIndex).toHaveBeenCalledWith(profile);
-    await page.waitForChanges()
+    await page.waitForChanges();
 
     // when the user types "test" into the navigation bar
     const searchBar = page.root.querySelector('ion-searchbar');
@@ -54,8 +57,8 @@ describe('pos-navigation-bar', () => {
     expect(searchIndex.search).toHaveBeenCalledWith('test');
 
     // and the result is shown
-    await page.waitForChanges()
-    expect(getByText(page.root, "https://result.test")).toBeDefined()
+    await page.waitForChanges();
+    expect(getByText(page.root, 'result.test')).toBeDefined();
   });
 });
 

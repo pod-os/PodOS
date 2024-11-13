@@ -26,6 +26,7 @@ describe('pos-reverse-relations', () => {
       reverseRelations: () => [
         {
           predicate: 'http://schema.org/knows',
+          label: 'knows',
           uris: ['https://person.test/alice'],
         },
       ],
@@ -34,7 +35,7 @@ describe('pos-reverse-relations', () => {
 
     const el: HTMLElement = page.root.shadowRoot as unknown as HTMLElement;
 
-    expect(getByText(el, 'is http://schema.org/knows of')).toBeDefined();
+    expect(getByText(el, 'is knows of')).toBeDefined();
     const linkToAlice = page.root.shadowRoot.querySelector('pos-rich-link[uri="https://person.test/alice"]');
     expect(linkToAlice).not.toBeNull();
   });
@@ -48,10 +49,12 @@ describe('pos-reverse-relations', () => {
       reverseRelations: () => [
         {
           predicate: 'http://schema.org/knows',
+          label: 'knows',
           uris: ['https://person.test/alice', 'https://person.test/bernadette'],
         },
         {
           predicate: 'http://schema.org/participant',
+          label: 'participant',
           uris: ['https://event.test/party'],
         },
       ],
@@ -60,13 +63,13 @@ describe('pos-reverse-relations', () => {
 
     const el: HTMLElement = page.root.shadowRoot as unknown as HTMLElement;
 
-    expect(getByText(el, 'is http://schema.org/knows of')).toBeDefined();
+    expect(getByText(el, 'is knows of')).toBeDefined();
     const linkToAlice = page.root.shadowRoot.querySelector('pos-rich-link[uri="https://person.test/alice"]');
     expect(linkToAlice).not.toBeNull();
     const linkToBernadette = page.root.shadowRoot.querySelector('pos-rich-link[uri="https://person.test/bernadette"]');
     expect(linkToBernadette).not.toBeNull();
 
-    expect(getByText(el, 'is http://schema.org/participant of')).toBeDefined();
+    expect(getByText(el, 'is participant of')).toBeDefined();
     const linkToAttachment = page.root.shadowRoot.querySelector('pos-rich-link[uri="https://event.test/party"]');
     expect(linkToAttachment).not.toBeNull();
   });
