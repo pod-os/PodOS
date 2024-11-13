@@ -41,9 +41,8 @@ pos-label {
 }
 
 pos-description {
-  max-width: var(--prose-lg);
-  overflow: hidden;
-  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
   text-overflow: ellipsis;
   font-weight: var(--weight-light);
   color: var(--description-color);
