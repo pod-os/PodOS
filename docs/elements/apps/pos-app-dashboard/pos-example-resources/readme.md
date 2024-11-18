@@ -6,18 +6,15 @@
 
 ### Used by
 
- - [pos-internal-router](../../components/pos-internal-router)
+ - [pos-app-dashboard](..)
 
 ### Depends on
 
-- [pos-getting-started](pos-getting-started)
-- [pos-example-resources](pos-example-resources)
+- [pos-rich-link](../../../components/pos-rich-link)
 
 ### Graph
 ```mermaid
 graph TD;
-  pos-app-dashboard --> pos-getting-started
-  pos-app-dashboard --> pos-example-resources
   pos-example-resources --> pos-rich-link
   pos-rich-link --> pos-resource
   pos-rich-link --> pos-label
@@ -27,8 +24,8 @@ graph TD;
   pos-resource --> ion-card-header
   pos-resource --> ion-card-content
   ion-card --> ion-ripple-effect
-  pos-internal-router --> pos-app-dashboard
-  style pos-app-dashboard fill:#f9f,stroke:#333,stroke-width:4px
+  pos-app-dashboard --> pos-example-resources
+  style pos-example-resources fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
 ----------------------------------------------

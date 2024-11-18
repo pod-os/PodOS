@@ -23,6 +23,7 @@
 
 ### Used by
 
+ - [pos-example-resources](../../apps/pos-app-dashboard/pos-example-resources)
  - [pos-navigation-bar](../pos-navigation-bar)
  - [pos-relations](../pos-relations)
  - [pos-reverse-relations](../pos-reverse-relations)
@@ -45,6 +46,7 @@ graph TD;
   pos-resource --> ion-card-header
   pos-resource --> ion-card-content
   ion-card --> ion-ripple-effect
+  pos-example-resources --> pos-rich-link
   pos-navigation-bar --> pos-rich-link
   pos-relations --> pos-rich-link
   pos-reverse-relations --> pos-rich-link

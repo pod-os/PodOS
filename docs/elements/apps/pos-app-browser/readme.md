@@ -64,6 +64,9 @@ graph TD;
   pos-image --> ion-skeleton-text
   pos-image --> ion-icon
   pos-internal-router --> pos-app-dashboard
+  pos-app-dashboard --> pos-getting-started
+  pos-app-dashboard --> pos-example-resources
+  pos-example-resources --> pos-rich-link
   style pos-app-browser fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

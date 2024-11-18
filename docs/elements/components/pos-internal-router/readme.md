@@ -23,6 +23,17 @@
 ```mermaid
 graph TD;
   pos-internal-router --> pos-app-dashboard
+  pos-app-dashboard --> pos-getting-started
+  pos-app-dashboard --> pos-example-resources
+  pos-example-resources --> pos-rich-link
+  pos-rich-link --> pos-resource
+  pos-rich-link --> pos-label
+  pos-rich-link --> pos-description
+  pos-resource --> ion-progress-bar
+  pos-resource --> ion-card
+  pos-resource --> ion-card-header
+  pos-resource --> ion-card-content
+  ion-card --> ion-ripple-effect
   pos-app-browser --> pos-internal-router
   style pos-internal-router fill:#f9f,stroke:#333,stroke-width:4px
 ```
