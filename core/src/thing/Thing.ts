@@ -13,6 +13,7 @@ import { labelFromUri } from "./labelFromUri";
 
 export interface Literal {
   predicate: string;
+  label: string;
   values: string[];
 }
 
@@ -66,6 +67,7 @@ export class Thing {
 
     return Object.keys(values).map((predicate) => ({
       predicate,
+      label: labelFromUri(predicate),
       values: values[predicate],
     }));
   }

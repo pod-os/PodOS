@@ -24,6 +24,7 @@ describe("Thing", function () {
       expect(result).toEqual([
         {
           predicate: "http://vocab.test/predicate",
+          label: "predicate",
           values: ["literal value"],
         },
       ]);
@@ -42,10 +43,12 @@ describe("Thing", function () {
       expect(result).toEqual([
         {
           predicate: "http://vocab.test/first",
+          label: "first",
           values: ["first value"],
         },
         {
           predicate: "http://vocab.test/second",
+          label: "second",
           values: ["second value"],
         },
       ]);
@@ -64,6 +67,7 @@ describe("Thing", function () {
       expect(result).toEqual([
         {
           predicate: "http://vocab.test/predicate",
+          label: "predicate",
           values: ["first value", "second value"],
         },
       ]);
@@ -84,14 +88,17 @@ describe("Thing", function () {
       expect(result).toEqual([
         {
           predicate: "http://vocab.test/first",
+          label: "first",
           values: ["value 1-1"],
         },
         {
           predicate: "http://vocab.test/second",
+          label: "second",
           values: ["value 2-1", "value 2-2"],
         },
         {
           predicate: "http://vocab.test/third",
+          label: "third",
           values: ["value 3-1"],
         },
       ]);
@@ -115,6 +122,7 @@ describe("Thing", function () {
       expect(result).toEqual([
         {
           predicate: "http://vocab.test/literal",
+          label: "literal",
           values: ["literal value"],
         },
       ]);
