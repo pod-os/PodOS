@@ -30,11 +30,11 @@ describe('pos-predicate', () => {
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
      <pos-predicate label="test-label" uri="https://predicate.test">
-      <div>
+      <div class="container">
         <a href="https://predicate.test">
           https://predicate.test
         </a>
-        <button>
+        <button aria-label="collapse URI to test-label">
           <ion-icon name="chevron-back-circle-outline"></ion-icon>
         </button>
       </div>

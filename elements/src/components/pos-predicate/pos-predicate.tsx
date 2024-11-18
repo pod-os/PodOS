@@ -3,6 +3,7 @@ import { Component, h, Prop, State } from '@stencil/core';
 @Component({
   tag: 'pos-predicate',
   shadow: true,
+  styleUrl: './pos-predicate.css',
 })
 export class PosPredicate {
   @Prop()
@@ -17,9 +18,9 @@ export class PosPredicate {
   render() {
     if (this.expanded) {
       return (
-        <div>
+        <div class="container">
           <a href={this.uri}>{this.uri}</a>
-          <button onClick={() => (this.expanded = false)}>
+          <button aria-label={`collapse URI to ${this.label}`} onClick={() => (this.expanded = false)}>
             <ion-icon name="chevron-back-circle-outline"></ion-icon>
           </button>
         </div>

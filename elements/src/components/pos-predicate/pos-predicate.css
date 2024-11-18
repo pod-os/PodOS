@@ -1,0 +1,29 @@
+:host {
+  --text-color: var(--pos-primary-color);
+}
+
+button {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-color);
+  font-size: var(--scale-0);
+  font-weight: var(--weight-light);
+}
+
+a {
+  color: var(--text-color);
+  font-size: var(--scale-0);
+  font-weight: var(--weight-light);
+}
+
+.container {
+  display: flex;
+  gap: var(--size-1);
+  flex-direction: row;
+  align-items: center;
+  line-height: var(--scale-0);
+}
