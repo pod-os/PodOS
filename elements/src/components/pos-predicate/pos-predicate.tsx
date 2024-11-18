@@ -1,7 +1,8 @@
-import { Component, h, Prop } from '@stencil/core';
+import { Component, h, Prop, State } from '@stencil/core';
 
 @Component({
   tag: 'pos-predicate',
+  shadow: true,
 })
 export class PosPredicate {
   @Prop()
@@ -10,7 +11,25 @@ export class PosPredicate {
   @Prop()
   label: string;
 
+  @State()
+  expanded: boolean = false;
+
   render() {
-    return <ion-label title={this.uri}>{this.label}</ion-label>;
+    if (this.expanded) {
+      return (
+        <div>
+          <a href={this.uri}>{this.uri}</a>
+          <button onClick={() => (this.expanded = false)}>
+            <ion-icon name="chevron-back-circle-outline"></ion-icon>
+          </button>
+        </div>
+      );
+    } else {
+      return (
+        <button onClick={() => (this.expanded = true)} title={this.uri}>
+          {this.label}
+        </button>
+      );
+    }
   }
 }
