@@ -84,6 +84,10 @@ export namespace Components {
     }
     interface PosPicture {
     }
+    interface PosPredicate {
+        "label": string;
+        "uri": string;
+    }
     interface PosRelations {
     }
     interface PosResource {
@@ -584,6 +588,12 @@ declare global {
         prototype: HTMLPosPictureElement;
         new (): HTMLPosPictureElement;
     };
+    interface HTMLPosPredicateElement extends Components.PosPredicate, HTMLStencilElement {
+    }
+    var HTMLPosPredicateElement: {
+        prototype: HTMLPosPredicateElement;
+        new (): HTMLPosPredicateElement;
+    };
     interface HTMLPosRelationsElementEventMap {
         "pod-os:resource": any;
     }
@@ -789,6 +799,7 @@ declare global {
         "pos-navigation-bar": HTMLPosNavigationBarElement;
         "pos-new-thing-form": HTMLPosNewThingFormElement;
         "pos-picture": HTMLPosPictureElement;
+        "pos-predicate": HTMLPosPredicateElement;
         "pos-relations": HTMLPosRelationsElement;
         "pos-resource": HTMLPosResourceElement;
         "pos-reverse-relations": HTMLPosReverseRelationsElement;
@@ -921,6 +932,10 @@ declare namespace LocalJSX {
     interface PosPicture {
         "onPod-os:resource"?: (event: PosPictureCustomEvent<any>) => void;
     }
+    interface PosPredicate {
+        "label"?: string;
+        "uri"?: string;
+    }
     interface PosRelations {
         "onPod-os:resource"?: (event: PosRelationsCustomEvent<any>) => void;
     }
@@ -1008,6 +1023,7 @@ declare namespace LocalJSX {
         "pos-navigation-bar": PosNavigationBar;
         "pos-new-thing-form": PosNewThingForm;
         "pos-picture": PosPicture;
+        "pos-predicate": PosPredicate;
         "pos-relations": PosRelations;
         "pos-resource": PosResource;
         "pos-reverse-relations": PosReverseRelations;
@@ -1059,6 +1075,7 @@ declare module "@stencil/core" {
             "pos-navigation-bar": LocalJSX.PosNavigationBar & JSXBase.HTMLAttributes<HTMLPosNavigationBarElement>;
             "pos-new-thing-form": LocalJSX.PosNewThingForm & JSXBase.HTMLAttributes<HTMLPosNewThingFormElement>;
             "pos-picture": LocalJSX.PosPicture & JSXBase.HTMLAttributes<HTMLPosPictureElement>;
+            "pos-predicate": LocalJSX.PosPredicate & JSXBase.HTMLAttributes<HTMLPosPredicateElement>;
             "pos-relations": LocalJSX.PosRelations & JSXBase.HTMLAttributes<HTMLPosRelationsElement>;
             "pos-resource": LocalJSX.PosResource & JSXBase.HTMLAttributes<HTMLPosResourceElement>;
             "pos-reverse-relations": LocalJSX.PosReverseRelations & JSXBase.HTMLAttributes<HTMLPosReverseRelationsElement>;

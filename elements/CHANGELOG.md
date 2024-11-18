@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+## Added
+
+- [pos-predicate](../docs/elements/components/pos-predicate): a component to render a predicate in a human-centric way
+
 ### Changes
 
 - [pos-label](../docs/elements/components/pos-label): shorter fallback labels 

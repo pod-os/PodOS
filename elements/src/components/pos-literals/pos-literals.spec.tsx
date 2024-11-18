@@ -39,9 +39,8 @@ describe('pos-literals', () => {
     const el: HTMLElement = page.root.shadowRoot as unknown as HTMLElement;
 
     expect(getByText(el, 'Alice')).toBeDefined();
-    const label = getByText(el, 'name');
-    expect(label).toBeDefined();
-    expect(label).toEqualAttribute('title', 'http://schema.org/name');
+    const predicate = el.querySelector('pos-predicate');
+    expect(predicate).toEqualHtml('<pos-predicate uri="http://schema.org/name" label="name"/>');
   });
 
   it('renders multiple predicates and values', async () => {
@@ -69,10 +68,12 @@ describe('pos-literals', () => {
 
     expect(getByText(el, 'Alice')).toBeDefined();
     expect(getByText(el, 'Bernadette')).toBeDefined();
-    expect(getByText(el, 'name')).toBeDefined();
+    const name = el.querySelector('pos-predicate[uri="http://schema.org/name"]');
+    expect(name).toEqualAttribute('label', 'name');
 
     expect(getByText(el, 'the description')).toBeDefined();
-    expect(getByText(el, 'description')).toBeDefined();
+    const description = el.querySelector('pos-predicate[uri="http://schema.org/description"]');
+    expect(description).toEqualAttribute('label', 'description');
   });
 
   it('adds newly added predicate to the list', async () => {
@@ -105,7 +106,8 @@ describe('pos-literals', () => {
 
     // then
     expect(getByText(page.root, 'Alice')).toBeDefined();
-    expect(getByText(page.root, 'name')).toBeDefined();
+    const name = page.root.querySelector('pos-predicate[uri="https://schema.org/name"]');
+    expect(name).toEqualAttribute('label', 'name');
   });
 
   it('adds newly added predicate value to the existing list without duplicating the predicate', async () => {
@@ -145,6 +147,7 @@ describe('pos-literals', () => {
     // then
     expect(getByText(page.root, 'Alice')).toBeDefined();
     expect(getByText(page.root, 'Bernadette')).toBeDefined();
-    expect(getAllByText(page.root, 'name')).toHaveLength(1);
+    const name = page.root.querySelectorAll('pos-predicate[uri="https://schema.org/name"]');
+    expect(name).toHaveLength(1);
   });
 });

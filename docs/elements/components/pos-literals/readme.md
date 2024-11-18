@@ -26,8 +26,9 @@
 
 - ion-item-group
 - ion-item-divider
-- ion-label
+- [pos-predicate](../pos-predicate)
 - ion-item
+- ion-label
 - ion-list
 - [pos-add-literal-value](../pos-add-literal-value)
 
@@ -36,10 +37,12 @@
 graph TD;
   pos-literals --> ion-item-group
   pos-literals --> ion-item-divider
-  pos-literals --> ion-label
+  pos-literals --> pos-predicate
   pos-literals --> ion-item
+  pos-literals --> ion-label
   pos-literals --> ion-list
   pos-literals --> pos-add-literal-value
+  pos-predicate --> ion-label
   ion-item --> ion-icon
   ion-item --> ion-ripple-effect
   ion-item --> ion-note
