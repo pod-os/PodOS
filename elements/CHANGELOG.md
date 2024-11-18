@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - [pos-rich-link](../docs/elements/components/pos-rich-link): Redesigned to reduce clutter and duplicate information
 - [pos-relations](../docs/elements/components/pos-relations): shorter labels for predicates
 - [pos-reverse-relations](../docs/elements/components/pos-reverse-relations): shorter labels for predicates
+- [pos-literals](../docs/elements/components/pos-literals): shorter labels for predicates
 
 ## 0.20.0
 

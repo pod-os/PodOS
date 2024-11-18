@@ -29,6 +29,7 @@ describe('pos-literals', () => {
       literals: () => [
         {
           predicate: 'http://schema.org/name',
+          label: 'name',
           values: ['Alice'],
         },
       ],
@@ -38,7 +39,9 @@ describe('pos-literals', () => {
     const el: HTMLElement = page.root.shadowRoot as unknown as HTMLElement;
 
     expect(getByText(el, 'Alice')).toBeDefined();
-    expect(getByText(el, 'http://schema.org/name')).toBeDefined();
+    const label = getByText(el, 'name');
+    expect(label).toBeDefined();
+    expect(label).toEqualAttribute('title', 'http://schema.org/name');
   });
 
   it('renders multiple predicates and values', async () => {
@@ -50,10 +53,12 @@ describe('pos-literals', () => {
       literals: () => [
         {
           predicate: 'http://schema.org/name',
+          label: 'name',
           values: ['Alice', 'Bernadette'],
         },
         {
           predicate: 'http://schema.org/description',
+          label: 'description',
           values: ['the description'],
         },
       ],
@@ -64,10 +69,10 @@ describe('pos-literals', () => {
 
     expect(getByText(el, 'Alice')).toBeDefined();
     expect(getByText(el, 'Bernadette')).toBeDefined();
-    expect(getByText(el, 'http://schema.org/name')).toBeDefined();
+    expect(getByText(el, 'name')).toBeDefined();
 
     expect(getByText(el, 'the description')).toBeDefined();
-    expect(getByText(el, 'http://schema.org/description')).toBeDefined();
+    expect(getByText(el, 'description')).toBeDefined();
   });
 
   it('adds newly added predicate to the list', async () => {
@@ -86,6 +91,7 @@ describe('pos-literals', () => {
     const input = page.root.querySelector('pos-add-literal-value');
     const literal: Literal = {
       predicate: 'https://schema.org/name',
+      label: 'name',
       values: ['Alice'],
     };
     fireEvent(
@@ -99,7 +105,7 @@ describe('pos-literals', () => {
 
     // then
     expect(getByText(page.root, 'Alice')).toBeDefined();
-    expect(getByText(page.root, 'https://schema.org/name')).toBeDefined();
+    expect(getByText(page.root, 'name')).toBeDefined();
   });
 
   it('adds newly added predicate value to the existing list without duplicating the predicate', async () => {
@@ -113,6 +119,7 @@ describe('pos-literals', () => {
       literals: () => [
         {
           predicate: 'https://schema.org/name',
+          label: 'name',
           values: ['Alice'],
         },
       ],
@@ -123,6 +130,7 @@ describe('pos-literals', () => {
     const input = page.root.querySelector('pos-add-literal-value');
     const literal: Literal = {
       predicate: 'https://schema.org/name',
+      label: 'name',
       values: ['Bernadette'],
     };
     fireEvent(
@@ -137,6 +145,6 @@ describe('pos-literals', () => {
     // then
     expect(getByText(page.root, 'Alice')).toBeDefined();
     expect(getByText(page.root, 'Bernadette')).toBeDefined();
-    expect(getAllByText(page.root, 'https://schema.org/name')).toHaveLength(1);
+    expect(getAllByText(page.root, 'name')).toHaveLength(1);
   });
 });

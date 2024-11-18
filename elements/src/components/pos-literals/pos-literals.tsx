@@ -30,6 +30,7 @@ export class PosLiterals implements ResourceAware {
         return it.predicate === existing.predicate
           ? {
               predicate: existing.predicate,
+              label: existing.label,
               values: [...existing.values, ...newLiteral.values],
             }
           : it;
@@ -41,7 +42,7 @@ export class PosLiterals implements ResourceAware {
     const items = this.data.map(it => (
       <ion-item-group>
         <ion-item-divider>
-          <ion-label>{it.predicate}</ion-label>
+          <ion-label title={it.predicate}>{it.label}</ion-label>
         </ion-item-divider>
         {it.values.map(value => (
           <ion-item>
