@@ -35,7 +35,8 @@ describe('pos-relations', () => {
 
     const el: HTMLElement = page.root.shadowRoot as unknown as HTMLElement;
 
-    expect(getByText(el, 'url')).toBeDefined();
+    const url = el.querySelector('pos-predicate[uri="http://schema.org/url"]');
+    expect(url).toEqualAttribute('label', 'url');
     const linkToAlice = page.root.shadowRoot.querySelector('pos-rich-link[uri="https://person.test/alice"]');
     expect(linkToAlice).not.toBeNull();
   });
@@ -63,13 +64,15 @@ describe('pos-relations', () => {
 
     const el: HTMLElement = page.root.shadowRoot as unknown as HTMLElement;
 
-    expect(getByText(el, 'url')).toBeDefined();
+    const url = el.querySelector('pos-predicate[uri="http://schema.org/url"]');
+    expect(url).toEqualAttribute('label', 'url');
     const linkToAlice = page.root.shadowRoot.querySelector('pos-rich-link[uri="https://person.test/alice"]');
     expect(linkToAlice).not.toBeNull();
     const linkToBernadette = page.root.shadowRoot.querySelector('pos-rich-link[uri="https://person.test/bernadette"]');
     expect(linkToBernadette).not.toBeNull();
 
-    expect(getByText(el, 'attachment')).toBeDefined();
+    const attachment = el.querySelector('pos-predicate[uri="https://www.w3.org/ns/activitystreams#attachment"]');
+    expect(attachment).toEqualAttribute('label', 'attachment');
     const linkToAttachment = page.root.shadowRoot.querySelector(
       'pos-rich-link[uri="https://resource.test/attachment"]',
     );
