@@ -16,7 +16,6 @@ p.content {
   flex-direction: column;
   align-items: baseline;
   gap: var(--size-1);
-  border-bottom: var(--size-px) solid var(--color-grey-200);
 
   .url {
     font-size: var(--scale-000);
