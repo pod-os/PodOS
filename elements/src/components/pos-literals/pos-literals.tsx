@@ -4,6 +4,7 @@ import { ResourceAware, subscribeResource } from '../events/ResourceAware';
 
 @Component({
   tag: 'pos-literals',
+  styleUrl: './pos-literals.css',
   shadow: true,
 })
 export class PosLiterals implements ResourceAware {
@@ -39,21 +40,22 @@ export class PosLiterals implements ResourceAware {
   }
 
   render() {
-    const items = this.data.map(it => (
-      <ion-item-group>
-        <ion-item-divider>
-          <pos-predicate uri={it.predicate} label={it.label} />
-        </ion-item-divider>
-        {it.values.map(value => (
-          <ion-item>
-            <ion-label class="ion-text-wrap">{value}</ion-label>{' '}
-          </ion-item>
-        ))}
-      </ion-item-group>
-    ));
     return (
       <Host>
-        {this.data.length > 0 ? <ion-list>{items}</ion-list> : null}
+        {this.data.length > 0 ? (
+          <dl>
+            {this.data.map(it => (
+              <div>
+                <dt>
+                  <pos-predicate uri={it.predicate} label={it.label} />
+                </dt>
+                {it.values.map(value => (
+                  <dd>{value}</dd>
+                ))}
+              </div>
+            ))}
+          </dl>
+        ) : null}
         <pos-add-literal-value onPod-os:added-literal-value={event => this.literalValueAdded(event.detail)} />
       </Host>
     );

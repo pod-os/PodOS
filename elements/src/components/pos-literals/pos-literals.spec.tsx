@@ -1,6 +1,6 @@
 import { newSpecPage } from '@stencil/core/testing';
 
-import { fireEvent, getAllByText, getByText } from '@testing-library/dom';
+import { fireEvent, getAllByText, getByRole, getByText } from '@testing-library/dom';
 
 import { PosLiterals } from './pos-literals';
 import { Literal } from '@pod-os/core';
@@ -38,8 +38,9 @@ describe('pos-literals', () => {
 
     const el: HTMLElement = page.root.shadowRoot as unknown as HTMLElement;
 
-    expect(getByText(el, 'Alice')).toBeDefined();
-    const predicate = el.querySelector('pos-predicate');
+    expect(getByRole(el, 'definition')).toEqualText('Alice');
+    const term = getByRole(el, 'term');
+    const predicate = term.querySelector('pos-predicate');
     expect(predicate).toEqualHtml('<pos-predicate uri="http://schema.org/name" label="name"/>');
   });
 
