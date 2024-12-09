@@ -5,6 +5,7 @@ import { ResourceAware, subscribeResource } from '../events/ResourceAware';
 @Component({
   tag: 'pos-reverse-relations',
   shadow: true,
+  styleUrl: 'pos-reverse-relations.css',
 })
 export class PosReverseRelations implements ResourceAware {
   @State() data: Relation[] = [];
@@ -21,15 +22,17 @@ export class PosReverseRelations implements ResourceAware {
 
   render() {
     const items = this.data.map(it => (
-      <ion-item-group>
-        <ion-item-divider>
+      <div class="predicate-values">
+        <dt>
           <pos-predicate uri={it.predicate} label={`is ${it.label} of`} />
-        </ion-item-divider>
+        </dt>
         {it.uris.map(uri => (
-          <pos-rich-link uri={uri} />
+          <dd>
+            <pos-rich-link uri={uri} />
+          </dd>
         ))}
-      </ion-item-group>
+      </div>
     ));
-    return this.data.length > 0 ? <ion-list>{items}</ion-list> : null;
+    return this.data.length > 0 ? <dl>{items}</dl> : null;
   }
 }
