@@ -20,20 +20,15 @@
 
 ### Depends on
 
-- ion-item-group
-- ion-item-divider
-- ion-label
+- [pos-predicate](../pos-predicate)
 - [pos-rich-link](../pos-rich-link)
-- ion-list
 
 ### Graph
 ```mermaid
 graph TD;
-  pos-relations --> ion-item-group
-  pos-relations --> ion-item-divider
-  pos-relations --> ion-label
+  pos-relations --> pos-predicate
   pos-relations --> pos-rich-link
-  pos-relations --> ion-list
+  pos-predicate --> ion-icon
   pos-rich-link --> pos-resource
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description

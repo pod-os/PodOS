@@ -22,13 +22,11 @@
 ### Depends on
 
 - [pos-rich-link](../pos-rich-link)
-- ion-list
 
 ### Graph
 ```mermaid
 graph TD;
   pos-subjects --> pos-rich-link
-  pos-subjects --> ion-list
   pos-rich-link --> pos-resource
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description

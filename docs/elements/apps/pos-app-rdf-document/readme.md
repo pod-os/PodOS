@@ -34,7 +34,6 @@ graph TD;
   pos-app-rdf-document --> pos-type-badges
   pos-app-rdf-document --> pos-literals
   pos-subjects --> pos-rich-link
-  pos-subjects --> ion-list
   pos-rich-link --> pos-resource
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
@@ -45,17 +44,9 @@ graph TD;
   ion-card --> ion-ripple-effect
   pos-type-badges --> ion-badge
   pos-type-badges --> ion-icon
-  pos-literals --> ion-item-group
-  pos-literals --> ion-item-divider
   pos-literals --> pos-predicate
-  pos-literals --> ion-item
-  pos-literals --> ion-label
-  pos-literals --> ion-list
   pos-literals --> pos-add-literal-value
-  pos-predicate --> ion-label
-  ion-item --> ion-icon
-  ion-item --> ion-ripple-effect
-  ion-item --> ion-note
+  pos-predicate --> ion-icon
   pos-add-literal-value --> ion-icon
   pos-add-literal-value --> pos-select-term
   pos-add-literal-value --> ion-input
