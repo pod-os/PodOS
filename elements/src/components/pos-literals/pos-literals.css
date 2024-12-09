@@ -1,4 +1,37 @@
+:host {
+  --background-base-color: var(--color-grey-200);
+  --background-color-even: hsl(from var(--background-base-color) h s calc(l + 7));
+  --background-color-odd: hsl(from var(--background-base-color) h s calc(l + 10));
+  --border-color: var(--background-base-color);
+}
+
 dd {
   padding: 0;
   margin: 0;
+}
+
+dl {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-1);
+}
+
+dt {
+  margin-bottom: var(--size-1);
+}
+
+.predicate-values:nth-child(odd) {
+  background-color: var(--background-color-odd);
+}
+
+.predicate-values:nth-child(even) {
+  background-color: var(--background-color-even);
+}
+
+.predicate-values {
+  display: flex;
+  flex-direction: column;
+  border: var(--size-px) solid var(--border-color);
+  padding: var(--size-2);
+  gap: var(--size-1);
 }
