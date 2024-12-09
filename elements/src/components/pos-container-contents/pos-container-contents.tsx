@@ -31,7 +31,6 @@ export class PosContainerContents implements ResourceAware {
         <pos-container-item role="listitem">
           <ion-label>
             <h3>{it.name}</h3>
-            <p>{it.uri}</p>
           </ion-label>
         </pos-container-item>
       </pos-resource>

@@ -41,9 +41,6 @@ describe('pos-container-contents', () => {
         <pos-container-item role="listitem">
           <ion-label>
             <h3>file</h3>
-            <p>
-              https://pod.test/container/file
-            </p>
           </ion-label>
         </pos-container-item>
       </pos-resource>
@@ -107,9 +104,6 @@ describe('pos-container-contents', () => {
                     <pos-container-item role="listitem">
                       <ion-label>
                         <h3>a-file-on-top-of-the-list</h3>
-                        <p>
-                          https://pod.test/container/a-file-on-top-of-the-list
-                        </p>
                       </ion-label>
                     </pos-container-item>
                   </pos-resource>
@@ -117,9 +111,6 @@ describe('pos-container-contents', () => {
                         <pos-container-item role="listitem">
                             <ion-label>
                                 <h3>file</h3>
-                                <p>
-                                    https://pod.test/container/file
-                                </p>
                             </ion-label>
                         </pos-container-item>
                     </pos-resource>
@@ -127,9 +118,6 @@ describe('pos-container-contents', () => {
                         <pos-container-item role="listitem">
                             <ion-label>
                                 <h3>subdir</h3>
-                                <p>
-                                    https://pod.test/container/subdir/
-                                </p>
                             </ion-label>
                         </pos-container-item>
                     </pos-resource>
