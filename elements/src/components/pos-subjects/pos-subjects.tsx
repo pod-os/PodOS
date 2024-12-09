@@ -5,6 +5,7 @@ import { ResourceAware, subscribeResource } from '../events/ResourceAware';
 @Component({
   tag: 'pos-subjects',
   shadow: true,
+  styleUrl: 'pos-subjects.css',
 })
 export class PosSubjects implements ResourceAware {
   @State() data: Subject[] = [];
@@ -22,7 +23,11 @@ export class PosSubjects implements ResourceAware {
   };
 
   render() {
-    const items = this.data.map(it => <pos-rich-link uri={it.uri} />);
-    return this.data.length > 0 ? <ion-list>{items}</ion-list> : null;
+    const items = this.data.map(it => (
+      <li>
+        <pos-rich-link uri={it.uri} />
+      </li>
+    ));
+    return this.data.length > 0 ? <ul>{items}</ul> : null;
   }
 }

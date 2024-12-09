@@ -1,5 +1,5 @@
 :host {
-  --background-color: white;
+  --background-color: inherit;
   --label-color: var(--color-grey-900);
   --description-color: var(--color-grey-900);
   --uri-color: var(--color-grey-600);
