@@ -1,4 +1,4 @@
-import { PodOS, Thing } from '@pod-os/core';
+import { Literal, PodOS, Thing, labelFromUri } from '@pod-os/core';
 import { Component, Host, h, State, Event, Watch, EventEmitter } from '@stencil/core';
 import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../events/PodOsAware';
 import { ResourceAware, ResourceEventEmitter, subscribeResource } from '../events/ResourceAware';
@@ -50,8 +50,9 @@ export class PosAddLiteralValue implements ResourceAware, PodOsAware {
   async save() {
     try {
       await this.os.addPropertyValue(this.resource, this.selectedTermUri, this.currentValue);
-      const literal = {
+      const literal: Literal = {
         predicate: this.selectedTermUri,
+        label: labelFromUri(this.selectedTermUri),
         values: [this.currentValue],
       };
       this.addedLiteralValue.emit(literal);

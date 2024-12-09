@@ -1,3 +1,7 @@
+jest.mock('@pod-os/core', () => ({
+  labelFromUri: uri => `fake label for ${uri}`,
+}));
+
 import { Literal } from '@pod-os/core';
 import { newSpecPage } from '@stencil/core/testing';
 import { when } from 'jest-when';
@@ -82,7 +86,10 @@ describe('pos-add-literal-value', () => {
 
     // when the user selects a term
     const termSelect = page.root.querySelector('pos-select-term');
-    fireEvent(termSelect, new CustomEvent('pod-os:term-selected', { detail: { uri: 'https://schema.org/description' } }));
+    fireEvent(
+      termSelect,
+      new CustomEvent('pod-os:term-selected', { detail: { uri: 'https://schema.org/description' } }),
+    );
 
     // then the input is focussed
     expect(input.setFocus).toHaveBeenCalled();
@@ -115,7 +122,12 @@ describe('pos-add-literal-value', () => {
 
     // when the user selects a term
     const termSelect = page.root.querySelector('pos-select-term');
-    fireEvent(termSelect, new CustomEvent('pod-os:term-selected', { detail: { uri: 'https://schema.org/description' } }));
+    fireEvent(
+      termSelect,
+      new CustomEvent('pod-os:term-selected', {
+        detail: { uri: 'https://schema.org/description' },
+      }),
+    );
     expect(page.rootInstance.selectedTermUri).toBe('https://schema.org/description');
 
     // when the user types something into the value input
@@ -168,6 +180,7 @@ describe('pos-add-literal-value', () => {
     // then a pod-os:added-literal-value event with the added literal is received in the listener
     const literal: Literal = {
       predicate: 'https://schema.org/name',
+      label: 'fake label for https://schema.org/name',
       values: ['Test value'],
     };
     expect(eventListener).toHaveBeenCalledWith(
