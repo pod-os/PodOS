@@ -41,8 +41,10 @@ pos-label {
 
 pos-description {
   display: -webkit-box;
+  -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   text-overflow: ellipsis;
+  overflow: hidden;
   font-weight: var(--weight-light);
   color: var(--description-color);
   font-size: var(--scale-fluid-0);
