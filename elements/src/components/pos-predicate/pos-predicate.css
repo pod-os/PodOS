@@ -1,23 +1,24 @@
 :host {
   --text-color: var(--pos-primary-color);
+  font-family: var(--font-sans);
 }
 
 button {
+  line-height: var(--scale-0);
   margin: 0;
   padding: 0;
   display: flex;
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--text-color);
-  font-size: var(--scale-0);
-  font-weight: var(--weight-light);
 }
 
+button,
 a {
   color: var(--text-color);
-  font-size: var(--scale-0);
   font-weight: var(--weight-light);
+  line-height: var(--scale-0);
+  font-size: var(--scale-0);
 }
 
 .container {
