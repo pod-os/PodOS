@@ -14,9 +14,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - [pos-label](../docs/elements/components/pos-label): shorter fallback labels 
 - [pos-rich-link](../docs/elements/components/pos-rich-link): Redesigned to reduce clutter and duplicate information
-- [pos-relations](../docs/elements/components/pos-relations): shorter labels for predicates
-- [pos-reverse-relations](../docs/elements/components/pos-reverse-relations): shorter labels for predicates
-- [pos-literals](../docs/elements/components/pos-literals): shorter labels for predicates
+- [pos-relations](../docs/elements/components/pos-relations): shorter labels for predicates & redesign
+- [pos-reverse-relations](../docs/elements/components/pos-reverse-relations): shorter labels for predicates & redesign
+- [pos-literals](../docs/elements/components/pos-literals): shorter labels for predicates & redesign
+- [pos-container-contents](../docs/elements/components/pos-container-contents): does not show URI anymore
+- [pos-subjects](../docs/elements/components/pos-subjects): redesign
 
 ## 0.20.0
 
