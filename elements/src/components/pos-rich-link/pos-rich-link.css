@@ -1,6 +1,5 @@
 :host {
   --background-color: white;
-  --hover-color: var(--color-grey-200);
   --label-color: var(--color-grey-900);
   --description-color: var(--color-grey-900);
   --uri-color: var(--color-grey-600);
@@ -11,7 +10,6 @@ p.content {
   background-color: var(--background-color);
   line-height: var(--line-xs);
   margin: 0;
-  padding: var(--size-2) var(--size-2) var(--size-2) var(--size-4);
   display: flex;
   flex-direction: column;
   align-items: baseline;
