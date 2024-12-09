@@ -17,9 +17,26 @@
   box-shadow: var(--shadow-xl);
 }
 
+.suggestions {
+  li {
+    padding: 1rem;
+    background-color: white;
+    pos-rich-link {
+      --background-color: inherit;
+    }
+    &.selected {
+      background-color: var(--color-blue);
+      &:hover {
+        background-color: var(--color-blue-700);
+      }
+    }
+    &:hover {
+      background-color: var(--color-grey-200);
+    }
+  }
+}
+
 .suggestions li.selected pos-rich-link {
-  --background-color: var(--color-blue);
-  --hover-color: var(--color-blue-700);
   --label-color: white;
   --description-color: var(--color-grey-200);
   --uri-color: var(--color-grey-200);
