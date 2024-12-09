@@ -10,6 +10,8 @@
     "test:elements": "playwright test --config playwright-elements.config.ts",
     "test:debug": "playwright test --config playwright-app.config.ts --debug --project=chromium",
     "test:elements:debug": "playwright test --config playwright-elements.config.ts --debug --project=chromium",
+    "test:ui": "npm run test -- --ui",
+    "test:elements:ui": "npm run test:elements -- --ui",
     "build:latest": "POD_OS_ELEMENTS_VERSION=latest make pos-app-browser"
   },
   "keywords": [],

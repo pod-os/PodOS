@@ -65,6 +65,13 @@ It is also possible to run the tests against the local dev server of [PodOS elem
 npm run test:elements
 ```
 
+To start the test with the Playwright UI run one of those:
+
+```shell
+npm run test:ui
+npm run test:elements:ui
+```
+
 #### Test data
 
 The tests fire up a Community Solid Server to provide test data, which can be
