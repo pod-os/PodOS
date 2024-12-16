@@ -26,17 +26,21 @@ test("show contents of an LDP container", async ({ page }) => {
   await expect(item3.getByRole("heading")).toHaveText("resource");
   await expect(item4.getByRole("heading")).toHaveText("sub-container");
 
-  // and for each item in the list, the full URL is shown
-  await expect(item1.getByRole("paragraph")).toHaveText(
+  // and each item links to the full URL
+  await expect(item1.getByRole("link")).toHaveAttribute(
+    "href",
     "http://localhost:4000/alice/container/another-sub-container/",
   );
-  await expect(item2.getByRole("paragraph")).toHaveText(
+  await expect(item2.getByRole("link")).toHaveAttribute(
+    "href",
     "http://localhost:4000/alice/container/readme.md",
   );
-  await expect(item3.getByRole("paragraph")).toHaveText(
+  await expect(item3.getByRole("link")).toHaveAttribute(
+    "href",
     "http://localhost:4000/alice/container/resource",
   );
-  await expect(item4.getByRole("paragraph")).toHaveText(
+  await expect(item4.getByRole("link")).toHaveAttribute(
+    "href",
     "http://localhost:4000/alice/container/sub-container/",
   );
 
