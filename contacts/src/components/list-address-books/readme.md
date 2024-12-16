@@ -16,6 +16,7 @@
 
 | Event           | Description | Type               |
 | --------------- | ----------- | ------------------ |
+| `pod-os:link`   |             | `CustomEvent<any>` |
 | `pod-os:module` |             | `CustomEvent<any>` |
 
 
@@ -27,15 +28,16 @@
 
 ### Depends on
 
-- pos-rich-link
+- pos-resource
+- ion-icon
+- pos-label
 
 ### Graph
 ```mermaid
 graph TD;
-  pos-contacts-list-address-books --> pos-rich-link
-  pos-rich-link --> pos-resource
-  pos-rich-link --> pos-label
-  pos-rich-link --> pos-description
+  pos-contacts-list-address-books --> pos-resource
+  pos-contacts-list-address-books --> ion-icon
+  pos-contacts-list-address-books --> pos-label
   pos-resource --> ion-progress-bar
   pos-resource --> ion-card
   pos-resource --> ion-card-header

@@ -43,13 +43,11 @@ graph TD;
   pos-contacts-open-address-book --> pos-contacts-list-address-books
   pos-contacts-open-address-book --> pos-login
   pos-contacts-open-address-book --> ion-icon
-  pos-contacts-list-address-books --> pos-rich-link
-  pos-rich-link --> pos-resource
-  pos-rich-link --> pos-label
-  pos-rich-link --> pos-description
+  pos-contacts-list-address-books --> pos-resource
+  pos-contacts-list-address-books --> ion-icon
+  pos-contacts-list-address-books --> pos-label
   pos-contacts-address-book-page --> pos-login
   pos-contacts-address-book-page --> ion-icon
-  pos-contacts-address-book-page --> pos-resource
   pos-contacts-address-book-page --> pos-contacts-loading-spinner
   pos-contacts-address-book-page --> pos-contacts-create-new-contact
   pos-contacts-address-book-page --> pos-contacts-group-list
