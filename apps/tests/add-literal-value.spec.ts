@@ -33,9 +33,11 @@ test("can add a literal value", async ({ page }) => {
   await page.keyboard.press("Enter");
 
   // then the new literal & value show up in the list of literals
-  const newItem = page
-    .locator("pos-literals")
-    .getByRole("group")
-    .filter({ hasText: "https://property.example" });
-  await expect(newItem).toContainText("my literal value");
+
+  const newProperty = page
+    .getByRole("term")
+    .filter({ hasText: "property.example" })
+    .locator("..");
+  const newValue = newProperty.getByRole("definition");
+  await expect(newValue).toContainText("my literal value");
 });
