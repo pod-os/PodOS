@@ -5,6 +5,7 @@
 
 button {
   line-height: var(--scale-0);
+  font-family: inherit;
   margin: 0;
   padding: 0;
   display: flex;
@@ -19,6 +20,7 @@ a {
   font-weight: var(--weight-light);
   line-height: var(--scale-0);
   font-size: var(--scale-0);
+  font-family: inherit;
 }
 
 .container {
