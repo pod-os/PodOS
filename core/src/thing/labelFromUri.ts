@@ -1,3 +1,7 @@
+/**
+ * Generates a short human-readable label for a given URI
+ * @param uri
+ */
 export function labelFromUri(uri: string) {
   const url = new URL(uri);
   if (isTooGeneric(url.hash)) {
