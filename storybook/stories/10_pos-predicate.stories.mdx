@@ -1,0 +1,26 @@
+import {html} from "lit-html";
+
+import {
+  Canvas,
+  Meta,
+  Story
+} from '@storybook/addon-docs/blocks';
+
+<Meta
+  title="Basics"
+  args={{ uri: "https://schema.org/name", label: "name" }}
+/>
+
+## pos-predicate
+
+<Canvas
+  withSource="open">
+  <Story
+    name="pos-predicate"
+  >
+    {({uri, label}) => html`
+<pos-predicate uri=${uri} label="${label}">
+</pos-resource>
+    `}
+  </Story>
+</Canvas>
