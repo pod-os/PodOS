@@ -11,6 +11,11 @@ and this project adheres to
 ### Changed
 
 - `Thing.label()`: Shorter fallbacks, instead of full URI, if no label is known
+- added a predicate `label` to `Thing.literals()`, `Thing.relations()` and `Thing.reverseRelations()`
+
+### Added
+
+- `labelFromUri(uri: string)`: generate a short human-readable label from a URI
 
 ## 0.12.0
 

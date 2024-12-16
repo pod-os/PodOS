@@ -19,6 +19,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - [pos-literals](../docs/elements/components/pos-literals): shorter labels for predicates & redesign
 - [pos-container-contents](../docs/elements/components/pos-container-contents): does not show URI anymore
 - [pos-subjects](../docs/elements/components/pos-subjects): redesign
+- [pos-navigation-abr](../docs/elements/components/pos-navigation-bar): Style changes for search results
 
 ## 0.20.0
 
