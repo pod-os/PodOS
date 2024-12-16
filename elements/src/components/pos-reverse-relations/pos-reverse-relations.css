@@ -34,6 +34,11 @@ dt {
   border: var(--size-px) solid var(--border-color);
   padding: var(--size-2);
   gap: var(--size-1);
+  .values {
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-3);
+  }
 }
 
 pos-rich-link {

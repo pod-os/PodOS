@@ -49,9 +49,11 @@ export class PosLiterals implements ResourceAware {
                 <dt>
                   <pos-predicate uri={it.predicate} label={it.label} />
                 </dt>
-                {it.values.map(value => (
-                  <dd>{value}</dd>
-                ))}
+                <div class="values">
+                  {it.values.map(value => (
+                    <dd>{value}</dd>
+                  ))}
+                </div>
               </div>
             ))}
           </dl>

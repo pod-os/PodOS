@@ -27,11 +27,13 @@ export class PosRelations implements ResourceAware {
         <dt>
           <pos-predicate uri={it.predicate} label={it.label} />
         </dt>
-        {it.uris.map(uri => (
-          <dd>
-            <pos-rich-link uri={uri} />
-          </dd>
-        ))}
+        <div class="values">
+          {it.uris.map(uri => (
+            <dd>
+              <pos-rich-link uri={uri} />
+            </dd>
+          ))}
+        </div>
       </div>
     ));
     return this.data.length > 0 ? <dl>{items}</dl> : null;
