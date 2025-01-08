@@ -7,7 +7,7 @@
    * @prop --max-height: Maximum height of the image
    * @prop --object-fit: CSS object-fit of the image
    */
-  --object-fit: cover;
+  display: flex;
 }
 
 img,

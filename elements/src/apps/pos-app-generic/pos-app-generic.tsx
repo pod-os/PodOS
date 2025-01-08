@@ -1,36 +1,36 @@
-import { Component, h } from '@stencil/core';
+import { Component, h, Host } from '@stencil/core';
 
 @Component({
   tag: 'pos-app-generic',
+  styleUrls: ['./pos-app-generic.css'],
+  shadow: true,
 })
 export class PosAppGeneric {
   render() {
     return (
-      <ion-grid>
-        <ion-row>
-          <ion-col size="12" size-sm>
-            <ion-card>
-              <ion-card-header>
-                <pos-type-badges />
-                <pos-picture />
-                <ion-card-title>
-                  <pos-label />
-                </ion-card-title>
-              </ion-card-header>
-              <ion-card-content>
-                <pos-description />
-              </ion-card-content>
-            </ion-card>
-          </ion-col>
-          <ion-col size="12" size-sm>
-            <pos-literals />
-          </ion-col>
-          <ion-col size="12" size-sm>
-            <pos-relations />
-            <pos-reverse-relations />
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+      <Host>
+        <section>
+          <div class="card">
+            <header>
+              <pos-picture />
+              <h1>
+                <pos-label />
+              </h1>
+              <pos-type-badges />
+            </header>
+            <main>
+              <pos-description />
+            </main>
+          </div>
+        </section>
+        <section>
+          <pos-literals />
+        </section>
+        <section>
+          <pos-relations />
+          <pos-reverse-relations />
+        </section>
+      </Host>
     );
   }
 }

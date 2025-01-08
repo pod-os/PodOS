@@ -3,8 +3,10 @@
    * @prop --width: Width of the picture
    * @prop --height: Height of the picture
    * @prop --border-radius: Border radius of the picture
+   * @prop --object-fit: CSS object-fit of the picture
    */
   --width: 300px;
   --height: 300px;
   --border-radius: var(--border-radius, 0);
+  --object-fit: var(--object-fit, cover);
 }

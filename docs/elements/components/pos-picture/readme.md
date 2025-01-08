@@ -14,11 +14,12 @@
 
 ## CSS Custom Properties
 
-| Name              | Description                  |
-| ----------------- | ---------------------------- |
-| `--border-radius` | Border radius of the picture |
-| `--height`        | Height of the picture        |
-| `--width`         | Width of the picture         |
+| Name              | Description                   |
+| ----------------- | ----------------------------- |
+| `--border-radius` | Border radius of the picture  |
+| `--height`        | Height of the picture         |
+| `--object-fit`    | CSS object-fit of the picture |
+| `--width`         | Width of the picture          |
 
 
 ## Dependencies

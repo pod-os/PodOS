@@ -9,16 +9,9 @@
 
 ### Depends on
 
-- ion-grid
-- ion-row
-- ion-col
-- ion-card
-- ion-card-header
-- [pos-type-badges](../../components/pos-type-badges)
 - [pos-picture](../../components/pos-picture)
-- ion-card-title
 - [pos-label](../../components/pos-label)
-- ion-card-content
+- [pos-type-badges](../../components/pos-type-badges)
 - [pos-description](../../components/pos-description)
 - [pos-literals](../../components/pos-literals)
 - [pos-relations](../../components/pos-relations)
@@ -27,26 +20,18 @@
 ### Graph
 ```mermaid
 graph TD;
-  pos-app-generic --> ion-grid
-  pos-app-generic --> ion-row
-  pos-app-generic --> ion-col
-  pos-app-generic --> ion-card
-  pos-app-generic --> ion-card-header
-  pos-app-generic --> pos-type-badges
   pos-app-generic --> pos-picture
-  pos-app-generic --> ion-card-title
   pos-app-generic --> pos-label
-  pos-app-generic --> ion-card-content
+  pos-app-generic --> pos-type-badges
   pos-app-generic --> pos-description
   pos-app-generic --> pos-literals
   pos-app-generic --> pos-relations
   pos-app-generic --> pos-reverse-relations
-  ion-card --> ion-ripple-effect
-  pos-type-badges --> ion-badge
-  pos-type-badges --> ion-icon
   pos-picture --> pos-image
   pos-image --> ion-skeleton-text
   pos-image --> ion-icon
+  pos-type-badges --> ion-badge
+  pos-type-badges --> ion-icon
   pos-literals --> pos-predicate
   pos-literals --> pos-add-literal-value
   pos-predicate --> ion-icon
@@ -63,6 +48,7 @@ graph TD;
   pos-resource --> ion-card
   pos-resource --> ion-card-header
   pos-resource --> ion-card-content
+  ion-card --> ion-ripple-effect
   pos-reverse-relations --> pos-predicate
   pos-reverse-relations --> pos-rich-link
   style pos-app-generic fill:#f9f,stroke:#333,stroke-width:4px

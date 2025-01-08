@@ -1,7 +1,6 @@
 .types {
   display: flex;
-  gap: 0.25rem;
-  margin: 0.5rem 0;
+  gap: var(--size-1);
 }
 
 .expanded {

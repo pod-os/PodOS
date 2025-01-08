@@ -18,6 +18,8 @@ body {
   --pos-primary-color: var(--color-blue-500);
   --pos-disabled-color: var(--color-grey-100);
   --pos-background-color: var(--color-grey-50);
+  --pos-border-color: var(--color-grey-200);
   --pos-input-outline: var(--size-px) solid var(--color-grey-700);
   --pos-input-focus-outline: var(--size-px) solid var(--pos-primary-color);
+  --pos-border-solid: var(--size-px) solid var(--pos-border-color);
 }
