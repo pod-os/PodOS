@@ -43,7 +43,11 @@
     flex-direction: row;
     flex-wrap: wrap;
 
-    section {
+    section:first-of-type {
+      flex: 0 0 25%;
+    }
+
+    section:not(:first-of-type) {
       flex: 1;
     }
   }
