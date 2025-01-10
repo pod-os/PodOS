@@ -7,7 +7,7 @@
 }
 
 .card {
-  border: var(--pos-border-solid);
+  outline: var(--pos-border-solid);
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-md);
 
@@ -20,6 +20,8 @@
       --width: 100%;
       --height: auto;
       --max-height: 300px;
+      border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+      --border-radius: var(--radius-sm) var(--radius-sm) 0 0;
     }
 
     h1,
