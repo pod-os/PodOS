@@ -4,13 +4,24 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+## Added
+
+- [pos-image](../docs/elements/components/pos-image): new property `blurred-background`
+- [pos-picture](../docs/elements/components/pos-image): new property `blurred-background`
+
+## Changed
+
+- [pos-app-generic](../docs/elements/apps/pos-app-generic): Redesign
+
 ## 0.21.0
 
 ### Added
 
 - [pos-predicate](../docs/elements/components/pos-predicate): a component to render a predicate in a human-centric way
 
-### Changes
+### Changed
 
 - [pos-label](../docs/elements/components/pos-label): shorter fallback labels 
 - [pos-rich-link](../docs/elements/components/pos-rich-link): Redesigned to reduce clutter and duplicate information
