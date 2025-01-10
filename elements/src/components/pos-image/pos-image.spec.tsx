@@ -79,6 +79,26 @@ describe('pos-image', () => {
   `);
   });
 
+  it('uses the same image for a blurred background', async () => {
+    const file = mockBinaryFile(pngBlob);
+    const page = await newSpecPage({
+      components: [PosImage],
+      html: `<pos-image src="https://pod.test/image.png" alt="image" blurred-background/>`,
+    });
+    const os = mockPodOS();
+    when(os.fetchFile).calledWith('https://pod.test/image.png').mockResolvedValue(file);
+    await page.rootInstance.setOs(os);
+    await page.waitForChanges();
+    expect(URL.createObjectURL).toHaveBeenCalledWith(pngBlob);
+    expect(page.root).toEqualHtml(`
+      <pos-image src="https://pod.test/image.png" alt="image" blurred-background style="background-image: url('blob:fake-png-data');">
+        <mock:shadow-root>
+          <img src="blob:fake-png-data" alt="image">
+        </mock:shadow-root>
+      </pos-image>
+  `);
+  });
+
   it('emits event after loading image', async () => {
     const onResourceLoaded = jest.fn();
     const file = mockBinaryFile(pngBlob);

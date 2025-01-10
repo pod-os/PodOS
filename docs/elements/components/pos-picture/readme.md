@@ -5,6 +5,13 @@
 <!-- Auto Generated Below -->
 
 
+## Properties
+
+| Property            | Attribute            | Description                                                                                                      | Type      | Default |
+| ------------------- | -------------------- | ---------------------------------------------------------------------------------------------------------------- | --------- | ------- |
+| `blurredBackground` | `blurred-background` | Use a blurred version of the image as its own background, if the image is scaled down to fit into the container. | `boolean` | `false` |
+
+
 ## Events
 
 | Event             | Description | Type               |

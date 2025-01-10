@@ -38,6 +38,18 @@ loaded image:
   </Story>
 </Canvas>
 
+You can also apply a blurred background, that shows up if the image has to scale down to fit into the container. Usually
+this would leave empty space at the sides of the image. Setting `blurred-background` will instead create a blur effect
+using the image itself for the effect.
+
+<Canvas withSource="open">
+  <Story name="Blurred background" args={{ width: '100%', height: '300px', objectFit: 'contain' }}>
+    {({ url, width, height, borderRadius, objectFit}) => html`
+      <pos-image blurred-background style="--width: ${width}; --height: ${height}; --border-radius: ${borderRadius}; --object-fit: ${objectFit};" src=${url} />
+    `}
+  </Story>
+</Canvas>
+
 If the file is not found it will display a box with an error message:
 
 <Canvas withSource="open">

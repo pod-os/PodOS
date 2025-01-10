@@ -1,4 +1,4 @@
-import { Component, Event, EventEmitter, State, h } from '@stencil/core';
+import { Component, Event, EventEmitter, State, h, Prop } from '@stencil/core';
 import { Thing } from '@pod-os/core';
 import { ResourceAware, subscribeResource } from '../events/ResourceAware';
 
@@ -8,6 +8,11 @@ import { ResourceAware, subscribeResource } from '../events/ResourceAware';
   styleUrl: 'pos-picture.css',
 })
 export class PosPicture implements ResourceAware {
+  /**
+   * Use a blurred version of the image as its own background, if the image is scaled down to fit into the container.
+   */
+  @Prop() blurredBackground: boolean = false;
+
   @State() resource: Thing;
 
   @Event({ eventName: 'pod-os:resource' }) subscribeResource: EventEmitter;
@@ -23,6 +28,6 @@ export class PosPicture implements ResourceAware {
   render() {
     const pic = this.resource ? this.resource.picture() : null;
     if (!pic) return null;
-    return <pos-image src={pic.url} alt={this.resource.label()}></pos-image>;
+    return <pos-image blurredBackground={this.blurredBackground} src={pic.url} alt={this.resource.label()}></pos-image>;
   }
 }

@@ -63,6 +63,10 @@ export namespace Components {
      */
     interface PosImage {
         "alt": string;
+        /**
+          * Use a blurred version of the image as its own background, if the image is scaled down to fit into the container.
+         */
+        "blurredBackground": boolean;
         "src": string;
     }
     interface PosInternalRouter {
@@ -83,6 +87,10 @@ export namespace Components {
         "referenceUri": string;
     }
     interface PosPicture {
+        /**
+          * Use a blurred version of the image as its own background, if the image is scaled down to fit into the container.
+         */
+        "blurredBackground": boolean;
     }
     interface PosPredicate {
         "label": string;
@@ -893,6 +901,10 @@ declare namespace LocalJSX {
      */
     interface PosImage {
         "alt"?: string;
+        /**
+          * Use a blurred version of the image as its own background, if the image is scaled down to fit into the container.
+         */
+        "blurredBackground"?: boolean;
         "onPod-os:init"?: (event: PosImageCustomEvent<any>) => void;
         /**
           * Indicates that the resource given in `src` property has been loaded.
@@ -930,6 +942,10 @@ declare namespace LocalJSX {
         "referenceUri": string;
     }
     interface PosPicture {
+        /**
+          * Use a blurred version of the image as its own background, if the image is scaled down to fit into the container.
+         */
+        "blurredBackground"?: boolean;
         "onPod-os:resource"?: (event: PosPictureCustomEvent<any>) => void;
     }
     interface PosPredicate {

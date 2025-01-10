@@ -8,6 +8,9 @@
    * @prop --object-fit: CSS object-fit of the image
    */
   display: flex;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 img,
@@ -19,6 +22,10 @@ div.error {
   max-width: var(--max-width);
   max-height: var(--max-height);
   object-fit: var(--object-fit);
+}
+
+img {
+  backdrop-filter: var(--blur-xl);
 }
 
 .error {

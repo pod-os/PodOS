@@ -13,10 +13,11 @@ Renders a normal link if even this fails.
 
 ## Properties
 
-| Property | Attribute | Description | Type     | Default     |
-| -------- | --------- | ----------- | -------- | ----------- |
-| `alt`    | `alt`     |             | `string` | `undefined` |
-| `src`    | `src`     |             | `string` | `undefined` |
+| Property            | Attribute            | Description                                                                                                      | Type      | Default     |
+| ------------------- | -------------------- | ---------------------------------------------------------------------------------------------------------------- | --------- | ----------- |
+| `alt`               | `alt`                |                                                                                                                  | `string`  | `undefined` |
+| `blurredBackground` | `blurred-background` | Use a blurred version of the image as its own background, if the image is scaled down to fit into the container. | `boolean` | `false`     |
+| `src`               | `src`                |                                                                                                                  | `string`  | `undefined` |
 
 
 ## Events

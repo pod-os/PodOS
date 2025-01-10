@@ -1,6 +1,6 @@
 import { BrokenFile as BrokenFileData, PodOS } from '@pod-os/core';
 import { BrokenFile } from '../broken-file/BrokenFile';
-import { Component, Event, EventEmitter, h, Prop, State, Watch } from '@stencil/core';
+import { Component, Event, EventEmitter, h, Host, Prop, State, Watch } from '@stencil/core';
 import session from '../../store/session';
 
 /**
@@ -17,6 +17,11 @@ export class PosImage {
   @Prop() src: string;
 
   @Prop() alt: string;
+
+  /**
+   * Use a blurred version of the image as its own background, if the image is scaled down to fit into the container.
+   */
+  @Prop() blurredBackground: boolean = false;
 
   @State() os: PodOS;
 
@@ -99,6 +104,14 @@ export class PosImage {
       );
     }
 
-    return <img src={this.dataUri} alt={this.alt} />;
+    return (
+      <Host
+        style={{
+          backgroundImage: this.blurredBackground ? `url('${this.dataUri}')` : null,
+        }}
+      >
+        <img src={this.dataUri} alt={this.alt} />
+      </Host>
+    );
   }
 }

@@ -12,7 +12,7 @@ export class PosAppGeneric {
         <section>
           <div class="card">
             <header>
-              <pos-picture />
+              <pos-picture blurredBackground={true} />
               <h1>
                 <pos-label />
               </h1>
