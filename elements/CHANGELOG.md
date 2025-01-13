@@ -6,9 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
-### Changed
+### Fixed
 
 - [pos-container-contents](../docs/elements/components/pos-container-contents): Style fixes
+- [pos-rich-link](../docs/elements/components/pos-rich-link): Larger font sizes on mobile
+- some more minor style fixes
 
 ## 0.22.0
 

@@ -16,7 +16,7 @@ p.content {
   gap: var(--size-1);
 
   .url {
-    font-size: var(--scale-000);
+    font-size: var(--scale-fluid-1);
     color: var(--color-grey-500);
   }
 }
@@ -33,7 +33,7 @@ a {
 
 pos-label {
   color: var(--label-color);
-  font-size: var(--scale-fluid-0);
+  font-size: var(--scale-fluid-2);
   margin-bottom: var(--size-1);
 }
 
@@ -45,5 +45,20 @@ pos-description {
   overflow: hidden;
   font-weight: var(--weight-light);
   color: var(--description-color);
-  font-size: var(--scale-fluid-0);
+  font-size: var(--scale-fluid-2);
+}
+
+@media (min-width: 640px) {
+  pos-label {
+    font-size: var(--scale-fluid-0);
+  }
+  pos-description {
+    font-size: var(--scale-fluid-1);
+  }
+
+  p.content {
+    .url {
+      font-size: var(--scale-fluid-000);
+    }
+  }
 }
