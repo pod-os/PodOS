@@ -21,6 +21,7 @@ describe('pos-container-contents', () => {
     const page = await newSpecPage({
       components: [PosContainerContents],
       html: `<pos-container-contents />`,
+      supportsShadowDom: false,
     });
     await page.rootInstance.receiveResource({
       assume: () => ({
@@ -34,19 +35,18 @@ describe('pos-container-contents', () => {
     });
     await page.waitForChanges();
 
-    expect(page.root).toEqualHtml(`<pos-container-contents>
-  <mock:shadow-root>
-    <ion-list>
-      <pos-resource lazy="" uri="https://pod.test/container/file">
-        <pos-container-item role="listitem">
-          <ion-label>
-            <h3>file</h3>
-          </ion-label>
-        </pos-container-item>
-      </pos-resource>
-    </ion-list>
-  </mock:shadow-root>
-</pos-container-contents>`);
+    expect(page.root).toEqualHtml(`
+      <pos-container-contents>
+        <ul>
+          <li>
+            <pos-resource lazy="" uri="https://pod.test/container/file">
+              <pos-container-item>
+                file
+              </pos-container-item>
+            </pos-resource>
+          </li>
+        </ul>
+      </pos-container-contents>`);
   });
 
   it('renders a note about container being empty', async () => {
@@ -75,6 +75,7 @@ describe('pos-container-contents', () => {
     const page = await newSpecPage({
       components: [PosContainerContents],
       html: `<pos-container-contents />`,
+      supportsShadowDom: false,
     });
     await page.rootInstance.receiveResource({
       assume: () => ({
@@ -96,33 +97,30 @@ describe('pos-container-contents', () => {
     });
     await page.waitForChanges();
 
-    expect(page.root).toEqualHtml(`
-        <pos-container-contents>
-            <mock:shadow-root>
-                <ion-list>
-                  <pos-resource lazy="" uri="https://pod.test/container/a-file-on-top-of-the-list">
-                    <pos-container-item role="listitem">
-                      <ion-label>
-                        <h3>a-file-on-top-of-the-list</h3>
-                      </ion-label>
-                    </pos-container-item>
-                  </pos-resource>
-                    <pos-resource lazy="" uri="https://pod.test/container/file">
-                        <pos-container-item role="listitem">
-                            <ion-label>
-                                <h3>file</h3>
-                            </ion-label>
-                        </pos-container-item>
-                    </pos-resource>
-                    <pos-resource lazy="" uri="https://pod.test/container/subdir/">
-                        <pos-container-item role="listitem">
-                            <ion-label>
-                                <h3>subdir</h3>
-                            </ion-label>
-                        </pos-container-item>
-                    </pos-resource>
-                </ion-list>
-            </mock:shadow-root>
-        </pos-container-contents>`);
+    expect(page.root).toEqualHtml(`<pos-container-contents>
+  <ul>
+    <li>
+      <pos-resource lazy="" uri="https://pod.test/container/a-file-on-top-of-the-list">
+        <pos-container-item>
+          a-file-on-top-of-the-list
+        </pos-container-item>
+      </pos-resource>
+    </li>
+    <li>
+      <pos-resource lazy="" uri="https://pod.test/container/file">
+        <pos-container-item>
+          file
+        </pos-container-item>
+      </pos-resource>
+    </li>
+    <li>
+      <pos-resource lazy="" uri="https://pod.test/container/subdir/">
+        <pos-container-item>
+          subdir
+        </pos-container-item>
+      </pos-resource>
+    </li>
+  </ul>
+</pos-container-contents>`);
   });
 });

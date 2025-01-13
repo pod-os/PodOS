@@ -5,6 +5,7 @@ import { ResourceAware, subscribeResource } from '../events/ResourceAware';
 @Component({
   tag: 'pos-container-contents',
   shadow: true,
+  styleUrl: 'pos-container-contents.css'
 })
 export class PosContainerContents implements ResourceAware {
   @State() contents: ContainerContent[] = [];
@@ -27,14 +28,14 @@ export class PosContainerContents implements ResourceAware {
   render() {
     if (this.loading) return null;
     const items = this.contents.map(it => (
-      <pos-resource lazy={true} uri={it.uri}>
-        <pos-container-item role="listitem">
-          <ion-label>
-            <h3>{it.name}</h3>
-          </ion-label>
-        </pos-container-item>
-      </pos-resource>
+      <li>
+        <pos-resource lazy={true} uri={it.uri}>
+          <pos-container-item>
+            {it.name}
+          </pos-container-item>
+        </pos-resource>
+      </li>
     ));
-    return this.contents.length > 0 ? <ion-list>{items}</ion-list> : <p>The container is empty</p>;
+    return this.contents.length > 0 ? <ul>{items}</ul> : <p>The container is empty</p>;
   }
 }
