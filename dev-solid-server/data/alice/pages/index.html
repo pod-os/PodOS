@@ -1,57 +1,55 @@
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Alice's Homepage</title>
 
     <script type="module" src="/build/elements.esm.js"></script>
-    <link href="/build/elements.css" rel="stylesheet">
+    <link href="/build/elements.css" rel="stylesheet" />
 
     <style>
-        .description {
-            background-color: #f6f6f6;
-            padding: 1rem;
-            border-left: 0.5rem solid #494949;
-            border-top-right-radius: 1rem;
-            border-bottom-right-radius: 1rem;
-            max-width: 500px;
-        }
+      .description {
+        background-color: #f6f6f6;
+        padding: 1rem;
+        border-left: 0.5rem solid #494949;
+        border-top-right-radius: 1rem;
+        border-bottom-right-radius: 1rem;
+        max-width: 500px;
+      }
     </style>
-</head>
-<body>
-<pos-app>
-    <div style="padding: 1rem">
+  </head>
+  <body>
+    <pos-app>
+      <div style="padding: 1rem">
         <pos-resource uri="http://localhost:3000/alice/profile/card#me">
-            <h1>Hi, I am
-                <pos-label/>
-            </h1>
+          <h1>
+            Hi, I am
+            <pos-label />
+          </h1>
         </pos-resource>
 
         On this page, I am showing you my favorite games!
 
         <pos-resource uri="http://localhost:3000/alice/games/minecraft#it">
-            <h2>
-                <pos-label/>
-            </h2>
-            <p class="description">
-                <pos-description/>
-            </p>
-            <p>
-                Here are some interesting facts about the game
-                <span><pos-label/></span>:
-            </p>
-            <p>
-                <pos-literals/>
-            </p>
-            <p>
-                Related resources:
-            </p>
-            <pos-relations/>
+          <h2>
+            <pos-label />
+          </h2>
+          <p class="description">
+            <pos-description />
+          </p>
+          <p>
+            Here are some interesting facts about the game
+            <span><pos-label /></span>:
+          </p>
+          <p>
+            <pos-literals />
+          </p>
+          <p>Related resources:</p>
+          <pos-relations />
         </pos-resource>
-    </div>
-</pos-app>
-</body>
+      </div>
+    </pos-app>
+  </body>
 </html>
