@@ -6,10 +6,10 @@ import { ResourceAware, subscribeResource } from '../../components/events/Resour
   tag: 'pos-app-image-viewer',
   shadow: true,
   styles: `
-        pos-image {
-          --max-width: 100%;
-        }
-    `,
+    pos-image {
+      --max-width: 100%;
+    }
+  `,
 })
 export class PosAppImageViewer implements ResourceAware {
   @State() resource: Thing;
@@ -37,7 +37,7 @@ export class PosAppImageViewer implements ResourceAware {
           </ion-col>
           <ion-col size="12" size-sm>
             <ion-card>
-              <ion-card-header>
+              <ion-card-header style={{ gap: 'var(--size-1)' }}>
                 <ion-card-title>
                   <pos-label />
                 </ion-card-title>
