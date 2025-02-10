@@ -1,0 +1,35 @@
+button {
+  display: flex;
+  flex-direction: row;
+  height: var(--size-8);
+  width: var(--size-8);
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-xs);
+  color: var(--color-grey-500);
+  border: var(--size-px) dashed var(--color-grey-500);
+  background: none;
+
+  p {
+    padding: 0;
+    margin: 0;
+    display: none;
+  }
+}
+
+svg {
+  display: inline-block;
+  height: var(--size-6);
+  width: var(--size-6);
+}
+
+button:hover {
+  width: auto;
+  height: var(--size-8);
+  background: var(--color-grey-200);
+  color: var(--color-grey-700);
+
+  p {
+    display: inline-block;
+  }
+}
