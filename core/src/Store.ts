@@ -10,6 +10,9 @@ import {
 } from "rdflib";
 import { PodOsSession } from "./authentication";
 import { Thing } from "./thing";
+import { LabelIndex } from "./search";
+import { executeUpdate } from "@solid-data-modules/rdflib-utils";
+import { addToLabelIndex } from "./search/addToLabelIndex";
 
 /**
  * The store contains all data that is known locally.
@@ -110,5 +113,10 @@ export class Store {
         credentials: "omit",
       },
     );
+  }
+
+  async addToLabelIndex(thing: Thing, labelIndex: LabelIndex) {
+    const operation = addToLabelIndex(thing, labelIndex);
+    await executeUpdate(this.fetcher, this.updater, operation);
   }
 }

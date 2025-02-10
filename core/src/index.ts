@@ -153,4 +153,13 @@ export class PodOS {
   loadContactsModule(): Promise<ContactsModule> {
     return loadContactsModule(this.store);
   }
+
+  /**
+   * Adds a label of the given thing to the label index, so that it can be found after the search index has been rebuilt
+   * @param thing - The thing to index
+   * @param labelIndex - The index to update
+   */
+  async addToLabelIndex(thing: Thing, labelIndex: LabelIndex) {
+    await this.store.addToLabelIndex(thing, labelIndex);
+  }
 }

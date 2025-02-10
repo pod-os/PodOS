@@ -1,9 +1,16 @@
 import { when } from "jest-when";
-import { sym } from "rdflib";
+import { lit, st, sym } from "rdflib";
 import { Parser as SparqlParser, Update } from "sparqljs";
 import { AuthenticatedFetch, PodOsSession } from "./authentication";
 import { Store } from "./Store";
 import { Thing } from "./thing";
+import { LabelIndex } from "./search";
+import { rdfs } from "./namespaces";
+import {
+  expectPatchRequest,
+  mockNotFound,
+  // @ts-expect-error moduleResolution needs to be NodeNext, but jest does not care
+} from "@solid-data-modules/rdflib-utils/test-support";
 
 jest.mock("./authentication");
 
@@ -447,6 +454,45 @@ describe("Store", () => {
           <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://vocab.example/Thing> ;
           <http://www.w3.org/2000/01/rdf-schema#label> "A new thing" .
       }`,
+      );
+    });
+  });
+
+  describe("add to label index", () => {
+    it("patches the label index with a label found in the store", async () => {
+      // given a session and a store
+      const fetchMock = jest.fn();
+      const mockSession = {
+        authenticatedFetch: fetchMock,
+      } as unknown as PodOsSession;
+      const store = new Store(mockSession);
+
+      // and no label index yet
+      mockNotFound(fetchMock, "https://pod.example/label-index");
+
+      // and the store contains a label for a thing
+      store.graph.add(
+        st(sym("https://thing.example#it"), rdfs("label"), lit("Something")),
+      );
+
+      // when that thing is added to a label index
+      await store.addToLabelIndex(
+        new Thing("https://thing.example#it", store.graph, true),
+        new LabelIndex("https://pod.example/label-index", store.graph, true),
+      );
+
+      // then the label of the thing is patched into the label index document
+      expectPatchRequest(
+        fetchMock,
+        "https://pod.example/label-index",
+        `@prefix solid: <http://www.w3.org/ns/solid/terms#>.
+@prefix ex: <http://www.example.org/terms#>.
+
+_:patch
+
+      solid:inserts {
+        <https://thing.example#it> <http://www.w3.org/2000/01/rdf-schema#label> "Something" .
+      };   a solid:InsertDeletePatch .`,
       );
     });
   });
