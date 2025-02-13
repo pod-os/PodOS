@@ -10,8 +10,13 @@ import session from '../../store/session';
 import { LabelIndex, WebIdProfile } from '@pod-os/core';
 
 describe('pos-make-findable', () => {
-  it('renders a button', async () => {
-    const page = await newSpecPage({
+  beforeEach(() => {
+    session.dispose();
+  });
+
+  it('renders a button, when logged in', async () => {
+    session.state.isLoggedIn = true;
+    await newSpecPage({
       components: [PosMakeFindable],
       html: `<pos-make-findable />`,
     });
@@ -23,11 +28,12 @@ describe('pos-make-findable', () => {
 
   it('add thing to a single private label index', async () => {
     // given a user profile in the current session with a single private label index
+    session.state.isLoggedIn = true;
     session.state.profile = {
       getPrivateLabelIndexes: () => ['https://pod.example/label-index'],
     } as unknown as WebIdProfile;
 
-    // given a make findable component for a thing
+    // and a make findable component for a thing
     const page = await newSpecPage({
       components: [PosMakeFindable],
       html: `<pos-make-findable uri="https://thing.example#it"/>`,
@@ -55,5 +61,17 @@ describe('pos-make-findable', () => {
 
     // then the thing is added to the index
     expect(mockOs.addToLabelIndex).toHaveBeenCalledWith({ fake: 'thing' }, { fake: 'index' });
+  });
+
+  it('does not show up, when not logged in', async () => {
+    // given no user session
+    session.state.isLoggedIn = false;
+    // and a make findable component for a thing
+    const page = await newSpecPage({
+      components: [PosMakeFindable],
+      html: `<pos-make-findable uri="https://thing.example#it"/>`,
+    });
+    // then nothing shows up
+    expect(page.root).toEqualHtml('<pos-make-findable uri="https://thing.example#it"/>');
   });
 });

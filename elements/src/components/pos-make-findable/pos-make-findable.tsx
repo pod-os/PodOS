@@ -1,5 +1,5 @@
 import { Component, Event, h, Prop, State } from '@stencil/core';
-import { LabelIndex, PodOS, Thing } from '@pod-os/core';
+import { LabelIndex, PodOS, Thing, WebIdProfile } from '@pod-os/core';
 import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../events/PodOsAware';
 import session from '../../store/session';
 
@@ -23,8 +23,14 @@ export class PosMakeFindable implements PodOsAware {
   receivePodOs = async (os: PodOS) => {
     this.os = os;
     this.thing = this.os.store.get(this.uri);
-    this.indexes = session.state.profile.getPrivateLabelIndexes().map(it => this.os.store.get(it).assume(LabelIndex));
+    this.getLabelIndexes(session.state.profile);
   };
+
+  private getLabelIndexes(profile: WebIdProfile) {
+    if (profile) {
+      this.indexes = profile.getPrivateLabelIndexes().map(it => this.os.store.get(it).assume(LabelIndex));
+    }
+  }
 
   private async makeFindable(e: MouseEvent) {
     e.preventDefault();
@@ -32,6 +38,9 @@ export class PosMakeFindable implements PodOsAware {
   }
 
   render() {
+    if (!session.state.isLoggedIn) {
+      return null;
+    }
     return (
       <button onClick={e => this.makeFindable(e)} title="">
         <svg
