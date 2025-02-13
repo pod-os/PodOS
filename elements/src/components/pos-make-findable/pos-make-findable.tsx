@@ -1,12 +1,34 @@
-import { Component, h } from '@stencil/core';
+import { Component, Event, h, Prop, State } from '@stencil/core';
+import { LabelIndex, PodOS, Thing } from '@pod-os/core';
+import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../events/PodOsAware';
+import session from '../../store/session';
 
 @Component({
   tag: 'pos-make-findable',
   styleUrl: 'pos-make-findable.css',
 })
-export class PosMakeFindable {
+export class PosMakeFindable implements PodOsAware {
+  @Prop() uri: string;
+
+  @State() os: PodOS;
+  @State() thing: Thing;
+  @State() indexes: LabelIndex[];
+
+  @Event({ eventName: 'pod-os:init' }) subscribePodOs: PodOsEventEmitter;
+
+  componentWillLoad() {
+    subscribePodOs(this);
+  }
+
+  receivePodOs = async (os: PodOS) => {
+    this.os = os;
+    this.thing = this.os.store.get(this.uri);
+    this.indexes = session.state.profile.getPrivateLabelIndexes().map(it => this.os.store.get(it).assume(LabelIndex));
+  };
+
   private async makeFindable(e: MouseEvent) {
     e.preventDefault();
+    await this.os.addToLabelIndex(this.thing, this.indexes[0]);
   }
 
   render() {
