@@ -124,4 +124,30 @@ describe('pos-make-findable', () => {
     fireEvent.click(button);
     expect(mockOs.addToLabelIndex).toHaveBeenCalledWith({ fake: 'thing' }, { fake: 'index' });
   });
+
+  it('updates thing when URI changes', async () => {
+    // given a make findable component for a thing
+    page = await newSpecPage({
+      components: [PosMakeFindable],
+      html: `<pos-make-findable uri="https://thing.example#it"/>`,
+    });
+    // and a PodOS instance that yields Things for given URIs
+    const mockOs = {
+      store: {
+        get: jest.fn(),
+      },
+    };
+    when(mockOs.store.get).calledWith('https://thing.example#it').mockReturnValue({ uri: 'https://thing.example#it' });
+    when(mockOs.store.get).calledWith('https://other.example#it').mockReturnValue({ uri: 'https://other.example#it' });
+
+    // and the component received that PodOs instance already
+    page.rootInstance.receivePodOs(mockOs);
+    // and the thing matches the initial URI
+    expect(page.rootInstance.thing).toEqual({ uri: 'https://thing.example#it' });
+
+    // when the URI attribute changes
+    page.root.setAttribute('uri', 'https://other.example#it');
+    // then the thing matches the new URI
+    expect(page.rootInstance.thing).toEqual({ uri: 'https://other.example#it' });
+  });
 });

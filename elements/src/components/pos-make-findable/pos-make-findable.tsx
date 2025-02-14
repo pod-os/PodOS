@@ -1,4 +1,4 @@
-import { Component, Event, h, Prop, State } from '@stencil/core';
+import { Component, Event, h, Prop, State, Watch } from '@stencil/core';
 import { LabelIndex, PodOS, Thing, WebIdProfile } from '@pod-os/core';
 import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../events/PodOsAware';
 import session from '../../store/session';
@@ -8,7 +8,7 @@ import session from '../../store/session';
   styleUrl: 'pos-make-findable.css',
 })
 export class PosMakeFindable implements PodOsAware {
-  @Prop() uri: string;
+  @Prop() uri!: string;
 
   @State() os: PodOS;
   @State() thing: Thing;
@@ -24,6 +24,11 @@ export class PosMakeFindable implements PodOsAware {
 
   disconnectedCallback() {
     this.unsubscribeSessionChange && this.unsubscribeSessionChange();
+  }
+
+  @Watch('uri')
+  updateUri(uri: string) {
+    this.thing = this.os.store.get(uri);
   }
 
   receivePodOs = async (os: PodOS) => {
