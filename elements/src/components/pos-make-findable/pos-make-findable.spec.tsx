@@ -150,4 +150,100 @@ describe('pos-make-findable', () => {
     // then the thing matches the new URI
     expect(page.rootInstance.thing).toEqual({ uri: 'https://other.example#it' });
   });
+
+  describe('multiple indexes to choose from', () => {
+    let mockOs;
+
+    beforeEach(async () => {
+      // given a user profile in the current session with a single private label index
+      session.state.isLoggedIn = true;
+      session.state.profile = {
+        getPrivateLabelIndexes: () => ['https://pod.example/first-index', 'https://pod.example/second-index'],
+      } as unknown as WebIdProfile;
+
+      // and a make findable component for a thing
+      page = await newSpecPage({
+        components: [PosMakeFindable],
+        supportsShadowDom: false,
+        html: `<pos-make-findable uri="https://thing.example#it"/>`,
+      });
+
+      // and a PodOS instance that yields Thing and LabelIndex instances for the URIs in question
+      mockOs = {
+        store: {
+          get: jest.fn(),
+        },
+        addToLabelIndex: jest.fn(),
+      };
+      when(mockOs.store.get).calledWith('https://thing.example#it').mockReturnValue({ fake: 'thing' });
+      const firstIndexAssume = jest.fn();
+      when(firstIndexAssume).calledWith(LabelIndex).mockReturnValue({ uri: 'https://pod.example/first-index' });
+      when(mockOs.store.get).calledWith('https://pod.example/first-index').mockReturnValue({
+        assume: firstIndexAssume,
+      });
+      const secondIndexAssume = jest.fn();
+      when(secondIndexAssume).calledWith(LabelIndex).mockReturnValue({ uri: 'https://pod.example/second-index' });
+      when(mockOs.store.get).calledWith('https://pod.example/second-index').mockReturnValue({
+        assume: secondIndexAssume,
+      });
+      // and the component received that PodOs instance
+      page.rootInstance.receivePodOs(mockOs);
+      await page.waitForChanges();
+    });
+
+    it('allows to choose the target index, if multiple exist', async () => {
+      // given the list does not show up yet
+      expect(screen.queryByRole('listbox')).toBeNull();
+
+      // when the button is clicked
+      const button = screen.getByRole('button');
+      fireEvent.click(button);
+      await page.waitForChanges();
+
+      // then nothing is added to an index yet
+      expect(mockOs.addToLabelIndex).not.toHaveBeenCalled();
+
+      // but options show up to choose one of the indexes
+      const list = screen.getByRole('listbox');
+      expect(list).toEqualHtml(`
+        <ol role="listbox">
+          <li role="option">
+            <button>
+              <pos-resource uri="https://pod.example/first-index" lazy>
+                <pos-label></pos-label>
+              </pos-resource>
+            </button>
+          </li>
+          <li role="option">
+            <button>
+              <pos-resource uri="https://pod.example/second-index" lazy>
+                <pos-label></pos-label>
+              </pos-resource>
+            </button>
+          </li>
+        </ol>`);
+    });
+
+    it('closes the options, if clicked elsewhere', async () => {
+      // given the list does not show up yet
+      expect(screen.queryByRole('listbox')).toBeNull();
+
+      // when the button is clicked
+      const button = screen.getByRole('button');
+      fireEvent.click(button);
+      await page.waitForChanges();
+
+      // and then clicked elsewhere
+      // @ts-ignore
+      page.doc.click();
+      await page.waitForChanges();
+
+      // then nothing is added to an index
+      expect(mockOs.addToLabelIndex).not.toHaveBeenCalled();
+
+      // and the options disappear
+      const list = screen.queryByRole('listbox');
+      expect(list).toBeNull();
+    });
+  });
 });

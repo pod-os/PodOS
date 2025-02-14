@@ -1,4 +1,4 @@
-button {
+button.main {
   display: flex;
   flex-direction: row;
   height: var(--size-8);
@@ -23,7 +23,7 @@ svg {
   width: var(--size-6);
 }
 
-button:hover {
+button.main:hover {
   width: auto;
   height: var(--size-8);
   background: var(--color-grey-200);
