@@ -16,14 +16,23 @@ export class PosMakeFindable implements PodOsAware {
 
   @Event({ eventName: 'pod-os:init' }) subscribePodOs: PodOsEventEmitter;
 
+  @State() unsubscribeSessionChange: undefined | (() => void);
+
   componentWillLoad() {
     subscribePodOs(this);
+  }
+
+  disconnectedCallback() {
+    this.unsubscribeSessionChange && this.unsubscribeSessionChange();
   }
 
   receivePodOs = async (os: PodOS) => {
     this.os = os;
     this.thing = this.os.store.get(this.uri);
     this.getLabelIndexes(session.state.profile);
+    this.unsubscribeSessionChange = session.onChange('profile', profile => {
+      this.getLabelIndexes(profile);
+    });
   };
 
   private getLabelIndexes(profile: WebIdProfile) {

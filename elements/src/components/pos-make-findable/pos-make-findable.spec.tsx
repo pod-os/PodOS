@@ -1,6 +1,6 @@
 jest.mock('@pod-os/core', () => ({}));
 
-import { newSpecPage } from '@stencil/core/testing';
+import { newSpecPage, SpecPage } from '@stencil/core/testing';
 
 import { PosMakeFindable } from './pos-make-findable';
 
@@ -10,13 +10,16 @@ import session from '../../store/session';
 import { LabelIndex, WebIdProfile } from '@pod-os/core';
 
 describe('pos-make-findable', () => {
-  beforeEach(() => {
+  let page: SpecPage;
+
+  afterEach(() => {
+    page.rootInstance.disconnectedCallback();
     session.dispose();
   });
 
   it('renders a button, when logged in', async () => {
     session.state.isLoggedIn = true;
-    await newSpecPage({
+    page = await newSpecPage({
       components: [PosMakeFindable],
       html: `<pos-make-findable />`,
     });
@@ -34,7 +37,7 @@ describe('pos-make-findable', () => {
     } as unknown as WebIdProfile;
 
     // and a make findable component for a thing
-    const page = await newSpecPage({
+    page = await newSpecPage({
       components: [PosMakeFindable],
       html: `<pos-make-findable uri="https://thing.example#it"/>`,
     });
@@ -67,11 +70,58 @@ describe('pos-make-findable', () => {
     // given no user session
     session.state.isLoggedIn = false;
     // and a make findable component for a thing
-    const page = await newSpecPage({
+    page = await newSpecPage({
       components: [PosMakeFindable],
       html: `<pos-make-findable uri="https://thing.example#it"/>`,
     });
     // then nothing shows up
     expect(page.root).toEqualHtml('<pos-make-findable uri="https://thing.example#it"/>');
+    page.rootInstance.disconnectedCallback();
+  });
+
+  it('can be used, after the user signed in', async () => {
+    // given no user session yet
+    session.state.isLoggedIn = false;
+    // and a make findable component for a thing
+    page = await newSpecPage({
+      components: [PosMakeFindable],
+      html: `<pos-make-findable uri="https://thing.example#it"/>`,
+    });
+
+    // and a PodOS instance that yields Thing and LabelIndex instances for the URIs in question
+    const mockOs = {
+      store: {
+        get: jest.fn(),
+      },
+      addToLabelIndex: jest.fn(),
+    };
+    when(mockOs.store.get).calledWith('https://thing.example#it').mockReturnValue({ fake: 'thing' });
+    const labelIndexAssume = jest.fn();
+    when(labelIndexAssume).calledWith(LabelIndex).mockReturnValue({ fake: 'index' });
+    when(mockOs.store.get).calledWith('https://pod.example/label-index').mockReturnValue({
+      assume: labelIndexAssume,
+    });
+    // and the component received that PodOs instance already
+    page.rootInstance.receivePodOs(mockOs);
+
+    // and nothing shows up yet
+    expect(page.root).toEqualHtml('<pos-make-findable uri="https://thing.example#it"/>');
+
+    // when the user signed in
+    session.state.isLoggedIn = true;
+    session.state.profile = {
+      getPrivateLabelIndexes: () => ['https://pod.example/label-index'],
+    } as unknown as WebIdProfile;
+
+    await page.waitForChanges();
+
+    // then the button appears
+    const button = screen.getByRole('button');
+    expect(button).toBeDefined();
+    expect(button.textContent).toEqual('Make this findable');
+
+    // and is working
+    fireEvent.click(button);
+    expect(mockOs.addToLabelIndex).toHaveBeenCalledWith({ fake: 'thing' }, { fake: 'index' });
   });
 });
