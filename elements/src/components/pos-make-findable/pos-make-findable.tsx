@@ -61,10 +61,14 @@ export class PosMakeFindable implements PodOsAware {
   private async onClick(e: MouseEvent) {
     e.preventDefault();
     if (this.indexes.length === 1) {
-      await this.os.addToLabelIndex(this.thing, this.indexes[0]);
+      await this.addToLabelIndex(this.indexes[0]);
     } else if (this.indexes.length > 1) {
       this.showOptions = true;
     }
+  }
+
+  private async addToLabelIndex(index: LabelIndex) {
+    await this.os.addToLabelIndex(this.thing, index);
   }
 
   render() {
@@ -94,7 +98,7 @@ export class PosMakeFindable implements PodOsAware {
           <ol role="listbox">
             {this.indexes.map((index: LabelIndex) => (
               <li role="option">
-                <button>
+                <button onClick={e => this.chooseOption(e, index)}>
                   <pos-resource uri={index.uri} lazy={true}>
                     <pos-label></pos-label>
                   </pos-resource>
@@ -105,5 +109,10 @@ export class PosMakeFindable implements PodOsAware {
         )}
       </Host>
     );
+  }
+
+  private async chooseOption(e: MouseEvent, index: LabelIndex) {
+    e.preventDefault();
+    await this.addToLabelIndex(index);
   }
 }

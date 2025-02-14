@@ -4,7 +4,7 @@ import { newSpecPage, SpecPage } from '@stencil/core/testing';
 
 import { PosMakeFindable } from './pos-make-findable';
 
-import { fireEvent, screen } from '@testing-library/dom';
+import { fireEvent, screen, within } from '@testing-library/dom';
 import { when } from 'jest-when';
 import session from '../../store/session';
 import { LabelIndex, WebIdProfile } from '@pod-os/core';
@@ -222,6 +222,22 @@ describe('pos-make-findable', () => {
             </button>
           </li>
         </ol>`);
+    });
+
+    it('add thing to the chosen label index', async () => {
+      // when the button is clicked
+      const button = screen.getByRole('button');
+      fireEvent.click(button);
+      await page.waitForChanges();
+
+      // and an option is chosen
+      const options = screen.getAllByRole('option');
+      expect(options.length).toEqual(2);
+      const indexButton = within(options[0]).getByRole('button');
+      fireEvent.click(indexButton);
+
+      // then nothing is added to an index yet
+      expect(mockOs.addToLabelIndex).toHaveBeenCalled();
     });
 
     it('closes the options, if clicked elsewhere', async () => {
