@@ -41,3 +41,9 @@
   --description-color: var(--color-grey-200);
   --uri-color: var(--color-grey-200);
 }
+
+.bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}

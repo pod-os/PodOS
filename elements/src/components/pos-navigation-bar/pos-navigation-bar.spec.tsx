@@ -14,7 +14,10 @@ describe('pos-navigation-bar', () => {
     <pos-navigation-bar uri="https://pod.example/resource">
       <mock:shadow-root>
         <form>
-          <ion-searchbar debounce="300" enterkeyhint="search" placeholder="Search or enter URI" value="https://pod.example/resource"></ion-searchbar>
+          <div class="bar">
+            <pos-make-findable uri="https://pod.example/resource"></pos-make-findable>
+            <ion-searchbar debounce="300" enterkeyhint="search" placeholder="Search or enter URI" value="https://pod.example/resource"></ion-searchbar>
+          </div>
         </form>
       </mock:shadow-root>
     </pos-navigation-bar>`);
