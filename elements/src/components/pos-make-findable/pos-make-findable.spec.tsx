@@ -68,6 +68,52 @@ describe('pos-make-findable', () => {
     expect(mockOs.addToLabelIndex).toHaveBeenCalledWith({ fake: 'thing' }, { fake: 'index' });
   });
 
+  fit('emits error if updating the index fails', async () => {
+    // given a user profile in the current session with a single private label index
+    session.state.isLoggedIn = true;
+    session.state.profile = {
+      getPrivateLabelIndexes: () => ['https://pod.example/label-index'],
+    } as unknown as WebIdProfile;
+
+    // and a make findable component for a thing
+    page = await newSpecPage({
+      components: [PosMakeFindable],
+      html: `<pos-make-findable uri="https://thing.example#it"/>`,
+    });
+
+    // and the page listens for error
+    const errorListener = jest.fn();
+    page.root.addEventListener('pod-os:error', errorListener);
+
+    // and a PodOS instance that yields Thing and LabelIndex instances for the URIs in question
+    const mockOs = {
+      store: {
+        get: jest.fn(),
+      },
+      addToLabelIndex: jest.fn(),
+    };
+    when(mockOs.store.get).calledWith('https://thing.example#it').mockReturnValue({ fake: 'thing' });
+    const labelIndexAssume = jest.fn();
+    when(labelIndexAssume).calledWith(LabelIndex).mockReturnValue({ fake: 'index' });
+    when(mockOs.store.get).calledWith('https://pod.example/label-index').mockReturnValue({
+      assume: labelIndexAssume,
+    });
+
+    // but leads to an error when adding a thing to index
+    mockOs.addToLabelIndex.mockRejectedValue(new Error('simulated error'));
+
+    // and the component received that PodOs instance
+    page.rootInstance.receivePodOs(mockOs);
+
+    // when the button is clicked
+    const button = screen.getByRole('button');
+    fireEvent.click(button);
+    await page.waitForChanges();
+
+    // then an error event is emitted
+    expect(errorListener).toHaveBeenCalledWith(expect.objectContaining({ detail: new Error('simulated error') }));
+  });
+
   it('does not show up, when not logged in', async () => {
     // given no user session
     session.state.isLoggedIn = false;

@@ -1,4 +1,4 @@
-import { Component, Element, Event, h, Host, Listen, Prop, State, Watch } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, h, Host, Listen, Prop, State, Watch } from '@stencil/core';
 import { LabelIndex, PodOS, Thing, WebIdProfile } from '@pod-os/core';
 import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../events/PodOsAware';
 import session from '../../store/session';
@@ -19,6 +19,8 @@ export class PosMakeFindable implements PodOsAware {
   @State() unsubscribeSessionChange: undefined | (() => void);
 
   @State() showOptions = false;
+
+  @Event({ eventName: 'pod-os:error' }) errorEmitter: EventEmitter;
 
   @Element() el: HTMLElement;
 
@@ -75,7 +77,12 @@ export class PosMakeFindable implements PodOsAware {
   }
 
   private async addToLabelIndex(index: LabelIndex) {
-    await this.os.addToLabelIndex(this.thing, index);
+    try {
+      await this.os.addToLabelIndex(this.thing, index);
+    } catch (e) {
+      this.errorEmitter.emit(e);
+    }
+
     this.showOptions = false;
   }
 

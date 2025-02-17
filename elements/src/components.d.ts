@@ -551,6 +551,7 @@ declare global {
     };
     interface HTMLPosMakeFindableElementEventMap {
         "pod-os:init": any;
+        "pod-os:error": any;
     }
     interface HTMLPosMakeFindableElement extends Components.PosMakeFindable, HTMLStencilElement {
         addEventListener<K extends keyof HTMLPosMakeFindableElementEventMap>(type: K, listener: (this: HTMLPosMakeFindableElement, ev: PosMakeFindableCustomEvent<HTMLPosMakeFindableElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -956,6 +957,7 @@ declare namespace LocalJSX {
         "onPod-os:idp-url-selected"?: (event: PosLoginFormCustomEvent<any>) => void;
     }
     interface PosMakeFindable {
+        "onPod-os:error"?: (event: PosMakeFindableCustomEvent<any>) => void;
         "onPod-os:init"?: (event: PosMakeFindableCustomEvent<any>) => void;
         "uri": string;
     }
