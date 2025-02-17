@@ -65,7 +65,8 @@ svg {
   width: var(--size-6);
 }
 
-button.main:hover {
+button.main:hover,
+button.open {
   width: var(--size-full);
   height: var(--size-8);
   background: var(--color-grey-200);
