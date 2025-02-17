@@ -85,7 +85,7 @@ export class PosMakeFindable implements PodOsAware {
 
     return (
       <Host>
-        <button class={{ main: true, open: this.showOptions }} onClick={e => this.onClick(e)} title="">
+        <button type="button" class={{ main: true, open: this.showOptions }} onClick={e => this.onClick(e)} title="">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
