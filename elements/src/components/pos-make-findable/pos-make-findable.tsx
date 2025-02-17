@@ -76,6 +76,7 @@ export class PosMakeFindable implements PodOsAware {
 
   private async addToLabelIndex(index: LabelIndex) {
     await this.os.addToLabelIndex(this.thing, index);
+    this.showOptions = false;
   }
 
   render() {

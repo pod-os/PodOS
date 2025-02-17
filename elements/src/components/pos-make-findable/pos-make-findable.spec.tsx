@@ -237,9 +237,17 @@ describe('pos-make-findable', () => {
       expect(options.length).toEqual(2);
       const indexButton = within(options[0]).getByRole('button');
       fireEvent.click(indexButton);
+      await page.waitForChanges();
 
-      // then nothing is added to an index yet
-      expect(mockOs.addToLabelIndex).toHaveBeenCalled();
+      // then the thing is added to the index
+      expect(mockOs.addToLabelIndex).toHaveBeenCalledWith(
+        { fake: 'thing' },
+        { uri: 'https://pod.example/first-index' },
+      );
+
+      // and the options disappear
+      const list = screen.queryByRole('listbox');
+      expect(list).toBeNull();
     });
 
     it('closes the options, if clicked elsewhere', async () => {
