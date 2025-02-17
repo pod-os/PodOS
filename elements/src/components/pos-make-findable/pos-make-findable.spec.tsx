@@ -1,3 +1,5 @@
+import { pressKey } from '../../test/pressKey';
+
 jest.mock('@pod-os/core', () => ({}));
 
 import { newSpecPage, SpecPage } from '@stencil/core/testing';
@@ -258,6 +260,23 @@ describe('pos-make-findable', () => {
       expect(mockOs.addToLabelIndex).not.toHaveBeenCalled();
 
       // and the options disappear
+      const list = screen.queryByRole('listbox');
+      expect(list).toBeNull();
+    });
+    it('closes the options, when ESC is pressed', async () => {
+      // given the list does not show up yet
+      expect(screen.queryByRole('listbox')).toBeNull();
+
+      // when the button is clicked
+      const button = screen.getByRole('button');
+      fireEvent.click(button);
+      await page.waitForChanges();
+
+      // and then clicked elsewhere
+      // @ts-ignore
+      await pressKey(page, 'Escape');
+
+      // then the options disappear
       const list = screen.queryByRole('listbox');
       expect(list).toBeNull();
     });

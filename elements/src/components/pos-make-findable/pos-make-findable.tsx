@@ -38,6 +38,13 @@ export class PosMakeFindable implements PodOsAware {
     }
   }
 
+  @Listen('keydown')
+  handleKeyDown(ev: KeyboardEvent) {
+    if (ev.key === 'Escape') {
+      this.showOptions = false;
+    }
+  }
+
   @Watch('uri')
   updateUri(uri: string) {
     this.thing = this.os.store.get(uri);

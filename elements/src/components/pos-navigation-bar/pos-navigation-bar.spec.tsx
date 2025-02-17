@@ -2,6 +2,7 @@ import { newSpecPage } from '@stencil/core/testing';
 import { fireEvent } from '@testing-library/dom';
 import { mockSessionStore } from '../../test/mockSessionStore';
 import { PosNavigationBar } from './pos-navigation-bar';
+import { pressKey } from '../../test/pressKey';
 
 describe('pos-navigation-bar', () => {
   it('renders a search bar within a form', async () => {
@@ -333,13 +334,5 @@ describe('pos-navigation-bar', () => {
 async function type(page, text: string) {
   const searchBar = page.root.querySelector('ion-searchbar');
   fireEvent(searchBar, new CustomEvent('ionInput', { detail: { value: text } }));
-  await page.waitForChanges();
-}
-
-async function pressKey(page, key: string) {
-  const keyEvent = new KeyboardEvent('keydown', {
-    key,
-  });
-  page.root.dispatchEvent(keyEvent);
   await page.waitForChanges();
 }
