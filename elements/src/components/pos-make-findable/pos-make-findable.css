@@ -1,6 +1,8 @@
 button.main {
   display: flex;
+  transition: width 200ms;
   flex-direction: row;
+  overflow: hidden;
   height: var(--size-8);
   width: var(--size-8);
   align-items: center;
@@ -14,22 +16,71 @@ button.main {
     padding: 0;
     margin: 0;
     display: none;
+    white-space: nowrap;
+  }
+}
+
+.options {
+  position: absolute;
+  animation: fadeIn 300ms;
+  padding: 0;
+  margin-top: var(--size-1);
+  z-index: var(--layer-top);
+
+  ol {
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-md);
+    backdrop-filter: var(--blur-md);
+    border-radius: var(--radius-xs);
+    overflow: hidden;
+    background-color: var(--color-grey-200);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    button {
+      transition: all 300ms var(--ease-in-out-sine);
+      margin: 0;
+      border: none;
+      outline: none;
+      padding: var(--size-2);
+      width: var(--size-full);
+
+      &:hover {
+        filter: brightness(80%);
+      }
+
+      &:active {
+        filter: brightness(90%);
+      }
+    }
   }
 }
 
 svg {
   display: inline-block;
   height: var(--size-6);
+  flex-shrink: 0;
+  flex-grow: 0;
   width: var(--size-6);
 }
 
 button.main:hover {
-  width: auto;
+  width: var(--size-full);
   height: var(--size-8);
   background: var(--color-grey-200);
   color: var(--color-grey-700);
 
   p {
     display: inline-block;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }

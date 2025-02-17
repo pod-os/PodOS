@@ -75,6 +75,7 @@ export class PosMakeFindable implements PodOsAware {
     if (!session.state.isLoggedIn) {
       return null;
     }
+
     return (
       <Host>
         <button class="main" onClick={e => this.onClick(e)} title="">
@@ -84,7 +85,6 @@ export class PosMakeFindable implements PodOsAware {
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            class="size-6"
           >
             <path
               stroke-linecap="round"
@@ -95,17 +95,19 @@ export class PosMakeFindable implements PodOsAware {
           <p>Make this findable</p>
         </button>
         {this.showOptions && (
-          <ol role="listbox">
-            {this.indexes.map((index: LabelIndex) => (
-              <li role="option">
-                <button onClick={e => this.chooseOption(e, index)}>
-                  <pos-resource uri={index.uri} lazy={true}>
-                    <pos-label></pos-label>
-                  </pos-resource>
-                </button>
-              </li>
-            ))}
-          </ol>
+          <div class="options">
+            <ol role="listbox">
+              {this.indexes.map((index: LabelIndex) => (
+                <li role="option">
+                  <button onClick={e => this.chooseOption(e, index)}>
+                    <pos-resource uri={index.uri} lazy={true}>
+                      <pos-label></pos-label>
+                    </pos-resource>
+                  </button>
+                </li>
+              ))}
+            </ol>
+          </div>
         )}
       </Host>
     );
