@@ -118,30 +118,32 @@ describe('pos-make-findable', () => {
     expect(errorListener).toHaveBeenCalledWith(expect.objectContaining({ detail: new Error('simulated error') }));
   });
 
-  it('does not show up, when not logged in', async () => {
-    // given no user session
-    session.state.isLoggedIn = false;
-    // and a make findable component for a thing
-    page = await newSpecPage({
-      components: [PosMakeFindable],
-      html: `<pos-make-findable uri="https://thing.example#it"/>`,
+  describe('does not show up', () => {
+    it('if URI is empty', async () => {
+      // given no user session
+      session.state.isLoggedIn = true;
+      // and a make findable component for a thing
+      page = await newSpecPage({
+        components: [PosMakeFindable],
+        html: `<pos-make-findable uri=""/>`,
+      });
+      // then nothing shows up
+      expect(page.root).toEqualHtml('<pos-make-findable uri=""/>');
+      page.rootInstance.disconnectedCallback();
     });
-    // then nothing shows up
-    expect(page.root).toEqualHtml('<pos-make-findable uri="https://thing.example#it"/>');
-    page.rootInstance.disconnectedCallback();
-  });
 
-  it('does not show up, if URI is empty', async () => {
-    // given no user session
-    session.state.isLoggedIn = true;
-    // and a make findable component for a thing
-    page = await newSpecPage({
-      components: [PosMakeFindable],
-      html: `<pos-make-findable uri=""/>`,
+    it('when not logged in', async () => {
+      // given no user session
+      session.state.isLoggedIn = false;
+      // and a make findable component for a thing
+      page = await newSpecPage({
+        components: [PosMakeFindable],
+        html: `<pos-make-findable uri="https://thing.example#it"/>`,
+      });
+      // then nothing shows up
+      expect(page.root).toEqualHtml('<pos-make-findable uri="https://thing.example#it"/>');
+      page.rootInstance.disconnectedCallback();
     });
-    // then nothing shows up
-    expect(page.root).toEqualHtml('<pos-make-findable uri=""/>');
-    page.rootInstance.disconnectedCallback();
   });
 
   it('can be used, after the user signed in', async () => {
