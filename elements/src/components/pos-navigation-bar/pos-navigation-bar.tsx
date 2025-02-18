@@ -57,11 +57,6 @@ export class PosNavigationBar implements PodOsAware {
     event.stopPropagation();
   }
 
-  @Listen('focus')
-  onFocus() {
-    this.search();
-  }
-
   @Listen('keydown')
   handleKeyDown(ev: KeyboardEvent) {
     if (ev.key === 'Escape') {
@@ -93,8 +88,8 @@ export class PosNavigationBar implements PodOsAware {
   render() {
     return (
       <form onSubmit={e => this.onSubmit(e)}>
+        <pos-make-findable uri={this.uri}></pos-make-findable>
         <div class="bar">
-          <pos-make-findable uri={this.uri}></pos-make-findable>
           <ion-searchbar
             enterkeyhint="search"
             placeholder="Search or enter URI"
@@ -103,18 +98,18 @@ export class PosNavigationBar implements PodOsAware {
             onIonChange={e => this.onChange(e)}
             onIonInput={e => this.onChange(e)}
           />
+          {this.suggestions.length > 0 ? (
+            <div class="suggestions">
+              <ol>
+                {this.suggestions.map((it, index) => (
+                  <li class={index === this.selectedIndex ? 'selected' : ''}>
+                    <pos-rich-link uri={it.ref}></pos-rich-link>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          ) : null}
         </div>
-        {this.suggestions.length > 0 ? (
-          <div class="suggestions">
-            <ol>
-              {this.suggestions.map((it, index) => (
-                <li class={index === this.selectedIndex ? 'selected' : ''}>
-                  <pos-rich-link uri={it.ref}></pos-rich-link>
-                </li>
-              ))}
-            </ol>
-          </div>
-        ) : null}
       </form>
     );
   }

@@ -14,8 +14,8 @@ describe('pos-navigation-bar', () => {
     <pos-navigation-bar uri="https://pod.example/resource">
       <mock:shadow-root>
         <form>
+          <pos-make-findable uri="https://pod.example/resource"></pos-make-findable>
           <div class="bar">
-            <pos-make-findable uri="https://pod.example/resource"></pos-make-findable>
             <ion-searchbar debounce="300" enterkeyhint="search" placeholder="Search or enter URI" value="https://pod.example/resource"></ion-searchbar>
           </div>
         </form>
@@ -125,24 +125,6 @@ describe('pos-navigation-bar', () => {
       expect(page.root.querySelector('.suggestions')).toBeNull();
     });
 
-    it('shows the suggestions when focused', async () => {
-      // given the user entered a text into the searchbar
-      await type(page, 'test');
-
-      // then clicked elsewhere to hide suggestions
-      page.doc.click();
-      await page.waitForChanges();
-      expect(page.root.querySelector('.suggestions')).toBeNull();
-
-      // when the user clicks into the search bar again
-      const searchBar = page.root.querySelector('ion-searchbar');
-      searchBar.focus();
-      await page.waitForChanges();
-
-      // then suggestions are shown
-      expect(page.root.querySelectorAll('.suggestions li')).toHaveLength(2);
-    });
-
     describe('keyboard selection', () => {
       it('selects the first suggestion when pressing key down', async () => {
         // when the user enters a text into the searchbar
@@ -215,28 +197,6 @@ describe('pos-navigation-bar', () => {
         expect(suggestions).toHaveLength(2);
         expect(suggestions[0]).not.toHaveClass('selected');
         expect(suggestions[1]).toHaveClass('selected');
-      });
-
-      it('resets the selection when losing focus', async () => {
-        // given the user entered a text into the searchbar
-        await type(page, 'test');
-        await pressKey(page, 'ArrowDown');
-
-        // then clicked elsewhere to hide suggestions
-        page.doc.click();
-        await page.waitForChanges();
-        expect(page.root.querySelector('.suggestions')).toBeNull();
-
-        // when the user clicks into the search bar again
-        const searchBar = page.root.querySelector('ion-searchbar');
-        searchBar.focus();
-        await page.waitForChanges();
-
-        // then suggestions are shown
-        const selections = page.root.querySelectorAll('.suggestions li');
-        expect(selections).toHaveLength(2);
-        expect(selections[0]).not.toHaveClass('selected');
-        expect(selections[1]).not.toHaveClass('selected');
       });
     });
 

@@ -1,10 +1,6 @@
 :host {
 }
 
-.suggestions {
-  position: relative;
-}
-
 .suggestions ol {
   border: 1px solid var(--color-grey-200);
   display: flex;
@@ -18,6 +14,7 @@
 }
 
 .suggestions {
+  position: relative;
   li {
     padding: 1rem;
     background-color: white;
@@ -42,8 +39,16 @@
   --uri-color: var(--color-grey-200);
 }
 
-.bar {
+ion-searchbar {
+  width: 100%;
+}
+
+form {
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+
+.bar {
+  flex-grow: 1;
 }
