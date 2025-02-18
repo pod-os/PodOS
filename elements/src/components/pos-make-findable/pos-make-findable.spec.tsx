@@ -23,7 +23,7 @@ describe('pos-make-findable', () => {
     session.state.isLoggedIn = true;
     page = await newSpecPage({
       components: [PosMakeFindable],
-      html: `<pos-make-findable />`,
+      html: `<pos-make-findable uri="https://any.thing.example" />`,
     });
 
     const button = screen.getByRole('button');
@@ -128,6 +128,19 @@ describe('pos-make-findable', () => {
     });
     // then nothing shows up
     expect(page.root).toEqualHtml('<pos-make-findable uri="https://thing.example#it"/>');
+    page.rootInstance.disconnectedCallback();
+  });
+
+  it('does not show up, if URI is empty', async () => {
+    // given no user session
+    session.state.isLoggedIn = true;
+    // and a make findable component for a thing
+    page = await newSpecPage({
+      components: [PosMakeFindable],
+      html: `<pos-make-findable uri=""/>`,
+    });
+    // then nothing shows up
+    expect(page.root).toEqualHtml('<pos-make-findable uri=""/>');
     page.rootInstance.disconnectedCallback();
   });
 

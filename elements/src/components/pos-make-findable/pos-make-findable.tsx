@@ -90,7 +90,7 @@ export class PosMakeFindable implements PodOsAware {
   }
 
   render() {
-    if (!session.state.isLoggedIn) {
+    if (!session.state.isLoggedIn || !this.uri) {
       return null;
     }
 
