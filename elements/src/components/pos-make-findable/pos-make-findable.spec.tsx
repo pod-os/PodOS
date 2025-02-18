@@ -216,6 +216,31 @@ describe('pos-make-findable', () => {
     expect(page.rootInstance.thing).toEqual({ uri: 'https://other.example#it' });
   });
 
+  it('resets success state when URI changes', async () => {
+    // given a make findable component for a thing
+    page = await newSpecPage({
+      components: [PosMakeFindable],
+      html: `<pos-make-findable uri="https://thing.example#it"/>`,
+    });
+    // and a PodOS instance that yields Things
+    const mockOs = {
+      store: {
+        get: jest.fn(),
+      },
+    };
+    when(mockOs.store.get).mockReturnValue({ fake: 'thing' });
+
+    // and the component received that PodOs instance already
+    page.rootInstance.receivePodOs(mockOs);
+    // and the component is in success state
+    page.rootInstance.success = true;
+
+    // when the URI attribute changes
+    page.root.setAttribute('uri', 'https://other.example#it');
+    // then the success status resets
+    expect(page.rootInstance.success).toEqual(false);
+  });
+
   describe('multiple indexes to choose from', () => {
     let mockOs;
 

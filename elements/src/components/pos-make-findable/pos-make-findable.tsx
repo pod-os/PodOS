@@ -51,6 +51,7 @@ export class PosMakeFindable implements PodOsAware {
   @Watch('uri')
   updateUri(uri: string) {
     this.thing = this.os.store.get(uri);
+    this.success = false;
   }
 
   receivePodOs = async (os: PodOS) => {
