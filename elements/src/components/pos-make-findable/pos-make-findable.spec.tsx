@@ -118,6 +118,46 @@ describe('pos-make-findable', () => {
     expect(errorListener).toHaveBeenCalledWith(expect.objectContaining({ detail: new Error('simulated error') }));
   });
 
+  it('shows a hint, if user has not configured any label index', async () => {
+    // given a user profile in the current session with no private label index
+    session.state.isLoggedIn = true;
+    session.state.profile = {
+      getPrivateLabelIndexes: () => [],
+    } as unknown as WebIdProfile;
+
+    // and a make findable component for a thing
+    page = await newSpecPage({
+      components: [PosMakeFindable],
+      html: `<pos-make-findable uri="https://thing.example#it"/>`,
+    });
+
+    // and a window
+    jest.spyOn(window, 'confirm');
+
+    // and a PodOS instance that yields a Thing for the URI in question
+    const mockOs = {
+      store: {
+        get: jest.fn(),
+      },
+      addToLabelIndex: jest.fn(),
+    };
+    when(mockOs.store.get).calledWith('https://thing.example#it').mockReturnValue({ fake: 'thing' });
+
+    // and the component received that PodOs instance
+    page.rootInstance.receivePodOs(mockOs);
+
+    // when the button is clicked
+    const button = screen.getByRole('button');
+    fireEvent.click(button);
+    await page.waitForChanges();
+
+    // then help on how to create an index is shown
+    expect(window.confirm).toHaveBeenCalledWith(`🔎 To use search you have to configure a label index.
+           For now you have to do this manually unfortunately.
+
+           📖 Do you want to open a page that describes how to create a label index?`);
+  });
+
   describe('does not show up', () => {
     it('if URI is empty', async () => {
       // given no user session

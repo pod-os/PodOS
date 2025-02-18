@@ -76,6 +76,20 @@ export class PosMakeFindable implements PodOsAware {
       await this.addToLabelIndex(this.indexes[0]);
     } else if (this.indexes.length > 1) {
       this.showOptions = true;
+    } else {
+      if (
+        window.confirm(
+          `🔎 To use search you have to configure a label index.
+           For now you have to do this manually unfortunately.
+
+           📖 Do you want to open a page that describes how to create a label index?`,
+        )
+      ) {
+        window.open(
+          'https://github.com/pod-os/PodOS/blob/main/docs/features/full-text-search.md#full-text-search',
+          '_blank',
+        );
+      }
     }
   }
 
