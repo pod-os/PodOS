@@ -63,12 +63,16 @@ describe('pos-make-findable', () => {
     // when the button is clicked
     const button = screen.getByRole('button');
     fireEvent.click(button);
+    await page.waitForChanges();
 
     // then the thing is added to the index
     expect(mockOs.addToLabelIndex).toHaveBeenCalledWith({ fake: 'thing' }, { fake: 'index' });
+
+    // and the state changes to success
+    expect(page.rootInstance.success).toEqual(true);
   });
 
-  fit('emits error if updating the index fails', async () => {
+  it('emits error if updating the index fails', async () => {
     // given a user profile in the current session with a single private label index
     session.state.isLoggedIn = true;
     session.state.profile = {
@@ -294,6 +298,9 @@ describe('pos-make-findable', () => {
       // and the options disappear
       const list = screen.queryByRole('listbox');
       expect(list).toBeNull();
+
+      // and the state changes to success
+      expect(page.rootInstance.success).toEqual(true);
     });
 
     it('closes the options, if clicked elsewhere', async () => {

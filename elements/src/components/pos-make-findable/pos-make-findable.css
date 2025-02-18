@@ -1,6 +1,10 @@
 button.main {
   display: flex;
-  transition: width 200ms;
+  transition:
+    width 200ms,
+    background-color 500ms,
+    color 500ms,
+    border-color 500ms;
   flex-direction: row;
   overflow: hidden;
   height: var(--size-8);
@@ -17,6 +21,13 @@ button.main {
     margin: 0;
     display: none;
     white-space: nowrap;
+  }
+
+  &.success {
+    color: var(--color-green-700);
+    border-color: var(--color-green-700);
+    border-style: solid;
+    background-color: var(--color-green-100);
   }
 }
 
@@ -67,6 +78,9 @@ svg {
 
 button.main:hover,
 button.open {
+  &.success {
+    background: var(--color-green-200);
+  }
   width: var(--size-full);
   height: var(--size-8);
   background: var(--color-grey-200);

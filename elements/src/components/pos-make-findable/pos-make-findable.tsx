@@ -19,6 +19,7 @@ export class PosMakeFindable implements PodOsAware {
   @State() unsubscribeSessionChange: undefined | (() => void);
 
   @State() showOptions = false;
+  @State() success = false;
 
   @Event({ eventName: 'pod-os:error' }) errorEmitter: EventEmitter;
 
@@ -69,6 +70,7 @@ export class PosMakeFindable implements PodOsAware {
 
   private async onClick(e: MouseEvent) {
     e.preventDefault();
+    this.success = false;
     if (this.indexes.length === 1) {
       await this.addToLabelIndex(this.indexes[0]);
     } else if (this.indexes.length > 1) {
@@ -79,6 +81,7 @@ export class PosMakeFindable implements PodOsAware {
   private async addToLabelIndex(index: LabelIndex) {
     try {
       await this.os.addToLabelIndex(this.thing, index);
+      this.success = true;
     } catch (e) {
       this.errorEmitter.emit(e);
     }
@@ -91,23 +94,18 @@ export class PosMakeFindable implements PodOsAware {
       return null;
     }
 
+    const label = 'Make this findable';
     return (
       <Host>
-        <button type="button" class={{ main: true, open: this.showOptions }} onClick={e => this.onClick(e)} title="">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m5.231 13.481L15 17.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v16.5c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Zm3.75 11.625a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"
-            />
-          </svg>
-          <p>Make this findable</p>
+        <button
+          type="button"
+          aria-label={label}
+          class={{ main: true, open: this.showOptions, success: this.success }}
+          onClick={e => this.onClick(e)}
+          title=""
+        >
+          {this.success ? <IconSuccess /> : <IconMakeFindable />}
+          <p>{label}</p>
         </button>
         {this.showOptions && (
           <div class="options">
@@ -133,3 +131,37 @@ export class PosMakeFindable implements PodOsAware {
     await this.addToLabelIndex(index);
   }
 }
+
+const IconMakeFindable = () => (
+  <svg
+    role="presentation"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke-width="1.5"
+    stroke="currentColor"
+  >
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m5.231 13.481L15 17.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v16.5c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Zm3.75 11.625a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"
+    />
+  </svg>
+);
+
+const IconSuccess = () => (
+  <svg
+    role="presentation"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke-width="1.5"
+    stroke="currentColor"
+  >
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      d="M10.125 2.25h-4.5c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125v-9M10.125 2.25h.375a9 9 0 0 1 9 9v.375M10.125 2.25A3.375 3.375 0 0 1 13.5 5.625v1.5c0 .621.504 1.125 1.125 1.125h1.5a3.375 3.375 0 0 1 3.375 3.375M9 15l2.25 2.25L15 12"
+    />
+  </svg>
+);
