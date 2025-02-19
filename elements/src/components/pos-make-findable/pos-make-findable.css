@@ -5,6 +5,7 @@ button.main {
     background-color 500ms,
     color 500ms,
     border-color 500ms;
+  max-width: var(--size-40);
   flex-direction: row;
   overflow: hidden;
   height: var(--size-8);
