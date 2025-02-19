@@ -44,17 +44,20 @@ graph TD;
   pos-add-new-thing --> pos-new-thing-form
   pos-dialog --> ion-icon
   pos-new-thing-form --> pos-select-term
+  pos-navigation-bar --> pos-make-findable
   pos-navigation-bar --> ion-searchbar
   pos-navigation-bar --> pos-rich-link
-  ion-searchbar --> ion-icon
-  pos-rich-link --> pos-resource
-  pos-rich-link --> pos-label
-  pos-rich-link --> pos-description
+  pos-make-findable --> pos-resource
+  pos-make-findable --> pos-label
   pos-resource --> ion-progress-bar
   pos-resource --> ion-card
   pos-resource --> ion-card-header
   pos-resource --> ion-card-content
   ion-card --> ion-ripple-effect
+  ion-searchbar --> ion-icon
+  pos-rich-link --> pos-resource
+  pos-rich-link --> pos-label
+  pos-rich-link --> pos-description
   pos-login --> pos-resource
   pos-login --> pos-picture
   pos-login --> pos-label

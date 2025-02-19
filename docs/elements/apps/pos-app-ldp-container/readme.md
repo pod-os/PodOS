@@ -37,8 +37,6 @@ graph TD;
   pos-app-ldp-container --> pos-literals
   pos-container-contents --> pos-resource
   pos-container-contents --> pos-container-item
-  pos-container-contents --> ion-label
-  pos-container-contents --> ion-list
   pos-resource --> ion-progress-bar
   pos-resource --> ion-card
   pos-resource --> ion-card-header

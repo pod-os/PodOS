@@ -41,6 +41,7 @@ Type: `Promise<void>`
  - [pos-app-browser](../../apps/pos-app-browser)
  - [pos-container-contents](../pos-container-contents)
  - [pos-login](../pos-login)
+ - [pos-make-findable](../pos-make-findable)
  - [pos-rich-link](../pos-rich-link)
 
 ### Depends on
@@ -61,6 +62,7 @@ graph TD;
   pos-app-browser --> pos-resource
   pos-container-contents --> pos-resource
   pos-login --> pos-resource
+  pos-make-findable --> pos-resource
   pos-rich-link --> pos-resource
   style pos-resource fill:#f9f,stroke:#333,stroke-width:4px
 ```

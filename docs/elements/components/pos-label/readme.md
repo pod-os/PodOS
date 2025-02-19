@@ -22,6 +22,7 @@
  - [pos-app-ldp-container](../../apps/pos-app-ldp-container)
  - [pos-app-rdf-document](../../apps/pos-app-rdf-document)
  - [pos-login](../pos-login)
+ - [pos-make-findable](../pos-make-findable)
  - [pos-rich-link](../pos-rich-link)
 
 ### Graph
@@ -33,6 +34,7 @@ graph TD;
   pos-app-ldp-container --> pos-label
   pos-app-rdf-document --> pos-label
   pos-login --> pos-label
+  pos-make-findable --> pos-label
   pos-rich-link --> pos-label
   style pos-label fill:#f9f,stroke:#333,stroke-width:4px
 ```
