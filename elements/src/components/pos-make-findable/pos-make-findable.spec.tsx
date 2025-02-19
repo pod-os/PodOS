@@ -374,6 +374,7 @@ describe('pos-make-findable', () => {
         { fake: 'thing' },
         { uri: 'https://pod.example/first-index' },
       );
+      await page.waitForChanges();
 
       // and the options disappear
       const list = screen.queryByRole('listbox');

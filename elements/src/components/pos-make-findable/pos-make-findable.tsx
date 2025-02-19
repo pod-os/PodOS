@@ -33,10 +33,10 @@ export class PosMakeFindable implements PodOsAware {
     this.unsubscribeSessionChange && this.unsubscribeSessionChange();
   }
 
-  @Listen('click', { target: 'window' })
+  @Listen('click', { target: 'document' })
   hideOptions(event: MouseEvent) {
     // @ts-ignore
-    if (event.target.parentNode !== this.el) {
+    if (!this.el.contains(event.target)) {
       this.showOptions = false;
     }
   }
