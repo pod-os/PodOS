@@ -1,0 +1,45 @@
+import {
+  html
+} from "lit-html";
+
+import {
+  Canvas,
+  Meta,
+  Story
+} from '@storybook/addon-docs/blocks';
+
+<Meta
+  title="Navigation"
+  args={{uri: "https://solidproject.solidcommunity.net/profile/card#me"}}
+  parameters={{
+    actions: {
+      handles: ['pod-os:link'],
+    },
+  }}
+/>
+
+
+## pos-make-findable
+
+A button, to make a thing discoverable through search, by adding it to a label index.
+
+For this to work, you need to be signed in and have a [private label index](https://github.com/pod-os/PodOS/blob/main/docs/features/full-text-search.md).
+
+> ATTENTION: To be able to log in from here, you have to go to the `Canvas` tab and click
+> the `Open canvas in new tab` button in the upper right corner of the page
+
+<Canvas
+  withSource="open">
+  <Story
+    name="pos-make-findable"
+  >
+    {({uri}) => html`
+      <header>
+        <pos-login />
+      </header>
+      <main>
+        <pos-make-findable uri=${uri} />
+      </main>
+    `}
+  </Story>
+</Canvas>
