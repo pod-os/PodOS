@@ -128,7 +128,11 @@ export class PosMakeFindable implements PodOsAware {
               {this.indexes.map((index: LabelIndex) => (
                 <li role="option">
                   <label>
-                    <input type="checkbox" checked={false} onChange={e => this.chooseOption(e, index)} />
+                    <input
+                      type="checkbox"
+                      checked={index.contains(this.uri)}
+                      onChange={e => this.chooseOption(e, index)}
+                    />
                     <pos-resource uri={index.uri} lazy={true}>
                       <pos-label></pos-label>
                     </pos-resource>

@@ -309,12 +309,16 @@ describe('pos-make-findable', () => {
       };
       when(mockOs.store.get).calledWith('https://thing.example#it').mockReturnValue({ fake: 'thing' });
       const firstIndexAssume = jest.fn();
-      when(firstIndexAssume).calledWith(LabelIndex).mockReturnValue({ uri: 'https://pod.example/first-index' });
+      when(firstIndexAssume)
+        .calledWith(LabelIndex)
+        .mockReturnValue({ uri: 'https://pod.example/first-index', contains: () => false });
       when(mockOs.store.get).calledWith('https://pod.example/first-index').mockReturnValue({
         assume: firstIndexAssume,
       });
       const secondIndexAssume = jest.fn();
-      when(secondIndexAssume).calledWith(LabelIndex).mockReturnValue({ uri: 'https://pod.example/second-index' });
+      when(secondIndexAssume)
+        .calledWith(LabelIndex)
+        .mockReturnValue({ uri: 'https://pod.example/second-index', contains: () => true });
       when(mockOs.store.get).calledWith('https://pod.example/second-index').mockReturnValue({
         assume: secondIndexAssume,
       });
@@ -340,20 +344,20 @@ describe('pos-make-findable', () => {
       expect(list).toEqualHtml(`
         <ol role="listbox">
           <li role="option">
-            <label>
-              <input type="checkbox">
-              <pos-resource uri="https://pod.example/first-index" lazy>
-                <pos-label></pos-label>
-              </pos-resource>
-            </label>
+        <label>
+          <input type="checkbox">
+          <pos-resource uri="https://pod.example/first-index" lazy>
+            <pos-label></pos-label>
+          </pos-resource>
+        </label>
           </li>
           <li role="option">
-            <label>
-              <input type="checkbox">
-              <pos-resource uri="https://pod.example/second-index" lazy>
-                <pos-label></pos-label>
-              </pos-resource>
-            </label>
+        <label>
+          <input checked type="checkbox">
+          <pos-resource uri="https://pod.example/second-index" lazy>
+            <pos-label></pos-label>
+          </pos-resource>
+        </label>
           </li>
         </ol>`);
     });
@@ -374,7 +378,7 @@ describe('pos-make-findable', () => {
       // then the thing is added to the index
       expect(mockOs.addToLabelIndex).toHaveBeenCalledWith(
         { fake: 'thing' },
-        { uri: 'https://pod.example/first-index' },
+        expect.objectContaining({ uri: 'https://pod.example/first-index' }),
       );
       await page.waitForChanges();
 
