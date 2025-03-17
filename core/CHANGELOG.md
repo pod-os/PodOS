@@ -11,6 +11,7 @@ and this project adheres to
 ### Added
 
 - `addToLabelIndex`: a function to include a thing in a label index, so that it can be found via search
+- `LabelIndex.contains`: a method to check if a label index contains a specific URI
 
 ## 0.13.0
 

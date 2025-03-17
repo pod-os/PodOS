@@ -1,5 +1,6 @@
 import { IndexedFormula, sym } from "rdflib";
 import { RdfDocument } from "../rdf-document";
+import { rdfs } from "../namespaces";
 
 /**
  * Represents a label index document as described in
@@ -20,7 +21,7 @@ export class LabelIndex extends RdfDocument {
   getIndexedItems() {
     const matches = this.store.statementsMatching(
       null,
-      sym("http://www.w3.org/2000/01/rdf-schema#label"),
+      rdfs("label"),
       null,
       sym(this.uri),
     );
@@ -31,5 +32,9 @@ export class LabelIndex extends RdfDocument {
         label: it.object.value,
       };
     });
+  }
+
+  contains(uri: string) {
+    return this.store.holds(sym(uri), rdfs("label"), null, sym(this.uri));
   }
 }
