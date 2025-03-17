@@ -30,6 +30,11 @@ button.main {
     border-style: solid;
     background-color: var(--color-green-100);
   }
+
+  &:active {
+    transform: scale(0.99);
+    filter: brightness(90%);
+  }
 }
 
 .options {
