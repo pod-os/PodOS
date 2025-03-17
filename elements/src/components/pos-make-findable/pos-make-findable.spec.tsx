@@ -340,18 +340,20 @@ describe('pos-make-findable', () => {
       expect(list).toEqualHtml(`
         <ol role="listbox">
           <li role="option">
-            <button>
+            <label>
+              <input type="checkbox">
               <pos-resource uri="https://pod.example/first-index" lazy>
                 <pos-label></pos-label>
               </pos-resource>
-            </button>
+            </label>
           </li>
           <li role="option">
-            <button>
+            <label>
+              <input type="checkbox">
               <pos-resource uri="https://pod.example/second-index" lazy>
                 <pos-label></pos-label>
               </pos-resource>
-            </button>
+            </label>
           </li>
         </ol>`);
     });
@@ -365,8 +367,8 @@ describe('pos-make-findable', () => {
       // and an option is chosen
       const options = screen.getAllByRole('option');
       expect(options.length).toEqual(2);
-      const indexButton = within(options[0]).getByRole('button');
-      fireEvent.click(indexButton);
+      const indexCheckbox = within(options[0]).getByRole('checkbox');
+      fireEvent.change(indexCheckbox);
       await page.waitForChanges();
 
       // then the thing is added to the index
