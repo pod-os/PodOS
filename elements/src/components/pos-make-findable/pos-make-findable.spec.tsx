@@ -405,6 +405,29 @@ describe('pos-make-findable', () => {
       const list = screen.queryByRole('listbox');
       expect(list).toBeNull();
     });
+
+    it('closes the options, if button is clicked again', async () => {
+      // given the list does not show up yet
+      expect(screen.queryByRole('listbox')).toBeNull();
+
+      // when the button is clicked
+      const button = screen.getByRole('button');
+      fireEvent.click(button);
+      await page.waitForChanges();
+
+      // and then clicked it again
+      // @ts-ignore
+      fireEvent.click(button);
+      await page.waitForChanges();
+
+      // then nothing is added to an index
+      expect(mockOs.addToLabelIndex).not.toHaveBeenCalled();
+
+      // and the options disappear
+      const list = screen.queryByRole('listbox');
+      expect(list).toBeNull();
+    });
+
     it('closes the options, when ESC is pressed', async () => {
       // given the list does not show up yet
       expect(screen.queryByRole('listbox')).toBeNull();

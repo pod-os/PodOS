@@ -75,7 +75,7 @@ export class PosMakeFindable implements PodOsAware {
     if (this.indexes.length === 1) {
       await this.addToLabelIndex(this.indexes[0]);
     } else if (this.indexes.length > 1) {
-      this.showOptions = true;
+      this.showOptions = !this.showOptions;
     } else {
       if (
         window.confirm(
