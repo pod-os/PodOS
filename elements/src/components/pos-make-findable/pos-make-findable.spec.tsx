@@ -53,7 +53,9 @@ describe('pos-make-findable', () => {
     };
     when(mockOs.store.get).calledWith('https://thing.example#it').mockReturnValue({ fake: 'thing' });
     const labelIndexAssume = jest.fn();
-    when(labelIndexAssume).calledWith(LabelIndex).mockReturnValue({ fake: 'index' });
+    when(labelIndexAssume)
+      .calledWith(LabelIndex)
+      .mockReturnValue({ fake: 'index', contains: () => false });
     when(mockOs.store.get).calledWith('https://pod.example/label-index').mockReturnValue({
       assume: labelIndexAssume,
     });
@@ -66,10 +68,47 @@ describe('pos-make-findable', () => {
     await page.waitForChanges();
 
     // then the thing is added to the index
-    expect(mockOs.addToLabelIndex).toHaveBeenCalledWith({ fake: 'thing' }, { fake: 'index' });
+    expect(mockOs.addToLabelIndex).toHaveBeenCalledWith({ fake: 'thing' }, expect.objectContaining({ fake: 'index' }));
 
-    // and the state changes to success
-    expect(page.rootInstance.success).toEqual(true);
+    // and the state changes to indexed
+    expect(page.rootInstance.isIndexed).toEqual(true);
+  });
+
+  it('indicates if thing is already indexed', async () => {
+    // given a user profile in the current session with a single private label index
+    session.state.isLoggedIn = true;
+    session.state.profile = {
+      getPrivateLabelIndexes: () => ['https://pod.example/label-index'],
+    } as unknown as WebIdProfile;
+
+    // and a make findable component for a thing
+    page = await newSpecPage({
+      components: [PosMakeFindable],
+      html: `<pos-make-findable uri="https://thing.example#it"/>`,
+    });
+
+    // and a PodOS instance that yields Thing and LabelIndex instances for the URIs in question
+    const mockOs = {
+      store: {
+        get: jest.fn(),
+      },
+    };
+    when(mockOs.store.get).calledWith('https://thing.example#it').mockReturnValue({ fake: 'thing' });
+    const contains = jest.fn();
+    const labelIndexAssume = jest.fn();
+    when(labelIndexAssume).calledWith(LabelIndex).mockReturnValue({ fake: 'index', contains });
+    when(mockOs.store.get).calledWith('https://pod.example/label-index').mockReturnValue({
+      assume: labelIndexAssume,
+    });
+
+    // and the index already contains the URI
+    when(contains).calledWith('https://thing.example#it').mockReturnValue(true);
+
+    // and the component received that PodOs instance
+    page.rootInstance.receivePodOs(mockOs);
+
+    // then the state indicates that the URI is already indexed
+    expect(page.rootInstance.isIndexed).toEqual(true);
   });
 
   it('emits error if updating the index fails', async () => {
@@ -98,7 +137,9 @@ describe('pos-make-findable', () => {
     };
     when(mockOs.store.get).calledWith('https://thing.example#it').mockReturnValue({ fake: 'thing' });
     const labelIndexAssume = jest.fn();
-    when(labelIndexAssume).calledWith(LabelIndex).mockReturnValue({ fake: 'index' });
+    when(labelIndexAssume)
+      .calledWith(LabelIndex)
+      .mockReturnValue({ fake: 'index', contains: () => false });
     when(mockOs.store.get).calledWith('https://pod.example/label-index').mockReturnValue({
       assume: labelIndexAssume,
     });
@@ -204,7 +245,9 @@ describe('pos-make-findable', () => {
     };
     when(mockOs.store.get).calledWith('https://thing.example#it').mockReturnValue({ fake: 'thing' });
     const labelIndexAssume = jest.fn();
-    when(labelIndexAssume).calledWith(LabelIndex).mockReturnValue({ fake: 'index' });
+    when(labelIndexAssume)
+      .calledWith(LabelIndex)
+      .mockReturnValue({ fake: 'index', contains: () => false });
     when(mockOs.store.get).calledWith('https://pod.example/label-index').mockReturnValue({
       assume: labelIndexAssume,
     });
@@ -229,7 +272,7 @@ describe('pos-make-findable', () => {
 
     // and is working
     fireEvent.click(button);
-    expect(mockOs.addToLabelIndex).toHaveBeenCalledWith({ fake: 'thing' }, { fake: 'index' });
+    expect(mockOs.addToLabelIndex).toHaveBeenCalledWith({ fake: 'thing' }, expect.objectContaining({ fake: 'index' }));
   });
 
   it('updates thing when URI changes', async () => {
@@ -258,7 +301,7 @@ describe('pos-make-findable', () => {
     expect(page.rootInstance.thing).toEqual({ uri: 'https://other.example#it' });
   });
 
-  it('resets success state when URI changes', async () => {
+  it('resets index indication when URI changes', async () => {
     // given a make findable component for a thing
     page = await newSpecPage({
       components: [PosMakeFindable],
@@ -274,13 +317,13 @@ describe('pos-make-findable', () => {
 
     // and the component received that PodOs instance already
     page.rootInstance.receivePodOs(mockOs);
-    // and the component is in success state
-    page.rootInstance.success = true;
+    // and the component is in indexed state
+    page.rootInstance.isIndexed = true;
 
     // when the URI attribute changes
     page.root.setAttribute('uri', 'https://other.example#it');
-    // then the success status resets
-    expect(page.rootInstance.success).toEqual(false);
+    // then the indexed status resets
+    expect(page.rootInstance.isIndexed).toEqual(false);
   });
 
   describe('multiple indexes to choose from', () => {
@@ -386,8 +429,8 @@ describe('pos-make-findable', () => {
       const list = screen.queryByRole('listbox');
       expect(list).toBeNull();
 
-      // and the state changes to success
-      expect(page.rootInstance.success).toEqual(true);
+      // and the state changes to indexed
+      expect(page.rootInstance.isIndexed).toEqual(true);
     });
 
     it('closes the options, if clicked elsewhere', async () => {

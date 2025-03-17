@@ -19,7 +19,7 @@ export class PosMakeFindable implements PodOsAware {
   @State() unsubscribeSessionChange: undefined | (() => void);
 
   @State() showOptions = false;
-  @State() success = false;
+  @State() isIndexed = false;
 
   @Event({ eventName: 'pod-os:error' }) errorEmitter: EventEmitter;
 
@@ -51,7 +51,11 @@ export class PosMakeFindable implements PodOsAware {
   @Watch('uri')
   updateUri(uri: string) {
     this.thing = this.os.store.get(uri);
-    this.success = false;
+    this.isIndexed = this.checkIfIndexed(uri);
+  }
+
+  private checkIfIndexed(uri: string) {
+    return this.indexes.some(it => it.contains(uri));
   }
 
   receivePodOs = async (os: PodOS) => {
@@ -66,12 +70,12 @@ export class PosMakeFindable implements PodOsAware {
   private getLabelIndexes(profile: WebIdProfile) {
     if (profile) {
       this.indexes = profile.getPrivateLabelIndexes().map(it => this.os.store.get(it).assume(LabelIndex));
+      this.isIndexed = this.checkIfIndexed(this.uri);
     }
   }
 
   private async onClick(e: MouseEvent) {
     e.preventDefault();
-    this.success = false;
     if (this.indexes.length === 1) {
       await this.addToLabelIndex(this.indexes[0]);
     } else if (this.indexes.length > 1) {
@@ -96,7 +100,7 @@ export class PosMakeFindable implements PodOsAware {
   private async addToLabelIndex(index: LabelIndex) {
     try {
       await this.os.addToLabelIndex(this.thing, index);
-      this.success = true;
+      this.isIndexed = true;
     } catch (e) {
       this.errorEmitter.emit(e);
     }
@@ -115,11 +119,11 @@ export class PosMakeFindable implements PodOsAware {
         <button
           type="button"
           aria-label={label}
-          class={{ main: true, open: this.showOptions, success: this.success }}
+          class={{ main: true, open: this.showOptions, success: this.isIndexed }}
           onClick={e => this.onClick(e)}
           title=""
         >
-          {this.success ? <IconSuccess /> : <IconMakeFindable />}
+          {this.isIndexed ? <IconSuccess /> : <IconMakeFindable />}
           <p>{label}</p>
         </button>
         {this.showOptions && (
