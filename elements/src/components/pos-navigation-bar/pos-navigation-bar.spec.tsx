@@ -14,7 +14,6 @@ describe('pos-navigation-bar', () => {
     <pos-navigation-bar uri="https://pod.example/resource">
       <mock:shadow-root>
         <form>
-          <pos-make-findable uri="https://pod.example/resource"></pos-make-findable>
           <div class="bar">
             <ion-searchbar debounce="300" enterkeyhint="search" placeholder="Search or enter URI" value="https://pod.example/resource"></ion-searchbar>
           </div>
@@ -83,9 +82,35 @@ describe('pos-navigation-bar', () => {
 
       // and the user is signed in
       await session.sessionChanged(true);
+      await page.waitForChanges();
 
       // and therefore the search index is defined
       expect(page.rootInstance.searchIndex).toBeDefined();
+    });
+
+    it('shows the make-findable button as soon as search index is available', () => {
+      expect(page.root).toEqualHtml(`
+        <pos-navigation-bar uri="https://pod.example/resource">
+          <form>
+            <pos-make-findable uri="https://pod.example/resource"></pos-make-findable>
+            <div class="bar">
+              <ion-searchbar debounce="300" enterkeyhint="search" placeholder="Search or enter URI" value="https://pod.example/resource"></ion-searchbar>
+            </div>
+          </form>
+        </pos-navigation-bar>`);
+    });
+
+    it('does not show the make-findable button if URI is empty', async () => {
+      page.root.setAttribute('uri', '');
+      await page.waitForChanges();
+      expect(page.root).toEqualHtml(`
+        <pos-navigation-bar uri="">
+          <form>
+            <div class="bar">
+              <ion-searchbar debounce="300" enterkeyhint="search" placeholder="Search or enter URI" value=""></ion-searchbar>
+            </div>
+          </form>
+        </pos-navigation-bar>`);
     });
 
     it(' searches for the typed text and shows suggestions', async () => {

@@ -88,7 +88,7 @@ export class PosNavigationBar implements PodOsAware {
   render() {
     return (
       <form onSubmit={e => this.onSubmit(e)}>
-        <pos-make-findable uri={this.uri}></pos-make-findable>
+        {this.searchIndex && this.uri ? <pos-make-findable uri={this.uri}></pos-make-findable> : ''}
         <div class="bar">
           <ion-searchbar
             enterkeyhint="search"
