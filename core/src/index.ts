@@ -134,15 +134,7 @@ export class PodOS {
    * @param webId
    */
   async buildSearchIndex(profile: WebIdProfile) {
-    const labelIndexUris = profile.getPrivateLabelIndexes();
-    if (labelIndexUris.length > 0) {
-      await this.fetchAll(labelIndexUris);
-      const labelIndex = labelIndexUris.map((uri) =>
-        this.store.get(uri).assume(LabelIndex),
-      );
-      return new SearchIndex(labelIndex);
-    }
-    return new SearchIndex([]);
+    return this.searchGateway.buildSearchIndex(profile);
   }
 
   logout() {

@@ -13,8 +13,51 @@ import { lit, st, sym } from "rdflib";
 import { pim, rdfs } from "../namespaces";
 import { LabelIndex } from "./LabelIndex";
 import { Thing } from "../thing";
+import { solid } from "@solid-data-modules/rdflib-utils";
 
 describe(SearchGateway.name, () => {
+  describe("build search index", () => {
+    it("creates an index that can find indexed items", async () => {
+      // given a session and a store
+      const fetchMock = jest.fn();
+      const mockSession = {
+        authenticatedFetch: fetchMock,
+      } as unknown as PodOsSession;
+      const store = new Store(mockSession);
+      const gateway = new SearchGateway(store);
+
+      // and a profile with a private label index
+      store.graph.add(
+        st(
+          sym("https://pod.test/profile/card#me"),
+          solid("privateLabelIndex"),
+          sym("https://pod.test/profile/privateLabelIndex.ttl"),
+          sym("https://pod.test/profile/card"),
+        ),
+      );
+      const profile = store
+        .get("https://pod.test/profile/card#me")
+        .assume(WebIdProfile);
+
+      // and the index contains data
+      mockTurtleDocument(
+        fetchMock,
+        "https://pod.test/profile/privateLabelIndex.ttl",
+        `
+      <https://pod.test/some/thing#it> <http://www.w3.org/2000/01/rdf-schema#label> "Test Thing" .
+    `,
+      );
+
+      // when building a search index for that profile
+      const searchIndex = await gateway.buildSearchIndex(profile);
+
+      // then the search can find the indexed item
+      const result = searchIndex.search("test");
+      expect(result).toHaveLength(1);
+      expect(result[0].ref).toEqual("https://pod.test/some/thing#it");
+    });
+  });
+
   describe("add to label index", () => {
     it("patches the label index with a label found in the store", async () => {
       // given a session and a store
