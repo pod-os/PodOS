@@ -29,11 +29,25 @@ export class PosNavigationBar implements PodOsAware {
     subscribePodOs(this);
     session.onChange('isLoggedIn', async isLoggedIn => {
       if (isLoggedIn) {
-        this.searchIndex = await this.os.buildSearchIndex(session.state.profile);
+        await this.buildSearchIndex();
       } else {
-        this.searchIndex?.clear();
+        this.clearSearchIndex();
       }
     });
+  }
+
+  @Listen('pod-os:search:index-created')
+  private async buildSearchIndex() {
+    this.searchIndex = await this.os.buildSearchIndex(session.state.profile);
+  }
+
+  @Listen('pod-os:search:index-updated')
+  rebuildSearchIndex() {
+    this.searchIndex.rebuild();
+  }
+
+  private clearSearchIndex() {
+    this.searchIndex?.clear();
   }
 
   receivePodOs = async (os: PodOS) => {

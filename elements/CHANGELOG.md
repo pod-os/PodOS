@@ -10,6 +10,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - [pos-make-findable](../docs/elements/components/pos-make-findable)
   - creates a default label index if the user has not yet configured one
+- [pos-navigation-bar](../docs/elements/components/pos-navigation-bar)
+  - keeps the search index up-to-date after making things findable
 
 ## 0.23.1
 

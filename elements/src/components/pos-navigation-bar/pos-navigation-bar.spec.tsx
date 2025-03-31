@@ -75,6 +75,7 @@ describe('pos-navigation-bar', () => {
           },
         ]),
         clear: jest.fn(),
+        rebuild: jest.fn(),
       };
       page.rootInstance.receivePodOs({
         buildSearchIndex: jest.fn().mockReturnValue(mockSearchIndex),
@@ -315,6 +316,37 @@ describe('pos-navigation-bar', () => {
 
       // then the search index is cleared
       expect(mockSearchIndex.clear).toHaveBeenCalled();
+    });
+
+    it('builds a new search index from scratch when a new index document has been added', async () => {
+      expect(page.rootInstance.os.buildSearchIndex).toHaveBeenCalledTimes(1);
+      page.rootInstance.os.buildSearchIndex.mockReturnValueOnce({ fake: 'search index from scratch' });
+      fireEvent(
+        page.root,
+        new CustomEvent('pod-os:search:index-created', {
+          detail: {
+            fake: 'index',
+          },
+        }),
+      );
+      await page.waitForChanges();
+      expect(page.rootInstance.os.buildSearchIndex).toHaveBeenCalledTimes(2);
+      expect(page.rootInstance.searchIndex).toEqual({ fake: 'search index from scratch' });
+    });
+
+    it('rebuilds existing search index after new items have been indexed', async () => {
+      expect(page.rootInstance.os.buildSearchIndex).toHaveBeenCalledTimes(1);
+      fireEvent(
+        page.root,
+        new CustomEvent('pod-os:search:index-updated', {
+          detail: {
+            fake: 'index',
+          },
+        }),
+      );
+      await page.waitForChanges();
+      expect(page.rootInstance.os.buildSearchIndex).toHaveBeenCalledTimes(1);
+      expect(mockSearchIndex.rebuild).toHaveBeenCalledTimes(1);
     });
   });
 });
