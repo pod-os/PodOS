@@ -223,4 +223,24 @@ describe("search index", () => {
       expect(result).toHaveLength(0);
     });
   });
+
+  describe("rebuild", () => {
+    it("finds items after rebuilding the index with new data", () => {
+      const index = new SearchIndex([
+        {
+          getIndexedItems: jest
+            .fn()
+            .mockReturnValueOnce([])
+            .mockReturnValueOnce([
+              { uri: "https://pod.example/profile#me", label: "Alice" },
+            ]),
+        } as unknown as LabelIndex,
+      ]);
+      const result = index.search("alice");
+      expect(result).toEqual([]);
+      const updatedResult = index.rebuild().search("alice");
+      expect(updatedResult).toHaveLength(1);
+      expect(updatedResult[0].ref).toEqual("https://pod.example/profile#me");
+    });
+  });
 });

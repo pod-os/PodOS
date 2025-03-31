@@ -6,14 +6,22 @@ import lunr, { Index } from "lunr";
  */
 export class SearchIndex {
   private index: Index;
-  constructor(indexes: LabelIndex[]) {
+  constructor(private labelIndexes: LabelIndex[]) {
+    this.index = this.rebuild().index;
+  }
+
+  /**
+   * Recreates the search index with the current data from all label indexes
+   */
+  rebuild() {
+    const labelIndexes = this.labelIndexes;
     this.index = lunr(function () {
       this.ref("uri");
       this.field("uri");
       this.field("label");
       this.metadataWhitelist = ["position"];
 
-      const items = indexes.flatMap((it) => it.getIndexedItems());
+      const items = labelIndexes.flatMap((it) => it.getIndexedItems());
 
       items.forEach((item) => {
         this.add({
@@ -22,6 +30,7 @@ export class SearchIndex {
         });
       });
     });
+    return this;
   }
 
   /**

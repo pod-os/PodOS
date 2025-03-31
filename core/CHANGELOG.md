@@ -11,6 +11,7 @@ and this project adheres to
 ### Added
 
 - `createDefaultLabelIndex`: a function to create a new label index document at a default location and set it up in the user's profile / settings
+- `SearchIndex.rebuild()`: rebuild the search index with updated data
 
 ## 0.14.0
 
