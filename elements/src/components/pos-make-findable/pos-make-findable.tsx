@@ -97,8 +97,12 @@ export class PosMakeFindable implements PodOsAware {
     this.showOptions = false;
   }
 
-  private createDefaultLabelIndex(): Promise<LabelIndex> {
-    return this.os.createDefaultLabelIndex(session.state.profile);
+  private async createDefaultLabelIndex(): Promise<LabelIndex> {
+    try {
+      return await this.os.createDefaultLabelIndex(session.state.profile);
+    } catch (e) {
+      this.errorEmitter.emit(e);
+    }
   }
 
   render() {

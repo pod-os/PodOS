@@ -172,9 +172,6 @@ describe('pos-make-findable', () => {
       html: `<pos-make-findable uri="https://thing.example#it"/>`,
     });
 
-    // and a window
-    jest.spyOn(window, 'confirm');
-
     // and a PodOS instance that yields a Thing for the URI in question
     const mockOs = {
       store: {
@@ -206,6 +203,50 @@ describe('pos-make-findable', () => {
 
     // and the state changes to indexed
     expect(page.rootInstance.isIndexed).toEqual(true);
+  });
+
+  it('emits error if creating the default index fails', async () => {
+    // given a user profile in the current session with no private label index
+    session.state.isLoggedIn = true;
+    session.state.profile = {
+      getPrivateLabelIndexes: () => [],
+    } as unknown as WebIdProfile;
+
+    // and a make findable component for a thing
+    page = await newSpecPage({
+      components: [PosMakeFindable],
+      html: `<pos-make-findable uri="https://thing.example#it"/>`,
+    });
+
+    // and the page listens for error
+    const errorListener = jest.fn();
+    page.root.addEventListener('pod-os:error', errorListener);
+
+    // and a PodOS instance that yields a Thing for the URI in question
+    const mockOs = {
+      store: {
+        get: jest.fn(),
+      },
+      addToLabelIndex: jest.fn(),
+      createDefaultLabelIndex: jest.fn(),
+    };
+    when(mockOs.store.get).calledWith('https://thing.example#it').mockReturnValue({ fake: 'thing' });
+
+    // but leads to an error when creating the default index
+    when(mockOs.createDefaultLabelIndex)
+      .calledWith(session.state.profile)
+      .mockRejectedValue(new Error('simulated error'));
+
+    // and the component received that PodOs instance
+    page.rootInstance.receivePodOs(mockOs);
+
+    // when the button is clicked
+    const button = screen.getByRole('button');
+    fireEvent.click(button);
+    await page.waitForChanges();
+
+    // then an error event is emitted
+    expect(errorListener).toHaveBeenCalledWith(expect.objectContaining({ detail: new Error('simulated error') }));
   });
 
   describe('does not show up', () => {
