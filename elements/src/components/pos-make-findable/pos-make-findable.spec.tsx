@@ -482,6 +482,10 @@ describe('pos-make-findable', () => {
     });
 
     it('add thing to the chosen label index', async () => {
+      // and the page listens for index updates
+      const indexUpdateListener = jest.fn();
+      page.root.addEventListener('pod-os:search:index-updated', indexUpdateListener);
+
       // when the button is clicked
       const button = screen.getByRole('button');
       fireEvent.click(button);
@@ -507,6 +511,11 @@ describe('pos-make-findable', () => {
 
       // and the state changes to indexed
       expect(page.rootInstance.isIndexed).toEqual(true);
+
+      // then
+      expect(indexUpdateListener).toHaveBeenCalledWith(
+        expect.objectContaining({ detail: expect.objectContaining({ uri: 'https://pod.example/first-index' }) }),
+      );
     });
 
     it('closes the options, if clicked elsewhere', async () => {

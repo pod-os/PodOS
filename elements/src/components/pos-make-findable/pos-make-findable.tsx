@@ -155,6 +155,7 @@ export class PosMakeFindable implements PodOsAware {
   private async chooseOption(e: Event, index: LabelIndex) {
     e.preventDefault();
     await this.addToLabelIndex(index);
+    this.indexUpdatedEmitter.emit(index);
   }
 }
 
