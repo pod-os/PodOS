@@ -44,6 +44,10 @@ describe('pos-make-findable', () => {
       html: `<pos-make-findable uri="https://thing.example#it"/>`,
     });
 
+    // and the page listens for index updates
+    const indexUpdateListener = jest.fn();
+    page.root.addEventListener('pod-os:search:index-updated', indexUpdateListener);
+
     // and a PodOS instance that yields Thing and LabelIndex instances for the URIs in question
     const mockOs = {
       store: {
@@ -72,6 +76,15 @@ describe('pos-make-findable', () => {
 
     // and the state changes to indexed
     expect(page.rootInstance.isIndexed).toEqual(true);
+
+    // and an index update event is emitted
+    expect(indexUpdateListener).toHaveBeenCalledWith(
+      expect.objectContaining({
+        detail: expect.objectContaining({
+          fake: 'index',
+        }),
+      }),
+    );
   });
 
   it('indicates if thing is already indexed', async () => {
@@ -172,6 +185,10 @@ describe('pos-make-findable', () => {
       html: `<pos-make-findable uri="https://thing.example#it"/>`,
     });
 
+    // and the page listens for index creation
+    const indexCreatedListener = jest.fn();
+    page.root.addEventListener('pod-os:search:index-created', indexCreatedListener);
+
     // and a PodOS instance that yields a Thing for the URI in question
     const mockOs = {
       store: {
@@ -203,6 +220,15 @@ describe('pos-make-findable', () => {
 
     // and the state changes to indexed
     expect(page.rootInstance.isIndexed).toEqual(true);
+
+    // and an index created event is emitted
+    expect(indexCreatedListener).toHaveBeenCalledWith(
+      expect.objectContaining({
+        detail: expect.objectContaining({
+          fake: 'newly created default index',
+        }),
+      }),
+    );
   });
 
   it('emits error if creating the default index fails', async () => {
