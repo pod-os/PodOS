@@ -5,12 +5,11 @@ import { SolidFile } from "./files";
 import { FileFetcher } from "./files/FileFetcher";
 import { loadContactsModule } from "./modules/contacts";
 import { WebIdProfile } from "./profile";
-import { LabelIndex, SearchIndex } from "./search";
+import { LabelIndex, SearchGateway } from "./search";
 import { Store } from "./Store";
 import { listKnownTerms, Term } from "./terms";
 import { Thing } from "./thing";
 import { UriService } from "./uri/UriService";
-import { SearchGateway } from "./search";
 
 export * from "./authentication";
 export * from "./files";
