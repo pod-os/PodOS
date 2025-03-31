@@ -169,9 +169,10 @@ export class PodOS {
   /**
    * Creates a new label index document at a default location and links it to the user's profile or preferences document
    *
-   * @param profile
+   * @param profile - The profile for that to create the index
+   * @returns the newly created label index
    */
-  async createDefaultLabelIndex(profile: WebIdProfile) {
-    await this.searchGateway.createDefaultLabelIndex(profile);
+  async createDefaultLabelIndex(profile: WebIdProfile): Promise<LabelIndex> {
+    return await this.searchGateway.createDefaultLabelIndex(profile);
   }
 }

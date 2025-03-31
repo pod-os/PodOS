@@ -1,10 +1,11 @@
-import { sym, st } from "rdflib";
+import { lit, st, sym } from "rdflib";
 import { solid, UpdateOperation } from "@solid-data-modules/rdflib-utils";
 import { WebIdProfile } from "../profile";
+import { rdfs } from "../namespaces";
 
 export function createDefaultLabelIndex(
   profile: WebIdProfile,
-): UpdateOperation {
+): { uri: string } & UpdateOperation {
   const webId = sym(profile.webId);
   const preferencesFile = profile.getPreferencesFile();
   const defaultFileName = "privateLabelIndex.ttl";
@@ -12,13 +13,23 @@ export function createDefaultLabelIndex(
   const indexUrl = preferencesFile
     ? new URL(defaultFileName, preferencesFile).href
     : new URL(defaultFileName, webId.uri).href;
-  const document = preferencesFile ? sym(preferencesFile) : webId.doc();
+  const preferencesOrProfileDoc = preferencesFile
+    ? sym(preferencesFile)
+    : webId.doc();
 
+  const indexDocument = sym(indexUrl);
   return {
+    uri: indexDocument.uri,
     insertions: [
-      st(webId, solid("privateLabelIndex"), sym(indexUrl), document),
+      st(
+        webId,
+        solid("privateLabelIndex"),
+        indexDocument,
+        preferencesOrProfileDoc,
+      ),
+      st(indexDocument, rdfs("label"), lit("Default Index"), indexDocument),
     ],
     deletions: [],
-    filesToCreate: [{ url: indexUrl }],
+    filesToCreate: [],
   };
 }

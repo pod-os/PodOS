@@ -4,14 +4,14 @@ import { Store } from "../Store";
 
 import {
   expectPatchRequest,
-  expectPutEmptyTurtleFile,
   mockNotFound,
   mockTurtleDocument,
-  // @ts-expect-error compiler does not recognize import correctly
+  // @ts-expect-error compiler does not resolve module correctly
 } from "@solid-data-modules/rdflib-utils/test-support";
 import { WebIdProfile } from "../profile";
 import { st, sym } from "rdflib";
 import { pim } from "../namespaces";
+import { LabelIndex } from "./LabelIndex";
 
 describe(SearchGateway.name, () => {
   describe("create default label index", () => {
@@ -35,7 +35,7 @@ describe(SearchGateway.name, () => {
         mockTurtleDocument(fetchMock, "https://pod.example/profile/card", "");
 
         // when a new label index is created for that profile
-        await gateway.createDefaultLabelIndex(
+        const result = await gateway.createDefaultLabelIndex(
           new WebIdProfile(
             "https://pod.example/profile/card#me",
             store.graph,
@@ -57,11 +57,26 @@ _:patch
       };   a solid:InsertDeletePatch .`,
         );
 
-        // and an empty index document is created
-        expectPutEmptyTurtleFile(
+        // and an index document is created with a name
+        expectPatchRequest(
           fetchMock,
           "https://pod.example/profile/privateLabelIndex.ttl",
+          `@prefix solid: <http://www.w3.org/ns/solid/terms#>.
+@prefix ex: <http://www.example.org/terms#>.
+
+_:patch
+
+      solid:inserts {
+        <https://pod.example/profile/privateLabelIndex.ttl> <http://www.w3.org/2000/01/rdf-schema#label> "Default Index" .
+      };   a solid:InsertDeletePatch .`,
         );
+
+        // and a label index instance is returned representing that index
+        expect(result).toBeInstanceOf(LabelIndex);
+        expect(result.uri).toEqual(
+          "https://pod.example/profile/privateLabelIndex.ttl",
+        );
+        expect(result.label()).toEqual("Default Index");
       });
     });
     describe("given a preferences document exists", () => {
@@ -98,7 +113,7 @@ _:patch
         );
 
         // when a new label index is created for that profile
-        await gateway.createDefaultLabelIndex(
+        const result = await gateway.createDefaultLabelIndex(
           new WebIdProfile(
             "https://pod.example/profile/card#me",
             store.graph,
@@ -120,11 +135,26 @@ _:patch
       };   a solid:InsertDeletePatch .`,
         );
 
-        // and an empty index document is created
-        expectPutEmptyTurtleFile(
+        // and an index document is created with a name
+        expectPatchRequest(
           fetchMock,
           "https://pod.example/settings/privateLabelIndex.ttl",
+          `@prefix solid: <http://www.w3.org/ns/solid/terms#>.
+@prefix ex: <http://www.example.org/terms#>.
+
+_:patch
+
+      solid:inserts {
+        <https://pod.example/settings/privateLabelIndex.ttl> <http://www.w3.org/2000/01/rdf-schema#label> "Default Index" .
+      };   a solid:InsertDeletePatch .`,
         );
+
+        // and a label index instance is returned representing that index
+        expect(result).toBeInstanceOf(LabelIndex);
+        expect(result.uri).toEqual(
+          "https://pod.example/settings/privateLabelIndex.ttl",
+        );
+        expect(result.label()).toEqual("Default Index");
       });
     });
   });
