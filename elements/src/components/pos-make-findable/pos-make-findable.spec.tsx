@@ -159,7 +159,7 @@ describe('pos-make-findable', () => {
     expect(errorListener).toHaveBeenCalledWith(expect.objectContaining({ detail: new Error('simulated error') }));
   });
 
-  it('shows a hint, if user has not configured any label index', async () => {
+  it('creates a default label index if none exists and then uses it to make the thing findable', async () => {
     // given a user profile in the current session with no private label index
     session.state.isLoggedIn = true;
     session.state.profile = {
@@ -181,8 +181,14 @@ describe('pos-make-findable', () => {
         get: jest.fn(),
       },
       addToLabelIndex: jest.fn(),
+      createDefaultLabelIndex: jest.fn(),
     };
     when(mockOs.store.get).calledWith('https://thing.example#it').mockReturnValue({ fake: 'thing' });
+
+    // and it is able to create a default index for the user profile
+    when(mockOs.createDefaultLabelIndex)
+      .calledWith(session.state.profile)
+      .mockReturnValue({ fake: 'newly created default index' });
 
     // and the component received that PodOs instance
     page.rootInstance.receivePodOs(mockOs);
@@ -192,11 +198,14 @@ describe('pos-make-findable', () => {
     fireEvent.click(button);
     await page.waitForChanges();
 
-    // then help on how to create an index is shown
-    expect(window.confirm).toHaveBeenCalledWith(`🔎 To use search you have to configure a label index.
-           For now you have to do this manually unfortunately.
+    // then the thing is added to the index
+    expect(mockOs.addToLabelIndex).toHaveBeenCalledWith(
+      { fake: 'thing' },
+      expect.objectContaining({ fake: 'newly created default index' }),
+    );
 
-           📖 Do you want to open a page that describes how to create a label index?`);
+    // and the state changes to indexed
+    expect(page.rootInstance.isIndexed).toEqual(true);
   });
 
   describe('does not show up', () => {

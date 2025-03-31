@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- [pos-make-findable](../docs/elements/components/pos-make-findable)
+  - creates a default label index if the user has not yet configured one
+
 ## 0.23.1
 
 ### Fixed

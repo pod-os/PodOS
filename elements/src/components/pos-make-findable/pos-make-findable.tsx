@@ -81,19 +81,8 @@ export class PosMakeFindable implements PodOsAware {
     } else if (this.indexes.length > 1) {
       this.showOptions = !this.showOptions;
     } else {
-      if (
-        window.confirm(
-          `🔎 To use search you have to configure a label index.
-           For now you have to do this manually unfortunately.
-
-           📖 Do you want to open a page that describes how to create a label index?`,
-        )
-      ) {
-        window.open(
-          'https://github.com/pod-os/PodOS/blob/main/docs/features/full-text-search.md#full-text-search',
-          '_blank',
-        );
-      }
+      const index = await this.createDefaultLabelIndex();
+      await this.addToLabelIndex(index);
     }
   }
 
@@ -106,6 +95,10 @@ export class PosMakeFindable implements PodOsAware {
     }
 
     this.showOptions = false;
+  }
+
+  private createDefaultLabelIndex(): Promise<LabelIndex> {
+    return this.os.createDefaultLabelIndex(session.state.profile);
   }
 
   render() {
