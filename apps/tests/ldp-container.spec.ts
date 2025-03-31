@@ -21,10 +21,10 @@ test("show contents of an LDP container", async ({ page }) => {
   let item4 = contents.nth(3);
 
   // and for each item in the list the relative name is shown
-  await expect(item1.getByRole("heading")).toHaveText("another-sub-container");
-  await expect(item2.getByRole("heading")).toHaveText("readme.md");
-  await expect(item3.getByRole("heading")).toHaveText("resource");
-  await expect(item4.getByRole("heading")).toHaveText("sub-container");
+  await expect(item1).toHaveText("another-sub-container");
+  await expect(item2).toHaveText("readme.md");
+  await expect(item3).toHaveText("resource");
+  await expect(item4).toHaveText("sub-container");
 
   // and each item links to the full URL
   await expect(item1.getByRole("link")).toHaveAttribute(

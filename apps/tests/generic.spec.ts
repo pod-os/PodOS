@@ -9,16 +9,16 @@ test("show generic information about unknown types of things", async ({
   // and navigating to a generic resource
   const navigationBar = page.getByPlaceholder("Enter URI");
   await navigationBar.fill(
-    "http://localhost:4000/alice/public/generic/resource#it"
+    "http://localhost:4000/alice/public/generic/resource#it",
   );
   await navigationBar.press("Enter");
 
   // then page shows a heading with the resource name
-  const heading = await page.getByRole("heading");
+  const heading = page.getByRole("heading");
   await expect(heading).toHaveText("Something");
 
   // and it shows the description of the resource
-  const overview = page.locator("ion-col").filter({ has: heading });
+  const overview = page.getByRole("article", { name: "Something" });
   await expect(overview).toHaveText(/A very generic item/);
 
   // and the type of the resource
