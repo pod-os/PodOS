@@ -10,6 +10,7 @@ import { Store } from "./Store";
 import { listKnownTerms, Term } from "./terms";
 import { Thing } from "./thing";
 import { UriService } from "./uri/UriService";
+import { SearchGateway } from "./search";
 
 export * from "./authentication";
 export * from "./files";
@@ -24,10 +25,12 @@ export class PodOS {
   readonly store: Store;
   readonly uriService: UriService;
   private fileFetcher: FileFetcher;
+  private searchGateway: SearchGateway;
 
   constructor() {
     this.session = new BrowserSession();
     this.store = new Store(this.session);
+    this.searchGateway = new SearchGateway(this.store);
     this.flagAuthorizationMetaDataOnSessionChange();
     this.uriService = new UriService(this.store);
     this.fileFetcher = new FileFetcher(this.session);
@@ -161,5 +164,14 @@ export class PodOS {
    */
   async addToLabelIndex(thing: Thing, labelIndex: LabelIndex) {
     await this.store.addToLabelIndex(thing, labelIndex);
+  }
+
+  /**
+   * Creates a new label index document at a default location and links it to the user's profile or preferences document
+   *
+   * @param profile
+   */
+  async createDefaultLabelIndex(profile: WebIdProfile) {
+    await this.searchGateway.createDefaultLabelIndex(profile);
   }
 }

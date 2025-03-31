@@ -8,7 +8,13 @@ and this project adheres to
 
 ## Unreleased
 
-### 0.14.0
+### Added
+
+- `createDefaultLabelIndex`: a function to create a new label index document at a default location and set it up in the user's profile / settings
+
+## 0.14.0
+
+### Added
 
 - `addToLabelIndex`: a function to include a thing in a label index, so that it can be found via search
 - `LabelIndex.contains`: a method to check if a label index contains a specific URI
