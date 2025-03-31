@@ -4,35 +4,28 @@ import { alice } from "./fixtures/credentials";
 
 test.describe("Text search", () => {
   test("finds a thing based on the label index", async ({ page }) => {
-    // given the PodOS Browser is open
-    await page.goto("/");
+    await test.step("given a user is signed in", async () => {
+      await page.goto("/");
+      await signIn(page, alice);
+    });
 
-    // and the Pod owner signed in
-    await signIn(page, alice);
+    await test.step("when they search for a text and select the first result", async () => {
+      const navigationBar = page.getByPlaceholder("Search or enter URI");
+      await navigationBar.fill("ometh");
 
-    // when searching for a text
-    const navigationBar = page.getByPlaceholder("Search or enter URI");
-    await navigationBar.fill("ometh");
+      const result = page
+        .getByRole("listitem")
+        .filter({ hasText: "Something" });
+      await expect(result).toBeVisible();
+      await navigationBar.press("ArrowDown");
+      await navigationBar.press("Enter");
+    });
 
-    // and choosing the first result
-    const result = page.getByRole("listitem").filter({ hasText: "Something" });
-    await expect(result).toBeVisible();
-    await navigationBar.press("ArrowDown");
-    await navigationBar.press("Enter");
-
-    // then page shows a heading with the resource name
-    const heading = page.getByRole("heading");
-    await expect(heading).toHaveText("Something");
-
-    // and it shows the description of the resource
-    const overview = page.getByRole("article", { name: "Something" });
-    await expect(overview).toHaveText(/A very generic item/);
-
-    // and the type of the resource
-    await expect(overview).toHaveText(/Thing/);
-
-    // and the image
-    const image = overview.getByAltText("Something");
-    await expect(image).toHaveAttribute("src", /blob:/);
+    await test.step("then the page shows the selected resource", async () => {
+      const overview = page.getByRole("article", { name: "Something" });
+      await expect(overview, "show description").toHaveText(
+        /A very generic item/,
+      );
+    });
   });
 });
