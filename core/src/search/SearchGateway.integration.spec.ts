@@ -9,11 +9,52 @@ import {
   // @ts-expect-error compiler does not resolve module correctly
 } from "@solid-data-modules/rdflib-utils/test-support";
 import { WebIdProfile } from "../profile";
-import { st, sym } from "rdflib";
-import { pim } from "../namespaces";
+import { lit, st, sym } from "rdflib";
+import { pim, rdfs } from "../namespaces";
 import { LabelIndex } from "./LabelIndex";
+import { Thing } from "../thing";
 
 describe(SearchGateway.name, () => {
+  describe("add to label index", () => {
+    it("patches the label index with a label found in the store", async () => {
+      // given a session and a store
+      const fetchMock = jest.fn();
+      const mockSession = {
+        authenticatedFetch: fetchMock,
+      } as unknown as PodOsSession;
+      const store = new Store(mockSession);
+      const gateway = new SearchGateway(store);
+
+      // and no label index yet
+      mockNotFound(fetchMock, "https://pod.example/label-index");
+
+      // and the store contains a label for a thing
+      store.graph.add(
+        st(sym("https://thing.example#it"), rdfs("label"), lit("Something")),
+      );
+
+      // when that thing is added to a label index
+      await gateway.addToLabelIndex(
+        new Thing("https://thing.example#it", store.graph, true),
+        new LabelIndex("https://pod.example/label-index", store.graph, true),
+      );
+
+      // then the label of the thing is patched into the label index document
+      expectPatchRequest(
+        fetchMock,
+        "https://pod.example/label-index",
+        `@prefix solid: <http://www.w3.org/ns/solid/terms#>.
+@prefix ex: <http://www.example.org/terms#>.
+
+_:patch
+
+      solid:inserts {
+        <https://thing.example#it> <http://www.w3.org/2000/01/rdf-schema#label> "Something" .
+      };   a solid:InsertDeletePatch .`,
+      );
+    });
+  });
+
   describe("create default label index", () => {
     describe("given no preferences document exists", () => {
       it("creates a new label index document next to the profile and links it to the user in the profile document", async () => {

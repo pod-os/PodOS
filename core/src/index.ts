@@ -163,7 +163,7 @@ export class PodOS {
    * @param labelIndex - The index to update
    */
   async addToLabelIndex(thing: Thing, labelIndex: LabelIndex) {
-    await this.store.addToLabelIndex(thing, labelIndex);
+    await this.searchGateway.addToLabelIndex(thing, labelIndex);
   }
 
   /**
