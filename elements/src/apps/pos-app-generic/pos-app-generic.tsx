@@ -10,10 +10,10 @@ export class PosAppGeneric {
     return (
       <Host>
         <section>
-          <div class="card">
+          <article aria-labelledby="thing-title">
             <header>
               <pos-picture blurredBackground={true} />
-              <h1>
+              <h1 id="thing-title">
                 <pos-label />
               </h1>
               <pos-type-badges />
@@ -21,7 +21,7 @@ export class PosAppGeneric {
             <main>
               <pos-description />
             </main>
-          </div>
+          </article>
         </section>
         <section>
           <pos-literals />

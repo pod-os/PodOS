@@ -6,7 +6,7 @@
   margin: var(--gap-size);
 }
 
-.card {
+article {
   outline: var(--pos-border-solid);
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-md);
