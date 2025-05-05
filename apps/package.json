@@ -12,7 +12,7 @@
     "test:elements:debug": "playwright test --config playwright-elements.config.ts --debug --project=chromium",
     "test:ui": "npm run test -- --ui",
     "test:elements:ui": "npm run test:elements -- --ui",
-    "build:latest": "POD_OS_ELEMENTS_VERSION=latest make pos-app-browser"
+    "build:latest": "make"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +21,7 @@
     "@playwright/test": "^1.48.2",
     "@solid/community-server": "^7.1.3",
     "netlify-cli": "^16.9.3",
+    "pwa-asset-generator": "^8.0.4",
     "serve": "^14.2.1"
   }
 }

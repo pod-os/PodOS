@@ -12,6 +12,8 @@ A live version can be found at https://browser.pod-os.org
 
 ### Build
 
+Just can just run `make` to build the latest version, or be more specific if needed:
+
 ```shell
 POD_OS_ELEMENTS_VERSION=latest make pos-app-browser
 ```
@@ -35,7 +37,7 @@ with every new release of @pod-os/elements.
 
 #### Custom deployment
 
-Just upload `dist/pod-os-browser/index.html` to your Solid Pod or any webserver.
+Just upload `dist/pod-os-browser/` to your Solid Pod or any webserver.
 
 ### End-to-End tests
 
