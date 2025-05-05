@@ -54,6 +54,12 @@ self.addEventListener("install", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
+  if (event.request.mode === "navigate") {
+    console.log("Navigating to cached home page");
+    event.respondWith(caches.match("/"));
+    return;
+  }
+
   event.respondWith(
     cacheFirst({
       request: event.request,
