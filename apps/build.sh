@@ -14,6 +14,9 @@ envsubst < index.html > dist/"${POD_OS_APP_NAME}"/index.html
 echo "Copying favicon"
 cp favicon-32x32.png dist/"${POD_OS_APP_NAME}"/favicon-32x32.png
 
+echo "Copying service worker"
+envsubst < service-worker.js > dist/"${POD_OS_APP_NAME}"/service-worker.js
+
 echo "Generating manifest.json..."
 envsubst < "${POD_OS_APP_NAME}".manifest.json > dist/"${POD_OS_APP_NAME}"/manifest.json
 

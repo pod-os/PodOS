@@ -17,5 +17,16 @@
   </head>
   <body>
     <${POD_OS_APP_NAME} restore-previous-session="true" />
+    <script>
+      if ("serviceWorker" in navigator && location.protocol !== "file:") {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("service-worker.js")
+            .catch((error) => {
+              console.error("Service worker registration failed:", error);
+            });
+        });
+      }
+    </script>
   </body>
 </html>
