@@ -1,6 +1,7 @@
 // Import the original types from rdflib
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import * as rdflib from "rdflib";
+import { AutoInitOptions } from "rdflib";
 
 /**
  * This module declaration is needed as a workarround, because
@@ -10,7 +11,7 @@ import * as rdflib from "rdflib";
  */
 declare module "rdflib" {
   export class Fetcher {
-    constructor(store: IndexedFormula, options?: object);
+    constructor(store: IndexedFormula, options?: Partial<AutoInitOptions>);
 
     load<T extends NamedNode | string | Array<string | NamedNode>>(
       url: T,

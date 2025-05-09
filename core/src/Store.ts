@@ -28,6 +28,7 @@ export class Store {
     this.graph = graph();
     this.fetcher = new OfflineCapableFetcher(this.graph, {
       fetch: session.authenticatedFetch,
+      isOnline: () => (navigator ? navigator.onLine : true), // TODO online check via navigator should not be part of core
     });
     this.updater = new UpdateManager(this.graph);
   }
