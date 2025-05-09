@@ -5,6 +5,7 @@ import { mockTurtleDocument } from "@solid-data-modules/rdflib-utils/test-suppor
 
 describe(OfflineCapableFetcher.name, () => {
   it("loads data to the store from network normally", async () => {
+    // given a turtle document can be fetched
     const fetch = jest.fn();
     mockTurtleDocument(
       fetch,
@@ -14,9 +15,17 @@ describe(OfflineCapableFetcher.name, () => {
     `,
     );
     const store = graph();
-    const fetcher = new OfflineCapableFetcher(store, { fetch });
+
+    // and a fetcher that is currently online
+    const fetcher = new OfflineCapableFetcher(store, {
+      fetch,
+      isOnline: () => true,
+    });
+
+    // when the fetcher loads the document
     await fetcher.load("https://alice.pod.test/thing");
 
+    // then all the statements from the document are in the store
     const statements = store.statementsMatching(
       null,
       null,
