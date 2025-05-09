@@ -10,17 +10,23 @@ jobs:
 
   deploy-pod-os-apps:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./apps
     env:
       POD_OS_ELEMENTS_VERSION: ${{ github.event.inputs.version }}
+      NETLIFY_SITE_ID: ${{ secrets.NETLIFY_POD_OS_BROWSER_SITE_ID }}
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
     steps:
-      - run: echo release apps based on @pod-os/elements version ${POD_OS_ELEMENTS_VERSION}
       - uses: actions/checkout@v3
+      - run: echo release apps based on @pod-os/elements version ${POD_OS_ELEMENTS_VERSION}
+      - name: install dependencies
+        run: npm ci
       - name: Build PodOS Browser
-        working-directory: ./apps
         run: make pos-app-browser
+      - name: Check netlify version & auth status
+        run: |
+          npx netlify-cli --version
+          npx netlify-cli status
       - name: Deploy PodOS Browser
-        working-directory: ./apps
         run: npx netlify-cli deploy --site=pod-os-browser --dir=dist/pos-app-browser --prod
-        env:
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_POD_OS_BROWSER_SITE_ID }}
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
