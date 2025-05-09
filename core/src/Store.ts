@@ -14,6 +14,8 @@ import {
   UpdateOperation,
 } from "@solid-data-modules/rdflib-utils";
 import { OfflineCapableFetcher } from "./offline-capable-fetcher";
+import { IndexDbOfflineCache } from "./offline-capable-fetcher/browser/IndexDbOfflineCache";
+import { NoOfflineCache } from "./offline-capable-fetcher/OfflineCache";
 
 /**
  * The store contains all data that is known locally.
@@ -28,6 +30,9 @@ export class Store {
     this.graph = graph();
     this.fetcher = new OfflineCapableFetcher(this.graph, {
       fetch: session.authenticatedFetch,
+      offlineCache: indexedDB
+        ? new IndexDbOfflineCache() // TODO index db access should not be part of core
+        : new NoOfflineCache(),
       isOnline: () => (navigator ? navigator.onLine : true), // TODO online check via navigator should not be part of core
     });
     this.updater = new UpdateManager(this.graph);
