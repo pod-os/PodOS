@@ -5,7 +5,7 @@
   "description": "Browsing and managing data stored on Solid pods.",
   "start_url": "/",
   "theme_color": "#008BF8",
-  "background_color": "#2B2D30",
+  "background_color": "#2D2D2D",
   "display": "standalone",
   "icons": []
 }
