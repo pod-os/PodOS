@@ -13,7 +13,7 @@ declare module "rdflib" {
   export class Fetcher {
     constructor(store: IndexedFormula, options?: Partial<AutoInitOptions>);
 
-    load<T extends NamedNode | string | Array<string | NamedNode>>(
+    async load<T extends NamedNode | string | Array<string | NamedNode>>(
       url: T,
       options?: object,
     ): Promise<Response>;
