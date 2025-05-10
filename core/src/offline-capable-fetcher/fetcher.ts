@@ -1,4 +1,11 @@
-import { AutoInitOptions, Fetcher, IndexedFormula, NamedNode } from "rdflib";
+import {
+  AutoInitOptions,
+  Fetcher,
+  IndexedFormula,
+  NamedNode,
+  sym,
+  termValue,
+} from "rdflib";
 import { OfflineCache } from "./OfflineCache";
 
 export interface OfflineCapableFetcherOptions {
@@ -8,19 +15,38 @@ export interface OfflineCapableFetcherOptions {
 }
 
 export class OfflineCapableFetcher extends Fetcher {
+  private offlineCache: OfflineCache;
+  store: IndexedFormula;
   constructor(
     store: IndexedFormula,
     options: Partial<AutoInitOptions> & OfflineCapableFetcherOptions,
   ) {
-    super(store, options);
+    const { offlineCache, ...rest } = options;
+    super(store, rest);
+    this.store = store;
+    this.offlineCache = offlineCache;
   }
 
-  load<T extends NamedNode | string | Array<string | NamedNode>>(
+  async load<T extends NamedNode | string | Array<string | NamedNode>>(
     uri: T,
     options?: Partial<AutoInitOptions>,
   ) {
-    console.log(`Offline capable loading!!!`);
+    const doc = sym(termValue(uri as NamedNode)).doc();
+    const response = await super.load(uri, options);
+    const etag = response.headers.get("etag");
 
-    return super.load(uri, options);
+    const statementsInStore = this.store.statementsMatching(
+      null,
+      null,
+      null,
+      doc,
+    );
+
+    this.offlineCache.put({
+      url: doc.uri,
+      revision: etag || "",
+      statements: statementsInStore.map((s) => s.toNT()),
+    });
+    return response;
   }
 }
