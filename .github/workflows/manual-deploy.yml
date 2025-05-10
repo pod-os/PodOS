@@ -29,4 +29,4 @@ jobs:
           npx netlify-cli --version
           npx netlify-cli status
       - name: Deploy PodOS Browser
-        run: npx netlify-cli deploy --site=pod-os-browser --dir=dist/pos-app-browser --prod
+        run: npx netlify-cli deploy --dir=dist/pos-app-browser --prod
