@@ -11,9 +11,6 @@ rm -rf dist/"${POD_OS_APP_NAME}" && mkdir -p dist/"${POD_OS_APP_NAME}"
 echo "Generating index.html..."
 envsubst < index.html > dist/"${POD_OS_APP_NAME}"/index.html
 
-echo "Copying favicon"
-cp favicon-32x32.png dist/"${POD_OS_APP_NAME}"/favicon-32x32.png
-
 echo "Copying service worker"
 envsubst < service-worker.js > dist/"${POD_OS_APP_NAME}"/service-worker.js
 
