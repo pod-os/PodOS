@@ -30,10 +30,12 @@ export class Store {
     this.graph = graph();
     this.fetcher = new OfflineCapableFetcher(this.graph, {
       fetch: session.authenticatedFetch,
-      offlineCache: indexedDB
-        ? new IndexDbOfflineCache() // TODO index db access should not be part of core
-        : new NoOfflineCache(),
-      isOnline: () => (navigator ? navigator.onLine : true), // TODO online check via navigator should not be part of core
+      offlineCache:
+        typeof indexedDB !== "undefined"
+          ? new IndexDbOfflineCache() // TODO index db access should not be part of core
+          : new NoOfflineCache(),
+      isOnline: () =>
+        typeof navigator !== "undefined" ? navigator.onLine : true, // TODO online check via navigator should not be part of core
     });
     this.updater = new UpdateManager(this.graph);
   }
