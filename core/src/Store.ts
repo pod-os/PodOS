@@ -14,7 +14,7 @@ import {
   UpdateOperation,
 } from "@solid-data-modules/rdflib-utils";
 import { OfflineCapableFetcher } from "./offline-capable-fetcher";
-import { IndexDbOfflineCache } from "./offline-capable-fetcher/browser/IndexDbOfflineCache";
+import { IndexedDbOfflineCache } from "./offline-capable-fetcher/browser/IndexedDbOfflineCache";
 import { NoOfflineCache } from "./offline-capable-fetcher/OfflineCache";
 
 /**
@@ -32,7 +32,7 @@ export class Store {
       fetch: session.authenticatedFetch,
       offlineCache:
         typeof indexedDB !== "undefined"
-          ? new IndexDbOfflineCache() // TODO index db access should not be part of core
+          ? new IndexedDbOfflineCache() // TODO index db access should not be part of core
           : new NoOfflineCache(),
       isOnline: () =>
         typeof navigator !== "undefined" ? navigator.onLine : true, // TODO online check via navigator should not be part of core
