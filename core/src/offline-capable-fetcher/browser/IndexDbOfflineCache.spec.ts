@@ -13,7 +13,7 @@ describe("IndexDbOfflineCache", () => {
     beforeEach(() => {
       db = {
         put: jest.fn(),
-        get: jest.fn(),
+        getFromIndex: jest.fn(),
       } as unknown as IDBPDatabase;
       const dbPromise = Promise.resolve(db);
       when(openDB)
@@ -24,9 +24,7 @@ describe("IndexDbOfflineCache", () => {
 
     it("should store document in IndexDB if not present yet", async () => {
       // given no existing document in cache
-      when(db.get)
-        .calledWith("documents", "https://document.example/")
-        .mockResolvedValue(undefined);
+      when(db.getFromIndex).mockResolvedValue(undefined);
 
       // and a document to store
       const document: CachedRdfDocument = {
@@ -44,8 +42,11 @@ describe("IndexDbOfflineCache", () => {
 
     it("should store document in IndexDB when revision is new", async () => {
       // given no existing document in cache
-      when(db.get)
-        .calledWith("documents", "https://document.example/")
+      when(db.getFromIndex)
+        .calledWith("documents", "url-revision", [
+          "https://document.example/",
+          "old-revision",
+        ])
         .mockResolvedValue({
           url: "https://document.example/",
           statements: "test content",
@@ -73,8 +74,11 @@ describe("IndexDbOfflineCache", () => {
         statements: "known content",
         revision: "known-revision",
       };
-      when(db.get)
-        .calledWith("documents", "https://document.example/")
+      when(db.getFromIndex)
+        .calledWith("documents", "url-revision", [
+          "https://document.example/",
+          "known-revision",
+        ])
         .mockResolvedValue(existingDoc);
 
       // and a document with same revision
