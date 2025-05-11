@@ -3,6 +3,7 @@ import {
   Fetcher,
   IndexedFormula,
   NamedNode,
+  serialize,
   sym,
   termValue,
 } from "rdflib";
@@ -55,17 +56,12 @@ export class OfflineCapableFetcher extends Fetcher {
     const response = await super.load(node, options);
 
     const etag = response.headers.get("etag");
-    const statementsInStore = this.store.statementsMatching(
-      null,
-      null,
-      null,
-      doc,
-    );
 
+    const triples = serialize(doc, this.store, null, "application/n-triples");
     this.offlineCache.put({
       url: doc.uri,
-      revision: etag || "",
-      statements: statementsInStore.map((s) => s.toNT()),
+      revision: etag ?? "",
+      statements: triples?.trim() ?? "",
     });
     return response as T extends Array<string | NamedNode>
       ? Response[]

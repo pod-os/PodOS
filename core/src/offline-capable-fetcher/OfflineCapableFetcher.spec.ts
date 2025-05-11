@@ -88,9 +88,8 @@ describe(OfflineCapableFetcher.name, () => {
         expect(offlineCache.put).toHaveBeenCalledWith({
           url: "https://alice.pod.test/thing",
           revision: 'W/"1234567890"',
-          statements: [
+          statements:
             '<https://alice.pod.test/thing#it> <http://www.w3.org/2000/01/rdf-schema#label> "A thing" .',
-          ],
         });
       },
     );
@@ -217,16 +216,13 @@ describe(OfflineCapableFetcher.name, () => {
       expect(offlineCache.put).toHaveBeenCalledWith({
         url: "https://alice.pod.test/one",
         revision: "etag-doc-1",
-        statements: [
-          '<https://alice.pod.test/one#it> <http://www.w3.org/2000/01/rdf-schema#label> "First" .',
-        ],
+        statements: `<https://alice.pod.test/one#it> <http://www.w3.org/2000/01/rdf-schema#label> "First" .`,
       });
       expect(offlineCache.put).toHaveBeenCalledWith({
         url: "https://alice.pod.test/two",
         revision: "etag-doc-2",
-        statements: [
+        statements:
           '<https://alice.pod.test/two#it> <http://www.w3.org/2000/01/rdf-schema#label> "Second" .',
-        ],
       });
     });
   });
