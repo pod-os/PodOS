@@ -1,2 +1,2 @@
-export { OfflineCapableFetcher } from "./fetcher";
+export { OfflineCapableFetcher } from "./OfflineCapableFetcher";
 export { OfflineCache } from "./OfflineCache";

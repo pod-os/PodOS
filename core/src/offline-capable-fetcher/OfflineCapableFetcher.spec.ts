@@ -1,4 +1,4 @@
-import { OfflineCapableFetcher } from "./fetcher";
+import { OfflineCapableFetcher } from "./OfflineCapableFetcher";
 import { graph, sym } from "rdflib";
 import { when } from "jest-when";
 import { OfflineCache } from "./OfflineCache";
