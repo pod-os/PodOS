@@ -16,6 +16,6 @@ declare module "rdflib" {
     async load<T extends NamedNode | string | Array<string | NamedNode>>(
       url: T,
       options?: object,
-    ): Promise<Response>;
+    ): Promise<T extends Array<string | NamedNode> ? Response[] : Response>;
   }
 }
