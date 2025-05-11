@@ -1,7 +1,7 @@
 export interface CachedRdfDocument {
   url: string;
   revision: string;
-  statements: string[];
+  statements: string;
 }
 
 export interface OfflineCache {
