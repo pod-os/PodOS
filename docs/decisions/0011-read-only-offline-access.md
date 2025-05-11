@@ -79,14 +79,14 @@ An experimental version of caching in a service worker [has been implemented by 
 
 * **Cons:**
 
-  * Lacks insight into rdflib or RDF document structure, RDF-graph based merging strategies might be hard to implement later.
-  * PATCH requests with n3/patch or sparql/update could be intercepted, but cannot update the cache while offline
+  * Lacks insight into rdflib or RDF document structure, so RDF-graph based merging strategies would need completely separate implementation later.
+  * By design would pass through PATCH requests as this solution has no natural mechanism to inspect and process n3/patch or sparql/update. Offline support would need to come from a separate cache layer.
     * This problem might be mitigated by the fact, that rdflib.js updates the store after a (seemingly) successful request.
     * Yet if refreshing the page, the rdflib store gets lost and the cache is not up-to-date.
   * Is based on browser's service worker and will not work in Node.js out of the box.
   * Offline cache needs to store different serialization formats (e.g., Turtle, RDF/XML, JSON-LD).
 
-**Rejected** The limitations in handling offline PATCH requests and maintaining cache consistency make this approach less suitable for future offline write support.
+**Rejected** The need for a separate cache to handle offline PATCH requests and maintain cache consistency makes this approach less suitable for future offline write support.
 
 ## Decision Outcome
 
