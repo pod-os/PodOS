@@ -49,7 +49,6 @@ export class OfflineCapableFetcher extends Fetcher {
     options?: object,
   ): Promise<T extends Array<string | NamedNode> ? Response[] : Response> {
     if (Array.isArray(oneOrMoreUris)) {
-      // TODO test this case
       return (await super.load<Array<string | NamedNode>>(
         oneOrMoreUris,
         options,

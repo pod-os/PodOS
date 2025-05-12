@@ -316,6 +316,139 @@ describe(OfflineCapableFetcher.name, () => {
       },
     );
 
+    it(`retrieves every document from cache when trying to load multiple`, async () => {
+      // given a fetch function
+      const fetch = jest.fn();
+
+      // and an empty store
+      const store = graph();
+
+      // and an offline cache containing one document only
+      const offlineCache = mockOfflineCache();
+      when(offlineCache.get)
+        .calledWith("https://alice.pod.test/one")
+        .mockResolvedValueOnce({
+          url: "https://alice.pod.test/one",
+          revision: "some-revision",
+          statements: `<https://alice.pod.test/one#it> <http://www.w3.org/2000/01/rdf-schema#label> "First" .`,
+        });
+      when(offlineCache.get)
+        .calledWith("https://alice.pod.test/two")
+        .mockResolvedValueOnce({
+          url: "https://alice.pod.test/two",
+          revision: "some-revision",
+          statements: `<https://alice.pod.test/two#it> <http://www.w3.org/2000/01/rdf-schema#label> "Second" .`,
+        });
+
+      // and a fetcher that is currently offline
+      const fetcher = new OfflineCapableFetcher(store, {
+        fetch,
+        offlineCache,
+        isOnline: () => false,
+      });
+
+      // when the fetcher is supposed to load two resources, but only one from the cached doc
+      const response = await fetcher.load([
+        "https://alice.pod.test/one#it",
+        "https://alice.pod.test/two#it",
+      ]);
+
+      // then a fake response is returned for each resource
+      expect(response[0].status).toEqual(200);
+      expect(response[0].headers.get("etag")).toEqual("some-revision");
+      expect(response[0].headers.get("Content-Type")).toEqual("text/turtle");
+      expect(await response[0].text()).toEqual(
+        '<https://alice.pod.test/one#it> <http://www.w3.org/2000/01/rdf-schema#label> "First" .',
+      );
+
+      expect(response[1].status).toEqual(200);
+      expect(response[1].headers.get("etag")).toEqual("some-revision");
+      expect(response[1].headers.get("Content-Type")).toEqual("text/turtle");
+      expect(await response[1].text()).toEqual(
+        '<https://alice.pod.test/two#it> <http://www.w3.org/2000/01/rdf-schema#label> "Second" .',
+      );
+
+      // and all the statements from the documents are in the store
+      const statementsOfFirstDocument = store.statementsMatching(
+        null,
+        null,
+        null,
+        sym("https://alice.pod.test/one"),
+      );
+      expect(statementsOfFirstDocument).toEqual([
+        {
+          graph: {
+            classOrder: 5,
+            termType: "NamedNode",
+            value: "https://alice.pod.test/one",
+          },
+          object: {
+            classOrder: 1,
+            datatype: {
+              classOrder: 5,
+              termType: "NamedNode",
+              value: "http://www.w3.org/2001/XMLSchema#string",
+            },
+            isVar: 0,
+            language: "",
+            termType: "Literal",
+            value: "First",
+          },
+          predicate: {
+            classOrder: 5,
+            termType: "NamedNode",
+            value: "http://www.w3.org/2000/01/rdf-schema#label",
+          },
+          subject: {
+            classOrder: 5,
+            termType: "NamedNode",
+            value: "https://alice.pod.test/one#it",
+          },
+        },
+      ]);
+
+      const statementsOfSecondDocument = store.statementsMatching(
+        null,
+        null,
+        null,
+        sym("https://alice.pod.test/two"),
+      );
+      expect(statementsOfSecondDocument).toEqual([
+        {
+          graph: {
+            classOrder: 5,
+            termType: "NamedNode",
+            value: "https://alice.pod.test/two",
+          },
+          object: {
+            classOrder: 1,
+            datatype: {
+              classOrder: 5,
+              termType: "NamedNode",
+              value: "http://www.w3.org/2001/XMLSchema#string",
+            },
+            isVar: 0,
+            language: "",
+            termType: "Literal",
+            value: "Second",
+          },
+          predicate: {
+            classOrder: 5,
+            termType: "NamedNode",
+            value: "http://www.w3.org/2000/01/rdf-schema#label",
+          },
+          subject: {
+            classOrder: 5,
+            termType: "NamedNode",
+            value: "https://alice.pod.test/two#it",
+          },
+        },
+      ]);
+
+      // and nothing was ever fetched
+      expect(fetch).not.toHaveBeenCalled();
+    });
+
     it(`throws an error if document was not found in cache`, async () => {
       // given a fetch function
       const fetch = jest.fn();
