@@ -13,16 +13,14 @@ import {
   executeUpdate,
   UpdateOperation,
 } from "@solid-data-modules/rdflib-utils";
-import { OfflineCapableFetcher } from "./offline-capable-fetcher";
-import { IndexedDbOfflineCache } from "./offline-capable-fetcher/browser/IndexedDbOfflineCache";
-import { NoOfflineCache } from "./offline-capable-fetcher/OfflineCache";
+import {
+  OfflineCache,
+  OfflineCapableFetcher,
+  NoOfflineCache,
+} from "./offline-cache";
 
 function navigatorIsAvailable() {
   return typeof navigator !== "undefined" && navigator.onLine !== undefined;
-}
-
-function indexedDbIsAvailable() {
-  return typeof indexedDB !== "undefined";
 }
 
 /**
@@ -34,13 +32,14 @@ export class Store {
   updater: UpdateManager;
   graph: IndexedFormula;
 
-  constructor(session: PodOsSession) {
+  constructor(
+    session: PodOsSession,
+    offlineCache: OfflineCache = new NoOfflineCache(),
+  ) {
     this.graph = graph();
     this.fetcher = new OfflineCapableFetcher(this.graph, {
       fetch: session.authenticatedFetch,
-      offlineCache: indexedDbIsAvailable() // TODO get user consent for caching?
-        ? new IndexedDbOfflineCache() // TODO index db access should not be part of core
-        : new NoOfflineCache(),
+      offlineCache,
       isOnline: () => (navigatorIsAvailable() ? navigator.onLine : true), // TODO online check via navigator should not be part of core
     });
     this.updater = new UpdateManager(this.graph);
