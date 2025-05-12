@@ -77,16 +77,17 @@ export class OfflineCapableFetcher extends Fetcher {
       const cache = await this.offlineCache.get(doc.uri);
       if (!cache) {
         throw new Error(
-          `You are offline, but the requested the document (${doc}) was not found in the offline cache.`,
+          `You are offline and no data was found in the offline cache for ${doc.uri}`,
         );
       }
       parse(cache.statements, this.store, doc.uri, "text/turtle");
-      const response = new Response(cache.statements);
-      response.headers.set("Content-Type", "text/turtle");
-      response.headers.set("etag", cache.revision);
-      return response as T extends Array<string | NamedNode>
-        ? Response[]
-        : Response;
+      return new Response(cache.statements, {
+        status: 200,
+        headers: {
+          "Content-Type": "text/turtle",
+          etag: cache.revision,
+        },
+      }) as T extends Array<string | NamedNode> ? Response[] : Response;
     }
   }
 }
