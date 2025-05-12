@@ -10,7 +10,12 @@ import { Store } from "./Store";
 import { listKnownTerms, Term } from "./terms";
 import { Thing } from "./thing";
 import { UriService } from "./uri/UriService";
-import { NoOfflineCache, OfflineCache } from "./offline-cache";
+import {
+  AssumeAlwaysOnline,
+  NoOfflineCache,
+  OfflineCache,
+  OnlineStatus,
+} from "./offline-cache";
 
 export * from "./authentication";
 export * from "./files";
@@ -23,6 +28,7 @@ export * from "./offline-cache";
 
 export interface PodOsConfiguration {
   offlineCache?: OfflineCache;
+  onlineStatus?: OnlineStatus;
 }
 
 export class PodOS {
@@ -34,9 +40,10 @@ export class PodOS {
 
   constructor({
     offlineCache = new NoOfflineCache(),
+    onlineStatus = new AssumeAlwaysOnline(),
   }: PodOsConfiguration = {}) {
     this.session = new BrowserSession();
-    this.store = new Store(this.session, offlineCache);
+    this.store = new Store(this.session, offlineCache, onlineStatus);
     this.searchGateway = new SearchGateway(this.store);
     this.flagAuthorizationMetaDataOnSessionChange();
     this.uriService = new UriService(this.store);
