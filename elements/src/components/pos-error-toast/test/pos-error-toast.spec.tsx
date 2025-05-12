@@ -6,13 +6,15 @@ describe('pos-error-toast', () => {
   it('renders its children', async () => {
     const page = await newSpecPage({
       components: [PosErrorToast],
-      html: `<pos-error-toast></pos-error-toast>`,
+      supportsShadowDom: false,
+      html: `<pos-error-toast>Slot value</pos-error-toast>`,
     });
     expect(page.root).toEqualHtml(`
       <pos-error-toast>
-        <mock:shadow-root>
-          <slot></slot>
-        </mock:shadow-root>
+        <ion-toast duration="0" message="Workarround to preload ion-toast and ion-ripple-effect to be able to show errors while offline" trigger="never">
+          <ion-ripple-effect></ion-ripple-effect>
+        </ion-toast>
+        Slot value
       </pos-error-toast>
     `);
   });
