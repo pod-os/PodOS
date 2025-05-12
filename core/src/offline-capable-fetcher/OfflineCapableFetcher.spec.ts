@@ -234,7 +234,7 @@ describe(OfflineCapableFetcher.name, () => {
         uriArg: sym("https://alice.pod.test/thing#it"),
       },
     ])(
-      `retrieves document for given $argumentType and puts data to store`,
+      `retrieves document for given $argumentType from cache and puts data to store`,
       async ({ uriArg }) => {
         // given a fetch function
         const fetch = jest.fn();
@@ -308,8 +308,52 @@ describe(OfflineCapableFetcher.name, () => {
             },
           },
         ]);
+
+        // and nothing was ever fetched
+        expect(fetch).not.toHaveBeenCalled();
       },
     );
+
+    it(`throws an error if document was not found in cache`, async () => {
+      // given a fetch function
+      const fetch = jest.fn();
+
+      // and an empty store
+      const store = graph();
+
+      // and an empty offline cache
+      const offlineCache = mockOfflineCache();
+      when(offlineCache.get).mockResolvedValue(undefined);
+
+      // and a fetcher that is currently offline
+      const fetcher = new OfflineCapableFetcher(store, {
+        fetch,
+        offlineCache,
+        isOnline: () => false,
+      });
+
+      // when the fetcher is supposed to load a resource
+      const fetchPromise = fetcher.load("https://alice.pod.test/thing#it");
+
+      // then an error is thrown indicating a cache miss
+      await expect(fetchPromise).rejects.toThrow(
+        new Error(
+          "You are offline and no data was found in the offline cache for https://alice.pod.test/thing",
+        ),
+      );
+
+      // and the store stays empty
+      const statementsInStore = store.statementsMatching(
+        null,
+        null,
+        null,
+        sym("https://alice.pod.test/thing"),
+      );
+      expect(statementsInStore).toHaveLength(0);
+
+      // and nothing was ever fetched
+      expect(fetch).not.toHaveBeenCalled();
+    });
   });
 });
 
