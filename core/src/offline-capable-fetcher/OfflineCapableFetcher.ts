@@ -59,7 +59,7 @@ export class OfflineCapableFetcher extends Fetcher {
     const doc = node.doc();
 
     if (this.isOnline()) {
-      const response = await super.load(node, options); // TODO fallback to cache on error?
+      const response = await super.load(node, options); // ISSUE fallback to cache on error? https://github.com/pod-os/PodOS/issues/112
 
       const etag = response.headers.get("etag");
 
