@@ -30,9 +30,7 @@ describe(OfflineCapableFetcher.name, () => {
         const store = graph();
 
         // and a fetcher that is currently online
-        const offlineCache = {
-          put: jest.fn(),
-        } as OfflineCache;
+        const offlineCache = mockOfflineCache();
         const fetcher = new OfflineCapableFetcher(store, {
           fetch,
           offlineCache,
@@ -116,9 +114,7 @@ describe(OfflineCapableFetcher.name, () => {
       const store = graph();
 
       // and a fetcher that is currently online
-      const offlineCache = {
-        put: jest.fn(),
-      } as OfflineCache;
+      const offlineCache = mockOfflineCache();
       const fetcher = new OfflineCapableFetcher(store, {
         fetch,
         offlineCache,
@@ -227,6 +223,13 @@ describe(OfflineCapableFetcher.name, () => {
     });
   });
 });
+
+function mockOfflineCache(): OfflineCache {
+  return {
+    put: jest.fn(),
+    get: jest.fn(),
+  };
+}
 
 /**
  * TODO Copied from @solid-data-modules/rdflib-utils to add custom headers
