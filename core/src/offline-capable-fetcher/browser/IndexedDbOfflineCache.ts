@@ -11,6 +11,9 @@ interface OfflineCacheDb extends DBSchema {
   };
 }
 
+/**
+ * An offline cache backed by the browsers IndexedDB storage
+ */
 export class IndexedDbOfflineCache implements OfflineCache {
   private readonly dbPromise: Promise<IDBPDatabase<OfflineCacheDb>>;
 
@@ -23,6 +26,11 @@ export class IndexedDbOfflineCache implements OfflineCache {
         }
       },
     });
+  }
+
+  async get(url: string): Promise<CachedRdfDocument | undefined> {
+    const db = await this.dbPromise;
+    return await db.get("documents", url);
   }
 
   async put(document: CachedRdfDocument): Promise<void> {
