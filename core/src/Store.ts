@@ -38,7 +38,7 @@ export class Store {
     this.graph = graph();
     this.fetcher = new OfflineCapableFetcher(this.graph, {
       fetch: session.authenticatedFetch,
-      offlineCache: indexedDbIsAvailable()
+      offlineCache: indexedDbIsAvailable() // TODO get user consent for caching?
         ? new IndexedDbOfflineCache() // TODO index db access should not be part of core
         : new NoOfflineCache(),
       isOnline: () => (navigatorIsAvailable() ? navigator.onLine : true), // TODO online check via navigator should not be part of core
