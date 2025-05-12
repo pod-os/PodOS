@@ -59,14 +59,14 @@ export class OfflineCapableFetcher extends Fetcher {
     const doc = node.doc();
 
     if (this.isOnline()) {
-      const response = await super.load(node, options);
+      const response = await super.load(node, options); // TODO fallback to cache on error?
 
       const etag = response.headers.get("etag");
 
       const triples = serialize(doc, this.store, null, "application/n-triples");
       this.offlineCache.put({
         url: doc.uri,
-        revision: etag ?? "", // TODO handle missing etag
+        revision: etag ?? `timestamp-${new Date().getTime()}`,
         statements: triples?.trim() ?? "",
       });
       return response as T extends Array<string | NamedNode>

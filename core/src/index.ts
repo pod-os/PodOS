@@ -137,6 +137,7 @@ export class PodOS {
   }
 
   logout() {
+    // TODO clear offline cache on logout to protect private data
     return this.session.logout();
   }
 

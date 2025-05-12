@@ -94,6 +94,42 @@ describe(OfflineCapableFetcher.name, () => {
       },
     );
 
+    it("uses current time as revision if no etag is given", async () => {
+      jest.useFakeTimers({
+        now: 1234,
+      });
+      // given a turtle document can be fetched, but without an etag
+      const fetch = jest.fn();
+      mockTurtleDocument(
+        fetch,
+        "https://alice.pod.test/thing",
+        `<https://alice.pod.test/thing#it> <http://www.w3.org/2000/01/rdf-schema#label> "A thing".`,
+      );
+      const store = graph();
+
+      // and a fetcher that is currently online
+      const offlineCache = mockOfflineCache();
+      const fetcher = new OfflineCapableFetcher(store, {
+        fetch,
+        offlineCache,
+        isOnline: () => true,
+      });
+
+      // when the fetcher loads a resource from that document
+      const response = await fetcher.load("https://alice.pod.test/thing#it");
+
+      // then no etag can be read from the response
+      expect(response.headers.get("etag")).toEqual(null);
+
+      // and the cache entry revision is based on the current time
+      expect(offlineCache.put).toHaveBeenCalledWith({
+        url: "https://alice.pod.test/thing",
+        revision: "timestamp-1234",
+        statements:
+          '<https://alice.pod.test/thing#it> <http://www.w3.org/2000/01/rdf-schema#label> "A thing" .',
+      });
+    });
+
     it("fetches multiple documents if array is given and puts all the data to the store and offline cache", async () => {
       // given two turtle documents can be fetched
       const fetch = jest.fn();
