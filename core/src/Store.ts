@@ -17,11 +17,9 @@ import {
   OfflineCache,
   OfflineCapableFetcher,
   NoOfflineCache,
+  AssumeAlwaysOnline,
+  OnlineStatus,
 } from "./offline-cache";
-
-function navigatorIsAvailable() {
-  return typeof navigator !== "undefined" && navigator.onLine !== undefined;
-}
 
 /**
  * The store contains all data that is known locally.
@@ -35,12 +33,13 @@ export class Store {
   constructor(
     session: PodOsSession,
     offlineCache: OfflineCache = new NoOfflineCache(),
+    onlineStatus: OnlineStatus = new AssumeAlwaysOnline(),
   ) {
     this.graph = graph();
     this.fetcher = new OfflineCapableFetcher(this.graph, {
       fetch: session.authenticatedFetch,
       offlineCache,
-      isOnline: () => (navigatorIsAvailable() ? navigator.onLine : true), // TODO online check via navigator should not be part of core
+      isOnline: onlineStatus.isOnline,
     });
     this.updater = new UpdateManager(this.graph);
   }

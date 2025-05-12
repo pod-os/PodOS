@@ -4,3 +4,5 @@ export {
   CachedRdfDocument,
   NoOfflineCache,
 } from "./OfflineCache";
+
+export { OnlineStatus, AssumeAlwaysOnline } from "./OnlineStatus";
