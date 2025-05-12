@@ -222,6 +222,95 @@ describe(OfflineCapableFetcher.name, () => {
       });
     });
   });
+
+  describe("while offline", () => {
+    it.each([
+      {
+        argumentType: "uri string",
+        uriArg: "https://alice.pod.test/thing#it",
+      },
+      {
+        argumentType: "NamedNode",
+        uriArg: sym("https://alice.pod.test/thing#it"),
+      },
+    ])(
+      `retrieves document for given $argumentType and puts data to store`,
+      async ({ uriArg }) => {
+        // given a fetch function
+        const fetch = jest.fn();
+
+        // and an empty store
+        const store = graph();
+
+        // and an offline cache containing a document
+        const offlineCache = mockOfflineCache();
+        when(offlineCache.get)
+          .calledWith("https://alice.pod.test/thing")
+          .mockResolvedValueOnce({
+            url: "https://alice.pod.test/thing",
+            revision: "some-revision",
+            statements: `<https://alice.pod.test/thing#it> <http://www.w3.org/2000/01/rdf-schema#label> "Cached value" .`,
+          });
+
+        // and a fetcher that is currently offline
+        const fetcher = new OfflineCapableFetcher(store, {
+          fetch,
+          offlineCache,
+          isOnline: () => false,
+        });
+
+        // when the fetcher is supposed to load a resource from that document
+        const response = await fetcher.load(uriArg as string); // typecast to string is a workaround to satisfy the type checker
+
+        // then a fake response is returned using the cached data
+        expect(response.status).toEqual(200);
+        expect(response.headers.get("etag")).toEqual("some-revision");
+        expect(response.headers.get("Content-Type")).toEqual("text/turtle");
+        expect(await response.text()).toEqual(
+          '<https://alice.pod.test/thing#it> <http://www.w3.org/2000/01/rdf-schema#label> "Cached value" .',
+        );
+
+        // and all the statements from the document are in the store
+        const statementsInStore = store.statementsMatching(
+          null,
+          null,
+          null,
+          sym("https://alice.pod.test/thing"),
+        );
+        expect(statementsInStore).toEqual([
+          {
+            graph: {
+              classOrder: 5,
+              termType: "NamedNode",
+              value: "https://alice.pod.test/thing",
+            },
+            object: {
+              classOrder: 1,
+              datatype: {
+                classOrder: 5,
+                termType: "NamedNode",
+                value: "http://www.w3.org/2001/XMLSchema#string",
+              },
+              isVar: 0,
+              language: "",
+              termType: "Literal",
+              value: "Cached value",
+            },
+            predicate: {
+              classOrder: 5,
+              termType: "NamedNode",
+              value: "http://www.w3.org/2000/01/rdf-schema#label",
+            },
+            subject: {
+              classOrder: 5,
+              termType: "NamedNode",
+              value: "https://alice.pod.test/thing#it",
+            },
+          },
+        ]);
+      },
+    );
+  });
 });
 
 function mockOfflineCache(): OfflineCache {
