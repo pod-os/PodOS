@@ -13,6 +13,7 @@ describe("IndexDbOfflineCache", () => {
     beforeEach(() => {
       db = {
         put: jest.fn(),
+        get: jest.fn(),
         getFromIndex: jest.fn(),
       } as unknown as IDBPDatabase;
       const dbPromise = Promise.resolve(db);
@@ -93,6 +94,37 @@ describe("IndexDbOfflineCache", () => {
 
       // then it is not put to the IndexedDB
       expect(db.put).not.toHaveBeenCalled();
+    });
+
+    it("should get undefined when no document is found", async () => {
+      // given no existing document in cache
+      when(db.get)
+        .calledWith("documents", "https://document.example/")
+        .mockResolvedValue(undefined);
+
+      // when the document is retrieved from the cache
+      const result = await cache.get("https://document.example/");
+
+      // then it returns undefined
+      expect(result).toBeUndefined();
+    });
+
+    it("should get document when it is found", async () => {
+      // given an existing document in cache
+      const existingDoc: CachedRdfDocument = {
+        url: "https://document.example/",
+        statements: "known content",
+        revision: "known-revision",
+      };
+      when(db.get)
+        .calledWith("documents", "https://document.example/")
+        .mockResolvedValue(existingDoc);
+
+      // when the document is retrieved from the cache
+      const result = await cache.get("https://document.example/");
+
+      // then it returns the document
+      expect(result).toEqual(existingDoc);
     });
   });
 });
