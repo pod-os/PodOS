@@ -2,6 +2,8 @@ import { OfflineCapableFetcher } from "./OfflineCapableFetcher";
 import { graph, sym } from "rdflib";
 import { when } from "jest-when";
 import { OfflineCache } from "./OfflineCache";
+// @ts-expect-error compiler does not resolve module correctly
+import { mockTurtleDocument } from "@solid-data-modules/rdflib-utils/test-support";
 
 describe(OfflineCapableFetcher.name, () => {
   describe("while online", () => {
@@ -362,30 +364,4 @@ function mockOfflineCache(): OfflineCache {
     put: jest.fn(),
     get: jest.fn(),
   };
-}
-
-/**
- * TODO Copied from @solid-data-modules/rdflib-utils to add custom headers
- */
-export function mockTurtleDocument(
-  fetch: jest.Mock,
-  url: string,
-  ttl: string,
-  additionalHeaders: Record<string, string> = {},
-) {
-  when(fetch)
-    .calledWith(url, expect.anything())
-    .mockResolvedValue({
-      ok: true,
-      status: 200,
-      statusText: "OK",
-      headers: new Headers({
-        "Content-Type": "text/turtle",
-        link: '<http://www.w3.org/ns/ldp#Resource>; rel="type"',
-        "wac-allow": 'user="read write append control",public="read"',
-        "accept-patch": "text/n3",
-        ...additionalHeaders,
-      }),
-      text: () => Promise.resolve(ttl),
-    } as Response);
 }
