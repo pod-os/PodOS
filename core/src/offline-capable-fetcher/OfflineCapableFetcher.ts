@@ -3,6 +3,7 @@ import {
   Fetcher,
   IndexedFormula,
   NamedNode,
+  parse,
   serialize,
   sym,
   termValue,
@@ -16,16 +17,19 @@ export interface OfflineCapableFetcherOptions {
 }
 
 export class OfflineCapableFetcher extends Fetcher {
-  private offlineCache: OfflineCache;
-  store: IndexedFormula;
+  private readonly offlineCache: OfflineCache;
+  private readonly isOnline: () => boolean;
+  private readonly store: IndexedFormula;
+
   constructor(
     store: IndexedFormula,
     options: Partial<AutoInitOptions> & OfflineCapableFetcherOptions,
   ) {
-    const { offlineCache, ...rest } = options;
+    const { offlineCache, isOnline, ...rest } = options;
     super(store, rest);
     this.store = store;
     this.offlineCache = offlineCache;
+    this.isOnline = isOnline;
   }
 
   async load(
@@ -51,20 +55,38 @@ export class OfflineCapableFetcher extends Fetcher {
         options,
       )) as T extends Array<string | NamedNode> ? Response[] : Response;
     }
+
     const node = sym(termValue(oneOrMoreUris)); // make sure we get a NamedNode
     const doc = node.doc();
-    const response = await super.load(node, options);
 
-    const etag = response.headers.get("etag");
+    if (this.isOnline()) {
+      const response = await super.load(node, options);
 
-    const triples = serialize(doc, this.store, null, "application/n-triples");
-    this.offlineCache.put({
-      url: doc.uri,
-      revision: etag ?? "",
-      statements: triples?.trim() ?? "",
-    });
-    return response as T extends Array<string | NamedNode>
-      ? Response[]
-      : Response;
+      const etag = response.headers.get("etag");
+
+      const triples = serialize(doc, this.store, null, "application/n-triples");
+      this.offlineCache.put({
+        url: doc.uri,
+        revision: etag ?? "", // TODO handle missing etag
+        statements: triples?.trim() ?? "",
+      });
+      return response as T extends Array<string | NamedNode>
+        ? Response[]
+        : Response;
+    } else {
+      const cache = await this.offlineCache.get(doc.uri);
+      if (!cache) {
+        throw new Error(
+          `You are offline, but the requested the document (${doc}) was not found in the offline cache.`,
+        );
+      }
+      parse(cache.statements, this.store, doc.uri, "text/turtle");
+      const response = new Response(cache.statements);
+      response.headers.set("Content-Type", "text/turtle");
+      response.headers.set("etag", cache.revision);
+      return response as T extends Array<string | NamedNode>
+        ? Response[]
+        : Response;
+    }
   }
 }

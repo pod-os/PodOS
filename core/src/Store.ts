@@ -17,6 +17,14 @@ import { OfflineCapableFetcher } from "./offline-capable-fetcher";
 import { IndexedDbOfflineCache } from "./offline-capable-fetcher/browser/IndexedDbOfflineCache";
 import { NoOfflineCache } from "./offline-capable-fetcher/OfflineCache";
 
+function navigatorIsAvailable() {
+  return typeof navigator !== "undefined" && navigator.onLine !== undefined;
+}
+
+function indexedDbIsAvailable() {
+  return typeof indexedDB !== "undefined";
+}
+
 /**
  * The store contains all data that is known locally.
  * It can be used to fetch additional data from the web and also update data and sync it back to editable resources.
@@ -30,12 +38,10 @@ export class Store {
     this.graph = graph();
     this.fetcher = new OfflineCapableFetcher(this.graph, {
       fetch: session.authenticatedFetch,
-      offlineCache:
-        typeof indexedDB !== "undefined"
-          ? new IndexedDbOfflineCache() // TODO index db access should not be part of core
-          : new NoOfflineCache(),
-      isOnline: () =>
-        typeof navigator !== "undefined" ? navigator.onLine : true, // TODO online check via navigator should not be part of core
+      offlineCache: indexedDbIsAvailable()
+        ? new IndexedDbOfflineCache() // TODO index db access should not be part of core
+        : new NoOfflineCache(),
+      isOnline: () => (navigatorIsAvailable() ? navigator.onLine : true), // TODO online check via navigator should not be part of core
     });
     this.updater = new UpdateManager(this.graph);
   }
