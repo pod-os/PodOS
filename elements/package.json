@@ -25,6 +25,7 @@
     "@pod-os/core": "^0.15.0",
     "@stencil/core": "^4.23.2",
     "@stencil/store": "^2.0.16",
+    "idb": "^8.0.3",
     "pollen-css": "^5.0.1",
     "rxjs": "^7.8.1",
     "stencil-router-v2": "^0.6.0"

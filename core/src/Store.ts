@@ -1,6 +1,5 @@
 import {
   Fetcher,
-  fetcher,
   graph,
   IndexedFormula,
   lit,
@@ -14,6 +13,13 @@ import {
   executeUpdate,
   UpdateOperation,
 } from "@solid-data-modules/rdflib-utils";
+import {
+  OfflineCache,
+  OfflineCapableFetcher,
+  NoOfflineCache,
+  AssumeAlwaysOnline,
+  OnlineStatus,
+} from "./offline-cache";
 
 /**
  * The store contains all data that is known locally.
@@ -24,9 +30,17 @@ export class Store {
   updater: UpdateManager;
   graph: IndexedFormula;
 
-  constructor(session: PodOsSession) {
+  constructor(
+    session: PodOsSession,
+    offlineCache: OfflineCache = new NoOfflineCache(),
+    onlineStatus: OnlineStatus = new AssumeAlwaysOnline(),
+  ) {
     this.graph = graph();
-    this.fetcher = fetcher(this.graph, { fetch: session.authenticatedFetch });
+    this.fetcher = new OfflineCapableFetcher(this.graph, {
+      fetch: session.authenticatedFetch,
+      offlineCache,
+      isOnline: onlineStatus.isOnline,
+    });
     this.updater = new UpdateManager(this.graph);
   }
 

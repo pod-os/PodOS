@@ -1,5 +1,5 @@
 import { toastController } from '@ionic/core';
-import { Component, h, Listen } from '@stencil/core';
+import { Component, h, Host, Listen } from '@stencil/core';
 
 @Component({
   tag: 'pos-error-toast',
@@ -7,8 +7,10 @@ import { Component, h, Listen } from '@stencil/core';
 })
 export class PosErrorToast {
   @Listen('unhandledrejection', { target: 'window' })
-  async unhandledRejection(event) {
-    await this.showToast(event.reason);
+  async unhandledRejection(event: PromiseRejectionEvent) {
+    event.stopPropagation();
+    console.error('unhandled promise rejection', event);
+    await this.showToast(event.reason.toString());
   }
 
   @Listen('pod-os:error')
@@ -35,6 +37,17 @@ export class PosErrorToast {
     await toast.present();
   }
   render() {
-    return <slot></slot>;
+    return (
+      <Host>
+        <ion-toast
+          trigger="never"
+          message="Workarround to preload ion-toast and ion-ripple-effect to be able to show errors while offline"
+          duration={0}
+        >
+          <ion-ripple-effect></ion-ripple-effect>
+        </ion-toast>
+        <slot></slot>
+      </Host>
+    );
   }
 }

@@ -10,6 +10,12 @@ import { Store } from "./Store";
 import { listKnownTerms, Term } from "./terms";
 import { Thing } from "./thing";
 import { UriService } from "./uri/UriService";
+import {
+  AssumeAlwaysOnline,
+  NoOfflineCache,
+  OfflineCache,
+  OnlineStatus,
+} from "./offline-cache";
 
 export * from "./authentication";
 export * from "./files";
@@ -18,6 +24,12 @@ export * from "./rdf-document";
 export * from "./ldp-container";
 export * from "./profile";
 export * from "./search";
+export * from "./offline-cache";
+
+export interface PodOsConfiguration {
+  offlineCache?: OfflineCache;
+  onlineStatus?: OnlineStatus;
+}
 
 export class PodOS {
   private readonly session: BrowserSession;
@@ -26,9 +38,12 @@ export class PodOS {
   private fileFetcher: FileFetcher;
   private searchGateway: SearchGateway;
 
-  constructor() {
+  constructor({
+    offlineCache = new NoOfflineCache(),
+    onlineStatus = new AssumeAlwaysOnline(),
+  }: PodOsConfiguration = {}) {
     this.session = new BrowserSession();
-    this.store = new Store(this.session);
+    this.store = new Store(this.session, offlineCache, onlineStatus);
     this.searchGateway = new SearchGateway(this.store);
     this.flagAuthorizationMetaDataOnSessionChange();
     this.uriService = new UriService(this.store);
@@ -137,6 +152,7 @@ export class PodOS {
   }
 
   logout() {
+    // TODO clear offline cache on logout to protect private data
     return this.session.logout();
   }
 
