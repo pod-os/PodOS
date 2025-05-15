@@ -1,6 +1,7 @@
 import {
   AutoInitOptions,
   Fetcher,
+  FetchError,
   IndexedFormula,
   NamedNode,
   parse,
@@ -59,34 +60,57 @@ export class OfflineCapableFetcher extends Fetcher {
     const doc = node.doc();
 
     if (this.isOnline()) {
-      const response = await super.load(node, options); // ISSUE fallback to cache on error? https://github.com/pod-os/PodOS/issues/112
-
-      const etag = response.headers.get("etag");
-
-      const triples = serialize(doc, this.store, null, "application/n-triples");
-      this.offlineCache.put({
-        url: doc.uri,
-        revision: etag ?? `timestamp-${new Date().getTime()}`,
-        statements: triples?.trim() ?? "",
-      });
-      return response as T extends Array<string | NamedNode>
-        ? Response[]
-        : Response;
-    } else {
-      const cache = await this.offlineCache.get(doc.uri);
-      if (!cache) {
-        throw new Error(
-          `You are offline and no data was found in the offline cache for ${doc.uri}`,
-        );
+      try {
+        const response = await super.load(node, options);
+        const etag = response.headers.get("etag");
+        this.putToCache(doc, etag);
+        return response as T extends Array<string | NamedNode>
+          ? Response[]
+          : Response;
+      } catch (e) {
+        const error = e as FetchError;
+        if (error.status === 999) {
+          // this status is returned by the original load method for non-http errors
+          return await this.retrieveFromCache(doc, error);
+        } else {
+          // ISSUE fallback to cache on http error codes? https://github.com/pod-os/PodOS/issues/112
+          throw error;
+        }
       }
-      parse(cache.statements, this.store, doc.uri, "text/turtle");
-      return new Response(cache.statements, {
-        status: 200,
-        headers: {
-          "Content-Type": "text/turtle",
-          etag: cache.revision,
-        },
-      }) as T extends Array<string | NamedNode> ? Response[] : Response;
+    } else {
+      return await this.retrieveFromCache(
+        doc,
+        new Error(
+          `You are offline and no data was found in the offline cache for ${doc.uri}`,
+        ),
+      );
     }
+  }
+
+  private putToCache(doc: NamedNode, etag: string | null) {
+    const triples = serialize(doc, this.store, null, "application/n-triples");
+    this.offlineCache.put({
+      url: doc.uri,
+      revision: etag ?? `timestamp-${new Date().getTime()}`,
+      statements: triples?.trim() ?? "",
+    });
+  }
+
+  private async retrieveFromCache<T>(
+    doc: NamedNode,
+    errorOnCacheMiss: Error,
+  ): Promise<T extends Array<string | NamedNode> ? Response[] : Response> {
+    const cache = await this.offlineCache.get(doc.uri);
+    if (!cache) {
+      throw errorOnCacheMiss;
+    }
+    parse(cache.statements, this.store, doc.uri, "text/turtle");
+    return new Response(cache.statements, {
+      status: 200,
+      headers: {
+        "Content-Type": "text/turtle",
+        etag: cache.revision,
+      },
+    }) as T extends Array<string | NamedNode> ? Response[] : Response;
   }
 }
