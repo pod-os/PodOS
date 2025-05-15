@@ -259,6 +259,153 @@ describe(OfflineCapableFetcher.name, () => {
           '<https://alice.pod.test/two#it> <http://www.w3.org/2000/01/rdf-schema#label> "Second" .',
       });
     });
+
+    it("restores document from cache on non-http (network) errors", async () => {
+      // given fetch returns a network error
+      const fetch = jest.fn();
+      fetch.mockRejectedValue(new Error("Simulated network error"));
+
+      // and an empty store
+      const store = graph();
+
+      // and an offline cache containing a document
+      const offlineCache = mockOfflineCache();
+      when(offlineCache.get)
+        .calledWith("https://alice.pod.test/thing")
+        .mockResolvedValueOnce({
+          url: "https://alice.pod.test/thing",
+          revision: "some-revision",
+          statements: `<https://alice.pod.test/thing#it> <http://www.w3.org/2000/01/rdf-schema#label> "Cached value" .`,
+        });
+
+      // and a fetcher that is currently online
+      const fetcher = new OfflineCapableFetcher(store, {
+        fetch,
+        offlineCache,
+        isOnline: () => true,
+      });
+
+      // when the fetcher loads a resource from the cached document
+      const response = await fetcher.load("https://alice.pod.test/thing#it"); // typecast to string is a workaround to satisfy the type checker
+
+      // then the cache revision is returned as the etag of the response
+      expect(response.headers.get("etag")).toEqual("some-revision");
+
+      // and all the statements from the document are in the store
+      const statementsInStore = store.statementsMatching(
+        null,
+        null,
+        null,
+        sym("https://alice.pod.test/thing"),
+      );
+      expect(statementsInStore).toEqual([
+        {
+          graph: {
+            classOrder: 5,
+            termType: "NamedNode",
+            value: "https://alice.pod.test/thing",
+          },
+          object: {
+            classOrder: 1,
+            datatype: {
+              classOrder: 5,
+              termType: "NamedNode",
+              value: "http://www.w3.org/2001/XMLSchema#string",
+            },
+            isVar: 0,
+            language: "",
+            termType: "Literal",
+            value: "Cached value",
+          },
+          predicate: {
+            classOrder: 5,
+            termType: "NamedNode",
+            value: "http://www.w3.org/2000/01/rdf-schema#label",
+          },
+          subject: {
+            classOrder: 5,
+            termType: "NamedNode",
+            value: "https://alice.pod.test/thing#it",
+          },
+        },
+      ]);
+    });
+
+    it("throws an error if document was not found in cache", async () => {
+      // given fetch returns a network error
+      const fetch = jest.fn();
+      fetch.mockRejectedValue(new Error("Simulated network error"));
+
+      // and an empty store
+      const store = graph();
+
+      // and an empty cache
+      const offlineCache = mockOfflineCache();
+      when(offlineCache.get).mockResolvedValue(undefined);
+
+      // and a fetcher that is currently online
+      const fetcher = new OfflineCapableFetcher(store, {
+        fetch,
+        offlineCache,
+        isOnline: () => true,
+      });
+
+      // when the fetcher is supposed to load a resource
+      const fetchPromise = fetcher.load("https://alice.pod.test/thing#it");
+
+      // then the network error is thrown
+      await expect(fetchPromise).rejects.toThrow(
+        new Error("Fetcher: Error: undefined Simulated network error"),
+      );
+
+      // and the store stays empty
+      const statementsInStore = store.statementsMatching(
+        null,
+        null,
+        null,
+        sym("https://alice.pod.test/thing"),
+      );
+      expect(statementsInStore).toHaveLength(0);
+    });
+
+    it.each([401, 403, 404, 500, 503, 504])(
+      "returns http errors if something fails",
+      async (status) => {
+        // given fetch returns a network error
+        const fetch = jest.fn();
+        fetch.mockResolvedValue({
+          ok: true,
+          status,
+          headers: new Headers({
+            "Content-Type": "text/plain",
+          }),
+          statusText: `simulated http status ${status}`,
+          text: () => Promise.resolve("Something went wrong."),
+        });
+
+        // and an empty store
+        const store = graph();
+
+        // and an offline cache
+        const offlineCache = mockOfflineCache();
+
+        // and a fetcher that is currently online
+        const fetcher = new OfflineCapableFetcher(store, {
+          fetch,
+          offlineCache,
+          isOnline: () => true,
+        });
+
+        // when the fetcher loads a resource from the cached document
+        await expect(
+          fetcher.load("https://alice.pod.test/thing#it"),
+        ).rejects.toThrow(
+          new Error(
+            `Fetcher: <https://alice.pod.test/thing> simulated http status ${status}`,
+          ),
+        );
+      },
+    );
   });
 
   describe("while offline", () => {
