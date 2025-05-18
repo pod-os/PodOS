@@ -18,8 +18,8 @@ export const config: Config = {
     },
     {
       type: 'www',
-      copy: [{ src: 'pod-index.html' }],
-      serviceWorker: null, // disable service workers
+      copy: [{ src: 'pod-index.html' }, { src: 'registerSW.js' }, { src: 'service-worker-localhost.js' }],
+      serviceWorker: false, // disable stencils own service worker
     },
   ],
 };
