@@ -78,4 +78,38 @@ describe('setupServiceWorker', () => {
     expect(mockGlobalCaches.delete).toHaveBeenCalledWith('old-cache');
     expect(mockGlobalCaches.delete).not.toHaveBeenCalledWith('new-cache');
   });
+
+  it('caches files from CDN when fetched from network', async () => {
+    const mockRequest = new Request('https://cdn.example.com/resource.js');
+    const networkResponse = new Response('network response');
+    const mockCache = { put: jest.fn() } as unknown as Cache;
+
+    when(mockGlobalCaches.match as jest.Mock)
+      .calledWith(mockRequest)
+      .mockResolvedValue(null);
+
+    when(global.fetch as jest.Mock)
+      .calledWith(expect.any(Request))
+      .mockResolvedValue(networkResponse);
+
+    when(mockGlobalCaches.open as jest.Mock)
+      .calledWith('test-cache')
+      .mockResolvedValue(mockCache);
+
+    setupServiceWorker(mockServiceWorker, 'test-cache', 'https://cdn.example.com');
+
+    const fetchHandler = mockServiceWorker.addEventListener.mock.calls.find(call => call[0] === 'fetch')[1];
+
+    const event = {
+      request: mockRequest,
+      respondWith: jest.fn(),
+    };
+
+    await fetchHandler(event);
+    // Allow putInCache to complete
+    await new Promise(process.nextTick);
+
+    expect(mockCache.put).toHaveBeenCalledWith(mockRequest, expect.any(Response));
+    expect(event.respondWith).toHaveBeenCalled();
+  });
 });
