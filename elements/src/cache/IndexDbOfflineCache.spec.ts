@@ -7,21 +7,22 @@ import { IDBPDatabase, openDB } from 'idb';
 import { CachedRdfDocument } from '@pod-os/core';
 
 describe('IndexDbOfflineCache', () => {
+  let db: IDBPDatabase;
+  let cache: IndexedDbOfflineCache;
+
+  beforeEach(() => {
+    db = {
+      put: jest.fn(),
+      get: jest.fn(),
+      clear: jest.fn(),
+      getFromIndex: jest.fn(),
+    } as unknown as IDBPDatabase;
+    const dbPromise = Promise.resolve(db);
+    when(openDB).calledWith('OfflineCacheDB', 1, expect.anything()).mockReturnValue(dbPromise);
+    cache = new IndexedDbOfflineCache();
+  });
+
   describe('put', () => {
-    let db: IDBPDatabase;
-    let cache: IndexedDbOfflineCache;
-
-    beforeEach(() => {
-      db = {
-        put: jest.fn(),
-        get: jest.fn(),
-        getFromIndex: jest.fn(),
-      } as unknown as IDBPDatabase;
-      const dbPromise = Promise.resolve(db);
-      when(openDB).calledWith('OfflineCacheDB', 1, expect.anything()).mockReturnValue(dbPromise);
-      cache = new IndexedDbOfflineCache();
-    });
-
     it('should store document in IndexDB if not present yet', async () => {
       // given no existing document in cache
       when(db.getFromIndex).mockResolvedValue(undefined);
@@ -88,7 +89,9 @@ describe('IndexDbOfflineCache', () => {
       // then it is not put to the IndexedDB
       expect(db.put).not.toHaveBeenCalled();
     });
+  });
 
+  describe('get', () => {
     it('should get undefined when no document is found', async () => {
       // given no existing document in cache
       when(db.get).calledWith('documents', 'https://document.example/').mockResolvedValue(undefined);
@@ -114,6 +117,14 @@ describe('IndexDbOfflineCache', () => {
 
       // then it returns the document
       expect(result).toEqual(existingDoc);
+    });
+  });
+
+  describe('clear', () => {
+    it('should clear all documents from IndexDB', async () => {
+      const cache = new IndexedDbOfflineCache();
+      await cache.clear();
+      expect(db.clear).toHaveBeenCalledWith('documents');
     });
   });
 });

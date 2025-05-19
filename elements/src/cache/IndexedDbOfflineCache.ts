@@ -28,8 +28,9 @@ export class IndexedDbOfflineCache implements OfflineCache {
     });
   }
 
-  clear(): void {
-    // TODO implement
+  async clear() {
+    const db = await this.dbPromise;
+    return db.clear('documents');
   }
 
   async get(url: string): Promise<CachedRdfDocument | undefined> {
@@ -37,7 +38,7 @@ export class IndexedDbOfflineCache implements OfflineCache {
     return await db.get('documents', url);
   }
 
-  async put(document: CachedRdfDocument): Promise<void> {
+  async put(document: CachedRdfDocument) {
     const db = await this.dbPromise;
     const existing = await db.getFromIndex('documents', 'url-revision', [document.url, document.revision]);
 
