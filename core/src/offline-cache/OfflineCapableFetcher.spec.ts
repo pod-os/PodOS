@@ -679,5 +679,6 @@ function mockOfflineCache(): OfflineCache {
   return {
     put: jest.fn(),
     get: jest.fn(),
+    clear: jest.fn(),
   };
 }
