@@ -28,6 +28,10 @@ export class IndexedDbOfflineCache implements OfflineCache {
     });
   }
 
+  clear(): void {
+    // TODO implement
+  }
+
   async get(url: string): Promise<CachedRdfDocument | undefined> {
     const db = await this.dbPromise;
     return await db.get('documents', url);

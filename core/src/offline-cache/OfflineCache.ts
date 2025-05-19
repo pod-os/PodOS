@@ -7,6 +7,7 @@ export interface CachedRdfDocument {
 export interface OfflineCache {
   put(document: CachedRdfDocument): void;
   get(url: string): Promise<CachedRdfDocument | undefined>;
+  clear(): void;
 }
 
 export class NoOfflineCache implements OfflineCache {
@@ -14,4 +15,5 @@ export class NoOfflineCache implements OfflineCache {
   async get(): Promise<undefined> {
     return undefined;
   }
+  clear() {}
 }
