@@ -29,20 +29,24 @@ export * from "./offline-cache";
 export interface PodOsConfiguration {
   offlineCache?: OfflineCache;
   onlineStatus?: OnlineStatus;
+  session?: BrowserSession;
 }
 
 export class PodOS {
   private readonly session: BrowserSession;
   readonly store: Store;
   readonly uriService: UriService;
-  private fileFetcher: FileFetcher;
-  private searchGateway: SearchGateway;
+  private readonly fileFetcher: FileFetcher;
+  private readonly searchGateway: SearchGateway;
+  private readonly offlineCache: OfflineCache;
 
   constructor({
+    session = new BrowserSession(),
     offlineCache = new NoOfflineCache(),
     onlineStatus = new AssumeAlwaysOnline(),
   }: PodOsConfiguration = {}) {
-    this.session = new BrowserSession();
+    this.session = session;
+    this.offlineCache = offlineCache;
     this.store = new Store(this.session, offlineCache, onlineStatus);
     this.searchGateway = new SearchGateway(this.store);
     this.flagAuthorizationMetaDataOnSessionChange();
@@ -152,7 +156,7 @@ export class PodOS {
   }
 
   logout() {
-    // TODO clear offline cache on logout to protect private data
+    this.offlineCache.clear();
     return this.session.logout();
   }
 
