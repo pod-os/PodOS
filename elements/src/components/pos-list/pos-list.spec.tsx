@@ -59,5 +59,48 @@ describe('pos-list', () => {
     expect(el.querySelectorAll("div")).toHaveLength(2)
   })
 
+  it('displays error on missing template', async () => {
+    const page = await newSpecPage({
+      components: [PosList],
+      html: `<pos-list rel="http://schema.org/video"></pos-list>`,
+    });
+    await page.rootInstance.receiveResource({
+      relations: () => [
+        {
+          predicate: 'http://schema.org/video',
+          label: 'url',
+          uris: ['https://video.test/video-1'],
+        },
+      ],
+    });
+    await page.waitForChanges();
+
+    const el: HTMLElement = page.root as unknown as HTMLElement;
+
+    expect(el.textContent).toEqual("No template element found")
+  })
+
+  it('displays error if template does not have a single child', async () => {
+    const page = await newSpecPage({
+      components: [PosList],
+      html: `<pos-list rel="http://schema.org/video"><template><div>Test 1</div><div>Test 2</div></template></pos-list>`,
+    });
+    await page.rootInstance.receiveResource({
+      relations: () => [
+        {
+          predicate: 'http://schema.org/video',
+          label: 'url',
+          uris: ['https://video.test/video-1'],
+        },
+      ],
+    });
+    await page.waitForChanges();
+
+    const el: HTMLElement = page.root as unknown as HTMLElement;
+
+    expect(el.textContent).toEqual("Template element should only have one child, e.g. li")
+  })
+
+
 
 });
