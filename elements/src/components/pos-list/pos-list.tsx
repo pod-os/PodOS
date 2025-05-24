@@ -1,5 +1,5 @@
 import { Thing } from '@pod-os/core';
-import { Component, Event, h, Prop, State } from '@stencil/core';
+import { Component, Element, Event, h, Prop, State } from '@stencil/core';
 import { ResourceAware, ResourceEventEmitter, subscribeResource } from '../events/ResourceAware';
 
 @Component({
@@ -12,14 +12,27 @@ export class PosList implements ResourceAware {
    */
   @Prop() rel: string;
 
+  @Element() host: HTMLDivElement;
+  @State() error: string = null;
   @State() resource: Thing;
   @State() items: string[] = [];
+  @State() templateNodeName: string;
+  @State() templateString: string;
 
   @Event({ eventName: 'pod-os:resource' })
   subscribeResource: ResourceEventEmitter;
 
   componentWillLoad() {
     subscribeResource(this);
+    let templateElement = this.host.querySelector("template")
+    if (templateElement == null) {
+      this.error = "No template element found"
+    } else if (templateElement.content.childElementCount != 1) {
+      this.error = "Template element should only have one child, e.g. li"
+    } else {
+      this.templateNodeName = templateElement.content.firstElementChild.nodeName.toLowerCase()
+      this.templateString = templateElement.content.firstElementChild.innerHTML
+    }
   }
 
   receiveResource = (resource: Thing) => {
@@ -28,8 +41,9 @@ export class PosList implements ResourceAware {
   };
 
   render() {
-    const elems = this.items.map(it => (
-      <div>Test</div>
+    if (this.error) return this.error
+    const elems = this.items.map(() => (
+      <this.templateNodeName innerHTML={this.templateString}></this.templateNodeName>
     ));
     return this.items.length > 0 ? elems : null;
   }
