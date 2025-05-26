@@ -44,12 +44,7 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("install", (event) => {
   console.log("ServiceWorker installed");
   event.waitUntil(
-    addResourcesToCache([
-      "/",
-      "./index.html",
-      "./manifest.json",
-      "./favicon-32x32.png",
-    ]),
+    addResourcesToCache(["/", "./index.html", "./manifest.json"]),
   );
 });
 
