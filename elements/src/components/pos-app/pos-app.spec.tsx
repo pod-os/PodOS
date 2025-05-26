@@ -1,3 +1,5 @@
+import { localSettings } from '../../store/settings';
+
 jest.mock('../../pod-os', () => ({
   createPodOS: jest.fn(),
 }));
@@ -189,6 +191,66 @@ describe('pos-app', () => {
           },
         }),
       );
+    });
+  });
+
+  describe('local settings', () => {
+    let sessionInfo$;
+    beforeEach(() => {
+      localSettings.dispose();
+      sessionInfo$ = new BehaviorSubject({ isLoggedIn: false, webId: '' });
+      jest.resetAllMocks();
+
+      (createPodOS as jest.Mock).mockReturnValue({
+        handleIncomingRedirect: jest.fn(),
+        observeSession: () => sessionInfo$,
+        onSessionRestore: () => {},
+      });
+    });
+
+    it('creates PodOS instance with default settings', async () => {
+      const page = await newSpecPage({
+        components: [PosApp],
+        html: `<pos-app>item body</pos-app>`,
+      });
+
+      expect(createPodOS).toHaveBeenCalledWith({
+        offlineCache: false,
+      });
+
+      page.rootInstance.disconnectedCallback();
+    });
+
+    it('creates PodOS instance with stored settings', async () => {
+      localSettings.state.offlineCache = true;
+      const page = await newSpecPage({
+        components: [PosApp],
+        html: `<pos-app>item body</pos-app>`,
+      });
+
+      expect(createPodOS).toHaveBeenCalledWith({
+        offlineCache: true,
+      });
+      page.rootInstance.disconnectedCallback();
+    });
+
+    it('recreates PodOS instance with updated settings', async () => {
+      const page = await newSpecPage({
+        components: [PosApp],
+        html: `<pos-app>item body</pos-app>`,
+      });
+
+      expect(createPodOS).toHaveBeenCalledWith({
+        offlineCache: false,
+      });
+
+      localSettings.state.offlineCache = true;
+
+      expect(createPodOS).toHaveBeenCalledWith({
+        offlineCache: true,
+      });
+
+      page.rootInstance.disconnectedCallback();
     });
   });
 });
