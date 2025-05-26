@@ -51,11 +51,7 @@ export class PosList implements ResourceAware {
 
   receiveResource = (resource: Thing) => {
     this.items = [];
-    if (this.rel)
-      this.items = resource
-        .relations()
-        .filter(relation => relation.predicate == this.rel)
-        .flatMap(relation => relation.uris);
+    if (this.rel) this.items = resource.relations(this.rel).flatMap(relation => relation.uris);
   };
 
   @Watch('os')
