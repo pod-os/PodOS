@@ -188,4 +188,31 @@ describe("Thing", function () {
       expect(result).toEqual([]);
     });
   });
+
+  it("only follows the given predicate if provided", () => {
+    const store = graph();
+    const uri = "https://jane.doe.example/container/file.ttl#fragment";
+    store.add(
+      sym(uri),
+      sym("http://vocab.test/first"),
+      sym("https://pod.example/first"),
+    );
+    store.add(
+      sym(uri),
+      sym("http://vocab.test/second"),
+      sym("https://pod.example/second"),
+    );
+    const it = new Thing(
+      "https://jane.doe.example/container/file.ttl#fragment",
+      store,
+    );
+    const result = it.relations("http://vocab.test/first");
+    expect(result).toEqual([
+      {
+        predicate: "http://vocab.test/first",
+        label: "first",
+        uris: ["https://pod.example/first"],
+      },
+    ]);
+  });
 });
