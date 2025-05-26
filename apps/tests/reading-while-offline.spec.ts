@@ -1,8 +1,14 @@
 import { test, expect } from "@playwright/test";
 
 test("can access cached resources while offline", async ({ page, context }) => {
-  await test.step("given the user has visited a resource", async () => {
+  await test.step("given the user has enabled offline cache", async () => {
     await page.goto("/");
+    await page.evaluate(() => {
+      localStorage.setItem("settings", JSON.stringify({ offlineCache: true }));
+    });
+  });
+
+  await test.step("and the they have visited a resource", async () => {
     const navigationBar = page.getByPlaceholder("Enter URI");
     await navigationBar.fill(
       "http://localhost:4000/alice/public/generic/resource#it",
