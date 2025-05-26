@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- Capability to cache data for offline usage
+  - `OfflineCapableFetcher`: Drop-in replacement for rdflib.js fetcher that can cache data given a cache implementation
+  - `NoOfflineCache`: Fallback "cache" for offline usage, which is actually does not cache anything at all. 
+
+### Changed
+
+- `PodOS`
+  - the constructor can now take an optional `PodOsConfiguration`, to set up offline cache depending on the environment
+  - offline cache will be cleared on logout
+
 ## 0.15.0
 
 ### Added
