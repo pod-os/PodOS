@@ -1,6 +1,7 @@
 import { PodOS } from '@pod-os/core';
 import { Component, h, Listen, Prop, State, Event, EventEmitter } from '@stencil/core';
 import session from '../../store/session';
+import { localSettings } from '../../store/settings';
 import { createPodOS } from '../../pod-os';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -30,8 +31,14 @@ export class PosApp {
 
   private readonly disconnected$ = new Subject<void>();
 
+  @State()
+  private unsubscribeSettings: () => void;
+
   componentWillLoad() {
-    this.os = createPodOS();
+    this.unsubscribeSettings = localSettings.on('set', () => {
+      this.os = createPodOS(localSettings.state);
+    });
+    this.os = createPodOS(localSettings.state);
     this.os.onSessionRestore(url => {
       this.sessionRestoredEmitter.emit({ url });
     });
@@ -50,6 +57,7 @@ export class PosApp {
   }
 
   disconnectedCallback() {
+    this.unsubscribeSettings();
     this.disconnected$.next();
     this.disconnected$.unsubscribe();
   }
