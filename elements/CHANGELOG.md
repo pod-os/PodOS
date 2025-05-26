@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- `IndexedDbOfflineCache`: A PodOS cache implementation that uses IndexedDB to store data for offline usage
+
+### Changed
+
+- [pos-app](../docs/elements/components/pos-app):
+  - Is now capable of reading local settings from localstorage
+  - will enable offline cache using IndexedDB when found in the settings
+- [pos-error-toast](../docs/elements/components/pos-error-toast):
+  - Will pre-fetch relevant child components, so that errors can be shown even when offline and the components would otherwise not have been loaded yet
+
 ## 0.24.1
 
 ### Fixed
