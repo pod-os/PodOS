@@ -72,8 +72,11 @@ export class Thing {
     }));
   }
 
-  relations(): Relation[] {
-    const statements = this.store.statementsMatching(sym(this.uri));
+  relations(predicate?: string): Relation[] {
+    const statements = this.store.statementsMatching(
+      sym(this.uri),
+      predicate ? sym(predicate) : null,
+    );
 
     const values = statements
       .filter((it) => isNamedNode(it.object) && !isRdfType(it.predicate))
