@@ -59,6 +59,7 @@ jobs:
         with:
           token: ${{ secrets.NPM_TOKEN }}
           tag: ${{ env.GITHUB_REF_SLUG }}
+          access: public
 
   npm-release-latest-service-worker:
     if: github.ref == 'refs/heads/main'
@@ -76,3 +77,4 @@ jobs:
         with:
           token: ${{ secrets.NPM_TOKEN }}
           tag: latest
+          access: public
