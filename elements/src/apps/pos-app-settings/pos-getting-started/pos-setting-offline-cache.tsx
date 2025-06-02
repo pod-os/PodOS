@@ -1,4 +1,5 @@
 import { Component, h, Host } from '@stencil/core';
+import { localSettings } from '../../../store/settings';
 
 @Component({
   tag: 'pos-setting-offline-cache',
@@ -29,7 +30,11 @@ export class PosSettingOfflineCache {
           <p class="info">ℹ Enable offline cache to be able to access previously loaded data while offline.</p>
           <p class="warn">⚠ Private data may be stored on this device. Only enable it, if you trust this device.</p>
           <label>
-            <input type="checkbox"></input>
+            <input
+              type="checkbox"
+              checked={localSettings.state.offlineCache}
+              onChange={ev => (localSettings.state.offlineCache = (ev.target as HTMLInputElement).checked)}
+            ></input>
             Enable offline cache
           </label>
         </div>
