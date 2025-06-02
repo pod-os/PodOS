@@ -14,4 +14,17 @@ describe('pos-internal-router', () => {
       </pos-internal-router>
     `);
   });
+
+  it('renders local settings', async () => {
+    const page = await newSpecPage({
+      components: [PosInternalRouter],
+      html: `<pos-internal-router uri="pod-os:settings"/>`,
+    });
+
+    expect(page.root).toEqualHtml(`
+      <pos-internal-router uri="pod-os:settings">
+         <pos-app-settings></pos-app-settings>
+      </pos-internal-router>
+    `);
+  });
 });

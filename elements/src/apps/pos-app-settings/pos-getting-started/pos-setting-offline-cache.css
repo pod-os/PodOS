@@ -1,0 +1,28 @@
+:host {
+  border: var(--size-px) solid var(--color-grey-100);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--size-8);
+  max-width: var(--size-96);
+  background: var(--color-white);
+}
+
+svg {
+  width: var(--size-8);
+}
+
+h2 {
+  display: flex;
+  align-items: center;
+}
+
+p {
+  padding: var(--size-2);
+}
+
+.info {
+  background-color: var(--color-blue-200);
+}
+.warn {
+  background-color: var(--color-yellow-200);
+}

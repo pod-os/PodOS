@@ -33,6 +33,8 @@ export namespace Components {
     }
     interface PosAppRdfDocument {
     }
+    interface PosAppSettings {
+    }
     interface PosContainerContents {
     }
     interface PosContainerItem {
@@ -125,6 +127,8 @@ export namespace Components {
     interface PosSelectTerm {
         "placeholder": string;
         "value": string;
+    }
+    interface PosSettingOfflineCache {
     }
     interface PosSubjects {
     }
@@ -354,6 +358,12 @@ declare global {
     var HTMLPosAppRdfDocumentElement: {
         prototype: HTMLPosAppRdfDocumentElement;
         new (): HTMLPosAppRdfDocumentElement;
+    };
+    interface HTMLPosAppSettingsElement extends Components.PosAppSettings, HTMLStencilElement {
+    }
+    var HTMLPosAppSettingsElement: {
+        prototype: HTMLPosAppSettingsElement;
+        new (): HTMLPosAppSettingsElement;
     };
     interface HTMLPosContainerContentsElementEventMap {
         "pod-os:resource": any;
@@ -738,6 +748,12 @@ declare global {
         prototype: HTMLPosSelectTermElement;
         new (): HTMLPosSelectTermElement;
     };
+    interface HTMLPosSettingOfflineCacheElement extends Components.PosSettingOfflineCache, HTMLStencilElement {
+    }
+    var HTMLPosSettingOfflineCacheElement: {
+        prototype: HTMLPosSettingOfflineCacheElement;
+        new (): HTMLPosSettingOfflineCacheElement;
+    };
     interface HTMLPosSubjectsElementEventMap {
         "pod-os:resource": any;
     }
@@ -817,6 +833,7 @@ declare global {
         "pos-app-image-viewer": HTMLPosAppImageViewerElement;
         "pos-app-ldp-container": HTMLPosAppLdpContainerElement;
         "pos-app-rdf-document": HTMLPosAppRdfDocumentElement;
+        "pos-app-settings": HTMLPosAppSettingsElement;
         "pos-container-contents": HTMLPosContainerContentsElement;
         "pos-container-item": HTMLPosContainerItemElement;
         "pos-description": HTMLPosDescriptionElement;
@@ -842,6 +859,7 @@ declare global {
         "pos-rich-link": HTMLPosRichLinkElement;
         "pos-router": HTMLPosRouterElement;
         "pos-select-term": HTMLPosSelectTermElement;
+        "pos-setting-offline-cache": HTMLPosSettingOfflineCacheElement;
         "pos-subjects": HTMLPosSubjectsElement;
         "pos-type-badges": HTMLPosTypeBadgesElement;
         "pos-type-router": HTMLPosTypeRouterElement;
@@ -891,6 +909,8 @@ declare namespace LocalJSX {
     interface PosAppLdpContainer {
     }
     interface PosAppRdfDocument {
+    }
+    interface PosAppSettings {
     }
     interface PosContainerContents {
         "onPod-os:resource"?: (event: PosContainerContentsCustomEvent<any>) => void;
@@ -1030,6 +1050,8 @@ declare namespace LocalJSX {
         "placeholder"?: string;
         "value"?: string;
     }
+    interface PosSettingOfflineCache {
+    }
     interface PosSubjects {
         "onPod-os:resource"?: (event: PosSubjectsCustomEvent<any>) => void;
     }
@@ -1057,6 +1079,7 @@ declare namespace LocalJSX {
         "pos-app-image-viewer": PosAppImageViewer;
         "pos-app-ldp-container": PosAppLdpContainer;
         "pos-app-rdf-document": PosAppRdfDocument;
+        "pos-app-settings": PosAppSettings;
         "pos-container-contents": PosContainerContents;
         "pos-container-item": PosContainerItem;
         "pos-description": PosDescription;
@@ -1082,6 +1105,7 @@ declare namespace LocalJSX {
         "pos-rich-link": PosRichLink;
         "pos-router": PosRouter;
         "pos-select-term": PosSelectTerm;
+        "pos-setting-offline-cache": PosSettingOfflineCache;
         "pos-subjects": PosSubjects;
         "pos-type-badges": PosTypeBadges;
         "pos-type-router": PosTypeRouter;
@@ -1102,6 +1126,7 @@ declare module "@stencil/core" {
             "pos-app-image-viewer": LocalJSX.PosAppImageViewer & JSXBase.HTMLAttributes<HTMLPosAppImageViewerElement>;
             "pos-app-ldp-container": LocalJSX.PosAppLdpContainer & JSXBase.HTMLAttributes<HTMLPosAppLdpContainerElement>;
             "pos-app-rdf-document": LocalJSX.PosAppRdfDocument & JSXBase.HTMLAttributes<HTMLPosAppRdfDocumentElement>;
+            "pos-app-settings": LocalJSX.PosAppSettings & JSXBase.HTMLAttributes<HTMLPosAppSettingsElement>;
             "pos-container-contents": LocalJSX.PosContainerContents & JSXBase.HTMLAttributes<HTMLPosContainerContentsElement>;
             "pos-container-item": LocalJSX.PosContainerItem & JSXBase.HTMLAttributes<HTMLPosContainerItemElement>;
             "pos-description": LocalJSX.PosDescription & JSXBase.HTMLAttributes<HTMLPosDescriptionElement>;
@@ -1140,6 +1165,7 @@ declare module "@stencil/core" {
              */
             "pos-router": LocalJSX.PosRouter & JSXBase.HTMLAttributes<HTMLPosRouterElement>;
             "pos-select-term": LocalJSX.PosSelectTerm & JSXBase.HTMLAttributes<HTMLPosSelectTermElement>;
+            "pos-setting-offline-cache": LocalJSX.PosSettingOfflineCache & JSXBase.HTMLAttributes<HTMLPosSettingOfflineCacheElement>;
             "pos-subjects": LocalJSX.PosSubjects & JSXBase.HTMLAttributes<HTMLPosSubjectsElement>;
             "pos-type-badges": LocalJSX.PosTypeBadges & JSXBase.HTMLAttributes<HTMLPosTypeBadgesElement>;
             "pos-type-router": LocalJSX.PosTypeRouter & JSXBase.HTMLAttributes<HTMLPosTypeRouterElement>;

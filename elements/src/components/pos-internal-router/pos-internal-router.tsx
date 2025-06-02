@@ -8,6 +8,10 @@ export class PosInternalRouter {
   uri: string = 'pod-os:dashboard';
 
   render() {
-    return <pos-app-dashboard></pos-app-dashboard>;
+    return this.uri === 'pod-os:settings' ? (
+      <pos-app-settings></pos-app-settings>
+    ) : (
+      <pos-app-dashboard></pos-app-dashboard>
+    );
   }
 }
