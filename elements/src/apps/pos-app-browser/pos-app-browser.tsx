@@ -40,6 +40,10 @@ export class PosAppBrowser {
               <footer>
                 <Logo />
                 <span>PodOS Browser</span>
+                <span>|</span>
+                <a class="settings" href="?uri=pod-os:settings">
+                  ⚙ Settings
+                </a>
               </footer>
             </pos-router>
           </pos-error-toast>
