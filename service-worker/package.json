@@ -1,0 +1,20 @@
+{
+  "name": "@pod-os/service-worker",
+  "version": "0.1.0",
+  "description": "Utilities to create a Service Worker for PodOS apps",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@babel/preset-env": "^7.27.2",
+    "@babel/preset-typescript": "^7.27.1",
+    "@types/jest": "^29.5.14",
+    "@types/jest-when": "^3.5.5",
+    "eslint": "^9.27.0",
+    "prettier": "^3.5.3",
+    "typescript-eslint": "^8.33.0"
+  }
+}
