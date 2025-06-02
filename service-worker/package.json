@@ -1,6 +1,6 @@
 {
   "name": "@pod-os/service-worker",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Utilities to create a Service Worker for PodOS apps",
   "main": "lib/index.js",
   "types": "./types/index.d.ts",

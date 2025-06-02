@@ -60,10 +60,8 @@ export function setupServiceWorker(
   serviceWorker.addEventListener("fetch", async (event) => {
     const fetchEvent = event as FetchEvent;
     if (fetchEvent.request.mode === "navigate") {
-      const match = await caches.match("/");
-      if (match) {
-        fetchEvent.respondWith(match);
-      }
+      const match = caches.match("/") as Promise<Response>;
+      fetchEvent.respondWith(match);
       return;
     }
 
