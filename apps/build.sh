@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+set -e
+
 export POD_OS_ELEMENTS_VERSION=${POD_OS_ELEMENTS_VERSION:-latest}
 export POD_OS_APP_NAME=${1:-pos-app-browser}
 
