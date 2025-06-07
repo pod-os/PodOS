@@ -9,6 +9,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Added
 
 - `IndexedDbOfflineCache`: A PodOS cache implementation that uses IndexedDB to store data for offline usage
+- [pos-app-settings](../docs/elements/apps/pos-app-settings)
+  - A settings app, which currently only serves the Offline Cache setting
+- [pos-setting-offline-cache](../docs/elements/apps/pos-app-settings/pos-setting-offline-cache): Enable / Disable offline cache
 
 ### Changed
 
@@ -17,6 +20,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - will enable offline cache using IndexedDB when found in the settings
 - [pos-error-toast](../docs/elements/components/pos-error-toast):
   - Will pre-fetch relevant child components, so that errors can be shown even when offline and the components would otherwise not have been loaded yet
+- [pos-internal-router](../docs/elements/components/pos-internal-router):
+  - will navigate to the settings app for URI `pod-os:settings`
 
 ## 0.24.1
 
