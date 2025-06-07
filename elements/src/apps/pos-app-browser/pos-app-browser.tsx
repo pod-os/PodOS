@@ -41,7 +41,7 @@ export class PosAppBrowser {
                 <Logo />
                 <span>PodOS Browser</span>
                 <span>|</span>
-                <a class="settings" href="?uri=pod-os:settings">
+                <a class="settings" href="?uri=pod-os%3Asettings">
                   ⚙ Settings
                 </a>
               </footer>
