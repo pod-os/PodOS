@@ -9,6 +9,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Added
 
 - `IndexedDbOfflineCache`: A PodOS cache implementation that uses IndexedDB to store data for offline usage
+- [pos-list](../docs/elements/components/pos-list):
+  - Basic implementation of element to list things related to a resource with a custom display
 
 ### Changed
 
