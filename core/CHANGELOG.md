@@ -25,6 +25,7 @@ and this project adheres to
 - `PodOS`
   - the constructor can now take an optional `PodOsConfiguration`, to set up offline cache depending on the environment
   - offline cache will be cleared on logout
+- `Thing.relations()`: Now takes optional predicate to filter by
 
 ## 0.15.0
 
