@@ -194,7 +194,7 @@ jobs:
         run: make pos-app-browser
       - name: Deploy PodOS Browser
         working-directory: ./apps
-        run: npx netlify-cli deploy --site=pod-os-browser --dir=dist/pos-app-browser --prod
+        run: npx netlify-cli deploy --dir=dist/pos-app-browser --prod
         env:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_POD_OS_BROWSER_SITE_ID }}
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
