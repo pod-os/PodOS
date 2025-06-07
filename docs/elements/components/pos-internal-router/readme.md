@@ -17,12 +17,15 @@
 
 ### Depends on
 
+- [pos-app-settings](../../apps/pos-app-settings)
 - [pos-app-dashboard](../../apps/pos-app-dashboard)
 
 ### Graph
 ```mermaid
 graph TD;
+  pos-internal-router --> pos-app-settings
   pos-internal-router --> pos-app-dashboard
+  pos-app-settings --> pos-setting-offline-cache
   pos-app-dashboard --> pos-getting-started
   pos-app-dashboard --> pos-example-resources
   pos-example-resources --> pos-rich-link

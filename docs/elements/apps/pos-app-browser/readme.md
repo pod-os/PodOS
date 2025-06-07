@@ -39,6 +39,10 @@ graph TD;
   pos-app-browser --> pos-internal-router
   pos-app-browser --> pos-resource
   pos-app-browser --> pos-type-router
+  pos-error-toast --> ion-toast
+  pos-error-toast --> ion-ripple-effect
+  ion-toast --> ion-icon
+  ion-toast --> ion-ripple-effect
   pos-add-new-thing --> ion-icon
   pos-add-new-thing --> pos-dialog
   pos-add-new-thing --> pos-new-thing-form
@@ -66,7 +70,9 @@ graph TD;
   pos-picture --> pos-image
   pos-image --> ion-skeleton-text
   pos-image --> ion-icon
+  pos-internal-router --> pos-app-settings
   pos-internal-router --> pos-app-dashboard
+  pos-app-settings --> pos-setting-offline-cache
   pos-app-dashboard --> pos-getting-started
   pos-app-dashboard --> pos-example-resources
   pos-example-resources --> pos-rich-link
