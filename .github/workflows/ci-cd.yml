@@ -183,7 +183,7 @@ jobs:
   deploy-pod-os-apps:
     needs: npm-release-latest-elements
     if: needs.npm-release-latest-elements.outputs.releaseType != 'none'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     env:
       POD_OS_ELEMENTS_VERSION: ${{ needs.npm-release-latest-elements.outputs.releaseVersion }}
     steps:
