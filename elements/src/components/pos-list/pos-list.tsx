@@ -1,5 +1,5 @@
 import { Thing, PodOS } from '@pod-os/core';
-import { Component, Element, Event, EventEmitter, h, Prop, State, Watch } from '@stencil/core';
+import { Component, Element, Event, h, Prop, State, Watch } from '@stencil/core';
 import { ResourceAware, ResourceEventEmitter, ResourceReceiver, subscribeResource } from '../events/ResourceAware';
 import { PodOsEventEmitter, subscribePodOs } from '../events/PodOsAware';
 
