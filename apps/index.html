@@ -15,7 +15,7 @@
     <link rel="manifest" href="manifest.json" />
   </head>
   <body>
-    <${POD_OS_APP_NAME} restore-previous-session="true" />
+    <${POD_OS_APP_NAME} restore-previous-session="true"></${POD_OS_APP_NAME}>
     <script>
       if ("serviceWorker" in navigator && location.protocol !== "file:") {
         window.addEventListener("load", () => {
