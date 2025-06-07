@@ -21,6 +21,7 @@ envsubst < "${POD_OS_APP_NAME}".manifest.json > dist/"${POD_OS_APP_NAME}"/manife
 
 echo "Generating PWA assets"
 npx pwa-asset-generator \
+  --no-sandbox \
   --opaque false \
   --favicon \
   --padding "0" \
@@ -30,6 +31,7 @@ npx pwa-asset-generator \
   ./dist/"${POD_OS_APP_NAME}"/icons
 
 npx pwa-asset-generator \
+  --no-sandbox \
   --opaque false \
   --padding "calc(50vh - 25%) calc(50vw - 50%)" \
   --index ./dist/"${POD_OS_APP_NAME}"/index.html \
