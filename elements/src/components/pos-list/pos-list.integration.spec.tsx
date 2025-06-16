@@ -27,31 +27,29 @@ describe('pos-list', () => {
       .mockReturnValue({ uri: 'https://video.test/video-2', label: () => 'Video 2' });
     const page = await newSpecPage({
       components: [PosApp, PosLabel, PosList, PosResource],
-      html: `<pos-app>
-            <pos-resource uri="https://resource.test">
-              <pos-list rel="http://schema.org/video">
-                <template>
-                  <pos-label />
-                </template>
-              </pos-list>
-            </pos-resource>
-        </pos-app>`,
+      supportsShadowDom: false,
+      html: `
+      <pos-app>
+        <pos-resource uri="https://resource.test">
+          <pos-list rel="http://schema.org/video">
+            <template>
+              <pos-label />
+            </template>
+          </pos-list>
+        </pos-resource>
+      </pos-app>`,
     });
     expect(page.root?.querySelectorAll('pos-label')).toHaveLength(2);
     const label1 = page.root?.querySelectorAll('pos-label')[0];
     expect(label1).toEqualHtml(`
       <pos-label about="https://video.test/video-1">
-        <mock:shadow-root>
-          Video 1
-        </mock:shadow-root>
+        Video 1
       </pos-label>
 `);
     const label2 = page.root?.querySelectorAll('pos-label')[1];
     expect(label2).toEqualHtml(`
     <pos-label about="https://video.test/video-2">
-      <mock:shadow-root>
-        Video 2
-      </mock:shadow-root>
+      Video 2
     </pos-label>
 `);
   });
