@@ -1,8 +1,8 @@
 :host {
   --background-color: inherit;
-  --label-color: var(--color-grey-900);
-  --description-color: var(--color-grey-900);
-  --uri-color: var(--color-grey-600);
+  --label-color: var(--pos-normal-text-color);
+  --description-color: var(--pos-normal-text-color);
+  --uri-color: var(--pos-subtle-text-color);
   --font-family: var(--font-sans);
 }
 
