@@ -23,7 +23,7 @@ export class PosList implements ResourceAware {
 
   componentWillLoad() {
     subscribeResource(this);
-    let templateElement = this.host.querySelector('template');
+    const templateElement = this.host.querySelector('template');
     if (templateElement == null) {
       this.error = 'No template element found';
     } else {
