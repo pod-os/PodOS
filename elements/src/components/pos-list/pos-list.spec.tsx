@@ -7,7 +7,10 @@ describe('pos-list', () => {
   it('contains only template initially', async () => {
     const page = await newSpecPage({
       components: [PosList],
-      html: `<pos-list rel="http://schema.org/video"><template><div>Test</div></template></pos-list>`,
+      html: `
+      <pos-list rel="http://schema.org/video">
+        <template><div>Test</div></template>
+      </pos-list>`,
     });
     expect(page.root).toEqualHtml(`
           <pos-list rel="http://schema.org/video" />
@@ -19,7 +22,12 @@ describe('pos-list', () => {
   it('renders single rel object', async () => {
     const page = await newSpecPage({
       components: [PosList],
-      html: `<pos-list rel="http://schema.org/video"><template><div>Test</div></template></pos-list>`,
+      html: `
+      <pos-list rel="http://schema.org/video">
+        <template>
+          <div>Test</div>
+        </template>
+      </pos-list>`,
     });
     await page.rootInstance.receiveResource({
       relations: () => [
@@ -41,7 +49,12 @@ describe('pos-list', () => {
   it('renders multiple rel objects', async () => {
     const page = await newSpecPage({
       components: [PosList],
-      html: `<pos-list rel="http://schema.org/video"><template><div>Test</div></template></pos-list>`,
+      html: `
+      <pos-list rel="http://schema.org/video">
+        <template>
+          <div>Test</div>
+        </template>
+      </pos-list>`,
     });
     await page.rootInstance.receiveResource({
       relations: () => [
@@ -83,7 +96,13 @@ describe('pos-list', () => {
   it('displays error if template does not have a single child', async () => {
     const page = await newSpecPage({
       components: [PosList],
-      html: `<pos-list rel="http://schema.org/video"><template><div>Test 1</div><div>Test 2</div></template></pos-list>`,
+      html: `
+      <pos-list rel="http://schema.org/video">
+        <template>
+          <div>Test 1</div>
+          <div>Test 2</div>
+        </template>
+      </pos-list>`,
     });
     await page.rootInstance.receiveResource({
       relations: () => [
@@ -98,13 +117,18 @@ describe('pos-list', () => {
 
     const el: HTMLElement = page.root as unknown as HTMLElement;
 
-    expect(el.textContent).toEqual('Template element should only have one child, e.g. li');
+    expect(el.textContent).toEqualHtml('Template element should only have one child, e.g. li');
   });
 
   it('sets about attribute on children', async () => {
     const page = await newSpecPage({
       components: [PosList],
-      html: `<pos-list rel="http://schema.org/video"><template><div>Test</div></template></pos-list>`,
+      html: `
+      <pos-list rel="http://schema.org/video">
+        <template>
+          <div>Test</div>
+        </template>
+      </pos-list>`,
     });
     await page.rootInstance.receiveResource({
       relations: () => [
@@ -126,7 +150,14 @@ describe('pos-list', () => {
   it('provides resource to descendants', async () => {
     const page = await newSpecPage({
       components: [PosList],
-      html: `<pos-list rel="http://schema.org/video"><template><div class="resource"><div class="child"></div></div></template></pos-list>`,
+      html: `
+      <pos-list rel="http://schema.org/video">
+        <template>
+          <div class="resource">
+            <div class="child"></div>
+          </div>
+        </template>
+      </pos-list>`,
     });
     const os = mockPodOS();
     when(os.store.get).calledWith('https://video.test/video-1').mockReturnValue({ uri: 'https://video.test/video-1' });
