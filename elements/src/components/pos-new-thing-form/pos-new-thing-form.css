@@ -21,16 +21,20 @@ button {
   grid-column: 2 / 3;
 }
 
-input, pos-select-term::part(input) {
+input,
+pos-select-term::part(input) {
   outline: var(--pos-input-outline);
   padding: var(--scale-000);
   border: none;
   border-radius: var(--radius-xs);
   width: var(--size-full);
   box-sizing: border-box;
+  background: var(--pos-input-background-color);
+  color: var(--pos-normal-text-color);
 }
 
-input:focus-within, pos-select-term::part(input):focus-within {
+input:focus-within,
+pos-select-term::part(input):focus-within {
   outline: var(--pos-input-focus-outline);
 }
 
@@ -38,9 +42,9 @@ input:focus-within, pos-select-term::part(input):focus-within {
   grid-column: 1/3;
   cursor: default;
   word-break: break-all;
-  color: var(--color-grey-800);
+  color: var(--pos-normal-text-color);
   font-weight: var(--weight-light);
-  background: var(--color-grey-100);
+  background: var(--pos-disabled-color);
   padding: var(--scale-000);
   border-radius: var(--radius-xs);
 }
@@ -57,10 +61,11 @@ input#create:disabled {
   cursor: default;
   color: var(--pos-disabled-text-color);
   background-color: var(--pos-disabled-color);
-  box-shadow: none
+  box-shadow: none;
 }
 
-input#create:hover:not(:disabled), input#create:focus {
+input#create:hover:not(:disabled),
+input#create:focus {
   filter: brightness(110%);
   box-shadow: var(--shadow-md);
 }

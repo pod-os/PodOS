@@ -1,6 +1,6 @@
 :host {
   display: block;
-  margin: 0
+  margin: 0;
 }
 
 form {
@@ -16,6 +16,8 @@ input {
   border-radius: var(--radius-xs);
   width: var(--size-full);
   box-sizing: border-box;
+  background: var(--pos-input-background-color);
+  color: var(--pos-normal-text-color);
 }
 
 input:focus-within {
@@ -34,10 +36,11 @@ input#login:disabled {
   cursor: default;
   color: var(--pos-disabled-text-color);
   background-color: var(--pos-disabled-color);
-  box-shadow: none
+  box-shadow: none;
 }
 
-input#login:hover:not(:disabled), input#login:focus {
+input#login:hover:not(:disabled),
+input#login:focus {
   filter: brightness(110%);
   box-shadow: var(--shadow-md);
 }
