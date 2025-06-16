@@ -6,6 +6,4 @@
   justify-content: center;
   align-items: start;
   justify-items: stretch;
-  height: 100%;
-  background: linear-gradient(230deg, rgb(251, 251, 255) 0%, rgb(215, 223, 252) 100%);
 }
