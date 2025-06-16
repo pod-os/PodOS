@@ -15,6 +15,7 @@ body {
 :root {
   --pos-primary-text-color: var(--color-grey-50);
   --pos-normal-text-color: var(--color-grey-900);
+  --pos-secondary-text-color: var(--color-grey-800);
   --pos-subtle-text-color: var(--color-grey-600);
   --pos-disabled-text-color: var(--pos-subtle-text-color);
   --pos-primary-color: var(--color-blue-500);
@@ -34,6 +35,7 @@ body {
   :root {
     --pos-primary-text-color: var(--color-grey-50);
     --pos-normal-text-color: var(--color-grey-100);
+    --pos-secondary-text-color: var(--color-grey-200);
     --pos-subtle-text-color: var(--color-grey-400);
     --pos-disabled-text-color: var(--color-grey-400);
     --pos-primary-color: var(--color-blue-500);

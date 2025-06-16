@@ -10,6 +10,7 @@ article {
   outline: var(--pos-border-solid);
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-md);
+  background-color: var(--pos-card-background);
 
   header {
     display: flex;
@@ -34,7 +35,7 @@ article {
     padding: var(--size-2);
 
     pos-description {
-      color: var(--color-grey-800);
+      color: var(--pos-secondary-text-color);
       font-weight: var(--weight-light);
     }
   }
