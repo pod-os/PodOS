@@ -1,8 +1,5 @@
-:host {
-}
-
 .suggestions ol {
-  border: 1px solid var(--color-grey-200);
+  border: 1px solid var(--pos-border-color);
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -17,26 +14,26 @@
   position: relative;
   li {
     padding: 1rem;
-    background-color: white;
+    background-color: var(--pos-background-color);
     pos-rich-link {
       --background-color: inherit;
     }
     &.selected {
-      background-color: var(--color-blue);
+      background-color: var(--pos-primary-color);
       &:hover {
-        background-color: var(--color-blue-700);
+        background-color: var(--pos-primary-color);
       }
     }
     &:hover {
-      background-color: var(--color-grey-200);
+      background-color: var(--pos-border-color);
     }
   }
 }
 
 .suggestions li.selected pos-rich-link {
   --label-color: white;
-  --description-color: var(--color-grey-200);
-  --uri-color: var(--color-grey-200);
+  --description-color: var(--pos-border-color);
+  --uri-color: var(--pos-subtle-text-color);
 }
 
 ion-searchbar {
