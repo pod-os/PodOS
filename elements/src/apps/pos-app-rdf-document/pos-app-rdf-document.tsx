@@ -1,29 +1,29 @@
-import { Component, h } from '@stencil/core';
+import { Component, h, Host } from '@stencil/core';
 
 @Component({
   tag: 'pos-app-rdf-document',
+  styleUrl: 'pos-app-rdf-document.css',
+  shadow: true,
 })
 export class PosAppRdfDocument {
   render() {
     return (
-      <ion-grid>
-        <ion-row>
-          <ion-col size="12" size-sm>
-            <pos-subjects />
-          </ion-col>
-          <ion-col size="12" size-sm>
-            <ion-card>
-              <ion-card-header style={{ gap: 'var(--size-1)' }}>
-                <ion-card-title>
-                  <pos-label />
-                </ion-card-title>
-                <pos-type-badges />
-                <pos-literals />
-              </ion-card-header>
-            </ion-card>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+      <Host>
+        <section>
+          <pos-subjects />
+        </section>
+        <section>
+          <article aria-labelledby="doc-title">
+            <header>
+              <h1 id="doc-title">
+                <pos-label />
+              </h1>
+              <pos-type-badges />
+            </header>
+            <pos-literals />
+          </article>
+        </section>
+      </Host>
     );
   }
 }

@@ -1,0 +1,39 @@
+:host {
+  --gap-size: var(--size-1);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-size);
+  margin: var(--gap-size);
+}
+
+article {
+  outline: var(--pos-border-solid);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  background-color: var(--pos-card-background);
+
+  header {
+    display: flex;
+    flex-direction: column;
+
+    h1,
+    pos-type-badges {
+      margin: var(--size-2);
+    }
+  }
+}
+
+@media (min-width: 640px) {
+  :host {
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    section:first-of-type {
+      flex: 1;
+    }
+
+    section:not(:first-of-type) {
+      flex: 0 0 30%;
+    }
+  }
+}
