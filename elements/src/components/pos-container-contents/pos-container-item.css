@@ -1,0 +1,16 @@
+:host {
+  display: flex;
+}
+
+a {
+  display: flex;
+  text-decoration: none;
+  padding: var(--size-4);
+  width: var(--size-full);
+  gap: var(--size-2);
+  color: var(--pos-normal-text-color);
+  background-color: var(--pos-background-color);
+  &:hover {
+    background-color: var(--pos-border-color);
+  }
+}

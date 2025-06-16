@@ -6,6 +6,7 @@ import { selectIconForTypes } from './selectIconForTypes';
 @Component({
   tag: 'pos-container-item',
   shadow: true,
+  styleUrl: 'pos-container-item.css',
 })
 export class PosContainerItem implements ResourceAware {
   @State() resource: Thing;
@@ -27,7 +28,7 @@ export class PosContainerItem implements ResourceAware {
     if (!this.resource) return null;
     const iconName = selectIconForTypes(this.resource.types());
     return (
-      <ion-item
+      <a
         href={this.resource.uri}
         onClick={e => {
           e.preventDefault();
@@ -36,7 +37,7 @@ export class PosContainerItem implements ResourceAware {
       >
         <ion-icon name={iconName} slot="start"></ion-icon>
         <slot></slot>
-      </ion-item>
+      </a>
     );
   }
 }

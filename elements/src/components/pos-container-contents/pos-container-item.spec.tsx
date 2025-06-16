@@ -35,10 +35,10 @@ describe('pos-container-item', () => {
 
     expect(page.root).toEqualHtml(`
       <pos-container-item>
-        <ion-item>
+        <a>
           <ion-icon name="document-outline" slot="start"></ion-icon>
           file name
-        </ion-item>
+        </a>
       </pos-container-item>
     `);
   });
@@ -60,10 +60,10 @@ describe('pos-container-item', () => {
 
     expect(page.root).toEqualHtml(`
         <pos-container-item>
-            <ion-item>
+            <a>
                 <ion-icon name="folder-outline" slot="start"></ion-icon>
                 folder name
-            </ion-item>
+            </a>
         </pos-container-item>
     `);
   });

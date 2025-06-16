@@ -5,7 +5,7 @@ import { ResourceAware, subscribeResource } from '../events/ResourceAware';
 @Component({
   tag: 'pos-container-contents',
   shadow: true,
-  styleUrl: 'pos-container-contents.css'
+  styleUrl: 'pos-container-contents.css',
 })
 export class PosContainerContents implements ResourceAware {
   @State() contents: ContainerContent[] = [];
@@ -30,9 +30,7 @@ export class PosContainerContents implements ResourceAware {
     const items = this.contents.map(it => (
       <li>
         <pos-resource lazy={true} uri={it.uri}>
-          <pos-container-item>
-            {it.name}
-          </pos-container-item>
+          <pos-container-item>{it.name}</pos-container-item>
         </pos-resource>
       </li>
     ));
