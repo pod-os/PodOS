@@ -39,7 +39,7 @@ export class PosList implements ResourceAware {
   render() {
     if (this.error) return this.error;
     const elems = this.items.map(it => (
-      <pos-resource uri={it} innerHTML={this.templateString} about={it}></pos-resource>
+      <pos-resource uri={it} lazy={true} innerHTML={this.templateString} about={it}></pos-resource>
     ));
     return this.items.length > 0 ? elems : null;
   }

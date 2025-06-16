@@ -61,4 +61,77 @@ describe('pos-list', () => {
 `);
     expect(label2?.uri).toEqual('https://video.test/video-2');
   });
+
+  it('does not fetch resources by default (if fetch attribute is not present)', async () => {
+    const os = mockPodOS();
+    when(os.store.get)
+      .calledWith('https://resource.test')
+      .mockReturnValue({
+        relations: () => [
+          {
+            predicate: 'http://schema.org/video',
+            uris: ['https://video.test/video-1', 'https://video.test/video-2'],
+          },
+        ],
+      });
+    when(os.store.get)
+      .calledWith('https://video.test/video-1')
+      .mockReturnValue({ uri: 'https://video.test/video-1', label: () => 'video-1' });
+    when(os.store.get)
+      .calledWith('https://video.test/video-2')
+      .mockReturnValue({ uri: 'https://video.test/video-2', label: () => 'video-2' });
+    const page = await newSpecPage({
+      components: [PosApp, PosLabel, PosList, PosResource],
+      supportsShadowDom: false,
+      html: `
+      <pos-app>
+        <pos-resource uri="https://resource.test" lazy="">
+          <pos-list rel="http://schema.org/video">
+            <template>
+              <pos-label />
+            </template>
+          </pos-list>
+        </pos-resource>
+      </pos-app>`,
+    });
+
+    expect(os.fetch.mock.calls).toHaveLength(0);
+  });
+
+  it('fetches resources if fetch attribute is present', async () => {
+    const os = mockPodOS();
+    when(os.store.get)
+      .calledWith('https://resource.test')
+      .mockReturnValue({
+        relations: () => [
+          {
+            predicate: 'http://schema.org/video',
+            uris: ['https://video.test/video-1', 'https://video.test/video-2'],
+          },
+        ],
+      });
+    when(os.store.get)
+      .calledWith('https://video.test/video-1')
+      .mockReturnValue({ uri: 'https://video.test/video-1', label: () => 'Video 1' });
+    when(os.store.get)
+      .calledWith('https://video.test/video-2')
+      .mockReturnValue({ uri: 'https://video.test/video-2', label: () => 'Video 2' });
+    const page = await newSpecPage({
+      components: [PosApp, PosLabel, PosList, PosResource],
+      supportsShadowDom: false,
+      html: `
+      <pos-app>
+        <pos-resource uri="https://resource.test" lazy="">
+          <pos-list rel="http://schema.org/video" fetch>
+            <template>
+              <pos-label />
+            </template>
+          </pos-list>
+        </pos-resource>
+      </pos-app>`,
+    });
+
+    expect(os.fetch.mock.calls).toHaveLength(2);
+    expect(os.fetch.mock.calls).toEqual([['https://video.test/video-1'], ['https://video.test/video-2']]);
+  });
 });
