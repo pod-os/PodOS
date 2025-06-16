@@ -1,5 +1,5 @@
 :host {
-  --background-base-color: var(--color-grey-200);
+  --background-base-color: color-mix(in srgb, var(--pos-background-color), var(--color-grey-800) 10%);
   --background-color-even: hsl(from var(--background-base-color) h s calc(l + 7));
   --background-color-odd: hsl(from var(--background-base-color) h s calc(l + 10));
   --border-color: var(--background-base-color);
