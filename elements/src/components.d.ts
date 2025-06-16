@@ -519,7 +519,6 @@ declare global {
         new (): HTMLPosLabelElement;
     };
     interface HTMLPosListElementEventMap {
-        "pod-os:init": any;
         "pod-os:resource": any;
     }
     interface HTMLPosListElement extends Components.PosList, HTMLStencilElement {
@@ -996,7 +995,6 @@ declare namespace LocalJSX {
         "onPod-os:resource"?: (event: PosLabelCustomEvent<any>) => void;
     }
     interface PosList {
-        "onPod-os:init"?: (event: PosListCustomEvent<any>) => void;
         "onPod-os:resource"?: (event: PosListCustomEvent<any>) => void;
         /**
           * URI of the predicate to follow

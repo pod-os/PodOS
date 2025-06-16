@@ -40,6 +40,7 @@ Type: `Promise<void>`
 
  - [pos-app-browser](../../apps/pos-app-browser)
  - [pos-container-contents](../pos-container-contents)
+ - [pos-list](../pos-list)
  - [pos-login](../pos-login)
  - [pos-make-findable](../pos-make-findable)
  - [pos-rich-link](../pos-rich-link)
@@ -61,6 +62,7 @@ graph TD;
   ion-card --> ion-ripple-effect
   pos-app-browser --> pos-resource
   pos-container-contents --> pos-resource
+  pos-list --> pos-resource
   pos-login --> pos-resource
   pos-make-findable --> pos-resource
   pos-rich-link --> pos-resource
