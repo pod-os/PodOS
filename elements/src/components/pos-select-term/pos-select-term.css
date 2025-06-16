@@ -3,6 +3,8 @@
 }
 
 input {
+  background-color: transparent;
+  color: var(--pos-normal-text-color);
   border: none;
   padding-top: 1rem;
   padding-bottom: 1rem;
