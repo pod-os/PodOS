@@ -37,13 +37,14 @@ footer {
   .settings {
     padding: 0 var(--size-1);
     text-decoration: none;
-    border: 1px solid var(--color-grey-800);
-    color: var(--color-grey-800);
+    background-color: var(--pos-background-color);
+    border: 1px solid var(--pos-secondary-border-color);
+    color: var(--pos-secondary-border-color);
     border-radius: var(--radius-xs);
 
     &:hover {
-      background-color: var(--color-grey-800);
-      color: white;
+      background-color: var(--pos-secondary-border-color);
+      color: var(--pos-background-color);
     }
   }
 }
