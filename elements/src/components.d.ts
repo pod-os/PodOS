@@ -78,6 +78,10 @@ export namespace Components {
     }
     interface PosList {
         /**
+          * Whether listed resources should be fetched before being displayed
+         */
+        "fetch": boolean;
+        /**
           * URI of the predicate to follow
          */
         "rel": string;
@@ -995,6 +999,10 @@ declare namespace LocalJSX {
         "onPod-os:resource"?: (event: PosLabelCustomEvent<any>) => void;
     }
     interface PosList {
+        /**
+          * Whether listed resources should be fetched before being displayed
+         */
+        "fetch"?: boolean;
         "onPod-os:resource"?: (event: PosListCustomEvent<any>) => void;
         /**
           * URI of the predicate to follow

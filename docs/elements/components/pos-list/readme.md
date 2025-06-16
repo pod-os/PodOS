@@ -4,9 +4,10 @@
 
 ## Properties
 
-| Property | Attribute | Description                    | Type     | Default     |
-| -------- | --------- | ------------------------------ | -------- | ----------- |
-| `rel`    | `rel`     | URI of the predicate to follow | `string` | `undefined` |
+| Property | Attribute | Description                                                       | Type      | Default     |
+| -------- | --------- | ----------------------------------------------------------------- | --------- | ----------- |
+| `fetch`  | `fetch`   | Whether listed resources should be fetched before being displayed | `boolean` | `false`     |
+| `rel`    | `rel`     | URI of the predicate to follow                                    | `string`  | `undefined` |
 
 
 ## Events
