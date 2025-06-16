@@ -32,7 +32,7 @@ export class PosAddLiteralValue implements ResourceAware, PodOsAware {
   @Watch('os')
   setName() {}
 
-  private valueInput: HTMLIonInputElement;
+  private valueInput: HTMLInputElement;
 
   componentWillLoad() {
     subscribeResource(this);
@@ -64,7 +64,7 @@ export class PosAddLiteralValue implements ResourceAware, PodOsAware {
 
   onTermSelected(event) {
     this.selectedTermUri = event.detail.uri;
-    this.valueInput.setFocus();
+    this.valueInput.focus();
   }
 
   render() {
@@ -75,13 +75,13 @@ export class PosAddLiteralValue implements ResourceAware, PodOsAware {
       <Host>
         <ion-icon name="add-circle-outline"></ion-icon>
         <pos-select-term placeholder="Add literal" onPod-os:term-selected={ev => this.onTermSelected(ev)} />
-        <ion-input
+        <input
           ref={el => (this.valueInput = el)}
           value={this.currentValue}
           placeholder=""
-          onIonChange={ev => (this.currentValue = ev.detail.value.toString())}
+          onInput={ev => (this.currentValue = (ev.target as HTMLInputElement).value)}
           onChange={() => this.save()}
-        ></ion-input>
+        ></input>
       </Host>
     );
   }

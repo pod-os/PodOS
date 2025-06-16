@@ -53,7 +53,7 @@ describe('pos-add-literal-value', () => {
         <mock:shadow-root>
             <ion-icon name="add-circle-outline"></ion-icon>
             <pos-select-term placeholder="Add literal"></pos-select-term>
-            <ion-input placeholder=""></ion-input>
+            <input placeholder="" />
         </mock:shadow-root>
       </pos-add-literal-value>
     `);
@@ -81,8 +81,8 @@ describe('pos-add-literal-value', () => {
 
     await page.waitForChanges();
 
-    const input = page.root.querySelector('ion-input');
-    input.setFocus = jest.fn();
+    const input = page.root.querySelector('input');
+    input.focus = jest.fn();
 
     // when the user selects a term
     const termSelect = page.root.querySelector('pos-select-term');
@@ -92,7 +92,7 @@ describe('pos-add-literal-value', () => {
     );
 
     // then the input is focussed
-    expect(input.setFocus).toHaveBeenCalled();
+    expect(input.focus).toHaveBeenCalled();
   });
 
   it('changes value and saves value', async () => {
@@ -117,8 +117,8 @@ describe('pos-add-literal-value', () => {
 
     await page.waitForChanges();
 
-    const input = page.root.querySelector('ion-input');
-    input.setFocus = jest.fn();
+    const input = page.root.querySelector('input');
+    input.focus = jest.fn();
 
     // when the user selects a term
     const termSelect = page.root.querySelector('pos-select-term');
@@ -131,7 +131,8 @@ describe('pos-add-literal-value', () => {
     expect(page.rootInstance.selectedTermUri).toBe('https://schema.org/description');
 
     // when the user types something into the value input
-    fireEvent(input, new CustomEvent('ionChange', { detail: { value: 'new value' } }));
+    input.value = 'new value';
+    fireEvent(input, new CustomEvent('input'));
     expect(page.rootInstance.currentValue).toBe('new value');
 
     // and the value changes for good

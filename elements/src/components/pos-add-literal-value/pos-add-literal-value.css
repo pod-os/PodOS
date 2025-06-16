@@ -3,3 +3,18 @@
   align-items: center;
   gap: 0.2rem;
 }
+
+input {
+  padding: var(--size-2);
+  background-color: transparent;
+  color: var(--pos-normal-text-color);
+  border: none;
+}
+
+input:focus {
+  outline: 2px solid var(--pos-primary-color);
+  background-color: var(--pos-input-background-color);
+  transition:
+    outline 0.1s,
+    background-color 0.1s;
+}
