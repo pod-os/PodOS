@@ -39,18 +39,26 @@ describe('pos-list', () => {
         </pos-resource>
       </pos-app>`,
     });
-    expect(page.root?.querySelectorAll('pos-label')).toHaveLength(2);
-    const label1 = page.root?.querySelectorAll('pos-label')[0];
+    expect(page.root?.querySelectorAll('pos-list pos-resource')).toHaveLength(2);
+    const label1 = page.root?.querySelectorAll('pos-list pos-resource')[0] as unknown as PosResource;
     expect(label1).toEqualHtml(`
-      <pos-label about="https://video.test/video-1">
-        Video 1
-      </pos-label>
+      <pos-resource about="https://video.test/video-1">
+        <pos-label>
+          Video 1
+        </pos-label>
+      </pos-resource>
 `);
-    const label2 = page.root?.querySelectorAll('pos-label')[1];
+    //Tested separately because pos-resource does not reflect the uri property as an attribute
+    expect(label1?.uri).toEqual('https://video.test/video-1');
+
+    const label2 = page.root?.querySelectorAll('pos-list pos-resource')[1] as unknown as PosResource;
     expect(label2).toEqualHtml(`
-    <pos-label about="https://video.test/video-2">
-      Video 2
-    </pos-label>
+      <pos-resource about="https://video.test/video-2">
+        <pos-label>
+          Video 2
+        </pos-label>
+      </pos-resource>
 `);
+    expect(label2?.uri).toEqual('https://video.test/video-2');
   });
 });
