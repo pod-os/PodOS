@@ -32,11 +32,11 @@ body {
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --pos-primary-text-color: var(--color-grey-900);
+    --pos-primary-text-color: var(--color-grey-50);
     --pos-normal-text-color: var(--color-grey-100);
     --pos-subtle-text-color: var(--color-grey-400);
     --pos-disabled-text-color: var(--color-grey-400);
-    --pos-primary-color: var(--color-blue-400);
+    --pos-primary-color: var(--color-blue-500);
     --pos-disabled-color: var(--color-grey-800);
     --pos-background-color: var(--color-grey-900);
     --pos-border-color: var(--color-grey-800);
