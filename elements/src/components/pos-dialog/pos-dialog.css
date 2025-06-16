@@ -1,11 +1,23 @@
-
-
 dialog {
   background-color: var(--pos-background-color);
+  color: var(--pos-normal-text-color);
   border: none;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);
   max-width: var(--width-xs);
+  animation: slideIn 0.2s ease-out;
+}
+
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: var(--blur-sm);
+  animation: fadeIn 0.2s ease-out;
+}
+
+@media (prefers-color-scheme: dark) {
+  dialog::backdrop {
+    background: rgb(100, 100, 100, 0.5);
+  }
 }
 
 dialog header > :first-child {
@@ -45,5 +57,25 @@ button#close {
 }
 
 button#close:hover {
-  color: var(--color-grey-800);
+  color: var(--pos-secondary-border-color);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
