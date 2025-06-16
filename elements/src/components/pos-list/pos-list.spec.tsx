@@ -119,4 +119,55 @@ describe('pos-list', () => {
     expect(el.querySelectorAll('pos-resource')[0]?.getAttribute('uri')).toEqual('https://video.test/video-1');
     expect(el.querySelectorAll('pos-resource')[1]?.getAttribute('uri')).toEqual('https://video.test/video-2');
   });
+
+  it('sets lazy attribute on children if fetch is not present', async () => {
+    const page = await newSpecPage({
+      components: [PosList],
+      html: `
+      <pos-list rel="http://schema.org/video">
+        <template>
+          Test
+        </template>
+      </pos-list>`,
+    });
+    await page.rootInstance.receiveResource({
+      relations: () => [
+        {
+          predicate: 'http://schema.org/video',
+          label: 'url',
+          uris: ['https://video.test/video-1'],
+        },
+      ],
+    });
+    await page.waitForChanges();
+
+    const el: HTMLElement = page.root as unknown as HTMLElement;
+
+    expect(el.querySelector('pos-resource')?.getAttribute('lazy')).toEqual('');
+  });
+
+  it('does not set lazy attribute on children if fetch is present', async () => {
+    const page = await newSpecPage({
+      components: [PosList],
+      html: `
+      <pos-list rel="http://schema.org/video" fetch="">
+        <template>
+          Test
+        </template>
+      </pos-list>`,
+    });
+    await page.rootInstance.receiveResource({
+      relations: () => [
+        {
+          predicate: 'http://schema.org/video',
+          label: 'url',
+          uris: ['https://video.test/video-1'],
+        },
+      ],
+    });
+    await page.waitForChanges();
+
+    const el: HTMLElement = page.root as unknown as HTMLElement;
+    expect(el.querySelector('pos-resource')?.getAttribute('lazy')).toEqual(null);
+  });
 });
