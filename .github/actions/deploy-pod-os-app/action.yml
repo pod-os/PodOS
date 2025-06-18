@@ -1,0 +1,35 @@
+name: 'Deploy PodOS App'
+description: 'Builds and deploys a PodOS app to Netlify'
+inputs:
+  app-name:
+    description: 'Name of the app to build and deploy'
+    required: true
+  deploy-dir:
+    description: 'Directory to deploy from'
+    required: false
+    default: 'dist/${{ inputs.app-name }}'
+  netlify-flags:
+    description: 'Additional flags to pass to netlify-cli deploy command'
+    required: false
+    default: ''
+runs:
+  using: "composite"
+  steps:
+    - name: Echo Version
+      shell: bash
+      run: echo release apps based on @pod-os/elements version ${POD_OS_ELEMENTS_VERSION}
+
+    - uses: actions/checkout@v3
+
+    - name: Build PodOS App
+      working-directory: ./apps
+      shell: bash
+      run: make ${{ inputs.app-name }}
+
+    - name: Deploy PodOS App
+      working-directory: ./apps
+      shell: bash
+      run: npx netlify-cli deploy --dir=${{ inputs.deploy-dir }} ${{ inputs.netlify-flags }}
+      env:
+        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_POD_OS_BROWSER_SITE_ID }}
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}

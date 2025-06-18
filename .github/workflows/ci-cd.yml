@@ -95,6 +95,17 @@ jobs:
           token: ${{ secrets.NPM_TOKEN }}
           tag: ${{ env.GITHUB_REF_SLUG }}
 
+  deploy-preview-pod-os-browser:
+    needs: npm-publish-elements-build
+    if: needs.npm-publish-elements-build.outputs.releaseType != 'none'
+    runs-on: ubuntu-22.04
+    env:
+      POD_OS_ELEMENTS_VERSION: ${{ needs.npm-publish-elements-build.outputs.releaseVersion }}
+    steps:
+      - uses: ./.github/actions/deploy-pod-os-app
+        with:
+          app-name: pos-app-browser
+
   build-pages:
     if: github.ref == 'refs/heads/main'
     needs:
@@ -180,21 +191,14 @@ jobs:
           token: ${{ secrets.NPM_TOKEN }}
           tag: latest
 
-  deploy-pod-os-apps:
+  deploy-prod-pod-os-browser:
     needs: npm-release-latest-elements
     if: needs.npm-release-latest-elements.outputs.releaseType != 'none'
     runs-on: ubuntu-22.04
     env:
       POD_OS_ELEMENTS_VERSION: ${{ needs.npm-release-latest-elements.outputs.releaseVersion }}
     steps:
-      - run: echo release apps based on @pod-os/elements version ${POD_OS_ELEMENTS_VERSION}
-      - uses: actions/checkout@v3
-      - name: Build PodOS Browser
-        working-directory: ./apps
-        run: make pos-app-browser
-      - name: Deploy PodOS Browser
-        working-directory: ./apps
-        run: npx netlify-cli deploy --dir=dist/pos-app-browser --prod
-        env:
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_POD_OS_BROWSER_SITE_ID }}
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      - uses: ./.github/actions/deploy-pod-os-app
+        with:
+          app-name: pos-app-browser
+          netlify-flags: '--prod'
