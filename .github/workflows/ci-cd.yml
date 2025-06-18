@@ -99,11 +99,16 @@ jobs:
     needs: npm-publish-elements-build
     if: needs.npm-publish-elements-build.outputs.releaseType != 'none'
     runs-on: ubuntu-22.04
+    environment:
+      name: preview
+      url: ${{ steps.deploy.outputs.deploy_url }}
     env:
       POD_OS_ELEMENTS_VERSION: ${{ needs.npm-publish-elements-build.outputs.prereleaseVersion }}
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/deploy-pod-os-app
+      - name: Deploy to Netlify (Preview)
+        id: deploy
+        uses: ./.github/actions/deploy-pod-os-app
         with:
           app-name: pos-app-browser
           netlify-site-id: ${{ secrets.NETLIFY_POD_OS_BROWSER_SITE_ID }}
@@ -198,11 +203,17 @@ jobs:
     needs: npm-release-latest-elements
     if: needs.npm-release-latest-elements.outputs.releaseType != 'none'
     runs-on: ubuntu-22.04
+    # Define the environment with a URL
+    environment:
+      name: production
+      url: ${{ steps.deploy.outputs.deploy_url }}
     env:
       POD_OS_ELEMENTS_VERSION: ${{ needs.npm-release-latest-elements.outputs.releaseVersion }}
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/deploy-pod-os-app
+      - name: Deploy to Netlify (Production)
+        id: deploy
+        uses: ./.github/actions/deploy-pod-os-app
         with:
           app-name: pos-app-browser
           netlify-flags: '--prod'

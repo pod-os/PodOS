@@ -14,6 +14,10 @@ inputs:
   netlify-auth-token:
     description: 'Netlify Auth Token'
     required: true
+outputs:
+  deploy_url:
+    description: 'The URL of the deployed site'
+    value: ${{ steps.deploy.outputs.deploy_url }}
 runs:
   using: "composite"
   steps:
@@ -27,9 +31,14 @@ runs:
       run: make ${{ inputs.app-name }}
 
     - name: Deploy PodOS App
+      id: deploy
       working-directory: ./apps
       shell: bash
-      run: npx netlify-cli deploy --dir=dist/${{ inputs.app-name }} ${{ inputs.netlify-flags }}
+      run: |
+        DEPLOY_OUTPUT=$(npx netlify-cli deploy --dir=dist/${{ inputs.app-name }} ${{ inputs.netlify-flags }} --json)
+        echo $DEPLOY_OUTPUT
+        DEPLOY_URL=$(echo "$DEPLOY_OUTPUT" | jq -r '.deploy_url')
+        echo "deploy_url=$DEPLOY_URL" >> $GITHUB_OUTPUT
       env:
         NETLIFY_SITE_ID: ${{ inputs.netlify-site-id }}
         NETLIFY_AUTH_TOKEN: ${{ inputs.netlify-auth-token }}
