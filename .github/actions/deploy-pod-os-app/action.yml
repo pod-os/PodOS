@@ -4,22 +4,22 @@ inputs:
   app-name:
     description: 'Name of the app to build and deploy'
     required: true
-  deploy-dir:
-    description: 'Directory to deploy from'
-    required: false
-    default: 'dist/${{ inputs.app-name }}'
   netlify-flags:
     description: 'Additional flags to pass to netlify-cli deploy command'
     required: false
     default: ''
+  netlify-site-id:
+    description: 'Netlify Site ID'
+    required: true
+  netlify-auth-token:
+    description: 'Netlify Auth Token'
+    required: true
 runs:
   using: "composite"
   steps:
     - name: Echo Version
       shell: bash
-      run: echo release apps based on @pod-os/elements version ${POD_OS_ELEMENTS_VERSION}
-
-    - uses: actions/checkout@v3
+      run: echo release ${{ inputs.app-name }} to Netlify site ${{ inputs.netlify-site-id }} based on @pod-os/elements version ${POD_OS_ELEMENTS_VERSION}
 
     - name: Build PodOS App
       working-directory: ./apps
@@ -29,7 +29,7 @@ runs:
     - name: Deploy PodOS App
       working-directory: ./apps
       shell: bash
-      run: npx netlify-cli deploy --dir=${{ inputs.deploy-dir }} ${{ inputs.netlify-flags }}
+      run: npx netlify-cli deploy --dir=dist/${{ inputs.app-name }} ${{ inputs.netlify-flags }}
       env:
-        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_POD_OS_BROWSER_SITE_ID }}
-        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        NETLIFY_SITE_ID: ${{ inputs.netlify-site-id }}
+        NETLIFY_AUTH_TOKEN: ${{ inputs.netlify-auth-token }}

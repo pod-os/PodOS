@@ -100,11 +100,14 @@ jobs:
     if: needs.npm-publish-elements-build.outputs.releaseType != 'none'
     runs-on: ubuntu-22.04
     env:
-      POD_OS_ELEMENTS_VERSION: ${{ needs.npm-publish-elements-build.outputs.releaseVersion }}
+      POD_OS_ELEMENTS_VERSION: ${{ needs.npm-publish-elements-build.outputs.prereleaseVersion }}
     steps:
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/deploy-pod-os-app
         with:
           app-name: pos-app-browser
+          netlify-site-id: ${{ secrets.NETLIFY_POD_OS_BROWSER_SITE_ID }}
+          netlify-auth-token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
 
   build-pages:
     if: github.ref == 'refs/heads/main'
@@ -198,7 +201,10 @@ jobs:
     env:
       POD_OS_ELEMENTS_VERSION: ${{ needs.npm-release-latest-elements.outputs.releaseVersion }}
     steps:
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/deploy-pod-os-app
         with:
           app-name: pos-app-browser
           netlify-flags: '--prod'
+          netlify-site-id: ${{ secrets.NETLIFY_POD_OS_BROWSER_SITE_ID }}
+          netlify-auth-token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
