@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- `Thing.relations()`: Now takes optional predicate to filter by
+
 ## 0.16.1
 
 ### Fixed
@@ -25,7 +31,6 @@ and this project adheres to
 - `PodOS`
   - the constructor can now take an optional `PodOsConfiguration`, to set up offline cache depending on the environment
   - offline cache will be cleared on logout
-- `Thing.relations()`: Now takes optional predicate to filter by
 
 ## 0.15.0
 
