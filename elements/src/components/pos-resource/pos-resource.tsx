@@ -57,7 +57,7 @@ export class PosResource implements PodOsAware {
   @Watch('os')
   @Watch('uri')
   async loadResource() {
-    await this.getResource(!this.lazy);
+    if(this.uri) await this.getResource(!this.lazy);
   }
 
   @Method()
