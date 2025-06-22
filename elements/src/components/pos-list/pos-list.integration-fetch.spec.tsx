@@ -7,7 +7,7 @@ import { PosResource } from '../pos-resource/pos-resource';
 import { when } from 'jest-when';
 
 describe('pos-list', () => {
-  it('children render label for loaded resources (without fetching)', async () => {
+  it('fetches resources if fetch attribute is present', async () => {
     const os = mockPodOS();
     when(os.store.get)
       .calledWith('https://resource.test')
@@ -31,7 +31,7 @@ describe('pos-list', () => {
       html: `
       <pos-app>
         <pos-resource uri="https://resource.test" lazy="">
-          <pos-list rel="http://schema.org/video">
+          <pos-list rel="http://schema.org/video" fetch>
             <template>
               <pos-label />
             </template>
@@ -39,27 +39,8 @@ describe('pos-list', () => {
         </pos-resource>
       </pos-app>`,
     });
-    expect(os.fetch.mock.calls).toHaveLength(0);
-    expect(page.root?.querySelectorAll('pos-list pos-resource')).toHaveLength(2);
-    const label1 = page.root?.querySelectorAll('pos-list pos-resource')[0] as unknown as PosResource;
-    expect(label1).toEqualHtml(`
-      <pos-resource about="https://video.test/video-1">
-        <pos-label>
-          Video 1
-        </pos-label>
-      </pos-resource>
-`);
-    //Tested separately because pos-resource does not reflect the uri property as an attribute
-    expect(label1?.uri).toEqual('https://video.test/video-1');
 
-    const label2 = page.root?.querySelectorAll('pos-list pos-resource')[1] as unknown as PosResource;
-    expect(label2).toEqualHtml(`
-      <pos-resource about="https://video.test/video-2">
-        <pos-label>
-          Video 2
-        </pos-label>
-      </pos-resource>
-`);
-    expect(label2?.uri).toEqual('https://video.test/video-2');
+    expect(os.fetch.mock.calls).toHaveLength(2);
+    expect(os.fetch.mock.calls).toEqual([['https://video.test/video-1'], ['https://video.test/video-2']]);
   });
 });
