@@ -1,0 +1,30 @@
+import { html } from "lit-html";
+
+import { Canvas, Meta, Story } from "@storybook/addon-docs/blocks";
+
+<Meta
+  title="Basics"
+  args={{
+    uri: "https://solidproject.solidcommunity.net/profile/card#me",
+    rel: "http://schema.org/skills",
+    fetch: false,
+  }}
+/>
+
+## pos-list
+
+Renders things related to a resource with a custom template. The related
+resources can optionally be fetched before rendering.
+
+<Canvas withSource="open">
+  <Story name="pos-list">
+    {({ uri, rel, fetch }) => html`
+      The template is repeated for each item:
+      <pos-resource uri=${uri}>
+        <pos-list rel=${rel} ?fetch=${fetch}>
+          <template> :-) </template>
+        </pos-list>
+      </pos-resource>
+    `}
+  </Story>
+</Canvas>
