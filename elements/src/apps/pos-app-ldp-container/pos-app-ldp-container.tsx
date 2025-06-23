@@ -1,33 +1,33 @@
-import { Component, h } from '@stencil/core';
+import { Component, h, Host } from '@stencil/core';
 
 @Component({
   tag: 'pos-app-ldp-container',
+  shadow: true,
+  styleUrl: 'pos-app-ldp-container.css',
 })
 export class PosAppLdpContainer {
   render() {
     return (
-      <ion-grid>
-        <ion-row>
-          <ion-col size="12" size-sm>
-            <pos-container-contents />
-            <details>
-              <summary>All subjects</summary>
-              <pos-subjects />
-            </details>
-          </ion-col>
-          <ion-col size="12" size-sm>
-            <ion-card>
-              <ion-card-header style={{ gap: 'var(--size-1)' }}>
-                <ion-card-title>
-                  <pos-label />
-                </ion-card-title>
-                <pos-type-badges />
-                <pos-literals />
-              </ion-card-header>
-            </ion-card>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+      <Host>
+        <section>
+          <pos-container-contents />
+          <details>
+            <summary>All subjects</summary>
+            <pos-subjects />
+          </details>
+        </section>
+        <section>
+          <article>
+            <header>
+              <h1>
+                <pos-label />
+              </h1>
+              <pos-type-badges />
+            </header>
+            <pos-literals />
+          </article>
+        </section>
+      </Host>
     );
   }
 }
