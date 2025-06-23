@@ -1,0 +1,11 @@
+details.error {
+  margin: var(--size-2);
+  background-color: var(--pos-error-background-color);
+  border: var(--size-px) solid var(--pos-error-border-color);
+  padding: var(--size-2);
+  border-radius: var(--radius-md);
+
+  a {
+    color: var(--pos-normal-text-color);
+  }
+}

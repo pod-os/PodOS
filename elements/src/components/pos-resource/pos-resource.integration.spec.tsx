@@ -117,27 +117,23 @@ describe('pos-resource with a pos-label child', () => {
 <pos-app>
     <pos-resource uri="https://resource.test">
       <mock:shadow-root>
-        <ion-card>
-          <ion-card-header>
-            <p>
-              Sorry, something went wrong
-            </p>
-            <p>
-              Status:
-            </p>
-            <details>
-              not found
-            </details>
-          </ion-card-header>
-          <ion-card-content>
-            <p>
-              You can try to open the link outside PodOS:
-            </p>
+        <details class="error">
+          <summary title="Click to expand">
+            ⚠ Sorry, something went wrong
+          </summary>
+          <p>
+            Status:
+          </p>
+          <p>
+            not found
+          </p>
+          <p>
+            You can try to open the link outside PodOS:
             <a href="https://resource.test">
               https://resource.test
             </a>
-          </ion-card-content>
-        </ion-card>
+          </p>
+        </details>
       </mock:shadow-root>
       <pos-label>
         <mock:shadow-root>
@@ -293,27 +289,23 @@ describe('pos-resource with a pos-label child', () => {
     <pos-app>
         <pos-resource lazy uri="https://resource.test">
           <mock:shadow-root>
-            <ion-card>
-              <ion-card-header>
-                <p>
-                  Sorry, something went wrong
-                </p>
-                <p>
-                  Status:
-                </p>
-                <details>
-                  not found
-                </details>
-              </ion-card-header>
-              <ion-card-content>
-                <p>
-                  You can try to open the link outside PodOS:
-                </p>
+            <details class="error">
+              <summary title="Click to expand">
+                ⚠ Sorry, something went wrong
+              </summary>
+              <p>
+                Status:
+              </p>
+              <p>
+                not found
+              </p>
+              <p>
+                You can try to open the link outside PodOS:
                 <a href="https://resource.test">
                   https://resource.test
                 </a>
-              </ion-card-content>
-            </ion-card>
+              </p>
+            </details>
           </mock:shadow-root>
           <pos-label>
             <mock:shadow-root>

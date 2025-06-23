@@ -42,6 +42,8 @@ body {
     radial-gradient(ellipse 1000px 300px at 50% 100%, var(--color-slate-200), transparent 80%);
   --pos-card-background: var(--color-white);
   color: var(--pos-normal-text-color);
+  --pos-error-background-color: var(--color-red-50);
+  --pos-error-border-color: var(--color-red-600);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -73,5 +75,7 @@ body {
       ),
       radial-gradient(ellipse 1000px 300px at 50% 100%, var(--color-grey-800), transparent 80%);
     --pos-card-background: var(--color-grey-900);
+    --pos-error-background-color: var(--color-red-950);
+    --pos-error-border-color: var(--color-red-400);
   }
 }

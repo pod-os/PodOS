@@ -12,6 +12,7 @@ interface SubscribeResourceEvent extends CustomEvent {
 @Component({
   tag: 'pos-resource',
   shadow: true,
+  styleUrl: 'pos-resource.css',
 })
 export class PosResource implements PodOsAware {
   @State() os: PodOS;
@@ -90,23 +91,20 @@ export class PosResource implements PodOsAware {
     }
     if (this.error) {
       return (
-        <ion-card>
-          <ion-card-header>
-            <p>Sorry, something went wrong</p>
-            <p>
-              Status:
-              {
-                // @ts-ignore
-                this.error.status
-              }
-            </p>
-            <details>{this.error.message}</details>
-          </ion-card-header>
-          <ion-card-content>
-            <p>You can try to open the link outside PodOS:</p>
-            <a href={this.uri}>{this.uri}</a>
-          </ion-card-content>
-        </ion-card>
+        <details class="error">
+          <summary title="Click to expand">⚠ Sorry, something went wrong</summary>
+          <p>
+            Status:
+            {
+              // @ts-ignore
+              this.error.status
+            }
+          </p>
+          <p>{this.error.message}</p>
+          <p>
+            You can try to open the link outside PodOS: <a href={this.uri}>{this.uri}</a>
+          </p>
+        </details>
       );
     }
     return <slot />;

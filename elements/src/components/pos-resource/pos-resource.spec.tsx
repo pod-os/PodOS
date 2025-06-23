@@ -84,7 +84,25 @@ describe('pos-resource', () => {
     await page.rootInstance.receivePodOs(os);
     await page.waitForChanges();
     const errorDetails = page.root.shadowRoot.querySelector('details');
-    expect(errorDetails).toEqualHtml(`<details>not found</details>`);
+    expect(errorDetails).toEqualHtml(`
+    <details class="error">
+        <summary title="Click to expand">
+          ⚠ Sorry, something went wrong
+        </summary>
+        <p>
+          Status:
+        </p>
+        <p>
+          not found
+        </p>
+        <p>
+          You can try to open the link outside PodOS:
+          <a href="https://resource.test/">
+            https://resource.test/
+          </a>
+        </p>
+      </details>
+    `);
   });
 
   it('updates and loads resource when uri changes', async () => {
@@ -228,8 +246,22 @@ describe('pos-resource', () => {
         await page.waitForChanges();
         const errorDetails = page.root.shadowRoot.querySelector('details');
         expect(errorDetails).toEqualHtml(`
-        <details>
-          not found
+        <details class="error">
+          <summary title="Click to expand">
+            ⚠ Sorry, something went wrong
+          </summary>
+          <p>
+            Status:
+          </p>
+          <p>
+            not found
+          </p>
+          <p>
+            You can try to open the link outside PodOS:
+            <a href="https://resource.test/">
+              https://resource.test/
+            </a>
+          </p>
         </details>
 `);
       });
