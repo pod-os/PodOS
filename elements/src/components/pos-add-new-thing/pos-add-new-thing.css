@@ -12,12 +12,13 @@ button#new {
   width: var(--scale-5);
   height: var(--scale-5);
   background-color: var(--pos-primary-color);
-  color: var(--color-grey-50);
+  color: var(--pos-primary-text-color);
   font-size: var(--scale-6);
   border-radius: var(--radius-xs);
 }
 
-button#new:hover, button#new:focus {
+button#new:hover,
+button#new:focus {
   outline: none;
   filter: brightness(110%);
   box-shadow: var(--shadow-sm);
@@ -26,4 +27,3 @@ button#new:hover, button#new:focus {
 pos-new-thing-form {
   margin: var(--scale-3);
 }
-

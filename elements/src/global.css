@@ -18,7 +18,7 @@ body {
   --pos-secondary-text-color: var(--color-grey-800);
   --pos-subtle-text-color: var(--color-grey-600);
   --pos-disabled-text-color: var(--pos-subtle-text-color);
-  --pos-primary-color: var(--color-blue-500);
+  --pos-primary-color: var(--color-blue-800);
   --pos-disabled-color: var(--color-grey-100);
   --pos-background-color: var(--color-grey-50);
   --pos-input-background-color: var(--color-white);
@@ -48,12 +48,12 @@ body {
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --pos-primary-text-color: var(--color-grey-50);
+    --pos-primary-text-color: var(--color-grey-950);
     --pos-normal-text-color: var(--color-grey-100);
     --pos-secondary-text-color: var(--color-grey-200);
     --pos-subtle-text-color: var(--color-grey-400);
     --pos-disabled-text-color: var(--color-grey-700);
-    --pos-primary-color: var(--color-blue-500);
+    --pos-primary-color: var(--color-blue-400);
     --pos-disabled-color: var(--color-slate-800);
     --pos-background-color: var(--color-grey-900);
     --pos-input-background-color: var(--color-slate-700);
