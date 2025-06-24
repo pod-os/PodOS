@@ -1,10 +1,11 @@
 import { Thing } from '@pod-os/core';
-import { Component, Event, EventEmitter, h, State } from '@stencil/core';
+import { Component, Event, EventEmitter, h, Host, State } from '@stencil/core';
 import { ResourceAware, subscribeResource } from '../../components/events/ResourceAware';
 
 @Component({
   tag: 'pos-app-document-viewer',
   shadow: true,
+  styleUrls: ['pos-app-document-viewer.css', '../styles/article-card.css'],
 })
 export class PosAppDocumentViewer implements ResourceAware {
   @State() resource: Thing;
@@ -25,24 +26,22 @@ export class PosAppDocumentViewer implements ResourceAware {
     }
 
     return (
-      <ion-grid>
-        <ion-row>
-          <ion-col size="12" size-sm>
-            <pos-document src={this.resource.uri} />
-          </ion-col>
-          <ion-col size="12" size-sm>
-            <ion-card>
-              <ion-card-header style={{ gap: 'var(--size-1)' }}>
-                <ion-card-title>
-                  <pos-label />
-                </ion-card-title>
-                <pos-type-badges />
-                <pos-literals />
-              </ion-card-header>
-            </ion-card>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+      <Host>
+        <section>
+          <pos-document src={this.resource.uri} />
+        </section>
+        <section>
+          <article>
+            <header>
+              <h1>
+                <pos-label />
+              </h1>
+              <pos-type-badges />
+            </header>
+            <pos-literals />
+          </article>
+        </section>
+      </Host>
     );
   }
 }

@@ -6,23 +6,6 @@
   margin: var(--gap-size);
 }
 
-article {
-  outline: var(--pos-border-solid);
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-md);
-  background-color: var(--pos-card-background);
-
-  header {
-    display: flex;
-    flex-direction: column;
-
-    h1,
-    pos-type-badges {
-      margin: var(--size-2);
-    }
-  }
-}
-
 @media (min-width: 640px) {
   :host {
     flex-direction: row;

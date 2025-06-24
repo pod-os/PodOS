@@ -3,7 +3,7 @@ import { Component, h, Host } from '@stencil/core';
 @Component({
   tag: 'pos-app-ldp-container',
   shadow: true,
-  styleUrl: 'pos-app-ldp-container.css',
+  styleUrls: ['pos-app-ldp-container.css', '../styles/article-card.css'],
 })
 export class PosAppLdpContainer {
   render() {
