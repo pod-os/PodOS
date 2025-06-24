@@ -2,7 +2,7 @@ import { Component, h, Host } from '@stencil/core';
 
 @Component({
   tag: 'pos-app-rdf-document',
-  styleUrls: ['pos-app-rdf-document.css', '../styles/article-card.css'],
+  styleUrls: ['../styles/default-app-layout.css', '../styles/article-card.css'],
   shadow: true,
 })
 export class PosAppRdfDocument {

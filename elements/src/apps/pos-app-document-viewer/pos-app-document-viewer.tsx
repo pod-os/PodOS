@@ -5,7 +5,7 @@ import { ResourceAware, subscribeResource } from '../../components/events/Resour
 @Component({
   tag: 'pos-app-document-viewer',
   shadow: true,
-  styleUrls: ['pos-app-document-viewer.css', '../styles/article-card.css'],
+  styleUrls: ['../styles/default-app-layout.css', '../styles/article-card.css'],
 })
 export class PosAppDocumentViewer implements ResourceAware {
   @State() resource: Thing;
