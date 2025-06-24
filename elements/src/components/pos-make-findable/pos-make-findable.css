@@ -13,9 +13,9 @@ button.main {
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-xs);
-  color: var(--color-grey-500);
-  border: var(--size-px) dashed var(--color-grey-500);
-  background: none;
+  color: var(--pos-subtle-text-color);
+  border: var(--size-px) dashed var(--pos-subtle-text-color);
+  background-color: var(--pos-background-color);
 
   p {
     padding: 0;
@@ -51,6 +51,7 @@ button.main {
     backdrop-filter: var(--blur-md);
     border-radius: var(--radius-xs);
     overflow: hidden;
+    color: var(--color-grey-900);
     background-color: var(--color-grey-200);
     padding: 0;
     margin: 0;
@@ -96,8 +97,8 @@ button.open {
   }
   width: var(--size-full);
   height: var(--size-8);
-  background: var(--color-grey-200);
-  color: var(--color-grey-700);
+  background: var(--pos-background-color);
+  color: var(--pos-normal-text-color);
 
   p {
     display: inline-block;
