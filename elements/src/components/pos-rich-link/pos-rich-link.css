@@ -17,7 +17,7 @@ p.content {
 
   .url {
     font-size: var(--scale-fluid-1);
-    color: var(--color-grey-500);
+    color: var(--pos-subtle-text-color);
   }
 }
 
