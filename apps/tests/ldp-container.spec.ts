@@ -10,7 +10,7 @@ test("show contents of an LDP container", async ({ page }) => {
   await navigationBar.press("Enter");
 
   // then page shows the full container URL as heading
-  const heading = await page.getByRole("heading", { level: 2 });
+  const heading = await page.getByRole("heading", { level: 1 });
   await expect(heading).toHaveText("container/");
 
   // and shows a list of all contents
