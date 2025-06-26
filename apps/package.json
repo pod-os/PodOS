@@ -18,6 +18,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
     "@playwright/test": "^1.52.0",
     "@solid/community-server": "^7.1.7",
     "netlify-cli": "^21.2.1",
