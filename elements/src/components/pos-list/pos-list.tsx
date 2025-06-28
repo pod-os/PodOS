@@ -16,7 +16,7 @@ export class PosList implements ResourceAware {
    */
   @Prop() fetch: boolean = false;
 
-  @Element() host: HTMLDivElement;
+  @Element() host: HTMLElement;
   @State() error: string = null;
   @State() resource: Thing;
   @State() items: string[] = [];

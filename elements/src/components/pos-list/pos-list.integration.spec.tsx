@@ -40,8 +40,11 @@ describe('pos-list', () => {
       </pos-app>`,
     });
     expect(os.fetch.mock.calls).toHaveLength(0);
-    expect(page.root?.querySelectorAll('pos-list pos-resource')).toHaveLength(2);
-    const label1 = page.root?.querySelectorAll('pos-list pos-resource')[0] as unknown as PosResource;
+
+    const resources = page.root ? page.root.querySelectorAll('pos-list pos-resource') : [];
+    expect(resources).toHaveLength(2);
+
+    const label1 = resources[0] as unknown as PosResource;
     expect(label1).toEqualHtml(`
       <pos-resource about="https://video.test/video-1">
         <pos-label>
@@ -52,7 +55,7 @@ describe('pos-list', () => {
     //Tested separately because pos-resource does not reflect the uri property as an attribute
     expect(label1?.uri).toEqual('https://video.test/video-1');
 
-    const label2 = page.root?.querySelectorAll('pos-list pos-resource')[1] as unknown as PosResource;
+    const label2 = resources[1] as unknown as PosResource;
     expect(label2).toEqualHtml(`
       <pos-resource about="https://video.test/video-2">
         <pos-label>

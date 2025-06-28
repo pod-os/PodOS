@@ -19,13 +19,7 @@ describe('pos-list', () => {
           },
         ],
       });
-    when(os.store.get)
-      .calledWith('https://video.test/video-1')
-      .mockReturnValue({ uri: 'https://video.test/video-1', label: () => 'Video 1' });
-    when(os.store.get)
-      .calledWith('https://video.test/video-2')
-      .mockReturnValue({ uri: 'https://video.test/video-2', label: () => 'Video 2' });
-    const page = await newSpecPage({
+    await newSpecPage({
       components: [PosApp, PosLabel, PosList, PosResource],
       supportsShadowDom: false,
       html: `

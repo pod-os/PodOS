@@ -113,11 +113,12 @@ describe('pos-list', () => {
     await page.waitForChanges();
 
     const el: HTMLElement = page.root as unknown as HTMLElement;
+    const resources = el.querySelectorAll('pos-resource');
 
-    expect(el.querySelectorAll('pos-resource')[0]?.getAttribute('about')).toEqual('https://video.test/video-1');
-    expect(el.querySelectorAll('pos-resource')[1]?.getAttribute('about')).toEqual('https://video.test/video-2');
-    expect(el.querySelectorAll('pos-resource')[0]?.getAttribute('uri')).toEqual('https://video.test/video-1');
-    expect(el.querySelectorAll('pos-resource')[1]?.getAttribute('uri')).toEqual('https://video.test/video-2');
+    expect(resources[0]?.getAttribute('about')).toEqual('https://video.test/video-1');
+    expect(resources[1]?.getAttribute('about')).toEqual('https://video.test/video-2');
+    expect(resources[0]?.getAttribute('uri')).toEqual('https://video.test/video-1');
+    expect(resources[1]?.getAttribute('uri')).toEqual('https://video.test/video-2');
   });
 
   it('sets lazy attribute on children if fetch is not present', async () => {
