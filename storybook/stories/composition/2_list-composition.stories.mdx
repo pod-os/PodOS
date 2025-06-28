@@ -17,18 +17,20 @@ related to a resource with a custom display.
     {({ uri }) => html`
 Skills:
 <pos-resource uri=${uri}>
-    <pos-list rel="http://schema.org/skills">
-        <template>
-            <li>
-                <pos-list rel="http://www.w3.org/ns/solid/terms#publicId">
-                    <template>
-                        <pos-label></pos-label>
-                    </template>
-                </pos-list>:
-                <pos-value predicate="http://www.w3.org/ns/solid/terms#publicId"/></pos-value>
-            </li>
-        </template>
-    </pos-list>
+    <ul>
+        <pos-list rel="http://schema.org/skills">
+            <template>
+                <li>
+                    <pos-list rel="http://www.w3.org/ns/solid/terms#publicId">
+                        <template>
+                            <pos-label></pos-label>
+                        </template>
+                    </pos-list>:
+                    <pos-value predicate="http://www.w3.org/ns/solid/terms#publicId"/></pos-value>
+                </li>
+            </template>
+        </pos-list>
+    </ul>
 </pos-resource>
     `}
   </Story>
