@@ -37,18 +37,12 @@ graph TD;
   pos-predicate --> ion-icon
   pos-add-literal-value --> ion-icon
   pos-add-literal-value --> pos-select-term
-  pos-add-literal-value --> ion-input
-  ion-input --> ion-icon
   pos-relations --> pos-predicate
   pos-relations --> pos-rich-link
   pos-rich-link --> pos-resource
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
   pos-resource --> ion-progress-bar
-  pos-resource --> ion-card
-  pos-resource --> ion-card-header
-  pos-resource --> ion-card-content
-  ion-card --> ion-ripple-effect
   pos-reverse-relations --> pos-predicate
   pos-reverse-relations --> pos-rich-link
   style pos-app-generic fill:#f9f,stroke:#333,stroke-width:4px

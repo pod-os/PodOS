@@ -48,18 +48,11 @@ Type: `Promise<void>`
 ### Depends on
 
 - ion-progress-bar
-- ion-card
-- ion-card-header
-- ion-card-content
 
 ### Graph
 ```mermaid
 graph TD;
   pos-resource --> ion-progress-bar
-  pos-resource --> ion-card
-  pos-resource --> ion-card-header
-  pos-resource --> ion-card-content
-  ion-card --> ion-ripple-effect
   pos-app-browser --> pos-resource
   pos-container-contents --> pos-resource
   pos-list --> pos-resource

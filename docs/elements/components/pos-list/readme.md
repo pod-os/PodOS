@@ -28,10 +28,6 @@
 graph TD;
   pos-list --> pos-resource
   pos-resource --> ion-progress-bar
-  pos-resource --> ion-card
-  pos-resource --> ion-card-header
-  pos-resource --> ion-card-content
-  ion-card --> ion-ripple-effect
   style pos-list fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

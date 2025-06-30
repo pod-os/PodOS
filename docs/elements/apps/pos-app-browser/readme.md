@@ -54,10 +54,6 @@ graph TD;
   pos-make-findable --> pos-resource
   pos-make-findable --> pos-label
   pos-resource --> ion-progress-bar
-  pos-resource --> ion-card
-  pos-resource --> ion-card-header
-  pos-resource --> ion-card-content
-  ion-card --> ion-ripple-effect
   ion-searchbar --> ion-icon
   pos-rich-link --> pos-resource
   pos-rich-link --> pos-label

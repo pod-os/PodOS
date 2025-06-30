@@ -20,10 +20,6 @@ graph TD;
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
   pos-resource --> ion-progress-bar
-  pos-resource --> ion-card
-  pos-resource --> ion-card-header
-  pos-resource --> ion-card-content
-  ion-card --> ion-ripple-effect
   pos-app-dashboard --> pos-example-resources
   style pos-example-resources fill:#f9f,stroke:#333,stroke-width:4px
 ```
