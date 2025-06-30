@@ -6,10 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+### ⚠ BREAKING CHANGES
+
+- The global stylesheet (elements.css) now applies theming based on the user's system preferences (dark vs. light), this also affects the document body background by default. 
+  - If you don't like that, you may overwrite the background with your own style, but keep in mind that in dark mode other styles may rely on a dark background (e.g., white text)
+  - You may choose not to include the stylesheet at all, in that case make sure to at least [include pollen.css](https://www.pollen.style/basics/getting-started#quick-start), because PodOS relies on variables defined there. Additionally, you should define the PodOS-specific variables. Take a look into [global.css](https://github.com/pod-os/PodOS/blob/main/elements/src/global.css) to see what is available and what the default is.
+  
 ### Added
 
 - [pos-list](../docs/elements/components/pos-list):
-  - Basic implementation of element to list things related to a resource with a custom display
+  - Basic implementation of an element to list things related to a resource with a custom display
+- 🌃 Dark mode: Various elements now adjust their styling based on user preferences (prefers-color-scheme dark / light)
+
+### Changed
+
+- minor style adjustments in several elements
 
 ## 0.25.2
 
