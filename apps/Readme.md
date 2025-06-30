@@ -27,6 +27,10 @@ For the latest build you can also run
 npm run build:latest
 ```
 
+#### Build PWA assets
+
+PWA assets (icons / manifest) have been pre-built and added to version control. In case they need to be rebuild, the script `./build-pwa-assets.sh` can be used.
+
 ### Deploy
 
 #### Automatic deployment
