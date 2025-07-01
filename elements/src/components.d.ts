@@ -16,7 +16,7 @@ export namespace Components {
     }
     interface PosAppBrowser {
         /**
-          * The mode the app is running in:  - standalone:  use this when you deploy it as a standalone web application - pod: use this when you host this app as a default interface for you pod
+          * The mode the app is running in:  - standalone: use this when you deploy it as a standalone web application - pod: use this when you host this app as a default interface for you pod
          */
         "mode": 'standalone' | 'pod';
         "restorePreviousSession": boolean;
@@ -923,7 +923,7 @@ declare namespace LocalJSX {
     }
     interface PosAppBrowser {
         /**
-          * The mode the app is running in:  - standalone:  use this when you deploy it as a standalone web application - pod: use this when you host this app as a default interface for you pod
+          * The mode the app is running in:  - standalone: use this when you deploy it as a standalone web application - pod: use this when you host this app as a default interface for you pod
          */
         "mode"?: 'standalone' | 'pod';
         "restorePreviousSession"?: boolean;

@@ -10,7 +10,7 @@ export class PosAppBrowser {
   /**
    * The mode the app is running in:
    *
-   * - standalone:  use this when you deploy it as a standalone web application
+   * - standalone: use this when you deploy it as a standalone web application
    * - pod: use this when you host this app as a default interface for you pod
    */
   @Prop() mode: 'standalone' | 'pod' = 'standalone';
@@ -28,15 +28,7 @@ export class PosAppBrowser {
                 <pos-navigation-bar uri={this.uri === 'pod-os:dashboard' ? '' : this.uri}></pos-navigation-bar>
                 <pos-login></pos-login>
               </header>
-              <main>
-                {this.uri.startsWith('pod-os:') ? (
-                  <pos-internal-router uri={this.uri} />
-                ) : (
-                  <pos-resource key={this.uri} uri={this.uri}>
-                    <pos-type-router />
-                  </pos-resource>
-                )}
-              </main>
+              <main>{this.mainContent()}</main>
               <footer>
                 <Logo />
                 <span>PodOS Browser</span>
@@ -49,6 +41,20 @@ export class PosAppBrowser {
           </pos-error-toast>
         </pos-app>
       </Host>
+    );
+  }
+
+  private mainContent() {
+    if (this.uri === '') {
+      return null;
+    }
+    if (this.uri.startsWith('pod-os:')) {
+      return <pos-internal-router uri={this.uri} />;
+    }
+    return (
+      <pos-resource key={this.uri} uri={this.uri}>
+        <pos-type-router />
+      </pos-resource>
     );
   }
 }

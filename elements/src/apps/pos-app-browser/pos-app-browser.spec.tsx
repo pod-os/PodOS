@@ -90,4 +90,20 @@ describe('pos-app-browser', () => {
       </main>
     `);
   });
+
+  it('render nothing as long as uri is not set', async () => {
+    const page = await newSpecPage({
+      components: [PosAppBrowser],
+      html: `<pos-app-browser />`,
+    });
+
+    await page.waitForChanges();
+
+    const main = getByRole(page.root, 'main');
+
+    expect(main).toEqualHtml(`
+      <main>
+      </main>
+    `);
+  });
 });
