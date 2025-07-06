@@ -2,7 +2,7 @@ import { newSpecPage } from '@stencil/core/testing';
 import { PosRichLink } from './pos-rich-link';
 import { getByText } from '@testing-library/dom';
 
-describe('pos-rich-link', () => {
+describe('pos-rich-link with uri', () => {
   let page;
   beforeEach(async () => {
     page = await newSpecPage({
@@ -47,5 +47,54 @@ describe('pos-rich-link', () => {
       </span>
       `);
     });
+  });
+});
+
+describe('pos-rich-link without uri', () => {
+  it('does not emit pod-os:resource event if uri is present', async () => {
+    const receiveResource = jest.fn();
+    const page = await newSpecPage({
+      components: [PosRichLink],
+    });
+    page.body.addEventListener('pod-os:resource', receiveResource);
+    await page.setContent('<pos-rich-link uri="https://pod.example/resource" />');
+    expect(receiveResource).toHaveBeenCalledTimes(0);
+  });
+
+  it('receives resource and sets it as link if uri is not present', async () => {
+    const receiveResource = jest.fn();
+    const page = await newSpecPage({
+      components: [PosRichLink],
+    });
+    page.body.addEventListener('pod-os:resource', receiveResource);
+    await page.setContent('<pos-rich-link/>');
+    expect(receiveResource).toHaveBeenCalledTimes(1);
+
+    await page.rootInstance.receiveResource({
+      uri: 'https://pod.example/resource',
+    });
+    await page.waitForChanges();
+    const link = page.root?.shadowRoot?.querySelector('a');
+    expect(link).toEqualAttribute('href', 'https://pod.example/resource');
+  });
+
+  it('is empty if neither uri nor resource are received', async () => {
+    const page = await newSpecPage({
+      components: [PosRichLink],
+      html: `<pos-rich-link/>`,
+    });
+    expect(page.root?.innerHTML).toBe('');
+  });
+
+  it('does not use pos-resource if uri is not present', async () => {
+    const page = await newSpecPage({
+      components: [PosRichLink],
+      html: `<pos-rich-link/>`,
+    });
+    await page.rootInstance.receiveResource({
+      uri: 'https://pod.example/resource',
+    });
+    await page.waitForChanges();
+    expect(page.root?.shadowRoot?.querySelector('pos-resource')).toBeNull();
   });
 });
