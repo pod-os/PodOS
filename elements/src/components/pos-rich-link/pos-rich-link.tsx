@@ -9,24 +9,39 @@ import { ResourceAware, ResourceEventEmitter, subscribeResource } from '../event
 })
 export class PosRichLink implements ResourceAware {
   @Prop() uri?: string;
+  @Prop() rel?: string;
 
   @Event({ eventName: 'pod-os:link' }) linkEmitter: EventEmitter;
 
   @Event({ eventName: 'pod-os:resource' })
   subscribeResource: ResourceEventEmitter;
 
-  @State() resource?: Thing;
+  @State() link?: string;
+  @State() error: string = null;
 
   componentWillLoad() {
     if (!this.uri) subscribeResource(this);
   }
 
   receiveResource = (resource: Thing) => {
-    this.resource = resource;
+    if (this.rel) {
+      const links = resource.relations(this.rel);
+      if (links.length == 0) {
+        this.error = 'No matching link found';
+      } else if (links[0].uris.length > 1) {
+        this.error = 'More than one matching link found';
+      } else {
+        this.link = links[0].uris[0];
+      }
+    } else {
+      this.link = resource.uri;
+    }
   };
 
   render() {
-    const uri = this.uri || this.resource?.uri;
+    if (this.error) return this.error;
+
+    const uri = this.uri || this.link;
     if (!uri) return null;
 
     const content = (
@@ -45,7 +60,7 @@ export class PosRichLink implements ResourceAware {
       </p>
     );
 
-    if (this.resource) {
+    if (this.link) {
       return content;
     } else if (this.uri) {
       return (
