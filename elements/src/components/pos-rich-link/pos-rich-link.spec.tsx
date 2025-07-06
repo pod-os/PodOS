@@ -97,4 +97,46 @@ describe('pos-rich-link without uri', () => {
     await page.waitForChanges();
     expect(page.root?.shadowRoot?.querySelector('pos-resource')).toBeNull();
   });
+
+  it('uses the matching relation if rel prop is defined', async () => {
+    const page = await newSpecPage({
+      components: [PosRichLink],
+      html: `<pos-rich-link rel="https://schema.org/video" />`,
+    });
+    await page.rootInstance.receiveResource({
+      uri: 'https://pod.example/resource',
+      relations: () => [{ predicate: 'https://schema.org/video', uris: ['https://video.test/video-1'] }],
+    });
+    await page.waitForChanges();
+    const link = page.root?.shadowRoot?.querySelector('a');
+    expect(link).toEqualAttribute('href', 'https://video.test/video-1');
+  });
+
+  it('displays an error if no link is found', async () => {
+    const page = await newSpecPage({
+      components: [PosRichLink],
+      html: `<pos-rich-link rel="https://schema.org/video" />`,
+    });
+    await page.rootInstance.receiveResource({
+      uri: 'https://pod.example/resource',
+      relations: () => [],
+    });
+    await page.waitForChanges();
+    expect(page.root?.shadowRoot?.textContent).toEqual('No matching link found');
+  });
+
+  it('displays an error if more than one link is found', async () => {
+    const page = await newSpecPage({
+      components: [PosRichLink],
+      html: `<pos-rich-link rel="https://schema.org/video" />`,
+    });
+    await page.rootInstance.receiveResource({
+      uri: 'https://pod.example/resource',
+      relations: () => [
+        { predicate: 'https://schema.org/video', uris: ['https://video.test/video-1', 'https://video.test/video-2'] },
+      ],
+    });
+    await page.waitForChanges();
+    expect(page.root?.shadowRoot?.textContent).toEqual('More than one matching link found');
+  });
 });
