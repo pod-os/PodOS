@@ -2,7 +2,6 @@
   border: 1px solid var(--pos-border-color);
   display: flex;
   flex-direction: column;
-  position: absolute;
   margin: 0;
   padding: 0;
   z-index: var(--layer-top);
@@ -11,7 +10,7 @@
 }
 
 .suggestions {
-  position: relative;
+  width: 100%;
   li {
     padding: 1rem;
     background-color: var(--pos-background-color);
@@ -50,6 +49,8 @@ form {
   flex-grow: 1;
 }
 
-dialog {
-  min-height: 50%; /* TODO better height value*/
+dialog[open] {
+  margin-top: 0;
+  width: 80%; // TODO better width value
+  padding: 0;
 }
