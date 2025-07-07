@@ -50,8 +50,10 @@ describe('pos-navigation', () => {
     await page.waitForChanges();
 
     // when the user types "test" into the navigation bar
-    const searchBar = page.root.querySelector('ion-searchbar');
-    fireEvent(searchBar, new CustomEvent('ionInput', { detail: { value: 'test' } }));
+    const searchBar = page.root.querySelector('input');
+    // @ts-ignore
+    searchBar.value = 'test';
+    fireEvent(searchBar, new CustomEvent('change', { target: { value: 'test' } }));
 
     // then a search is triggered
     expect(searchIndex.search).toHaveBeenCalledWith('test');
