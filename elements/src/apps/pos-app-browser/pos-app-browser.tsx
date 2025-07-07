@@ -25,7 +25,7 @@ export class PosAppBrowser {
             <pos-router mode={this.mode} onPod-os:route-changed={e => (this.uri = e.detail)}>
               <header>
                 <pos-add-new-thing referenceUri={this.uri}></pos-add-new-thing>
-                <pos-navigation-bar uri={this.uri === 'pod-os:dashboard' ? '' : this.uri}></pos-navigation-bar>
+                <pos-navigation uri={this.uri === 'pod-os:dashboard' ? '' : this.uri}></pos-navigation>
                 <pos-login></pos-login>
               </header>
               <main>{this.mainContent()}</main>

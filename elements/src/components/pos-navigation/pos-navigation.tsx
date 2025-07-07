@@ -5,11 +5,11 @@ import session from '../../store/session';
 import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../events/PodOsAware';
 
 @Component({
-  tag: 'pos-navigation-bar',
+  tag: 'pos-navigation',
   shadow: true,
-  styleUrl: 'pos-navigation-bar.css',
+  styleUrl: 'pos-navigation.css',
 })
-export class PosNavigationBar implements PodOsAware {
+export class PosNavigation implements PodOsAware {
   @State() os: PodOS;
 
   @Event({ eventName: 'pod-os:init' }) subscribePodOs: PodOsEventEmitter;

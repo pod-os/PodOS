@@ -33,9 +33,9 @@ describe('pos-app-browser', () => {
     await page.waitForChanges();
 
     const main = getByRole(page.root, 'banner');
-    const navigationBar = main.querySelector('pos-navigation-bar');
+    const navigation = main.querySelector('pos-navigation');
 
-    expect(navigationBar).toEqualAttribute('uri', '');
+    expect(navigation).toEqualAttribute('uri', '');
   });
 
   it('shows uri in navigation bar, if visiting other internal pages', async () => {
@@ -49,9 +49,9 @@ describe('pos-app-browser', () => {
     await page.waitForChanges();
 
     const main = getByRole(page.root, 'banner');
-    const navigationBar = main.querySelector('pos-navigation-bar');
+    const navigation = main.querySelector('pos-navigation');
 
-    expect(navigationBar).toEqualAttribute('uri', 'pod-os:other');
+    expect(navigation).toEqualAttribute('uri', 'pod-os:other');
   });
 
   it('shows uri in navigation bar, if visiting http(s) URIs', async () => {
@@ -65,9 +65,9 @@ describe('pos-app-browser', () => {
     await page.waitForChanges();
 
     const main = getByRole(page.root, 'banner');
-    const navigationBar = main.querySelector('pos-navigation-bar');
+    const navigation = main.querySelector('pos-navigation');
 
-    expect(navigationBar).toEqualAttribute('uri', 'https://resource.test');
+    expect(navigation).toEqualAttribute('uri', 'https://resource.test');
   });
 
   it('uses type router for http(s) URIs ', async () => {
