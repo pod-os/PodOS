@@ -69,7 +69,8 @@ export class PosNavigation implements PodOsAware {
   };
 
   private onChange(event) {
-    this.value = event.detail.value;
+    this.value = event.target.value;
+    // TODO add debounce
     this.search();
   }
 
@@ -121,13 +122,12 @@ export class PosNavigation implements PodOsAware {
         <dialog ref={el => (this.dialogRef = el as HTMLDialogElement)}>
           <form method="dialog" onSubmit={e => this.onSubmit(e)}>
             <div class="bar">
-              <ion-searchbar
+              <input
                 enterkeyhint="search"
                 placeholder="Search or enter URI"
                 value={this.uri}
-                debounce={300}
-                onIonChange={e => this.onChange(e)}
-                onIonInput={e => this.onChange(e)}
+                onChange={e => this.onChange(e)}
+                onInput={e => this.onChange(e)}
               />
               {this.suggestions.length > 0 ? (
                 <div class="suggestions">

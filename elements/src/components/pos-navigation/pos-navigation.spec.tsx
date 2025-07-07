@@ -3,6 +3,7 @@ import { fireEvent } from '@testing-library/dom';
 import { mockSessionStore } from '../../test/mockSessionStore';
 import { PosNavigation } from './pos-navigation';
 import { pressKey } from '../../test/pressKey';
+import * as test from 'node:test';
 
 describe('pos-navigation', () => {
   it('renders a search bar within a form', async () => {
@@ -16,7 +17,7 @@ describe('pos-navigation', () => {
         <dialog>
           <form method="dialog">
             <div class="bar">
-              <ion-searchbar debounce="300" enterkeyhint="search" placeholder="Search or enter URI" value="https://pod.example/resource"></ion-searchbar>
+              <input enterkeyhint="search" placeholder="Search or enter URI" value="https://pod.example/resource"></input>
             </div>
           </form>
         </dialog>
@@ -47,7 +48,7 @@ describe('pos-navigation', () => {
       <dialog>
         <form method="dialog">
           <div class="bar">
-            <ion-searchbar debounce="300" enterkeyhint="search" placeholder="Search or enter URI" value="https://pod.example/resource"></ion-searchbar>
+            <input enterkeyhint="search" placeholder="Search or enter URI" value="https://pod.example/resource"></input>
           </div>
         </form>
       </dialog>
@@ -146,7 +147,7 @@ describe('pos-navigation', () => {
         <dialog>
           <form method="dialog">
             <div class="bar">
-              <ion-searchbar debounce="300" enterkeyhint="search" placeholder="Search or enter URI" value="https://pod.example/resource"></ion-searchbar>
+              <input enterkeyhint="search" placeholder="Search or enter URI" value="https://pod.example/resource"></input>
             </div>
           </form>
         </dialog>
@@ -161,7 +162,7 @@ describe('pos-navigation', () => {
           <dialog>
             <form method="dialog">
               <div class="bar">
-                <ion-searchbar debounce="300" enterkeyhint="search" placeholder="Search or enter URI" value=""></ion-searchbar>
+                <input enterkeyhint="search" placeholder="Search or enter URI" value=""></input>
               </div>
             </form>
           </dialog>
@@ -288,7 +289,7 @@ describe('pos-navigation', () => {
       expect(page.root.querySelectorAll('.suggestions li')).toHaveLength(2);
 
       // when the user clicks into the search bar
-      const searchBar = page.root.querySelector('ion-searchbar');
+      const searchBar = page.root.querySelector('input');
       searchBar.click();
       await page.waitForChanges();
 
@@ -406,7 +407,9 @@ describe('pos-navigation', () => {
 });
 
 async function type(page, text: string) {
-  const searchBar = page.root.querySelector('ion-searchbar');
-  fireEvent(searchBar, new CustomEvent('ionInput', { detail: { value: text } }));
+  const searchBar = page.root.querySelector('input');
+  searchBar.value = text;
+  // @ts-ignore
+  fireEvent(searchBar, new CustomEvent('change', { target: { value: text } }));
   await page.waitForChanges();
 }
