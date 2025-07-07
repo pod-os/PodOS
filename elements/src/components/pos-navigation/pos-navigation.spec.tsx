@@ -13,13 +13,63 @@ describe('pos-navigation', () => {
     expect(page.root).toEqualHtml(`
     <pos-navigation uri="https://pod.example/resource">
       <mock:shadow-root>
-        <form>
+        <dialog>
+          <form method="dialog">
+            <div class="bar">
+              <ion-searchbar debounce="300" enterkeyhint="search" placeholder="Search or enter URI" value="https://pod.example/resource"></ion-searchbar>
+            </div>
+          </form>
+        </dialog>
+      </mock:shadow-root>
+    </pos-navigation>`);
+  });
+
+  it('renders pos-navigation-bar when resource is loaded', async () => {
+    const page = await newSpecPage({
+      components: [PosNavigation],
+      html: `<pos-navigation uri="https://pod.example/resource" />`,
+      supportsShadowDom: false,
+    });
+
+    const mockResource = { fake: 'resource' };
+    page.rootInstance.os = {
+      store: {
+        get: jest.fn().mockReturnValue(mockResource),
+      },
+    };
+
+    await page.rootInstance.getResource('https://pod.example/resource');
+    await page.waitForChanges();
+
+    expect(page.root).toEqualHtml(`
+    <pos-navigation uri="https://pod.example/resource">
+      <pos-navigation-bar></pos-navigation-bar>
+      <dialog>
+        <form method="dialog">
           <div class="bar">
             <ion-searchbar debounce="300" enterkeyhint="search" placeholder="Search or enter URI" value="https://pod.example/resource"></ion-searchbar>
           </div>
         </form>
-      </mock:shadow-root>
+      </dialog>
     </pos-navigation>`);
+  });
+
+  it('opens the dialog when navigate event is emitted', async () => {
+    // given a page with a navigation
+    const page = await newSpecPage({
+      supportsShadowDom: false,
+      components: [PosNavigation],
+      html: `<pos-navigation uri="https://pod.example/resource" />`,
+    });
+
+    const dialog = page.root.querySelector('dialog');
+    dialog.showModal = jest.fn();
+
+    // when a "navigate" event is emitted
+    fireEvent(page.root, new CustomEvent('pod-os:navigate'));
+
+    // then the dialog should be shown
+    expect(dialog.showModal).toHaveBeenCalled();
   });
 
   it('navigates to entered URI when form is submitted', async () => {
@@ -92,12 +142,14 @@ describe('pos-navigation', () => {
     it('shows the make-findable button as soon as search index is available', () => {
       expect(page.root).toEqualHtml(`
         <pos-navigation uri="https://pod.example/resource">
-          <form>
-            <pos-make-findable uri="https://pod.example/resource"></pos-make-findable>
+        <pos-make-findable uri="https://pod.example/resource"></pos-make-findable>
+        <dialog>
+          <form method="dialog">
             <div class="bar">
               <ion-searchbar debounce="300" enterkeyhint="search" placeholder="Search or enter URI" value="https://pod.example/resource"></ion-searchbar>
             </div>
           </form>
+        </dialog>
         </pos-navigation>`);
     });
 
@@ -106,11 +158,13 @@ describe('pos-navigation', () => {
       await page.waitForChanges();
       expect(page.root).toEqualHtml(`
         <pos-navigation uri="">
-          <form>
-            <div class="bar">
-              <ion-searchbar debounce="300" enterkeyhint="search" placeholder="Search or enter URI" value=""></ion-searchbar>
-            </div>
-          </form>
+          <dialog>
+            <form method="dialog">
+              <div class="bar">
+                <ion-searchbar debounce="300" enterkeyhint="search" placeholder="Search or enter URI" value=""></ion-searchbar>
+              </div>
+            </form>
+          </dialog>
         </pos-navigation>`);
     });
 

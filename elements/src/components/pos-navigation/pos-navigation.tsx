@@ -1,5 +1,5 @@
-import { PodOS, SearchIndex } from '@pod-os/core';
-import { Component, Event, EventEmitter, h, Listen, Prop, State } from '@stencil/core';
+import { PodOS, SearchIndex, Thing } from '@pod-os/core';
+import { Component, Event, EventEmitter, h, Host, Listen, Prop, State, Watch } from '@stencil/core';
 
 import session from '../../store/session';
 import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../events/PodOsAware';
@@ -11,6 +11,7 @@ import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../events/PodOsAw
 })
 export class PosNavigation implements PodOsAware {
   @State() os: PodOS;
+  private dialogRef?: HTMLDialogElement;
 
   @Event({ eventName: 'pod-os:init' }) subscribePodOs: PodOsEventEmitter;
   @Prop() uri: string = '';
@@ -24,6 +25,14 @@ export class PosNavigation implements PodOsAware {
   @State() suggestions = [];
 
   @State() selectedIndex = -1;
+
+  @State() resource: Thing = null;
+
+  @Watch('uri')
+  async getResource() {
+    // TODO should this be done on componentWillLoad?
+    this.resource = this.uri ? this.os.store.get(this.uri) : null;
+  }
 
   componentWillLoad() {
     subscribePodOs(this);
@@ -44,6 +53,11 @@ export class PosNavigation implements PodOsAware {
   @Listen('pod-os:search:index-updated')
   rebuildSearchIndex() {
     this.searchIndex.rebuild();
+  }
+
+  @Listen('pod-os:navigate')
+  openNavigationDialog() {
+    this.dialogRef?.showModal();
   }
 
   private clearSearchIndex() {
@@ -91,7 +105,6 @@ export class PosNavigation implements PodOsAware {
   }
 
   private onSubmit(event) {
-    event.preventDefault();
     if (this.suggestions && this.selectedIndex > -1) {
       this.linkEmitter.emit(this.suggestions[this.selectedIndex].ref);
     } else {
@@ -100,31 +113,37 @@ export class PosNavigation implements PodOsAware {
   }
 
   render() {
+    // TODO: move make findable to pos-navigation-bar
     return (
-      <form onSubmit={e => this.onSubmit(e)}>
+      <Host>
         {this.searchIndex && this.uri ? <pos-make-findable uri={this.uri}></pos-make-findable> : ''}
-        <div class="bar">
-          <ion-searchbar
-            enterkeyhint="search"
-            placeholder="Search or enter URI"
-            value={this.uri}
-            debounce={300}
-            onIonChange={e => this.onChange(e)}
-            onIonInput={e => this.onChange(e)}
-          />
-          {this.suggestions.length > 0 ? (
-            <div class="suggestions">
-              <ol>
-                {this.suggestions.map((it, index) => (
-                  <li class={index === this.selectedIndex ? 'selected' : ''}>
-                    <pos-rich-link uri={it.ref}></pos-rich-link>
-                  </li>
-                ))}
-              </ol>
+        {this.resource && <pos-navigation-bar current={this.resource}></pos-navigation-bar>}
+        <dialog ref={el => (this.dialogRef = el as HTMLDialogElement)}>
+          <form method="dialog" onSubmit={e => this.onSubmit(e)}>
+            <div class="bar">
+              <ion-searchbar
+                enterkeyhint="search"
+                placeholder="Search or enter URI"
+                value={this.uri}
+                debounce={300}
+                onIonChange={e => this.onChange(e)}
+                onIonInput={e => this.onChange(e)}
+              />
+              {this.suggestions.length > 0 ? (
+                <div class="suggestions">
+                  <ol>
+                    {this.suggestions.map((it, index) => (
+                      <li class={index === this.selectedIndex ? 'selected' : ''}>
+                        <pos-rich-link uri={it.ref}></pos-rich-link>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              ) : null}
             </div>
-          ) : null}
-        </div>
-      </form>
+          </form>
+        </dialog>
+      </Host>
     );
   }
 }

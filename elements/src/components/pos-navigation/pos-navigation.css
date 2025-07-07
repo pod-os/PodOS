@@ -49,3 +49,7 @@ form {
 .bar {
   flex-grow: 1;
 }
+
+dialog {
+  min-height: 50%; /* TODO better height value*/
+}
