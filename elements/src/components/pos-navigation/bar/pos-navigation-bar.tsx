@@ -1,4 +1,4 @@
-import { Component, h, Prop } from '@stencil/core';
+import { Component, Event, EventEmitter, h, Prop } from '@stencil/core';
 import { Thing } from '@pod-os/core';
 
 @Component({
@@ -9,10 +9,16 @@ import { Thing } from '@pod-os/core';
 export class PosNavigationBar {
   @Prop() current: Thing;
 
+  @Event({ eventName: 'pod-os:navigate' }) navigate: EventEmitter;
+
+  private onClick() {
+    this.navigate.emit();
+  }
+
   render() {
     return (
       <nav>
-        <button>{this.current?.label() || 'Navigation'}</button>
+        <button onClick={() => this.onClick()}>{this.current.label()}</button>
       </nav>
     );
   }
