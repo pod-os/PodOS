@@ -24,7 +24,7 @@
 ### Used by
 
  - [pos-example-resources](../../apps/pos-app-dashboard/pos-example-resources)
- - [pos-navigation-bar](../pos-navigation-bar)
+ - [pos-navigation](../pos-navigation)
  - [pos-relations](../pos-relations)
  - [pos-reverse-relations](../pos-reverse-relations)
  - [pos-subjects](../pos-subjects)
@@ -43,7 +43,7 @@ graph TD;
   pos-rich-link --> pos-description
   pos-resource --> ion-progress-bar
   pos-example-resources --> pos-rich-link
-  pos-navigation-bar --> pos-rich-link
+  pos-navigation --> pos-rich-link
   pos-relations --> pos-rich-link
   pos-reverse-relations --> pos-rich-link
   pos-subjects --> pos-rich-link

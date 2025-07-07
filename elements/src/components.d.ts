@@ -95,7 +95,7 @@ export namespace Components {
     interface PosMakeFindable {
         "uri": string;
     }
-    interface PosNavigationBar {
+    interface PosNavigation {
         "uri": string;
     }
     interface PosNewThingForm {
@@ -213,9 +213,9 @@ export interface PosMakeFindableCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosMakeFindableElement;
 }
-export interface PosNavigationBarCustomEvent<T> extends CustomEvent<T> {
+export interface PosNavigationCustomEvent<T> extends CustomEvent<T> {
     detail: T;
-    target: HTMLPosNavigationBarElement;
+    target: HTMLPosNavigationElement;
 }
 export interface PosNewThingFormCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -610,23 +610,23 @@ declare global {
         prototype: HTMLPosMakeFindableElement;
         new (): HTMLPosMakeFindableElement;
     };
-    interface HTMLPosNavigationBarElementEventMap {
+    interface HTMLPosNavigationElementEventMap {
         "pod-os:init": any;
         "pod-os:link": any;
     }
-    interface HTMLPosNavigationBarElement extends Components.PosNavigationBar, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLPosNavigationBarElementEventMap>(type: K, listener: (this: HTMLPosNavigationBarElement, ev: PosNavigationBarCustomEvent<HTMLPosNavigationBarElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+    interface HTMLPosNavigationElement extends Components.PosNavigation, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosNavigationElementEventMap>(type: K, listener: (this: HTMLPosNavigationElement, ev: PosNavigationCustomEvent<HTMLPosNavigationElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLPosNavigationBarElementEventMap>(type: K, listener: (this: HTMLPosNavigationBarElement, ev: PosNavigationBarCustomEvent<HTMLPosNavigationBarElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosNavigationElementEventMap>(type: K, listener: (this: HTMLPosNavigationElement, ev: PosNavigationCustomEvent<HTMLPosNavigationElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
-    var HTMLPosNavigationBarElement: {
-        prototype: HTMLPosNavigationBarElement;
-        new (): HTMLPosNavigationBarElement;
+    var HTMLPosNavigationElement: {
+        prototype: HTMLPosNavigationElement;
+        new (): HTMLPosNavigationElement;
     };
     interface HTMLPosNewThingFormElementEventMap {
         "pod-os:link": any;
@@ -881,7 +881,7 @@ declare global {
         "pos-login": HTMLPosLoginElement;
         "pos-login-form": HTMLPosLoginFormElement;
         "pos-make-findable": HTMLPosMakeFindableElement;
-        "pos-navigation-bar": HTMLPosNavigationBarElement;
+        "pos-navigation": HTMLPosNavigationElement;
         "pos-new-thing-form": HTMLPosNewThingFormElement;
         "pos-picture": HTMLPosPictureElement;
         "pos-predicate": HTMLPosPredicateElement;
@@ -1028,9 +1028,9 @@ declare namespace LocalJSX {
         "onPod-os:search:index-updated"?: (event: PosMakeFindableCustomEvent<any>) => void;
         "uri": string;
     }
-    interface PosNavigationBar {
-        "onPod-os:init"?: (event: PosNavigationBarCustomEvent<any>) => void;
-        "onPod-os:link"?: (event: PosNavigationBarCustomEvent<any>) => void;
+    interface PosNavigation {
+        "onPod-os:init"?: (event: PosNavigationCustomEvent<any>) => void;
+        "onPod-os:link"?: (event: PosNavigationCustomEvent<any>) => void;
         "uri"?: string;
     }
     interface PosNewThingForm {
@@ -1139,7 +1139,7 @@ declare namespace LocalJSX {
         "pos-login": PosLogin;
         "pos-login-form": PosLoginForm;
         "pos-make-findable": PosMakeFindable;
-        "pos-navigation-bar": PosNavigationBar;
+        "pos-navigation": PosNavigation;
         "pos-new-thing-form": PosNewThingForm;
         "pos-picture": PosPicture;
         "pos-predicate": PosPredicate;
@@ -1195,7 +1195,7 @@ declare module "@stencil/core" {
             "pos-login": LocalJSX.PosLogin & JSXBase.HTMLAttributes<HTMLPosLoginElement>;
             "pos-login-form": LocalJSX.PosLoginForm & JSXBase.HTMLAttributes<HTMLPosLoginFormElement>;
             "pos-make-findable": LocalJSX.PosMakeFindable & JSXBase.HTMLAttributes<HTMLPosMakeFindableElement>;
-            "pos-navigation-bar": LocalJSX.PosNavigationBar & JSXBase.HTMLAttributes<HTMLPosNavigationBarElement>;
+            "pos-navigation": LocalJSX.PosNavigation & JSXBase.HTMLAttributes<HTMLPosNavigationElement>;
             "pos-new-thing-form": LocalJSX.PosNewThingForm & JSXBase.HTMLAttributes<HTMLPosNewThingFormElement>;
             "pos-picture": LocalJSX.PosPicture & JSXBase.HTMLAttributes<HTMLPosPictureElement>;
             "pos-predicate": LocalJSX.PosPredicate & JSXBase.HTMLAttributes<HTMLPosPredicateElement>;

@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+### ⚠ BREAKING CHANGES
+
+- [pos-navigation](../docs/elements/components/pos-navigation)
+  - `pos-navigation-bar` has been renamed to `pos-navigation` and will undergo further major changes
+
 ### Fixed
 
 - [pos-app-browser](../docs/elements/apps/pos-app-browser): prevent error message flashing up while uri is unset on hard refresh

@@ -6,9 +6,9 @@ import session from '../../store/session';
 import { mockPodOS } from '../../test/mockPodOS';
 import { PosApp } from '../pos-app/pos-app';
 import { PosRichLink } from '../pos-rich-link/pos-rich-link';
-import { PosNavigationBar } from './pos-navigation-bar';
+import { PosNavigation } from './pos-navigation';
 
-describe('pos-navigation-bar', () => {
+describe('pos-navigation', () => {
   it('can search after login', async () => {
     // given PodOS
     const os = mockPodOS();
@@ -33,8 +33,8 @@ describe('pos-navigation-bar', () => {
     // and a page with a navigation bar
     const page = await newSpecPage({
       supportsShadowDom: false,
-      components: [PosApp, PosNavigationBar, PosRichLink],
-      html: `<pos-app><pos-navigation-bar></pos-navigation-bar></pos-app>`,
+      components: [PosApp, PosNavigation, PosRichLink],
+      html: `<pos-app><pos-navigation></pos-navigation></pos-app>`,
     });
 
     // and the user is not logged in yet

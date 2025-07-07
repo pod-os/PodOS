@@ -6,7 +6,7 @@ pos-router {
   height: 100%;
 }
 
-pos-navigation-bar {
+pos-navigation {
   max-width: var(--width-lg);
   margin: 0;
 }
@@ -66,7 +66,7 @@ main {
     justify-content: space-between;
   }
 
-  pos-navigation-bar {
+  pos-navigation {
     flex-basis: 100%;
     order: 0;
   }

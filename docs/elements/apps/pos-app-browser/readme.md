@@ -7,10 +7,10 @@
 
 ## Properties
 
-| Property                 | Attribute                  | Description                                                                                                                                                                           | Type                    | Default        |
-| ------------------------ | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- | -------------- |
-| `mode`                   | `mode`                     | The mode the app is running in:  - standalone:  use this when you deploy it as a standalone web application - pod: use this when you host this app as a default interface for you pod | `"pod" \| "standalone"` | `'standalone'` |
-| `restorePreviousSession` | `restore-previous-session` |                                                                                                                                                                                       | `boolean`               | `false`        |
+| Property                 | Attribute                  | Description                                                                                                                                                                          | Type                    | Default        |
+| ------------------------ | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------- | -------------- |
+| `mode`                   | `mode`                     | The mode the app is running in:  - standalone: use this when you deploy it as a standalone web application - pod: use this when you host this app as a default interface for you pod | `"pod" \| "standalone"` | `'standalone'` |
+| `restorePreviousSession` | `restore-previous-session` |                                                                                                                                                                                      | `boolean`               | `false`        |
 
 
 ## Dependencies
@@ -21,7 +21,7 @@
 - [pos-error-toast](../../components/pos-error-toast)
 - [pos-router](../../components/pos-router)
 - [pos-add-new-thing](../../components/pos-add-new-thing)
-- [pos-navigation-bar](../../components/pos-navigation-bar)
+- [pos-navigation](../../components/pos-navigation)
 - [pos-login](../../components/pos-login)
 - [pos-internal-router](../../components/pos-internal-router)
 - [pos-resource](../../components/pos-resource)
@@ -34,7 +34,7 @@ graph TD;
   pos-app-browser --> pos-error-toast
   pos-app-browser --> pos-router
   pos-app-browser --> pos-add-new-thing
-  pos-app-browser --> pos-navigation-bar
+  pos-app-browser --> pos-navigation
   pos-app-browser --> pos-login
   pos-app-browser --> pos-internal-router
   pos-app-browser --> pos-resource
@@ -48,9 +48,9 @@ graph TD;
   pos-add-new-thing --> pos-new-thing-form
   pos-dialog --> ion-icon
   pos-new-thing-form --> pos-select-term
-  pos-navigation-bar --> pos-make-findable
-  pos-navigation-bar --> ion-searchbar
-  pos-navigation-bar --> pos-rich-link
+  pos-navigation --> pos-make-findable
+  pos-navigation --> ion-searchbar
+  pos-navigation --> pos-rich-link
   pos-make-findable --> pos-resource
   pos-make-findable --> pos-label
   pos-resource --> ion-progress-bar

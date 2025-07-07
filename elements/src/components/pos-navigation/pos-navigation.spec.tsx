@@ -1,17 +1,17 @@
 import { newSpecPage } from '@stencil/core/testing';
 import { fireEvent } from '@testing-library/dom';
 import { mockSessionStore } from '../../test/mockSessionStore';
-import { PosNavigationBar } from './pos-navigation-bar';
+import { PosNavigation } from './pos-navigation';
 import { pressKey } from '../../test/pressKey';
 
-describe('pos-navigation-bar', () => {
+describe('pos-navigation', () => {
   it('renders a search bar within a form', async () => {
     const page = await newSpecPage({
-      components: [PosNavigationBar],
-      html: `<pos-navigation-bar uri="https://pod.example/resource" />`,
+      components: [PosNavigation],
+      html: `<pos-navigation uri="https://pod.example/resource" />`,
     });
     expect(page.root).toEqualHtml(`
-    <pos-navigation-bar uri="https://pod.example/resource">
+    <pos-navigation uri="https://pod.example/resource">
       <mock:shadow-root>
         <form>
           <div class="bar">
@@ -19,15 +19,15 @@ describe('pos-navigation-bar', () => {
           </div>
         </form>
       </mock:shadow-root>
-    </pos-navigation-bar>`);
+    </pos-navigation>`);
   });
 
   it('navigates to entered URI when form is submitted', async () => {
     // given a page with a navigation bar
     const page = await newSpecPage({
       supportsShadowDom: false,
-      components: [PosNavigationBar],
-      html: `<pos-navigation-bar uri="https://pod.example/resource" />`,
+      components: [PosNavigation],
+      html: `<pos-navigation uri="https://pod.example/resource" />`,
     });
 
     // and the page listens for pod-os:link events
@@ -60,8 +60,8 @@ describe('pos-navigation-bar', () => {
       // and a page with a navigation nar
       page = await newSpecPage({
         supportsShadowDom: false,
-        components: [PosNavigationBar],
-        html: `<pos-navigation-bar uri="https://pod.example/resource" />`,
+        components: [PosNavigation],
+        html: `<pos-navigation uri="https://pod.example/resource" />`,
       });
 
       // and a fake search index giving 2 results
@@ -91,27 +91,27 @@ describe('pos-navigation-bar', () => {
 
     it('shows the make-findable button as soon as search index is available', () => {
       expect(page.root).toEqualHtml(`
-        <pos-navigation-bar uri="https://pod.example/resource">
+        <pos-navigation uri="https://pod.example/resource">
           <form>
             <pos-make-findable uri="https://pod.example/resource"></pos-make-findable>
             <div class="bar">
               <ion-searchbar debounce="300" enterkeyhint="search" placeholder="Search or enter URI" value="https://pod.example/resource"></ion-searchbar>
             </div>
           </form>
-        </pos-navigation-bar>`);
+        </pos-navigation>`);
     });
 
     it('does not show the make-findable button if URI is empty', async () => {
       page.root.setAttribute('uri', '');
       await page.waitForChanges();
       expect(page.root).toEqualHtml(`
-        <pos-navigation-bar uri="">
+        <pos-navigation uri="">
           <form>
             <div class="bar">
               <ion-searchbar debounce="300" enterkeyhint="search" placeholder="Search or enter URI" value=""></ion-searchbar>
             </div>
           </form>
-        </pos-navigation-bar>`);
+        </pos-navigation>`);
     });
 
     it(' searches for the typed text and shows suggestions', async () => {
