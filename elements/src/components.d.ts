@@ -5,6 +5,8 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { Thing } from "@pod-os/core";
+export { Thing } from "@pod-os/core";
 export namespace Components {
     interface PosAddLiteralValue {
     }
@@ -97,6 +99,9 @@ export namespace Components {
     }
     interface PosNavigation {
         "uri": string;
+    }
+    interface PosNavigationBar {
+        "current": Thing;
     }
     interface PosNewThingForm {
         "referenceUri": string;
@@ -216,6 +221,10 @@ export interface PosMakeFindableCustomEvent<T> extends CustomEvent<T> {
 export interface PosNavigationCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosNavigationElement;
+}
+export interface PosNavigationBarCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosNavigationBarElement;
 }
 export interface PosNewThingFormCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -628,6 +637,23 @@ declare global {
         prototype: HTMLPosNavigationElement;
         new (): HTMLPosNavigationElement;
     };
+    interface HTMLPosNavigationBarElementEventMap {
+        "pod-os:navigate": any;
+    }
+    interface HTMLPosNavigationBarElement extends Components.PosNavigationBar, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosNavigationBarElementEventMap>(type: K, listener: (this: HTMLPosNavigationBarElement, ev: PosNavigationBarCustomEvent<HTMLPosNavigationBarElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosNavigationBarElementEventMap>(type: K, listener: (this: HTMLPosNavigationBarElement, ev: PosNavigationBarCustomEvent<HTMLPosNavigationBarElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLPosNavigationBarElement: {
+        prototype: HTMLPosNavigationBarElement;
+        new (): HTMLPosNavigationBarElement;
+    };
     interface HTMLPosNewThingFormElementEventMap {
         "pod-os:link": any;
         "pod-os:error": any;
@@ -882,6 +908,7 @@ declare global {
         "pos-login-form": HTMLPosLoginFormElement;
         "pos-make-findable": HTMLPosMakeFindableElement;
         "pos-navigation": HTMLPosNavigationElement;
+        "pos-navigation-bar": HTMLPosNavigationBarElement;
         "pos-new-thing-form": HTMLPosNewThingFormElement;
         "pos-picture": HTMLPosPictureElement;
         "pos-predicate": HTMLPosPredicateElement;
@@ -1033,6 +1060,10 @@ declare namespace LocalJSX {
         "onPod-os:link"?: (event: PosNavigationCustomEvent<any>) => void;
         "uri"?: string;
     }
+    interface PosNavigationBar {
+        "current"?: Thing;
+        "onPod-os:navigate"?: (event: PosNavigationBarCustomEvent<any>) => void;
+    }
     interface PosNewThingForm {
         "onPod-os:error"?: (event: PosNewThingFormCustomEvent<any>) => void;
         "onPod-os:init"?: (event: PosNewThingFormCustomEvent<any>) => void;
@@ -1140,6 +1171,7 @@ declare namespace LocalJSX {
         "pos-login-form": PosLoginForm;
         "pos-make-findable": PosMakeFindable;
         "pos-navigation": PosNavigation;
+        "pos-navigation-bar": PosNavigationBar;
         "pos-new-thing-form": PosNewThingForm;
         "pos-picture": PosPicture;
         "pos-predicate": PosPredicate;
@@ -1196,6 +1228,7 @@ declare module "@stencil/core" {
             "pos-login-form": LocalJSX.PosLoginForm & JSXBase.HTMLAttributes<HTMLPosLoginFormElement>;
             "pos-make-findable": LocalJSX.PosMakeFindable & JSXBase.HTMLAttributes<HTMLPosMakeFindableElement>;
             "pos-navigation": LocalJSX.PosNavigation & JSXBase.HTMLAttributes<HTMLPosNavigationElement>;
+            "pos-navigation-bar": LocalJSX.PosNavigationBar & JSXBase.HTMLAttributes<HTMLPosNavigationBarElement>;
             "pos-new-thing-form": LocalJSX.PosNewThingForm & JSXBase.HTMLAttributes<HTMLPosNewThingFormElement>;
             "pos-picture": LocalJSX.PosPicture & JSXBase.HTMLAttributes<HTMLPosPictureElement>;
             "pos-predicate": LocalJSX.PosPredicate & JSXBase.HTMLAttributes<HTMLPosPredicateElement>;
