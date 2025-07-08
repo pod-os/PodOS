@@ -29,13 +29,16 @@ export class PosNavigation implements PodOsAware {
   @State() resource: Thing = null;
 
   @Watch('uri')
+  @Watch('os')
   async getResource() {
     // TODO should this be done on componentWillLoad?
-    this.resource = this.uri ? this.os.store.get(this.uri) : null;
+    // TODO why can this.uri be null
+    this.resource = this.uri ? this.os?.store.get(this.uri) : null;
   }
 
   componentWillLoad() {
     subscribePodOs(this);
+    this.getResource();
     session.onChange('isLoggedIn', async isLoggedIn => {
       if (isLoggedIn) {
         await this.buildSearchIndex();
@@ -114,11 +117,12 @@ export class PosNavigation implements PodOsAware {
   }
 
   render() {
-    // TODO: move make findable to pos-navigation-bar
     return (
       <Host>
-        {this.searchIndex && this.uri ? <pos-make-findable uri={this.uri}></pos-make-findable> : ''}
-        {this.resource && <pos-navigation-bar current={this.resource}></pos-navigation-bar>}
+        <pos-navigation-bar
+          searchIndexReady={this.searchIndex !== undefined}
+          current={this.resource}
+        ></pos-navigation-bar>
         <dialog ref={el => (this.dialogRef = el as HTMLDialogElement)}>
           <form method="dialog" onSubmit={e => this.onSubmit(e)}>
             <div class="bar">
