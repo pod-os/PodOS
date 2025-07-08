@@ -101,7 +101,8 @@ export namespace Components {
         "uri": string;
     }
     interface PosNavigationBar {
-        "current": Thing;
+        "current"?: Thing;
+        "searchIndexReady": boolean;
     }
     interface PosNewThingForm {
         "referenceUri": string;
@@ -1063,6 +1064,7 @@ declare namespace LocalJSX {
     interface PosNavigationBar {
         "current"?: Thing;
         "onPod-os:navigate"?: (event: PosNavigationBarCustomEvent<any>) => void;
+        "searchIndexReady"?: boolean;
     }
     interface PosNewThingForm {
         "onPod-os:error"?: (event: PosNewThingFormCustomEvent<any>) => void;

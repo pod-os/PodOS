@@ -3,10 +3,9 @@ import { fireEvent } from '@testing-library/dom';
 import { mockSessionStore } from '../../test/mockSessionStore';
 import { PosNavigation } from './pos-navigation';
 import { pressKey } from '../../test/pressKey';
-import * as test from 'node:test';
 
 describe('pos-navigation', () => {
-  it('renders a search bar within a form', async () => {
+  it('renders navigation bar and search dialog', async () => {
     const page = await newSpecPage({
       components: [PosNavigation],
       html: `<pos-navigation uri="https://pod.example/resource" />`,
@@ -14,6 +13,7 @@ describe('pos-navigation', () => {
     expect(page.root).toEqualHtml(`
     <pos-navigation uri="https://pod.example/resource">
       <mock:shadow-root>
+        <pos-navigation-bar></pos-navigation-bar>
         <dialog>
           <form method="dialog">
             <div class="bar">
@@ -129,6 +129,9 @@ describe('pos-navigation', () => {
         rebuild: jest.fn(),
       };
       page.rootInstance.receivePodOs({
+        store: {
+          get: jest.fn().mockReturnValue({ fake: 'resource' }),
+        },
         buildSearchIndex: jest.fn().mockReturnValue(mockSearchIndex),
       });
 
@@ -140,10 +143,10 @@ describe('pos-navigation', () => {
       expect(page.rootInstance.searchIndex).toBeDefined();
     });
 
-    it('shows the make-findable button as soon as search index is available', () => {
+    it('informs navigation bar as soon as search index is available', () => {
       expect(page.root).toEqualHtml(`
         <pos-navigation uri="https://pod.example/resource">
-        <pos-make-findable uri="https://pod.example/resource"></pos-make-findable>
+        <pos-navigation-bar searchIndexReady=""></pos-navigation-bar>
         <dialog>
           <form method="dialog">
             <div class="bar">
@@ -151,21 +154,6 @@ describe('pos-navigation', () => {
             </div>
           </form>
         </dialog>
-        </pos-navigation>`);
-    });
-
-    it('does not show the make-findable button if URI is empty', async () => {
-      page.root.setAttribute('uri', '');
-      await page.waitForChanges();
-      expect(page.root).toEqualHtml(`
-        <pos-navigation uri="">
-          <dialog>
-            <form method="dialog">
-              <div class="bar">
-                <input enterkeyhint="search" placeholder="Search or enter URI" value=""></input>
-              </div>
-            </form>
-          </dialog>
         </pos-navigation>`);
     });
 

@@ -7,7 +7,8 @@ import { Thing } from '@pod-os/core';
   styleUrl: 'pos-navigation-bar.css',
 })
 export class PosNavigationBar {
-  @Prop() current: Thing;
+  @Prop() current?: Thing;
+  @Prop() searchIndexReady: boolean;
 
   @Event({ eventName: 'pod-os:navigate' }) navigate: EventEmitter;
 
@@ -16,9 +17,11 @@ export class PosNavigationBar {
   }
 
   render() {
+    if (!this.current) return <nav></nav>;
     return (
       <nav>
         <button onClick={() => this.onClick()}>{this.current.label()}</button>
+        {this.searchIndexReady && <pos-make-findable uri={this.current.uri}></pos-make-findable>}
       </nav>
     );
   }
