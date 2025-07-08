@@ -50,7 +50,7 @@ footer {
 }
 
 header {
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   padding: 0 var(--size-8);
 }
 
@@ -58,21 +58,4 @@ main {
   flex: 1;
   max-height: 100vh;
   overflow: auto;
-}
-
-@media (max-width: 640px) {
-  header {
-    padding: 0 var(--size-1) var(--size-1);
-    justify-content: space-between;
-  }
-
-  pos-navigation {
-    flex-basis: 100%;
-    order: 0;
-  }
-
-  pos-add-new-thing,
-  pos-login {
-    order: 1;
-  }
 }
