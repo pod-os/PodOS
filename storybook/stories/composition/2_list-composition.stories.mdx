@@ -10,7 +10,8 @@ import { Canvas, Meta, Story } from "@storybook/addon-docs/blocks";
 ## pos-list composition
 
 This is an example of how you can use `<pos-list>` element to list things
-related to a resource with a custom display.
+related to a resource with a custom display. The `ul` and `li` elements are used
+as appropriate semantic HTML elements.
 
 <Canvas withSource="open">
   <Story name="pos-list composition">
@@ -31,6 +32,51 @@ Skills:
             </template>
         </pos-list>
     </ul>
+</pos-resource>
+    `}
+  </Story>
+</Canvas>
+
+## Table example
+
+The `table`-related HTML elements have strict rules that prevent other elements
+such as `pos-list` being used within them. Instead we can make a table using CSS
+`grid` rules. The grid needs to be defined within each template as `pos-list`
+nests list items within `pos-resource` elements, which use shadow dom.
+
+<Canvas withSource="open">
+  <Story name="pos-list table">
+    {({ uri }) => html`
+<style>
+    [role="row"] {
+        display: grid;
+        grid-template-columns: 200px 600px;
+    }
+    .header {
+        font-weight: bold;
+    }
+    [role="gridcell"], [role="columnheader"] {
+        border: 1px solid grey;
+    }
+</style>
+<pos-resource uri=${uri} role="grid" aria-labelledby="skills-caption">
+    <span role="caption" id="skills-caption">Table of skills</span>
+    <div role="row" class="header">
+        <div role="columnheader">Skill</div>
+        <div role="columnheader">URL</div>
+    </div>
+    <pos-list rel="http://schema.org/skills">
+        <template>
+            <div role="row">
+                <pos-list rel="http://www.w3.org/ns/solid/terms#publicId" role="gridcell">
+                    <template>
+                        <pos-label></pos-label>
+                    </template>
+                </pos-list>
+                <pos-value predicate="http://www.w3.org/ns/solid/terms#publicId" role="gridcell" /></pos-value>
+            <div>
+        </template>
+    </pos-list>
 </pos-resource>
     `}
   </Story>
