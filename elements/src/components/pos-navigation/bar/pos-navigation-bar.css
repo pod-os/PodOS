@@ -1,4 +1,21 @@
 nav {
   display: flex;
+  height: var(--size-8);
   gap: 0;
+}
+
+section.current {
+  display: flex;
+  flex-grow: 1;
+  gap: 0;
+  background-color: var(--pos-input-background-color);
+  border-radius: var(--radius-md);
+  button {
+    cursor: pointer;
+    flex-grow: 1;
+    background: none;
+    color: var(--pos-normal-text-color);
+    outline: none;
+    border: none;
+  }
 }

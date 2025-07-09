@@ -20,9 +20,11 @@ describe('pos-navigation-bar', () => {
     expect(page.root).toEqualHtml(`
       <pos-navigation-bar>
         <nav>
-          <button>
-            Test Label
-          </button>
+          <section class="current">
+            <button>
+              Test Label
+            </button>
+          </section>
         </nav>
       </pos-navigation-bar>
     `);
@@ -38,9 +40,11 @@ describe('pos-navigation-bar', () => {
     expect(page.root).toEqualHtml(`
     <pos-navigation-bar>
       <nav>
-        <button>
-          Search or enter URI
-        </button>
+        <section class="current">
+          <button>
+            Search or enter URI
+          </button>
+        </section>
       </nav>
     </pos-navigation-bar>
   `);

@@ -52,6 +52,8 @@ footer {
 header {
   flex-wrap: nowrap;
   padding: 0 var(--size-8);
+  margin-top: var(--size-1);
+  margin-bottom: var(--size-1);
 }
 
 main {
