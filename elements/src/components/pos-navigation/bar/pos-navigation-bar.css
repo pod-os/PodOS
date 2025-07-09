@@ -10,12 +10,17 @@ section.current {
   gap: 0;
   background-color: var(--pos-input-background-color);
   border-radius: var(--radius-md);
-  button {
-    cursor: pointer;
-    flex-grow: 1;
-    background: none;
-    color: var(--pos-normal-text-color);
-    outline: none;
-    border: none;
-  }
+  width: 100%;
+}
+
+section.current button {
+  cursor: pointer;
+  flex-grow: 1;
+  background: none;
+  color: var(--pos-normal-text-color);
+  outline: none;
+  border: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

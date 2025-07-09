@@ -9,11 +9,14 @@ pos-router {
 pos-navigation {
   max-width: var(--width-lg);
   margin: 0;
+  min-width: var(--size-32);
+  flex-shrink: 1; /* Ensure navigation can shrink */
 }
 
 pos-add-new-thing,
 pos-login {
-  flex: 0 1 auto; /* Behält die Breite des Inhalts bei */
+  flex: 0 1 auto;
+  flex-shrink: 0; /* Ensure those items don't shrink */
 }
 
 header,
@@ -51,13 +54,18 @@ footer {
 
 header {
   flex-wrap: nowrap;
-  padding: 0 var(--size-8);
-  margin-top: var(--size-1);
-  margin-bottom: var(--size-1);
+  padding: var(--size-1) var(--size-8);
 }
 
 main {
   flex: 1;
   max-height: 100vh;
   overflow: auto;
+}
+
+@media (max-width: 640px) {
+  header {
+    padding: var(--size-1);
+    justify-content: space-between;
+  }
 }
