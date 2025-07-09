@@ -108,7 +108,7 @@ export class PosNavigation implements PodOsAware {
     }
   }
 
-  private onSubmit(event) {
+  private onSubmit() {
     if (this.suggestions && this.selectedIndex > -1) {
       this.linkEmitter.emit(this.suggestions[this.selectedIndex].ref);
     } else {
@@ -123,8 +123,8 @@ export class PosNavigation implements PodOsAware {
           searchIndexReady={this.searchIndex !== undefined}
           current={this.resource}
         ></pos-navigation-bar>
-        <dialog ref={el => (this.dialogRef = el as HTMLDialogElement)}>
-          <form method="dialog" onSubmit={e => this.onSubmit(e)}>
+        <dialog ref={el => (this.dialogRef = el)}>
+          <form method="dialog" onSubmit={() => this.onSubmit()}>
             <div class="bar">
               <input
                 enterkeyhint="search"
