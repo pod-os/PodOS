@@ -17,11 +17,10 @@ export class PosNavigationBar {
   }
 
   render() {
-    if (!this.current) return <nav></nav>;
     return (
       <nav>
-        <button onClick={() => this.onClick()}>{this.current.label()}</button>
-        {this.searchIndexReady && <pos-make-findable uri={this.current.uri}></pos-make-findable>}
+        <button onClick={() => this.onClick()}>{this.current ? this.current.label() : 'Search or enter URI'}</button>
+        {this.current && this.searchIndexReady && <pos-make-findable uri={this.current.uri}></pos-make-findable>}
       </nav>
     );
   }

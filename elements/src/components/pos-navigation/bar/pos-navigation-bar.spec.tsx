@@ -36,10 +36,14 @@ describe('pos-navigation-bar', () => {
     });
 
     expect(page.root).toEqualHtml(`
-      <pos-navigation-bar>
-        <nav></nav>
-      </pos-navigation-bar>
-    `);
+    <pos-navigation-bar>
+      <nav>
+        <button>
+          Search or enter URI
+        </button>
+      </nav>
+    </pos-navigation-bar>
+  `);
   });
 
   describe('make findable', () => {
