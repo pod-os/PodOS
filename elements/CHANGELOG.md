@@ -30,6 +30,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - now shows [pos-user-menu](../docs/elements/components/pos-user-menu) when signed in
   - redesigned navigation bar
 
+### Changed
+
+- [pos-rich-link](../docs/elements/components/pos-rich-link):
+  - can now receive a resource to use for the link
+  - can now follow `rel` and `rev` to discover a resource to use for the link
+
 ### Fixed
 
 - [pos-app-browser](../docs/elements/apps/pos-app-browser): prevent error message flashing up while uri is unset on hard refresh
