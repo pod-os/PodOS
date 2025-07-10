@@ -39,9 +39,9 @@ graph TD;
   pos-add-literal-value --> pos-select-term
   pos-relations --> pos-predicate
   pos-relations --> pos-rich-link
-  pos-rich-link --> pos-resource
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
+  pos-rich-link --> pos-resource
   pos-resource --> ion-progress-bar
   pos-reverse-relations --> pos-predicate
   pos-reverse-relations --> pos-rich-link

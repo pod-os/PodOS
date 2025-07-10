@@ -29,9 +29,9 @@ graph TD;
   pos-app-dashboard --> pos-getting-started
   pos-app-dashboard --> pos-example-resources
   pos-example-resources --> pos-rich-link
-  pos-rich-link --> pos-resource
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
+  pos-rich-link --> pos-resource
   pos-resource --> ion-progress-bar
   pos-app-browser --> pos-internal-router
   style pos-internal-router fill:#f9f,stroke:#333,stroke-width:4px

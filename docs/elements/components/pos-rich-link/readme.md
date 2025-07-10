@@ -7,16 +7,19 @@
 
 ## Properties
 
-| Property | Attribute | Description | Type     | Default     |
-| -------- | --------- | ----------- | -------- | ----------- |
-| `uri`    | `uri`     |             | `string` | `undefined` |
+| Property | Attribute | Description                                                                               | Type     | Default     |
+| -------- | --------- | ----------------------------------------------------------------------------------------- | -------- | ----------- |
+| `rel`    | `rel`     | Link will be obtained by following the predicate with this URI forward from a resource    | `string` | `undefined` |
+| `rev`    | `rev`     | Link will be obtained by following the predicate with this URI in reverse from a resource | `string` | `undefined` |
+| `uri`    | `uri`     | Link will use this URI                                                                    | `string` | `undefined` |
 
 
 ## Events
 
-| Event         | Description | Type               |
-| ------------- | ----------- | ------------------ |
-| `pod-os:link` |             | `CustomEvent<any>` |
+| Event             | Description | Type               |
+| ----------------- | ----------- | ------------------ |
+| `pod-os:link`     |             | `CustomEvent<any>` |
+| `pod-os:resource` |             | `CustomEvent<any>` |
 
 
 ## Dependencies
@@ -31,16 +34,16 @@
 
 ### Depends on
 
-- [pos-resource](../pos-resource)
 - [pos-label](../pos-label)
 - [pos-description](../pos-description)
+- [pos-resource](../pos-resource)
 
 ### Graph
 ```mermaid
 graph TD;
-  pos-rich-link --> pos-resource
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
+  pos-rich-link --> pos-resource
   pos-resource --> ion-progress-bar
   pos-example-resources --> pos-rich-link
   pos-navigation --> pos-rich-link
