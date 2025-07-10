@@ -52,23 +52,23 @@ describe('pos-rich-link with uri', () => {
 
 describe('pos-rich-link without uri', () => {
   it('does not emit pod-os:resource event if uri is present', async () => {
-    const receiveResource = jest.fn();
+    const onResource = jest.fn();
     const page = await newSpecPage({
       components: [PosRichLink],
     });
-    page.body.addEventListener('pod-os:resource', receiveResource);
+    page.body.addEventListener('pod-os:resource', onResource);
     await page.setContent('<pos-rich-link uri="https://pod.example/resource" />');
-    expect(receiveResource).toHaveBeenCalledTimes(0);
+    expect(onResource).toHaveBeenCalledTimes(0);
   });
 
   it('receives resource and sets it as link if uri is not present', async () => {
-    const receiveResource = jest.fn();
+    const onResource = jest.fn();
     const page = await newSpecPage({
       components: [PosRichLink],
     });
-    page.body.addEventListener('pod-os:resource', receiveResource);
+    page.body.addEventListener('pod-os:resource', onResource);
     await page.setContent('<pos-rich-link/>');
-    expect(receiveResource).toHaveBeenCalledTimes(1);
+    expect(onResource).toHaveBeenCalledTimes(1);
 
     await page.rootInstance.receiveResource({
       uri: 'https://pod.example/resource',
