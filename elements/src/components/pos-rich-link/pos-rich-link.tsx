@@ -8,8 +8,18 @@ import { ResourceAware, ResourceEventEmitter, subscribeResource } from '../event
   styleUrl: 'pos-rich-link.css',
 })
 export class PosRichLink implements ResourceAware {
+  /**
+   * Link will use this URI
+   */
   @Prop() uri?: string;
+  /**
+   * Link will be obtained by following the predicate with this URI forward from a resource
+   */
   @Prop() rel?: string;
+  /**
+   * Link will be obtained by following the predicate with this URI in reverse from a resource
+   */
+  @Prop() rev?: string;
 
   @Event({ eventName: 'pod-os:link' }) linkEmitter: EventEmitter;
 
@@ -24,8 +34,14 @@ export class PosRichLink implements ResourceAware {
   }
 
   receiveResource = (resource: Thing) => {
-    if (this.rel) {
-      const links = resource.relations(this.rel);
+    if (this.rel || this.rev) {
+      let links = [];
+      if (this.rel) {
+        links = resource.relations(this.rel);
+      } else if (this.rev) {
+        links = resource.reverseRelations(this.rev);
+      }
+
       if (links.length == 0) {
         this.error = 'No matching link found';
       } else if (links[0].uris.length > 1) {

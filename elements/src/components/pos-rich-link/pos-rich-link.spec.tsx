@@ -118,6 +118,25 @@ describe('pos-rich-link without uri', () => {
     expect(link).toEqualAttribute('href', 'https://video.test/video-1');
   });
 
+  it('uses the matching relation if rev prop is defined', async () => {
+    const page = await newSpecPage({
+      components: [PosRichLink],
+      html: `<pos-rich-link rev="https://schema.org/video" />`,
+    });
+    const thing = {
+      uri: 'https://video.test/video-1',
+      reverseRelations: jest.fn(),
+    };
+    when(thing.reverseRelations)
+      .calledWith('https://schema.org/video')
+      .mockReturnValue([{ predicate: 'https://schema.org/video', uris: ['https://pod.example/resource'] }]);
+
+    await page.rootInstance.receiveResource(thing);
+    await page.waitForChanges();
+    const link = page.root?.shadowRoot?.querySelector('a');
+    expect(link).toEqualAttribute('href', 'https://pod.example/resource');
+  });
+
   it('displays an error if no link is found', async () => {
     const page = await newSpecPage({
       components: [PosRichLink],
