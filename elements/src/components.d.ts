@@ -130,7 +130,18 @@ export namespace Components {
     interface PosReverseRelations {
     }
     interface PosRichLink {
-        "uri": string;
+        /**
+          * Link will be obtained by following the predicate with this URI forward from a resource
+         */
+        "rel"?: string;
+        /**
+          * Link will be obtained by following the predicate with this URI in reverse from a resource
+         */
+        "rev"?: string;
+        /**
+          * Link will use this URI
+         */
+        "uri"?: string;
     }
     /**
      * The responsibility of pos-router is to handle the `uri` query param, that specifies the URI of the resource that is currently opened.
@@ -776,6 +787,7 @@ declare global {
     };
     interface HTMLPosRichLinkElementEventMap {
         "pod-os:link": any;
+        "pod-os:resource": any;
     }
     interface HTMLPosRichLinkElement extends Components.PosRichLink, HTMLStencilElement {
         addEventListener<K extends keyof HTMLPosRichLinkElementEventMap>(type: K, listener: (this: HTMLPosRichLinkElement, ev: PosRichLinkCustomEvent<HTMLPosRichLinkElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -1148,6 +1160,18 @@ declare namespace LocalJSX {
     }
     interface PosRichLink {
         "onPod-os:link"?: (event: PosRichLinkCustomEvent<any>) => void;
+        "onPod-os:resource"?: (event: PosRichLinkCustomEvent<any>) => void;
+        /**
+          * Link will be obtained by following the predicate with this URI forward from a resource
+         */
+        "rel"?: string;
+        /**
+          * Link will be obtained by following the predicate with this URI in reverse from a resource
+         */
+        "rev"?: string;
+        /**
+          * Link will use this URI
+         */
         "uri"?: string;
     }
     /**

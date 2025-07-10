@@ -16,9 +16,9 @@
 ```mermaid
 graph TD;
   pos-example-resources --> pos-rich-link
-  pos-rich-link --> pos-resource
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
+  pos-rich-link --> pos-resource
   pos-resource --> ion-progress-bar
   pos-app-dashboard --> pos-example-resources
   style pos-example-resources fill:#f9f,stroke:#333,stroke-width:4px

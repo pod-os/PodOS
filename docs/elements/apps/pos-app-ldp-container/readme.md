@@ -28,9 +28,9 @@ graph TD;
   pos-resource --> ion-progress-bar
   pos-container-item --> ion-icon
   pos-subjects --> pos-rich-link
-  pos-rich-link --> pos-resource
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
+  pos-rich-link --> pos-resource
   pos-type-badges --> ion-badge
   pos-type-badges --> ion-icon
   pos-literals --> pos-predicate

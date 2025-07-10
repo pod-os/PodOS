@@ -56,11 +56,10 @@ graph TD;
   pos-make-findable --> pos-resource
   pos-make-findable --> pos-label
   pos-resource --> ion-progress-bar
-  pos-rich-link --> pos-resource
+  ion-searchbar --> ion-icon
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
-  pos-login --> pos-dialog
-  pos-login --> pos-login-form
+  pos-rich-link --> pos-resource
   pos-login --> pos-resource
   pos-login --> pos-picture
   pos-login --> pos-label
