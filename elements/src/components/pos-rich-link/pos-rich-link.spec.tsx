@@ -1,6 +1,7 @@
 import { newSpecPage } from '@stencil/core/testing';
 import { PosRichLink } from './pos-rich-link';
 import { getByText } from '@testing-library/dom';
+import { when } from 'jest-when';
 
 describe('pos-rich-link with uri', () => {
   let page;
@@ -103,10 +104,15 @@ describe('pos-rich-link without uri', () => {
       components: [PosRichLink],
       html: `<pos-rich-link rel="https://schema.org/video" />`,
     });
-    await page.rootInstance.receiveResource({
+    const thing = {
       uri: 'https://pod.example/resource',
-      relations: () => [{ predicate: 'https://schema.org/video', uris: ['https://video.test/video-1'] }],
-    });
+      relations: jest.fn(),
+    };
+    when(thing.relations)
+      .calledWith('https://schema.org/video')
+      .mockReturnValue([{ predicate: 'https://schema.org/video', uris: ['https://video.test/video-1'] }]);
+
+    await page.rootInstance.receiveResource(thing);
     await page.waitForChanges();
     const link = page.root?.shadowRoot?.querySelector('a');
     expect(link).toEqualAttribute('href', 'https://video.test/video-1');
