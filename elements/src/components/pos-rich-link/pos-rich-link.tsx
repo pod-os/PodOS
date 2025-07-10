@@ -39,12 +39,7 @@ export class PosRichLink implements ResourceAware {
   };
 
   render() {
-    if (this.error) return this.error;
-
-    const uri = this.uri || this.link;
-    if (!uri) return null;
-
-    const content = (
+    const content = (uri: string) => (
       <p class="content">
         <a
           href={uri}
@@ -60,14 +55,18 @@ export class PosRichLink implements ResourceAware {
       </p>
     );
 
-    if (this.link) {
-      return content;
+    if (this.error) {
+      return this.error;
+    } else if (this.link) {
+      return content(this.link);
     } else if (this.uri) {
       return (
         <pos-resource lazy={true} uri={this.uri}>
-          {content}
+          {content(this.uri)}
         </pos-resource>
       );
+    } else {
+      return null;
     }
   }
 }
