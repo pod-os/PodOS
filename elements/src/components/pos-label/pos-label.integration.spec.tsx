@@ -4,6 +4,7 @@ import { PosApp } from '../pos-app/pos-app';
 import { PosResource } from '../pos-resource/pos-resource';
 import { PosLabel } from './pos-label';
 import { when } from 'jest-when';
+import { Component, h } from '@stencil/core';
 
 describe('pos-label', () => {
   it('renders label for successfully loaded resource', async () => {
@@ -99,6 +100,91 @@ describe('pos-label', () => {
       <pos-label>
       <mock:shadow-root></mock:shadow-root>
       </pos-label>
+    `);
+  });
+
+  it('can be used within a component that does not use shadowdom', async () => {
+    @Component({
+      tag: 'test-comp',
+    })
+    class TestComp {
+      render() {
+        return <pos-label></pos-label>;
+      }
+    }
+
+    const os = mockPodOS();
+    when(os.store.get)
+      .calledWith('https://resource.test')
+      .mockReturnValue({
+        uri: 'https://resource.test',
+        label: () => 'Test label',
+      });
+    const page = await newSpecPage({
+      components: [PosApp, PosLabel, PosResource, TestComp],
+      supportsShadowDom: true,
+      html: `
+        <pos-app>
+          <pos-resource uri="https://resource.test" lazy="">
+            <test-comp/>
+          </pos-resource>
+        </pos-app>`,
+    });
+
+    expect(os.store.get.mock.calls).toHaveLength(1);
+
+    const testcomp = page.root?.querySelector('test-comp');
+
+    expect(testcomp).toEqualHtml(`
+    <test-comp>
+        <pos-label>
+          <mock:shadow-root>Test label</mock:shadow-root>
+        </pos-label>
+    </test-comp>
+    `);
+  });
+
+  it('can be used within a component that uses shadowdom', async () => {
+    @Component({
+      tag: 'test-comp',
+      shadow: true,
+    })
+    class TestComp {
+      render() {
+        return <pos-label></pos-label>;
+      }
+    }
+
+    const os = mockPodOS();
+    when(os.store.get)
+      .calledWith('https://resource.test')
+      .mockReturnValue({
+        uri: 'https://resource.test',
+        label: () => 'Test label',
+      });
+    const page = await newSpecPage({
+      components: [PosApp, PosLabel, PosResource, TestComp],
+      supportsShadowDom: true,
+      html: `
+        <pos-app>
+          <pos-resource uri="https://resource.test" lazy="">
+            <test-comp/>
+          </pos-resource>
+        </pos-app>`,
+    });
+
+    expect(os.store.get.mock.calls).toHaveLength(1);
+
+    const testcomp = page.root?.querySelector('test-comp');
+
+    expect(testcomp).toEqualHtml(`
+    <test-comp>
+      <mock:shadow-root>
+        <pos-label>
+          <mock:shadow-root>Test label</mock:shadow-root>
+        </pos-label>
+      </mock:shadow-root>
+    </test-comp>
     `);
   });
 });
