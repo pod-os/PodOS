@@ -27,6 +27,7 @@ export class PosRichLink implements ResourceAware {
   subscribeResource: ResourceEventEmitter;
 
   @State() link?: string;
+  @State() followPredicate: boolean = false;
   @State() error: string = null;
 
   componentWillLoad() {
@@ -34,7 +35,8 @@ export class PosRichLink implements ResourceAware {
   }
 
   receiveResource = (resource: Thing) => {
-    if (this.rel || this.rev) {
+    this.followPredicate = typeof this.rel != 'undefined' || typeof this.rev != 'undefined';
+    if (this.followPredicate) {
       let links = [];
       if (this.rel) {
         links = resource.relations(this.rel);
@@ -73,6 +75,12 @@ export class PosRichLink implements ResourceAware {
 
     if (this.error) {
       return this.error;
+    } else if (this.followPredicate) {
+      return (
+        <pos-resource lazy={true} uri={this.link}>
+          {content(this.link)}
+        </pos-resource>
+      );
     } else if (this.link) {
       return content(this.link);
     } else if (this.uri) {
