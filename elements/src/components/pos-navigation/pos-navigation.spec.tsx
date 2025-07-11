@@ -9,19 +9,18 @@ describe('pos-navigation', () => {
     const page = await newSpecPage({
       components: [PosNavigation],
       html: `<pos-navigation uri="https://pod.example/resource" />`,
+      supportsShadowDom: false,
     });
     expect(page.root).toEqualHtml(`
     <pos-navigation uri="https://pod.example/resource">
-      <mock:shadow-root>
-        <pos-navigation-bar></pos-navigation-bar>
-        <dialog>
-          <form method="dialog">
-            <div class="bar">
-              <input enterkeyhint="search" placeholder="Search or enter URI" value="https://pod.example/resource"></input>
-            </div>
-          </form>
-        </dialog>
-      </mock:shadow-root>
+        <div class="container">
+          <pos-navigation-bar></pos-navigation-bar>
+          <dialog>
+            <form method="dialog">
+              <input enterkeyhint="search" placeholder="Search or enter URI" value="https://pod.example/resource">
+            </form>
+          </dialog>
+        </div>
     </pos-navigation>`);
   });
 
@@ -44,14 +43,14 @@ describe('pos-navigation', () => {
 
     expect(page.root).toEqualHtml(`
     <pos-navigation uri="https://pod.example/resource">
-      <pos-navigation-bar></pos-navigation-bar>
-      <dialog>
-        <form method="dialog">
-          <div class="bar">
+     <div class="container">
+        <pos-navigation-bar></pos-navigation-bar>
+        <dialog>
+          <form method="dialog">
             <input enterkeyhint="search" placeholder="Search or enter URI" value="https://pod.example/resource"></input>
-          </div>
-        </form>
-      </dialog>
+          </form>
+        </dialog>
+      </div>
     </pos-navigation>`);
   });
 
@@ -64,13 +63,13 @@ describe('pos-navigation', () => {
     });
 
     const dialog = page.root.querySelector('dialog');
-    dialog.showModal = jest.fn();
+    dialog.show = jest.fn();
 
     // when a "navigate" event is emitted
     fireEvent(page.root, new CustomEvent('pod-os:navigate'));
 
     // then the dialog should be shown
-    expect(dialog.showModal).toHaveBeenCalled();
+    expect(dialog.show).toHaveBeenCalled();
   });
 
   it('navigates to entered URI when form is submitted', async () => {
@@ -146,14 +145,14 @@ describe('pos-navigation', () => {
     it('informs navigation bar as soon as search index is available', () => {
       expect(page.root).toEqualHtml(`
         <pos-navigation uri="https://pod.example/resource">
-        <pos-navigation-bar searchIndexReady=""></pos-navigation-bar>
-        <dialog>
-          <form method="dialog">
-            <div class="bar">
-              <input enterkeyhint="search" placeholder="Search or enter URI" value="https://pod.example/resource"></input>
-            </div>
-          </form>
-        </dialog>
+          <div class="container">
+            <pos-navigation-bar searchIndexReady=""></pos-navigation-bar>
+              <dialog>
+                <form method="dialog">
+                  <input enterkeyhint="search" placeholder="Search or enter URI" value="https://pod.example/resource"></input>
+                </form>
+            </dialog>
+          </div>
         </pos-navigation>`);
     });
 

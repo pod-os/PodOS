@@ -60,7 +60,7 @@ export class PosNavigation implements PodOsAware {
 
   @Listen('pod-os:navigate')
   openNavigationDialog() {
-    this.dialogRef?.showModal();
+    this.dialogRef?.show();
   }
 
   private clearSearchIndex() {
@@ -119,13 +119,13 @@ export class PosNavigation implements PodOsAware {
   render() {
     return (
       <Host>
-        <pos-navigation-bar
-          searchIndexReady={this.searchIndex !== undefined}
-          current={this.resource}
-        ></pos-navigation-bar>
-        <dialog ref={el => (this.dialogRef = el)}>
-          <form method="dialog" onSubmit={() => this.onSubmit()}>
-            <div class="bar">
+        <div class="container">
+          <pos-navigation-bar
+            searchIndexReady={this.searchIndex !== undefined}
+            current={this.resource}
+          ></pos-navigation-bar>
+          <dialog ref={el => (this.dialogRef = el)}>
+            <form method="dialog" onSubmit={() => this.onSubmit()}>
               <input
                 enterkeyhint="search"
                 placeholder="Search or enter URI"
@@ -144,9 +144,9 @@ export class PosNavigation implements PodOsAware {
                   </ol>
                 </div>
               ) : null}
-            </div>
-          </form>
-        </dialog>
+            </form>
+          </dialog>
+        </div>
       </Host>
     );
   }
