@@ -1,4 +1,4 @@
-import { Thing } from '@pod-os/core';
+import { Relation, Thing } from '@pod-os/core';
 import { Component, Event, EventEmitter, h, Prop, State } from '@stencil/core';
 import { ResourceAware, ResourceEventEmitter, subscribeResource } from '../events/ResourceAware';
 
@@ -26,6 +26,8 @@ export class PosRichLink implements ResourceAware {
   @Event({ eventName: 'pod-os:resource' })
   subscribeResource: ResourceEventEmitter;
 
+  @Event({ eventName: 'pod-os:error' }) errorEmitter: EventEmitter;
+
   @State() link?: string;
   @State() followPredicate: boolean = false;
   @State() error: string = null;
@@ -35,22 +37,27 @@ export class PosRichLink implements ResourceAware {
   }
 
   receiveResource = (resource: Thing) => {
-    this.followPredicate = typeof this.rel != 'undefined' || typeof this.rev != 'undefined';
-    if (this.followPredicate) {
-      let links = [];
-      if (this.rel) {
-        links = resource.relations(this.rel);
-      } else if (this.rev) {
-        links = resource.reverseRelations(this.rev);
-      }
-
+    const addLink = (links: Relation[], resource: Thing, predicate: string, direction: string) => {
       if (links.length == 0) {
         this.error = 'No matching link found';
+        this.errorEmitter.emit(
+          new Error(`pos-rich-link: No matching link found from ${resource.uri} ${direction}=${predicate}`),
+        );
       } else if (links[0].uris.length > 1) {
         this.error = 'More than one matching link found';
+        this.errorEmitter.emit(
+          new Error(`pos-rich-link: More than one matching link found from ${resource.uri} ${direction}=${predicate}`),
+        );
       } else {
         this.link = links[0].uris[0];
+        this.followPredicate = true;
       }
+    };
+
+    if (this.rel) {
+      addLink(resource.relations(this.rel), resource, this.rel, 'rel');
+    } else if (this.rev) {
+      addLink(resource.reverseRelations(this.rev), resource, this.rev, 'rev');
     } else {
       this.link = resource.uri;
     }

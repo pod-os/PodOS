@@ -788,6 +788,7 @@ declare global {
     interface HTMLPosRichLinkElementEventMap {
         "pod-os:link": any;
         "pod-os:resource": any;
+        "pod-os:error": any;
     }
     interface HTMLPosRichLinkElement extends Components.PosRichLink, HTMLStencilElement {
         addEventListener<K extends keyof HTMLPosRichLinkElementEventMap>(type: K, listener: (this: HTMLPosRichLinkElement, ev: PosRichLinkCustomEvent<HTMLPosRichLinkElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -1159,6 +1160,7 @@ declare namespace LocalJSX {
         "onPod-os:resource"?: (event: PosReverseRelationsCustomEvent<any>) => void;
     }
     interface PosRichLink {
+        "onPod-os:error"?: (event: PosRichLinkCustomEvent<any>) => void;
         "onPod-os:link"?: (event: PosRichLinkCustomEvent<any>) => void;
         "onPod-os:resource"?: (event: PosRichLinkCustomEvent<any>) => void;
         /**
