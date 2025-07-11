@@ -1,35 +1,84 @@
-import {
-  html
-} from "lit-html";
+import { html } from "lit-html";
 
-import {
-  Canvas,
-  Meta,
-  Story
-} from '@storybook/addon-docs/blocks';
+import { Canvas, Meta, Story } from "@storybook/addon-docs/blocks";
 
 <Meta
   title="Navigation"
-  args={{uri: "https://solidproject.solidcommunity.net/profile/card"}}
+  args={{ uri: "https://solidproject.solidcommunity.net/profile/card#me" }}
   parameters={{
     actions: {
-      handles: ['pod-os:link'],
+      handles: ["pod-os:link"],
     },
   }}
 />
 
-
 ## pos-rich-link
 
-Links to the given URI and shows a label and description of the resource identified by that URI, if available.
+Links to the given URI and shows a label and description of the resource
+identified by that URI, if available.
 
-<Canvas
-  withSource="open">
-  <Story
-    name="pos-rich-link"
-  >
-    {({uri}) => html`
-      <pos-rich-link uri=${uri} />
+<Canvas withSource="open">
+  <Story name="pos-rich-link with uri">
+    {({ uri }) => html` <pos-rich-link uri=${uri} /> `}
+  </Story>
+</Canvas>
+
+Link can be obtained by receiving a resource from an ancestor element
+
+<Canvas withSource="open">
+  <Story name="pos-rich-link with resource">
+    {({ uri }) => html`
+      <pos-resource uri=${uri}>
+        <pos-rich-link></pos-rich-link>
+      </pos-resource>
+    `}
+  </Story>
+</Canvas>
+
+Link can be obtained by following the predicate forward from a resource
+
+<Canvas withSource="open">
+  <Story name="pos-rich-link with rel">
+    {({ uri }) => html`
+      <pos-resource uri=${uri}>
+        <pos-rich-link rel="http://www.w3.org/ns/ldp#inbox"></pos-rich-link>
+      </pos-resource>
+    `}
+  </Story>
+</Canvas>
+
+Link can be obtained by following a predicate in reverse from a resource
+
+<Canvas withSource="open">
+  <Story name="pos-rich-link with rev">
+    {({ uri }) => html`
+      <pos-resource uri=${uri}>
+        <pos-rich-link rev="http://www.w3.org/ns/org#member"></pos-rich-link>
+      </pos-resource>
+    `}
+  </Story>
+</Canvas>
+
+Error is shown if there is no matching link
+
+<Canvas withSource="open">
+  <Story name="pos-rich-link with no link">
+    {({ uri }) => html`
+      <pos-resource uri=${uri}>
+        <pos-rich-link rel="http://example.com/missing"></pos-rich-link>
+      </pos-resource>
+    `}
+  </Story>
+</Canvas>
+
+Error is shown if there is more than one link
+
+<Canvas withSource="open">
+  <Story name="pos-rich-link with multiple links">
+    {({ uri }) => html`
+      <pos-resource uri=${uri}>
+        <pos-rich-link rel="http://schema.org/skills"></pos-rich-link>
+      </pos-resource>
     `}
   </Story>
 </Canvas>
