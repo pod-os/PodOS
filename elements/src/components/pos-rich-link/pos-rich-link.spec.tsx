@@ -137,24 +137,36 @@ describe('pos-rich-link without uri', () => {
     expect(link).toEqualAttribute('href', 'https://pod.example/resource');
   });
 
-  it('displays an error if no link is found', async () => {
+  it('displays and emits an error if no link is found', async () => {
     const page = await newSpecPage({
       components: [PosRichLink],
       html: `<pos-rich-link rel="https://schema.org/video" />`,
     });
+    const errorListener = jest.fn();
+    page.body.addEventListener('pod-os:error', errorListener);
     await page.rootInstance.receiveResource({
       uri: 'https://pod.example/resource',
       relations: () => [],
     });
     await page.waitForChanges();
     expect(page.root?.shadowRoot?.textContent).toEqual('No matching link found');
+    expect(errorListener).toHaveBeenCalledWith(
+      expect.objectContaining({
+        detail: new Error(
+          'pos-rich-link: No matching link found from https://pod.example/resource rel=https://schema.org/video',
+        ),
+      }),
+    );
   });
 
-  it('displays an error if more than one link is found', async () => {
+  it('displays and emits an error if more than one link is found', async () => {
     const page = await newSpecPage({
       components: [PosRichLink],
       html: `<pos-rich-link rel="https://schema.org/video" />`,
     });
+    const errorListener = jest.fn();
+    page.body.addEventListener('pod-os:error', errorListener);
+
     await page.rootInstance.receiveResource({
       uri: 'https://pod.example/resource',
       relations: () => [
@@ -163,5 +175,12 @@ describe('pos-rich-link without uri', () => {
     });
     await page.waitForChanges();
     expect(page.root?.shadowRoot?.textContent).toEqual('More than one matching link found');
+    expect(errorListener).toHaveBeenCalledWith(
+      expect.objectContaining({
+        detail: new Error(
+          'pos-rich-link: More than one matching link found from https://pod.example/resource rel=https://schema.org/video',
+        ),
+      }),
+    );
   });
 });

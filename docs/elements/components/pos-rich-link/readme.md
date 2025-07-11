@@ -18,6 +18,7 @@
 
 | Event             | Description | Type               |
 | ----------------- | ----------- | ------------------ |
+| `pod-os:error`    |             | `CustomEvent<any>` |
 | `pod-os:link`     |             | `CustomEvent<any>` |
 | `pod-os:resource` |             | `CustomEvent<any>` |
 
