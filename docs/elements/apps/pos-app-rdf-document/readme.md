@@ -22,9 +22,9 @@ graph TD;
   pos-app-rdf-document --> pos-type-badges
   pos-app-rdf-document --> pos-literals
   pos-subjects --> pos-rich-link
-  pos-rich-link --> pos-resource
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
+  pos-rich-link --> pos-resource
   pos-resource --> ion-progress-bar
   pos-type-badges --> ion-badge
   pos-type-badges --> ion-icon

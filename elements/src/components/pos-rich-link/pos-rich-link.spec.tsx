@@ -1,8 +1,9 @@
 import { newSpecPage } from '@stencil/core/testing';
 import { PosRichLink } from './pos-rich-link';
 import { getByText } from '@testing-library/dom';
+import { when } from 'jest-when';
 
-describe('pos-rich-link', () => {
+describe('pos-rich-link with uri', () => {
   let page;
   beforeEach(async () => {
     page = await newSpecPage({
@@ -47,5 +48,139 @@ describe('pos-rich-link', () => {
       </span>
       `);
     });
+  });
+});
+
+describe('pos-rich-link without uri', () => {
+  it('does not emit pod-os:resource event if uri is present', async () => {
+    const onResource = jest.fn();
+    const page = await newSpecPage({
+      components: [PosRichLink],
+    });
+    page.body.addEventListener('pod-os:resource', onResource);
+    await page.setContent('<pos-rich-link uri="https://pod.example/resource" />');
+    expect(onResource).toHaveBeenCalledTimes(0);
+  });
+
+  it('receives resource and sets it as link if uri is not present', async () => {
+    const onResource = jest.fn();
+    const page = await newSpecPage({
+      components: [PosRichLink],
+    });
+    page.body.addEventListener('pod-os:resource', onResource);
+    await page.setContent('<pos-rich-link/>');
+    expect(onResource).toHaveBeenCalledTimes(1);
+
+    await page.rootInstance.receiveResource({
+      uri: 'https://pod.example/resource',
+    });
+    await page.waitForChanges();
+    const link = page.root?.shadowRoot?.querySelector('a');
+    expect(link).toEqualAttribute('href', 'https://pod.example/resource');
+  });
+
+  it('is empty if neither uri nor resource are received', async () => {
+    const page = await newSpecPage({
+      components: [PosRichLink],
+      html: `<pos-rich-link/>`,
+    });
+    expect(page.root?.innerHTML).toBe('');
+  });
+
+  it('does not use pos-resource if uri is not present', async () => {
+    const page = await newSpecPage({
+      components: [PosRichLink],
+      html: `<pos-rich-link/>`,
+    });
+    await page.rootInstance.receiveResource({
+      uri: 'https://pod.example/resource',
+    });
+    await page.waitForChanges();
+    expect(page.root?.shadowRoot?.querySelector('pos-resource')).toBeNull();
+  });
+
+  it('uses the matching relation if rel prop is defined', async () => {
+    const page = await newSpecPage({
+      components: [PosRichLink],
+      html: `<pos-rich-link rel="https://schema.org/video" />`,
+    });
+    const thing = {
+      uri: 'https://pod.example/resource',
+      relations: jest.fn(),
+    };
+    when(thing.relations)
+      .calledWith('https://schema.org/video')
+      .mockReturnValue([{ predicate: 'https://schema.org/video', uris: ['https://video.test/video-1'] }]);
+
+    await page.rootInstance.receiveResource(thing);
+    await page.waitForChanges();
+    const link = page.root?.shadowRoot?.querySelector('a');
+    expect(link).toEqualAttribute('href', 'https://video.test/video-1');
+  });
+
+  it('uses the matching relation if rev prop is defined', async () => {
+    const page = await newSpecPage({
+      components: [PosRichLink],
+      html: `<pos-rich-link rev="https://schema.org/video" />`,
+    });
+    const thing = {
+      uri: 'https://video.test/video-1',
+      reverseRelations: jest.fn(),
+    };
+    when(thing.reverseRelations)
+      .calledWith('https://schema.org/video')
+      .mockReturnValue([{ predicate: 'https://schema.org/video', uris: ['https://pod.example/resource'] }]);
+
+    await page.rootInstance.receiveResource(thing);
+    await page.waitForChanges();
+    const link = page.root?.shadowRoot?.querySelector('a');
+    expect(link).toEqualAttribute('href', 'https://pod.example/resource');
+  });
+
+  it('displays and emits an error if no link is found', async () => {
+    const page = await newSpecPage({
+      components: [PosRichLink],
+      html: `<pos-rich-link rel="https://schema.org/video" />`,
+    });
+    const errorListener = jest.fn();
+    page.body.addEventListener('pod-os:error', errorListener);
+    await page.rootInstance.receiveResource({
+      uri: 'https://pod.example/resource',
+      relations: () => [],
+    });
+    await page.waitForChanges();
+    expect(page.root?.shadowRoot?.textContent).toEqual('No matching link found');
+    expect(errorListener).toHaveBeenCalledWith(
+      expect.objectContaining({
+        detail: new Error(
+          'pos-rich-link: No matching link found from https://pod.example/resource rel=https://schema.org/video',
+        ),
+      }),
+    );
+  });
+
+  it('displays and emits an error if more than one link is found', async () => {
+    const page = await newSpecPage({
+      components: [PosRichLink],
+      html: `<pos-rich-link rel="https://schema.org/video" />`,
+    });
+    const errorListener = jest.fn();
+    page.body.addEventListener('pod-os:error', errorListener);
+
+    await page.rootInstance.receiveResource({
+      uri: 'https://pod.example/resource',
+      relations: () => [
+        { predicate: 'https://schema.org/video', uris: ['https://video.test/video-1', 'https://video.test/video-2'] },
+      ],
+    });
+    await page.waitForChanges();
+    expect(page.root?.shadowRoot?.textContent).toEqual('More than one matching link found');
+    expect(errorListener).toHaveBeenCalledWith(
+      expect.objectContaining({
+        detail: new Error(
+          'pos-rich-link: More than one matching link found from https://pod.example/resource rel=https://schema.org/video',
+        ),
+      }),
+    );
   });
 });

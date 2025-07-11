@@ -89,10 +89,10 @@ export class Thing {
     }));
   }
 
-  reverseRelations(): Relation[] {
+  reverseRelations(predicate?: string): Relation[] {
     const statements = this.store.statementsMatching(
       undefined,
-      undefined,
+      predicate ? sym(predicate) : null,
       sym(this.uri),
     );
 

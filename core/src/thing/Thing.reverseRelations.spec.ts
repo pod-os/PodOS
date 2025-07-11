@@ -142,5 +142,30 @@ describe("Thing", function () {
         },
       ]);
     });
+
+    it("only follows the given predicate if provided", () => {
+      const store = graph();
+      const uri = "https://jane.doe.example/container/file.ttl#fragment";
+      store.add(
+        sym("https://pod.example/first"),
+        sym("http://vocab.test/first"),
+
+        sym(uri),
+      );
+      store.add(
+        sym("https://pod.example/second"),
+        sym("http://vocab.test/second"),
+        sym(uri),
+      );
+      const it = new Thing(uri, store);
+      const result = it.reverseRelations("http://vocab.test/first");
+      expect(result).toEqual([
+        {
+          predicate: "http://vocab.test/first",
+          label: "first",
+          uris: ["https://pod.example/first"],
+        },
+      ]);
+    });
   });
 });

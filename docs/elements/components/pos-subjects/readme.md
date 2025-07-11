@@ -27,9 +27,9 @@
 ```mermaid
 graph TD;
   pos-subjects --> pos-rich-link
-  pos-rich-link --> pos-resource
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
+  pos-rich-link --> pos-resource
   pos-resource --> ion-progress-bar
   pos-app-ldp-container --> pos-subjects
   pos-app-rdf-document --> pos-subjects
