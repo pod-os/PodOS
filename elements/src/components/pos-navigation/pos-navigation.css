@@ -1,3 +1,7 @@
+.container {
+  position: relative;
+}
+
 .suggestions ol {
   border: 1px solid var(--pos-border-color);
   display: flex;
@@ -35,22 +39,41 @@
   --uri-color: var(--pos-subtle-text-color);
 }
 
-ion-searchbar {
+dialog {
+  position: absolute;
+  margin-top: calc(-1 * var(--size-8));
+  padding: 0;
   width: 100%;
-}
-
-form {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.bar {
-  flex-grow: 1;
+  max-width: 100%;
+  min-width: 100%;
+  min-height: var(--size-32);
+  background-color: var(--pos-background-color);
+  color: var(--pos-normal-text-color);
+  border: var(--pos-border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    input {
+      display: flex;
+      height: var(--size-8);
+      border-radius: var(--radius-md);
+      padding-left: var(--size-2);
+      width: 100%;
+      border: none;
+      outline: none;
+      color: var(--pos-normal-text-color);
+      background-color: var(--pos-input-background-color);
+      box-sizing: border-box;
+    }
+  }
 }
 
 dialog[open] {
-  margin-top: 0;
-  width: 80%; // TODO better width value
-  padding: 0;
+  display: flex;
+  z-index: var(--layer-top);
 }
