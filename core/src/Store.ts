@@ -133,4 +133,12 @@ export class Store {
   async executeUpdate(operation: UpdateOperation) {
     await executeUpdate(this.fetcher, this.updater, operation);
   }
+
+  /**
+   * Finds instances of the given class or its sub-classes
+   * @param classUri
+   */
+  findMembers(classUri: string): string[] {
+    return Object.keys(this.graph.findMemberURIs(sym(classUri)));
+  }
 }
