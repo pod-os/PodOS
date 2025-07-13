@@ -130,6 +130,14 @@ export class Store {
     );
   }
 
+  /**
+   * Finds instances of the given class or its sub-classes
+   * @param classUri
+   */
+  findMembers(classUri: string): string[] {
+    return Object.keys(this.internalStore.findMemberURIs(sym(classUri)));
+  }
+
   async executeUpdate(operation: UpdateOperation) {
     await executeUpdate(this.fetcher, this.updater, operation);
   }

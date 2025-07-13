@@ -1,5 +1,5 @@
 import { when } from "jest-when";
-import { graph, sym } from "rdflib";
+import { graph, quad, sym } from "rdflib";
 import { Parser as SparqlParser, Update } from "sparqljs";
 import { AuthenticatedFetch, PodOsSession } from "./authentication";
 import { Store } from "./Store";
@@ -452,6 +452,38 @@ describe("Store", () => {
           <http://www.w3.org/2000/01/rdf-schema#label> "A new thing" .
       }`,
       );
+    });
+  });
+
+  describe("findMembers", () => {
+    it("finds instances of classes and subclasses", () => {
+      const internalStore = graph();
+      const store = new Store(
+        {} as PodOsSession,
+        undefined,
+        undefined,
+        internalStore,
+      );
+      internalStore.addAll([
+        quad(
+          sym("http://recipe.test/1"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://schema.org/Recipe"),
+        ),
+        quad(
+          sym("http://recipe.test/RecipeClass"),
+          sym("http://www.w3.org/2000/01/rdf-schema#subClassOf"),
+          sym("http://schema.org/Recipe"),
+        ),
+        quad(
+          sym("http://recipe.test/2"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://recipe.test/RecipeClass"),
+        ),
+      ]);
+      const members = store.findMembers("http://schema.org/Recipe");
+      expect(members).toContain("http://recipe.test/1");
+      expect(members).toContain("http://recipe.test/2");
     });
   });
 });
