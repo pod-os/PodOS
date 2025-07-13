@@ -13,6 +13,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - `pos-navigation` is now a more complex navigation widget, not just an input field.
   - It is planned to evolve into an Omnibox for searching and navigating in PodOS Browser.
 
+### Changes
+
+- [pos-list](../docs/elements/components/pos-list): Added storybook example using CSS grid and table aria roles
+
 ### Fixed
 
 - [pos-app-browser](../docs/elements/apps/pos-app-browser): prevent error message flashing up while uri is unset on hard refresh
