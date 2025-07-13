@@ -1,5 +1,6 @@
 import { newSpecPage } from '@stencil/core/testing';
 import { PosList } from './pos-list';
+import { when } from 'jest-when';
 
 describe('pos-list', () => {
   it('contains only template initially', async () => {
@@ -68,6 +69,29 @@ describe('pos-list', () => {
     const el: HTMLElement = page.root as unknown as HTMLElement;
 
     expect(el.querySelectorAll('pos-resource')).toHaveLength(2);
+  });
+
+  it('renders if-typeof objects', async () => {
+    const page = await newSpecPage({
+      components: [PosList],
+      html: `
+      <pos-list if-typeof="http://schema.org/Recipe">
+        <template>
+          Test
+        </template>
+      </pos-list>`,
+    });
+    const os = {
+      store: {
+        findMembers: jest.fn(),
+      },
+    };
+    when(os.store.findMembers).calledWith('http://schema.org/Recipe').mockReturnValue(['https://recipe.test/1']);
+    await page.rootInstance.receivePodOs(os);
+    await page.waitForChanges();
+
+    const el: HTMLElement = page.root as unknown as HTMLElement;
+    expect(el.querySelector('pos-resource')?.getAttribute('about')).toEqual('https://recipe.test/1');
   });
 
   it('displays error on missing template', async () => {
