@@ -55,11 +55,11 @@ nests list items within `pos-resource` elements, which use shadow dom.
     .header {
         font-weight: bold;
     }
-    [role="gridcell"], [role="columnheader"] {
+    [role="cell"], [role="columnheader"] {
         border: 1px solid grey;
     }
 </style>
-<pos-resource uri=${uri} role="grid" aria-labelledby="skills-caption">
+<pos-resource uri=${uri} role="table" aria-labelledby="skills-caption">
     <span role="caption" id="skills-caption">Table of skills</span>
     <div role="row" class="header">
         <div role="columnheader">Skill</div>
@@ -68,12 +68,12 @@ nests list items within `pos-resource` elements, which use shadow dom.
     <pos-list rel="http://schema.org/skills">
         <template>
             <div role="row">
-                <pos-list rel="http://www.w3.org/ns/solid/terms#publicId" role="gridcell">
+                <pos-list rel="http://www.w3.org/ns/solid/terms#publicId" role="cell">
                     <template>
                         <pos-label></pos-label>
                     </template>
                 </pos-list>
-                <pos-value predicate="http://www.w3.org/ns/solid/terms#publicId" role="gridcell" /></pos-value>
+                <pos-value predicate="http://www.w3.org/ns/solid/terms#publicId" role="cell" /></pos-value>
             <div>
         </template>
     </pos-list>
