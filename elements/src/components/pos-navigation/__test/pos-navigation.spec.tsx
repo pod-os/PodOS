@@ -39,7 +39,7 @@ describe('pos-navigation', () => {
       },
     };
 
-    await page.rootInstance.getResource('https://pod.example/resource');
+    await page.rootInstance.updateResource('https://pod.example/resource');
     await page.waitForChanges();
 
     expect(page.root).toEqualHtml(`

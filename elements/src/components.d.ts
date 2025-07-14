@@ -98,6 +98,9 @@ export namespace Components {
         "uri": string;
     }
     interface PosNavigation {
+        /**
+          * Initial value of the navigation bar
+         */
         "uri": string;
     }
     interface PosNavigationBar {
@@ -1059,6 +1062,9 @@ declare namespace LocalJSX {
     interface PosNavigation {
         "onPod-os:init"?: (event: PosNavigationCustomEvent<any>) => void;
         "onPod-os:link"?: (event: PosNavigationCustomEvent<any>) => void;
+        /**
+          * Initial value of the navigation bar
+         */
         "uri"?: string;
     }
     interface PosNavigationBar {
