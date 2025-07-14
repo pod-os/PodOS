@@ -44,7 +44,9 @@ dialog {
   width: 100%;
   max-width: 100%;
   min-width: 100%;
-  min-height: var(--size-24);
+  overflow: hidden;
+  overflow-y: scroll;
+  max-height: 100dvh;
   background-color: var(--pos-background-color);
   color: var(--pos-normal-text-color);
   border: var(--pos-border-color);
@@ -59,7 +61,8 @@ dialog {
     input {
       display: flex;
       height: var(--size-8);
-      border-radius: var(--radius-md);
+      border-top-left-radius: var(--radius-md);
+      border-top-right-radius: var(--radius-md);
       padding-left: var(--size-2);
       width: 100%;
       border: none;
@@ -74,6 +77,7 @@ dialog {
 dialog[open] {
   display: flex;
   z-index: var(--layer-top);
+  animation: slideIn 100ms ease-out;
 }
 
 @media (max-width: 640px) {
@@ -92,5 +96,14 @@ dialog[open] {
         font-size: var(--scale-fluid-2);
       }
     }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
