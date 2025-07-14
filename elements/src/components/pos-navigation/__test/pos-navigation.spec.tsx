@@ -285,7 +285,10 @@ describe('pos-navigation', () => {
       expect(page.root.querySelectorAll('.suggestions li')).toHaveLength(2);
     });
 
-    it('clears the suggestions when clicked elsewhere in the document', async () => {
+    it('closes the suggestions when clicked elsewhere in the document', async () => {
+      const dialog = page.root.querySelector('dialog');
+      dialog.close = jest.fn();
+
       // given the user entered a text into the searchbar
       await typeToSearch(page, 'test');
 
@@ -296,11 +299,14 @@ describe('pos-navigation', () => {
       page.doc.click();
       await page.waitForChanges();
 
-      // then the suggestions are cleared
-      expect(page.root.querySelector('.suggestions')).toBeNull();
+      // then the dialog is closed
+      expect(dialog.close).toHaveBeenCalled();
     });
 
-    it('clears the suggestions when escape is pressed', async () => {
+    it('closes the suggestions when escape is pressed', async () => {
+      const dialog = page.root.querySelector('dialog');
+      dialog.close = jest.fn();
+
       // given the user entered a text into the searchbar
       await typeToSearch(page, 'test');
 
@@ -310,11 +316,14 @@ describe('pos-navigation', () => {
       // when the user presses escape
       await pressKey(page, 'Escape');
 
-      // then the suggestions are cleared
-      expect(page.root.querySelector('.suggestions')).toBeNull();
+      // then the dialog is closed
+      expect(dialog.close).toHaveBeenCalled();
     });
 
     it('clears the suggestions when navigating elsewhere', async () => {
+      const dialog = page.root.querySelector('dialog');
+      dialog.close = jest.fn();
+
       // given the user entered a text into the searchbar
       await typeToSearch(page, 'test');
 
@@ -327,6 +336,9 @@ describe('pos-navigation', () => {
 
       // then the suggestions are cleared
       expect(page.root.querySelector('.suggestions')).toBeNull();
+
+      // and the dialog is closed
+      expect(dialog.close).toHaveBeenCalled();
     });
 
     it('navigates to selected suggestion when the form is submitted', async () => {
