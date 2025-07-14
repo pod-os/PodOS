@@ -17,10 +17,14 @@ export class PosNavigationBar {
   }
 
   render() {
+    const ariaLabel = this.current ? `${this.current.label()} (Click to search or enter URI)` : 'Search or enter URI';
+
     return (
       <section class="current">
         {this.current && this.searchIndexReady && <pos-make-findable uri={this.current.uri}></pos-make-findable>}
-        <button onClick={() => this.onClick()}>{this.current ? this.current.label() : 'Search or enter URI'}</button>
+        <button aria-label={ariaLabel} onClick={() => this.onClick()}>
+          {this.current ? this.current.label() : 'Search or enter URI'}
+        </button>
       </section>
     );
   }
