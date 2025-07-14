@@ -20,7 +20,7 @@ describe('pos-navigation-bar', () => {
     expect(page.root).toEqualHtml(`
       <pos-navigation-bar>
         <section class="current">
-          <button>
+          <button aria-label="Test Label (Click to search or enter URI)">
             Test Label
           </button>
         </section>
@@ -38,7 +38,7 @@ describe('pos-navigation-bar', () => {
     expect(page.root).toEqualHtml(`
     <pos-navigation-bar>
       <section class="current">
-        <button>
+        <button aria-label="Search or enter URI">
           Search or enter URI
         </button>
       </section>
