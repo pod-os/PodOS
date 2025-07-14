@@ -84,8 +84,9 @@ describe('pos-navigation-bar', () => {
     });
   });
 
-  it('emits navigation event on button click', async () => {
+  it('emits navigation event with current resource on button click', async () => {
     const mockThing = {
+      uri: 'https://test.pod/resource/1234567890',
       label: () => 'Test Label',
     };
 
@@ -103,6 +104,9 @@ describe('pos-navigation-bar', () => {
     expect(onNavigate).toHaveBeenCalledWith(
       expect.objectContaining({
         type: 'pod-os:navigate',
+        detail: expect.objectContaining({
+          uri: 'https://test.pod/resource/1234567890',
+        }),
       }),
     );
   });
