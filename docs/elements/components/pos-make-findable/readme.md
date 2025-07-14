@@ -23,7 +23,7 @@
 
 ### Used by
 
- - [pos-navigation](../pos-navigation)
+ - [pos-navigation-bar](../pos-navigation/bar)
 
 ### Depends on
 
@@ -36,7 +36,7 @@ graph TD;
   pos-make-findable --> pos-resource
   pos-make-findable --> pos-label
   pos-resource --> ion-progress-bar
-  pos-navigation --> pos-make-findable
+  pos-navigation-bar --> pos-make-findable
   style pos-make-findable fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
