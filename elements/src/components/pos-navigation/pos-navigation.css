@@ -75,3 +75,22 @@ dialog[open] {
   display: flex;
   z-index: var(--layer-top);
 }
+
+@media (max-width: 640px) {
+  .container {
+    position: unset;
+  }
+  dialog {
+    margin-top: var(--size-1);
+    top: 0;
+    width: 99dvw;
+    max-width: unset;
+    min-width: unset;
+    form {
+      input {
+        height: var(--size-10);
+        font-size: var(--scale-fluid-2);
+      }
+    }
+  }
+}
