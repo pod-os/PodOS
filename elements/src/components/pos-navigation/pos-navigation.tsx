@@ -1,5 +1,5 @@
 import { PodOS, SearchIndex, Thing } from '@pod-os/core';
-import { Component, Event, EventEmitter, h, Host, Listen, Prop, State, Watch } from '@stencil/core';
+import { Component, Event, EventEmitter, h, Listen, Prop, State, Watch } from '@stencil/core';
 import { debounceTime, Subject } from 'rxjs';
 
 import session from '../../store/session';
@@ -146,8 +146,8 @@ export class PosNavigation implements PodOsAware {
 
   render() {
     return (
-      <Host>
-        <div class="container">
+      <nav>
+        <search>
           <pos-navigation-bar
             searchIndexReady={this.searchIndex !== undefined}
             current={this.resource}
@@ -174,8 +174,8 @@ export class PosNavigation implements PodOsAware {
               ) : null}
             </form>
           </dialog>
-        </div>
-      </Host>
+        </search>
+      </nav>
     );
   }
 }

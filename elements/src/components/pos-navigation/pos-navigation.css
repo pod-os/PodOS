@@ -1,4 +1,4 @@
-.container {
+search {
   position: relative;
 }
 
@@ -77,7 +77,7 @@ dialog[open] {
 }
 
 @media (max-width: 640px) {
-  .container {
+  search {
     position: unset;
   }
   dialog {

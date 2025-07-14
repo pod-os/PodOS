@@ -19,13 +19,11 @@ describe('pos-navigation-bar', () => {
 
     expect(page.root).toEqualHtml(`
       <pos-navigation-bar>
-        <nav>
-          <section class="current">
-            <button>
-              Test Label
-            </button>
-          </section>
-        </nav>
+        <section class="current">
+          <button>
+            Test Label
+          </button>
+        </section>
       </pos-navigation-bar>
     `);
   });
@@ -39,13 +37,11 @@ describe('pos-navigation-bar', () => {
 
     expect(page.root).toEqualHtml(`
     <pos-navigation-bar>
-      <nav>
-        <section class="current">
-          <button>
-            Search or enter URI
-          </button>
-        </section>
-      </nav>
+      <section class="current">
+        <button>
+          Search or enter URI
+        </button>
+      </section>
     </pos-navigation-bar>
   `);
   });
