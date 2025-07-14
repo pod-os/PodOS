@@ -1,13 +1,15 @@
-import { test, expect } from "@playwright/test";
+import { expect } from "@playwright/test";
 
-test("show name as heading for a person", async ({ page }) => {
+import { test } from "./fixtures";
+
+test("show name as heading for a person", async ({ page, navigationBar }) => {
   // when opening PodOS Browser
   await page.goto("/");
 
   // and navigating to Alice's WebID
-  const navigationBar = page.getByPlaceholder("Enter URI");
-  await navigationBar.fill("http://localhost:4000/alice/profile/card#me");
-  await navigationBar.press("Enter");
+  await navigationBar.fillAndSubmit(
+    "http://localhost:4000/alice/profile/card#me",
+  );
 
   // then the heading shows Alice's name as heading
   const label = await page.getByRole("heading");
