@@ -15,38 +15,43 @@ interface NavigateEvent {
   styleUrl: 'pos-navigation.css',
 })
 export class PosNavigation implements PodOsAware {
-  @State() os: PodOS;
+  @State() private os: PodOS;
   private dialogRef?: HTMLDialogElement;
 
   @Event({ eventName: 'pod-os:init' }) subscribePodOs: PodOsEventEmitter;
+
+  /**
+   * Initial value of the navigation bar
+   */
   @Prop() uri: string = '';
 
-  @State() value: string = this.uri;
+  /**
+   * Current value of the input field
+   */
+  @State() private inputValue: string = this.uri;
 
   @Event({ eventName: 'pod-os:link' }) linkEmitter: EventEmitter;
 
   @State() searchIndex?: SearchIndex = undefined;
 
-  @State() suggestions = [];
+  @State() private suggestions = [];
 
-  @State() selectedIndex = -1;
+  @State() private selectedIndex = -1;
 
-  @State() resource: Thing = null;
+  @State() private resource: Thing = null;
 
   private readonly changeEvents = new Subject<void>();
   private debouncedSearch = null;
 
   @Watch('uri')
   @Watch('os')
-  async getResource() {
-    // TODO should this be done on componentWillLoad?
-    // TODO why can this.uri be null
+  updateResource(): void {
     this.resource = this.uri ? this.os?.store.get(this.uri) : null;
   }
 
   componentWillLoad() {
     subscribePodOs(this);
-    this.getResource();
+    this.updateResource();
     session.onChange('isLoggedIn', async isLoggedIn => {
       if (isLoggedIn) {
         await this.buildSearchIndex();
@@ -75,7 +80,7 @@ export class PosNavigation implements PodOsAware {
   openNavigationDialog(e: NavigateEvent) {
     this.resource = e.detail;
     if (e.detail) {
-      this.value = e.detail.uri;
+      this.inputValue = e.detail.uri;
       this.search();
     }
     this.dialogRef?.show();
@@ -90,7 +95,7 @@ export class PosNavigation implements PodOsAware {
   };
 
   private onChange(event) {
-    this.value = event.target.value;
+    this.inputValue = event.target.value;
     this.changeEvents.next();
   }
 
@@ -127,7 +132,7 @@ export class PosNavigation implements PodOsAware {
 
   private search() {
     if (this.searchIndex) {
-      this.suggestions = this.value ? this.searchIndex.search(this.value) : [];
+      this.suggestions = this.inputValue ? this.searchIndex.search(this.inputValue) : [];
     }
   }
 
@@ -135,7 +140,7 @@ export class PosNavigation implements PodOsAware {
     if (this.suggestions && this.selectedIndex > -1) {
       this.linkEmitter.emit(this.suggestions[this.selectedIndex].ref);
     } else {
-      this.linkEmitter.emit(this.value);
+      this.linkEmitter.emit(this.inputValue);
     }
   }
 
