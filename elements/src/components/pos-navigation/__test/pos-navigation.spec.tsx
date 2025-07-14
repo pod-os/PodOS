@@ -41,7 +41,6 @@ describe('pos-navigation', () => {
       },
     };
 
-    await page.rootInstance.updateResource('https://pod.example/resource');
     await page.waitForChanges();
 
     expect(page.root).toEqualHtml(`
@@ -57,6 +56,50 @@ describe('pos-navigation', () => {
         </search>
       </nav>
     </pos-navigation>`);
+  });
+
+  it('updates current resource when uri changes', async () => {
+    const page = await newSpecPage({
+      components: [PosNavigation],
+      html: `<pos-navigation uri="https://pod.example/resource" />`,
+      supportsShadowDom: false,
+    });
+
+    const mockResource = { fake: 'resource' };
+    page.rootInstance.os = {
+      store: {
+        get: jest.fn().mockReturnValue(mockResource),
+      },
+    };
+
+    page.rootInstance.uri = 'https://pod.example/resource';
+    page.rootInstance.updateResource(mockResource);
+
+    expect(page.rootInstance.resource).toEqual(mockResource);
+  });
+
+  it('sets current resource to null when uri is invalid', async () => {
+    const page = await newSpecPage({
+      components: [PosNavigation],
+      html: `<pos-navigation uri="https://pod.example/resource" />`,
+      supportsShadowDom: false,
+    });
+
+    const mockResource = { fake: 'resource' };
+    const get = jest.fn();
+    get.mockImplementation(() => {
+      throw new Error('Invalid URI');
+    });
+    page.rootInstance.os = {
+      store: {
+        get,
+      },
+    };
+
+    page.rootInstance.uri = 'irrelevant, since store mock throws error';
+    page.rootInstance.updateResource(mockResource);
+
+    expect(page.rootInstance.resource).toEqual(null);
   });
 
   it('opens the dialog when navigate event is emitted', async () => {
