@@ -12,7 +12,7 @@ button.main {
   width: var(--size-8);
   align-items: center;
   justify-content: center;
-  border-radius: var(--radius-xs);
+  border-radius: var(--radius-md);
   color: var(--pos-subtle-text-color);
   border: var(--size-px) dashed var(--pos-subtle-text-color);
   background-color: var(--pos-background-color);
