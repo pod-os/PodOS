@@ -86,9 +86,15 @@ export class PosNavigation implements PodOsAware {
   }
 
   @Listen('click', { target: 'document' })
+  closeDialog() {
+    this.dialogRef?.close();
+    this.selectedIndex = -1;
+  }
+
   @Listen('pod-os:link')
   clearSuggestions() {
     this.suggestions = [];
+    this.dialogRef?.close();
     this.selectedIndex = -1;
   }
 
@@ -100,7 +106,7 @@ export class PosNavigation implements PodOsAware {
   @Listen('keydown')
   handleKeyDown(ev: KeyboardEvent) {
     if (ev.key === 'Escape') {
-      this.clearSuggestions();
+      this.closeDialog();
     } else if (ev.key === 'ArrowDown') {
       ev.preventDefault();
       this.selectedIndex = Math.min(this.selectedIndex + 1, this.suggestions.length - 1);
