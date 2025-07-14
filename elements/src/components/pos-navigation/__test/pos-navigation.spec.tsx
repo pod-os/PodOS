@@ -14,14 +14,16 @@ describe('pos-navigation', () => {
     });
     expect(page.root).toEqualHtml(`
     <pos-navigation uri="https://pod.example/resource">
-        <div class="container">
+      <nav>
+        <search>
           <pos-navigation-bar></pos-navigation-bar>
           <dialog>
             <form method="dialog">
               <input enterkeyhint="search" placeholder="Search or enter URI" value="https://pod.example/resource">
             </form>
           </dialog>
-        </div>
+        </search>
+      </nav>
     </pos-navigation>`);
   });
 
@@ -44,14 +46,16 @@ describe('pos-navigation', () => {
 
     expect(page.root).toEqualHtml(`
     <pos-navigation uri="https://pod.example/resource">
-     <div class="container">
-        <pos-navigation-bar></pos-navigation-bar>
-        <dialog>
-          <form method="dialog">
-            <input enterkeyhint="search" placeholder="Search or enter URI" value="https://pod.example/resource"></input>
-          </form>
-        </dialog>
-      </div>
+      <nav>
+        <search>
+          <pos-navigation-bar></pos-navigation-bar>
+          <dialog>
+            <form method="dialog">
+              <input enterkeyhint="search" placeholder="Search or enter URI" value="https://pod.example/resource"></input>
+            </form>
+          </dialog>
+        </search>
+      </nav>
     </pos-navigation>`);
   });
 
@@ -146,14 +150,16 @@ describe('pos-navigation', () => {
     it('informs navigation bar as soon as search index is available', () => {
       expect(page.root).toEqualHtml(`
         <pos-navigation uri="https://pod.example/resource">
-          <div class="container">
-            <pos-navigation-bar searchIndexReady=""></pos-navigation-bar>
-              <dialog>
-                <form method="dialog">
-                  <input enterkeyhint="search" placeholder="Search or enter URI" value="https://pod.example/resource"></input>
-                </form>
-            </dialog>
-          </div>
+          <nav>
+            <search>
+              <pos-navigation-bar searchIndexReady=""></pos-navigation-bar>
+                <dialog>
+                  <form method="dialog">
+                    <input enterkeyhint="search" placeholder="Search or enter URI" value="https://pod.example/resource"></input>
+                  </form>
+              </dialog>
+            </search>
+          </nav>
         </pos-navigation>`);
     });
 

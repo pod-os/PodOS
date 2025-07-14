@@ -1,11 +1,6 @@
-nav {
-  display: flex;
-  height: var(--size-8);
-  gap: 0;
-}
-
 section.current {
   display: flex;
+  height: var(--size-8);
   flex-grow: 1;
   gap: 0;
   background-color: var(--pos-input-background-color);
