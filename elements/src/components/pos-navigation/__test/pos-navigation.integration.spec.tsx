@@ -2,11 +2,12 @@ import { SearchIndex, WebIdProfile } from '@pod-os/core';
 import { newSpecPage } from '@stencil/core/testing';
 import { fireEvent, getByText } from '@testing-library/dom';
 import { when } from 'jest-when';
-import session from '../../store/session';
-import { mockPodOS } from '../../test/mockPodOS';
-import { PosApp } from '../pos-app/pos-app';
-import { PosRichLink } from '../pos-rich-link/pos-rich-link';
-import { PosNavigation } from './pos-navigation';
+import session from '../../../store/session';
+import { mockPodOS } from '../../../test/mockPodOS';
+import { PosApp } from '../../pos-app/pos-app';
+import { PosRichLink } from '../../pos-rich-link/pos-rich-link';
+import { PosNavigation } from '../pos-navigation';
+import { typeToSearch } from './typeToSearch';
 
 describe('pos-navigation', () => {
   it('can search after login', async () => {
@@ -50,10 +51,7 @@ describe('pos-navigation', () => {
     await page.waitForChanges();
 
     // when the user types "test" into the navigation bar
-    const searchBar = page.root.querySelector('input');
-    // @ts-ignore
-    searchBar.value = 'test';
-    fireEvent(searchBar, new CustomEvent('change', { target: { value: 'test' } }));
+    await typeToSearch(page, 'test');
 
     // then a search is triggered
     expect(searchIndex.search).toHaveBeenCalledWith('test');

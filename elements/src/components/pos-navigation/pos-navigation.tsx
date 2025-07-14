@@ -1,5 +1,6 @@
 import { PodOS, SearchIndex, Thing } from '@pod-os/core';
 import { Component, Event, EventEmitter, h, Host, Listen, Prop, State, Watch } from '@stencil/core';
+import { debounceTime, Subject } from 'rxjs';
 
 import session from '../../store/session';
 import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../events/PodOsAware';
@@ -28,6 +29,9 @@ export class PosNavigation implements PodOsAware {
 
   @State() resource: Thing = null;
 
+  private readonly changeEvents = new Subject<void>();
+  private debouncedSearch = null;
+
   @Watch('uri')
   @Watch('os')
   async getResource() {
@@ -46,6 +50,11 @@ export class PosNavigation implements PodOsAware {
         this.clearSearchIndex();
       }
     });
+    this.debouncedSearch = this.changeEvents.pipe(debounceTime(300)).subscribe(() => this.search());
+  }
+
+  disconnectedCallback() {
+    this.debouncedSearch?.unsubscribe();
   }
 
   @Listen('pod-os:search:index-created')
@@ -73,8 +82,7 @@ export class PosNavigation implements PodOsAware {
 
   private onChange(event) {
     this.value = event.target.value;
-    // TODO add debounce
-    this.search();
+    this.changeEvents.next();
   }
 
   @Listen('click', { target: 'document' })
