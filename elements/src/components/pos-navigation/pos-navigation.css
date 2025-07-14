@@ -13,6 +13,8 @@ search {
 
 .suggestions {
   width: 100%;
+  overflow-y: auto;
+  max-height: 90dvh;
   li {
     padding: 1rem;
     background-color: var(--pos-background-color);
@@ -45,7 +47,6 @@ dialog {
   max-width: 100%;
   min-width: 100%;
   overflow: hidden;
-  overflow-y: scroll;
   max-height: 100dvh;
   background-color: var(--pos-background-color);
   color: var(--pos-normal-text-color);
