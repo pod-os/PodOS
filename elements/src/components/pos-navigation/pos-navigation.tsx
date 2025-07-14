@@ -5,6 +5,10 @@ import { debounceTime, Subject } from 'rxjs';
 import session from '../../store/session';
 import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../events/PodOsAware';
 
+interface NavigateEvent {
+  detail: Thing | null;
+}
+
 @Component({
   tag: 'pos-navigation',
   shadow: true,
@@ -68,7 +72,12 @@ export class PosNavigation implements PodOsAware {
   }
 
   @Listen('pod-os:navigate')
-  openNavigationDialog() {
+  openNavigationDialog(e: NavigateEvent) {
+    this.resource = e.detail;
+    if (e.detail) {
+      this.value = e.detail.uri;
+      this.search();
+    }
     this.dialogRef?.show();
   }
 

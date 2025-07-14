@@ -13,7 +13,7 @@ export class PosNavigationBar {
   @Event({ eventName: 'pod-os:navigate' }) navigate: EventEmitter;
 
   private onClick() {
-    this.navigate.emit();
+    this.navigate.emit(this.current);
   }
 
   render() {
