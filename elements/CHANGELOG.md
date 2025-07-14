@@ -9,7 +9,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### ⚠ BREAKING CHANGES
 
 - [pos-navigation](../docs/elements/components/pos-navigation)
-  - `pos-navigation-bar` has been renamed to `pos-navigation` and will undergo further major changes
+  - `pos-navigation-bar` has been renamed to `pos-navigation`
+  - `pos-navigation` is now a more complex navigation widget, not just an input field 
 
 ### Fixed
 
