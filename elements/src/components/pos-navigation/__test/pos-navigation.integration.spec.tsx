@@ -14,7 +14,7 @@ describe('pos-navigation', () => {
     const os = mockPodOS();
 
     // and it can build a search index
-    const searchIndex = { search: jest.fn() } as SearchIndex;
+    const searchIndex = { search: jest.fn() } as unknown as SearchIndex;
     os.buildSearchIndex.mockResolvedValue(searchIndex);
 
     // and a search for "test" gives a result
@@ -23,11 +23,11 @@ describe('pos-navigation', () => {
       .mockReturnValue([
         {
           ref: 'https://result.test',
-        },
+        } as any,
       ]);
 
     // and a user profile can be fetched
-    const profile = { fake: 'profile of the user' } as WebIdProfile;
+    const profile = { fake: 'profile of the user' } as unknown as WebIdProfile;
     os.fetchProfile.mockResolvedValue(profile);
 
     // and a page with a navigation bar
@@ -69,7 +69,7 @@ async function waitUntilLoggedIn() {
   await new Promise((resolve, reject) => {
     unsubscribe = session.onChange('isLoggedIn', isLoggedIn => {
       if (isLoggedIn) {
-        resolve();
+        resolve({});
       } else {
         reject();
       }
