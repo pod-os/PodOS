@@ -1,8 +1,9 @@
 import { newSpecPage } from '@stencil/core/testing';
 import { fireEvent } from '@testing-library/dom';
-import { mockSessionStore } from '../../test/mockSessionStore';
-import { PosNavigation } from './pos-navigation';
-import { pressKey } from '../../test/pressKey';
+import { mockSessionStore } from '../../../test/mockSessionStore';
+import { PosNavigation } from '../pos-navigation';
+import { pressKey } from '../../../test/pressKey';
+import { typeToSearch } from './typeToSearch';
 
 describe('pos-navigation', () => {
   it('renders navigation bar and search dialog', async () => {
@@ -85,7 +86,7 @@ describe('pos-navigation', () => {
     page.root.addEventListener('pod-os:link', linkEventListener);
 
     // when the user enters a URI into the searchbar
-    await type(page, 'https://resource.test/');
+    await typeToSearch(page, 'https://resource.test/');
 
     // and then submits the form
     const form = page.root.querySelector('form');
@@ -158,10 +159,10 @@ describe('pos-navigation', () => {
 
     it(' searches for the typed text and shows suggestions', async () => {
       // when the user enters a text into the searchbar
-      await type(page, 'test');
+      await typeToSearch(page, 'test');
 
       // then the search is triggered
-      expect(mockSearchIndex.search).toHaveBeenCalledWith('test');
+      expect(mockSearchIndex.search).toHaveBeenNthCalledWith(1, 'test');
 
       // and the results are shown as suggestions
       let suggestions = page.root.querySelector('.suggestions');
@@ -181,13 +182,13 @@ describe('pos-navigation', () => {
 
     it('clears the suggestions when nothing is entered', async () => {
       // given the user entered a text into the searchbar
-      await type(page, 'test');
+      await typeToSearch(page, 'test');
 
       // and suggestions are shown
       expect(page.root.querySelectorAll('.suggestions li')).toHaveLength(2);
 
       // when the input is cleared
-      await type(page, '');
+      await typeToSearch(page, '');
 
       // then no suggestions are shown
       expect(page.root.querySelector('.suggestions')).toBeNull();
@@ -196,7 +197,7 @@ describe('pos-navigation', () => {
     describe('keyboard selection', () => {
       it('selects the first suggestion when pressing key down', async () => {
         // when the user enters a text into the searchbar
-        await type(page, 'test');
+        await typeToSearch(page, 'test');
 
         // and then presses the down arrow key
         await pressKey(page, 'ArrowDown');
@@ -209,7 +210,7 @@ describe('pos-navigation', () => {
 
       it('selects the second suggestion when pressing key down twice', async () => {
         // when the user enters a text into the searchbar
-        await type(page, 'test');
+        await typeToSearch(page, 'test');
 
         // and then presses the down arrow key twice
         await pressKey(page, 'ArrowDown');
@@ -223,7 +224,7 @@ describe('pos-navigation', () => {
 
       it('selects the first suggestion when moving down twice than up', async () => {
         // when the user enters a text into the searchbar
-        await type(page, 'test');
+        await typeToSearch(page, 'test');
 
         // and then presses the down arrow key twice
         await pressKey(page, 'ArrowDown');
@@ -238,7 +239,7 @@ describe('pos-navigation', () => {
 
       it('cannot move further up than top result', async () => {
         // when the user enters a text into the searchbar
-        await type(page, 'test');
+        await typeToSearch(page, 'test');
 
         // and then presses the down arrow key twice
         await pressKey(page, 'ArrowDown');
@@ -253,7 +254,7 @@ describe('pos-navigation', () => {
 
       it('cannot move further down than the last result', async () => {
         // when the user enters a text into the searchbar
-        await type(page, 'test');
+        await typeToSearch(page, 'test');
 
         // and then presses the down arrow key twice
         await pressKey(page, 'ArrowDown');
@@ -270,7 +271,7 @@ describe('pos-navigation', () => {
 
     it('does not clear suggestions when clicked on itself', async () => {
       // given the user entered a text into the searchbar
-      await type(page, 'test');
+      await typeToSearch(page, 'test');
 
       // and suggestions are shown
       expect(page.root.querySelectorAll('.suggestions li')).toHaveLength(2);
@@ -286,7 +287,7 @@ describe('pos-navigation', () => {
 
     it('clears the suggestions when clicked elsewhere in the document', async () => {
       // given the user entered a text into the searchbar
-      await type(page, 'test');
+      await typeToSearch(page, 'test');
 
       // and suggestions are shown
       expect(page.root.querySelectorAll('.suggestions li')).toHaveLength(2);
@@ -301,7 +302,7 @@ describe('pos-navigation', () => {
 
     it('clears the suggestions when escape is pressed', async () => {
       // given the user entered a text into the searchbar
-      await type(page, 'test');
+      await typeToSearch(page, 'test');
 
       // and suggestions are shown
       expect(page.root.querySelectorAll('.suggestions li')).toHaveLength(2);
@@ -315,7 +316,7 @@ describe('pos-navigation', () => {
 
     it('clears the suggestions when navigating elsewhere', async () => {
       // given the user entered a text into the searchbar
-      await type(page, 'test');
+      await typeToSearch(page, 'test');
 
       // and suggestions are shown
       expect(page.root.querySelectorAll('.suggestions li')).toHaveLength(2);
@@ -334,7 +335,7 @@ describe('pos-navigation', () => {
       page.root.addEventListener('pod-os:link', linkEventListener);
 
       // when the user enters a text into the searchbar
-      await type(page, 'test');
+      await typeToSearch(page, 'test');
 
       // and then presses the down arrow key to select the first result
       await pressKey(page, 'ArrowDown');
@@ -392,11 +393,3 @@ describe('pos-navigation', () => {
     });
   });
 });
-
-async function type(page, text: string) {
-  const searchBar = page.root.querySelector('input');
-  searchBar.value = text;
-  // @ts-ignore
-  fireEvent(searchBar, new CustomEvent('change', { target: { value: text } }));
-  await page.waitForChanges();
-}
