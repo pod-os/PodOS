@@ -11,6 +11,9 @@ section.current {
   background-color: var(--pos-input-background-color);
   border-radius: var(--radius-md);
   width: 100%;
+  &:focus-within {
+    outline: var(--pos-input-focus-outline);
+  }
 }
 
 section.current button {
@@ -23,4 +26,7 @@ section.current button {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  &:focus {
+    text-decoration: underline;
+  }
 }
