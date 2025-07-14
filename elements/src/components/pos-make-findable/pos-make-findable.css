@@ -35,6 +35,9 @@ button.main {
     transform: scale(0.99);
     filter: brightness(90%);
   }
+  &:focus {
+    outline: var(--pos-input-focus-outline);
+  }
 }
 
 .options {
