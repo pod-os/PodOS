@@ -48,13 +48,12 @@ graph TD;
   pos-add-new-thing --> pos-new-thing-form
   pos-dialog --> ion-icon
   pos-new-thing-form --> pos-select-term
-  pos-navigation --> pos-make-findable
-  pos-navigation --> ion-searchbar
+  pos-navigation --> pos-navigation-bar
   pos-navigation --> pos-rich-link
+  pos-navigation-bar --> pos-make-findable
   pos-make-findable --> pos-resource
   pos-make-findable --> pos-label
   pos-resource --> ion-progress-bar
-  ion-searchbar --> ion-icon
   pos-rich-link --> pos-resource
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
