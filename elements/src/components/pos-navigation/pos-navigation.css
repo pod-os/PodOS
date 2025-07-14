@@ -8,9 +8,7 @@
   flex-direction: column;
   margin: 0;
   padding: 0;
-  z-index: var(--layer-top);
   list-style-type: none;
-  box-shadow: var(--shadow-xl);
 }
 
 .suggestions {
@@ -46,7 +44,7 @@ dialog {
   width: 100%;
   max-width: 100%;
   min-width: 100%;
-  min-height: var(--size-32);
+  min-height: var(--size-24);
   background-color: var(--pos-background-color);
   color: var(--pos-normal-text-color);
   border: var(--pos-border-color);
