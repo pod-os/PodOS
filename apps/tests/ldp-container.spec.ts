@@ -1,13 +1,13 @@
-import { test, expect } from "@playwright/test";
+import { expect } from "@playwright/test";
 
-test("show contents of an LDP container", async ({ page }) => {
+import { test } from "./fixtures";
+
+test("show contents of an LDP container", async ({ page, navigationBar }) => {
   // when opening PodOS Browser
   await page.goto("/");
 
   // and navigating to a ldp container resource
-  const navigationBar = page.getByPlaceholder("Enter URI");
-  await navigationBar.fill("http://localhost:4000/alice/container/");
-  await navigationBar.press("Enter");
+  await navigationBar.fillAndSubmit("http://localhost:4000/alice/container/");
 
   // then page shows the full container URL as heading
   const heading = await page.getByRole("heading", { level: 1 });

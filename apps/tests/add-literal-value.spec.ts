@@ -1,17 +1,17 @@
-import { expect, test } from "@playwright/test";
+import { expect } from "@playwright/test";
 import { signIn } from "./actions/signIn";
 import { alice } from "./fixtures/credentials";
 
-test("can add a literal value", async ({ page }) => {
+import { test } from "./fixtures";
+
+test("can add a literal value", async ({ page, navigationBar }) => {
   // when opening PodOS Browser
   await page.goto("/");
 
   // and navigating to a generic resource
-  const navigationBar = page.getByPlaceholder("Enter URI");
-  await navigationBar.fill(
+  await navigationBar.fillAndSubmit(
     "http://localhost:4000/alice/public/generic/resource#it",
   );
-  await navigationBar.press("Enter");
 
   // then I cannot see any input to add literal values
   const missingAddLiteralField = page.getByPlaceholder("Add literal");

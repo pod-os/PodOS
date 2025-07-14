@@ -1,9 +1,12 @@
-import { test, expect } from "@playwright/test";
+import { expect } from "@playwright/test";
+
+import { test } from "./fixtures";
 
 test("can access cached resources while offline", async ({
   page,
   context,
   browserName,
+  navigationBar,
 }) => {
   test.skip(
     browserName === "webkit",
@@ -17,11 +20,9 @@ test("can access cached resources while offline", async ({
   });
 
   await test.step("and the they have visited a resource", async () => {
-    const navigationBar = page.getByPlaceholder("Enter URI");
-    await navigationBar.fill(
+    await navigationBar.fillAndSubmit(
       "http://localhost:4000/alice/public/generic/resource#it",
     );
-    await navigationBar.press("Enter");
 
     const heading = page.getByRole("heading");
     await expect(heading).toHaveText("Something");
@@ -36,11 +37,9 @@ test("can access cached resources while offline", async ({
   });
 
   await test.step("and visits the previously loaded resource", async () => {
-    const navigationBar = page.getByPlaceholder("Enter URI");
-    await navigationBar.fill(
+    await navigationBar.fillAndSubmit(
       "http://localhost:4000/alice/public/generic/resource#it",
     );
-    await navigationBar.press("Enter");
   });
 
   await test.step("then the cached content is still accessible", async () => {

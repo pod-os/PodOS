@@ -1,17 +1,18 @@
-import { test, expect } from "@playwright/test";
+import { expect } from "@playwright/test";
+
+import { test } from "./fixtures";
 
 test("show generic information about unknown types of things", async ({
   page,
+  navigationBar,
 }) => {
   // when opening PodOS Browser
   await page.goto("/");
 
   // and navigating to a generic resource
-  const navigationBar = page.getByPlaceholder("Enter URI");
-  await navigationBar.fill(
+  await navigationBar.fillAndSubmit(
     "http://localhost:4000/alice/public/generic/resource#it",
   );
-  await navigationBar.press("Enter");
 
   // then page shows a heading with the resource name
   const heading = page.getByRole("heading");

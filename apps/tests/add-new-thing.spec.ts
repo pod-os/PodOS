@@ -1,17 +1,16 @@
-import { expect, test } from "@playwright/test";
+import { expect } from "@playwright/test";
 import { signIn } from "./actions/signIn";
 import { alice } from "./fixtures/credentials";
+import { test } from "./fixtures";
 
-test("can add a new thing", async ({ page }) => {
+test("can add a new thing", async ({ page, navigationBar }) => {
   // when opening PodOS Browser
   await page.goto("/");
 
   // and navigating to a container
-  const navigationBar = page.getByPlaceholder("Enter URI");
-  await navigationBar.fill(
+  await navigationBar.fillAndSubmit(
     "http://localhost:4000/alice/acb50d31-42af-4d4c-9ead-e2d5e70d7317/",
   );
-  await navigationBar.press("Enter");
 
   // when signing in as the pod owner
   await signIn(page, alice);
@@ -37,7 +36,7 @@ test("can add a new thing", async ({ page }) => {
   await page.keyboard.press("Enter");
 
   // then I am at the page showing the new thing
-  await expect(navigationBar).toHaveValue(
+  expect(await navigationBar.inputValue()).toEqual(
     "http://localhost:4000/alice/acb50d31-42af-4d4c-9ead-e2d5e70d7317/my-new-thing#it",
   );
 
