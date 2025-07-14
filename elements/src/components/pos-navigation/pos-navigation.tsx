@@ -46,7 +46,11 @@ export class PosNavigation implements PodOsAware {
   @Watch('uri')
   @Watch('os')
   updateResource(): void {
-    this.resource = this.uri ? this.os?.store.get(this.uri) : null;
+    try {
+      this.resource = this.uri ? this.os?.store.get(this.uri) : null;
+    } catch {
+      this.resource = null;
+    }
   }
 
   componentWillLoad() {
