@@ -10,7 +10,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - [pos-navigation](../docs/elements/components/pos-navigation)
   - `pos-navigation-bar` has been renamed to `pos-navigation`
-  - `pos-navigation` is now a more complex navigation widget, not just an input field 
+  - `pos-navigation` is now a more complex navigation widget, not just an input field.
+  - It is planned to evolve into an Omnibox for searching and navigating in PodOS Browser.
 
 ### Fixed
 
