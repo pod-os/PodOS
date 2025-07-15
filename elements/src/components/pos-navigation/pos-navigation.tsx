@@ -18,6 +18,8 @@ export class PosNavigation implements PodOsAware {
   @State() private os: PodOS;
   private dialogRef?: HTMLDialogElement;
 
+  private inputRef?: HTMLInputElement;
+
   @Event({ eventName: 'pod-os:init' }) subscribePodOs: PodOsEventEmitter;
 
   /**
@@ -87,6 +89,7 @@ export class PosNavigation implements PodOsAware {
       this.inputValue = e.detail.uri;
       this.search();
     }
+    this.inputRef?.select();
     this.dialogRef?.show();
   }
 
@@ -159,6 +162,7 @@ export class PosNavigation implements PodOsAware {
           <dialog ref={el => (this.dialogRef = el)}>
             <form method="dialog" onSubmit={() => this.onSubmit()}>
               <input
+                ref={el => (this.inputRef = el)}
                 enterkeyhint="search"
                 placeholder="Search or enter URI"
                 value={this.uri}

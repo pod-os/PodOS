@@ -229,9 +229,11 @@ describe('pos-navigation', () => {
       );
     });
 
-    it('searches for the current resource on navigate event', async () => {
+    it('selects all text & searches for the current resource on navigate event', async () => {
       const dialog = page.root.querySelector('dialog');
+      const input = page.root.querySelector('input');
       dialog.show = jest.fn();
+      input.select = jest.fn();
 
       // when a "navigate" event is emitted
       fireEvent(
@@ -241,18 +243,22 @@ describe('pos-navigation', () => {
 
       // then the dialog should be shown and search for the current resource
       expect(dialog.show).toHaveBeenCalled();
+      expect(input.select).toHaveBeenCalled();
       expect(mockSearchIndex.search).toHaveBeenNthCalledWith(1, 'https://pod.example/current-resource');
     });
 
-    it('does not search on navigate event if current resource is missing', async () => {
+    it('selects all text & does not search on navigate event if current resource is missing', async () => {
       const dialog = page.root.querySelector('dialog');
+      const input = page.root.querySelector('input');
       dialog.show = jest.fn();
+      input.select = jest.fn();
 
       // when a "navigate" event is emitted
       fireEvent(page.root, new CustomEvent('pod-os:navigate', null));
 
       // then the dialog should be shown but no search is triggered
       expect(dialog.show).toHaveBeenCalled();
+      expect(input.select).toHaveBeenCalled();
       expect(mockSearchIndex.search).not.toHaveBeenCalled();
     });
 
