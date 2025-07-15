@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Fixed
 
 - [pos-app-browser](../docs/elements/apps/pos-app-browser): prevent error message flashing up while uri is unset on hard refresh
+- [pos-rich-link](../docs/elements/components/pos-rich-link): max width on small screens reduced to 100%
 
 ## 0.26.0
 
