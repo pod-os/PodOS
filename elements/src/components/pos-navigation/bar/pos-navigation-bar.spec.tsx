@@ -3,6 +3,7 @@ import { newSpecPage } from '@stencil/core/testing';
 import { PosNavigationBar } from './pos-navigation-bar';
 import { screen } from '@testing-library/dom';
 import '@testing-library/jest-dom';
+import { pressKey } from '../../../test/pressKey';
 
 describe('pos-navigation-bar', () => {
   it('shows the resource label', async () => {
@@ -105,5 +106,67 @@ describe('pos-navigation-bar', () => {
         }),
       }),
     );
+  });
+
+  describe('keyboard shortcut', () => {
+    let page;
+    let onNavigate;
+    beforeEach(async () => {
+      page = await newSpecPage({
+        components: [PosNavigationBar],
+        template: () => <pos-navigation-bar />,
+        supportsShadowDom: false,
+      });
+      onNavigate = jest.fn();
+      page.root.addEventListener('pod-os:navigate', onNavigate);
+    });
+
+    it('emits navigation event when ctrl-k is pressed', async () => {
+      // when the user presses CTRL-K
+      await pressKey(page, 'k', { ctrlKey: true, bubbles: true });
+
+      // then navigate is emitted
+      expect(onNavigate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: 'pod-os:navigate',
+        }),
+      );
+    });
+
+    it('emits navigation event when cmd-k is pressed', async () => {
+      // when the user presses CTRL-K
+      await pressKey(page, 'k', { ctrlKey: false, metaKey: true, bubbles: true });
+
+      // then navigate is emitted
+      expect(onNavigate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: 'pod-os:navigate',
+        }),
+      );
+    });
+
+    it('does not emit navigation event if CTRL key is not pressed', async () => {
+      // when the user presses K without CTRL
+      await pressKey(page, 'k', { ctrlKey: false, bubbles: true });
+
+      // then navigate is not emitted
+      expect(onNavigate).not.toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: 'pod-os:navigate',
+        }),
+      );
+    });
+
+    it('does not emit navigation event if CTRL is pressed with other keys', async () => {
+      // when the user presses CTRL-J
+      await pressKey(page, 'j', { ctrlKey: true, bubbles: true });
+
+      // then navigate is not emitted
+      expect(onNavigate).not.toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: 'pod-os:navigate',
+        }),
+      );
+    });
   });
 });

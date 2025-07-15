@@ -1,4 +1,4 @@
-import { Component, Event, EventEmitter, h, Prop } from '@stencil/core';
+import { Component, Event, EventEmitter, h, Listen, Prop } from '@stencil/core';
 import { Thing } from '@pod-os/core';
 
 @Component({
@@ -14,6 +14,14 @@ export class PosNavigationBar {
 
   private onClick() {
     this.navigate.emit(this.current);
+  }
+
+  @Listen('keydown', { target: 'document' })
+  activate(e: KeyboardEvent) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      this.navigate.emit(this.current);
+    }
   }
 
   render() {
