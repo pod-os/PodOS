@@ -9,8 +9,8 @@ button#new {
   align-items: center;
   justify-content: center;
   border: none;
-  width: var(--scale-5);
-  height: var(--scale-5);
+  width: var(--size-10);
+  height: var(--size-10);
   background-color: var(--pos-primary-color);
   color: var(--pos-primary-text-color);
   font-size: var(--scale-6);

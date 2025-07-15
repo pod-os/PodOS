@@ -1,3 +1,7 @@
+:host {
+  --pos-navigation-bar-height: var(--size-10);
+}
+
 search {
   position: relative;
 }
@@ -41,7 +45,7 @@ search {
 
 dialog {
   position: absolute;
-  margin-top: calc(-1 * var(--size-8));
+  margin-top: calc(-1 * var(--pos-navigation-bar-height));
   padding: 0;
   width: 100%;
   max-width: 100%;
@@ -61,7 +65,8 @@ dialog {
     align-items: center;
     input {
       display: flex;
-      height: var(--size-8);
+      font-size: var(--scale-1);
+      height: var(--pos-navigation-bar-height);
       border-top-left-radius: var(--radius-md);
       border-top-right-radius: var(--radius-md);
       padding-left: var(--size-2);
@@ -88,13 +93,13 @@ dialog[open] {
   dialog {
     margin-top: var(--size-1);
     top: 0;
-    width: 99dvw;
+    width: 95dvw;
     max-width: unset;
     min-width: unset;
     form {
       input {
-        height: var(--size-10);
-        font-size: var(--scale-fluid-2);
+        height: var(--size-12);
+        font-size: var(--scale-fluid-3);
       }
     }
   }

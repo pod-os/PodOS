@@ -8,8 +8,8 @@ button.main {
   max-width: var(--size-40);
   flex-direction: row;
   overflow: hidden;
-  height: var(--size-8);
-  width: var(--size-8);
+  height: var(--pos-navigation-bar-height);
+  width: var(--pos-navigation-bar-height);
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-md);
@@ -99,7 +99,7 @@ button.open {
     background: var(--color-green-200);
   }
   width: var(--size-full);
-  height: var(--size-8);
+  height: var(--pos-navigation-bar-height);
   background: var(--pos-background-color);
   color: var(--pos-normal-text-color);
 
