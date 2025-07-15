@@ -23,7 +23,7 @@ p.content {
 
 a {
   color: var(--label-color);
-  max-width: var(--prose-lg);
+  max-width: min(100%, var(--prose-lg));
   text-decoration: underline;
   overflow: hidden;
   white-space: nowrap;
