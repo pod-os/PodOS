@@ -103,4 +103,31 @@ describe('pos-login', () => {
     </pos-login>
   `);
   });
+
+  it('renders custom logout slot', async () => {
+    session.state.isLoggedIn = true;
+    session.state.webId = 'https://pod.example/alice#me';
+    const page = await newSpecPage({
+      components: [PosLogin],
+      supportsShadowDom: false,
+      html: `<pos-login>
+        <span slot="if-logged-in">Custom component</span>
+      </pos-login>`,
+    });
+    expect(page.root).toEqualHtml(`
+    <pos-login>
+      <div class="container">
+        <span slot="if-logged-in">
+          Custom component
+        </span>
+      </div>
+      <pos-dialog>
+        <span slot="title">
+          Sign in to your Pod
+        </span>
+        <pos-login-form slot="content"></pos-login-form>
+      </pos-dialog>
+    </pos-login>
+  `);
+  });
 });

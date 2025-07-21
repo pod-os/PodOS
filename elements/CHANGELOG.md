@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - It is planned to evolve into an Omnibox for searching and navigating in PodOS Browser.
 - [pos-login](../docs/elements/components/pos-login)
   - will now open the login dialog when a `pod-os:login` event is received on the document
+  - components that will be shown when logged in can now be customized with the named slot `if-logged-in`
 
 ### Changes
 

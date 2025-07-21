@@ -1,5 +1,5 @@
 import { PodOS } from '@pod-os/core';
-import { Component, Event, EventEmitter, h, Host, Listen, State } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, h, Host, Listen, State } from '@stencil/core';
 
 import session from '../../store/session';
 
@@ -13,7 +13,13 @@ export class PosLogin {
 
   @State() os: PodOS;
 
+  @Element() host: HTMLElement;
+
+  @State()
+  private customLoggedInComponent: boolean = false;
+
   componentWillLoad() {
+    this.customLoggedInComponent = !!this.host.querySelector('[slot="if-logged-in"]');
     this.initializeOsEmitter.emit(this.setOs);
   }
 
@@ -50,17 +56,7 @@ export class PosLogin {
               Login
             </button>
           ) : (
-            [
-              <pos-resource uri={session.state.webId}>
-                <span class="user-data">
-                  <pos-picture />
-                  <pos-label />
-                </span>
-              </pos-resource>,
-              <button id="logout" onClick={() => this.logout()}>
-                Logout
-              </button>,
-            ]
+            this.loggedInComponents()
           )}
         </div>
         <pos-dialog ref={el => (this.dialog = el)}>
@@ -69,5 +65,23 @@ export class PosLogin {
         </pos-dialog>
       </Host>
     );
+  }
+
+  private loggedInComponents() {
+    return this.customLoggedInComponent ? <slot name="if-logged-in"></slot> : this.defaultLoggedInComponents();
+  }
+
+  private defaultLoggedInComponents() {
+    return [
+      <pos-resource uri={session.state.webId}>
+        <span class="user-data">
+          <pos-picture />
+          <pos-label />
+        </span>
+      </pos-resource>,
+      <button id="logout" onClick={() => this.logout()}>
+        Logout
+      </button>,
+    ];
   }
 }

@@ -10,19 +10,29 @@ import {
   title="Login"
 />
 
+> ATTENTION: To be able to log in from here, you have to go to the `Canvas` tab and click
+> the `Open canvas in new tab` button in the upper right corner of the page
 
 ## pos-login
 
 Allows the user to log in.
-
-> ATTENTION: To be able to log in from here, you have to go to the `Canvas` tab and click
-> the `Open canvas in new tab` button in the upper right corner of the page
 
 <Canvas
   withSource="open">
   <Story
     name="pos-login"
   >
-    {({uri}) => html`<pos-login />`}
+    {() => html`<pos-login />`}
+  </Story>
+</Canvas>
+
+## pos-login with custom content when logged in
+
+<Canvas
+  withSource="open">
+  <Story
+    name="pos-login-custom-if-logged-in"
+  >
+    {() => html`<pos-login><div slot="if-logged-in">This is shown when logged in.</div></pos-login>`}
   </Story>
 </Canvas>
