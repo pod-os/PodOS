@@ -1,4 +1,4 @@
-import { Component, h, Host } from '@stencil/core';
+import { Component, Event, EventEmitter, h, Host } from '@stencil/core';
 
 @Component({
   tag: 'pos-getting-started',
@@ -6,13 +6,22 @@ import { Component, h, Host } from '@stencil/core';
   shadow: true,
 })
 export class PosGettingStarted {
+  @Event({ eventName: 'pod-os:login' })
+  login: EventEmitter<void>;
+
   render() {
     return (
       <Host>
         <div>
           <h2>Getting started 🚀</h2>
           <p>🔎 Enter a URL into the above navigation bar to browse through the web of data. </p>
-          <p>🔐 Sign in to access private resources on your Solid Pod or those of your friends or coworkers.</p>
+          <p>
+            🔐{' '}
+            <button class="login" onClick={() => this.login.emit()}>
+              Sign in
+            </button>{' '}
+            to access private resources on your Solid Pod or those of your friends or coworkers.
+          </p>
         </div>
         <div>
           <p class="question">New to Solid?</p>

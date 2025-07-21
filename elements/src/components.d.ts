@@ -194,6 +194,10 @@ export interface PosDocumentCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosDocumentElement;
 }
+export interface PosGettingStartedCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosGettingStartedElement;
+}
 export interface PosImageCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosImageElement;
@@ -483,7 +487,18 @@ declare global {
         prototype: HTMLPosExampleResourcesElement;
         new (): HTMLPosExampleResourcesElement;
     };
+    interface HTMLPosGettingStartedElementEventMap {
+        "pod-os:login": void;
+    }
     interface HTMLPosGettingStartedElement extends Components.PosGettingStarted, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosGettingStartedElementEventMap>(type: K, listener: (this: HTMLPosGettingStartedElement, ev: PosGettingStartedCustomEvent<HTMLPosGettingStartedElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosGettingStartedElementEventMap>(type: K, listener: (this: HTMLPosGettingStartedElement, ev: PosGettingStartedCustomEvent<HTMLPosGettingStartedElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosGettingStartedElement: {
         prototype: HTMLPosGettingStartedElement;
@@ -1004,6 +1019,7 @@ declare namespace LocalJSX {
     interface PosExampleResources {
     }
     interface PosGettingStarted {
+        "onPod-os:login"?: (event: PosGettingStartedCustomEvent<void>) => void;
     }
     /**
      * Tries fetch an image with the solid authentication, and can visualize http errors like 403 or 404 if this fails.
