@@ -21,7 +21,7 @@ describe('pos-picture', () => {
     const picture = page.root.querySelector('pos-picture');
     expect(picture).toEqualHtml(`
       <pos-picture>
-      <mock:shadow-root></mock:shadow-root>
+      <mock:shadow-root><slot></slot></mock:shadow-root>
       </pos-picture>
     `);
     await loadingPromise;
@@ -74,7 +74,7 @@ describe('pos-picture', () => {
     const picture = page.root.querySelector('pos-picture');
     expect(picture).toEqualHtml(`
       <pos-picture>
-      <mock:shadow-root></mock:shadow-root>
+      <mock:shadow-root><slot></slot></mock:shadow-root>
       </pos-picture>
     `);
   });

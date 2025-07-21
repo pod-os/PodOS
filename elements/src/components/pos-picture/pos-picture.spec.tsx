@@ -9,7 +9,7 @@ describe('pos-picture', () => {
     });
     expect(page.root).toEqualHtml(`
       <pos-picture>
-        <mock:shadow-root></mock:shadow-root>
+        <mock:shadow-root><slot></slot></mock:shadow-root>
       </pos-picture>
   `);
   });
@@ -63,7 +63,24 @@ describe('pos-picture', () => {
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
       <pos-picture>
-        <mock:shadow-root></mock:shadow-root>
+        <mock:shadow-root><slot></slot></mock:shadow-root>
+      </pos-picture>
+  `);
+  });
+
+  it('renders slot as fallback when resource has no picture', async () => {
+    const page = await newSpecPage({
+      components: [PosPicture],
+      supportsShadowDom: false,
+      html: `<pos-picture>No picture, but this nice text</pos-picture>`,
+    });
+    await page.rootInstance.receiveResource({
+      picture: () => null,
+    });
+    await page.waitForChanges();
+    expect(page.root).toEqualHtml(`
+      <pos-picture>
+        No picture, but this nice text
       </pos-picture>
   `);
   });

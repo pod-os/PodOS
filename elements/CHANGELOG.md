@@ -12,14 +12,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - `pos-navigation-bar` has been renamed to `pos-navigation`
   - `pos-navigation` is now a more complex navigation widget, not just an input field.
   - It is planned to evolve into an Omnibox for searching and navigating in PodOS Browser.
-- [pos-login](../docs/elements/components/pos-login)
-  - will now open the login dialog when a `pod-os:login` event is received on the document
-  - will perform logout when a `pod-os:logout` event is received on the document
-  - components that will be shown when logged in can now be customized with the named slot `if-logged-in`
 
 ### Changes
 
 - [pos-list](../docs/elements/components/pos-list): Added storybook example using CSS grid and table aria roles
+- [pos-login](../docs/elements/components/pos-login)
+  - will now open the login dialog when a `pod-os:login` event is received on the document
+  - will perform logout when a `pod-os:logout` event is received on the document
+  - components that will be shown when logged in can now be customized with the named slot `if-logged-in`
+- [pos-picture](../docs/elements/components/pos-picture)
+  - Now renders its children as fallback content if no picture is available
 
 ### Fixed
 

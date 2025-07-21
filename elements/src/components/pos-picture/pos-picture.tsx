@@ -27,7 +27,7 @@ export class PosPicture implements ResourceAware {
 
   render() {
     const pic = this.resource ? this.resource.picture() : null;
-    if (!pic) return null;
+    if (!pic) return <slot></slot>;
     return <pos-image blurredBackground={this.blurredBackground} src={pic.url} alt={this.resource.label()}></pos-image>;
   }
 }
