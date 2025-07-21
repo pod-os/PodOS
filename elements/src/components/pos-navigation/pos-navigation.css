@@ -25,7 +25,7 @@ search {
     pos-rich-link {
       --background-color: inherit;
     }
-    &.selected {
+    &[aria-selected='true'] {
       background-color: var(--pos-primary-color);
       &:hover {
         background-color: var(--pos-primary-color);

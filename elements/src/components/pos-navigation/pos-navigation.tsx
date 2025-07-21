@@ -164,16 +164,26 @@ export class PosNavigation implements PodOsAware {
               <input
                 ref={el => (this.inputRef = el)}
                 enterkeyhint="search"
+                aria-label="Search or enter URI"
                 placeholder="Search or enter URI"
                 value={this.uri}
                 onChange={e => this.onChange(e)}
                 onInput={e => this.onChange(e)}
+                role="combobox"
+                aria-autocomplete="list"
+                aria-expanded={this.suggestions.length > 0}
+                aria-controls="suggestions-list"
+                aria-activedescendant={this.selectedIndex >= 0 ? `option-${this.selectedIndex}` : null}
               />
               {this.suggestions.length > 0 ? (
                 <div class="suggestions">
-                  <ol>
+                  <ol id="suggestions-list" role="listbox" aria-label="Search results">
                     {this.suggestions.map((it, index) => (
-                      <li class={index === this.selectedIndex ? 'selected' : ''}>
+                      <li
+                        id={`option-${index}`}
+                        role="option"
+                        aria-selected={index === this.selectedIndex ? 'true' : 'false'}
+                      >
                         <pos-rich-link uri={it.ref}></pos-rich-link>
                       </li>
                     ))}

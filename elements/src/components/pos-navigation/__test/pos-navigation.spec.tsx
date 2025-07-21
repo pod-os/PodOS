@@ -1,5 +1,5 @@
 import { newSpecPage } from '@stencil/core/testing';
-import { fireEvent } from '@testing-library/dom';
+import { fireEvent, screen } from '@testing-library/dom';
 import { mockSessionStore } from '../../../test/mockSessionStore';
 import { PosNavigation } from '../pos-navigation';
 import { pressKey } from '../../../test/pressKey';
@@ -19,7 +19,14 @@ describe('pos-navigation', () => {
           <pos-navigation-bar></pos-navigation-bar>
           <dialog>
             <form method="dialog">
-              <input enterkeyhint="search" placeholder="Search or enter URI" value="https://pod.example/resource">
+              <input
+                role="combobox"
+                aria-autocomplete="list"
+                aria-controls="suggestions-list"
+                aria-label="Search or enter URI"
+                enterkeyhint="search"
+                placeholder="Search or enter URI"
+                value="https://pod.example/resource">
             </form>
           </dialog>
         </search>
@@ -50,7 +57,14 @@ describe('pos-navigation', () => {
           <pos-navigation-bar></pos-navigation-bar>
           <dialog>
             <form method="dialog">
-              <input enterkeyhint="search" placeholder="Search or enter URI" value="https://pod.example/resource"></input>
+              <input
+                role="combobox"
+                aria-autocomplete="list"
+                aria-controls="suggestions-list"
+                aria-label="Search or enter URI"
+                enterkeyhint="search"
+                placeholder="Search or enter URI"
+                value="https://pod.example/resource">
             </form>
           </dialog>
         </search>
@@ -201,7 +215,13 @@ describe('pos-navigation', () => {
               <pos-navigation-bar searchIndexReady=""></pos-navigation-bar>
                 <dialog>
                   <form method="dialog">
-                    <input enterkeyhint="search" placeholder="Search or enter URI" value="https://pod.example/resource"></input>
+                    <input role="combobox"
+                            aria-autocomplete="list"
+                            aria-controls="suggestions-list"
+                            aria-label="Search or enter URI"
+                            enterkeyhint="search"
+                            placeholder="Search or enter URI"
+                            value="https://pod.example/resource">
                   </form>
               </dialog>
             </search>
@@ -219,16 +239,17 @@ describe('pos-navigation', () => {
       // and the results are shown as suggestions
       let suggestions = page.root.querySelector('.suggestions');
       expect(suggestions).toEqualHtml(
-        `<div class="suggestions">
-  <ol>
-    <li>
-      <pos-rich-link uri="https://result.test/1"></pos-rich-link>
-    </li>
-    <li>
-      <pos-rich-link uri="https://result.test/2"></pos-rich-link>
-    </li>
-  </ol>
-</div>`,
+        `
+        <div class="suggestions">
+          <ol aria-label="Search results" id="suggestions-list" role="listbox">
+            <li aria-selected="false" id="option-0" role="option">
+              <pos-rich-link uri="https://result.test/1"></pos-rich-link>
+            </li>
+            <li aria-selected="false" id="option-1" role="option">
+              <pos-rich-link uri="https://result.test/2"></pos-rich-link>
+            </li>
+          </ol>
+        </div>`,
       );
     });
 
@@ -270,7 +291,7 @@ describe('pos-navigation', () => {
       await typeToSearch(page, 'test');
 
       // and suggestions are shown
-      expect(page.root.querySelectorAll('.suggestions li')).toHaveLength(2);
+      expect(screen.getAllByRole('option')).toHaveLength(2);
 
       // when the input is cleared
       await typeToSearch(page, '');
@@ -288,9 +309,11 @@ describe('pos-navigation', () => {
         await pressKey(page, 'ArrowDown');
 
         // then the first suggestion is selected
-        let suggestions = page.root.querySelectorAll('.suggestions li');
-        expect(suggestions[0]).toHaveClass('selected');
-        expect(suggestions[1]).not.toHaveClass('selected');
+        const input = screen.getByRole('combobox');
+        expect(input).toEqualAttribute('aria-activedescendant', 'option-0');
+        const suggestions = screen.getAllByRole('option');
+        expect(suggestions[0]).toEqualAttribute('aria-selected', 'true');
+        expect(suggestions[1]).toEqualAttribute('aria-selected', 'false');
       });
 
       it('selects the second suggestion when pressing key down twice', async () => {
@@ -301,10 +324,12 @@ describe('pos-navigation', () => {
         await pressKey(page, 'ArrowDown');
         await pressKey(page, 'ArrowDown');
 
-        // then the first suggestion is selected
-        let suggestions = page.root.querySelectorAll('.suggestions li');
-        expect(suggestions[0]).not.toHaveClass('selected');
-        expect(suggestions[1]).toHaveClass('selected');
+        // then the second suggestion is selected
+        const input = screen.getByRole('combobox');
+        expect(input).toEqualAttribute('aria-activedescendant', 'option-1');
+        const suggestions = screen.getAllByRole('option');
+        expect(suggestions[0]).toEqualAttribute('aria-selected', 'false');
+        expect(suggestions[1]).toEqualAttribute('aria-selected', 'true');
       });
 
       it('selects the first suggestion when moving down twice than up', async () => {
@@ -317,9 +342,11 @@ describe('pos-navigation', () => {
         await pressKey(page, 'ArrowUp');
 
         // then the first suggestion is selected
-        let suggestions = page.root.querySelectorAll('.suggestions li');
-        expect(suggestions[0]).toHaveClass('selected');
-        expect(suggestions[1]).not.toHaveClass('selected');
+        const input = screen.getByRole('combobox');
+        expect(input).toEqualAttribute('aria-activedescendant', 'option-0');
+        const suggestions = screen.getAllByRole('option');
+        expect(suggestions[0]).toEqualAttribute('aria-selected', 'true');
+        expect(suggestions[1]).toEqualAttribute('aria-selected', 'false');
       });
 
       it('cannot move further up than top result', async () => {
@@ -332,9 +359,11 @@ describe('pos-navigation', () => {
         await pressKey(page, 'ArrowUp');
 
         // then the first suggestion is selected
-        let suggestions = page.root.querySelectorAll('.suggestions li');
-        expect(suggestions[0]).toHaveClass('selected');
-        expect(suggestions[1]).not.toHaveClass('selected');
+        const input = screen.getByRole('combobox');
+        expect(input).toEqualAttribute('aria-activedescendant', 'option-0');
+        const suggestions = screen.getAllByRole('option');
+        expect(suggestions[0]).toEqualAttribute('aria-selected', 'true');
+        expect(suggestions[1]).toEqualAttribute('aria-selected', 'false');
       });
 
       it('cannot move further down than the last result', async () => {
@@ -347,10 +376,12 @@ describe('pos-navigation', () => {
         await pressKey(page, 'ArrowDown');
 
         // then the first suggestion is selected
-        let suggestions = page.root.querySelectorAll('.suggestions li');
+        const input = screen.getByRole('combobox');
+        expect(input).toEqualAttribute('aria-activedescendant', 'option-1');
+        const suggestions = screen.getAllByRole('option');
         expect(suggestions).toHaveLength(2);
-        expect(suggestions[0]).not.toHaveClass('selected');
-        expect(suggestions[1]).toHaveClass('selected');
+        expect(suggestions[0]).toEqualAttribute('aria-selected', 'false');
+        expect(suggestions[1]).toEqualAttribute('aria-selected', 'true');
       });
     });
 
@@ -359,7 +390,7 @@ describe('pos-navigation', () => {
       await typeToSearch(page, 'test');
 
       // and suggestions are shown
-      expect(page.root.querySelectorAll('.suggestions li')).toHaveLength(2);
+      expect(screen.getAllByRole('option')).toHaveLength(2);
 
       // when the user clicks into the search bar
       const searchBar = page.root.querySelector('input');
@@ -367,7 +398,7 @@ describe('pos-navigation', () => {
       await page.waitForChanges();
 
       // then suggestions are shown
-      expect(page.root.querySelectorAll('.suggestions li')).toHaveLength(2);
+      expect(screen.getAllByRole('option')).toHaveLength(2);
     });
 
     it('closes the suggestions when clicked elsewhere in the document', async () => {
@@ -378,7 +409,7 @@ describe('pos-navigation', () => {
       await typeToSearch(page, 'test');
 
       // and suggestions are shown
-      expect(page.root.querySelectorAll('.suggestions li')).toHaveLength(2);
+      expect(screen.getAllByRole('option')).toHaveLength(2);
 
       // when the user clicks anywhere
       page.doc.click();
@@ -396,7 +427,7 @@ describe('pos-navigation', () => {
       await typeToSearch(page, 'test');
 
       // and suggestions are shown
-      expect(page.root.querySelectorAll('.suggestions li')).toHaveLength(2);
+      expect(screen.getAllByRole('option')).toHaveLength(2);
 
       // when the user presses escape
       await pressKey(page, 'Escape');
@@ -413,7 +444,7 @@ describe('pos-navigation', () => {
       await typeToSearch(page, 'test');
 
       // and suggestions are shown
-      expect(page.root.querySelectorAll('.suggestions li')).toHaveLength(2);
+      expect(screen.getAllByRole('option')).toHaveLength(2);
 
       // when the user clicks on a link
       fireEvent(page.root, new CustomEvent('pod-os:link', { detail: 'any' }));
