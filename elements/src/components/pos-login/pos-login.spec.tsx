@@ -72,6 +72,25 @@ describe('pos-login', () => {
     });
   });
 
+  it('logs out when logout event is received', async () => {
+    // given a user is logged in
+    session.state.isLoggedIn = true;
+    session.state.webId = 'https://pod.example/alice#me';
+    // and the component is on the page
+    const page = await newSpecPage({
+      components: [PosLogin],
+      html: `<pos-login></pos-login>`,
+    });
+    const logout = jest.fn();
+    await page.rootInstance.setOs({
+      logout,
+    });
+    // when the document receives a logout event
+    document.dispatchEvent(new CustomEvent('pod-os:logout'));
+    // then logout is performed
+    expect(logout).toHaveBeenCalled();
+  });
+
   it('renders logout button, label and picture for webId', async () => {
     session.state.isLoggedIn = true;
     session.state.webId = 'https://pod.example/alice#me';

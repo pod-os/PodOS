@@ -32,6 +32,7 @@ export class PosLogin {
     this.os.login(idpUrl);
   }
 
+  @Listen('pod-os:logout', { target: 'document' })
   logout() {
     this.os.logout();
   }
