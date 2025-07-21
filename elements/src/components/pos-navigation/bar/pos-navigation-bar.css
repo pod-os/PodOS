@@ -14,6 +14,9 @@ section.current {
 section.current button {
   cursor: pointer;
   font-size: var(--scale-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-grow: 1;
   background: none;
   color: var(--pos-normal-text-color);
@@ -24,5 +27,12 @@ section.current button {
   white-space: nowrap;
   &:focus {
     text-decoration: underline;
+  }
+  :first-child {
+    flex-grow: 1;
+  }
+  svg {
+    width: var(--size-6);
+    color: var(--pos-subtle-text-color);
   }
 }

@@ -22,12 +22,29 @@ describe('pos-navigation-bar', () => {
       <pos-navigation-bar>
         <section class="current">
           <button aria-label="Test Label (Click to search or enter URI)">
-            Test Label
+            <div>Test Label</div>
+            ${icon}
           </button>
         </section>
       </pos-navigation-bar>
     `);
   });
+
+  const icon = `
+    <svg
+      aria-hidden="true"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+      />
+    </svg>`;
 
   it('shows nothing if current resource is not set', async () => {
     const page = await newSpecPage({
@@ -40,7 +57,8 @@ describe('pos-navigation-bar', () => {
     <pos-navigation-bar>
       <section class="current">
         <button aria-label="Search or enter URI">
-          Search or enter URI
+          <div>Search or enter URI</div>
+          ${icon}
         </button>
       </section>
     </pos-navigation-bar>
