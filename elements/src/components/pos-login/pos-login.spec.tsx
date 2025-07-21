@@ -1,11 +1,19 @@
-jest.mock('../../store/session');
-
+import { PosDialog } from '../pos-dialog/pos-dialog';
+import { screen } from '@testing-library/dom';
 import { newSpecPage } from '@stencil/core/testing';
 import { PosLogin } from './pos-login';
 
 import session from '../../store/session';
 
+jest.mock('@pod-os/core', () => ({}));
+
+jest.mock('../../store/session');
+
 describe('pos-login', () => {
+  afterEach(() => {
+    session.dispose();
+  });
+
   it('renders login button', async () => {
     session.state.isLoggedIn = false;
     const page = await newSpecPage({
@@ -29,6 +37,39 @@ describe('pos-login', () => {
       </mock:shadow-root>
     </pos-login>
   `);
+  });
+
+  describe('login dialog', () => {
+    let dialog: PosDialog;
+    beforeEach(async () => {
+      // given a user is not logged in
+      session.state.isLoggedIn = false;
+
+      // and a login component
+      const page = await newSpecPage({
+        components: [PosLogin],
+        supportsShadowDom: false,
+        html: `<pos-login></pos-login>`,
+      });
+
+      // and a dialog that can eventually be opened
+      dialog = page.root.querySelector('pos-dialog') as unknown as PosDialog;
+      dialog.showModal = jest.fn();
+    });
+
+    it('is opened when button is clicked', async () => {
+      // when the login button is clicked
+      screen.getByRole('button').click();
+      // then the dialog is opened
+      expect(dialog.showModal).toHaveBeenCalled();
+    });
+
+    it('is opened on login event', async () => {
+      // when the document receives a login event
+      document.dispatchEvent(new CustomEvent('pod-os:login'));
+      // then the dialog is opened
+      expect(dialog.showModal).toHaveBeenCalled();
+    });
   });
 
   it('renders logout button, label and picture for webId', async () => {

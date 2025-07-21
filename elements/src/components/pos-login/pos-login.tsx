@@ -1,5 +1,5 @@
 import { PodOS } from '@pod-os/core';
-import { Component, Event, EventEmitter, h, Host, State } from '@stencil/core';
+import { Component, Event, EventEmitter, h, Host, Listen, State } from '@stencil/core';
 
 import session from '../../store/session';
 
@@ -32,6 +32,11 @@ export class PosLogin {
 
   private dialog: HTMLPosDialogElement;
 
+  @Listen('pod-os:login', { target: 'document' })
+  onLogin() {
+    this.openDialog();
+  }
+
   openDialog() {
     this.dialog.showModal();
   }
@@ -61,7 +66,7 @@ export class PosLogin {
             </button>
           )}
         </div>
-        <pos-dialog ref={el => (this.dialog = el as HTMLPosDialogElement)}>
+        <pos-dialog ref={el => (this.dialog = el)}>
           <span slot="title">Sign in to your Pod</span>
           <pos-login-form onPod-os:idp-url-selected={ev => this.login(ev)} slot="content" />
         </pos-dialog>
