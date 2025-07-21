@@ -12,19 +12,19 @@ export class PosDialog {
   private dialog: HTMLDialogElement;
 
   @Method()
-  showModal() {
+  async showModal() {
     this.dialog.showModal();
   }
 
   @Method()
-  close() {
+  async close() {
     this.dialog.close();
   }
 
   render() {
     return (
       <Host>
-        <dialog ref={el => (this.dialog = el)}>
+        <dialog ref={el => (this.dialog = el as HTMLDialogElement)}>
           <header>
             <slot name="title" />
             <button tabindex={-1} id="close" title="Close" onClick={() => this.close()}>
