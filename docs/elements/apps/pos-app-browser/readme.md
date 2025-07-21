@@ -57,11 +57,11 @@ graph TD;
   pos-rich-link --> pos-resource
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
+  pos-login --> pos-dialog
+  pos-login --> pos-login-form
   pos-login --> pos-resource
   pos-login --> pos-picture
   pos-login --> pos-label
-  pos-login --> pos-dialog
-  pos-login --> pos-login-form
   pos-picture --> pos-image
   pos-image --> ion-skeleton-text
   pos-image --> ion-icon

@@ -2,6 +2,13 @@
 <!-- Auto Generated Below -->
 
 
+## Events
+
+| Event          | Description | Type                |
+| -------------- | ----------- | ------------------- |
+| `pod-os:login` |             | `CustomEvent<void>` |
+
+
 ## Dependencies
 
 ### Used by
