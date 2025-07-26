@@ -3,6 +3,8 @@ import { LabelIndex, PodOS, Thing, WebIdProfile } from '@pod-os/core';
 import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../events/PodOsAware';
 import session from '../../store/session';
 
+import './shoelace';
+
 @Component({
   tag: 'pos-make-findable',
   styleUrl: 'pos-make-findable.css',
@@ -36,21 +38,6 @@ export class PosMakeFindable implements PodOsAware {
     this.unsubscribeSessionChange && this.unsubscribeSessionChange();
   }
 
-  @Listen('click', { target: 'document' })
-  hideOptions(event: MouseEvent) {
-    // @ts-ignore
-    if (!this.el.contains(event.target)) {
-      this.showOptions = false;
-    }
-  }
-
-  @Listen('keydown')
-  handleKeyDown(ev: KeyboardEvent) {
-    if (ev.key === 'Escape') {
-      this.showOptions = false;
-    }
-  }
-
   @Watch('uri')
   updateUri(uri: string) {
     this.thing = this.os.store.get(uri);
@@ -73,6 +60,7 @@ export class PosMakeFindable implements PodOsAware {
   private getLabelIndexes(profile: WebIdProfile) {
     if (profile) {
       this.indexes = profile.getPrivateLabelIndexes().map(it => this.os.store.get(it).assume(LabelIndex));
+      this.showOptions = this.indexes.length > 1;
       this.isIndexed = this.checkIfIndexed(this.uri);
     }
   }
@@ -83,9 +71,7 @@ export class PosMakeFindable implements PodOsAware {
       const index = this.indexes[0];
       await this.addToLabelIndex(index);
       this.indexUpdatedEmitter.emit(index);
-    } else if (this.indexes.length > 1) {
-      this.showOptions = !this.showOptions;
-    } else {
+    } else if (this.indexes.length === 0) {
       const index = await this.createDefaultLabelIndex();
       await this.addToLabelIndex(index);
       this.indexCreatedEmitter.emit(index);
@@ -99,8 +85,6 @@ export class PosMakeFindable implements PodOsAware {
     } catch (e) {
       this.errorEmitter.emit(e);
     }
-
-    this.showOptions = false;
   }
 
   private async createDefaultLabelIndex(): Promise<LabelIndex> {
@@ -117,43 +101,44 @@ export class PosMakeFindable implements PodOsAware {
     }
 
     const label = 'Make this findable';
-    return (
-      <Host>
-        <button
-          type="button"
-          aria-label={label}
-          class={{ main: true, open: this.showOptions, success: this.isIndexed }}
-          onClick={e => this.onClick(e)}
-          title=""
-        >
-          {this.isIndexed ? <IconSuccess /> : <IconMakeFindable />}
-          <p>{label}</p>
-        </button>
-        {this.showOptions && (
-          <div class="options">
-            <ol role="listbox">
-              {this.indexes.map((index: LabelIndex) => (
-                <li role="option">
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={index.contains(this.uri)}
-                      onChange={e => this.chooseOption(e, index)}
-                    />
-                    <pos-resource uri={index.uri} lazy={true}>
-                      <pos-label></pos-label>
-                    </pos-resource>
-                  </label>
-                </li>
-              ))}
-            </ol>
-          </div>
-        )}
-      </Host>
+    const button = (
+      <button
+        type="button"
+        slot="trigger"
+        aria-label={label}
+        class={{ main: true, success: this.isIndexed }}
+        onClick={e => this.onClick(e)}
+        title=""
+      >
+        {this.isIndexed ? <IconSuccess /> : <IconMakeFindable />}
+        <p>{label}</p>
+      </button>
     );
+    if (this.showOptions) {
+      return (
+        <Host>
+          <sl-dropdown>
+            {button}
+            <sl-menu role="listbox">
+              {this.indexes.map((index: LabelIndex) => (
+                <sl-menu-item role="option" value={index} type="checkbox" checked={index.contains(this.uri)}>
+                  <pos-resource uri={index.uri} lazy={true}>
+                    <pos-label></pos-label>
+                  </pos-resource>
+                </sl-menu-item>
+              ))}
+            </sl-menu>
+          </sl-dropdown>
+        </Host>
+      );
+    } else {
+      return button;
+    }
   }
 
-  private async chooseOption(e: Event, index: LabelIndex) {
+  @Listen('sl-select')
+  async onSelect(e: CustomEvent<{ item: { value: LabelIndex } }>) {
+    const index = e.detail.item.value;
     e.preventDefault();
     await this.addToLabelIndex(index);
     this.indexUpdatedEmitter.emit(index);

@@ -20,5 +20,4 @@ button {
 
 sl-dropdown {
   display: block;
-  --sl-color-primary-600: var(--pos-primary-color);
 }

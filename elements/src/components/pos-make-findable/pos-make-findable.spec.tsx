@@ -1,5 +1,4 @@
-import { pressKey } from '../../test/pressKey';
-
+jest.mock('./shoelace', () => ({}));
 jest.mock('@pod-os/core', () => ({}));
 
 import { newSpecPage, SpecPage } from '@stencil/core/testing';
@@ -455,9 +454,6 @@ describe('pos-make-findable', () => {
     });
 
     it('allows to choose the target index, if multiple exist', async () => {
-      // given the list does not show up yet
-      expect(screen.queryByRole('listbox')).toBeNull();
-
       // when the button is clicked
       const button = screen.getByRole('button');
       fireEvent.click(button);
@@ -469,24 +465,18 @@ describe('pos-make-findable', () => {
       // but options show up to choose one of the indexes
       const list = screen.getByRole('listbox');
       expect(list).toEqualHtml(`
-        <ol role="listbox">
-          <li role="option">
-        <label>
-          <input type="checkbox">
-          <pos-resource uri="https://pod.example/first-index" lazy>
-            <pos-label></pos-label>
-          </pos-resource>
-        </label>
-          </li>
-          <li role="option">
-        <label>
-          <input checked type="checkbox">
-          <pos-resource uri="https://pod.example/second-index" lazy>
-            <pos-label></pos-label>
-          </pos-resource>
-        </label>
-          </li>
-        </ol>`);
+        <sl-menu role="listbox">
+          <sl-menu-item role="option" type="checkbox">
+            <pos-resource lazy="" uri="https://pod.example/first-index">
+              <pos-label></pos-label>
+            </pos-resource>
+          </sl-menu-item>
+          <sl-menu-item checked="" role="option" type="checkbox">
+            <pos-resource lazy="" uri="https://pod.example/second-index">
+              <pos-label></pos-label>
+            </pos-resource>
+          </sl-menu-item>
+        </sl-menu>`);
     });
 
     it('add thing to the chosen label index', async () => {
@@ -502,8 +492,8 @@ describe('pos-make-findable', () => {
       // and an option is chosen
       const options = screen.getAllByRole('option');
       expect(options.length).toEqual(2);
-      const indexCheckbox = within(options[0]).getByRole('checkbox');
-      fireEvent.change(indexCheckbox);
+      const firstOption = options[0] as HTMLInputElement & { option: LabelIndex };
+      page.root.dispatchEvent(new CustomEvent('sl-select', { detail: { item: { value: firstOption.value } } }));
       await page.waitForChanges();
 
       // then the thing is added to the index
@@ -513,10 +503,6 @@ describe('pos-make-findable', () => {
       );
       await page.waitForChanges();
 
-      // and the options disappear
-      const list = screen.queryByRole('listbox');
-      expect(list).toBeNull();
-
       // and the state changes to indexed
       expect(page.rootInstance.isIndexed).toEqual(true);
 
@@ -524,68 +510,6 @@ describe('pos-make-findable', () => {
       expect(indexUpdateListener).toHaveBeenCalledWith(
         expect.objectContaining({ detail: expect.objectContaining({ uri: 'https://pod.example/first-index' }) }),
       );
-    });
-
-    it('closes the options, if clicked elsewhere', async () => {
-      // given the list does not show up yet
-      expect(screen.queryByRole('listbox')).toBeNull();
-
-      // when the button is clicked
-      const button = screen.getByRole('button');
-      fireEvent.click(button);
-      await page.waitForChanges();
-
-      // and then clicked elsewhere
-      // @ts-ignore
-      page.doc.click();
-      await page.waitForChanges();
-
-      // then nothing is added to an index
-      expect(mockOs.addToLabelIndex).not.toHaveBeenCalled();
-
-      // and the options disappear
-      const list = screen.queryByRole('listbox');
-      expect(list).toBeNull();
-    });
-
-    it('closes the options, if button is clicked again', async () => {
-      // given the list does not show up yet
-      expect(screen.queryByRole('listbox')).toBeNull();
-
-      // when the button is clicked
-      const button = screen.getByRole('button');
-      fireEvent.click(button);
-      await page.waitForChanges();
-
-      // and then clicked it again
-      // @ts-ignore
-      fireEvent.click(button);
-      await page.waitForChanges();
-
-      // then nothing is added to an index
-      expect(mockOs.addToLabelIndex).not.toHaveBeenCalled();
-
-      // and the options disappear
-      const list = screen.queryByRole('listbox');
-      expect(list).toBeNull();
-    });
-
-    it('closes the options, when ESC is pressed', async () => {
-      // given the list does not show up yet
-      expect(screen.queryByRole('listbox')).toBeNull();
-
-      // when the button is clicked
-      const button = screen.getByRole('button');
-      fireEvent.click(button);
-      await page.waitForChanges();
-
-      // and then clicked elsewhere
-      // @ts-ignore
-      await pressKey(page, 'Escape');
-
-      // then the options disappear
-      const list = screen.queryByRole('listbox');
-      expect(list).toBeNull();
     });
   });
 });

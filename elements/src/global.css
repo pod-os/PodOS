@@ -47,6 +47,9 @@ body {
   color: var(--pos-normal-text-color);
   --pos-error-background-color: var(--color-red-50);
   --pos-error-border-color: var(--color-red-600);
+
+  /* Shoelace overrides */
+  --sl-color-primary-600: var(--pos-primary-color);
 }
 
 @media (prefers-color-scheme: dark) {
