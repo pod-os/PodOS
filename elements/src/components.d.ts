@@ -155,6 +155,9 @@ export namespace Components {
     }
     interface PosTypeRouter {
     }
+    interface PosUserMenu {
+        "webId": string;
+    }
     interface PosValue {
         /**
           * URI of the predicate to get the value from
@@ -277,6 +280,10 @@ export interface PosTypeBadgesCustomEvent<T> extends CustomEvent<T> {
 export interface PosTypeRouterCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosTypeRouterElement;
+}
+export interface PosUserMenuCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosUserMenuElement;
 }
 export interface PosValueCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -881,6 +888,24 @@ declare global {
         prototype: HTMLPosTypeRouterElement;
         new (): HTMLPosTypeRouterElement;
     };
+    interface HTMLPosUserMenuElementEventMap {
+        "pod-os:logout": any;
+        "pod-os:link": any;
+    }
+    interface HTMLPosUserMenuElement extends Components.PosUserMenu, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosUserMenuElementEventMap>(type: K, listener: (this: HTMLPosUserMenuElement, ev: PosUserMenuCustomEvent<HTMLPosUserMenuElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosUserMenuElementEventMap>(type: K, listener: (this: HTMLPosUserMenuElement, ev: PosUserMenuCustomEvent<HTMLPosUserMenuElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLPosUserMenuElement: {
+        prototype: HTMLPosUserMenuElement;
+        new (): HTMLPosUserMenuElement;
+    };
     interface HTMLPosValueElementEventMap {
         "pod-os:resource": any;
     }
@@ -941,6 +966,7 @@ declare global {
         "pos-subjects": HTMLPosSubjectsElement;
         "pos-type-badges": HTMLPosTypeBadgesElement;
         "pos-type-router": HTMLPosTypeRouterElement;
+        "pos-user-menu": HTMLPosUserMenuElement;
         "pos-value": HTMLPosValueElement;
     }
 }
@@ -1159,6 +1185,11 @@ declare namespace LocalJSX {
     interface PosTypeRouter {
         "onPod-os:resource"?: (event: PosTypeRouterCustomEvent<any>) => void;
     }
+    interface PosUserMenu {
+        "onPod-os:link"?: (event: PosUserMenuCustomEvent<any>) => void;
+        "onPod-os:logout"?: (event: PosUserMenuCustomEvent<any>) => void;
+        "webId": string;
+    }
     interface PosValue {
         "onPod-os:resource"?: (event: PosValueCustomEvent<any>) => void;
         /**
@@ -1209,6 +1240,7 @@ declare namespace LocalJSX {
         "pos-subjects": PosSubjects;
         "pos-type-badges": PosTypeBadges;
         "pos-type-router": PosTypeRouter;
+        "pos-user-menu": PosUserMenu;
         "pos-value": PosValue;
     }
 }
@@ -1271,6 +1303,7 @@ declare module "@stencil/core" {
             "pos-subjects": LocalJSX.PosSubjects & JSXBase.HTMLAttributes<HTMLPosSubjectsElement>;
             "pos-type-badges": LocalJSX.PosTypeBadges & JSXBase.HTMLAttributes<HTMLPosTypeBadgesElement>;
             "pos-type-router": LocalJSX.PosTypeRouter & JSXBase.HTMLAttributes<HTMLPosTypeRouterElement>;
+            "pos-user-menu": LocalJSX.PosUserMenu & JSXBase.HTMLAttributes<HTMLPosUserMenuElement>;
             "pos-value": LocalJSX.PosValue & JSXBase.HTMLAttributes<HTMLPosValueElement>;
         }
     }
