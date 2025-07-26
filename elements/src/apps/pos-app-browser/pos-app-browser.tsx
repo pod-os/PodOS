@@ -1,4 +1,5 @@
 import { Component, h, Host, Prop, State } from '@stencil/core';
+import session from '../../store/session';
 
 @Component({
   tag: 'pos-app-browser',
@@ -26,7 +27,10 @@ export class PosAppBrowser {
               <header>
                 <pos-add-new-thing referenceUri={this.uri}></pos-add-new-thing>
                 <pos-navigation uri={this.uri === 'pod-os:dashboard' ? '' : this.uri}></pos-navigation>
-                <pos-login></pos-login>
+
+                <pos-login>
+                  <pos-user-menu webId={session.state.webId} slot="if-logged-in"></pos-user-menu>
+                </pos-login>
               </header>
               <main>{this.mainContent()}</main>
               <footer>

@@ -70,6 +70,19 @@ describe('pos-app-browser', () => {
     expect(navigation).toEqualAttribute('uri', 'https://resource.test');
   });
 
+  it('allows to log in', async () => {
+    const page = await newSpecPage({
+      components: [PosAppBrowser],
+      html: `<pos-app-browser />`,
+    });
+    const main = getByRole(page.root, 'banner');
+    const login = main.querySelector('pos-login');
+    expect(login).toEqualHtml(`
+    <pos-login>
+      <pos-user-menu slot="if-logged-in" webid=""></pos-user-menu>
+    </pos-login>`);
+  });
+
   it('uses type router for http(s) URIs ', async () => {
     const page = await newSpecPage({
       components: [PosAppBrowser],
