@@ -4,6 +4,9 @@
 
 @import '~pollen-css/dist/pollen.css';
 
+@import '~@shoelace-style/shoelace/dist/themes/light.css';
+@import '~@shoelace-style/shoelace/dist/themes/dark.css';
+
 body {
   height: 100dvh;
   margin: 0;
