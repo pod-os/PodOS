@@ -23,6 +23,7 @@ describe('pos-make-findable', () => {
     session.state.isLoggedIn = true;
     page = await newSpecPage({
       components: [PosMakeFindable],
+      supportsShadowDom: false,
       html: `<pos-make-findable uri="https://any.thing.example" />`,
     });
 
@@ -41,6 +42,7 @@ describe('pos-make-findable', () => {
     // and a make findable component for a thing
     page = await newSpecPage({
       components: [PosMakeFindable],
+      supportsShadowDom: false,
       html: `<pos-make-findable uri="https://thing.example#it"/>`,
     });
 
@@ -134,6 +136,7 @@ describe('pos-make-findable', () => {
     // and a make findable component for a thing
     page = await newSpecPage({
       components: [PosMakeFindable],
+      supportsShadowDom: false,
       html: `<pos-make-findable uri="https://thing.example#it"/>`,
     });
 
@@ -182,6 +185,7 @@ describe('pos-make-findable', () => {
     // and a make findable component for a thing
     page = await newSpecPage({
       components: [PosMakeFindable],
+      supportsShadowDom: false,
       html: `<pos-make-findable uri="https://thing.example#it"/>`,
     });
 
@@ -241,6 +245,7 @@ describe('pos-make-findable', () => {
     // and a make findable component for a thing
     page = await newSpecPage({
       components: [PosMakeFindable],
+      supportsShadowDom: false,
       html: `<pos-make-findable uri="https://thing.example#it"/>`,
     });
 
@@ -282,10 +287,11 @@ describe('pos-make-findable', () => {
       // and a make findable component for a thing
       page = await newSpecPage({
         components: [PosMakeFindable],
+        supportsShadowDom: false,
         html: `<pos-make-findable uri=""/>`,
       });
       // then nothing shows up
-      expect(page.root).toEqualHtml('<pos-make-findable uri=""/>');
+      expect(page.root.innerHTML).toEqualHtml('<!---->');
       page.rootInstance.disconnectedCallback();
     });
 
@@ -295,10 +301,11 @@ describe('pos-make-findable', () => {
       // and a make findable component for a thing
       page = await newSpecPage({
         components: [PosMakeFindable],
+        supportsShadowDom: false,
         html: `<pos-make-findable uri="https://thing.example#it"/>`,
       });
       // then nothing shows up
-      expect(page.root).toEqualHtml('<pos-make-findable uri="https://thing.example#it"/>');
+      expect(page.root.innerHTML).toEqualHtml('<!---->');
       page.rootInstance.disconnectedCallback();
     });
   });
@@ -309,6 +316,7 @@ describe('pos-make-findable', () => {
     // and a make findable component for a thing
     page = await newSpecPage({
       components: [PosMakeFindable],
+      supportsShadowDom: false,
       html: `<pos-make-findable uri="https://thing.example#it"/>`,
     });
 
@@ -331,7 +339,7 @@ describe('pos-make-findable', () => {
     page.rootInstance.receivePodOs(mockOs);
 
     // and nothing shows up yet
-    expect(page.root).toEqualHtml('<pos-make-findable uri="https://thing.example#it"/>');
+    expect(page.root.innerHTML).toEqualHtml('<!---->');
 
     // when the user signed in
     session.state.isLoggedIn = true;

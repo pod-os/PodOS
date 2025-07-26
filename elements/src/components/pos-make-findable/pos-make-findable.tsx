@@ -6,6 +6,7 @@ import session from '../../store/session';
 @Component({
   tag: 'pos-make-findable',
   styleUrl: 'pos-make-findable.css',
+  shadow: true,
 })
 export class PosMakeFindable implements PodOsAware {
   @Prop() uri!: string;

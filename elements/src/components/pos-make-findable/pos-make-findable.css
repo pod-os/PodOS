@@ -97,6 +97,7 @@ button.main:hover,
 button.open {
   &.success {
     background: var(--color-green-200);
+    color: var(--color-green-700);
   }
   width: var(--size-full);
   height: var(--pos-navigation-bar-height);
