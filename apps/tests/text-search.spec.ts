@@ -16,9 +16,7 @@ test.describe("Text search", () => {
     await test.step("when they search for a text and select the first result", async () => {
       const input = await navigationBar.fill("ometh");
 
-      const result = page
-        .getByRole("listitem")
-        .filter({ hasText: "Something" });
+      const result = page.getByRole("option").filter({ hasText: "Something" });
       await expect(result).toBeVisible();
       await input.press("ArrowDown");
       await input.press("Enter");
@@ -46,7 +44,7 @@ test.describe("Text search", () => {
     await test.step("and there is no search result for 'Banana'", async () => {
       await input.fill("Banana");
 
-      const result = page.getByRole("listitem").filter({ hasText: "Banana" });
+      const result = page.getByRole("option").filter({ hasText: "Banana" });
       await expect(result).not.toBeVisible();
     });
 
@@ -63,7 +61,7 @@ test.describe("Text search", () => {
     await test.step("then they will find it when retrying the search", async () => {
       await navigationBar.fill("Banana");
 
-      const result = page.getByRole("listitem").filter({ hasText: "Banana" });
+      const result = page.getByRole("option").filter({ hasText: "Banana" });
       await expect(result).toBeVisible();
     });
   });
