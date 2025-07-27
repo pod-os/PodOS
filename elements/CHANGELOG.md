@@ -13,6 +13,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - `pos-navigation` is now a more complex navigation widget, not just an input field.
   - It is planned to evolve into an Omnibox for searching and navigating in PodOS Browser.
 
+### Added
+
+- [pos-user-menu](../docs/elements/components/pos-user-menu): A menu that shows the user avatar and allows to log out and navigate to dashboard, settings and own user profile
+
 ### Changes
 
 - [pos-list](../docs/elements/components/pos-list): Added storybook example using CSS grid and table aria roles
@@ -22,6 +26,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - components that will be shown when logged in can now be customized with the named slot `if-logged-in`
 - [pos-picture](../docs/elements/components/pos-picture)
   - Now renders its children as fallback content if no picture is available
+- [pos-app-browser](../docs/elements/apps/pos-app-browser)
+  - now shows [pos-user-menu](../docs/elements/components/pos-user-menu) when signed in
+  - redesigned navigation bar
 
 ### Fixed
 
