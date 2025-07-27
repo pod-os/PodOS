@@ -36,7 +36,7 @@ export class PosUserMenu {
     return (
       <pos-resource uri={this.webId}>
         <sl-dropdown>
-          <button slot="trigger">
+          <button slot="trigger" aria-label="User menu">
             <pos-picture>
               <sl-avatar></sl-avatar>
             </pos-picture>
