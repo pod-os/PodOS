@@ -26,10 +26,10 @@ An input field to navigate to a specific resource.
 <Canvas
   withSource="open">
   <Story
-    name="pos-navigation-bar"
+    name="pos-navigation"
   >
     {({uri}) => html`
-      <pos-navigation-bar uri=${uri} />
+      <pos-navigation uri=${uri} />
     `}
   </Story>
 </Canvas>
@@ -44,14 +44,14 @@ For search to work, you need to be signed in and have a [private label index](ht
 <Canvas
   withSource="open">
   <Story
-    name="pos-navigation-bar with search"
+    name="pos-navigation with search"
   >
-    {({uri}) => html`
+    {() => html`
       <header>
         <pos-login />
       </header>
       <main>
-        <pos-navigation-bar
+        <pos-navigation
           uri="" />
       </main>
     `}
