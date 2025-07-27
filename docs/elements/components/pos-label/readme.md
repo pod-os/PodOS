@@ -24,6 +24,7 @@
  - [pos-login](../pos-login)
  - [pos-make-findable](../pos-make-findable)
  - [pos-rich-link](../pos-rich-link)
+ - [pos-user-menu](../pos-user-menu)
 
 ### Graph
 ```mermaid
@@ -36,6 +37,7 @@ graph TD;
   pos-login --> pos-label
   pos-make-findable --> pos-label
   pos-rich-link --> pos-label
+  pos-user-menu --> pos-label
   style pos-label fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

@@ -23,6 +23,7 @@
 - [pos-add-new-thing](../../components/pos-add-new-thing)
 - [pos-navigation](../../components/pos-navigation)
 - [pos-login](../../components/pos-login)
+- [pos-user-menu](../../components/pos-user-menu)
 - [pos-internal-router](../../components/pos-internal-router)
 - [pos-resource](../../components/pos-resource)
 - [pos-type-router](../../components/pos-type-router)
@@ -36,6 +37,7 @@ graph TD;
   pos-app-browser --> pos-add-new-thing
   pos-app-browser --> pos-navigation
   pos-app-browser --> pos-login
+  pos-app-browser --> pos-user-menu
   pos-app-browser --> pos-internal-router
   pos-app-browser --> pos-resource
   pos-app-browser --> pos-type-router
@@ -65,6 +67,9 @@ graph TD;
   pos-picture --> pos-image
   pos-image --> ion-skeleton-text
   pos-image --> ion-icon
+  pos-user-menu --> pos-resource
+  pos-user-menu --> pos-picture
+  pos-user-menu --> pos-label
   pos-internal-router --> pos-app-settings
   pos-internal-router --> pos-app-dashboard
   pos-app-settings --> pos-setting-offline-cache

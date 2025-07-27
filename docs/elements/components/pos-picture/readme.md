@@ -35,6 +35,7 @@
 
  - [pos-app-generic](../../apps/pos-app-generic)
  - [pos-login](../pos-login)
+ - [pos-user-menu](../pos-user-menu)
 
 ### Depends on
 
@@ -48,6 +49,7 @@ graph TD;
   pos-image --> ion-icon
   pos-app-generic --> pos-picture
   pos-login --> pos-picture
+  pos-user-menu --> pos-picture
   style pos-picture fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

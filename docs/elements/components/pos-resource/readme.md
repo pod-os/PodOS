@@ -44,6 +44,7 @@ Type: `Promise<void>`
  - [pos-login](../pos-login)
  - [pos-make-findable](../pos-make-findable)
  - [pos-rich-link](../pos-rich-link)
+ - [pos-user-menu](../pos-user-menu)
 
 ### Depends on
 
@@ -59,6 +60,7 @@ graph TD;
   pos-login --> pos-resource
   pos-make-findable --> pos-resource
   pos-rich-link --> pos-resource
+  pos-user-menu --> pos-resource
   style pos-resource fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
