@@ -30,9 +30,8 @@ export async function signIn(
   await page.getByRole("button", { name: "Authorize" }).click();
 
   await expect(page).toHaveURL(originalLocation);
-  const name = page
+  const userMenu = page
     .getByRole("banner")
-    .locator("pos-label")
-    .filter({ hasText: credentials.name });
-  await expect(name).toBeVisible();
+    .getByRole("button", { name: "User menu" });
+  await expect(userMenu).toBeVisible();
 }
