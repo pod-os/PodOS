@@ -9,7 +9,6 @@
 
 | Event             | Description | Type               |
 | ----------------- | ----------- | ------------------ |
-| `pod-os:link`     |             | `CustomEvent<any>` |
 | `pod-os:resource` |             | `CustomEvent<any>` |
 
 
@@ -17,18 +16,22 @@
 
 ### Used by
 
- - [pos-container-contents](.)
+ - [pos-app-ldp-container](../../apps/pos-app-ldp-container)
 
 ### Depends on
 
-- ion-icon
+- [pos-resource](../pos-resource)
+- [pos-container-item](.)
 
 ### Graph
 ```mermaid
 graph TD;
-  pos-container-item --> ion-icon
+  pos-container-contents --> pos-resource
   pos-container-contents --> pos-container-item
-  style pos-container-item fill:#f9f,stroke:#333,stroke-width:4px
+  pos-resource --> ion-progress-bar
+  pos-container-item --> ion-icon
+  pos-app-ldp-container --> pos-container-contents
+  style pos-container-contents fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
 ----------------------------------------------
