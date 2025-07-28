@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- [pos-rich-link](../docs/elements/components/pos-rich-link):
+  - can now receive a resource to use for the link
+  - can now follow `rel` and `rev` to discover a resource to use for the link
+
 ## 0.27.0
 
 ### ⚠ BREAKING CHANGES
@@ -17,7 +25,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - [pos-user-menu](../docs/elements/components/pos-user-menu): A menu that shows the user avatar and allows to log out and navigate to dashboard, settings and own user profile
 
-### Changes
+### Changed
 
 - [pos-list](../docs/elements/components/pos-list): Added storybook example using CSS grid and table aria roles
 - [pos-login](../docs/elements/components/pos-login)
@@ -29,12 +37,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - [pos-app-browser](../docs/elements/apps/pos-app-browser)
   - now shows [pos-user-menu](../docs/elements/components/pos-user-menu) when signed in
   - redesigned navigation bar
-
-### Changed
-
-- [pos-rich-link](../docs/elements/components/pos-rich-link):
-  - can now receive a resource to use for the link
-  - can now follow `rel` and `rev` to discover a resource to use for the link
 
 ### Fixed
 
