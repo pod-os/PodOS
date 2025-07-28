@@ -5,8 +5,6 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { Thing } from "@pod-os/core";
-export { Thing } from "@pod-os/core";
 export namespace Components {
     interface PosAddLiteralValue {
     }
