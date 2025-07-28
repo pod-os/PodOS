@@ -6,7 +6,6 @@ import { PosLabel } from '../pos-label/pos-label';
 import { PosResource } from '../pos-resource/pos-resource';
 import { PosRichLink } from './pos-rich-link';
 import { when } from 'jest-when';
-import { Component, h } from '@stencil/core';
 
 describe('pos-rich-link', () => {
   let os;
