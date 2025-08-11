@@ -1,17 +1,15 @@
-import {
-  EVENTS,
-  ISessionInfo,
-  Session,
-} from "@inrupt/solid-client-authn-browser";
+import { Session } from "@uvdsl/solid-oidc-client-browser";
 import { BehaviorSubject } from "rxjs";
-import { observeSession } from "./observeSession";
 
 export type AuthenticatedFetch = (
   url: RequestInfo,
   init?: RequestInit | undefined,
 ) => Promise<Response>;
 
-export type SessionInfo = ISessionInfo;
+export type SessionInfo = {
+  isLoggedIn: boolean;
+  webId?: string;
+};
 
 export interface PodOsSession {
   authenticatedFetch: AuthenticatedFetch;
@@ -19,9 +17,14 @@ export interface PodOsSession {
 
 export class BrowserSession implements PodOsSession {
   private readonly session: Session;
+  private onSessionRestoreCallback: (url: string) => void = () => {};
   private readonly _authenticatedFetch: AuthenticatedFetch;
 
-  private readonly sessionInfo$: BehaviorSubject<SessionInfo>;
+  private readonly sessionInfo$: BehaviorSubject<SessionInfo> =
+    new BehaviorSubject<SessionInfo>({
+      isLoggedIn: false,
+      webId: undefined,
+    });
 
   get authenticatedFetch(): (
     url: RequestInfo,
@@ -32,38 +35,33 @@ export class BrowserSession implements PodOsSession {
 
   constructor() {
     this.session = new Session();
-    this.sessionInfo$ = observeSession(this.session);
-    this._authenticatedFetch = this.session.fetch;
+    this._authenticatedFetch = this.session.authFetch.bind(this.session);
   }
 
   async handleIncomingRedirect(restorePreviousSession = false) {
-    return this.session.handleIncomingRedirect({
-      restorePreviousSession,
+    await this.session.handleRedirectFromLogin();
+    if (restorePreviousSession) {
+      await this.session.restore();
+      if (this.session.isActive) {
+        this.onSessionRestoreCallback(window.location.href);
+      }
+    }
+    this.sessionInfo$.next({
+      isLoggedIn: this.session.isActive,
+      webId: this.session.webId,
     });
   }
 
   async login(oidcIssuer: string) {
-    return this.session.login({
-      oidcIssuer,
-      redirectUrl: window.location.href,
-      clientName: `Pod OS at ${window.location.host}`,
-    });
+    return this.session.login(oidcIssuer, window.location.href);
   }
 
   async logout() {
-    return this.session.logout();
-  }
-
-  /**
-   * @deprecated use observeSession instead
-   */
-  trackSession(callback: (session: SessionInfo) => unknown) {
-    this.session.events.on(EVENTS.LOGIN, () => callback(this.session.info));
-    this.session.events.on(EVENTS.LOGOUT, () => callback(this.session.info));
-    this.session.events.on(EVENTS.SESSION_RESTORED, () =>
-      callback(this.session.info),
-    );
-    callback(this.session.info);
+    await this.session.logout();
+    this.sessionInfo$.next({
+      isLoggedIn: false,
+      webId: undefined,
+    });
   }
 
   observeSession(): BehaviorSubject<SessionInfo> {
@@ -71,6 +69,6 @@ export class BrowserSession implements PodOsSession {
   }
 
   onSessionRestore(callback: (url: string) => void) {
-    this.session.events.on(EVENTS.SESSION_RESTORED, callback);
+    this.onSessionRestoreCallback = callback;
   }
 }
