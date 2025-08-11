@@ -109,16 +109,6 @@ export class PodOS {
   }
 
   /**
-   * @deprecated use observeSession instead
-   * @param callback
-   */
-  trackSession(callback: (session: SessionInfo) => unknown): void {
-    return this.session.trackSession((session) => {
-      callback(session);
-    });
-  }
-
-  /**
    * returns a behavior subject that can be used to observe changes in the session state
    */
   observeSession(): BehaviorSubject<SessionInfo> {
