@@ -72,8 +72,8 @@ export class PodOS {
       .subscribe();
   }
 
-  handleIncomingRedirect(restorePreviousSession = false) {
-    this.session.handleIncomingRedirect(restorePreviousSession);
+  async handleIncomingRedirect(restorePreviousSession = false) {
+    return this.session.handleIncomingRedirect(restorePreviousSession);
   }
 
   fetch(uri: string) {

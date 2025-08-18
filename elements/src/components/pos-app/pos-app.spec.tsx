@@ -203,6 +203,24 @@ describe('pos-app', () => {
         }),
       );
     });
+
+    it('recovers from incoming redirect failure', async () => {
+      mockHandleIncomingRedirect.mockRejectedValue(new Error('Simulated failure handling incoming redirect'));
+      page = await newSpecPage({
+        components: [PosApp],
+        html: `<pos-app>app body</pos-app>`,
+        supportsShadowDom: true,
+      });
+      expect(page.rootInstance.loading).toBe(false);
+      expect(page.root).toEqualHtml(`
+        <pos-app>
+          <mock:shadow-root>
+            <slot></slot>
+          </mock:shadow-root>
+          app body
+        </pos-app>
+      `);
+    });
   });
 
   describe('local settings', () => {
@@ -262,6 +280,65 @@ describe('pos-app', () => {
       });
 
       page.rootInstance.disconnectedCallback();
+    });
+  });
+
+  describe('loading state', () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
+
+    it('indicates loading when signed in, until profile has been fetched', async () => {
+      let finishFetchingProfile = null;
+      (createPodOS as jest.Mock).mockReturnValue({
+        handleIncomingRedirect: jest.fn(),
+        observeSession: () => new BehaviorSubject({ isLoggedIn: true, webId: 'https://pod.test/alice#me' }),
+        onSessionRestore: () => null,
+        fetchProfile: () => new Promise(resolve => (finishFetchingProfile = resolve)),
+      });
+      const page = await newSpecPage({
+        components: [PosApp],
+        html: `<pos-app><div>app body</div></pos-app>`,
+        supportsShadowDom: true,
+      });
+      expect(page.rootInstance.loading).toBe(true);
+      expect(page.root).toEqualHtml(`
+        <pos-app>
+          <mock:shadow-root>
+            <ion-progress-bar type="indeterminate"></ion-progress-bar>
+          </mock:shadow-root>
+          <div>
+            app body
+          </div>
+        </pos-app>
+      `);
+      finishFetchingProfile();
+      await page.waitForChanges();
+      expect(page.rootInstance.loading).toBe(false);
+    });
+
+    it('shows slot directly, when not signed in', async () => {
+      let finishFetchingProfile = null;
+      (createPodOS as jest.Mock).mockReturnValue({
+        handleIncomingRedirect: jest.fn(),
+        observeSession: () => new BehaviorSubject({ isLoggedIn: false, webId: '' }),
+        onSessionRestore: () => null,
+        fetchProfile: null,
+      });
+      const page = await newSpecPage({
+        components: [PosApp],
+        html: `<pos-app>app body</pos-app>`,
+        supportsShadowDom: true,
+      });
+      expect(page.rootInstance.loading).toBe(false);
+      expect(page.root).toEqualHtml(`
+        <pos-app>
+          <mock:shadow-root>
+            <slot></slot>
+          </mock:shadow-root>
+          app body
+        </pos-app>
+      `);
     });
   });
 });
