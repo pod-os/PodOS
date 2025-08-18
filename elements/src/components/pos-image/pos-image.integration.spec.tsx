@@ -31,11 +31,14 @@ describe('pos-image', () => {
     expect(URL.createObjectURL).toHaveBeenCalledWith(pngBlob);
     expect(page.root).toEqualHtml(`
     <pos-app>
-        <pos-image src="https://pod.test/image.png">
-            <mock:shadow-root>
-              <img src="blob:fake-png-data" />
-            </mock:shadow-root>
-        </pos-image>
+      <mock:shadow-root>
+        <slot></slot>
+      </mock:shadow-root>
+      <pos-image src="https://pod.test/image.png">
+          <mock:shadow-root>
+            <img src="blob:fake-png-data" />
+          </mock:shadow-root>
+      </pos-image>
     </pos-app>
   `);
   });
@@ -54,10 +57,13 @@ describe('pos-image', () => {
     });
     expect(page.root).toEqualHtml(`
       <pos-app>
+        <mock:shadow-root>
+          <slot></slot>
+        </mock:shadow-root>
         <pos-image src="https://pod.test/image.png">
-            <mock:shadow-root>
-              <ion-skeleton-text animated></ion-skeleton-text>
-            </mock:shadow-root>
+          <mock:shadow-root>
+            <ion-skeleton-text animated></ion-skeleton-text>
+          </mock:shadow-root>
         </pos-image>
     </pos-app>
   `);
@@ -75,10 +81,13 @@ describe('pos-image', () => {
     });
     expect(page.root).toEqualHtml(`
       <pos-app>
+        <mock:shadow-root>
+          <slot></slot>
+        </mock:shadow-root>
         <pos-image src="https://pod.test/image.png">
-            <mock:shadow-root>
-              <img src="https://pod.test/image.png" />
-            </mock:shadow-root>
+          <mock:shadow-root>
+            <img src="https://pod.test/image.png" />
+          </mock:shadow-root>
         </pos-image>
     </pos-app>
   `);
@@ -101,6 +110,9 @@ describe('pos-image', () => {
     });
     expect(page.root).toEqualHtml(`
       <pos-app>
+        <mock:shadow-root>
+          <slot></slot>
+        </mock:shadow-root>
         <pos-image src="https://pod.test/image.png">
             <mock:shadow-root>
               <div>
