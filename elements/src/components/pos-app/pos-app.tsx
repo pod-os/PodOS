@@ -18,6 +18,7 @@ interface RequestModuleEvent extends CustomEvent {
 
 @Component({
   tag: 'pos-app',
+  shadow: true,
 })
 export class PosApp {
   @State() os: PodOS;
@@ -34,7 +35,10 @@ export class PosApp {
   @State()
   private unsubscribeSettings: () => void;
 
-  componentWillLoad() {
+  @State()
+  private loading = true;
+
+  async componentWillLoad() {
     this.unsubscribeSettings = localSettings.on('set', () => {
       this.os = createPodOS(localSettings.state);
     });
@@ -42,7 +46,11 @@ export class PosApp {
     this.os.onSessionRestore(url => {
       this.sessionRestoredEmitter.emit({ url });
     });
-    this.os.handleIncomingRedirect(this.restorePreviousSession);
+    try {
+      await this.os.handleIncomingRedirect(this.restorePreviousSession);
+    } catch (e) {
+      console.error(e);
+    }
     this.os
       .observeSession()
       .pipe(takeUntil(this.disconnected$))
@@ -53,6 +61,7 @@ export class PosApp {
           session.state.profile = profile;
         }
         session.state.isLoggedIn = sessionInfo.isLoggedIn;
+        this.loading = false;
       });
   }
 
@@ -80,6 +89,6 @@ export class PosApp {
   }
 
   render() {
-    return <slot />;
+    return this.loading ? <ion-progress-bar type="indeterminate"></ion-progress-bar> : <slot></slot>;
   }
 }
