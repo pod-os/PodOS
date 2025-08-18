@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+### ⚠ BREAKING CHANGES
+
+- - [pos-app](../docs/elements/components/pos-app):
+  - If the user is logged in, pos-app now shows only shows the child contents after the user profile has been loaded. A loading indicator is shown until then.
+  - This also involves pos-app creating a shadow root which might affect styling and dom encapsulation
+  - The underlying authentication lib has been changed to [@uvdsl/solid-oidc-client-browser](https://github.com/uvdsl/solid-oidc-client-browser), which handles login and session refresh differently. Please consult the library documentation for details.
+
 ### Changed
 
 - [pos-rich-link](../docs/elements/components/pos-rich-link):
