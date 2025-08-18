@@ -18,34 +18,25 @@ describe('pos-login-form', () => {
     </label>
     <input id="idpUrl" list="suggestedIssuers" placeholder="Type to search..." type="url" required value="">
     <datalist id="suggestedIssuers">
-      <option value="https://solidcommunity.net">
+      <option value="https://solidcommunity.net/">
         solidcommunity.net
       </option>
-      <option value="https://solidweb.org">
-        solidweb.org
-      </option>
-      <option value="https://solidweb.me">
+      <option value="https://solidweb.me/">
         solidweb.me
-      </option>
-      <option value="https://inrupt.net">
-        inrupt.net
       </option>
       <option value="https://login.inrupt.com">
         Inrupt PodSpaces
       </option>
-      <option value="https://trinpod.us">
+      <option value="https://trinpod.us/">
         trinpod.us
       </option>
-      <option value="https://use.id">
-        use.id
+      <option value="https://trinpod.eu/">
+        trinpod.eu
       </option>
-      <option value="https://solid.redpencil.io">
+      <option value="https://solid.redpencil.io/">
         redpencil.io
       </option>
-      <option value="https://datapod.grant.io">
-        Data Pod (grant.io)
-      </option>
-      <option value="https://teamid.live">
+      <option value="https://teamid.live/">
         teamid.live
       </option>
     </datalist>

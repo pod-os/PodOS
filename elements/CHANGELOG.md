@@ -18,6 +18,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - [pos-rich-link](../docs/elements/components/pos-rich-link):
   - can now receive a resource to use for the link
   - can now follow `rel` and `rev` to discover a resource to use for the link
+- [pos-login-form](../docs/elements/components/pos-login-form):
+  - update the list of Identity Providers (IdPs) to contain trailing slashes where needed
+  - removed IdPs that are outdated or do not work anymore with the new auth lib
 
 ## 0.27.0
 

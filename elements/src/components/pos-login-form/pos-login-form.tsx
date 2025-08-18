@@ -36,16 +36,13 @@ export class PosLoginForm {
           placeholder="Type to search..."
         />
         <datalist id="suggestedIssuers">
-          <option value="https://solidcommunity.net">solidcommunity.net</option>
-          <option value="https://solidweb.org">solidweb.org</option>
-          <option value="https://solidweb.me">solidweb.me</option>
-          <option value="https://inrupt.net">inrupt.net</option>
+          <option value="https://solidcommunity.net/">solidcommunity.net</option>
+          <option value="https://solidweb.me/">solidweb.me</option>
           <option value="https://login.inrupt.com">Inrupt PodSpaces</option>
-          <option value="https://trinpod.us">trinpod.us</option>
-          <option value="https://use.id">use.id</option>
-          <option value="https://solid.redpencil.io">redpencil.io</option>
-          <option value="https://datapod.grant.io">Data Pod (grant.io)</option>
-          <option value="https://teamid.live">teamid.live</option>
+          <option value="https://trinpod.us/">trinpod.us</option>
+          <option value="https://trinpod.eu/">trinpod.eu</option>
+          <option value="https://solid.redpencil.io/">redpencil.io</option>
+          <option value="https://teamid.live/">teamid.live</option>
         </datalist>
         <input id="login" type="submit" value="Login" disabled={!this.canSubmit} />
       </form>
