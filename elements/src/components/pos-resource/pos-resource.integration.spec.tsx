@@ -25,6 +25,9 @@ describe('pos-resource with a pos-label child', () => {
     });
     expect(page.root).toEqualHtml(`
     <pos-app>
+        <mock:shadow-root>
+            <slot></slot>
+        </mock:shadow-root>
         <pos-resource uri="https://resource.test">
           <mock:shadow-root>
             <slot></slot>
@@ -60,6 +63,9 @@ describe('pos-resource with a pos-label child', () => {
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
     <pos-app>
+        <mock:shadow-root>
+          <slot></slot>
+        </mock:shadow-root>
         <pos-resource uri="https://resource.test">
           <mock:shadow-root>
             <slot></slot>
@@ -88,15 +94,18 @@ describe('pos-resource with a pos-label child', () => {
     });
     expect(page.root).toEqualHtml(`
       <pos-app>
-          <pos-resource uri="https://resource.test">
+        <mock:shadow-root>
+          <slot></slot>
+        </mock:shadow-root>
+        <pos-resource uri="https://resource.test">
+          <mock:shadow-root>
+            <ion-progress-bar type="indeterminate"></ion-progress-bar>
+          </mock:shadow-root>
+          <pos-label>
             <mock:shadow-root>
-              <ion-progress-bar type="indeterminate"></ion-progress-bar>
             </mock:shadow-root>
-            <pos-label>
-              <mock:shadow-root>
-              </mock:shadow-root>
-            </pos-label>
-          </pos-resource>
+          </pos-label>
+        </pos-resource>
       </pos-app>
   `);
     await loadingPromise;
@@ -115,6 +124,9 @@ describe('pos-resource with a pos-label child', () => {
     });
     expect(page.root).toEqualHtml(`
 <pos-app>
+  <mock:shadow-root>
+    <slot></slot>
+  </mock:shadow-root>
     <pos-resource uri="https://resource.test">
       <mock:shadow-root>
         <details class="error">
@@ -164,9 +176,16 @@ describe('pos-resource with a pos-label child', () => {
     });
     expect(page.root).toEqualHtml(`
     <pos-app>
-        <pos-resource uri="https://resource.test">
+      <mock:shadow-root>
+        <slot></slot>
+      </mock:shadow-root>
+      <pos-resource uri="https://resource.test">
+        <mock:shadow-root>
+          <slot></slot>
+        </mock:shadow-root>
+        <pos-label>
           <mock:shadow-root>
-            <slot></slot>
+            Test Resource
           </mock:shadow-root>
           <pos-label>
             <mock:shadow-root>
@@ -176,14 +195,10 @@ describe('pos-resource with a pos-label child', () => {
               <mock:shadow-root>
                 Test Resource
               </mock:shadow-root>
-              <pos-label>
-                <mock:shadow-root>
-                  Test Resource
-                </mock:shadow-root>
-              </pos-label>
             </pos-label>
           </pos-label>
-        </pos-resource>
+        </pos-label>
+      </pos-resource>
     </pos-app>
   `);
   });
@@ -211,9 +226,16 @@ describe('pos-resource with a pos-label child', () => {
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
     <pos-app>
-        <pos-resource uri="https://resource.test">
+      <mock:shadow-root>
+        <slot></slot>
+      </mock:shadow-root>
+      <pos-resource uri="https://resource.test">
+        <mock:shadow-root>
+          <slot></slot>
+        </mock:shadow-root>
+        <pos-label>
           <mock:shadow-root>
-            <slot></slot>
+            Test Resource
           </mock:shadow-root>
           <pos-label>
             <mock:shadow-root>
@@ -223,14 +245,10 @@ describe('pos-resource with a pos-label child', () => {
               <mock:shadow-root>
                 Test Resource
               </mock:shadow-root>
-              <pos-label>
-                <mock:shadow-root>
-                  Test Resource
-                </mock:shadow-root>
-              </pos-label>
             </pos-label>
           </pos-label>
-        </pos-resource>
+        </pos-label>
+      </pos-resource>
     </pos-app>
   `);
   });
@@ -253,16 +271,19 @@ describe('pos-resource with a pos-label child', () => {
     });
     expect(page.root).toEqualHtml(`
     <pos-app>
-        <pos-resource lazy uri="https://resource.test">
+      <mock:shadow-root>
+        <slot></slot>
+      </mock:shadow-root>
+      <pos-resource lazy uri="https://resource.test">
+        <mock:shadow-root>
+          <slot></slot>
+        </mock:shadow-root>
+        <pos-label>
           <mock:shadow-root>
-            <slot></slot>
+            Test Resource
           </mock:shadow-root>
-          <pos-label>
-            <mock:shadow-root>
-              Test Resource
-            </mock:shadow-root>
-          </pos-label>
-        </pos-resource>
+        </pos-label>
+      </pos-resource>
     </pos-app>
   `);
   });
@@ -287,32 +308,35 @@ describe('pos-resource with a pos-label child', () => {
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
     <pos-app>
-        <pos-resource lazy uri="https://resource.test">
+      <mock:shadow-root>
+        <slot></slot>
+      </mock:shadow-root>
+      <pos-resource lazy uri="https://resource.test">
+        <mock:shadow-root>
+          <details class="error">
+            <summary title="Click to expand">
+              ⚠ Sorry, something went wrong
+            </summary>
+            <p>
+              Status:
+            </p>
+            <p>
+              not found
+            </p>
+            <p>
+              You can try to open the link outside PodOS:
+              <a href="https://resource.test">
+                https://resource.test
+              </a>
+            </p>
+          </details>
+        </mock:shadow-root>
+        <pos-label>
           <mock:shadow-root>
-            <details class="error">
-              <summary title="Click to expand">
-                ⚠ Sorry, something went wrong
-              </summary>
-              <p>
-                Status:
-              </p>
-              <p>
-                not found
-              </p>
-              <p>
-                You can try to open the link outside PodOS:
-                <a href="https://resource.test">
-                  https://resource.test
-                </a>
-              </p>
-            </details>
+            Test Resource
           </mock:shadow-root>
-          <pos-label>
-            <mock:shadow-root>
-              Test Resource
-            </mock:shadow-root>
-          </pos-label>
-        </pos-resource>
+        </pos-label>
+      </pos-resource>
     </pos-app>
   `);
   });
@@ -340,16 +364,19 @@ describe('pos-resource with a pos-label child', () => {
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
     <pos-app>
-        <pos-resource lazy uri="https://resource.test">
+      <mock:shadow-root>
+        <slot></slot>
+      </mock:shadow-root>
+      <pos-resource lazy uri="https://resource.test">
+        <mock:shadow-root>
+          <slot></slot>
+        </mock:shadow-root>
+        <pos-label>
           <mock:shadow-root>
-            <slot></slot>
+            Updated Test Resource
           </mock:shadow-root>
-          <pos-label>
-            <mock:shadow-root>
-              Updated Test Resource
-            </mock:shadow-root>
-          </pos-label>
-        </pos-resource>
+        </pos-label>
+      </pos-resource>
     </pos-app>
   `);
   });

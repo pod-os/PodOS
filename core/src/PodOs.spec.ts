@@ -1,6 +1,8 @@
 import { BrowserSession, OfflineCache, PodOS } from "./index";
 import { of } from "rxjs";
 
+jest.mock("./authentication", () => ({}));
+
 describe("PodOS", () => {
   let mockSession: BrowserSession;
 
