@@ -39,8 +39,8 @@ export class PosLoginForm {
           <option value="https://solidcommunity.net/">solidcommunity.net</option>
           <option value="https://solidweb.me/">solidweb.me</option>
           <option value="https://login.inrupt.com">Inrupt PodSpaces</option>
-          <option value="https://trinpod.us/">trinpod.us</option>
-          <option value="https://trinpod.eu/">trinpod.eu</option>
+          <option value="https://trinpod.us">trinpod.us</option>
+          <option value="https://trinpod.eu">trinpod.eu</option>
           <option value="https://solid.redpencil.io/">redpencil.io</option>
           <option value="https://teamid.live/">teamid.live</option>
         </datalist>
