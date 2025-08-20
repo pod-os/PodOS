@@ -27,10 +27,10 @@ describe('pos-login-form', () => {
       <option value="https://login.inrupt.com">
         Inrupt PodSpaces
       </option>
-      <option value="https://trinpod.us/">
+      <option value="https://trinpod.us">
         trinpod.us
       </option>
-      <option value="https://trinpod.eu/">
+      <option value="https://trinpod.eu">
         trinpod.eu
       </option>
       <option value="https://solid.redpencil.io/">
