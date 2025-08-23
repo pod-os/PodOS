@@ -480,10 +480,18 @@ describe("Store", () => {
           sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
           sym("http://recipe.test/RecipeClass"),
         ),
+        quad(
+          sym("http://movie.test/1"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://movie.test/MovieClass"),
+        ),
       ]);
       const members = store.findMembers("http://schema.org/Recipe");
       expect(members).toContain("http://recipe.test/1");
       expect(members).toContain("http://recipe.test/2");
+      expect(members).toEqual(
+        expect.not.arrayContaining(["http://movie.test/1"]),
+      );
     });
   });
 });
