@@ -71,7 +71,7 @@ describe('pos-list', () => {
     expect(el.querySelectorAll('pos-resource')).toHaveLength(2);
   });
 
-  it('renders if-typeof objects', async () => {
+  it('renders the template for all things of the given type', async () => {
     const page = await newSpecPage({
       components: [PosList],
       html: `
