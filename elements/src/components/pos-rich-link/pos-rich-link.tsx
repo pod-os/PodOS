@@ -1,5 +1,5 @@
 import { Relation, Thing } from '@pod-os/core';
-import { Component, Event, EventEmitter, h, Prop, State } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, h, Prop, State } from '@stencil/core';
 import { ResourceAware, ResourceEventEmitter, subscribeResource } from '../events/ResourceAware';
 
 @Component({
@@ -32,7 +32,13 @@ export class PosRichLink implements ResourceAware {
   @State() followPredicate: boolean = false;
   @State() error: string = null;
 
+  @Element() host: HTMLElement;
+
+  @State()
+  private customContent: boolean = false;
+
   componentWillLoad() {
+    this.customContent = !!this.host.lastElementChild || this.host.textContent.trim() != '';
     if (!this.uri) subscribeResource(this);
   }
 
@@ -64,8 +70,8 @@ export class PosRichLink implements ResourceAware {
   };
 
   render() {
-    const content = (uri: string) => (
-      <p class="content">
+    const content = (uri: string) =>
+      this.customContent ? (
         <a
           href={uri}
           onClick={e => {
@@ -73,12 +79,23 @@ export class PosRichLink implements ResourceAware {
             this.linkEmitter.emit(uri);
           }}
         >
-          <pos-label />
+          <slot></slot>
         </a>
-        <span class="url">{new URL(uri).host}</span>
-        <pos-description />
-      </p>
-    );
+      ) : (
+        <p class="content">
+          <a
+            href={uri}
+            onClick={e => {
+              e.preventDefault();
+              this.linkEmitter.emit(uri);
+            }}
+          >
+            <pos-label />
+          </a>
+          <span class="url">{new URL(uri).host}</span>
+          <pos-description />
+        </p>
+      );
 
     if (this.error) {
       return this.error;
