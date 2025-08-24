@@ -22,7 +22,7 @@ export class PosTypeBadges implements ResourceAware {
 
   receiveResource = (resource: Thing) => {
     this.data = resource.types();
-    this.typeLabels = [...new Set(resource.types().map(it => it.label))];
+    this.typeLabels = [...new Set(resource.types().map(it => it.label).filter(label => typeof label === 'string'))] as string[];
   };
 
   toggleDetails() {
