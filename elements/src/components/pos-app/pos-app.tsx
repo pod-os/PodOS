@@ -4,6 +4,7 @@ import sessionStore from '../../store/session';
 import { localSettings } from '../../store/settings';
 import { createPodOS } from '../../pod-os';
 import { Subject, takeUntil } from 'rxjs';
+import { BrowserSession } from '../../authentication';
 
 interface InitializeOsEvent extends CustomEvent {
   detail: Function;
@@ -39,15 +40,16 @@ export class PosApp {
   private loading = true;
 
   async componentWillLoad() {
+    const session = new BrowserSession();
     this.unsubscribeSettings = localSettings.on('set', () => {
-      this.os = createPodOS(localSettings.state);
+      this.os = createPodOS(session, localSettings.state);
     });
-    this.os = createPodOS(localSettings.state);
-    this.os.onSessionRestore(url => {
+    this.os = createPodOS(session, localSettings.state);
+    session.onSessionRestore(url => {
       this.sessionRestoredEmitter.emit({ url });
     });
     try {
-      await this.os.handleIncomingRedirect(this.restorePreviousSession);
+      await session.handleIncomingRedirect(this.restorePreviousSession);
     } catch (e) {
       console.error(e);
     }

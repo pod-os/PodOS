@@ -1,18 +1,19 @@
-import { BrowserSession } from "./BrowserSession";
-import { Session } from "@uvdsl/solid-oidc-client-browser";
-import { firstValueFrom } from "rxjs";
-
-jest.mock("@uvdsl/solid-oidc-client-browser", () => ({
+jest.mock('@uvdsl/solid-oidc-client-browser', () => ({
   Session: jest.fn(),
 }));
 
-describe("BrowserSession", () => {
+import { BrowserSession } from './BrowserSession';
+import { Session } from '@uvdsl/solid-oidc-client-browser';
+
+import { firstValueFrom } from 'rxjs';
+
+describe('BrowserSession', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  describe("authenticated fetch", () => {
-    it("calls the session auth fetch", () => {
+  describe('authenticated fetch', () => {
+    it('calls the session auth fetch', () => {
       const authFetch = jest.fn();
       (Session as jest.Mock).mockImplementation(() => {
         return {
@@ -21,30 +22,27 @@ describe("BrowserSession", () => {
       });
 
       const session = new BrowserSession();
-      session.authenticatedFetch("some-url");
-      expect(authFetch).toHaveBeenCalledWith("some-url");
+      session.authenticatedFetch('some-url');
+      expect(authFetch).toHaveBeenCalledWith('some-url');
     });
 
-    it("`this` is bound to session object", () => {
+    it('`this` is bound to session object', () => {
       const authFetch = function () {
-        // @ts-expect-error testing that this is correctly bound here
         return this.internalValue;
       };
       (Session as jest.Mock).mockImplementation(() => {
         return {
-          internalValue: "internal-value",
+          internalValue: 'internal-value',
           authFetch,
         };
       });
 
       const session = new BrowserSession();
-      expect(session.authenticatedFetch("irrelevant")).toEqual(
-        "internal-value",
-      );
+      expect(session.authenticatedFetch('irrelevant')).toEqual('internal-value');
     });
   });
 
-  describe("handleIncomingRedirect", () => {
+  describe('handleIncomingRedirect', () => {
     let session: BrowserSession;
     let handleRedirectFromLogin: jest.Mock;
     let restore: jest.Mock;
@@ -55,59 +53,57 @@ describe("BrowserSession", () => {
         return {
           authFetch: jest.fn(),
           isActive: true,
-          webId: "http://pod.test/alice#me",
+          webId: 'http://pod.test/alice#me',
           handleRedirectFromLogin,
           restore,
         };
       });
       session = new BrowserSession();
     });
-    it("handles redirect from login", async () => {
+    it('handles redirect from login', async () => {
       await session.handleIncomingRedirect();
       expect(handleRedirectFromLogin).toHaveBeenCalled();
       const result = await firstValueFrom(session.observeSession());
       expect(result).toEqual({
         isLoggedIn: true,
-        webId: "http://pod.test/alice#me",
+        webId: 'http://pod.test/alice#me',
       });
     });
-    describe("session restore", () => {
+    describe('session restore', () => {
       let sessionRestoreCallback: jest.Mock;
       beforeEach(() => {
         sessionRestoreCallback = jest.fn();
         session.onSessionRestore(sessionRestoreCallback);
       });
 
-      it("does not restore session by default", async () => {
+      it('does not restore session by default', async () => {
         await session.handleIncomingRedirect();
         expect(restore).not.toHaveBeenCalled();
         expect(sessionRestoreCallback).not.toHaveBeenCalled();
       });
 
-      it("restores session, if explicitly configured", async () => {
+      it('restores session, if explicitly configured', async () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (global as any).window = {
           location: {
-            href: "https://current.test",
+            href: 'https://current.test',
           },
         };
         const sessionRestoreCallback = jest.fn();
         session.onSessionRestore(sessionRestoreCallback);
         await session.handleIncomingRedirect(true);
         expect(restore).toHaveBeenCalled();
-        expect(sessionRestoreCallback).toHaveBeenCalledWith(
-          "https://current.test",
-        );
+        expect(sessionRestoreCallback).toHaveBeenCalledWith('https://current.test');
       });
     });
   });
 
-  describe("login", () => {
-    it("logs in with given idp and current location as redirect url", () => {
+  describe('login', () => {
+    it('logs in with given idp and current location as redirect url', () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (global as any).window = {
         location: {
-          href: "https://current.test",
+          href: 'https://current.test',
         },
       };
       const login = jest.fn();
@@ -118,22 +114,19 @@ describe("BrowserSession", () => {
         };
       });
       const session = new BrowserSession();
-      session.login("https://pod.test/");
-      expect(login).toHaveBeenCalledWith(
-        "https://pod.test/",
-        "https://current.test",
-      );
+      session.login('https://pod.test/');
+      expect(login).toHaveBeenCalledWith('https://pod.test/', 'https://current.test');
     });
   });
 
-  describe("logout", () => {
-    it("logs out", async () => {
+  describe('logout', () => {
+    it('logs out', async () => {
       const logout = jest.fn();
       (Session as jest.Mock).mockImplementation(() => {
         return {
           authFetch: jest.fn(),
           isActive: true,
-          webId: "http://pod.test/alice#me",
+          webId: 'http://pod.test/alice#me',
           logout,
         };
       });

@@ -8,6 +8,10 @@ and this project adheres to
 
 ## Unreleased
 
+### ⚠ BREAKING CHANGES
+
+- `BrowserSession` has moved to `@pod-os/elements`, since it is browser-specific which `core` should not be.
+
 ### Changed
 
 - `Thing.reverseRelations()`: Now takes optional predicate to filter by

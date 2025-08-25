@@ -47,7 +47,6 @@
     "@solid-data-modules/contacts-rdflib": "^0.7.0",
     "@solid-data-modules/rdflib-utils": "^0.6.0",
     "@types/lunr": "^2.3.7",
-    "@uvdsl/solid-oidc-client-browser": "^0.1.1",
     "buffer": "^6.0.3",
     "lunr": "^2.3.9",
     "rdf-namespaces": "^1.14.0",

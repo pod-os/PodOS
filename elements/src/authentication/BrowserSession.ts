@@ -1,22 +1,18 @@
-import { Session } from "@uvdsl/solid-oidc-client-browser";
-import { BehaviorSubject } from "rxjs";
-import { AuthenticatedFetch, PodOsSession, SessionInfo } from "./index";
+import { Session } from '@uvdsl/solid-oidc-client-browser';
+import { BehaviorSubject } from 'rxjs';
+import { AuthenticatedFetch, PodOsSession, SessionInfo } from '@pod-os/core';
 
 export class BrowserSession implements PodOsSession {
   private readonly session: Session;
   private onSessionRestoreCallback: (url: string) => void = () => {};
   private readonly _authenticatedFetch: AuthenticatedFetch;
 
-  private readonly sessionInfo$: BehaviorSubject<SessionInfo> =
-    new BehaviorSubject<SessionInfo>({
-      isLoggedIn: false,
-      webId: undefined,
-    });
+  private readonly sessionInfo$: BehaviorSubject<SessionInfo> = new BehaviorSubject<SessionInfo>({
+    isLoggedIn: false,
+    webId: undefined,
+  });
 
-  get authenticatedFetch(): (
-    url: RequestInfo,
-    init?: RequestInit | undefined,
-  ) => Promise<Response> {
+  get authenticatedFetch(): (url: RequestInfo, init?: RequestInit | undefined) => Promise<Response> {
     return this._authenticatedFetch;
   }
 
