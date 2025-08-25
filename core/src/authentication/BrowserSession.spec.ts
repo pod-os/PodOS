@@ -1,6 +1,6 @@
 import { BrowserSession } from "./BrowserSession";
 import { Session } from "@uvdsl/solid-oidc-client-browser";
-import { first, firstValueFrom } from "rxjs";
+import { firstValueFrom } from "rxjs";
 
 jest.mock("@uvdsl/solid-oidc-client-browser", () => ({
   Session: jest.fn(),
