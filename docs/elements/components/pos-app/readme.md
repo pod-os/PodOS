@@ -25,9 +25,14 @@
 
  - [pos-app-browser](../../apps/pos-app-browser)
 
+### Depends on
+
+- ion-progress-bar
+
 ### Graph
 ```mermaid
 graph TD;
+  pos-app --> ion-progress-bar
   pos-app-browser --> pos-app
   style pos-app fill:#f9f,stroke:#333,stroke-width:4px
 ```
