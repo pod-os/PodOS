@@ -25,6 +25,7 @@ export * from "./ldp-container";
 export * from "./profile";
 export * from "./search";
 export * from "./offline-cache";
+export * from "./terms";
 
 export interface PodOsConfiguration {
   offlineCache?: OfflineCache;

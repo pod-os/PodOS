@@ -1,5 +1,4 @@
-import { PodOS } from '@pod-os/core';
-import { Term } from '@pod-os/core/types/terms';
+import { PodOS, Term } from '@pod-os/core';
 import { Component, Event, EventEmitter, h, Host, Prop, State, Watch } from '@stencil/core';
 import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../events/PodOsAware';
 
