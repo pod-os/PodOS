@@ -1,16 +1,16 @@
-import { BrowserSession, OfflineCache, PodOS } from "./index";
+import { OfflineCache, PodOS, PodOsSession } from "./index";
 import { of } from "rxjs";
 
 jest.mock("./authentication", () => ({}));
 
 describe("PodOS", () => {
-  let mockSession: BrowserSession;
+  let mockSession: PodOsSession;
 
   beforeEach(() => {
     mockSession = {
       logout: jest.fn(),
       observeSession: jest.fn().mockReturnValue(of()),
-    } as unknown as BrowserSession;
+    } as unknown as PodOsSession;
   });
 
   describe("logout", () => {

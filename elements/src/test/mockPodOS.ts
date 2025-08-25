@@ -2,6 +2,13 @@ jest.mock('../pod-os', () => ({
   createPodOS: jest.fn(),
 }));
 
+jest.mock('../authentication', () => ({
+  BrowserSession: jest.fn().mockReturnValue({
+    onSessionRestore: () => {},
+    handleIncomingRedirect: jest.fn(),
+  }),
+}));
+
 import { when } from 'jest-when';
 import { BehaviorSubject, EMPTY } from 'rxjs';
 import { createPodOS } from '../pod-os';
@@ -21,8 +28,6 @@ export function mockPodOS() {
       get: jest.fn(),
     },
     observeSession: () => sessionInfo$,
-    onSessionRestore: () => {},
-    handleIncomingRedirect: jest.fn(),
     login: jest.fn().mockImplementation(() => {
       sessionInfo$.next({ isLoggedIn: true, webId: alice.webId });
     }),

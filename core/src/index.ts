@@ -1,6 +1,6 @@
 import { ContactsModule } from "@solid-data-modules/contacts-rdflib";
 import { BehaviorSubject, tap } from "rxjs";
-import { BrowserSession, SessionInfo } from "./authentication";
+import { SessionInfo, PodOsSession } from "./authentication";
 import { SolidFile } from "./files";
 import { FileFetcher } from "./files/FileFetcher";
 import { loadContactsModule } from "./modules/contacts";
@@ -30,11 +30,11 @@ export * from "./terms";
 export interface PodOsConfiguration {
   offlineCache?: OfflineCache;
   onlineStatus?: OnlineStatus;
-  session?: BrowserSession;
+  session?: PodOsSession;
 }
 
 export class PodOS {
-  private readonly session: BrowserSession;
+  private readonly session: PodOsSession;
   readonly store: Store;
   readonly uriService: UriService;
   private readonly fileFetcher: FileFetcher;
@@ -42,7 +42,7 @@ export class PodOS {
   private readonly offlineCache: OfflineCache;
 
   constructor({
-    session = new BrowserSession(),
+    session = {} as PodOsSession,
     offlineCache = new NoOfflineCache(),
     onlineStatus = new AssumeAlwaysOnline(),
   }: PodOsConfiguration = {}) {
@@ -71,10 +71,6 @@ export class PodOS {
         }),
       )
       .subscribe();
-  }
-
-  async handleIncomingRedirect(restorePreviousSession = false) {
-    return this.session.handleIncomingRedirect(restorePreviousSession);
   }
 
   fetch(uri: string) {
@@ -114,14 +110,6 @@ export class PodOS {
    */
   observeSession(): BehaviorSubject<SessionInfo> {
     return this.session.observeSession();
-  }
-
-  /**
-   * Calls the provided callback with the original URL that was open before the silent auth redirect
-   * @param callback
-   */
-  onSessionRestore(callback: (url: string) => unknown): void {
-    this.session.onSessionRestore(callback);
   }
 
   /**
