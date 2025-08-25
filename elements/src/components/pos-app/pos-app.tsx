@@ -1,6 +1,6 @@
 import { PodOS } from '@pod-os/core';
 import { Component, h, Listen, Prop, State, Event, EventEmitter } from '@stencil/core';
-import session from '../../store/session';
+import sessionStore from '../../store/session';
 import { localSettings } from '../../store/settings';
 import { createPodOS } from '../../pod-os';
 import { Subject, takeUntil } from 'rxjs';
@@ -55,12 +55,12 @@ export class PosApp {
       .observeSession()
       .pipe(takeUntil(this.disconnected$))
       .subscribe(async sessionInfo => {
-        session.state.webId = sessionInfo.webId;
+        sessionStore.state.webId = sessionInfo.webId;
         if (sessionInfo.isLoggedIn) {
           const profile = await this.os.fetchProfile(sessionInfo.webId);
-          session.state.profile = profile;
+          sessionStore.state.profile = profile;
         }
-        session.state.isLoggedIn = sessionInfo.isLoggedIn;
+        sessionStore.state.isLoggedIn = sessionInfo.isLoggedIn;
         this.loading = false;
       });
   }
