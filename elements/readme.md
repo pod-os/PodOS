@@ -54,6 +54,8 @@ Try this 🤩:
 
 Check out the [📖 Storybook documentation](https://pod-os.github.io/PodOS/storybook/) to learn about the available elements.
 
+Also, check out the [🧑‍🏫 tutorial section](../docs/tutorials) on practical guides.
+
 ## Development
 
 ### Run locally
