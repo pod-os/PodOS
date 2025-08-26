@@ -21,6 +21,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - [pos-login-form](../docs/elements/components/pos-login-form):
   - update the list of Identity Providers (IdPs) to contain trailing slashes where needed
   - removed IdPs that are outdated or do not work anymore with the new auth lib
+- [pos-app](../docs/elements/components/pos-app):
+  - fires event `pod-os:loaded` as soon as PodOS is ready to be used
+  - this event gives access to the PodOS instance and an authenticated fetcher
+
 
 ## 0.27.0
 

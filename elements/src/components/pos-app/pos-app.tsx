@@ -31,6 +31,14 @@ export class PosApp {
    */
   @Event({ eventName: 'pod-os:session-restored' }) sessionRestoredEmitter: EventEmitter<{ url: string }>;
 
+  /**
+   * Fires as soon as the pos-app DOM element has been loaded and PodOS can be used. Note: In case the user is authenticated, this will fire before profile data of the user has been fetched, but after authentication has been handled.
+   */
+  @Event({ eventName: 'pod-os:loaded' }) podOsLoadedEmitter: EventEmitter<{
+    os: PodOS;
+    authenticatedFetch: typeof global.fetch;
+  }>;
+
   private readonly disconnected$ = new Subject<void>();
 
   @State()
@@ -65,6 +73,10 @@ export class PosApp {
         sessionStore.state.isLoggedIn = sessionInfo.isLoggedIn;
         this.loading = false;
       });
+    this.podOsLoadedEmitter.emit({
+      os: this.os,
+      authenticatedFetch: session.authenticatedFetch,
+    });
   }
 
   disconnectedCallback() {

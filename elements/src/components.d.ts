@@ -5,8 +5,8 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { Thing } from "@pod-os/core";
-export { Thing } from "@pod-os/core";
+import { PodOS, Thing } from "@pod-os/core";
+export { PodOS, Thing } from "@pod-os/core";
 export namespace Components {
     interface PosAddLiteralValue {
     }
@@ -329,6 +329,10 @@ declare global {
     };
     interface HTMLPosAppElementEventMap {
         "pod-os:session-restored": { url: string };
+        "pod-os:loaded": {
+    os: PodOS;
+    authenticatedFetch: typeof global.fetch;
+  };
     }
     interface HTMLPosAppElement extends Components.PosApp, HTMLStencilElement {
         addEventListener<K extends keyof HTMLPosAppElementEventMap>(type: K, listener: (this: HTMLPosAppElement, ev: PosAppCustomEvent<HTMLPosAppElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -1000,6 +1004,13 @@ declare namespace LocalJSX {
         "referenceUri": string;
     }
     interface PosApp {
+        /**
+          * Fires as soon as the pos-app DOM element has been loaded and PodOS can be used. Note: In case the user is authenticated, this will fire before profile data of the user has been fetched, but after authentication has been handled.
+         */
+        "onPod-os:loaded"?: (event: PosAppCustomEvent<{
+    os: PodOS;
+    authenticatedFetch: typeof global.fetch;
+  }>) => void;
         /**
           * Fired whenever the session was restored
          */

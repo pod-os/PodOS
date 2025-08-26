@@ -373,4 +373,42 @@ describe('pos-app', () => {
       `);
     });
   });
+
+  describe('loaded event', () => {
+    it('fires loaded event after the component has fully loaded', async () => {
+      (BrowserSession as jest.Mock).mockImplementation(() => {
+        return {
+          authenticatedFetch: 'fake authenticated fetch',
+          onSessionRestore: () => null,
+          handleIncomingRedirect: jest.fn(),
+        };
+      });
+      const os = {
+        observeSession: () => new BehaviorSubject({ isLoggedIn: true, webId: 'https://pod.test/alice#me' }),
+        fetchProfile: () => {},
+      };
+      (createPodOS as jest.Mock).mockReturnValue(os);
+
+      const page = await newSpecPage({
+        components: [PosApp],
+        supportsShadowDom: true,
+      });
+
+      const onLoaded = jest.fn();
+      page.body.addEventListener('pod-os:loaded', onLoaded);
+
+      await page.setContent(`<pos-app><div>app body</div></pos-app>`);
+
+      await page.waitForChanges();
+
+      expect(onLoaded).toHaveBeenCalledWith(
+        expect.objectContaining({
+          detail: {
+            os,
+            authenticatedFetch: 'fake authenticated fetch',
+          },
+        }),
+      );
+    });
+  });
 });
