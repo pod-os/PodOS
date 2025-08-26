@@ -14,9 +14,10 @@
 
 ## Events
 
-| Event                     | Description                             | Type                            |
-| ------------------------- | --------------------------------------- | ------------------------------- |
-| `pod-os:session-restored` | Fired whenever the session was restored | `CustomEvent<{ url: string; }>` |
+| Event                     | Description                                                                                                                                                                                                                          | Type                                                                                                                                                                                                 |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pod-os:loaded`           | Fires as soon as the pos-app DOM element has been loaded and PodOS can be used. Note: In case the user is authenticated, this will fire before profile data of the user has been fetched, but after authentication has been handled. | `CustomEvent<{ os: PodOS; authenticatedFetch: { (input: RequestInfo \| URL, init?: RequestInit): Promise<Response>; (input: string \| Request \| URL, init?: RequestInit): Promise<Response>; }; }>` |
+| `pod-os:session-restored` | Fired whenever the session was restored                                                                                                                                                                                              | `CustomEvent<{ url: string; }>`                                                                                                                                                                      |
 
 
 ## Dependencies
