@@ -184,3 +184,75 @@ describe('pos-rich-link without uri', () => {
     );
   });
 });
+
+describe('pos-rich-link with slot', () => {
+  it('uses slotted text if present with specified uri', async () => {
+    const page = await newSpecPage({
+      components: [PosRichLink],
+      html: `<pos-rich-link uri="https://pod.example/resource">Link text</pos-rich-link>`,
+      supportsShadowDom: false,
+    });
+    expect(page?.root?.innerHTML).toEqualHtml(
+      `
+      <!---->
+      <pos-resource lazy="" uri="https://pod.example/resource">
+        <a href="https://pod.example/resource">
+          Link text
+        </a>
+      </pos-resource>
+      `,
+    );
+  });
+
+  it('uses slotted element if present with specified uri', async () => {
+    const page = await newSpecPage({
+      components: [PosRichLink],
+      html: `<pos-rich-link uri="https://pod.example/resource"><pos-label/></pos-rich-link>`,
+      supportsShadowDom: false,
+    });
+    expect(page?.root?.innerHTML).toEqualHtml(
+      `
+      <!---->
+      <pos-resource lazy="" uri="https://pod.example/resource">
+        <a href="https://pod.example/resource">
+          <pos-label/>
+        </a>
+      </pos-resource>
+      `,
+    );
+  });
+
+  it('uses slotted text if present with received resource ', async () => {
+    const page = await newSpecPage({
+      components: [PosRichLink],
+      html: `<pos-rich-link>Link text</pos-rich-link>`,
+      supportsShadowDom: false,
+    });
+    await page.rootInstance.receiveResource({
+      uri: 'https://pod.example/resource',
+    });
+    await page.waitForChanges();
+    expect(page?.root?.innerHTML).toEqualHtml(`
+      <!---->
+      <a href="https://pod.example/resource">
+        Link text
+      </a>`);
+  });
+
+  it('uses slotted element if present with received resource ', async () => {
+    const page = await newSpecPage({
+      components: [PosRichLink],
+      html: `<pos-rich-link><pos-label/></pos-rich-link>`,
+      supportsShadowDom: false,
+    });
+    await page.rootInstance.receiveResource({
+      uri: 'https://pod.example/resource',
+    });
+    await page.waitForChanges();
+    expect(page?.root?.innerHTML).toEqualHtml(`
+      <!---->
+      <a href="https://pod.example/resource">
+        <pos-label/>
+      </a>`);
+  });
+});
