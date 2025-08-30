@@ -23,6 +23,14 @@ identified by that URI, if available.
   </Story>
 </Canvas>
 
+The text to be displayed to the user can be overridden
+
+<Canvas withSource="open">
+  <Story name="pos-rich-link with custom content">
+    {({ uri }) => html` <pos-rich-link uri=${uri}>Link text</pos-rich-link> `}
+  </Story>
+</Canvas>
+
 Link can be obtained by receiving a resource from an ancestor element
 
 <Canvas withSource="open">
