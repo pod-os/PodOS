@@ -20,6 +20,8 @@ import {
   AssumeAlwaysOnline,
   OnlineStatus,
 } from "./offline-cache";
+import { Subject } from "rxjs";
+import { Quad } from "rdflib/lib/tf-types";
 
 /**
  * The store contains all data that is known locally.
@@ -29,6 +31,7 @@ export class Store {
   fetcher: Fetcher;
   updater: UpdateManager;
   graph: IndexedFormula;
+  stream$: Subject<Quad>;
 
   constructor(
     session: PodOsSession,
@@ -36,6 +39,8 @@ export class Store {
     onlineStatus: OnlineStatus = new AssumeAlwaysOnline(),
   ) {
     this.graph = graph();
+    this.stream$ = new Subject<Quad>();
+    this.graph.addDataCallback((quad) => this.stream$.next(quad));
     this.fetcher = new OfflineCapableFetcher(this.graph, {
       fetch: session.authenticatedFetch,
       offlineCache,
