@@ -20,7 +20,14 @@ import {
   AssumeAlwaysOnline,
   OnlineStatus,
 } from "./offline-cache";
-import { Subject } from "rxjs";
+import {
+  distinctUntilChanged,
+  filter,
+  map,
+  Observable,
+  Subject,
+  takeUntil,
+} from "rxjs";
 import { Quad } from "rdflib/lib/tf-types";
 
 /**
@@ -145,5 +152,21 @@ export class Store {
    */
   findMembers(classUri: string): string[] {
     return Object.keys(this.graph.findMemberURIs(sym(classUri)));
+  }
+
+  observeFindMembers(
+    classUri: string,
+    stop$: Subject<void>,
+  ): Observable<string[]> {
+    return this.stream$.pipe(
+      takeUntil(stop$),
+      filter(
+        (quad) =>
+          quad.predicate.value ==
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+      ),
+      map(() => this.findMembers(classUri)),
+      distinctUntilChanged((prev, curr) => prev.length == curr.length),
+    );
   }
 }
