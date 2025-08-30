@@ -21,6 +21,8 @@ import {
   AssumeAlwaysOnline,
   OnlineStatus,
 } from "./offline-cache";
+import { Subject } from "rxjs";
+import { Quad } from "rdflib/lib/tf-types";
 
 /**
  * The internalStore contains all data that is known locally.
@@ -29,6 +31,7 @@ import {
 export class Store {
   private readonly fetcher: Fetcher;
   private readonly updater: UpdateManager;
+  additions$: Subject<Quad>;
 
   constructor(
     session: PodOsSession,
@@ -42,6 +45,8 @@ export class Store {
       isOnline: onlineStatus.isOnline,
     });
     this.updater = new UpdateManager(this.internalStore);
+    this.additions$ = new Subject<Quad>();
+    this.internalStore.addDataCallback((quad) => this.additions$.next(quad));
   }
 
   /**

@@ -1,5 +1,5 @@
 import { when } from "jest-when";
-import { graph, sym } from "rdflib";
+import { graph, sym, quad } from "rdflib";
 import { Parser as SparqlParser, Update } from "sparqljs";
 import { AuthenticatedFetch, PodOsSession } from "./authentication";
 import { Store } from "./Store";
@@ -8,6 +8,31 @@ import { Thing } from "./thing";
 jest.mock("./authentication");
 
 describe("Store", () => {
+  describe("additions$", () => {
+    it("emits quads as they are added to the store", async () => {
+      const mockSession = {} as unknown as PodOsSession;
+      const internalStore = graph();
+      const store = new Store(mockSession, undefined, undefined, internalStore);
+      const subscriber = jest.fn();
+      store.additions$.subscribe(subscriber);
+      const quads = [
+        quad(
+          sym("http://recipe.test/1"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://schema.org/Recipe"),
+        ),
+        quad(
+          sym("http://movie.test/1"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://movie.test/MovieClass"),
+        ),
+      ];
+      internalStore.addAll(quads);
+      expect(subscriber).toHaveBeenNthCalledWith(1, quads[0]);
+      expect(subscriber).toHaveBeenNthCalledWith(2, quads[1]);
+    });
+  });
+
   describe("fetch", () => {
     it("fetches and parses turtle data", async () => {
       const mockSession = {
