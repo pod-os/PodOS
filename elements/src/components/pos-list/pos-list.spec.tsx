@@ -1,6 +1,7 @@
 import { newSpecPage } from '@stencil/core/testing';
 import { PosList } from './pos-list';
 import { when } from 'jest-when';
+import { Subject } from 'rxjs';
 
 describe('pos-list', () => {
   it('contains only template initially', async () => {
@@ -83,11 +84,16 @@ describe('pos-list', () => {
     });
     const os = {
       store: {
-        findMembers: jest.fn(),
+        observeFindMembers: jest.fn(),
       },
     };
-    when(os.store.findMembers).calledWith('http://schema.org/Recipe').mockReturnValue(['https://recipe.test/1']);
+
+    const observed$ = new Subject<String[]>();
+    const firstArg = matcher => when.allArgs((args, equals) => equals(args[0], matcher));
+
+    when(os.store.observeFindMembers).calledWith(firstArg('http://schema.org/Recipe')).mockReturnValue(observed$);
     await page.rootInstance.receivePodOs(os);
+    observed$.next(['https://recipe.test/1']);
     await page.waitForChanges();
 
     const el: HTMLElement = page.root as unknown as HTMLElement;

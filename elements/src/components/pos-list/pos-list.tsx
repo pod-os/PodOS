@@ -2,6 +2,7 @@ import { PodOS, Thing } from '@pod-os/core';
 import { Component, Element, Event, h, Prop, State } from '@stencil/core';
 import { ResourceAware, ResourceEventEmitter, subscribeResource } from '../events/ResourceAware';
 import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../events/PodOsAware';
+import { Subject } from 'rxjs';
 
 @Component({
   tag: 'pos-list',
@@ -33,6 +34,8 @@ export class PosList implements PodOsAware, ResourceAware {
   @Event({ eventName: 'pod-os:init' })
   subscribePodOs: PodOsEventEmitter;
 
+  private readonly disconnected$ = new Subject<void>();
+
   componentWillLoad() {
     if (this.rel) subscribeResource(this);
     if (this.ifTypeof) subscribePodOs(this);
@@ -50,7 +53,7 @@ export class PosList implements PodOsAware, ResourceAware {
 
   receivePodOs = async (os: PodOS) => {
     this.os = os;
-    this.items = os.store.findMembers(this.ifTypeof);
+    os.store.observeFindMembers(this.ifTypeof, this.disconnected$).subscribe(value => (this.items = value));
   };
 
   render() {
@@ -59,5 +62,10 @@ export class PosList implements PodOsAware, ResourceAware {
       <pos-resource uri={it} lazy={!this.fetch} innerHTML={this.templateString} about={it}></pos-resource>
     ));
     return this.items.length > 0 ? elems : null;
+  }
+
+  disconnectedCallback() {
+    this.disconnected$.next();
+    this.disconnected$.unsubscribe();
   }
 }
