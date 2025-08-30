@@ -20,6 +20,15 @@ import {
   AssumeAlwaysOnline,
   OnlineStatus,
 } from "./offline-cache";
+import {
+  distinctUntilChanged,
+  filter,
+  map,
+  Observable,
+  Subject,
+  takeUntil,
+} from "rxjs";
+import { Quad } from "rdflib/lib/tf-types";
 
 /**
  * The store contains all data that is known locally.
@@ -29,6 +38,7 @@ export class Store {
   fetcher: Fetcher;
   updater: UpdateManager;
   graph: IndexedFormula;
+  stream$: Subject<Quad>;
 
   constructor(
     session: PodOsSession,
@@ -36,6 +46,8 @@ export class Store {
     onlineStatus: OnlineStatus = new AssumeAlwaysOnline(),
   ) {
     this.graph = graph();
+    this.stream$ = new Subject<Quad>();
+    this.graph.addDataCallback((quad) => this.stream$.next(quad));
     this.fetcher = new OfflineCapableFetcher(this.graph, {
       fetch: session.authenticatedFetch,
       offlineCache,
@@ -132,5 +144,29 @@ export class Store {
 
   async executeUpdate(operation: UpdateOperation) {
     await executeUpdate(this.fetcher, this.updater, operation);
+  }
+
+  /**
+   * Finds instances of the given class or its sub-classes
+   * @param classUri
+   */
+  findMembers(classUri: string): string[] {
+    return Object.keys(this.graph.findMemberURIs(sym(classUri)));
+  }
+
+  observeFindMembers(
+    classUri: string,
+    stop$: Subject<void>,
+  ): Observable<string[]> {
+    return this.stream$.pipe(
+      takeUntil(stop$),
+      filter(
+        (quad) =>
+          quad.predicate.value ==
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+      ),
+      map(() => this.findMembers(classUri)),
+      distinctUntilChanged((prev, curr) => prev.length == curr.length),
+    );
   }
 }

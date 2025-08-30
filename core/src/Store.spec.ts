@@ -1,13 +1,37 @@
 import { when } from "jest-when";
-import { sym } from "rdflib";
+import { literal, quad, sym } from "rdflib";
 import { Parser as SparqlParser, Update } from "sparqljs";
 import { AuthenticatedFetch, PodOsSession } from "./authentication";
 import { Store } from "./Store";
 import { Thing } from "./thing";
+import { Subject } from "rxjs";
 
 jest.mock("./authentication");
 
 describe("Store", () => {
+  describe("stream$", () => {
+    it("emits quads as they are added to the store", async () => {
+      const mockSession = {} as unknown as PodOsSession;
+      const store = new Store(mockSession);
+      const subscriber = jest.fn();
+      store.stream$.subscribe(subscriber);
+      const quads = [
+        quad(
+          sym("http://recipe.test/1"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://schema.org/Recipe"),
+        ),
+        quad(
+          sym("http://movie.test/1"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://movie.test/MovieClass"),
+        ),
+      ];
+      store.graph.addAll(quads);
+      expect(subscriber.mock.calls).toEqual(quads.map((x) => [x]));
+    });
+  });
+
   describe("fetch", () => {
     it("fetches and parses turtle data", async () => {
       const mockSession = {
@@ -449,6 +473,120 @@ describe("Store", () => {
       }`,
       );
     });
+  });
+
+  describe("findMembers", () => {
+    it("finds instances of classes and subclasses", () => {
+      const store = new Store({} as PodOsSession);
+      store.graph.addAll([
+        quad(
+          sym("http://recipe.test/1"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://schema.org/Recipe"),
+        ),
+        quad(
+          sym("http://recipe.test/RecipeClass"),
+          sym("http://www.w3.org/2000/01/rdf-schema#subClassOf"),
+          sym("http://schema.org/Recipe"),
+        ),
+        quad(
+          sym("http://recipe.test/2"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://recipe.test/RecipeClass"),
+        ),
+        quad(
+          sym("http://movie.test/1"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://movie.test/MovieClass"),
+        ),
+      ]);
+      const members = store.findMembers("http://schema.org/Recipe");
+      expect(members).toContain("http://recipe.test/1");
+      expect(members).toContain("http://recipe.test/2");
+      expect(members).toEqual(
+        expect.not.arrayContaining(["http://movie.test/1"]),
+      );
+    });
+  });
+});
+
+describe("observeFindMembers", () => {
+  let store: Store, subscriber: jest.Mock, stop$: Subject<void>;
+  beforeEach(() => {
+    store = new Store({} as PodOsSession);
+    subscriber = jest.fn();
+    stop$ = new Subject<void>();
+    store
+      .observeFindMembers("http://schema.org/Recipe", stop$)
+      .subscribe(subscriber);
+  });
+
+  //To avoid memory leak
+  afterEach(() => {
+    stop$.next();
+    stop$.unsubscribe();
+  });
+
+  it("pushes new values until stop", () => {
+    store.graph.add(
+      quad(
+        sym("http://recipe.test/1"),
+        sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        sym("http://schema.org/Recipe"),
+      ),
+    );
+    expect(subscriber).toHaveBeenCalledTimes(1);
+    expect(subscriber.mock.calls).toEqual([[["http://recipe.test/1"]]]);
+
+    // Stop listening to ignore future changes
+    stop$.next();
+    store.graph.add(
+      quad(
+        sym("http://recipe.test/2"),
+        sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        sym("http://schema.org/Recipe"),
+      ),
+    );
+    expect(subscriber).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not push values if predicate rdf:type is not present", () => {
+    store.graph.add(
+      quad(
+        sym("http://recipe.test/1"),
+        sym("http://www.w3.org/2000/01/rdf-schema#label"),
+        literal("Recipe 1"),
+      ),
+    );
+    expect(subscriber).toHaveBeenCalledTimes(0);
+  });
+
+  it("only pushes value if number of members has changed", () => {
+    store.graph.addAll([
+      quad(
+        sym("http://recipe.test/1"),
+        sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        sym("http://schema.org/Recipe"),
+      ),
+      quad(
+        sym("http://movie.test/1"),
+        sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        sym("http://movie.test/MovieClass"),
+      ),
+    ]);
+    expect(subscriber).toHaveBeenCalledTimes(1);
+    store.graph.add(
+      quad(
+        sym("http://recipe.test/2"),
+        sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        sym("http://schema.org/Recipe"),
+      ),
+    );
+    expect(subscriber).toHaveBeenCalledTimes(2);
+    expect(subscriber.mock.calls).toEqual([
+      [["http://recipe.test/1"]],
+      [["http://recipe.test/1", "http://recipe.test/2"]],
+    ]);
   });
 });
 
