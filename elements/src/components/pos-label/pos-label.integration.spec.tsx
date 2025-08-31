@@ -4,6 +4,7 @@ import { PosApp } from '../pos-app/pos-app';
 import { PosResource } from '../pos-resource/pos-resource';
 import { PosLabel } from './pos-label';
 import { when } from 'jest-when';
+import { sanitizeHtmlTool } from '../pos-html-tool/sanitizeHtmlTool';
 
 describe('pos-label', () => {
   it('renders label for successfully loaded resource', async () => {
@@ -100,5 +101,10 @@ describe('pos-label', () => {
       <mock:shadow-root></mock:shadow-root>
       </pos-label>
     `);
+  });
+
+  it('is whitelisted by sanitizeHtmlTool', () => {
+    const sanitized = sanitizeHtmlTool('<pos-label/>');
+    expect(sanitized).toEqual('<pos-label/>');
   });
 });

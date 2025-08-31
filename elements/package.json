@@ -28,6 +28,7 @@
     "@stencil/store": "^2.2.0",
     "@uvdsl/solid-oidc-client-browser": "^0.1.1",
     "idb": "^8.0.3",
+    "isomorphic-dompurify": "^2.26.0",
     "pollen-css": "^5.0.2",
     "rxjs": "^7.8.2",
     "stencil-router-v2": "^0.6.0"
