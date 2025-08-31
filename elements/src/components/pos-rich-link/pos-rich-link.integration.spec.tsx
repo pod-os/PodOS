@@ -154,4 +154,33 @@ describe('pos-rich-link', () => {
       </pos-rich-link>
   `);
   });
+
+  it('renders slotted label with received resource ', async () => {
+    const page = await newSpecPage({
+      components: [PosApp, PosLabel, PosResource, PosRichLink],
+      html: `
+        <pos-app>
+          <pos-resource uri='https://resource.test'>
+            <pos-rich-link>
+              <pos-label/>
+            </pos-rich-link>
+          </pos-resource>
+        </pos-app>
+          `,
+      supportsShadowDom: false,
+    });
+
+    expect(os.store.get.mock.calls).toHaveLength(1);
+
+    const link = page.root?.querySelector('pos-rich-link');
+    expect(link).toEqualHtml(`
+      <pos-rich-link>
+        <a href="https://resource.test">
+          <pos-label>
+            Test label
+          </pos-label>
+        </a>
+      </pos-rich-link>
+  `);
+  });
 });
