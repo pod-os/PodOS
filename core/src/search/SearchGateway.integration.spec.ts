@@ -9,7 +9,7 @@ import {
   // @ts-expect-error compiler does not resolve module correctly
 } from "@solid-data-modules/rdflib-utils/test-support";
 import { WebIdProfile } from "../profile";
-import { lit, st, sym } from "rdflib";
+import { graph, lit, st, sym } from "rdflib";
 import { pim, rdfs } from "../namespaces";
 import { LabelIndex } from "./LabelIndex";
 import { Thing } from "../thing";
@@ -23,11 +23,12 @@ describe(SearchGateway.name, () => {
       const mockSession = {
         authenticatedFetch: fetchMock,
       } as unknown as PodOsSession;
-      const store = new Store(mockSession);
+      const internalStore = graph();
+      const store = new Store(mockSession, undefined, undefined, internalStore);
       const gateway = new SearchGateway(store);
 
       // and a profile with a private label index
-      store.graph.add(
+      internalStore.add(
         st(
           sym("https://pod.test/profile/card#me"),
           solid("privateLabelIndex"),
@@ -65,21 +66,22 @@ describe(SearchGateway.name, () => {
       const mockSession = {
         authenticatedFetch: fetchMock,
       } as unknown as PodOsSession;
-      const store = new Store(mockSession);
+      const internalStore = graph();
+      const store = new Store(mockSession, undefined, undefined, internalStore);
       const gateway = new SearchGateway(store);
 
       // and no label index yet
       mockNotFound(fetchMock, "https://pod.example/label-index");
 
       // and the store contains a label for a thing
-      store.graph.add(
+      internalStore.add(
         st(sym("https://thing.example#it"), rdfs("label"), lit("Something")),
       );
 
       // when that thing is added to a label index
       await gateway.addToLabelIndex(
-        new Thing("https://thing.example#it", store.graph, true),
-        new LabelIndex("https://pod.example/label-index", store.graph, true),
+        new Thing("https://thing.example#it", internalStore, true),
+        new LabelIndex("https://pod.example/label-index", internalStore, true),
       );
 
       // then the label of the thing is patched into the label index document
@@ -106,7 +108,13 @@ _:patch
         const mockSession = {
           authenticatedFetch: fetchMock,
         } as unknown as PodOsSession;
-        const store = new Store(mockSession);
+        const internalStore = graph();
+        const store = new Store(
+          mockSession,
+          undefined,
+          undefined,
+          internalStore,
+        );
         const gateway = new SearchGateway(store);
 
         // and no label index yet
@@ -122,7 +130,7 @@ _:patch
         const result = await gateway.createDefaultLabelIndex(
           new WebIdProfile(
             "https://pod.example/profile/card#me",
-            store.graph,
+            internalStore,
             true,
           ),
         );
@@ -170,7 +178,13 @@ _:patch
         const mockSession = {
           authenticatedFetch: fetchMock,
         } as unknown as PodOsSession;
-        const store = new Store(mockSession);
+        const internalStore = graph();
+        const store = new Store(
+          mockSession,
+          undefined,
+          undefined,
+          internalStore,
+        );
         const gateway = new SearchGateway(store);
 
         // and no label index yet
@@ -180,7 +194,7 @@ _:patch
         );
 
         // and the profile links to a preferences document
-        store.graph.add(
+        internalStore.add(
           st(
             sym("https://pod.example/profile/card#me"),
             pim("preferencesFile"),
@@ -200,7 +214,7 @@ _:patch
         const result = await gateway.createDefaultLabelIndex(
           new WebIdProfile(
             "https://pod.example/profile/card#me",
-            store.graph,
+            internalStore,
             true,
           ),
         );

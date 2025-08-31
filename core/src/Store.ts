@@ -11,6 +11,7 @@ import { PodOsSession } from "./authentication";
 import { Thing } from "./thing";
 import {
   executeUpdate,
+  ModuleConfig,
   UpdateOperation,
 } from "@solid-data-modules/rdflib-utils";
 import {
@@ -22,30 +23,29 @@ import {
 } from "./offline-cache";
 
 /**
- * The store contains all data that is known locally.
+ * The internalStore contains all data that is known locally.
  * It can be used to fetch additional data from the web and also update data and sync it back to editable resources.
  */
 export class Store {
-  fetcher: Fetcher;
-  updater: UpdateManager;
-  graph: IndexedFormula;
+  private readonly fetcher: Fetcher;
+  private readonly updater: UpdateManager;
 
   constructor(
     session: PodOsSession,
     offlineCache: OfflineCache = new NoOfflineCache(),
     onlineStatus: OnlineStatus = new AssumeAlwaysOnline(),
+    private readonly internalStore: IndexedFormula = graph(),
   ) {
-    this.graph = graph();
-    this.fetcher = new OfflineCapableFetcher(this.graph, {
+    this.fetcher = new OfflineCapableFetcher(this.internalStore, {
       fetch: session.authenticatedFetch,
       offlineCache,
       isOnline: onlineStatus.isOnline,
     });
-    this.updater = new UpdateManager(this.graph);
+    this.updater = new UpdateManager(this.internalStore);
   }
 
   /**
-   * Fetch data for the given URI to the store
+   * Fetch data for the given URI to the internalStore
    * @param uri
    */
   fetch(uri: string) {
@@ -62,7 +62,7 @@ export class Store {
   }
 
   /**
-   * Fetch all the given URIs in parallel and put the data to the store
+   * Fetch all the given URIs in parallel and put the data to the internalStore
    * @param uris
    */
   fetchAll(uris: string[]) {
@@ -71,12 +71,12 @@ export class Store {
   }
 
   /**
-   * Retrieve the thing identified by the given URI from the store
+   * Retrieve the thing identified by the given URI from the internalStore
    * @param uri
    */
   get(uri: string) {
     const editable = !!this.updater.editable(uri);
-    return new Thing(uri, this.graph, editable);
+    return new Thing(uri, this.internalStore, editable);
   }
 
   /**
@@ -133,4 +133,20 @@ export class Store {
   async executeUpdate(operation: UpdateOperation) {
     await executeUpdate(this.fetcher, this.updater, operation);
   }
+
+  flagAuthorizationMetadata() {
+    this.updater.flagAuthorizationMetadata();
+  }
+
+  loadModule<T>(module: PodOsModule<T>) {
+    return new module.default({
+      store: this.internalStore,
+      fetcher: this.fetcher,
+      updater: this.updater,
+    });
+  }
+}
+
+interface PodOsModule<T> {
+  readonly default: new (config: ModuleConfig) => T;
 }

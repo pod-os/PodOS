@@ -16,6 +16,7 @@ import {
   OfflineCache,
   OnlineStatus,
 } from "./offline-cache";
+import { IndexedFormula } from "rdflib";
 
 export * from "./authentication";
 export * from "./files";
@@ -31,6 +32,7 @@ export interface PodOsConfiguration {
   offlineCache?: OfflineCache;
   onlineStatus?: OnlineStatus;
   session?: PodOsSession;
+  internalStore?: IndexedFormula;
 }
 
 export class PodOS {
@@ -45,10 +47,16 @@ export class PodOS {
     session = {} as PodOsSession,
     offlineCache = new NoOfflineCache(),
     onlineStatus = new AssumeAlwaysOnline(),
+    internalStore = undefined,
   }: PodOsConfiguration = {}) {
     this.session = session;
     this.offlineCache = offlineCache;
-    this.store = new Store(this.session, offlineCache, onlineStatus);
+    this.store = new Store(
+      this.session,
+      offlineCache,
+      onlineStatus,
+      internalStore,
+    );
     this.searchGateway = new SearchGateway(this.store);
     this.flagAuthorizationMetaDataOnSessionChange();
     this.uriService = new UriService(this.store);
@@ -67,7 +75,7 @@ export class PodOS {
       .observeSession()
       .pipe(
         tap(() => {
-          this.store.updater.flagAuthorizationMetadata();
+          this.store.flagAuthorizationMetadata();
         }),
       )
       .subscribe();

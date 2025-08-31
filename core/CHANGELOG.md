@@ -11,6 +11,9 @@ and this project adheres to
 ### ⚠ BREAKING CHANGES
 
 - `BrowserSession` has moved to `@pod-os/elements`, since it is browser-specific which `core` should not be.
+- `Store` restricted access to rdflib internals like `fetcher`, `updater` and `graph`
+  - If you need access to those, you can now pass your own [rdflib.js](https://github.com/linkeddata/rdflib.js) store in the constructor of `PodOS`. The `fetcher` and `updater` will be attached to this store.
+  - ⚠ PodOS uses rdflib.js internally, we consider it to be an implementation detail. In the future the interface might change to only support [RDF/JS](https://rdf.js.org). Please consider this before coupling your PodOS app too much to rdflib.js.
 
 ### Changed
 

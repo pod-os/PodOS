@@ -1,5 +1,5 @@
 import { when } from "jest-when";
-import { sym } from "rdflib";
+import { graph, sym } from "rdflib";
 import { Parser as SparqlParser, Update } from "sparqljs";
 import { AuthenticatedFetch, PodOsSession } from "./authentication";
 import { Store } from "./Store";
@@ -27,10 +27,11 @@ describe("Store", () => {
               '<https://pod.test/resource#it> <https://pod.test/vocab/predicate> "literal value" .',
             ),
         } as Response);
-      const store = new Store(mockSession);
+      const internalStore = graph();
+      const store = new Store(mockSession, undefined, undefined, internalStore);
       await store.fetch("https://pod.test/resource");
       expect(
-        store.graph.statementsMatching(
+        internalStore.statementsMatching(
           null,
           null,
           null,
@@ -83,17 +84,18 @@ describe("Store", () => {
             "Content-Type": "image/png",
           }),
         } as unknown as Response);
-      const store = new Store(mockSession);
+      const internalStore = graph();
+      const store = new Store(mockSession, undefined, undefined, internalStore);
       await store.fetch("https://pod.test/resource.png");
       expect(
-        store.graph.holds(
+        internalStore.holds(
           sym("https://pod.test/resource.png"),
           sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
           sym("http://purl.org/dc/terms/Image"),
         ),
       ).toBe(true);
       expect(
-        store.graph.holds(
+        internalStore.holds(
           sym("https://pod.test/resource.png"),
           sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
           sym("http://www.w3.org/ns/iana/media-types/image/png#Resource"),
@@ -136,7 +138,8 @@ describe("Store", () => {
               '<https://pod.test/resource2#it> <https://pod.test/vocab/predicate> "literal value 2" .',
             ),
         } as Response);
-      const store = new Store(mockSession);
+      const internalStore = graph();
+      const store = new Store(mockSession, undefined, undefined, internalStore);
       // when
       await store.fetchAll([
         "https://pod.test/resource1",
@@ -144,7 +147,7 @@ describe("Store", () => {
       ]);
       // then
       expect(
-        store.graph.statementsMatching(
+        internalStore.statementsMatching(
           null,
           null,
           null,
@@ -182,7 +185,7 @@ describe("Store", () => {
         },
       ]);
       expect(
-        store.graph.statementsMatching(
+        internalStore.statementsMatching(
           null,
           null,
           null,
@@ -251,7 +254,8 @@ describe("Store", () => {
               '<https://pod.test/resource2#it> <https://pod.test/vocab/predicate> "literal value 2" .',
             ),
         } as Response);
-      const store = new Store(mockSession);
+      const internalStore = graph();
+      const store = new Store(mockSession, undefined, undefined, internalStore);
       // when
       const result = await store.fetchAll([
         "https://pod.test/resource1",
@@ -262,7 +266,7 @@ describe("Store", () => {
       expect(result[0].status).toBe("rejected");
       expect(result[1].status).toBe("fulfilled");
       expect(
-        store.graph.statementsMatching(
+        internalStore.statementsMatching(
           null,
           null,
           null,
