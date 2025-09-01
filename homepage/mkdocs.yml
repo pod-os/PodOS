@@ -2,6 +2,7 @@ site_name: PodOS
 site_url: https://pod-os.org/
 theme:
   name: material
+  logo: assets/logo.svg
   palette:
 
     # Palette toggle for automatic mode
