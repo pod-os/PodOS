@@ -1,7 +1,13 @@
 site_name: PodOS
 site_url: https://pod-os.org/
+nav:
+  - Home: index.md
+  - Getting Started: getting-started
+  - Contributing: contributing
 theme:
   name: material
+  features:
+    - navigation.tabs
   logo: assets/logo.svg
   palette:
 
