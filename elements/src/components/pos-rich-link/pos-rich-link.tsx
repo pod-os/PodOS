@@ -35,10 +35,12 @@ export class PosRichLink implements ResourceAware {
   @Element() host: HTMLElement;
 
   @State()
-  private customContent: boolean = false;
+  private showCustomContent: boolean = false;
 
   componentWillLoad() {
-    this.customContent = !!this.host.lastElementChild || this.host.textContent.trim() != '';
+    this.showCustomContent = // custom content can either be given as child elements, or as just text, so we check for both:
+      !!this.host.lastElementChild || // either has any child element
+      this.host.textContent.trim() != ''; // or contains a non-empty text
     if (!this.uri) subscribeResource(this);
   }
 
@@ -71,7 +73,7 @@ export class PosRichLink implements ResourceAware {
 
   render() {
     const content = (uri: string) =>
-      this.customContent ? (
+      this.showCustomContent ? (
         <a
           href={uri}
           onClick={e => {
