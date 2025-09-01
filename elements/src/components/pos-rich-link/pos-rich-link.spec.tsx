@@ -192,9 +192,8 @@ describe('pos-rich-link with slot', () => {
       html: `<pos-rich-link uri="https://pod.example/resource">Link text</pos-rich-link>`,
       supportsShadowDom: false,
     });
-    expect(page?.root?.innerHTML).toEqualHtml(
+    expect(page.root.firstElementChild).toEqualHtml(
       `
-      <!---->
       <pos-resource lazy="" uri="https://pod.example/resource">
         <a href="https://pod.example/resource">
           Link text
@@ -210,9 +209,8 @@ describe('pos-rich-link with slot', () => {
       html: `<pos-rich-link uri="https://pod.example/resource"><pos-label/></pos-rich-link>`,
       supportsShadowDom: false,
     });
-    expect(page?.root?.innerHTML).toEqualHtml(
+    expect(page.root.firstElementChild).toEqualHtml(
       `
-      <!---->
       <pos-resource lazy="" uri="https://pod.example/resource">
         <a href="https://pod.example/resource">
           <pos-label/>
@@ -232,8 +230,7 @@ describe('pos-rich-link with slot', () => {
       uri: 'https://pod.example/resource',
     });
     await page.waitForChanges();
-    expect(page?.root?.innerHTML).toEqualHtml(`
-      <!---->
+    expect(page.root.firstElementChild).toEqualHtml(`
       <a href="https://pod.example/resource">
         Link text
       </a>`);
@@ -249,8 +246,7 @@ describe('pos-rich-link with slot', () => {
       uri: 'https://pod.example/resource',
     });
     await page.waitForChanges();
-    expect(page?.root?.innerHTML).toEqualHtml(`
-      <!---->
+    expect(page.root.firstElementChild).toEqualHtml(`
       <a href="https://pod.example/resource">
         <pos-label/>
       </a>`);
