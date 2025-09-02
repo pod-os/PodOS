@@ -2,15 +2,14 @@ site_name: PodOS
 site_url: https://pod-os.org/
 nav:
   - Home: index.md
-  - Getting Started: getting-started
-  - Contributing: contributing
+  - Getting Started: getting-started/index.md
+  - Contributing: contributing/index.md
 theme:
   name: material
   features:
     - navigation.tabs
   logo: assets/logo.svg
   palette:
-
     # Palette toggle for automatic mode
     - media: "(prefers-color-scheme)"
       toggle:
