@@ -4,8 +4,10 @@ nav:
   - Home: index.md
   - Getting Started: getting-started/index.md
   - Contributing: contributing/index.md
+
 theme:
   name: material
+  favicon: assets/logo.svg
   features:
     - navigation.tabs
   logo: assets/logo.svg
