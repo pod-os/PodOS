@@ -1,15 +1,23 @@
 name: Deploy Homepage
 on:
   push:
+    branches:
+      - docs/homepage # TODO change to main later
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./homepage
+    env:
+      NETLIFY_SITE_ID: ${{ secrets.NETLIFY_POD_OS_HOMEPAGE_SITE_ID }}
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
       - name: Build homepage
-        run: |
-          cd homepage
-          nix-shell --run "make build"
+        run: nix-shell --run "make build"
+      - name: Deploy PodOS Homepage
+        run: npx netlify-cli deploy --dir=site --prod
