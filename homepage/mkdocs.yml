@@ -2,7 +2,12 @@ site_name: PodOS
 site_url: https://pod-os.org/
 nav:
   - Home: index.md
-  - Getting Started: getting-started/index.md
+  - Getting Started:
+      - getting-started/index.md
+      - getting-started/quick-start.md
+  - Tutorials:
+      - tutorials/index.md
+      - tutorials/authentication.md
   - Contributing: contributing/index.md
 
 extra_css:
@@ -12,6 +17,8 @@ theme:
   favicon: assets/logo.svg
   features:
     - navigation.tabs
+    - navigation.footer
+    - navigation.indexes
   logo: assets/logo.svg
   custom_dir: docs/overrides
   palette:
