@@ -5,6 +5,7 @@ nav:
   - Getting Started: getting-started/index.md
   - Contributing: contributing/index.md
 
+
 theme:
   name: material
   favicon: assets/logo.svg
@@ -20,16 +21,18 @@ theme:
 
     # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
+      primary: white
       scheme: default
       toggle:
-        icon: material/brightness-7
+        icon: material/weather-sunny
         name: Switch to dark mode
 
     # Palette toggle for dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
+      primary: black
       toggle:
-        icon: material/brightness-4
+        icon: material/weather-night
         name: Switch to system preference
 markdown_extensions:
   - attr_list
