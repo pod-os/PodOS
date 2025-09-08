@@ -30,7 +30,7 @@ template: home.html.j2
 
     Fully based on the Solid protocol and proven W3C standards. Zero lock-in.
 
-    [:octicons-arrow-right-24: About Solid](#)
+    [:octicons-arrow-right-24: About Solid](solid/index.md)
 
 -   :material-scale-balance:{ .lg .middle } __100 % Open Source__
 
