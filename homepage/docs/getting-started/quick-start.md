@@ -40,4 +40,4 @@ Try this 🤩:
 
 Check out the [📖 Storybook documentation](https://pod-os.github.io/PodOS/storybook/) to learn about the available elements.
 
-Also, check out the [🧑‍🏫 tutorial section](/tutorials) on practical guides.
+Also, check out the [🧑‍🏫 tutorial section](../tutorials/index.md) on practical guides.
