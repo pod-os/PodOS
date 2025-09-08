@@ -1,9 +1,23 @@
 {% extends "main.html" %}
 
 {% block content %}
+
+  <section class="hero">
+    <img src="/assets/logo.svg" alt="PodOS logo" class="hero__logo">
+    <div>
+      <h1 class="hero__title">Your data, no matter what.</h1>
+      <p>PodOS serves as your gateway to managing online data. Store your data anywhere across the web and access it
+        whenever and wherever it is needed
+      </p>
+      <p class="buttons">
+        <a href="getting-started/" class="md-button md-button--primary">Get Started</a>
+        <a href="contributing/" class="md-button">Contributing</a>
+      </p>
+    </div>
+  </section>
+
   {{ page.content }}
-  <a href="getting-started/" class="md-button md-button--primary">Get Started</a>
-  <a href="contributing/" class="md-button">Contributing</a>
+
 {% endblock %}
 
 {% block footer %}
