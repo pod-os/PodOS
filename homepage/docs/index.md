@@ -22,7 +22,7 @@ template: home.html.j2
 
     With PodOS elements, facilitating your data is as simple as writing html
 
-    [:octicons-arrow-right-24: Quick start](#)
+    [:octicons-arrow-right-24: Quick start](getting-started/quick-start.md)
 
 -   :material-protocol:{ .lg .middle } __Interoperable web standards__
 
