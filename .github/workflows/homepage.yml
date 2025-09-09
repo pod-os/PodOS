@@ -2,7 +2,7 @@ name: Deploy Homepage
 on:
   push:
     branches:
-      - docs/homepage # TODO change to main later
+      - main
 
 jobs:
   build:
