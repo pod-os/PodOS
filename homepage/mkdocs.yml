@@ -10,6 +10,8 @@ nav:
       - tutorials/authentication.md
   - Contributing: contributing/index.md
 
+plugins:
+  - privacy
 extra_css:
   - stylesheets/extra.css
 theme:
