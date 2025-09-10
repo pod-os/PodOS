@@ -12,6 +12,8 @@ nav:
 
 plugins:
   - privacy
+  - search
+
 extra_css:
   - stylesheets/extra.css
 theme:
