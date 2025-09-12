@@ -62,7 +62,7 @@ export namespace Components {
     }
     /**
      * Tries fetch an image with the solid authentication, and can visualize http errors like 403 or 404 if this fails.
-     * Falls back to classic <img src="..."> on network errors like CORS.
+     * Falls back to classic `<img src="...">` on network errors like CORS.
      * Renders a normal link if even this fails.
      */
     interface PosImage {
@@ -532,7 +532,7 @@ declare global {
     }
     /**
      * Tries fetch an image with the solid authentication, and can visualize http errors like 403 or 404 if this fails.
-     * Falls back to classic <img src="..."> on network errors like CORS.
+     * Falls back to classic `<img src="...">` on network errors like CORS.
      * Renders a normal link if even this fails.
      */
     interface HTMLPosImageElement extends Components.PosImage, HTMLStencilElement {
@@ -1073,7 +1073,7 @@ declare namespace LocalJSX {
     }
     /**
      * Tries fetch an image with the solid authentication, and can visualize http errors like 403 or 404 if this fails.
-     * Falls back to classic <img src="..."> on network errors like CORS.
+     * Falls back to classic `<img src="...">` on network errors like CORS.
      * Renders a normal link if even this fails.
      */
     interface PosImage {
@@ -1309,7 +1309,7 @@ declare module "@stencil/core" {
             "pos-getting-started": LocalJSX.PosGettingStarted & JSXBase.HTMLAttributes<HTMLPosGettingStartedElement>;
             /**
              * Tries fetch an image with the solid authentication, and can visualize http errors like 403 or 404 if this fails.
-             * Falls back to classic <img src="..."> on network errors like CORS.
+             * Falls back to classic `<img src="...">` on network errors like CORS.
              * Renders a normal link if even this fails.
              */
             "pos-image": LocalJSX.PosImage & JSXBase.HTMLAttributes<HTMLPosImageElement>;
