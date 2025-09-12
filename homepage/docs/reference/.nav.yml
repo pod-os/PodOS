@@ -10,3 +10,4 @@ nav:
       - elements/components
   - '@pod-os/core':
       - core/index.md
+      - core/*

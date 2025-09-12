@@ -17,6 +17,7 @@
     "build:types": "rimraf types && tsc --emitDeclarationOnly --outDir types",
     "build:types:watch": "rimraf types && tsc --emitDeclarationOnly --outDir types --watch",
     "build:watch": "node esbuild/watch-esm.mjs",
+    "build:doc": "typedoc",
     "dev": "run-p build:types:watch build:watch",
     "build": " npm run build:bundle && npm run build:types && npm run build:esm"
   },
@@ -40,6 +41,8 @@
     "prettier": "^3.6.2",
     "rimraf": "^6.0.1",
     "sparqljs": "^3.7.3",
+    "typedoc": "^0.28.12",
+    "typedoc-plugin-markdown": "^4.8.1",
     "typescript": "5.9.2",
     "typescript-eslint": "^8.41.0"
   },
