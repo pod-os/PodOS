@@ -1,0 +1,12 @@
+title: Reference
+
+preserve_directory_names: true
+
+nav:
+  - index.md
+  - '@pod-os/elements':
+      - elements/index.md
+      - elements/apps
+      - elements/components
+  - '@pod-os/core':
+      - core/index.md

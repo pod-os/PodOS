@@ -1,19 +1,11 @@
 site_name: PodOS
 site_url: https://pod-os.org/
 repo_url: https://github.com/pod-os/PodOS
-nav:
-  - Home: index.md
-  - Getting Started:
-      - getting-started/index.md
-      - getting-started/quick-start.md
-  - Tutorials:
-      - tutorials/index.md
-      - tutorials/authentication.md
-  - Contributing: contributing/index.md
 
 plugins:
   - privacy
   - search
+  - awesome-nav
 
 extra_css:
   - stylesheets/extra.css
@@ -63,4 +55,8 @@ markdown_extensions:
       pygments_lang_class: true
   - pymdownx.inlinehilite
   - pymdownx.snippets
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format

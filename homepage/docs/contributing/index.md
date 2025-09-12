@@ -1,3 +1,7 @@
+---
+title: Contributing
+---
+
 # Contributing to PodOS
 
 Check out our [repository on GitHub](https://github.com/pod-os/PodOS) and

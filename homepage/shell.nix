@@ -6,6 +6,7 @@ mkShell {
     nushell
     python3Packages.mkdocs
     python3Packages.mkdocs-material
+    python3Packages.mkdocs-awesome-nav
     rsync
   ];
 
