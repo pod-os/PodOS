@@ -25,13 +25,14 @@ import { Subject } from "rxjs";
 import { Quad } from "rdflib/lib/tf-types";
 
 /**
- * The internalStore contains all data that is known locally.
+ * The Store contains all data that is known locally.
  * It can be used to fetch additional data from the web and also update data and sync it back to editable resources.
  */
 export class Store {
   private readonly fetcher: Fetcher;
   private readonly updater: UpdateManager;
   additions$: Subject<Quad>;
+  removals$: Subject<Quad>;
 
   constructor(
     session: PodOsSession,
@@ -46,7 +47,11 @@ export class Store {
     });
     this.updater = new UpdateManager(this.internalStore);
     this.additions$ = new Subject<Quad>();
+    this.removals$ = new Subject<Quad>();
     this.internalStore.addDataCallback((quad) => this.additions$.next(quad));
+    this.internalStore.addDataRemovalCallback((quad) =>
+      this.removals$.next(quad),
+    );
   }
 
   /**
