@@ -1,12 +1,4 @@
-import {
-  Fetcher,
-  graph,
-  IndexedFormula,
-  lit,
-  st,
-  sym,
-  UpdateManager,
-} from "rdflib";
+import { Fetcher, IndexedFormula, lit, st, sym, UpdateManager } from "rdflib";
 import { PodOsSession } from "./authentication";
 import { Thing } from "./thing";
 import {
@@ -32,20 +24,70 @@ import {
 } from "rxjs";
 import { Quad } from "rdflib/lib/tf-types";
 
+interface ObservableIndexedFormula extends IndexedFormula {
+  additions$: Subject<Quad>;
+  removals$: Subject<Quad>;
+}
+
 /**
- * The internalStore contains all data that is known locally.
+ * Creates a new rdflib.js graph where changes to statements are observable through rxjs Subjects additions$ and removals$
+ */
+export function observableGraph(): ObservableIndexedFormula {
+  const additions$ = new Subject<Quad>();
+  // We keep distinct values only because rdfArrayRemove is called 5 times with the same quad - once for each index + once for the statement
+  const removals$ = new Subject<Quad>().pipe(
+    distinctUntilChanged(),
+  ) as Subject<Quad>;
+  const internalStore = new IndexedFormula(
+    // FeaturesType is not exported from rdflib
+    {} as any,
+    {
+      dataCallback: (quad) => additions$.next(quad),
+      // Because of the structure of IndexedFormula, the matching logic needs to be reimplemented in order to insert the callback
+      //https://github.com/linkeddata/rdflib.js/blob/c049d599d6c03905283fb28f31de6389c7d18eb8/src/utils-js.js#L272
+      rdfArrayRemove: (statements: Quad[], quad: Quad) => {
+        for (var i = 0; i < statements.length; i++) {
+          if (
+            statements[i].subject.equals(quad.subject) &&
+            statements[i].predicate.equals(quad.predicate) &&
+            statements[i].object.equals(quad.object) &&
+            statements[i].graph.equals(quad.graph)
+          ) {
+            //console.log(quad)
+            statements.splice(i, 1);
+            removals$.next(quad);
+            return;
+          }
+        }
+        throw new Error(
+          "RDFArrayRemove: Array did not contain " + quad + " " + quad.graph,
+        );
+      },
+    },
+  ) as ObservableIndexedFormula;
+  internalStore.additions$ = additions$;
+  internalStore.removals$ = removals$;
+  return internalStore;
+}
+
+/**
+ * The Store contains all data that is known locally.
  * It can be used to fetch additional data from the web and also update data and sync it back to editable resources.
  */
 export class Store {
   private readonly fetcher: Fetcher;
   private readonly updater: UpdateManager;
-  stream$: Subject<Quad>;
+  additions$: Subject<Quad>;
+  removals$: Subject<Quad>;
 
   constructor(
     session: PodOsSession,
     offlineCache: OfflineCache = new NoOfflineCache(),
     onlineStatus: OnlineStatus = new AssumeAlwaysOnline(),
-    private readonly internalStore: IndexedFormula = graph(),
+    // We support IndexedFormula as well as ObservableIndexedFormula in case the user does not need store reactivity
+    private readonly internalStore:
+      | IndexedFormula
+      | ObservableIndexedFormula = observableGraph(),
   ) {
     this.fetcher = new OfflineCapableFetcher(this.internalStore, {
       fetch: session.authenticatedFetch,
@@ -53,8 +95,14 @@ export class Store {
       isOnline: onlineStatus.isOnline,
     });
     this.updater = new UpdateManager(this.internalStore);
-    this.stream$ = new Subject<Quad>();
-    this.internalStore.addDataCallback((quad) => this.stream$.next(quad));
+    this.additions$ =
+      "additions$" in internalStore
+        ? internalStore.additions$
+        : new Subject<Quad>();
+    this.removals$ =
+      "removals$" in internalStore
+        ? internalStore.removals$
+        : new Subject<Quad>();
   }
 
   /**
@@ -155,7 +203,7 @@ export class Store {
     classUri: string,
     stop$: Subject<void>,
   ): Observable<string[]> {
-    return this.stream$.pipe(
+    return this.additions$.pipe(
       takeUntil(stop$),
       filter(
         (quad) =>

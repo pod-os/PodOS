@@ -1,6 +1,6 @@
 import { graph, IndexedFormula, literal, quad, sym } from "rdflib";
 import { PodOsSession } from "./authentication";
-import { Store } from "./Store";
+import { observableGraph, Store } from "./Store";
 import { Subject } from "rxjs";
 
 describe("Store", () => {
@@ -50,7 +50,7 @@ describe("Store", () => {
       subscriber: jest.Mock,
       stop$: Subject<void>;
     beforeEach(() => {
-      internalStore = graph();
+      internalStore = observableGraph();
       internalStore.add(
         quad(
           sym("http://recipe.test/0"),
