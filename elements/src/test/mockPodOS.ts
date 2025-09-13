@@ -26,6 +26,7 @@ export function mockPodOS() {
     fetchFile: jest.fn(),
     store: {
       get: jest.fn(),
+      observeFindMembers: jest.fn(),
     },
     observeSession: () => sessionInfo$,
     login: jest.fn().mockImplementation(() => {

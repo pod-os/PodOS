@@ -5,6 +5,7 @@ import { PosLabel } from '../pos-label/pos-label';
 import { PosList } from './pos-list';
 import { PosResource } from '../pos-resource/pos-resource';
 import { when } from 'jest-when';
+import { Subject } from 'rxjs';
 
 describe('pos-list', () => {
   it('children render label for loaded resources (without fetching)', async () => {
@@ -64,5 +65,57 @@ describe('pos-list', () => {
       </pos-resource>
 `);
     expect(label2?.uri).toEqual('https://video.test/video-2');
+  });
+
+  it('children render label for all things of the given type, reactively', async () => {
+    const os = mockPodOS();
+    const observed$ = new Subject<String[]>();
+    const firstArg = matcher => when.allArgs((args, equals) => equals(args[0], matcher));
+    when(os.store.observeFindMembers).calledWith(firstArg('http://schema.org/Video')).mockReturnValue(observed$);
+    when(os.store.get)
+      .calledWith('https://video.test/video-1')
+      .mockReturnValue({ uri: 'https://video.test/video-1', label: () => 'Video 1' });
+    when(os.store.get)
+      .calledWith('https://video.test/video-2')
+      .mockReturnValue({ uri: 'https://video.test/video-2', label: () => 'Video 2' });
+
+    const page = await newSpecPage({
+      components: [PosApp, PosLabel, PosList, PosResource],
+      supportsShadowDom: false,
+      html: `
+      <pos-app>
+        <pos-list if-typeof="http://schema.org/Video">
+          <template>
+            <pos-label />
+          </template>
+        </pos-list>
+      </pos-app>`,
+    });
+
+    let resources = page.root ? page.root.querySelectorAll('pos-list pos-resource') : [];
+    expect(resources).toHaveLength(0);
+
+    observed$.next(['https://video.test/video-1']);
+    await page.waitForChanges();
+    resources = page.root ? page.root.querySelectorAll('pos-list pos-resource') : [];
+    expect(resources).toHaveLength(1);
+    expect(resources[0].getAttribute('about')).toEqual('https://video.test/video-1');
+    expect(resources[0].textContent).toEqual('Video 1');
+
+    observed$.next(['https://video.test/video-1', 'https://video.test/video-2']);
+    await page.waitForChanges();
+    resources = page.root ? page.root.querySelectorAll('pos-list pos-resource') : [];
+    expect(resources).toHaveLength(2);
+    expect(resources[0].getAttribute('about')).toEqual('https://video.test/video-1');
+    expect(resources[0].textContent).toEqual('Video 1');
+    expect(resources[1].getAttribute('about')).toEqual('https://video.test/video-2');
+    expect(resources[1].textContent).toEqual('Video 2');
+
+    observed$.next(['https://video.test/video-2']);
+    await page.waitForChanges();
+    resources = page.root ? page.root.querySelectorAll('pos-list pos-resource') : [];
+    expect(resources).toHaveLength(1);
+    expect(resources[0].getAttribute('about')).toEqual('https://video.test/video-2');
+    expect(resources[0].textContent).toEqual('Video 2');
   });
 });
