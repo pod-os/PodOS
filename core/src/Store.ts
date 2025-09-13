@@ -26,6 +26,7 @@ import {
   filter,
   map,
   Observable,
+  startWith,
   Subject,
   takeUntil,
 } from "rxjs";
@@ -163,6 +164,7 @@ export class Store {
       ),
       map(() => this.findMembers(classUri)),
       distinctUntilChanged((prev, curr) => prev.length == curr.length),
+      startWith(this.findMembers(classUri)),
     );
   }
 

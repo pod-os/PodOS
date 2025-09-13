@@ -528,6 +528,13 @@ describe("observeFindMembers", () => {
     stop$: Subject<void>;
   beforeEach(() => {
     internalStore = graph();
+    internalStore.add(
+      quad(
+        sym("http://recipe.test/0"),
+        sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        sym("http://schema.org/Recipe"),
+      ),
+    );
     store = new Store({} as PodOsSession, undefined, undefined, internalStore);
     subscriber = jest.fn();
     stop$ = new Subject<void>();
@@ -542,6 +549,11 @@ describe("observeFindMembers", () => {
     stop$.unsubscribe();
   });
 
+  it("pushes existing values immediately", () => {
+    expect(subscriber).toHaveBeenCalledTimes(1);
+    expect(subscriber.mock.calls).toEqual([[["http://recipe.test/0"]]]);
+  });
+
   it("pushes new values until stop", () => {
     internalStore.add(
       quad(
@@ -550,8 +562,11 @@ describe("observeFindMembers", () => {
         sym("http://schema.org/Recipe"),
       ),
     );
-    expect(subscriber).toHaveBeenCalledTimes(1);
-    expect(subscriber.mock.calls).toEqual([[["http://recipe.test/1"]]]);
+    expect(subscriber).toHaveBeenCalledTimes(2);
+    expect(subscriber.mock.calls).toEqual([
+      [["http://recipe.test/0"]],
+      [["http://recipe.test/0", "http://recipe.test/1"]],
+    ]);
 
     // Stop listening to ignore future changes
     stop$.next();
@@ -562,7 +577,7 @@ describe("observeFindMembers", () => {
         sym("http://schema.org/Recipe"),
       ),
     );
-    expect(subscriber).toHaveBeenCalledTimes(1);
+    expect(subscriber).toHaveBeenCalledTimes(2);
   });
 
   it("does not push values if predicate rdf:type is not present", () => {
@@ -573,7 +588,7 @@ describe("observeFindMembers", () => {
         literal("Recipe 1"),
       ),
     );
-    expect(subscriber).toHaveBeenCalledTimes(0);
+    expect(subscriber).toHaveBeenCalledTimes(1);
   });
 
   it("only pushes value if number of members has changed", () => {
@@ -589,7 +604,7 @@ describe("observeFindMembers", () => {
         sym("http://movie.test/MovieClass"),
       ),
     ]);
-    expect(subscriber).toHaveBeenCalledTimes(1);
+    expect(subscriber).toHaveBeenCalledTimes(2);
     internalStore.add(
       quad(
         sym("http://recipe.test/2"),
@@ -597,10 +612,17 @@ describe("observeFindMembers", () => {
         sym("http://schema.org/Recipe"),
       ),
     );
-    expect(subscriber).toHaveBeenCalledTimes(2);
+    expect(subscriber).toHaveBeenCalledTimes(3);
     expect(subscriber.mock.calls).toEqual([
-      [["http://recipe.test/1"]],
-      [["http://recipe.test/1", "http://recipe.test/2"]],
+      [["http://recipe.test/0"]],
+      [["http://recipe.test/0", "http://recipe.test/1"]],
+      [
+        [
+          "http://recipe.test/0",
+          "http://recipe.test/1",
+          "http://recipe.test/2",
+        ],
+      ],
     ]);
   });
 });
