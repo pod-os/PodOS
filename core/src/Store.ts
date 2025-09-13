@@ -17,6 +17,7 @@ import {
   distinctUntilChanged,
   filter,
   map,
+  merge,
   Observable,
   startWith,
   Subject,
@@ -34,9 +35,9 @@ interface ObservableIndexedFormula extends IndexedFormula {
  */
 export function observableGraph(): ObservableIndexedFormula {
   const additions$ = new Subject<Quad>();
-  // We keep distinct values only because rdfArrayRemove is called 5 times with the same quad - once for each index + once for the statement
+  // We keep every 5th value only because rdfArrayRemove is called 5 times with the same quad - once for each index + once for the statement
   const removals$ = new Subject<Quad>().pipe(
-    distinctUntilChanged(),
+    filter((value, index) => (index + 1) % 5 === 0),
   ) as Subject<Quad>;
   const internalStore = new IndexedFormula(
     // FeaturesType is not exported from rdflib
@@ -203,7 +204,7 @@ export class Store {
     classUri: string,
     stop$: Subject<void>,
   ): Observable<string[]> {
-    return this.additions$.pipe(
+    return merge(this.additions$, this.removals$).pipe(
       takeUntil(stop$),
       filter(
         (quad) =>

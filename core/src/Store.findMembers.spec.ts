@@ -119,6 +119,18 @@ describe("Store", () => {
       expect(subscriber).toHaveBeenCalledTimes(1);
     });
 
+    it("pushes new values when statement is removed", () => {
+      internalStore.removeStatement(
+        quad(
+          sym("http://recipe.test/0"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://schema.org/Recipe"),
+        ),
+      );
+      expect(subscriber).toHaveBeenCalledTimes(2);
+      expect(subscriber.mock.calls).toEqual([[["http://recipe.test/0"]], [[]]]);
+    });
+
     it("only pushes value if number of members has changed", () => {
       internalStore.addAll([
         quad(
@@ -141,6 +153,21 @@ describe("Store", () => {
         ),
       );
       expect(subscriber).toHaveBeenCalledTimes(3);
+      internalStore.removeStatement(
+        quad(
+          sym("http://movie.test/1"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://movie.test/MovieClass"),
+        ),
+      );
+      internalStore.removeStatement(
+        quad(
+          sym("http://recipe.test/1"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://schema.org/Recipe"),
+        ),
+      );
+      expect(subscriber).toHaveBeenCalledTimes(4);
       expect(subscriber.mock.calls).toEqual([
         [["http://recipe.test/0"]],
         [["http://recipe.test/0", "http://recipe.test/1"]],
@@ -151,6 +178,7 @@ describe("Store", () => {
             "http://recipe.test/2",
           ],
         ],
+        [["http://recipe.test/0", "http://recipe.test/2"]],
       ]);
     });
   });
