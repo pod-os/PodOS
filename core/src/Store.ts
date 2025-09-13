@@ -39,33 +39,29 @@ export function observableGraph(): ObservableIndexedFormula {
   const removals$ = new Subject<Quad>().pipe(
     filter((value, index) => (index + 1) % 5 === 0),
   ) as Subject<Quad>;
-  const internalStore = new IndexedFormula(
-    // FeaturesType is not exported from rdflib
-    {} as any,
-    {
-      dataCallback: (quad) => additions$.next(quad),
-      // Because of the structure of IndexedFormula, the matching logic needs to be reimplemented in order to insert the callback
-      //https://github.com/linkeddata/rdflib.js/blob/c049d599d6c03905283fb28f31de6389c7d18eb8/src/utils-js.js#L272
-      rdfArrayRemove: (statements: Quad[], quad: Quad) => {
-        for (var i = 0; i < statements.length; i++) {
-          if (
-            statements[i].subject.equals(quad.subject) &&
-            statements[i].predicate.equals(quad.predicate) &&
-            statements[i].object.equals(quad.object) &&
-            statements[i].graph.equals(quad.graph)
-          ) {
-            //console.log(quad)
-            statements.splice(i, 1);
-            removals$.next(quad);
-            return;
-          }
+  const internalStore = new IndexedFormula(undefined, {
+    dataCallback: (quad) => additions$.next(quad),
+    // Because of the structure of IndexedFormula, the matching logic needs to be reimplemented in order to insert the callback
+    //https://github.com/linkeddata/rdflib.js/blob/c049d599d6c03905283fb28f31de6389c7d18eb8/src/utils-js.js#L272
+    rdfArrayRemove: (statements: Quad[], quad: Quad) => {
+      for (let i = 0; i < statements.length; i++) {
+        if (
+          statements[i].subject.equals(quad.subject) &&
+          statements[i].predicate.equals(quad.predicate) &&
+          statements[i].object.equals(quad.object) &&
+          statements[i].graph.equals(quad.graph)
+        ) {
+          //console.log(quad)
+          statements.splice(i, 1);
+          removals$.next(quad);
+          return;
         }
-        throw new Error(
-          "RDFArrayRemove: Array did not contain " + quad + " " + quad.graph,
-        );
-      },
+      }
+      throw new Error(
+        "RDFArrayRemove: Array did not contain " + quad + " " + quad.graph,
+      );
     },
-  ) as ObservableIndexedFormula;
+  }) as ObservableIndexedFormula;
   internalStore.additions$ = additions$;
   internalStore.removals$ = removals$;
   return internalStore;
