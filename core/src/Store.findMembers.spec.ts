@@ -108,7 +108,7 @@ describe("Store", () => {
       expect(subscriber).toHaveBeenCalledTimes(2);
     });
 
-    it("does not push values if predicate rdf:type is not present", () => {
+    it("does not push values if predicate rdf:type or rdfs:subclassOf is not present", () => {
       internalStore.add(
         quad(
           sym("http://recipe.test/1"),
@@ -132,18 +132,22 @@ describe("Store", () => {
     });
 
     it("only pushes value if number of members has changed", () => {
-      internalStore.addAll([
+      expect(subscriber).toHaveBeenCalledTimes(1);
+      internalStore.add(
+        quad(
+          sym("http://recipe.test/2"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://recipe.test/RecipeClass"),
+        ),
+      );
+      expect(subscriber).toHaveBeenCalledTimes(1);
+      internalStore.add(
         quad(
           sym("http://recipe.test/1"),
           sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
           sym("http://schema.org/Recipe"),
         ),
-        quad(
-          sym("http://movie.test/1"),
-          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-          sym("http://movie.test/MovieClass"),
-        ),
-      ]);
+      );
       expect(subscriber).toHaveBeenCalledTimes(2);
       internalStore.add(
         quad(
@@ -155,9 +159,9 @@ describe("Store", () => {
       expect(subscriber).toHaveBeenCalledTimes(3);
       internalStore.removeStatement(
         quad(
-          sym("http://movie.test/1"),
+          sym("http://recipe.test/2"),
           sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-          sym("http://movie.test/MovieClass"),
+          sym("http://recipe.test/RecipeClass"),
         ),
       );
       internalStore.removeStatement(
@@ -178,6 +182,31 @@ describe("Store", () => {
             "http://recipe.test/2",
           ],
         ],
+        [["http://recipe.test/0", "http://recipe.test/2"]],
+      ]);
+    });
+
+    it("pushes values for instances of subclasses after subclass relation is defined", () => {
+      expect(subscriber).toHaveBeenCalledTimes(1);
+      internalStore.add(
+        quad(
+          sym("http://recipe.test/2"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://recipe.test/RecipeClass"),
+        ),
+      );
+      expect(subscriber).toHaveBeenCalledTimes(1);
+
+      internalStore.add(
+        quad(
+          sym("http://recipe.test/RecipeClass"),
+          sym("http://www.w3.org/2000/01/rdf-schema#subClassOf"),
+          sym("http://schema.org/Recipe"),
+        ),
+      );
+      expect(subscriber).toHaveBeenCalledTimes(2);
+      expect(subscriber.mock.calls).toEqual([
+        [["http://recipe.test/0"]],
         [["http://recipe.test/0", "http://recipe.test/2"]],
       ]);
     });
