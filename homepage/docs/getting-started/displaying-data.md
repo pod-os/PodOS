@@ -54,7 +54,7 @@ To fetch the data of that resource and make it available for further usage, add 
 
 !!! tip
 
-    If you already own a Solid Pod, you can also pass your WebID into the `uri` attribute. 
+    If you already own a [Solid Pod](../solid/index.md), you can also pass your WebID into the `uri` attribute. 
 
 If you open your page now, you might notice that the resource URI will be fetched from the network already, but nothing
 shows up yet. We will change that in a second.
@@ -83,7 +83,7 @@ Let's add
 
     Both `pos-label` and `pos-description` try to be "smart" about what information to show. On the web there are multiple
     terms that could be used to state resource labels, e.g. `rdfs:label`, `schema:name` and more.
-    PodOS tries to use the most fitting terms and falls back to others until it finds something it could show. If nothing is availabe 
+    PodOS tries to use the most fitting terms and falls back to others until it finds something it could show. If nothing is available 
     `pos-label` will just show the resource URI as a last resort.
 
 If you open the page now, you will see some content!
@@ -132,7 +132,7 @@ This should look a lot better already. But nothing compares to showing a picture
 
 !!! tip "Build in CSS variables"
 
-    Did you notice the `--pos-background-color` we are using here? PodOS comes with several of those variables built-in. You can find the available variables in [global.css](https://github.com/pod-os/PodOS/blob/main/elements/src/global.css). `--pos-background-color` is aware of the preferred color scheme and adjust to light and dark mode.
+    Did you notice the `--pos-background-color` we are using here? PodOS comes with several of these variables built-in. You can find the available variables in [global.css](https://github.com/pod-os/PodOS/blob/main/elements/src/global.css). `--pos-background-color` is aware of the preferred color scheme and adjusts to light and dark mode.
 
 ## Showing a picture
 
