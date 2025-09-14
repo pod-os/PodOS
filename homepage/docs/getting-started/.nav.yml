@@ -1,4 +1,5 @@
 nav:
+  - index.md
   - Building dashboards:
     - quick-start.md
     - installation.md
