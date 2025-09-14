@@ -2,3 +2,4 @@ nav:
   - Building dashboards:
     - quick-start.md
     - installation.md
+    - displaying-data.md

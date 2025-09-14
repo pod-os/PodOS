@@ -14,31 +14,33 @@
     />
   </head>
   <style>
-    body {
-      main {
-        padding: 4rem;
-        margin: 1rem;
-        border-radius: 1rem;
-        background-color: var(--pos-background-color);
-      }
+    pos-app {
+      display: block;
+      padding: 4rem;
+      margin: 1rem;
+      border-radius: 1rem;
+      background-color: var(--pos-background-color);
+    }
+    pos-resource {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
     }
   </style>
   <body>
     <main>
       <pos-app>
         <pos-resource uri="https://pod-os.solidcommunity.net/profile/card#me">
-          <div style="display: flex; gap: 1rem; align-items: center">
-            <pos-picture></pos-picture>
-            <section>
-              <h1>
-                Welcome to
-                <pos-label></pos-label>
-              </h1>
-              <blockquote>
-                <pos-description></pos-description>
-              </blockquote>
-            </section>
-          </div>
+          <pos-picture></pos-picture>
+          <section>
+            <h1>
+              Welcome to
+              <pos-label></pos-label>
+            </h1>
+            <blockquote>
+              <pos-description></pos-description>
+            </blockquote>
+          </section>
         </pos-resource>
       </pos-app>
     </main>
