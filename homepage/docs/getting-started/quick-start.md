@@ -1,4 +1,4 @@
-# Quick start - PodOS elements
+# Quick start
 
 1. Create a plain old html file
 2. Add latest PodOS script tag and stylesheet to the head
@@ -44,6 +44,6 @@ Try this 🤩:
 5. `<pos-label` renders a human-readable name of the resource
 6. `<pos-description>` renders a renders a description of the resource
 
-Check out the [📖 Storybook documentation](https://pod-os.github.io/PodOS/storybook/) to learn about the available elements.
+Check out the [📖 Storybook documentation](https://pod-os.github.io/PodOS/storybook/) and the [element reference](../reference/elements/index.md) to learn about the available elements.
 
-Also, check out the [🧑‍🏫 tutorial section](../tutorials/index.md) on practical guides.
+For advanced topics and practical guides, take a look into the [🧑‍🏫 tutorial section](../tutorials/index.md).
