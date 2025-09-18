@@ -6,7 +6,7 @@
 
 # Class: HttpStatus
 
-Defined in: [files/HttpStatus.ts:1](https://github.com/pod-os/PodOS/blob/1aecf6de76fa668e7779c8aad7b604e498d41244/core/src/files/HttpStatus.ts#L1)
+Defined in: [files/HttpStatus.ts:1](https://github.com/pod-os/PodOS/blob/05359ae5a5ec21be7fe13c91bc776d19e0a5d007/core/src/files/HttpStatus.ts#L1)
 
 ## Constructors
 
@@ -14,7 +14,7 @@ Defined in: [files/HttpStatus.ts:1](https://github.com/pod-os/PodOS/blob/1aecf6d
 
 > **new HttpStatus**(`code`, `text?`): `HttpStatus`
 
-Defined in: [files/HttpStatus.ts:2](https://github.com/pod-os/PodOS/blob/1aecf6de76fa668e7779c8aad7b604e498d41244/core/src/files/HttpStatus.ts#L2)
+Defined in: [files/HttpStatus.ts:2](https://github.com/pod-os/PodOS/blob/05359ae5a5ec21be7fe13c91bc776d19e0a5d007/core/src/files/HttpStatus.ts#L2)
 
 #### Parameters
 
@@ -36,7 +36,7 @@ Defined in: [files/HttpStatus.ts:2](https://github.com/pod-os/PodOS/blob/1aecf6d
 
 > `readonly` **code**: `number`
 
-Defined in: [files/HttpStatus.ts:3](https://github.com/pod-os/PodOS/blob/1aecf6de76fa668e7779c8aad7b604e498d41244/core/src/files/HttpStatus.ts#L3)
+Defined in: [files/HttpStatus.ts:3](https://github.com/pod-os/PodOS/blob/05359ae5a5ec21be7fe13c91bc776d19e0a5d007/core/src/files/HttpStatus.ts#L3)
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: [files/HttpStatus.ts:3](https://github.com/pod-os/PodOS/blob/1aecf6d
 
 > `readonly` `optional` **text**: `string`
 
-Defined in: [files/HttpStatus.ts:4](https://github.com/pod-os/PodOS/blob/1aecf6de76fa668e7779c8aad7b604e498d41244/core/src/files/HttpStatus.ts#L4)
+Defined in: [files/HttpStatus.ts:4](https://github.com/pod-os/PodOS/blob/05359ae5a5ec21be7fe13c91bc776d19e0a5d007/core/src/files/HttpStatus.ts#L4)
 
 ## Methods
 
@@ -52,7 +52,7 @@ Defined in: [files/HttpStatus.ts:4](https://github.com/pod-os/PodOS/blob/1aecf6d
 
 > **toString**(): `string`
 
-Defined in: [files/HttpStatus.ts:7](https://github.com/pod-os/PodOS/blob/1aecf6de76fa668e7779c8aad7b604e498d41244/core/src/files/HttpStatus.ts#L7)
+Defined in: [files/HttpStatus.ts:7](https://github.com/pod-os/PodOS/blob/05359ae5a5ec21be7fe13c91bc776d19e0a5d007/core/src/files/HttpStatus.ts#L7)
 
 #### Returns
 

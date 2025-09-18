@@ -8,7 +8,7 @@
 
 > **SessionInfo** = `object`
 
-Defined in: [authentication/index.ts:8](https://github.com/pod-os/PodOS/blob/1aecf6de76fa668e7779c8aad7b604e498d41244/core/src/authentication/index.ts#L8)
+Defined in: [authentication/index.ts:8](https://github.com/pod-os/PodOS/blob/05359ae5a5ec21be7fe13c91bc776d19e0a5d007/core/src/authentication/index.ts#L8)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [authentication/index.ts:8](https://github.com/pod-os/PodOS/blob/1ae
 
 > **isLoggedIn**: `boolean`
 
-Defined in: [authentication/index.ts:9](https://github.com/pod-os/PodOS/blob/1aecf6de76fa668e7779c8aad7b604e498d41244/core/src/authentication/index.ts#L9)
+Defined in: [authentication/index.ts:9](https://github.com/pod-os/PodOS/blob/05359ae5a5ec21be7fe13c91bc776d19e0a5d007/core/src/authentication/index.ts#L9)
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: [authentication/index.ts:9](https://github.com/pod-os/PodOS/blob/1ae
 
 > `optional` **webId**: `string`
 
-Defined in: [authentication/index.ts:10](https://github.com/pod-os/PodOS/blob/1aecf6de76fa668e7779c8aad7b604e498d41244/core/src/authentication/index.ts#L10)
+Defined in: [authentication/index.ts:10](https://github.com/pod-os/PodOS/blob/05359ae5a5ec21be7fe13c91bc776d19e0a5d007/core/src/authentication/index.ts#L10)

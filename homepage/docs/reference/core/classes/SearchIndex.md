@@ -6,7 +6,7 @@
 
 # Class: SearchIndex
 
-Defined in: [search/SearchIndex.ts:7](https://github.com/pod-os/PodOS/blob/1aecf6de76fa668e7779c8aad7b604e498d41244/core/src/search/SearchIndex.ts#L7)
+Defined in: [search/SearchIndex.ts:7](https://github.com/pod-os/PodOS/blob/05359ae5a5ec21be7fe13c91bc776d19e0a5d007/core/src/search/SearchIndex.ts#L7)
 
 A fast, in-memory search index based on data from label indexes. Both labels and URIs are indexed.
 
@@ -16,7 +16,7 @@ A fast, in-memory search index based on data from label indexes. Both labels and
 
 > **new SearchIndex**(`labelIndexes`): `SearchIndex`
 
-Defined in: [search/SearchIndex.ts:9](https://github.com/pod-os/PodOS/blob/1aecf6de76fa668e7779c8aad7b604e498d41244/core/src/search/SearchIndex.ts#L9)
+Defined in: [search/SearchIndex.ts:9](https://github.com/pod-os/PodOS/blob/05359ae5a5ec21be7fe13c91bc776d19e0a5d007/core/src/search/SearchIndex.ts#L9)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [search/SearchIndex.ts:9](https://github.com/pod-os/PodOS/blob/1aecf
 
 > **clear**(): `void`
 
-Defined in: [search/SearchIndex.ts:61](https://github.com/pod-os/PodOS/blob/1aecf6de76fa668e7779c8aad7b604e498d41244/core/src/search/SearchIndex.ts#L61)
+Defined in: [search/SearchIndex.ts:61](https://github.com/pod-os/PodOS/blob/05359ae5a5ec21be7fe13c91bc776d19e0a5d007/core/src/search/SearchIndex.ts#L61)
 
 Remove all data from the search index.
 
@@ -48,7 +48,7 @@ Remove all data from the search index.
 
 > **rebuild**(): `SearchIndex`
 
-Defined in: [search/SearchIndex.ts:16](https://github.com/pod-os/PodOS/blob/1aecf6de76fa668e7779c8aad7b604e498d41244/core/src/search/SearchIndex.ts#L16)
+Defined in: [search/SearchIndex.ts:16](https://github.com/pod-os/PodOS/blob/05359ae5a5ec21be7fe13c91bc776d19e0a5d007/core/src/search/SearchIndex.ts#L16)
 
 Recreates the search index with the current data from all label indexes
 
@@ -62,7 +62,7 @@ Recreates the search index with the current data from all label indexes
 
 > **search**(`term`, `maxResults`): `Result`[]
 
-Defined in: [search/SearchIndex.ts:49](https://github.com/pod-os/PodOS/blob/1aecf6de76fa668e7779c8aad7b604e498d41244/core/src/search/SearchIndex.ts#L49)
+Defined in: [search/SearchIndex.ts:49](https://github.com/pod-os/PodOS/blob/05359ae5a5ec21be7fe13c91bc776d19e0a5d007/core/src/search/SearchIndex.ts#L49)
 
 Search the index for a given term. It finds partial matches, but will rank exact matches higher.
 

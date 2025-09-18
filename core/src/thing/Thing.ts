@@ -38,6 +38,12 @@ export class Thing {
     readonly editable: boolean = false,
   ) {}
 
+  /**
+   * Returns a human-readable label for this thing. Tries to match common RDF terms
+   * used for labels, such as `rdfs:label`, `schema:name` and others.
+   *
+   * If no such term is present, it will derive a label from the URI.
+   */
   label() {
     const value = this.anyValue(
       "http://www.w3.org/2006/vcard/ns#fn",
@@ -58,6 +64,9 @@ export class Thing {
     return labelFromUri(this.uri);
   }
 
+  /**
+   * Returns all the literal values that are linked to this thing
+   */
   literals(): Literal[] {
     const statements = this.store.statementsMatching(sym(this.uri));
 
@@ -72,6 +81,9 @@ export class Thing {
     }));
   }
 
+  /**
+   * Returns all the links from this thing to other resources
+   */
   relations(predicate?: string): Relation[] {
     const statements = this.store.statementsMatching(
       sym(this.uri),
@@ -89,6 +101,9 @@ export class Thing {
     }));
   }
 
+  /**
+   * Returns all the links from other resources to this thing
+   */
   reverseRelations(predicate?: string): Relation[] {
     const statements = this.store.statementsMatching(
       undefined,
@@ -105,6 +120,10 @@ export class Thing {
     }));
   }
 
+  /**
+   * Returns any value linked from this thing via one of the given predicates
+   * @param predicateUris
+   */
   anyValue(...predicateUris: string[]) {
     let value;
     predicateUris.some((it) => {
@@ -114,6 +133,10 @@ export class Thing {
     return value;
   }
 
+  /**
+   * Returns a literal value that describes this thing. Tries to match common RDF terms
+   * used for descriptions, like `dct:description`, `schema:description` or `rdfs:comment`
+   */
   description() {
     return this.anyValue(
       "http://purl.org/dc/terms/description",
@@ -128,6 +151,13 @@ export class Thing {
     );
   }
 
+  /**
+   * Returns the url of a picture or logo associated with this thing
+   * Tries to match common RDF terms used for pictures like `schema:image`,
+   * `vcard:photo` or `foaf:img`
+   *
+   * @return {Object} An object containing the `url` of the picture
+   */
   picture() {
     const directUrl = this.anyValue(
       "http://schema.org/image",
@@ -178,6 +208,9 @@ export class Thing {
       : null;
   }
 
+  /**
+   * Retrieves a list of RDF types for this thing.
+   */
   types(): RdfType[] {
     const uriMap = this.store.findTypeURIs(sym(this.uri));
     return Object.keys(uriMap).map((uri) => ({
@@ -186,6 +219,11 @@ export class Thing {
     }));
   }
 
+  /**
+   * Call this method to switch to a more specific subclass of Thing.
+   *
+   * @param SpecificThing - a subclass of Thing to assume
+   */
   assume<T>(
     SpecificThing: new (
       uri: string,
