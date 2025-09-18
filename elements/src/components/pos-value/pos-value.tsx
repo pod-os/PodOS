@@ -2,6 +2,10 @@ import { Thing } from '@pod-os/core';
 import { Component, Event, Prop, State } from '@stencil/core';
 import { ResourceAware, ResourceEventEmitter, subscribeResource } from '../events/ResourceAware';
 
+/**
+ * Shows a single value linked to the resource using the given predicate.
+ * The value is determined by [Thing.anyValue()](https://pod-os.org/reference/core/classes/thing/#anyvalue)
+ */
 @Component({
   tag: 'pos-value',
   shadow: true,

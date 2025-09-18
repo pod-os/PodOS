@@ -5,6 +5,10 @@
 <!-- Auto Generated Below -->
 
 
+## Overview
+
+Displays a human-readable label of the resource, provided by [Thing.label()](https://pod-os.org/reference/core/classes/thing/#label)
+
 ## Events
 
 | Event             | Description | Type               |

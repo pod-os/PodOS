@@ -76,6 +76,9 @@ export namespace Components {
     interface PosInternalRouter {
         "uri": string;
     }
+    /**
+     * Displays a human-readable label of the resource, provided by [Thing.label()](https://pod-os.org/reference/core/classes/thing/#label)
+     */
     interface PosLabel {
     }
     interface PosList {
@@ -116,8 +119,19 @@ export namespace Components {
          */
         "blurredBackground": boolean;
     }
+    /**
+     * Displays an RDF term (predicate) in a human-friendly way, using a provided label. The user can still expand the label
+     * to the full URI to see the actual predicate.
+     * This will only show the predicate itself, not any value. If you want to display a value, use [pos-value](../pos-value) instead.
+     */
     interface PosPredicate {
+        /**
+          * The human-readable label to show for this predicate
+         */
         "label": string;
+        /**
+          * The full URI of the predicate
+         */
         "uri": string;
     }
     interface PosRelations {
@@ -169,6 +183,10 @@ export namespace Components {
     interface PosUserMenu {
         "webId": string;
     }
+    /**
+     * Shows a single value linked to the resource using the given predicate.
+     * The value is determined by [Thing.anyValue()](https://pod-os.org/reference/core/classes/thing/#anyvalue)
+     */
     interface PosValue {
         /**
           * URI of the predicate to get the value from
@@ -558,6 +576,9 @@ declare global {
     interface HTMLPosLabelElementEventMap {
         "pod-os:resource": any;
     }
+    /**
+     * Displays a human-readable label of the resource, provided by [Thing.label()](https://pod-os.org/reference/core/classes/thing/#label)
+     */
     interface HTMLPosLabelElement extends Components.PosLabel, HTMLStencilElement {
         addEventListener<K extends keyof HTMLPosLabelElementEventMap>(type: K, listener: (this: HTMLPosLabelElement, ev: PosLabelCustomEvent<HTMLPosLabelElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
@@ -731,6 +752,11 @@ declare global {
         prototype: HTMLPosPictureElement;
         new (): HTMLPosPictureElement;
     };
+    /**
+     * Displays an RDF term (predicate) in a human-friendly way, using a provided label. The user can still expand the label
+     * to the full URI to see the actual predicate.
+     * This will only show the predicate itself, not any value. If you want to display a value, use [pos-value](../pos-value) instead.
+     */
     interface HTMLPosPredicateElement extends Components.PosPredicate, HTMLStencilElement {
     }
     var HTMLPosPredicateElement: {
@@ -926,6 +952,10 @@ declare global {
     interface HTMLPosValueElementEventMap {
         "pod-os:resource": any;
     }
+    /**
+     * Shows a single value linked to the resource using the given predicate.
+     * The value is determined by [Thing.anyValue()](https://pod-os.org/reference/core/classes/thing/#anyvalue)
+     */
     interface HTMLPosValueElement extends Components.PosValue, HTMLStencilElement {
         addEventListener<K extends keyof HTMLPosValueElementEventMap>(type: K, listener: (this: HTMLPosValueElement, ev: PosValueCustomEvent<HTMLPosValueElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
@@ -1092,6 +1122,9 @@ declare namespace LocalJSX {
     interface PosInternalRouter {
         "uri"?: string;
     }
+    /**
+     * Displays a human-readable label of the resource, provided by [Thing.label()](https://pod-os.org/reference/core/classes/thing/#label)
+     */
     interface PosLabel {
         "onPod-os:resource"?: (event: PosLabelCustomEvent<any>) => void;
     }
@@ -1151,8 +1184,19 @@ declare namespace LocalJSX {
         "blurredBackground"?: boolean;
         "onPod-os:resource"?: (event: PosPictureCustomEvent<any>) => void;
     }
+    /**
+     * Displays an RDF term (predicate) in a human-friendly way, using a provided label. The user can still expand the label
+     * to the full URI to see the actual predicate.
+     * This will only show the predicate itself, not any value. If you want to display a value, use [pos-value](../pos-value) instead.
+     */
     interface PosPredicate {
+        /**
+          * The human-readable label to show for this predicate
+         */
         "label"?: string;
+        /**
+          * The full URI of the predicate
+         */
         "uri"?: string;
     }
     interface PosRelations {
@@ -1227,6 +1271,10 @@ declare namespace LocalJSX {
         "onPod-os:logout"?: (event: PosUserMenuCustomEvent<any>) => void;
         "webId": string;
     }
+    /**
+     * Shows a single value linked to the resource using the given predicate.
+     * The value is determined by [Thing.anyValue()](https://pod-os.org/reference/core/classes/thing/#anyvalue)
+     */
     interface PosValue {
         "onPod-os:resource"?: (event: PosValueCustomEvent<any>) => void;
         /**
@@ -1314,6 +1362,9 @@ declare module "@stencil/core" {
              */
             "pos-image": LocalJSX.PosImage & JSXBase.HTMLAttributes<HTMLPosImageElement>;
             "pos-internal-router": LocalJSX.PosInternalRouter & JSXBase.HTMLAttributes<HTMLPosInternalRouterElement>;
+            /**
+             * Displays a human-readable label of the resource, provided by [Thing.label()](https://pod-os.org/reference/core/classes/thing/#label)
+             */
             "pos-label": LocalJSX.PosLabel & JSXBase.HTMLAttributes<HTMLPosLabelElement>;
             "pos-list": LocalJSX.PosList & JSXBase.HTMLAttributes<HTMLPosListElement>;
             "pos-literals": LocalJSX.PosLiterals & JSXBase.HTMLAttributes<HTMLPosLiteralsElement>;
@@ -1324,6 +1375,11 @@ declare module "@stencil/core" {
             "pos-navigation-bar": LocalJSX.PosNavigationBar & JSXBase.HTMLAttributes<HTMLPosNavigationBarElement>;
             "pos-new-thing-form": LocalJSX.PosNewThingForm & JSXBase.HTMLAttributes<HTMLPosNewThingFormElement>;
             "pos-picture": LocalJSX.PosPicture & JSXBase.HTMLAttributes<HTMLPosPictureElement>;
+            /**
+             * Displays an RDF term (predicate) in a human-friendly way, using a provided label. The user can still expand the label
+             * to the full URI to see the actual predicate.
+             * This will only show the predicate itself, not any value. If you want to display a value, use [pos-value](../pos-value) instead.
+             */
             "pos-predicate": LocalJSX.PosPredicate & JSXBase.HTMLAttributes<HTMLPosPredicateElement>;
             "pos-relations": LocalJSX.PosRelations & JSXBase.HTMLAttributes<HTMLPosRelationsElement>;
             "pos-resource": LocalJSX.PosResource & JSXBase.HTMLAttributes<HTMLPosResourceElement>;
@@ -1341,6 +1397,10 @@ declare module "@stencil/core" {
             "pos-type-badges": LocalJSX.PosTypeBadges & JSXBase.HTMLAttributes<HTMLPosTypeBadgesElement>;
             "pos-type-router": LocalJSX.PosTypeRouter & JSXBase.HTMLAttributes<HTMLPosTypeRouterElement>;
             "pos-user-menu": LocalJSX.PosUserMenu & JSXBase.HTMLAttributes<HTMLPosUserMenuElement>;
+            /**
+             * Shows a single value linked to the resource using the given predicate.
+             * The value is determined by [Thing.anyValue()](https://pod-os.org/reference/core/classes/thing/#anyvalue)
+             */
             "pos-value": LocalJSX.PosValue & JSXBase.HTMLAttributes<HTMLPosValueElement>;
         }
     }
