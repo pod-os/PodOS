@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 0.28.0
 
 ### ⚠ BREAKING CHANGES
 
@@ -13,7 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - This also involves pos-app creating a shadow root which might affect styling and dom encapsulation
   - The underlying authentication lib has been changed to [@uvdsl/solid-oidc-client-browser](https://github.com/uvdsl/solid-oidc-client-browser), which handles login and session refresh differently. Please consult the library documentation for details.
 
-### 0.28.0
+### Changed
 
 - [pos-rich-link](../docs/elements/components/pos-rich-link):
   - can now receive a resource to use for the link
