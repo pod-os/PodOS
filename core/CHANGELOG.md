@@ -12,6 +12,8 @@ and this project adheres to
 
 - `Store.findMembers` returns instances of classes and subclasses
 - `Store.observeFindMembers` returns an Observable and pushes new values when graph is updated
+- `Store.additions$` and `Store.removals$` are `rxjs` `Subject`s for listening to changes to the store
+- `observableGraph`  creates a new `rdflib.js` graph where changes to statements are observable through `rxjs` `Subject`s `additions$` and `removals$`
 
 ## 0.18.0
 
