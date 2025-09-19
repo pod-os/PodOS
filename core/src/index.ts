@@ -27,6 +27,8 @@ export * from "./profile";
 export * from "./search";
 export * from "./offline-cache";
 export * from "./terms";
+export * from "./Store";
+export * from "./uri";
 
 export interface PodOsConfiguration {
   offlineCache?: OfflineCache;
@@ -136,7 +138,7 @@ export class PodOS {
 
   /**
    * Fetch the private label index for the given profile and build a search index from it
-   * @param webId
+   * @param profile
    */
   async buildSearchIndex(profile: WebIdProfile) {
     return this.searchGateway.buildSearchIndex(profile);

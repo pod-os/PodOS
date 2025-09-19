@@ -1,4 +1,7 @@
-export { OfflineCapableFetcher } from "./OfflineCapableFetcher";
+export {
+  OfflineCapableFetcher,
+  OfflineCapableFetcherOptions,
+} from "./OfflineCapableFetcher";
 export {
   OfflineCache,
   CachedRdfDocument,

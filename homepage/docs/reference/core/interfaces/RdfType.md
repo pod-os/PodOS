@@ -6,7 +6,7 @@
 
 # Interface: RdfType
 
-Defined in: [thing/Thing.ts:26](https://github.com/pod-os/PodOS/blob/05359ae5a5ec21be7fe13c91bc776d19e0a5d007/core/src/thing/Thing.ts#L26)
+Defined in: [thing/Thing.ts:26](https://github.com/pod-os/PodOS/blob/5f8057b37a40843b32a1365a54e4283e9f14e36c/core/src/thing/Thing.ts#L26)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [thing/Thing.ts:26](https://github.com/pod-os/PodOS/blob/05359ae5a5e
 
 > **label**: `string`
 
-Defined in: [thing/Thing.ts:28](https://github.com/pod-os/PodOS/blob/05359ae5a5ec21be7fe13c91bc776d19e0a5d007/core/src/thing/Thing.ts#L28)
+Defined in: [thing/Thing.ts:28](https://github.com/pod-os/PodOS/blob/5f8057b37a40843b32a1365a54e4283e9f14e36c/core/src/thing/Thing.ts#L28)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [thing/Thing.ts:28](https://github.com/pod-os/PodOS/blob/05359ae5a5e
 
 > **uri**: `string`
 
-Defined in: [thing/Thing.ts:27](https://github.com/pod-os/PodOS/blob/05359ae5a5ec21be7fe13c91bc776d19e0a5d007/core/src/thing/Thing.ts#L27)
+Defined in: [thing/Thing.ts:27](https://github.com/pod-os/PodOS/blob/5f8057b37a40843b32a1365a54e4283e9f14e36c/core/src/thing/Thing.ts#L27)

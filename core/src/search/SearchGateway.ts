@@ -11,7 +11,7 @@ export class SearchGateway {
 
   /**
    * Fetch the private label index for the given profile and build a search index from it
-   * @param webId
+   * @param profile
    */
   async buildSearchIndex(profile: WebIdProfile) {
     const labelIndexUris = profile.getPrivateLabelIndexes();

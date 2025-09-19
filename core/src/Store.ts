@@ -147,6 +147,6 @@ export class Store {
   }
 }
 
-interface PodOsModule<T> {
+export interface PodOsModule<T> {
   readonly default: new (config: ModuleConfig) => T;
 }
