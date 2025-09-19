@@ -13,6 +13,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - This also involves pos-app creating a shadow root which might affect styling and dom encapsulation
   - The underlying authentication lib has been changed to [@uvdsl/solid-oidc-client-browser](https://github.com/uvdsl/solid-oidc-client-browser), which handles login and session refresh differently. Please consult the library documentation for details.
 
+### Changed
+
+- [pos-list](../docs/elements/components/pos-list): renders the template for all things from the store if they match the type given in attribute `if-typeof`
+
 ### 0.28.0
 
 - [pos-rich-link](../docs/elements/components/pos-rich-link):

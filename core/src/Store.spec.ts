@@ -1,13 +1,64 @@
 import { when } from "jest-when";
-import { graph, sym } from "rdflib";
+import { graph, quad, sym } from "rdflib";
 import { Parser as SparqlParser, Update } from "sparqljs";
 import { AuthenticatedFetch, PodOsSession } from "./authentication";
-import { Store } from "./Store";
+import { observableGraph, Store } from "./Store";
 import { Thing } from "./thing";
 
 jest.mock("./authentication");
 
 describe("Store", () => {
+  describe("observableGraph additions$", () => {
+    it("emits quads as they are added to the store", async () => {
+      const mockSession = {} as unknown as PodOsSession;
+      const internalStore = observableGraph();
+      const store = new Store(mockSession, undefined, undefined, internalStore);
+      const subscriber = jest.fn();
+      store.additions$?.subscribe(subscriber);
+      const quads = [
+        quad(
+          sym("http://recipe.test/1"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://schema.org/Recipe"),
+        ),
+        quad(
+          sym("http://movie.test/1"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://movie.test/MovieClass"),
+        ),
+      ];
+      internalStore.addAll(quads);
+      expect(subscriber.mock.calls).toEqual(quads.map((x) => [x]));
+    });
+  });
+
+  describe("observableGraph removals$", () => {
+    it("emits quads as they are removed from the store", async () => {
+      const mockSession = {} as unknown as PodOsSession;
+      const internalStore = observableGraph();
+      const store = new Store(mockSession, undefined, undefined, internalStore);
+      const subscriber = jest.fn();
+      store.removals$?.subscribe(subscriber);
+      const quads = [
+        quad(
+          sym("http://recipe.test/1"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://schema.org/Recipe"),
+        ),
+        quad(
+          sym("http://movie.test/1"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://movie.test/MovieClass"),
+        ),
+      ];
+      internalStore.addAll(quads);
+      internalStore.removeStatement(quads[0]);
+      internalStore.removeStatement(quads[1]);
+      expect(subscriber).toHaveBeenCalledTimes(2);
+      expect(subscriber.mock.calls).toEqual(quads.map((x) => [x]));
+    });
+  });
+
   describe("fetch", () => {
     it("fetches and parses turtle data", async () => {
       const mockSession = {

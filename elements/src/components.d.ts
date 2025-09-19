@@ -87,6 +87,10 @@ export namespace Components {
          */
         "fetch": boolean;
         /**
+          * URI of a class for which instances will be listed
+         */
+        "ifTypeof": string;
+        /**
           * URI of the predicate to follow
          */
         "rel": string;
@@ -595,6 +599,7 @@ declare global {
     };
     interface HTMLPosListElementEventMap {
         "pod-os:resource": any;
+        "pod-os:init": any;
     }
     interface HTMLPosListElement extends Components.PosList, HTMLStencilElement {
         addEventListener<K extends keyof HTMLPosListElementEventMap>(type: K, listener: (this: HTMLPosListElement, ev: PosListCustomEvent<HTMLPosListElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -1133,6 +1138,11 @@ declare namespace LocalJSX {
           * Whether listed resources should be fetched before being displayed
          */
         "fetch"?: boolean;
+        /**
+          * URI of a class for which instances will be listed
+         */
+        "ifTypeof"?: string;
+        "onPod-os:init"?: (event: PosListCustomEvent<any>) => void;
         "onPod-os:resource"?: (event: PosListCustomEvent<any>) => void;
         /**
           * URI of the predicate to follow
