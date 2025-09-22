@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- PodOS can now handle JSON-LD documents as regular RDF documents and work with their data 
+
 ## 0.18.0
 
 ### ⚠ BREAKING CHANGES

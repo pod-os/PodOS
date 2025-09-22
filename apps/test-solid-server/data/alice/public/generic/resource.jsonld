@@ -1,0 +1,22 @@
+{
+  "@context": {
+    "schema": "http://schema.org/"
+  },
+  "@graph": [
+    {
+      "@id": "#it",
+      "@type": "schema:Thing",
+      "schema:name": "Something",
+      "schema:image": {
+        "@id": "thing.png"
+      },
+      "schema:description": "A very generic item",
+      "schema:parentItem": {
+        "@id": "#parent",
+        "@type": "schema:Thing",
+        "schema:name": "Related Thing",
+        "schema:description": "This is somehow related to the other thing"
+      }
+    }
+  ]
+}
