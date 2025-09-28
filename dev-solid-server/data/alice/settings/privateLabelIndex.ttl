@@ -1,17 +1,9 @@
-@prefix :       <#> .
-@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix : <http://localhost:3000/alice/settings/privateLabelIndex.ttl#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 
-</alice/games/minecraft#it>
-    rdfs:label "Minecraft" .
-
-</alice/profile/card#me>
-    rdfs:label "Alice" .
-
-</alice/documents/test.pdf>
-    rdfs:label "test.pdf" .
-
-</alice/documents/page.html>
-    rdfs:label "Web Page" .
-
-</alice/documents/notes.md>
-    rdfs:label "notes.md" .
+<http://localhost:3000/alice/games/minecraft#it> rdfs:label "Minecraft".
+<http://localhost:3000/alice/profile/card#me> rdfs:label "Alice".
+<http://localhost:3000/alice/documents/test.pdf> rdfs:label "test.pdf".
+<http://localhost:3000/alice/documents/page.html> rdfs:label "Web Page".
+<http://localhost:3000/alice/documents/notes.md> rdfs:label "notes.md".
+<http://localhost:3000/alice/games/fallout3#it> rdfs:label "Fallout 3".
