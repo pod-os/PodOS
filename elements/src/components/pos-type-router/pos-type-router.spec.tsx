@@ -9,6 +9,7 @@ describe('pos-type-router', () => {
     const page = await newSpecPage({
       components: [PosTypeRouter],
       html: `<pos-type-router />`,
+      supportsShadowDom: true,
     });
     expect(page.root).toEqualHtml(`
       <pos-type-router>
@@ -21,6 +22,7 @@ describe('pos-type-router', () => {
     const page = await newSpecPage({
       components: [PosTypeRouter],
       html: `<pos-type-router />`,
+      supportsShadowDom: false,
     });
     await page.rootInstance.receiveResource({
       types: () => [{ uri: 'http://www.w3.org/2007/ont/link#RDFDocument', label: 'RdfDocument' }],
@@ -29,9 +31,9 @@ describe('pos-type-router', () => {
 
     expect(page.root).toEqualHtml(`
     <pos-type-router>
-      <mock:shadow-root>
+      <section>
         <pos-app-rdf-document></pos-app-rdf-document>
-      </mock:shadow-root>
+      </section>
     </pos-type-router>
 `);
   });
@@ -40,6 +42,7 @@ describe('pos-type-router', () => {
     const page = await newSpecPage({
       components: [PosTypeRouter],
       html: `<pos-type-router />`,
+      supportsShadowDom: false,
     });
     await page.rootInstance.receiveResource({
       types: () => [{ uri: 'http://purl.org/dc/terms/Image', label: 'Image' }],
@@ -48,9 +51,9 @@ describe('pos-type-router', () => {
 
     expect(page.root).toEqualHtml(`
     <pos-type-router>
-      <mock:shadow-root>
+      <section>
         <pos-app-image-viewer></pos-app-image-viewer>
-      </mock:shadow-root>
+      </section>
     </pos-type-router>
 `);
   });
@@ -59,6 +62,7 @@ describe('pos-type-router', () => {
     const page = await newSpecPage({
       components: [PosTypeRouter],
       html: `<pos-type-router />`,
+      supportsShadowDom: false,
     });
     await page.rootInstance.receiveResource({
       types: () => [
@@ -70,9 +74,9 @@ describe('pos-type-router', () => {
 
     expect(page.root).toEqualHtml(`
     <pos-type-router>
-      <mock:shadow-root>
+      <section>
         <pos-app-document-viewer></pos-app-document-viewer>
-      </mock:shadow-root>
+      </section>
     </pos-type-router>
 `);
   });
@@ -81,6 +85,7 @@ describe('pos-type-router', () => {
     const page = await newSpecPage({
       components: [PosTypeRouter],
       html: `<pos-type-router />`,
+      supportsShadowDom: false,
     });
     await page.rootInstance.receiveResource({
       types: () => [{ uri: 'http://www.w3.org/2007/ont/link#Document', label: 'Document' }],
@@ -89,9 +94,9 @@ describe('pos-type-router', () => {
 
     expect(page.root).toEqualHtml(`
     <pos-type-router>
-      <mock:shadow-root>
+      <section>
         <pos-app-document-viewer></pos-app-document-viewer>
-      </mock:shadow-root>
+      </section>
     </pos-type-router>
 `);
   });
@@ -100,6 +105,7 @@ describe('pos-type-router', () => {
     const page = await newSpecPage({
       components: [PosTypeRouter],
       html: `<pos-type-router />`,
+      supportsShadowDom: false,
     });
     await page.rootInstance.receiveResource({
       types: () => ['http://www.w3.org/ns/ldp#Resource'],
@@ -108,9 +114,9 @@ describe('pos-type-router', () => {
 
     expect(page.root).toEqualHtml(`
     <pos-type-router>
-      <mock:shadow-root>
+      <section>
         <pos-app-generic></pos-app-generic>
-      </mock:shadow-root>
+      </section>
     </pos-type-router>
 `);
   });

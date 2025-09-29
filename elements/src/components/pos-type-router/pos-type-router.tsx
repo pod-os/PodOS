@@ -6,6 +6,7 @@ import { selectAppForTypes } from './selectAppForTypes';
 @Component({
   tag: 'pos-type-router',
   shadow: true,
+  styleUrl: 'pos-type-router.css',
 })
 export class PosTypeRouter implements ResourceAware {
   @State() types: RdfType[];
@@ -27,6 +28,18 @@ export class PosTypeRouter implements ResourceAware {
 
   private renderApp() {
     const App = selectAppForTypes(this.types);
-    return <App />;
+    const apps = [App];
+    return (
+      <section>
+        {apps.length > 1 ? (
+          <aside>
+            <button>A</button>
+            <button>B</button>
+            <button>C</button>
+          </aside>
+        ) : null}
+        <App></App>
+      </section>
+    );
   }
 }
