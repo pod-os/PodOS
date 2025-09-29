@@ -1,7 +1,7 @@
 import { RdfType, Thing } from '@pod-os/core';
 import { Component, Event, EventEmitter, h, State } from '@stencil/core';
 import { ResourceAware, subscribeResource } from '../events/ResourceAware';
-import { selectAppForTypes } from './selectAppForTypes';
+import { selectToolsForTypes } from './selectToolsForTypes';
 
 @Component({
   tag: 'pos-type-router',
@@ -27,12 +27,12 @@ export class PosTypeRouter implements ResourceAware {
   }
 
   private renderApp() {
-    const Tool = selectAppForTypes(this.types);
-    const tools = [Tool];
+    const availableTools = selectToolsForTypes(this.types);
+    const SelectedTool = availableTools[0].element;
     return (
       <section>
-        <pos-tool-select tools={tools}></pos-tool-select>
-        <Tool></Tool>
+        <pos-tool-select tools={availableTools}></pos-tool-select>
+        <SelectedTool></SelectedTool>
       </section>
     );
   }
