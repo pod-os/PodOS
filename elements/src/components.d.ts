@@ -6,7 +6,9 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { PodOS, Thing } from "@pod-os/core";
+import { ToolConfig } from "./components/pos-type-router/selectToolsForTypes";
 export { PodOS, Thing } from "@pod-os/core";
+export { ToolConfig } from "./components/pos-type-router/selectToolsForTypes";
 export namespace Components {
     interface PosAddLiteralValue {
     }
@@ -177,7 +179,7 @@ export namespace Components {
     interface PosSubjects {
     }
     interface PosToolSelect {
-        "tools": Tool[];
+        "tools": ToolConfig[];
     }
     interface PosTypeBadges {
     }
@@ -1271,7 +1273,7 @@ declare namespace LocalJSX {
         "onPod-os:resource"?: (event: PosSubjectsCustomEvent<any>) => void;
     }
     interface PosToolSelect {
-        "tools"?: Tool[];
+        "tools"?: ToolConfig[];
     }
     interface PosTypeBadges {
         "onPod-os:resource"?: (event: PosTypeBadgesCustomEvent<any>) => void;

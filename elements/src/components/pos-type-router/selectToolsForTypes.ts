@@ -1,6 +1,6 @@
 import { RdfType } from '@pod-os/core';
 
-interface ToolConfig {
+export interface ToolConfig {
   element: string;
   label: string;
 }

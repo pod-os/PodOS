@@ -1,3 +1,5 @@
+jest.mock('./shoelace', () => ({}));
+
 // noinspection ES6UnusedImports
 import { h } from '@stencil/core';
 import { newSpecPage } from '@stencil/core/testing';
@@ -56,5 +58,7 @@ describe('pos-tool-select', () => {
 
     const buttons = queryAllByRole(page.root, 'button');
     expect(buttons.length).toBe(2);
+    expect(buttons[0].textContent).toEqual('Tool 1');
+    expect(buttons[1].textContent).toEqual('Tool 2');
   });
 });

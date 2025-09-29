@@ -1,9 +1,9 @@
 :host {
-  --button-size: var(--size-12);
+  --button-size: var(--size-14);
   display: block;
   position: sticky;
   top: 0;
-  overflow: scroll;
+  overflow: auto;
   min-width: var(--button-size);
 }
 
@@ -13,6 +13,19 @@ aside {
   justify-content: center;
 
   button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    font-size: var(--size-6);
+    .text {
+      font-size: var(--size-3);
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      width: 100%;
+      overflow: hidden;
+    }
     outline: none;
     border: none;
     width: var(--button-size);
