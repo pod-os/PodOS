@@ -1,7 +1,6 @@
 section {
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
 }
 
 section > :last-child {
@@ -11,6 +10,5 @@ section > :last-child {
 @media (max-width: 640px) {
   section {
     flex-direction: column-reverse;
-    align-items: center;
   }
 }
