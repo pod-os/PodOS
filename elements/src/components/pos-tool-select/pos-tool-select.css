@@ -1,6 +1,7 @@
 :host {
   --button-size: var(--size-14);
   display: block;
+  /* TODO sticky does not work yet */
   position: sticky;
   top: 0;
   overflow: auto;
@@ -38,6 +39,7 @@ aside {
 
 @media (max-width: 640px) {
   :host {
+    position: absolute;
     top: unset;
     bottom: 0;
     width: 100dvw;
