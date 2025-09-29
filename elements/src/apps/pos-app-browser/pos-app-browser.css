@@ -68,4 +68,7 @@ main {
     padding: var(--size-1);
     justify-content: space-between;
   }
+  footer {
+    display: none;
+  }
 }
