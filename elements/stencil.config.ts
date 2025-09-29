@@ -1,5 +1,7 @@
 import { Config } from '@stencil/core';
 
+import { join } from 'path';
+
 export const config: Config = {
   namespace: 'elements',
   globalScript: 'src/global.ts',
@@ -18,7 +20,15 @@ export const config: Config = {
     },
     {
       type: 'www',
-      copy: [{ src: 'pod-index.html' }, { src: 'registerSW.js' }, { src: 'service-worker-localhost.js' }],
+      copy: [
+        { src: 'pod-index.html' },
+        { src: 'registerSW.js' },
+        { src: 'service-worker-localhost.js' },
+        {
+          src: join(__dirname, '../node_modules/@shoelace-style/shoelace/dist/assets'),
+          dest: 'shoelace/assets',
+        },
+      ],
       serviceWorker: false, // disable stencils own service worker
     },
   ],

@@ -1,5 +1,8 @@
 import '@ionic/core';
 
+import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path.js';
+setBasePath('/shoelace/');
+
 const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
 function updateTheme(e) {
