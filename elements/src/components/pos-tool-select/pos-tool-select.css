@@ -1,0 +1,36 @@
+:host {
+  --button-size: var(--size-12);
+  display: block;
+  position: sticky;
+  top: 0;
+  overflow: scroll;
+  min-width: var(--button-size);
+}
+
+aside {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  button {
+    outline: none;
+    border: none;
+    width: var(--button-size);
+    min-width: var(--button-size);
+    height: var(--button-size);
+    min-height: var(--button-size);
+    background-color: var(--pos-background-color);
+  }
+}
+
+@media (max-width: 640px) {
+  :host {
+    top: unset;
+    bottom: 0;
+    width: 100dvw;
+  }
+  aside {
+    flex-direction: row;
+    background-color: var(--pos-background-color);
+  }
+}

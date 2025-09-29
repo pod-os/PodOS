@@ -176,6 +176,8 @@ export namespace Components {
     }
     interface PosSubjects {
     }
+    interface PosToolSelect {
+    }
     interface PosTypeBadges {
     }
     interface PosTypeRouter {
@@ -897,6 +899,12 @@ declare global {
         prototype: HTMLPosSubjectsElement;
         new (): HTMLPosSubjectsElement;
     };
+    interface HTMLPosToolSelectElement extends Components.PosToolSelect, HTMLStencilElement {
+    }
+    var HTMLPosToolSelectElement: {
+        prototype: HTMLPosToolSelectElement;
+        new (): HTMLPosToolSelectElement;
+    };
     interface HTMLPosTypeBadgesElementEventMap {
         "pod-os:resource": any;
     }
@@ -1011,6 +1019,7 @@ declare global {
         "pos-select-term": HTMLPosSelectTermElement;
         "pos-setting-offline-cache": HTMLPosSettingOfflineCacheElement;
         "pos-subjects": HTMLPosSubjectsElement;
+        "pos-tool-select": HTMLPosToolSelectElement;
         "pos-type-badges": HTMLPosTypeBadgesElement;
         "pos-type-router": HTMLPosTypeRouterElement;
         "pos-user-menu": HTMLPosUserMenuElement;
@@ -1260,6 +1269,8 @@ declare namespace LocalJSX {
     interface PosSubjects {
         "onPod-os:resource"?: (event: PosSubjectsCustomEvent<any>) => void;
     }
+    interface PosToolSelect {
+    }
     interface PosTypeBadges {
         "onPod-os:resource"?: (event: PosTypeBadgesCustomEvent<any>) => void;
     }
@@ -1323,6 +1334,7 @@ declare namespace LocalJSX {
         "pos-select-term": PosSelectTerm;
         "pos-setting-offline-cache": PosSettingOfflineCache;
         "pos-subjects": PosSubjects;
+        "pos-tool-select": PosToolSelect;
         "pos-type-badges": PosTypeBadges;
         "pos-type-router": PosTypeRouter;
         "pos-user-menu": PosUserMenu;
@@ -1394,6 +1406,7 @@ declare module "@stencil/core" {
             "pos-select-term": LocalJSX.PosSelectTerm & JSXBase.HTMLAttributes<HTMLPosSelectTermElement>;
             "pos-setting-offline-cache": LocalJSX.PosSettingOfflineCache & JSXBase.HTMLAttributes<HTMLPosSettingOfflineCacheElement>;
             "pos-subjects": LocalJSX.PosSubjects & JSXBase.HTMLAttributes<HTMLPosSubjectsElement>;
+            "pos-tool-select": LocalJSX.PosToolSelect & JSXBase.HTMLAttributes<HTMLPosToolSelectElement>;
             "pos-type-badges": LocalJSX.PosTypeBadges & JSXBase.HTMLAttributes<HTMLPosTypeBadgesElement>;
             "pos-type-router": LocalJSX.PosTypeRouter & JSXBase.HTMLAttributes<HTMLPosTypeRouterElement>;
             "pos-user-menu": LocalJSX.PosUserMenu & JSXBase.HTMLAttributes<HTMLPosUserMenuElement>;

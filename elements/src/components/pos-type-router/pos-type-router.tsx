@@ -31,13 +31,7 @@ export class PosTypeRouter implements ResourceAware {
     const apps = [App];
     return (
       <section>
-        {apps.length > 1 ? (
-          <aside>
-            <button>A</button>
-            <button>B</button>
-            <button>C</button>
-          </aside>
-        ) : null}
+        {apps.length > 1 ? <pos-tool-select></pos-tool-select> : null}
         <App></App>
       </section>
     );

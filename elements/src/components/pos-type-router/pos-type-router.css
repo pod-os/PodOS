@@ -1,28 +1,12 @@
 section {
   display: flex;
   flex-direction: row;
-  gap: var(--size-2);
-  aside {
-    display: flex;
-    flex-direction: column;
-    gap: var(--size-2);
-    button {
-      outline: none;
-      border: none;
-      background-color: var(--pos-background-color);
-    }
-  }
+  align-items: flex-start;
 }
 
 @media (max-width: 640px) {
   section {
     flex-direction: column-reverse;
-    aside {
-      flex-direction: row;
-      justify-content: center;
-      position: sticky;
-      bottom: 0;
-      background-color: var(--pos-background-color);
-    }
+    align-items: center;
   }
 }
