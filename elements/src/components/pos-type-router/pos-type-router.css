@@ -4,6 +4,10 @@ section {
   align-items: flex-start;
 }
 
+section > :last-child {
+  flex-grow: 1;
+}
+
 @media (max-width: 640px) {
   section {
     flex-direction: column-reverse;
