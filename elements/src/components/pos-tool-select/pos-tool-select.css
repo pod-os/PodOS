@@ -1,8 +1,8 @@
 :host {
   --button-size: var(--size-14);
   display: block;
-  /* TODO sticky does not work yet */
   position: sticky;
+  align-self: flex-start;
   top: 0;
   overflow: auto;
   min-width: var(--button-size);
@@ -39,6 +39,7 @@ aside {
 
 @media (max-width: 640px) {
   :host {
+    /*TODO this overlaps content, while sticky is not at the bottom with small content*/
     position: absolute;
     top: unset;
     bottom: 0;
