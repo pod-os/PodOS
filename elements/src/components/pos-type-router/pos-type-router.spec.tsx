@@ -32,6 +32,7 @@ describe('pos-type-router', () => {
     expect(page.root).toEqualHtml(`
     <pos-type-router>
       <section>
+        <pos-tool-select></pos-tool-select>
         <pos-app-rdf-document></pos-app-rdf-document>
       </section>
     </pos-type-router>
@@ -52,6 +53,7 @@ describe('pos-type-router', () => {
     expect(page.root).toEqualHtml(`
     <pos-type-router>
       <section>
+        <pos-tool-select></pos-tool-select>
         <pos-app-image-viewer></pos-app-image-viewer>
       </section>
     </pos-type-router>
@@ -75,6 +77,7 @@ describe('pos-type-router', () => {
     expect(page.root).toEqualHtml(`
     <pos-type-router>
       <section>
+        <pos-tool-select></pos-tool-select>
         <pos-app-document-viewer></pos-app-document-viewer>
       </section>
     </pos-type-router>
@@ -95,6 +98,7 @@ describe('pos-type-router', () => {
     expect(page.root).toEqualHtml(`
     <pos-type-router>
       <section>
+        <pos-tool-select></pos-tool-select>
         <pos-app-document-viewer></pos-app-document-viewer>
       </section>
     </pos-type-router>
@@ -115,6 +119,7 @@ describe('pos-type-router', () => {
     expect(page.root).toEqualHtml(`
     <pos-type-router>
       <section>
+        <pos-tool-select></pos-tool-select>
         <pos-app-generic></pos-app-generic>
       </section>
     </pos-type-router>

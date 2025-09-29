@@ -177,6 +177,7 @@ export namespace Components {
     interface PosSubjects {
     }
     interface PosToolSelect {
+        "tools": Tool[];
     }
     interface PosTypeBadges {
     }
@@ -1270,6 +1271,7 @@ declare namespace LocalJSX {
         "onPod-os:resource"?: (event: PosSubjectsCustomEvent<any>) => void;
     }
     interface PosToolSelect {
+        "tools"?: Tool[];
     }
     interface PosTypeBadges {
         "onPod-os:resource"?: (event: PosTypeBadgesCustomEvent<any>) => void;

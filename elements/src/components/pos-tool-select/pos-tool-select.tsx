@@ -1,4 +1,6 @@
-import { Component, h } from '@stencil/core';
+import { Component, h, Prop } from '@stencil/core';
+
+interface Tool {}
 
 @Component({
   tag: 'pos-tool-select',
@@ -6,18 +8,19 @@ import { Component, h } from '@stencil/core';
   shadow: true,
 })
 export class PosToolSelect {
+  @Prop()
+  tools: Tool[] = [];
+
   render() {
-    return (
-      <aside>
-        <button>A</button>
-        <button>B</button>
-        <button>C</button>
-        <button>D</button>
-        <button>E</button>
-        <button>F</button>
-        <button>G</button>
-        <button>H</button>
-      </aside>
-    );
+    if (this.tools.length > 1) {
+      return (
+        <aside>
+          {this.tools.map(() => (
+            <button>Tool</button>
+          ))}
+        </aside>
+      );
+    }
+    return null;
   }
 }

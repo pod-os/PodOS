@@ -27,12 +27,12 @@ export class PosTypeRouter implements ResourceAware {
   }
 
   private renderApp() {
-    const App = selectAppForTypes(this.types);
-    const apps = [App];
+    const Tool = selectAppForTypes(this.types);
+    const tools = [Tool];
     return (
       <section>
-        {apps.length > 1 ? <pos-tool-select></pos-tool-select> : null}
-        <App></App>
+        <pos-tool-select tools={tools}></pos-tool-select>
+        <Tool></Tool>
       </section>
     );
   }
