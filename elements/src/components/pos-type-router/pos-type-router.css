@@ -9,6 +9,11 @@ section > :last-child {
 
 @media (max-width: 640px) {
   section {
+    --toolbar-size: var(--size-14);
     flex-direction: column-reverse;
+    padding-bottom: var(--toolbar-size);
+    pos-tool-select {
+      --button-size: var(--toolbar-size);
+    }
   }
 }

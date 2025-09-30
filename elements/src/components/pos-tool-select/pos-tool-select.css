@@ -39,8 +39,7 @@ aside {
 
 @media (max-width: 640px) {
   :host {
-    /*TODO this overlaps content, while sticky is not at the bottom with small content*/
-    position: absolute;
+    position: fixed;
     top: unset;
     bottom: 0;
     width: 100dvw;
