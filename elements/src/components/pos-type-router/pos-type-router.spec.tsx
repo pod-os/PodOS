@@ -125,4 +125,32 @@ describe('pos-type-router', () => {
     </pos-type-router>
 `);
   });
+
+  it('renders the selected tool', async () => {
+    const page = await newSpecPage({
+      components: [PosTypeRouter],
+      html: `<pos-type-router />`,
+      supportsShadowDom: false,
+    });
+    await page.rootInstance.receiveResource({
+      types: () => ['http://www.w3.org/ns/ldp#Resource'],
+    });
+    await page.waitForChanges();
+
+    page.root.dispatchEvent(
+      new CustomEvent('pod-os:tool-selected', {
+        detail: { element: 'pos-app-document-viewer' },
+      }),
+    );
+    await page.waitForChanges();
+
+    expect(page.root).toEqualHtml(`
+    <pos-type-router>
+      <section>
+        <pos-tool-select></pos-tool-select>
+        <pos-app-document-viewer></pos-app-document-viewer>
+      </section>
+    </pos-type-router>
+`);
+  });
 });

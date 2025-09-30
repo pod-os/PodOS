@@ -307,6 +307,10 @@ export interface PosSubjectsCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosSubjectsElement;
 }
+export interface PosToolSelectCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosToolSelectElement;
+}
 export interface PosTypeBadgesCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosTypeBadgesElement;
@@ -902,7 +906,18 @@ declare global {
         prototype: HTMLPosSubjectsElement;
         new (): HTMLPosSubjectsElement;
     };
+    interface HTMLPosToolSelectElementEventMap {
+        "pod-os:tool-selected": ToolConfig;
+    }
     interface HTMLPosToolSelectElement extends Components.PosToolSelect, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosToolSelectElementEventMap>(type: K, listener: (this: HTMLPosToolSelectElement, ev: PosToolSelectCustomEvent<HTMLPosToolSelectElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosToolSelectElementEventMap>(type: K, listener: (this: HTMLPosToolSelectElement, ev: PosToolSelectCustomEvent<HTMLPosToolSelectElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosToolSelectElement: {
         prototype: HTMLPosToolSelectElement;
@@ -1273,6 +1288,7 @@ declare namespace LocalJSX {
         "onPod-os:resource"?: (event: PosSubjectsCustomEvent<any>) => void;
     }
     interface PosToolSelect {
+        "onPod-os:tool-selected"?: (event: PosToolSelectCustomEvent<ToolConfig>) => void;
         "tools"?: ToolConfig[];
     }
     interface PosTypeBadges {
