@@ -4,7 +4,7 @@ jest.mock('./shoelace', () => ({}));
 import { h } from '@stencil/core';
 import { newSpecPage } from '@stencil/core/testing';
 import { PosToolSelect } from './pos-tool-select';
-import { findAllByRole, getAllByRole, queryAllByRole, screen } from '@testing-library/dom';
+import { queryAllByRole } from '@testing-library/dom';
 
 describe('pos-tool-select', () => {
   it('renders nothing if no tools configured', async () => {
@@ -60,5 +60,36 @@ describe('pos-tool-select', () => {
     expect(buttons.length).toBe(2);
     expect(buttons[0].textContent).toEqual('Tool 1');
     expect(buttons[1].textContent).toEqual('Tool 2');
+  });
+
+  it('fires pod-os:tool-selected event on button click', async () => {
+    const tools = [
+      {
+        label: 'Tool 1',
+        component: 'pos-test-tool-1',
+      },
+      {
+        label: 'Tool 2',
+        component: 'pos-test-tool-2',
+      },
+    ];
+    const page = await newSpecPage({
+      components: [PosToolSelect],
+      template: () => <pos-tool-select tools={tools} />,
+      supportsShadowDom: false,
+    });
+
+    const eventSpy = jest.fn();
+    page.win.addEventListener('pod-os:tool-selected', eventSpy);
+
+    const button = queryAllByRole(page.root, 'button')[0];
+    expect(button.textContent).toEqual('Tool 1');
+    button.click();
+
+    expect(eventSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        detail: tools[0],
+      }),
+    );
   });
 });

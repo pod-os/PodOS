@@ -1,4 +1,4 @@
-import { Component, h, Prop } from '@stencil/core';
+import { Component, h, Prop, Event, EventEmitter } from '@stencil/core';
 import { ToolConfig } from '../pos-type-router/selectToolsForTypes';
 
 import './shoelace';
@@ -12,13 +12,15 @@ export class PosToolSelect {
   @Prop()
   tools: ToolConfig[] = [];
 
+  @Event({ eventName: 'pod-os:tool-selected' })
+  toolSelected: EventEmitter<ToolConfig>;
+
   render() {
-    console.log('toos', this.tools);
     if (this.tools.length > 1) {
       return (
         <aside>
           {this.tools.map(it => (
-            <button>
+            <button onClick={() => this.toolSelected.emit(it)}>
               <sl-icon name="list-ul"></sl-icon>
               <span class="text">{it.label}</span>
             </button>
