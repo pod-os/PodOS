@@ -35,15 +35,15 @@ function containsType(types: RdfType[], typeUri: string) {
 
 export function selectToolsForTypes(types: RdfType[]) {
   if (containsType(types, 'http://www.w3.org/ns/ldp#Container')) {
-    return [AvailableTools.LdpContainer];
+    return [AvailableTools.LdpContainer, AvailableTools.Generic];
   } else if (containsType(types, 'http://www.w3.org/2007/ont/link#RDFDocument')) {
-    return [AvailableTools.RdfDocument];
+    return [AvailableTools.RdfDocument, AvailableTools.Generic];
   } else if (containsType(types, 'http://www.w3.org/ns/iana/media-types/application/pdf#Resource')) {
-    return [AvailableTools.DocumentViewer];
+    return [AvailableTools.DocumentViewer, AvailableTools.Generic];
   } else if (containsType(types, 'http://purl.org/dc/terms/Image')) {
-    return [AvailableTools.ImageViewer];
+    return [AvailableTools.ImageViewer, AvailableTools.Generic];
   } else if (containsType(types, 'http://www.w3.org/2007/ont/link#Document')) {
-    return [AvailableTools.DocumentViewer];
+    return [AvailableTools.DocumentViewer, AvailableTools.Generic];
   } else {
     return [AvailableTools.Generic];
   }
