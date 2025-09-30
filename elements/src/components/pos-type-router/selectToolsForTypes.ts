@@ -1,9 +1,15 @@
 import { RdfType } from '@pod-os/core';
 
+interface TypePriority {
+  type: string;
+  priority: number;
+}
+
 export interface ToolConfig {
   element: string;
   label: string;
   icon: string;
+  types: TypePriority[];
 }
 
 export const AvailableTools: { [key: string]: ToolConfig } = {
@@ -11,46 +17,67 @@ export const AvailableTools: { [key: string]: ToolConfig } = {
     element: 'pos-app-generic',
     label: 'Generic',
     icon: 'list-ul',
+    types: [],
   },
   RdfDocument: {
     element: 'pos-app-rdf-document',
     label: 'RDF Document',
     icon: 'file-earmark-ruled',
+    types: [
+      {
+        type: 'http://www.w3.org/2007/ont/link#RDFDocument',
+        priority: 20,
+      },
+    ],
   },
   DocumentViewer: {
     element: 'pos-app-document-viewer',
     label: 'Document',
     icon: 'file-text',
+    types: [
+      {
+        type: mimeType('application/pdf'),
+        priority: 30,
+      },
+      {
+        type: 'http://www.w3.org/2007/ont/link#Document',
+        priority: 10,
+      },
+    ],
   },
   ImageViewer: {
     element: 'pos-app-image-viewer',
     label: 'Image',
     icon: 'file-image',
+    types: [
+      {
+        type: 'http://purl.org/dc/terms/Image',
+        priority: 20,
+      },
+    ],
   },
   LdpContainer: {
     element: 'pos-app-ldp-container',
     label: 'Container',
     icon: 'folder',
+    types: [{ type: 'http://www.w3.org/ns/ldp#Container', priority: 30 }],
   },
 };
 
-// TODO: remove duplication with pos-container-contents/selectIconForTypes
-function containsType(types: RdfType[], typeUri: string) {
-  return types.some(type => type.uri === typeUri);
+function mimeType(mimeType: string) {
+  return 'http://www.w3.org/ns/iana/media-types/' + mimeType + '#Resource';
 }
 
 export function selectToolsForTypes(types: RdfType[]) {
-  if (containsType(types, 'http://www.w3.org/ns/ldp#Container')) {
-    return [AvailableTools.LdpContainer, AvailableTools.Generic];
-  } else if (containsType(types, 'http://www.w3.org/2007/ont/link#RDFDocument')) {
-    return [AvailableTools.RdfDocument, AvailableTools.Generic];
-  } else if (containsType(types, 'http://www.w3.org/ns/iana/media-types/application/pdf#Resource')) {
-    return [AvailableTools.DocumentViewer, AvailableTools.Generic];
-  } else if (containsType(types, 'http://purl.org/dc/terms/Image')) {
-    return [AvailableTools.ImageViewer, AvailableTools.Generic];
-  } else if (containsType(types, 'http://www.w3.org/2007/ont/link#Document')) {
-    return [AvailableTools.DocumentViewer, AvailableTools.Generic];
-  } else {
-    return [AvailableTools.Generic];
-  }
+  const result: { tool: ToolConfig; priority: number }[] = [];
+
+  Object.values(AvailableTools).forEach(tool => {
+    const matchingTypes = tool.types.filter(typePriority => types.some(type => type.uri === typePriority.type));
+    if (matchingTypes.length > 0) {
+      const highestPriority = Math.max(...matchingTypes.map(t => t.priority));
+      result.push({ tool, priority: highestPriority });
+    }
+  });
+  result.push({ tool: AvailableTools.Generic, priority: 0 });
+  return result.toSorted((a, b) => b.priority - a.priority).map(item => item.tool);
 }
