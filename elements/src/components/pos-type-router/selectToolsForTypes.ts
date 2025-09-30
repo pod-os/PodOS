@@ -3,30 +3,36 @@ import { RdfType } from '@pod-os/core';
 export interface ToolConfig {
   element: string;
   label: string;
+  icon: string;
 }
 
-export const AvailableTools = {
+export const AvailableTools: { [key: string]: ToolConfig } = {
   Generic: {
     element: 'pos-app-generic',
     label: 'Generic',
-  } as ToolConfig,
+    icon: 'list-ul',
+  },
   RdfDocument: {
     element: 'pos-app-rdf-document',
     label: 'RDF Document',
-  } as ToolConfig,
+    icon: 'file-earmark-ruled',
+  },
   DocumentViewer: {
     element: 'pos-app-document-viewer',
     label: 'Document',
-  } as ToolConfig,
+    icon: 'file-text',
+  },
   ImageViewer: {
     element: 'pos-app-image-viewer',
     label: 'Image',
-  } as ToolConfig,
+    icon: 'file-image',
+  },
   LdpContainer: {
     element: 'pos-app-ldp-container',
     label: 'Container',
-  } as ToolConfig,
-} as const;
+    icon: 'folder',
+  },
+};
 
 // TODO: remove duplication with pos-container-contents/selectIconForTypes
 function containsType(types: RdfType[], typeUri: string) {

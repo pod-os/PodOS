@@ -21,7 +21,7 @@ export class PosToolSelect {
         <aside>
           {this.tools.map(it => (
             <button onClick={() => this.toolSelected.emit(it)}>
-              <sl-icon name="list-ul"></sl-icon>
+              <sl-icon name={it.icon}></sl-icon>
               <span class="text">{it.label}</span>
             </button>
           ))}

@@ -62,6 +62,31 @@ describe('pos-tool-select', () => {
     expect(buttons[1].textContent).toEqual('Tool 2');
   });
 
+  it('renders a sl-icon matching the tool config', async () => {
+    const tools = [
+      {
+        label: 'Tool 1',
+        component: 'pos-test-tool-1',
+        icon: 'icon-1',
+      },
+      {
+        label: 'Tool 2',
+        component: 'pos-test-tool-2',
+        icon: 'icon-2',
+      },
+    ];
+    const page = await newSpecPage({
+      components: [PosToolSelect],
+      template: () => <pos-tool-select tools={tools} />,
+      supportsShadowDom: false,
+    });
+
+    const icons = page.root.querySelectorAll('sl-icon');
+    expect(icons.length).toBe(2);
+    expect(icons[0].getAttribute('name')).toBe('icon-1');
+    expect(icons[1].getAttribute('name')).toBe('icon-2');
+  });
+
   it('fires pod-os:tool-selected event on button click', async () => {
     const tools = [
       {
