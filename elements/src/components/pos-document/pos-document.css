@@ -1,5 +1,5 @@
 iframe {
-  background-color: white;
+  background-color: var(--pos-background-color);
   width: 100%;
   height: 100vh;
 }
