@@ -10,6 +10,12 @@ export const config: Config = {
     {
       type: 'dist',
       esmLoaderPath: '../loader',
+      copy: [
+        {
+          src: join(__dirname, '../node_modules/@shoelace-style/shoelace/dist/assets'),
+          dest: 'shoelace/assets',
+        },
+      ],
     },
     {
       type: 'dist-custom-elements',
@@ -26,7 +32,7 @@ export const config: Config = {
         { src: 'service-worker-localhost.js' },
         {
           src: join(__dirname, '../node_modules/@shoelace-style/shoelace/dist/assets'),
-          dest: 'shoelace/assets',
+          dest: 'build/shoelace/assets',
         },
       ],
       serviceWorker: false, // disable stencils own service worker

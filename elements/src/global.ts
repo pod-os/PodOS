@@ -1,7 +1,8 @@
 import '@ionic/core';
 
 import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path.js';
-setBasePath('/shoelace/');
+
+setBasePath(new URL('./shoelace', import.meta.url).toString());
 
 const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
