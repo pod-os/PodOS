@@ -69,15 +69,19 @@ function mimeType(mimeType: string) {
 }
 
 export function selectToolsForTypes(types: RdfType[]) {
-  const result: { tool: ToolConfig; priority: number }[] = [];
-
-  Object.values(AvailableTools).forEach(tool => {
-    const matchingTypes = tool.types.filter(typePriority => types.some(type => type.uri === typePriority.type));
-    if (matchingTypes.length > 0) {
-      const highestPriority = Math.max(...matchingTypes.map(t => t.priority));
-      result.push({ tool, priority: highestPriority });
-    }
-  });
-  result.push({ tool: AvailableTools.Generic, priority: 0 });
-  return result.toSorted((a, b) => b.priority - a.priority).map(item => item.tool);
+  return [
+    ...Object.values(AvailableTools)
+      .map(tool => {
+        const matchingTypes = tool.types.filter(typePriority => types.some(type => type.uri === typePriority.type));
+        if (matchingTypes.length > 0) {
+          const highestPriority = Math.max(...matchingTypes.map(t => t.priority));
+          return { tool, priority: highestPriority };
+        }
+        return null;
+      })
+      .filter(Boolean),
+    { tool: AvailableTools.Generic, priority: 0 },
+  ]
+    .toSorted((a, b) => b.priority - a.priority)
+    .map(item => item.tool);
 }
