@@ -15,14 +15,14 @@ export interface ToolConfig {
 export const AvailableTools: { [key: string]: ToolConfig } = {
   Generic: {
     element: 'pos-app-generic',
-    label: 'Generic',
+    label: 'Data',
     icon: 'list-ul',
-    types: [],
+    types: [], // since this is included everywhere, it does not need to specify types
   },
   RdfDocument: {
     element: 'pos-app-rdf-document',
-    label: 'RDF Document',
-    icon: 'file-earmark-ruled',
+    label: 'Things',
+    icon: 'diagram-2',
     types: [
       {
         type: 'http://www.w3.org/2007/ont/link#RDFDocument',
@@ -32,7 +32,7 @@ export const AvailableTools: { [key: string]: ToolConfig } = {
   },
   DocumentViewer: {
     element: 'pos-app-document-viewer',
-    label: 'Document',
+    label: 'Doc',
     icon: 'file-text',
     types: [
       {
@@ -47,7 +47,7 @@ export const AvailableTools: { [key: string]: ToolConfig } = {
   },
   ImageViewer: {
     element: 'pos-app-image-viewer',
-    label: 'Image',
+    label: 'Pic',
     icon: 'file-image',
     types: [
       {
@@ -58,7 +58,7 @@ export const AvailableTools: { [key: string]: ToolConfig } = {
   },
   LdpContainer: {
     element: 'pos-app-ldp-container',
-    label: 'Container',
+    label: 'Content',
     icon: 'folder',
     types: [{ type: 'http://www.w3.org/ns/ldp#Container', priority: 30 }],
   },
