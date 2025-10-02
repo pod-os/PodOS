@@ -1,15 +1,15 @@
 import { RdfType } from '@pod-os/core';
 import { AvailableTools, selectToolsForTypes } from './selectToolsForTypes';
 
-describe('select app for types', () => {
+describe('select tools for types', () => {
   it('uses generic app by default', () => {
-    const app = selectToolsForTypes([]);
-    expect(app).toEqual([AvailableTools.Generic]);
+    const tools = selectToolsForTypes([]);
+    expect(tools).toEqual([AvailableTools.Generic]);
   });
 
   it('uses generic app for unknown types', () => {
-    const app = selectToolsForTypes([{ uri: 'http://example', label: 'Resource' }]);
-    expect(app).toEqual([AvailableTools.Generic]);
+    const tools = selectToolsForTypes([{ uri: 'http://example', label: 'Resource' }]);
+    expect(tools).toEqual([AvailableTools.Generic]);
   });
 
   it.each`
@@ -21,8 +21,8 @@ describe('select app for types', () => {
     ${'http://www.w3.org/ns/ldp#Container'}                             | ${AvailableTools.LdpContainer}
   `(`selects app $expectedApp app for single type $typeUri`, ({ typeUri, expectedApp }) => {
     const types: RdfType[] = [{ uri: typeUri, label: 'irrelevant here' }];
-    const app = selectToolsForTypes(types);
-    expect(app).toEqual([expectedApp, AvailableTools.Generic]);
+    const tools = selectToolsForTypes(types);
+    expect(tools).toEqual([expectedApp, AvailableTools.Generic]);
   });
 
   it('favours document viewer over other apps for pdf document', () => {
@@ -32,8 +32,8 @@ describe('select app for types', () => {
       { uri: 'http://www.w3.org/2007/ont/link#Document', label: 'Document' },
       { uri: 'http://www.w3.org/ns/ldp#Resource', label: 'Resource' },
     ];
-    const app = selectToolsForTypes(types);
-    expect(app[0]).toEqual(AvailableTools.DocumentViewer);
+    const tools = selectToolsForTypes(types);
+    expect(tools).toEqual([AvailableTools.DocumentViewer, AvailableTools.ImageViewer, AvailableTools.Generic]);
   });
 
   it('favours document viewer over other apps for html document', () => {
@@ -43,8 +43,8 @@ describe('select app for types', () => {
       { uri: 'http://www.w3.org/2007/ont/link#WebPage', label: 'WebPage' },
       { uri: 'http://www.w3.org/ns/ldp#Resource', label: 'Resource' },
     ];
-    const app = selectToolsForTypes(types);
-    expect(app[0]).toEqual(AvailableTools.DocumentViewer);
+    const tools = selectToolsForTypes(types);
+    expect(tools).toEqual([AvailableTools.DocumentViewer, AvailableTools.Generic]);
   });
 
   it('favours document viewer over other apps for markdown document', () => {
@@ -53,8 +53,8 @@ describe('select app for types', () => {
       { uri: 'http://www.w3.org/2007/ont/link#Document', label: 'Document' },
       { uri: 'http://www.w3.org/ns/ldp#Resource', label: 'Resource' },
     ];
-    const app = selectToolsForTypes(types);
-    expect(app[0]).toEqual(AvailableTools.DocumentViewer);
+    const tools = selectToolsForTypes(types);
+    expect(tools).toEqual([AvailableTools.DocumentViewer, AvailableTools.Generic]);
   });
 
   it('favours image viewer over other apps for images', () => {
@@ -64,8 +64,8 @@ describe('select app for types', () => {
       { uri: 'http://www.w3.org/2007/ont/link#Document', label: 'Document' },
       { uri: 'http://www.w3.org/ns/ldp#Resource', label: 'Resource' },
     ];
-    const app = selectToolsForTypes(types);
-    expect(app[0]).toEqual(AvailableTools.ImageViewer);
+    const tools = selectToolsForTypes(types);
+    expect(tools).toEqual([AvailableTools.ImageViewer, AvailableTools.DocumentViewer, AvailableTools.Generic]);
   });
 
   it('favours rdf document app over other apps for rdf documents', () => {
@@ -75,8 +75,8 @@ describe('select app for types', () => {
       { uri: 'http://www.w3.org/2007/ont/link#Document', label: 'Document' },
       { uri: 'http://www.w3.org/ns/ldp#Resource', label: 'Resource' },
     ];
-    const app = selectToolsForTypes(types);
-    expect(app[0]).toEqual(AvailableTools.RdfDocument);
+    const tools = selectToolsForTypes(types);
+    expect(tools).toEqual([AvailableTools.RdfDocument, AvailableTools.DocumentViewer, AvailableTools.Generic]);
   });
 
   it('favours ldp container app over other apps for ldp containers', () => {
@@ -88,7 +88,12 @@ describe('select app for types', () => {
       { uri: 'http://www.w3.org/ns/ldp#Container', label: 'Container' },
       { uri: 'http://www.w3.org/ns/ldp#BasicContainer', label: 'BasicContainer' },
     ];
-    const app = selectToolsForTypes(types);
-    expect(app[0]).toEqual(AvailableTools.LdpContainer);
+    const tools = selectToolsForTypes(types);
+    expect(tools).toEqual([
+      AvailableTools.LdpContainer,
+      AvailableTools.RdfDocument,
+      AvailableTools.DocumentViewer,
+      AvailableTools.Generic,
+    ]);
   });
 });
