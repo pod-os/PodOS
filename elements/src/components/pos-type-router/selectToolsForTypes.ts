@@ -1,15 +1,20 @@
 import { RdfType } from '@pod-os/core';
 
-interface TypePriority {
-  type: string;
-  priority: number;
-}
-
 export interface ToolConfig {
   element: string;
   label: string;
   icon: string;
   types: TypePriority[];
+}
+
+interface TypePriority {
+  uri: string;
+  priority: number;
+}
+
+interface ToolPriority {
+  tool: ToolConfig;
+  priority: number;
 }
 
 export const AvailableTools: { [key: string]: ToolConfig } = {
@@ -25,7 +30,7 @@ export const AvailableTools: { [key: string]: ToolConfig } = {
     icon: 'diagram-2',
     types: [
       {
-        type: 'http://www.w3.org/2007/ont/link#RDFDocument',
+        uri: 'http://www.w3.org/2007/ont/link#RDFDocument',
         priority: 20,
       },
     ],
@@ -36,11 +41,11 @@ export const AvailableTools: { [key: string]: ToolConfig } = {
     icon: 'file-text',
     types: [
       {
-        type: mimeType('application/pdf'),
+        uri: mimeType('application/pdf'),
         priority: 30,
       },
       {
-        type: 'http://www.w3.org/2007/ont/link#Document',
+        uri: 'http://www.w3.org/2007/ont/link#Document',
         priority: 10,
       },
     ],
@@ -51,7 +56,7 @@ export const AvailableTools: { [key: string]: ToolConfig } = {
     icon: 'file-image',
     types: [
       {
-        type: 'http://purl.org/dc/terms/Image',
+        uri: 'http://purl.org/dc/terms/Image',
         priority: 20,
       },
     ],
@@ -60,7 +65,7 @@ export const AvailableTools: { [key: string]: ToolConfig } = {
     element: 'pos-app-ldp-container',
     label: 'Content',
     icon: 'folder',
-    types: [{ type: 'http://www.w3.org/ns/ldp#Container', priority: 30 }],
+    types: [{ uri: 'http://www.w3.org/ns/ldp#Container', priority: 30 }],
   },
 };
 
@@ -69,19 +74,26 @@ function mimeType(mimeType: string) {
 }
 
 export function selectToolsForTypes(types: RdfType[]) {
-  return [
-    ...Object.values(AvailableTools)
-      .map(tool => {
-        const matchingTypes = tool.types.filter(typePriority => types.some(type => type.uri === typePriority.type));
-        if (matchingTypes.length > 0) {
-          const highestPriority = Math.max(...matchingTypes.map(t => t.priority));
-          return { tool, priority: highestPriority };
-        }
-        return null;
-      })
-      .filter(Boolean),
-    { tool: AvailableTools.Generic, priority: 0 },
-  ]
-    .toSorted((a, b) => b.priority - a.priority)
-    .map(item => item.tool);
+  const typeUris = new Set(types.map(type => type.uri));
+
+  return Object.values(AvailableTools)
+    .map(maxPriorityFor(typeUris))
+    .filter(onlyRelevant)
+    .toSorted(byPriority)
+    .map(it => it.tool)
+    .concat(AvailableTools.Generic);
 }
+
+const maxPriorityFor = (typeUris: Set<string>) => tool =>
+  ({
+    tool,
+    priority: maxPriority(tool.types, typeUris),
+  }) as ToolPriority;
+
+function maxPriority(types: TypePriority[], typeUris: Set<string>): number {
+  return types.filter(type => typeUris.has(type.uri)).reduce((max, type) => Math.max(max, type.priority), 0);
+}
+
+const onlyRelevant = (it: ToolPriority) => it.priority > 0;
+
+const byPriority = (a: ToolPriority, b: ToolPriority) => b.priority - a.priority;
