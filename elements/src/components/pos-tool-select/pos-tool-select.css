@@ -1,5 +1,5 @@
 :host {
-  --button-size: var(--size-14);
+  --button-size: var(--size-16);
   display: block;
   position: sticky;
   align-self: flex-start;
@@ -20,13 +20,8 @@ aside {
     justify-content: center;
     gap: 0;
     font-size: var(--size-6);
-    .text {
-      font-size: var(--size-3);
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      width: 100%;
-      overflow: hidden;
-    }
+    position: relative;
+    overflow: hidden;
     outline: none;
     border: none;
     width: var(--button-size);
@@ -34,6 +29,38 @@ aside {
     height: var(--button-size);
     min-height: var(--button-size);
     background-color: var(--pos-background-color);
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: color-mix(in srgb, var(--pos-primary-color), transparent 50%);
+      transform: translate(-50%, -50%);
+      opacity: 1;
+    }
+
+    &:active::after,
+    &:focus::after {
+      width: 300px;
+      height: 300px;
+      opacity: 0;
+      transition:
+        width 0.6s ease-out,
+        height 0.6s ease-out,
+        opacity 0.6s ease-out;
+    }
+
+    .text {
+      font-size: var(--size-3);
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      width: 100%;
+      overflow: hidden;
+    }
   }
 }
 
