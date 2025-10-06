@@ -27,6 +27,9 @@ export class PosTypeRouter implements ResourceAware {
   @Listen('pod-os:tool-selected')
   handleToolSelected(event: CustomEvent<ToolConfig>) {
     this.selectedTool = event.detail.element;
+    const url = new URL(window.location.href);
+    url.searchParams.set('tool', event.detail.element);
+    window.history.replaceState({}, '', url.toString());
   }
 
   receiveResource = (resource: Thing) => {

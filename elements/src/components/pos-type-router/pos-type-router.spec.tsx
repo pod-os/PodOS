@@ -126,12 +126,15 @@ describe('pos-type-router', () => {
 `);
   });
 
-  it('renders the selected tool', async () => {
+  it('renders the selected tool and updates query param', async () => {
     const page = await newSpecPage({
       components: [PosTypeRouter],
       html: `<pos-type-router />`,
       supportsShadowDom: false,
+      url: 'https://pod-os.test/container/file',
     });
+    const historySpy = jest.spyOn(page.win.history, 'replaceState');
+
     await page.rootInstance.receiveResource({
       types: () => [
         { uri: 'http://www.w3.org/2007/ont/link#Document', label: 'Document' },
@@ -146,6 +149,8 @@ describe('pos-type-router', () => {
       }),
     );
     await page.waitForChanges();
+
+    expect(historySpy).toHaveBeenCalledWith({}, '', 'https://pod-os.test/container/file?tool=pos-app-generic');
 
     expect(page.root).toEqualHtml(`
     <pos-type-router>
