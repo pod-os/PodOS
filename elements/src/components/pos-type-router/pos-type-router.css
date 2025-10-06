@@ -3,11 +3,13 @@ section {
   flex-direction: row;
 }
 
-.transition {
-  position: relative;
+.tools {
   flex-grow: 1;
-  .tool {
-    position: absolute;
+  &.transition {
+    position: relative;
+    .tool {
+      position: absolute;
+    }
   }
 }
 

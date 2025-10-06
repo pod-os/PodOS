@@ -57,7 +57,7 @@ export class PosTypeRouter implements ResourceAware {
     return (
       <section>
         <pos-tool-select selected={this.currentTool} tools={this.availableTools}></pos-tool-select>
-        <div class={{ transition: this.transitioning }} onAnimationEnd={() => this.removeOldTool()}>
+        <div class={{ tools: true, transition: this.transitioning }} onAnimationEnd={() => this.removeOldTool()}>
           {OldTool && <OldTool class="tool hidden"></OldTool>}
           <SelectedTool class="tool visible"></SelectedTool>
         </div>
