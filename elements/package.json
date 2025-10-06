@@ -26,7 +26,7 @@
     "@shoelace-style/shoelace": "^2.20.1",
     "@stencil/core": "4.24.0",
     "@stencil/store": "^2.2.0",
-    "@uvdsl/solid-oidc-client-browser": "^0.1.1",
+    "@uvdsl/solid-oidc-client-browser": "^0.1.2",
     "idb": "^8.0.3",
     "pollen-css": "^5.0.2",
     "rxjs": "^7.8.2",
