@@ -178,6 +178,9 @@ export namespace Components {
     }
     interface PosSubjects {
     }
+    /**
+     * Allows selecting a tool from within a set of available tools
+     */
     interface PosToolSelect {
         /**
           * The tool that is currently selected
@@ -190,6 +193,9 @@ export namespace Components {
     }
     interface PosTypeBadges {
     }
+    /**
+     * This component is responsible for rendering tools that are useful to interact with the current resource.
+     */
     interface PosTypeRouter {
     }
     interface PosUserMenu {
@@ -916,6 +922,9 @@ declare global {
     interface HTMLPosToolSelectElementEventMap {
         "pod-os:tool-selected": ToolConfig;
     }
+    /**
+     * Allows selecting a tool from within a set of available tools
+     */
     interface HTMLPosToolSelectElement extends Components.PosToolSelect, HTMLStencilElement {
         addEventListener<K extends keyof HTMLPosToolSelectElementEventMap>(type: K, listener: (this: HTMLPosToolSelectElement, ev: PosToolSelectCustomEvent<HTMLPosToolSelectElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
@@ -950,6 +959,9 @@ declare global {
     interface HTMLPosTypeRouterElementEventMap {
         "pod-os:resource": any;
     }
+    /**
+     * This component is responsible for rendering tools that are useful to interact with the current resource.
+     */
     interface HTMLPosTypeRouterElement extends Components.PosTypeRouter, HTMLStencilElement {
         addEventListener<K extends keyof HTMLPosTypeRouterElementEventMap>(type: K, listener: (this: HTMLPosTypeRouterElement, ev: PosTypeRouterCustomEvent<HTMLPosTypeRouterElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
@@ -1294,6 +1306,9 @@ declare namespace LocalJSX {
     interface PosSubjects {
         "onPod-os:resource"?: (event: PosSubjectsCustomEvent<any>) => void;
     }
+    /**
+     * Allows selecting a tool from within a set of available tools
+     */
     interface PosToolSelect {
         "onPod-os:tool-selected"?: (event: PosToolSelectCustomEvent<ToolConfig>) => void;
         /**
@@ -1308,6 +1323,9 @@ declare namespace LocalJSX {
     interface PosTypeBadges {
         "onPod-os:resource"?: (event: PosTypeBadgesCustomEvent<any>) => void;
     }
+    /**
+     * This component is responsible for rendering tools that are useful to interact with the current resource.
+     */
     interface PosTypeRouter {
         "onPod-os:resource"?: (event: PosTypeRouterCustomEvent<any>) => void;
     }
@@ -1440,8 +1458,14 @@ declare module "@stencil/core" {
             "pos-select-term": LocalJSX.PosSelectTerm & JSXBase.HTMLAttributes<HTMLPosSelectTermElement>;
             "pos-setting-offline-cache": LocalJSX.PosSettingOfflineCache & JSXBase.HTMLAttributes<HTMLPosSettingOfflineCacheElement>;
             "pos-subjects": LocalJSX.PosSubjects & JSXBase.HTMLAttributes<HTMLPosSubjectsElement>;
+            /**
+             * Allows selecting a tool from within a set of available tools
+             */
             "pos-tool-select": LocalJSX.PosToolSelect & JSXBase.HTMLAttributes<HTMLPosToolSelectElement>;
             "pos-type-badges": LocalJSX.PosTypeBadges & JSXBase.HTMLAttributes<HTMLPosTypeBadgesElement>;
+            /**
+             * This component is responsible for rendering tools that are useful to interact with the current resource.
+             */
             "pos-type-router": LocalJSX.PosTypeRouter & JSXBase.HTMLAttributes<HTMLPosTypeRouterElement>;
             "pos-user-menu": LocalJSX.PosUserMenu & JSXBase.HTMLAttributes<HTMLPosUserMenuElement>;
             /**

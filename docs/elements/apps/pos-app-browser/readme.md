@@ -77,6 +77,7 @@ graph TD;
   pos-app-dashboard --> pos-getting-started
   pos-app-dashboard --> pos-example-resources
   pos-example-resources --> pos-rich-link
+  pos-type-router --> pos-tool-select
   style pos-app-browser fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

@@ -3,6 +3,9 @@ import { Component, Event, EventEmitter, h, Listen, State } from '@stencil/core'
 import { ResourceAware, subscribeResource } from '../events/ResourceAware';
 import { selectToolsForTypes, ToolConfig } from './selectToolsForTypes';
 
+/**
+ * This component is responsible for rendering tools that are useful to interact with the current resource.
+ */
 @Component({
   tag: 'pos-type-router',
   shadow: true,

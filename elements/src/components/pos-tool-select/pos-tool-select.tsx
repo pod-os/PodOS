@@ -3,6 +3,9 @@ import { ToolConfig } from '../pos-type-router/selectToolsForTypes';
 
 import './shoelace';
 
+/**
+ * Allows selecting a tool from within a set of available tools
+ */
 @Component({
   tag: 'pos-tool-select',
   styleUrl: 'pos-tool-select.css',
