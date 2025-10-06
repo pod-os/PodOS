@@ -61,8 +61,10 @@
       border: var(--size-px) solid var(--pos-primary-color);
     }
 
-    &[aria-selected] {
-      border-right: var(--size-1) solid var(--pos-primary-color);
+    @media (min-width: 640px) {
+      &[aria-selected] {
+        border-right: var(--size-1) solid var(--pos-primary-color);
+      }
     }
 
     .text {
@@ -86,12 +88,10 @@
     flex-direction: row;
     background-color: var(--pos-background-color);
 
-    border-right: none;
     border-top: var(--size-px) solid var(--pos-border-color);
 
     button {
       &[aria-selected] {
-        border-right: none;
         border-top: var(--size-1) solid var(--pos-primary-color);
       }
     }
