@@ -112,7 +112,7 @@ describe('pos-type-router', () => {
       supportsShadowDom: false,
     });
     await page.rootInstance.receiveResource({
-      types: () => ['http://www.w3.org/ns/ldp#Resource'],
+      types: () => [{ uri: 'http://www.w3.org/ns/ldp#Resource', label: 'Resource' }],
     });
     await page.waitForChanges();
 
@@ -133,13 +133,16 @@ describe('pos-type-router', () => {
       supportsShadowDom: false,
     });
     await page.rootInstance.receiveResource({
-      types: () => ['http://www.w3.org/ns/ldp#Resource'],
+      types: () => [
+        { uri: 'http://www.w3.org/2007/ont/link#Document', label: 'Document' },
+        { uri: 'http://www.w3.org/ns/ldp#Resource', label: 'Resource' },
+      ],
     });
     await page.waitForChanges();
 
     page.root.dispatchEvent(
       new CustomEvent('pod-os:tool-selected', {
-        detail: { element: 'pos-app-document-viewer' },
+        detail: { element: 'pos-app-generic' },
       }),
     );
     await page.waitForChanges();
@@ -148,7 +151,7 @@ describe('pos-type-router', () => {
     <pos-type-router>
       <section>
         <pos-tool-select></pos-tool-select>
-        <pos-app-document-viewer></pos-app-document-viewer>
+        <pos-app-generic></pos-app-generic>
       </section>
     </pos-type-router>
 `);
