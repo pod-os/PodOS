@@ -57,6 +57,10 @@ aside {
         opacity 1s ease-out;
     }
 
+    &:focus-visible {
+      border: var(--size-px) solid var(--pos-primary-color);
+    }
+
     &[aria-selected] {
       border-right: var(--size-1) solid var(--pos-primary-color);
     }
