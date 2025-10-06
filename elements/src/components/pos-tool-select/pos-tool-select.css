@@ -9,7 +9,7 @@
   z-index: var(--layer-1);
 }
 
-aside {
+[role='tablist'] {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -82,7 +82,7 @@ aside {
     bottom: 0;
     width: 100dvw;
   }
-  aside {
+  [role='tablist'] {
     flex-direction: row;
     background-color: var(--pos-background-color);
 

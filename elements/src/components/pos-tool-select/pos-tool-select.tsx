@@ -27,7 +27,7 @@ export class PosToolSelect {
   render() {
     if (this.tools.length > 1) {
       return (
-        <aside>
+        <div role="tablist" aria-label="Tools" aria-multiselectable="false">
           {this.tools.map(it => (
             <button
               role="tab"
@@ -38,7 +38,7 @@ export class PosToolSelect {
               <span class="text">{it.label}</span>
             </button>
           ))}
-        </aside>
+        </div>
       );
     }
     return null;
