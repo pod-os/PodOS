@@ -1,4 +1,4 @@
-import { RdfType, Thing } from '@pod-os/core';
+import { Thing } from '@pod-os/core';
 import { Component, Event, EventEmitter, h, Listen, State } from '@stencil/core';
 import { ResourceAware, subscribeResource } from '../events/ResourceAware';
 import { selectToolsForTypes, ToolConfig } from './selectToolsForTypes';
@@ -9,10 +9,10 @@ import { selectToolsForTypes, ToolConfig } from './selectToolsForTypes';
   styleUrl: 'pos-type-router.css',
 })
 export class PosTypeRouter implements ResourceAware {
-  @State() types: RdfType[];
-
-  @State() selectedTool: string;
-  @State() oldTool: string;
+  @State() initialTool: string;
+  @State() availableTools: ToolConfig[];
+  @State() oldTool: ToolConfig;
+  @State() currentTool: ToolConfig;
 
   @Event({ eventName: 'pod-os:resource' })
   subscribeResource: EventEmitter;
@@ -22,35 +22,35 @@ export class PosTypeRouter implements ResourceAware {
     const urlParams = new URLSearchParams(window.location.search);
     const toolParam = urlParams.get('tool');
     if (toolParam) {
-      this.selectedTool = toolParam;
+      this.initialTool = toolParam;
     }
   }
 
   @Listen('pod-os:tool-selected')
   handleToolSelected(event: CustomEvent<ToolConfig>) {
-    this.oldTool = this.selectedTool;
-    this.selectedTool = event.detail.element;
+    this.oldTool = this.currentTool;
+    this.currentTool = event.detail;
     const url = new URL(window.location.href);
     url.searchParams.set('tool', event.detail.element);
     window.history.replaceState({}, '', url.toString());
   }
 
   receiveResource = (resource: Thing) => {
-    this.types = resource.types();
+    const types = resource.types();
+    this.availableTools = selectToolsForTypes(types);
+    this.currentTool = this.availableTools.find(it => it.element === this.initialTool) ?? this.availableTools[0];
   };
 
   render() {
-    return this.types ? this.renderApp() : null;
+    return this.availableTools ? this.renderApp() : null;
   }
 
   private renderApp() {
-    const availableTools = selectToolsForTypes(this.types);
-    const tool = availableTools.find(it => it.element === this.selectedTool) ?? availableTools[0];
-    const SelectedTool = tool.element;
-    const OldTool = this.oldTool;
+    const SelectedTool = this.currentTool.element;
+    const OldTool = this.oldTool?.element;
     return (
       <section>
-        <pos-tool-select selected={tool} tools={availableTools}></pos-tool-select>
+        <pos-tool-select selected={this.currentTool} tools={this.availableTools}></pos-tool-select>
         <div class="tools" onAnimationEnd={() => this.removeOldTool()}>
           {OldTool && <OldTool class="tool hidden"></OldTool>}
           <SelectedTool class="tool visible"></SelectedTool>

@@ -167,6 +167,7 @@ describe('pos-type-router', () => {
       <section>
         <pos-tool-select></pos-tool-select>
         <div class="tools">
+          <pos-app-document-viewer class="tool hidden"></pos-app-document-viewer>
           <pos-app-generic class="tool visible"></pos-app-generic>
         </div>
       </section>
@@ -189,6 +190,73 @@ describe('pos-type-router', () => {
     });
     await page.waitForChanges();
 
+    expect(page.root).toEqualHtml(`
+    <pos-type-router>
+      <section>
+        <pos-tool-select></pos-tool-select>
+        <div class="tools">
+          <pos-app-generic class="tool visible"></pos-app-generic>
+        </div>
+      </section>
+    </pos-type-router>
+`);
+  });
+
+  it('switches from old to new tool', async () => {
+    // given the document viewer is rendered for a resource
+    const page = await newSpecPage({
+      components: [PosTypeRouter],
+      html: `<pos-type-router />`,
+      supportsShadowDom: false,
+      url: 'https://pod-os.test/container/file',
+    });
+
+    await page.rootInstance.receiveResource({
+      types: () => [
+        { uri: 'http://www.w3.org/2007/ont/link#Document', label: 'Document' },
+        { uri: 'http://www.w3.org/ns/ldp#Resource', label: 'Resource' },
+      ],
+    });
+    await page.waitForChanges();
+
+    expect(page.root).toEqualHtml(`
+    <pos-type-router>
+      <section>
+        <pos-tool-select></pos-tool-select>
+        <div class="tools">
+          <pos-app-document-viewer class="tool visible"></pos-app-document-viewer>
+        </div>
+      </section>
+    </pos-type-router>
+`);
+
+    // when the user switches to the generic tool
+    page.root.dispatchEvent(
+      new CustomEvent('pod-os:tool-selected', {
+        detail: { element: 'pos-app-generic' },
+      }),
+    );
+    await page.waitForChanges();
+
+    // Then the generic tool is showing up, while the document viewer gets hidden
+    expect(page.root).toEqualHtml(`
+    <pos-type-router>
+      <section>
+        <pos-tool-select></pos-tool-select>
+        <div class="tools">
+          <pos-app-document-viewer class="hidden tool"></pos-app-document-viewer>
+          <pos-app-generic class="tool visible"></pos-app-generic>
+        </div>
+      </section>
+    </pos-type-router>
+`);
+
+    // when the animation ends
+    const documentViewer = page.root.querySelector('.tools');
+    documentViewer.dispatchEvent(new CustomEvent('animationend'));
+    await page.waitForChanges();
+
+    // then the document viewer is removed from DOM
     expect(page.root).toEqualHtml(`
     <pos-type-router>
       <section>
