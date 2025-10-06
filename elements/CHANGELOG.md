@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.30.0
+
+### Changed
+
+- [pos-type-router](https://pod-os.org/reference/elements/components/pos-type-router/): Allows switching between multiple tools that are a fit for the current resource
+
+### Added
+
+- [pos-tool-select](https://pod-os.org/reference/elements/components/pos-tool-select/): Allows selecting a tool from within a set of available tools
+
+### Fixed
+
+- [pos-document](https://pod-os.org/reference/elements/components/pos-document/): adjust iframe background in dark mode
+
+## 0.29.0
+
+- PodOS can now handle JSON-LD documents as regular RDF documents and work with their data
+
 ## 0.28.0
 
 ### ⚠ BREAKING CHANGES
