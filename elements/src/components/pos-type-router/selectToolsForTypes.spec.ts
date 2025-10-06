@@ -1,5 +1,6 @@
 import { RdfType } from '@pod-os/core';
-import { AvailableTools, selectToolsForTypes } from './selectToolsForTypes';
+import { selectToolsForTypes } from './selectToolsForTypes';
+import { AvailableTools } from './availableTools';
 
 describe('select tools for types', () => {
   it('uses generic app by default', () => {
