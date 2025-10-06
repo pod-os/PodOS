@@ -3,13 +3,15 @@ section {
   flex-direction: row;
 }
 
-.tools {
+.transition {
   position: relative;
   flex-grow: 1;
+  .tool {
+    position: absolute;
+  }
 }
 
 .tool {
-  position: absolute;
   top: 0;
   right: 0;
   left: 0;

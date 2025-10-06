@@ -33,7 +33,7 @@ describe('pos-type-router', () => {
     <pos-type-router>
       <section>
         <pos-tool-select></pos-tool-select>
-        <div class="tools">
+        <div>
           <pos-app-rdf-document class="tool visible"></pos-app-rdf-document>
         </div>
       </section>
@@ -56,7 +56,7 @@ describe('pos-type-router', () => {
     <pos-type-router>
       <section>
         <pos-tool-select></pos-tool-select>
-        <div class="tools">
+        <div>
           <pos-app-image-viewer class="tool visible"></pos-app-image-viewer>
         </div>
       </section>
@@ -82,7 +82,7 @@ describe('pos-type-router', () => {
     <pos-type-router>
       <section>
         <pos-tool-select></pos-tool-select>
-        <div class="tools">
+        <div>
           <pos-app-document-viewer class="tool visible"></pos-app-document-viewer>
         </div>
       </section>
@@ -105,7 +105,7 @@ describe('pos-type-router', () => {
     <pos-type-router>
       <section>
         <pos-tool-select></pos-tool-select>
-        <div class="tools">
+        <div>
           <pos-app-document-viewer class="tool visible"></pos-app-document-viewer>
         </div>
       </section>
@@ -128,7 +128,7 @@ describe('pos-type-router', () => {
     <pos-type-router>
       <section>
         <pos-tool-select></pos-tool-select>
-        <div class="tools">
+        <div>
           <pos-app-generic class="tool visible"></pos-app-generic>
         </div>
       </section>
@@ -166,7 +166,7 @@ describe('pos-type-router', () => {
     <pos-type-router>
       <section>
         <pos-tool-select></pos-tool-select>
-        <div class="tools">
+        <div class="transition">
           <pos-app-document-viewer class="tool hidden"></pos-app-document-viewer>
           <pos-app-generic class="tool visible"></pos-app-generic>
         </div>
@@ -194,7 +194,7 @@ describe('pos-type-router', () => {
     <pos-type-router>
       <section>
         <pos-tool-select></pos-tool-select>
-        <div class="tools">
+        <div>
           <pos-app-generic class="tool visible"></pos-app-generic>
         </div>
       </section>
@@ -223,7 +223,7 @@ describe('pos-type-router', () => {
     <pos-type-router>
       <section>
         <pos-tool-select></pos-tool-select>
-        <div class="tools">
+        <div>
           <pos-app-document-viewer class="tool visible"></pos-app-document-viewer>
         </div>
       </section>
@@ -243,7 +243,7 @@ describe('pos-type-router', () => {
     <pos-type-router>
       <section>
         <pos-tool-select></pos-tool-select>
-        <div class="tools">
+        <div class="transition">
           <pos-app-document-viewer class="hidden tool"></pos-app-document-viewer>
           <pos-app-generic class="tool visible"></pos-app-generic>
         </div>
@@ -252,7 +252,7 @@ describe('pos-type-router', () => {
 `);
 
     // when the animation ends
-    const documentViewer = page.root.querySelector('.tools');
+    const documentViewer = page.root.querySelector('.transition');
     documentViewer.dispatchEvent(new CustomEvent('animationend'));
     await page.waitForChanges();
 
@@ -261,7 +261,7 @@ describe('pos-type-router', () => {
     <pos-type-router>
       <section>
         <pos-tool-select></pos-tool-select>
-        <div class="tools">
+        <div>
           <pos-app-generic class="tool visible"></pos-app-generic>
         </div>
       </section>

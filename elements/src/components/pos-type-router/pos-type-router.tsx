@@ -14,6 +14,8 @@ export class PosTypeRouter implements ResourceAware {
   @State() oldTool: ToolConfig;
   @State() currentTool: ToolConfig;
 
+  @State() transitioning: boolean = false;
+
   @Event({ eventName: 'pod-os:resource' })
   subscribeResource: EventEmitter;
 
@@ -30,6 +32,7 @@ export class PosTypeRouter implements ResourceAware {
   handleToolSelected(event: CustomEvent<ToolConfig>) {
     this.oldTool = this.currentTool;
     this.currentTool = event.detail;
+    this.transitioning = true;
     const url = new URL(window.location.href);
     url.searchParams.set('tool', event.detail.element);
     window.history.replaceState({}, '', url.toString());
@@ -51,7 +54,7 @@ export class PosTypeRouter implements ResourceAware {
     return (
       <section>
         <pos-tool-select selected={this.currentTool} tools={this.availableTools}></pos-tool-select>
-        <div class="tools" onAnimationEnd={() => this.removeOldTool()}>
+        <div class={{ transition: this.transitioning }} onAnimationEnd={() => this.removeOldTool()}>
           {OldTool && <OldTool class="tool hidden"></OldTool>}
           <SelectedTool class="tool visible"></SelectedTool>
         </div>
@@ -61,5 +64,6 @@ export class PosTypeRouter implements ResourceAware {
 
   private removeOldTool() {
     this.oldTool = null;
+    this.transitioning = false;
   }
 }
