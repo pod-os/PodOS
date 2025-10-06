@@ -33,7 +33,9 @@ describe('pos-type-router', () => {
     <pos-type-router>
       <section>
         <pos-tool-select></pos-tool-select>
-        <pos-app-rdf-document></pos-app-rdf-document>
+        <div class="tools">
+          <pos-app-rdf-document class="tool visible"></pos-app-rdf-document>
+        </div>
       </section>
     </pos-type-router>
 `);
@@ -54,7 +56,9 @@ describe('pos-type-router', () => {
     <pos-type-router>
       <section>
         <pos-tool-select></pos-tool-select>
-        <pos-app-image-viewer></pos-app-image-viewer>
+        <div class="tools">
+          <pos-app-image-viewer class="tool visible"></pos-app-image-viewer>
+        </div>
       </section>
     </pos-type-router>
 `);
@@ -78,7 +82,9 @@ describe('pos-type-router', () => {
     <pos-type-router>
       <section>
         <pos-tool-select></pos-tool-select>
-        <pos-app-document-viewer></pos-app-document-viewer>
+        <div class="tools">
+          <pos-app-document-viewer class="tool visible"></pos-app-document-viewer>
+        </div>
       </section>
     </pos-type-router>
 `);
@@ -99,7 +105,9 @@ describe('pos-type-router', () => {
     <pos-type-router>
       <section>
         <pos-tool-select></pos-tool-select>
-        <pos-app-document-viewer></pos-app-document-viewer>
+        <div class="tools">
+          <pos-app-document-viewer class="tool visible"></pos-app-document-viewer>
+        </div>
       </section>
     </pos-type-router>
 `);
@@ -120,7 +128,9 @@ describe('pos-type-router', () => {
     <pos-type-router>
       <section>
         <pos-tool-select></pos-tool-select>
-        <pos-app-generic></pos-app-generic>
+        <div class="tools">
+          <pos-app-generic class="tool visible"></pos-app-generic>
+        </div>
       </section>
     </pos-type-router>
 `);
@@ -156,7 +166,9 @@ describe('pos-type-router', () => {
     <pos-type-router>
       <section>
         <pos-tool-select></pos-tool-select>
-        <pos-app-generic></pos-app-generic>
+        <div class="tools">
+          <pos-app-generic class="tool visible"></pos-app-generic>
+        </div>
       </section>
     </pos-type-router>
 `);
@@ -181,7 +193,9 @@ describe('pos-type-router', () => {
     <pos-type-router>
       <section>
         <pos-tool-select></pos-tool-select>
-        <pos-app-generic></pos-app-generic>
+        <div class="tools">
+          <pos-app-generic class="tool visible"></pos-app-generic>
+        </div>
       </section>
     </pos-type-router>
 `);

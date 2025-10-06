@@ -10,7 +10,9 @@ import { selectToolsForTypes, ToolConfig } from './selectToolsForTypes';
 })
 export class PosTypeRouter implements ResourceAware {
   @State() types: RdfType[];
+
   @State() selectedTool: string;
+  @State() oldTool: string;
 
   @Event({ eventName: 'pod-os:resource' })
   subscribeResource: EventEmitter;
@@ -26,6 +28,7 @@ export class PosTypeRouter implements ResourceAware {
 
   @Listen('pod-os:tool-selected')
   handleToolSelected(event: CustomEvent<ToolConfig>) {
+    this.oldTool = this.selectedTool;
     this.selectedTool = event.detail.element;
     const url = new URL(window.location.href);
     url.searchParams.set('tool', event.detail.element);
@@ -44,11 +47,19 @@ export class PosTypeRouter implements ResourceAware {
     const availableTools = selectToolsForTypes(this.types);
     const tool = availableTools.find(it => it.element === this.selectedTool) ?? availableTools[0];
     const SelectedTool = tool.element;
+    const OldTool = this.oldTool;
     return (
       <section>
         <pos-tool-select selected={tool} tools={availableTools}></pos-tool-select>
-        <SelectedTool></SelectedTool>
+        <div class="tools" onAnimationEnd={() => this.removeOldTool()}>
+          {OldTool && <OldTool class="tool hidden"></OldTool>}
+          <SelectedTool class="tool visible"></SelectedTool>
+        </div>
       </section>
     );
+  }
+
+  private removeOldTool() {
+    this.oldTool = null;
   }
 }

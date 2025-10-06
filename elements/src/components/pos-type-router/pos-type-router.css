@@ -3,8 +3,41 @@ section {
   flex-direction: row;
 }
 
-section > :last-child {
+.tools {
+  position: relative;
   flex-grow: 1;
+}
+
+.tool {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  &.visible {
+    animation: fadeIn 300ms ease-in;
+  }
+  &.hidden {
+    animation: fadeOut 300ms ease-in;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 @media (max-width: 640px) {
