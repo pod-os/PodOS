@@ -14,6 +14,8 @@ aside {
   flex-direction: column;
   justify-content: center;
 
+  border-right: var(--size-px) solid var(--pos-border-color);
+
   button {
     display: flex;
     flex-direction: column;
@@ -79,6 +81,9 @@ aside {
   aside {
     flex-direction: row;
     background-color: var(--pos-background-color);
+
+    border-right: none;
+    border-top: var(--size-px) solid var(--pos-border-color);
 
     button {
       &[aria-selected] {
