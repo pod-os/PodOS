@@ -39,7 +39,7 @@ describe('pos-tool-select', () => {
     `);
   });
 
-  it('renders a button for each tool', async () => {
+  it('renders a tab for each tool', async () => {
     const tools = [
       {
         label: 'Tool 1',
@@ -56,7 +56,7 @@ describe('pos-tool-select', () => {
       supportsShadowDom: false,
     });
 
-    const buttons = queryAllByRole(page.root, 'button');
+    const buttons = queryAllByRole(page.root, 'tab');
     expect(buttons.length).toBe(2);
     expect(buttons[0].textContent).toEqual('Tool 1');
     expect(buttons[1].textContent).toEqual('Tool 2');
@@ -87,7 +87,7 @@ describe('pos-tool-select', () => {
     expect(icons[1].getAttribute('name')).toBe('icon-2');
   });
 
-  it('fires pod-os:tool-selected event on button click', async () => {
+  it('fires pod-os:tool-selected event on tab click', async () => {
     const tools = [
       {
         label: 'Tool 1',
@@ -107,7 +107,7 @@ describe('pos-tool-select', () => {
     const eventSpy = jest.fn();
     page.win.addEventListener('pod-os:tool-selected', eventSpy);
 
-    const button = queryAllByRole(page.root, 'button')[0];
+    const button = queryAllByRole(page.root, 'tab')[0];
     expect(button.textContent).toEqual('Tool 1');
     button.click();
 
@@ -116,5 +116,29 @@ describe('pos-tool-select', () => {
         detail: tools[0],
       }),
     );
+  });
+
+  it('renders aria-selected for selected tool', async () => {
+    const tools = [
+      {
+        label: 'Tool 1',
+        component: 'pos-test-tool-1',
+        element: 'element-1',
+      },
+      {
+        label: 'Tool 2',
+        component: 'pos-test-tool-2',
+        element: 'element-2',
+      },
+    ];
+    const page = await newSpecPage({
+      components: [PosToolSelect],
+      template: () => <pos-tool-select tools={tools} selected={tools[1]} />,
+      supportsShadowDom: false,
+    });
+
+    const buttons = queryAllByRole(page.root, 'tab');
+    expect(buttons[0]).not.toHaveAttribute('aria-selected');
+    expect(buttons[1]).toHaveAttribute('aria-selected');
   });
 });

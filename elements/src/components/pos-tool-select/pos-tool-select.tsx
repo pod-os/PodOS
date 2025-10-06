@@ -9,6 +9,15 @@ import './shoelace';
   shadow: true,
 })
 export class PosToolSelect {
+  /**
+   * The tool that is currently selected
+   */
+  @Prop()
+  selected: ToolConfig;
+
+  /**
+   * All tools that are available
+   */
   @Prop()
   tools: ToolConfig[] = [];
 
@@ -20,7 +29,11 @@ export class PosToolSelect {
       return (
         <aside>
           {this.tools.map(it => (
-            <button onClick={() => this.toolSelected.emit(it)}>
+            <button
+              role="tab"
+              aria-selected={this.selected?.element === it.element}
+              onClick={() => this.toolSelected.emit(it)}
+            >
               <sl-icon name={it.icon}></sl-icon>
               <span class="text">{it.label}</span>
             </button>

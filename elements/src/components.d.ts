@@ -179,6 +179,13 @@ export namespace Components {
     interface PosSubjects {
     }
     interface PosToolSelect {
+        /**
+          * The tool that is currently selected
+         */
+        "selected": ToolConfig;
+        /**
+          * All tools that are available
+         */
         "tools": ToolConfig[];
     }
     interface PosTypeBadges {
@@ -1289,6 +1296,13 @@ declare namespace LocalJSX {
     }
     interface PosToolSelect {
         "onPod-os:tool-selected"?: (event: PosToolSelectCustomEvent<ToolConfig>) => void;
+        /**
+          * The tool that is currently selected
+         */
+        "selected"?: ToolConfig;
+        /**
+          * All tools that are available
+         */
         "tools"?: ToolConfig[];
     }
     interface PosTypeBadges {

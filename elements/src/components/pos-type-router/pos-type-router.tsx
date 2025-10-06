@@ -46,7 +46,7 @@ export class PosTypeRouter implements ResourceAware {
     const SelectedTool = tool.element;
     return (
       <section>
-        <pos-tool-select tools={availableTools}></pos-tool-select>
+        <pos-tool-select selected={tool} tools={availableTools}></pos-tool-select>
         <SelectedTool></SelectedTool>
       </section>
     );

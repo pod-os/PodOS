@@ -54,6 +54,10 @@ aside {
         opacity 1s ease-out;
     }
 
+    &[aria-selected] {
+      border-right: var(--size-1) solid var(--pos-primary-color);
+    }
+
     .text {
       font-size: var(--size-3);
       white-space: nowrap;
@@ -74,5 +78,12 @@ aside {
   aside {
     flex-direction: row;
     background-color: var(--pos-background-color);
+
+    button {
+      &[aria-selected] {
+        border-right: none;
+        border-top: var(--size-1) solid var(--pos-primary-color);
+      }
+    }
   }
 }
