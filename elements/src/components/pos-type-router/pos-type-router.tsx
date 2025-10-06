@@ -17,6 +17,11 @@ export class PosTypeRouter implements ResourceAware {
 
   componentWillLoad() {
     subscribeResource(this);
+    const urlParams = new URLSearchParams(window.location.search);
+    const toolParam = urlParams.get('tool');
+    if (toolParam) {
+      this.selectedTool = toolParam;
+    }
   }
 
   @Listen('pod-os:tool-selected')

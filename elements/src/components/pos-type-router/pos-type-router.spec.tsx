@@ -156,4 +156,29 @@ describe('pos-type-router', () => {
     </pos-type-router>
 `);
   });
+
+  it('renders selected tool, if given as URI param', async () => {
+    const page = await newSpecPage({
+      components: [PosTypeRouter],
+      html: `<pos-type-router />`,
+      supportsShadowDom: false,
+      url: 'https://pod.test/container/file?tool=pos-app-generic',
+    });
+    await page.rootInstance.receiveResource({
+      types: () => [
+        { uri: 'http://www.w3.org/2007/ont/link#Document', label: 'Document' },
+        { uri: 'http://www.w3.org/ns/ldp#Resource', label: 'Resource' },
+      ],
+    });
+    await page.waitForChanges();
+
+    expect(page.root).toEqualHtml(`
+    <pos-type-router>
+      <section>
+        <pos-tool-select></pos-tool-select>
+        <pos-app-generic></pos-app-generic>
+      </section>
+    </pos-type-router>
+`);
+  });
 });
