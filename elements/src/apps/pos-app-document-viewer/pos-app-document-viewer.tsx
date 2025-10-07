@@ -30,17 +30,6 @@ export class PosAppDocumentViewer implements ResourceAware {
         <section>
           <pos-document src={this.resource.uri} />
         </section>
-        <section>
-          <article>
-            <header>
-              <h1>
-                <pos-label />
-              </h1>
-              <pos-type-badges />
-            </header>
-            <pos-literals />
-          </article>
-        </section>
       </Host>
     );
   }
