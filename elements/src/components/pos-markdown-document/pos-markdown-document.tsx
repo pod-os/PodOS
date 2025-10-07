@@ -1,7 +1,7 @@
 import { SolidFile } from '@pod-os/core';
 import { Component, h, Prop, State } from '@stencil/core';
 
-import { marked } from 'marked';
+import { marked, Renderer } from 'marked';
 
 @Component({
   tag: 'pos-markdown-document',
@@ -17,6 +17,21 @@ export class PosMarkdownDocument {
 
   async componentWillLoad() {
     const markdown = await this.file.blob().text();
+
+    const renderer = new Renderer();
+
+    renderer.link = ({ href, text }) => {
+      const url = new URL(href, this.file.url);
+      return `<pos-rich-link uri="${url}">${text}</pos-rich-link>`;
+    };
+
+    renderer.image = ({ href, title, text }) => {
+      const titleAttr = title ? ` title="${title}"` : '';
+      const url = new URL(href, this.file.url);
+      return `<pos-image src="${url}" alt="${text}" ${titleAttr}>`;
+    };
+
+    marked.setOptions({ renderer });
     this.text = await marked(markdown); // TODO sanitize
   }
 
