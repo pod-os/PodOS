@@ -7,3 +7,4 @@
 <http://localhost:3000/alice/documents/page.html> rdfs:label "Web Page".
 <http://localhost:3000/alice/documents/notes.md> rdfs:label "notes.md".
 <http://localhost:3000/alice/games/fallout3#it> rdfs:label "Fallout 3".
+<http://localhost:3000/alice/documents/favorite-games.md> rdfs:label "My favorite games".
