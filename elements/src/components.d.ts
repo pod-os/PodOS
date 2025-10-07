@@ -5,9 +5,9 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { PodOS, Thing } from "@pod-os/core";
+import { PodOS, SolidFile, Thing } from "@pod-os/core";
 import { ToolConfig } from "./components/pos-type-router/selectToolsForTypes";
-export { PodOS, Thing } from "@pod-os/core";
+export { PodOS, SolidFile, Thing } from "@pod-os/core";
 export { ToolConfig } from "./components/pos-type-router/selectToolsForTypes";
 export namespace Components {
     interface PosAddLiteralValue {
@@ -101,6 +101,9 @@ export namespace Components {
     }
     interface PosMakeFindable {
         "uri": string;
+    }
+    interface PosMarkdownDocument {
+        "file": SolidFile;
     }
     interface PosNavigation {
         /**
@@ -703,6 +706,12 @@ declare global {
         prototype: HTMLPosMakeFindableElement;
         new (): HTMLPosMakeFindableElement;
     };
+    interface HTMLPosMarkdownDocumentElement extends Components.PosMarkdownDocument, HTMLStencilElement {
+    }
+    var HTMLPosMarkdownDocumentElement: {
+        prototype: HTMLPosMarkdownDocumentElement;
+        new (): HTMLPosMarkdownDocumentElement;
+    };
     interface HTMLPosNavigationElementEventMap {
         "pod-os:init": any;
         "pod-os:link": any;
@@ -1043,6 +1052,7 @@ declare global {
         "pos-login": HTMLPosLoginElement;
         "pos-login-form": HTMLPosLoginFormElement;
         "pos-make-findable": HTMLPosMakeFindableElement;
+        "pos-markdown-document": HTMLPosMarkdownDocumentElement;
         "pos-navigation": HTMLPosNavigationElement;
         "pos-navigation-bar": HTMLPosNavigationBarElement;
         "pos-new-thing-form": HTMLPosNewThingFormElement;
@@ -1203,6 +1213,9 @@ declare namespace LocalJSX {
         "onPod-os:search:index-created"?: (event: PosMakeFindableCustomEvent<any>) => void;
         "onPod-os:search:index-updated"?: (event: PosMakeFindableCustomEvent<any>) => void;
         "uri": string;
+    }
+    interface PosMarkdownDocument {
+        "file"?: SolidFile;
     }
     interface PosNavigation {
         "onPod-os:init"?: (event: PosNavigationCustomEvent<any>) => void;
@@ -1373,6 +1386,7 @@ declare namespace LocalJSX {
         "pos-login": PosLogin;
         "pos-login-form": PosLoginForm;
         "pos-make-findable": PosMakeFindable;
+        "pos-markdown-document": PosMarkdownDocument;
         "pos-navigation": PosNavigation;
         "pos-navigation-bar": PosNavigationBar;
         "pos-new-thing-form": PosNewThingForm;
@@ -1435,6 +1449,7 @@ declare module "@stencil/core" {
             "pos-login": LocalJSX.PosLogin & JSXBase.HTMLAttributes<HTMLPosLoginElement>;
             "pos-login-form": LocalJSX.PosLoginForm & JSXBase.HTMLAttributes<HTMLPosLoginFormElement>;
             "pos-make-findable": LocalJSX.PosMakeFindable & JSXBase.HTMLAttributes<HTMLPosMakeFindableElement>;
+            "pos-markdown-document": LocalJSX.PosMarkdownDocument & JSXBase.HTMLAttributes<HTMLPosMarkdownDocumentElement>;
             "pos-navigation": LocalJSX.PosNavigation & JSXBase.HTMLAttributes<HTMLPosNavigationElement>;
             "pos-navigation-bar": LocalJSX.PosNavigationBar & JSXBase.HTMLAttributes<HTMLPosNavigationBarElement>;
             "pos-new-thing-form": LocalJSX.PosNewThingForm & JSXBase.HTMLAttributes<HTMLPosNewThingFormElement>;

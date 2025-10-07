@@ -1,4 +1,4 @@
-import { PodOS, BrokenFile as BrokenFileData } from '@pod-os/core';
+import { PodOS, BrokenFile as BrokenFileData, SolidFile } from '@pod-os/core';
 import { Component, Event, EventEmitter, h, Prop, State, Watch } from '@stencil/core';
 import session from '../../store/session';
 import { BrokenFile } from '../broken-file/BrokenFile';
@@ -16,7 +16,7 @@ export class PosDocument {
   @State() os: PodOS;
 
   @State()
-  private dataUri: string;
+  private file: SolidFile;
 
   @State()
   private brokenFile: BrokenFileData;
@@ -51,7 +51,7 @@ export class PosDocument {
       const file = await this.os.fetchFile(this.src);
       this.resourceLoadedEmitter.emit(this.src);
       if (file.blob()) {
-        this.dataUri = URL.createObjectURL(file.blob());
+        this.file = file;
         this.error = null;
       } else {
         this.brokenFile = file as BrokenFileData;
@@ -73,6 +73,10 @@ export class PosDocument {
     if (this.brokenFile) {
       return <BrokenFile file={this.brokenFile} />;
     }
-    return <iframe src={this.dataUri}></iframe>;
+    if (this.file.blob().type === 'text/markdown') {
+      return <pos-markdown-document file={this.file}></pos-markdown-document>;
+    } else {
+      return <iframe src={URL.createObjectURL(this.file.blob())}></iframe>;
+    }
   }
 }

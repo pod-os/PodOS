@@ -1,5 +1,9 @@
 jest.mock('../broken-file/BrokenFile');
 
+// noinspection ES6UnusedImports
+import { h } from '@stencil/core';
+
+import { Components } from '../../components';
 import { BinaryFile, BrokenFile as BrokenFileData } from '@pod-os/core';
 import { newSpecPage } from '@stencil/core/testing';
 import { Blob } from 'buffer';
@@ -7,8 +11,8 @@ import { mockPodOS } from '../../test/mockPodOS';
 import { mockSessionStore } from '../../test/mockSessionStore';
 import { BrokenFile } from '../broken-file/BrokenFile';
 import { PosDocument } from './pos-document';
+
 import { when } from 'jest-when';
-import { h } from '@stencil/core';
 
 import session from '../../store/session';
 
@@ -76,6 +80,31 @@ describe('pos-document', () => {
         </mock:shadow-root>
       </pos-document>
   `);
+  });
+
+  it('renders pos-markdown-document for markdown files', async () => {
+    const markdownBlob = new Blob(['# Test'], {
+      type: 'text/markdown',
+    });
+    const file = mockBinaryFile(markdownBlob);
+    const page = await newSpecPage({
+      components: [PosDocument],
+      html: `<pos-document src="https://pod.test/test.md" />`,
+    });
+    const os = mockPodOS();
+    when(os.fetchFile).calledWith('https://pod.test/test.md').mockResolvedValue(file);
+    await page.rootInstance.setOs(os);
+    await page.waitForChanges();
+    expect(page.root).toEqualHtml(`
+      <pos-document src="https://pod.test/test.md">
+        <mock:shadow-root>
+          <pos-markdown-document></pos-markdown-document>
+        </mock:shadow-root>
+      </pos-document>
+  `);
+    const markdownDocument: Components.PosMarkdownDocument =
+      page.root.shadowRoot.querySelector('pos-markdown-document');
+    expect(markdownDocument.file).toBe(file);
   });
 
   it('emits event after loading', async () => {
