@@ -2,6 +2,7 @@ import { SolidFile } from '@pod-os/core';
 import { Component, h, Prop, State } from '@stencil/core';
 
 import { marked, Renderer } from 'marked';
+import { sanitize, SanitizedHtml } from './sanitize';
 
 @Component({
   tag: 'pos-markdown-document',
@@ -13,7 +14,7 @@ export class PosMarkdownDocument {
   file: SolidFile;
 
   @State()
-  text: string;
+  private sanitizedHtml: SanitizedHtml;
 
   async componentWillLoad() {
     const markdown = await this.file.blob().text();
@@ -32,10 +33,11 @@ export class PosMarkdownDocument {
     };
 
     marked.setOptions({ renderer });
-    this.text = await marked(markdown); // TODO sanitize
+    const parsed = await marked(markdown);
+    this.sanitizedHtml = sanitize(parsed);
   }
 
   render() {
-    return <article innerHTML={this.text}></article>;
+    return <article innerHTML={this.sanitizedHtml.value}></article>;
   }
 }

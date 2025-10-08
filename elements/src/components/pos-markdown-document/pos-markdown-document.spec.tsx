@@ -3,6 +3,7 @@ import { h } from '@stencil/core';
 
 import { newSpecPage } from '@stencil/core/testing';
 import { PosMarkdownDocument } from './pos-markdown-document';
+import { when } from 'jest-when';
 
 describe('pos-markdown-document', () => {
   it('parses and renders the markdown document', async () => {
@@ -150,5 +151,33 @@ This is a test document`;
       </pos-markdown-document>
     `);
     });
+  });
+
+  it('sanitizes markdown', async () => {
+    const sanitizeSpy = jest.spyOn(require('./sanitize'), 'sanitize');
+    const maliciousCode = `<div>malicious code</div>`;
+
+    when(sanitizeSpy).calledWith(maliciousCode).mockReturnValue({ value: 'sanitized code' });
+    const file = {
+      blob: () => ({
+        text: () => {
+          return Promise.resolve(maliciousCode);
+        },
+      }),
+    };
+    const page = await newSpecPage({
+      components: [PosMarkdownDocument],
+      template: () => <pos-markdown-document file={file} />,
+      supportsShadowDom: false,
+    });
+
+    expect(sanitizeSpy).toHaveBeenCalledWith('<div>malicious code</div>');
+    expect(page.root).toEqualHtml(`
+    <pos-markdown-document>
+      <article>
+        sanitized code
+      </article>
+    </pos-markdown-document>
+  `);
   });
 });
