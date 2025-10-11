@@ -1,8 +1,9 @@
 import { SolidFile } from '@pod-os/core';
 import { Component, h, Prop, State } from '@stencil/core';
 
-import { marked, Renderer } from 'marked';
+import { marked } from 'marked';
 import { sanitize, SanitizedHtml } from './sanitize';
+import { RichEditor } from './rich-editor';
 
 @Component({
   tag: 'pos-markdown-document',
@@ -16,28 +17,24 @@ export class PosMarkdownDocument {
   @State()
   private sanitizedHtml: SanitizedHtml;
 
+  private editorEl: HTMLElement;
+
   async componentWillLoad() {
     const markdown = await this.file.blob().text();
+    const html = await marked(markdown);
+    this.sanitizedHtml = sanitize(html);
+  }
 
-    const renderer = new Renderer();
-
-    renderer.link = ({ href, text }) => {
-      const url = new URL(href, this.file.url);
-      return `<pos-rich-link uri="${url}">${text}</pos-rich-link>`;
-    };
-
-    renderer.image = ({ href, title, text }) => {
-      const titleAttr = title ? ` title="${title}"` : '';
-      const url = new URL(href, this.file.url);
-      return `<pos-image src="${url}" alt="${text}" ${titleAttr}>`;
-    };
-
-    marked.setOptions({ renderer });
-    const parsed = await marked(markdown);
-    this.sanitizedHtml = sanitize(parsed);
+  componentDidLoad() {
+    const editor = new RichEditor(this.editorEl, this.sanitizedHtml, this.file.url);
+    editor.onUpdate(() => {});
   }
 
   render() {
-    return <article innerHTML={this.sanitizedHtml.value}></article>;
+    return (
+      <article>
+        <div ref={el => (this.editorEl = el)}></div>
+      </article>
+    );
   }
 }
