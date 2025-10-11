@@ -1,3 +1,6 @@
 article {
   line-height: 1.5;
+  pos-image {
+    --max-width: 100%;
+  }
 }
