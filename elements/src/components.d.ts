@@ -294,6 +294,10 @@ export interface PosMakeFindableCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosMakeFindableElement;
 }
+export interface PosMarkdownDocumentCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosMarkdownDocumentElement;
+}
 export interface PosNavigationCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosNavigationElement;
@@ -721,7 +725,18 @@ declare global {
         prototype: HTMLPosMakeFindableElement;
         new (): HTMLPosMakeFindableElement;
     };
+    interface HTMLPosMarkdownDocumentElementEventMap {
+        "pod-os:document-modified": ModifiedFile;
+    }
     interface HTMLPosMarkdownDocumentElement extends Components.PosMarkdownDocument, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosMarkdownDocumentElementEventMap>(type: K, listener: (this: HTMLPosMarkdownDocumentElement, ev: PosMarkdownDocumentCustomEvent<HTMLPosMarkdownDocumentElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosMarkdownDocumentElementEventMap>(type: K, listener: (this: HTMLPosMarkdownDocumentElement, ev: PosMarkdownDocumentCustomEvent<HTMLPosMarkdownDocumentElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosMarkdownDocumentElement: {
         prototype: HTMLPosMarkdownDocumentElement;
@@ -1238,6 +1253,10 @@ declare namespace LocalJSX {
           * The file to show / edit
          */
         "file"?: SolidFile;
+        /**
+          * Event emitted when the document has been modified
+         */
+        "onPod-os:document-modified"?: (event: PosMarkdownDocumentCustomEvent<ModifiedFile>) => void;
     }
     interface PosNavigation {
         "onPod-os:init"?: (event: PosNavigationCustomEvent<any>) => void;
