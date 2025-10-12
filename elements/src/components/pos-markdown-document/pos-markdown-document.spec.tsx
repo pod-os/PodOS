@@ -18,8 +18,7 @@ import { PosMarkdownDocument } from './pos-markdown-document';
 
 import { when } from 'jest-when';
 import { getByRole } from '@testing-library/dom';
-import { RichEditor } from './rich-editor';
-import { BehaviorSubject, EMPTY, of } from 'rxjs';
+import { EMPTY, of, Subject } from 'rxjs';
 
 describe('pos-markdown-document', () => {
   afterEach(() => {
@@ -346,6 +345,34 @@ This is a test document`;
       expect(onDocumentModified).toHaveBeenCalledWith(
         expect.objectContaining({ detail: { file, newContent: 'changed content' } }),
       );
+    });
+
+    it('resets modification status after changes have been processed', async () => {
+      // given an editor communicating changes
+      const file = mockFile();
+      const changes = new Subject();
+      const { RichEditor } = require('./rich-editor');
+      RichEditor.mockImplementation(function () {
+        this.onUpdate = jest.fn();
+        this.observeChanges = jest.fn(() => changes);
+      });
+
+      // and a page with pos-markdown-document
+      const page = await newSpecPage({
+        components: [PosMarkdownDocument],
+        template: () => <pos-markdown-document editable file={file} />,
+        supportsShadowDom: false,
+      });
+
+      // and the document has currently been modified
+      page.rootInstance.isModified = true;
+      expect(page.rootInstance.isModified).toBe(true);
+
+      // when the editor communicates the changes
+      changes.next({ content: 'changed content' });
+
+      // then the document is no longer modified (compared to what has been communicated already)
+      expect(page.rootInstance.isModified).toBe(false);
     });
   });
 });
