@@ -110,21 +110,17 @@ describe('RichEditor', () => {
       }, 1);
     });
 
-    it('is modified by auto-appending an empty paragraph (trailing node)', done => {
+    it('is modified by auto-appending an empty paragraph (trailing node)', () => {
       const div = document.createElement('div');
       const editor = new RichEditor(div, { value: '<h1>Hello World</h1>' }, 'https://pod.test');
       editor.startEditing();
-      expect(editor.isModified()).toBe(false);
-      setTimeout(() => {
-        expect(editor.isModified()).toBe(true);
-        expect(editor.getContent()).toEqual('<h1>Hello World</h1><p></p>');
-        done();
-      }, 1);
+      expect(editor.isModified()).toBe(true);
+      expect(editor.getContent()).toEqual('<h1>Hello World</h1><p></p>');
     });
 
     it('is not modified when editing starts and stops without changes', () => {
       const div = document.createElement('div');
-      const editor = new RichEditor(div, { value: '<h1>Hello World</h1>' }, 'https://pod.test');
+      const editor = new RichEditor(div, { value: '<h1>Hello World</h1><p></p>' }, 'https://pod.test');
       editor.startEditing();
       expect(editor.isModified()).toBe(false);
       editor.stopEditing();

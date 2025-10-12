@@ -42,6 +42,7 @@ export class RichEditor {
   startEditing() {
     this.editingJustChanged = true;
     this.editor.setEditable(true);
+    this.editor.commands.focus();
   }
 
   stopEditing() {

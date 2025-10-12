@@ -105,6 +105,7 @@ export namespace Components {
     interface PosMarkdownDocument {
         "file": SolidFile;
         "startEditing": () => Promise<void>;
+        "stopEditing": () => Promise<void>;
     }
     interface PosNavigation {
         /**
