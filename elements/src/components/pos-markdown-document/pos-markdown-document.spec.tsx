@@ -52,20 +52,18 @@ This is a test document`;
     expect(page.root).toEqualHtml(`
       <pos-markdown-document>
         <article>
-        <header>
-          <button><sl-icon name="pencil-square"></sl-icon>Edit</button>
-        </header>
-        <div></div></article>
+          <div></div>
+        </article>
       </pos-markdown-document>
     `);
   });
 
-  describe('edit / view buttons', () => {
+  describe('edit / view buttons for editable documents', () => {
     it('shows an edit button in the header', async () => {
       const file = mockFile();
       const page = await newSpecPage({
         components: [PosMarkdownDocument],
-        template: () => <pos-markdown-document file={file} />,
+        template: () => <pos-markdown-document editable file={file} />,
         supportsShadowDom: false,
       });
 
@@ -82,7 +80,7 @@ This is a test document`;
       const file = mockFile();
       const page = await newSpecPage({
         components: [PosMarkdownDocument],
-        template: () => <pos-markdown-document file={file} />,
+        template: () => <pos-markdown-document editable file={file} />,
         supportsShadowDom: false,
       });
 
@@ -105,7 +103,7 @@ This is a test document`;
       const file = mockFile();
       const page = await newSpecPage({
         components: [PosMarkdownDocument],
-        template: () => <pos-markdown-document file={file} />,
+        template: () => <pos-markdown-document editable file={file} />,
         supportsShadowDom: false,
       });
 
@@ -131,7 +129,7 @@ This is a test document`;
       const file = mockFile();
       const page = await newSpecPage({
         components: [PosMarkdownDocument],
-        template: () => <pos-markdown-document file={file} />,
+        template: () => <pos-markdown-document editable file={file} />,
         supportsShadowDom: false,
       });
 
@@ -149,7 +147,7 @@ This is a test document`;
       const file = mockFile();
       const page = await newSpecPage({
         components: [PosMarkdownDocument],
-        template: () => <pos-markdown-document file={file} />,
+        template: () => <pos-markdown-document editable file={file} />,
         supportsShadowDom: false,
       });
 

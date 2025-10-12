@@ -13,8 +13,17 @@ import './shoelace';
   shadow: true,
 })
 export class PosMarkdownDocument {
+  /**
+   * The file to show / edit
+   */
   @Prop()
   file: SolidFile;
+
+  /**
+   * Whether the current user has the permission to edit the file
+   */
+  @Prop()
+  editable: boolean = false;
 
   @State()
   private sanitizedHtml: SanitizedHtml;
@@ -27,7 +36,7 @@ export class PosMarkdownDocument {
   private editor: RichEditor;
 
   @State()
-  private isEditable: boolean = false;
+  private isEditing: boolean = false;
 
   async componentWillLoad() {
     const markdown = await this.file.blob().text();
@@ -42,34 +51,42 @@ export class PosMarkdownDocument {
     });
   }
 
+  /**
+   * Switch to editing mode
+   */
   @Method()
   startEditing() {
     this.editor.startEditing();
-    this.isEditable = true;
+    this.isEditing = true;
   }
 
+  /**
+   * Switch to view mode
+   */
   @Method()
   stopEditing() {
     this.editor.stopEditing();
-    this.isEditable = false;
+    this.isEditing = false;
   }
 
   render() {
     return (
       <article>
-        <header>
-          {this.isEditable ? (
-            <button onClick={() => this.stopEditing()}>
-              <sl-icon name="eye"></sl-icon>View
-            </button>
-          ) : (
-            <button onClick={() => this.startEditing()}>
-              <sl-icon name="pencil-square"></sl-icon>Edit
-            </button>
-          )}
-        </header>
+        {this.editable ? (
+          <header>
+            {this.isEditing ? (
+              <button onClick={() => this.stopEditing()}>
+                <sl-icon name="eye"></sl-icon>View
+              </button>
+            ) : (
+              <button onClick={() => this.startEditing()}>
+                <sl-icon name="pencil-square"></sl-icon>Edit
+              </button>
+            )}
+          </header>
+        ) : null}
         <div ref={el => (this.editorEl = el)}></div>
-        {this.isEditable ? this.getFooter() : null}
+        {this.isEditing ? this.getFooter() : null}
       </article>
     );
   }

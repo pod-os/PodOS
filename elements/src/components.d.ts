@@ -103,8 +103,21 @@ export namespace Components {
         "uri": string;
     }
     interface PosMarkdownDocument {
+        /**
+          * Whether the current user has the permission to edit the file
+         */
+        "editable": boolean;
+        /**
+          * The file to show / edit
+         */
         "file": SolidFile;
+        /**
+          * Switch to editing mode
+         */
         "startEditing": () => Promise<void>;
+        /**
+          * Switch to view mode
+         */
         "stopEditing": () => Promise<void>;
     }
     interface PosNavigation {
@@ -1217,6 +1230,13 @@ declare namespace LocalJSX {
         "uri": string;
     }
     interface PosMarkdownDocument {
+        /**
+          * Whether the current user has the permission to edit the file
+         */
+        "editable"?: boolean;
+        /**
+          * The file to show / edit
+         */
         "file"?: SolidFile;
     }
     interface PosNavigation {

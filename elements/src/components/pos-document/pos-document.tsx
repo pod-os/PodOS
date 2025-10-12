@@ -27,6 +27,9 @@ export class PosDocument {
   @State()
   private loading: boolean = true;
 
+  @State()
+  private isEditable: boolean = false;
+
   @Event({ eventName: 'pod-os:init' }) initializeOsEmitter: EventEmitter;
 
   /**
@@ -49,6 +52,8 @@ export class PosDocument {
     try {
       this.loading = true;
       const file = await this.os.fetchFile(this.src);
+      const thing = this.os.store.get(this.src);
+      this.isEditable = thing?.editable;
       this.resourceLoadedEmitter.emit(this.src);
       if (file.blob()) {
         this.file = file;
@@ -74,7 +79,7 @@ export class PosDocument {
       return <BrokenFile file={this.brokenFile} />;
     }
     if (this.file.blob().type === 'text/markdown') {
-      return <pos-markdown-document file={this.file}></pos-markdown-document>;
+      return <pos-markdown-document editable={this.isEditable} file={this.file}></pos-markdown-document>;
     } else {
       return <iframe src={URL.createObjectURL(this.file.blob())}></iframe>;
     }

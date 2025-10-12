@@ -82,7 +82,7 @@ describe('pos-document', () => {
   `);
   });
 
-  it('renders pos-markdown-document for markdown files', async () => {
+  it('renders editable pos-markdown-document for editable markdown files', async () => {
     const markdownBlob = new Blob(['# Test'], {
       type: 'text/markdown',
     });
@@ -93,6 +93,33 @@ describe('pos-document', () => {
     });
     const os = mockPodOS();
     when(os.fetchFile).calledWith('https://pod.test/test.md').mockResolvedValue(file);
+    when(os.store.get).calledWith('https://pod.test/test.md').mockReturnValue({ editable: true });
+    await page.rootInstance.setOs(os);
+    await page.waitForChanges();
+    expect(page.root).toEqualHtml(`
+      <pos-document src="https://pod.test/test.md">
+        <mock:shadow-root>
+          <pos-markdown-document editable></pos-markdown-document>
+        </mock:shadow-root>
+      </pos-document>
+  `);
+    const markdownDocument: Components.PosMarkdownDocument =
+      page.root.shadowRoot.querySelector('pos-markdown-document');
+    expect(markdownDocument.file).toBe(file);
+  });
+
+  it('renders read-only pos-markdown-document for non-editable markdown files', async () => {
+    const markdownBlob = new Blob(['# Test'], {
+      type: 'text/markdown',
+    });
+    const file = mockBinaryFile(markdownBlob);
+    const page = await newSpecPage({
+      components: [PosDocument],
+      html: `<pos-document src="https://pod.test/test.md" />`,
+    });
+    const os = mockPodOS();
+    when(os.fetchFile).calledWith('https://pod.test/test.md').mockResolvedValue(file);
+    when(os.store.get).calledWith('https://pod.test/test.md').mockReturnValue({ editable: false });
     await page.rootInstance.setOs(os);
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
