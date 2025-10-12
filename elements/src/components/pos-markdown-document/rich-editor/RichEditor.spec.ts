@@ -7,6 +7,7 @@
 import { RichEditor } from './RichEditor';
 import { getByRole } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
+import { Subscription, tap } from 'rxjs';
 
 describe('RichEditor', () => {
   describe('rendering', () => {
@@ -134,6 +135,81 @@ describe('RichEditor', () => {
       const heading = getByRole(div, 'heading', { name: 'Hello World' });
       await userEvent.type(heading, 'Modified');
       expect(editor.isModified()).toBe(true);
+    });
+
+    describe('observe changes', () => {
+      let subscription: Subscription;
+      beforeEach(() => {
+        jest.useFakeTimers();
+      });
+
+      afterEach(() => {
+        jest.useRealTimers();
+        subscription?.unsubscribe();
+      });
+
+      it('debounces changes for 3 seconds', async () => {
+        const div = document.createElement('div');
+        const editor = new RichEditor(div, { value: '<h1>Hello World</h1><p></p>' }, 'https://pod.test');
+        editor.startEditing();
+        const save = jest.fn();
+        subscription = editor
+          .observeChanges()
+          .pipe(
+            tap(args => {
+              save(args);
+            }),
+          )
+          .subscribe();
+
+        // @ts-ignore Accessing a private field here for testing
+        const tiptap = editor.editor;
+        tiptap.commands.insertContent('Modified ');
+
+        expect(editor.isModified()).toBe(true);
+        jest.advanceTimersByTime(2999);
+        expect(save).toHaveBeenCalledTimes(0);
+        expect(editor.isModified()).toBe(true);
+        jest.advanceTimersByTime(1);
+        expect(save).toHaveBeenCalledTimes(1);
+        expect(save).toHaveBeenLastCalledWith({
+          content: '<h1>Modified Hello World</h1><p></p>',
+        });
+        expect(editor.isModified()).toBe(false);
+      });
+
+      it('waits until changes have settled for 3 seconds', async () => {
+        const div = document.createElement('div');
+        const editor = new RichEditor(div, { value: '<h1>Hello World</h1><p></p>' }, 'https://pod.test');
+        editor.startEditing();
+        const save = jest.fn();
+        subscription = editor
+          .observeChanges()
+          .pipe(
+            tap(args => {
+              save(args);
+            }),
+          )
+          .subscribe();
+
+        // @ts-ignore Accessing a private field here for testing
+        const tiptap = editor.editor;
+
+        tiptap.commands.insertContent('edit 1 ');
+        jest.advanceTimersByTime(2999);
+        tiptap.commands.insertContent('edit 2 ');
+        jest.advanceTimersByTime(2999);
+        tiptap.commands.insertContent('edit 3 ');
+
+        expect(editor.isModified()).toBe(true);
+        expect(save).toHaveBeenCalledTimes(0);
+        jest.advanceTimersByTime(3000);
+        expect(save).toHaveBeenCalledTimes(1);
+        expect(save).toHaveBeenLastCalledWith({
+          content: '<h1>edit 1 edit 2 edit 3 Hello World</h1><p></p>',
+        });
+        expect(editor.isModified()).toBe(false);
+      });
     });
   });
 });
