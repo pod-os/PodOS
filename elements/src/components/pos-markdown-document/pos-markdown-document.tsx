@@ -68,6 +68,7 @@ export class PosMarkdownDocument {
       .pipe(
         takeUntil(this.disconnected$),
         tap(changes => {
+          this.isModified = false;
           this.documentModified.emit({
             file: this.file,
             newContent: changes.content,
