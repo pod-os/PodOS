@@ -3,12 +3,20 @@ import StarterKit from '@tiptap/starter-kit';
 import { PosImageNode } from './PosImageNode';
 import { PosRichLinkMark } from './PosRichLinkMark';
 import { SanitizedHtml } from '../sanitize';
+import { BehaviorSubject, tap } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 export class RichEditor {
   private readonly editor: Editor;
 
+  /**
+   * Whether the editor has been modified since the latest changes have been observed
+   * @private
+   */
   private modified = false;
+
   private editingJustChanged = false;
+  private readonly modifications = new BehaviorSubject<{ content: string }>({ content: '' });
 
   /**
    * @param target The element to render to
@@ -28,6 +36,7 @@ export class RichEditor {
         return;
       }
       this.modified = true;
+      this.modifications.next({ content: this.editor.getHTML() });
     });
   }
 
@@ -56,5 +65,16 @@ export class RichEditor {
 
   getContent() {
     return this.editor.getHTML();
+  }
+
+  /**
+   * Provides an observable that communicates the latest editor content after changes have settled
+   * @param debounce - time (in millisecond) that has to pass without further modifications, until the changes are communicated
+   */
+  observeChanges(debounce: number = 3000) {
+    return this.modifications.pipe(
+      debounceTime(debounce),
+      tap(() => (this.modified = false)),
+    );
   }
 }
