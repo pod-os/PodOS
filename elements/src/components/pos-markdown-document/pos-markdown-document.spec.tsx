@@ -1,9 +1,13 @@
 // noinspection ES6UnusedImports
 import { h } from '@stencil/core';
 
+jest.mock('./shoelace', () => ({}));
+
 jest.mock('./rich-editor', () => ({
   RichEditor: jest.fn(function () {
     this.onUpdate = () => {};
+    this.startEditing = () => {};
+    this.isModified = () => false;
   }),
 }));
 
@@ -11,16 +15,6 @@ import { newSpecPage } from '@stencil/core/testing';
 import { PosMarkdownDocument } from './pos-markdown-document';
 
 import { when } from 'jest-when';
-
-function expectEditor(expectedBaseUrl: string, expectedContent: string) {
-  const { RichEditor } = require('./rich-editor');
-  const [_, content, baseUrl] = RichEditor.mock.calls[0];
-  expect(RichEditor).toHaveBeenCalled();
-  expect(content).toEqual({
-    value: expectedContent,
-  });
-  expect(baseUrl).toEqual(expectedBaseUrl);
-}
 
 describe('pos-markdown-document', () => {
   afterEach(() => {
@@ -172,4 +166,71 @@ This is a test document`;
 
     expect(sanitizeSpy).toHaveBeenCalledWith('<div>malicious code</div>');
   });
+
+  describe('modification status', () => {
+    it('shows that all changes have been saved', async () => {
+      const file = mockFile();
+      const page = await newSpecPage({
+        components: [PosMarkdownDocument],
+        template: () => <pos-markdown-document file={file} />,
+        supportsShadowDom: false,
+      });
+
+      page.rootInstance.startEditing();
+      await page.waitForChanges();
+
+      expect(page.root.querySelector('footer')).toEqualHtml(`
+      <footer>
+        <span class="status">
+          <sl-icon name="check2-circle"></sl-icon>
+          all saved
+        </span>
+      </footer>
+    `);
+    });
+
+    it('shows pending changes, if editor has been modified', async () => {
+      const file = mockFile();
+      const page = await newSpecPage({
+        components: [PosMarkdownDocument],
+        template: () => <pos-markdown-document file={file} />,
+        supportsShadowDom: false,
+      });
+
+      page.rootInstance.startEditing();
+      page.rootInstance.isModified = true;
+      await page.waitForChanges();
+
+      expect(page.root.querySelector('footer')).toEqualHtml(`
+      <footer>
+        <span class="status">
+          <sl-icon name="clock-history"></sl-icon>
+          pending changes
+        </span>
+      </footer>
+    `);
+    });
+  });
 });
+
+function expectEditor(expectedBaseUrl: string, expectedContent: string) {
+  const { RichEditor } = require('./rich-editor');
+  const [_, content, baseUrl] = RichEditor.mock.calls[0];
+  expect(RichEditor).toHaveBeenCalled();
+  expect(content).toEqual({
+    value: expectedContent,
+  });
+  expect(baseUrl).toEqual(expectedBaseUrl);
+}
+
+function mockFile(content: string = 'any content', url: string = 'https://pod.test/document/readme.md') {
+  const file = {
+    url,
+    blob: () => ({
+      text: () => {
+        return Promise.resolve(content);
+      },
+    }),
+  };
+  return file;
+}
