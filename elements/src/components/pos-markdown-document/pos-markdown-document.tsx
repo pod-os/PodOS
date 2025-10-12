@@ -1,11 +1,17 @@
 import { SolidFile } from '@pod-os/core';
-import { Component, h, Method, Prop, State } from '@stencil/core';
+import { Component, h, Method, Prop, State, Event, EventEmitter } from '@stencil/core';
 
 import { marked } from 'marked';
 import { sanitize, SanitizedHtml } from './sanitize';
 import { RichEditor } from './rich-editor';
 
 import './shoelace';
+import { Subject, takeUntil, tap } from 'rxjs';
+
+interface ModifiedFile {
+  file: SolidFile;
+  newContent: string;
+}
 
 @Component({
   tag: 'pos-markdown-document',
@@ -38,6 +44,14 @@ export class PosMarkdownDocument {
   @State()
   private isEditing: boolean = false;
 
+  /**
+   * Event emitted when the document has been modified
+   */
+  @Event({ eventName: 'pod-os:document-modified' })
+  documentModified: EventEmitter<ModifiedFile>;
+
+  private readonly disconnected$ = new Subject<void>();
+
   async componentWillLoad() {
     const markdown = await this.file.blob().text();
     const html = await marked(markdown);
@@ -49,6 +63,23 @@ export class PosMarkdownDocument {
     this.editor.onUpdate(() => {
       this.isModified = this.editor.isModified();
     });
+    this.editor
+      .observeChanges()
+      .pipe(
+        takeUntil(this.disconnected$),
+        tap(changes => {
+          this.documentModified.emit({
+            file: this.file,
+            newContent: changes.content,
+          });
+        }),
+      )
+      .subscribe();
+  }
+
+  disconnectedCallback() {
+    this.disconnected$.next();
+    this.disconnected$.unsubscribe();
   }
 
   /**

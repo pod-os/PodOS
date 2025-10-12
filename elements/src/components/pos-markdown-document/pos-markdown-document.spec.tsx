@@ -8,6 +8,7 @@ jest.mock('./rich-editor', () => ({
     this.onUpdate = jest.fn();
     this.startEditing = jest.fn();
     this.stopEditing = jest.fn();
+    this.observeChanges = jest.fn(() => EMPTY);
     this.isModified = jest.fn(() => false);
   }),
 }));
@@ -18,6 +19,7 @@ import { PosMarkdownDocument } from './pos-markdown-document';
 import { when } from 'jest-when';
 import { getByRole } from '@testing-library/dom';
 import { RichEditor } from './rich-editor';
+import { BehaviorSubject, EMPTY, of } from 'rxjs';
 
 describe('pos-markdown-document', () => {
   afterEach(() => {
@@ -321,6 +323,29 @@ This is a test document`;
         </span>
       </footer>
     `);
+    });
+  });
+
+  describe('document modified', () => {
+    it('emits pod-os:document-modified event when changes are observed', async () => {
+      const file = mockFile();
+      const onDocumentModified = jest.fn();
+
+      const { RichEditor } = require('./rich-editor');
+      RichEditor.mockImplementation(function () {
+        this.onUpdate = jest.fn();
+        this.observeChanges = jest.fn(() => of({ content: 'changed content' }));
+      });
+
+      await newSpecPage({
+        components: [PosMarkdownDocument],
+        template: () => <pos-markdown-document editable onPod-os:document-modified={onDocumentModified} file={file} />,
+        supportsShadowDom: false,
+      });
+
+      expect(onDocumentModified).toHaveBeenCalledWith(
+        expect.objectContaining({ detail: { file, newContent: 'changed content' } }),
+      );
     });
   });
 });
