@@ -48,9 +48,26 @@ export class PosMarkdownDocument {
     this.isEditable = true;
   }
 
+  @Method()
+  stopEditing() {
+    this.editor.stopEditing();
+    this.isEditable = false;
+  }
+
   render() {
     return (
       <article>
+        <header>
+          {this.isEditable ? (
+            <button onClick={() => this.stopEditing()}>
+              <sl-icon name="eye"></sl-icon>View
+            </button>
+          ) : (
+            <button onClick={() => this.startEditing()}>
+              <sl-icon name="pencil-square"></sl-icon>Edit
+            </button>
+          )}
+        </header>
         <div ref={el => (this.editorEl = el)}></div>
         {this.isEditable ? this.getFooter() : null}
       </article>
