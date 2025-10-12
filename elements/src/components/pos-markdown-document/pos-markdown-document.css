@@ -1,26 +1,41 @@
-article {
-  &:focus-within {
-    outline: var(--pos-input-focus-outline);
-  }
+:host {
+  article {
+    &:focus-within {
+      outline: var(--pos-input-focus-outline);
+    }
 
-  .tiptap {
-    border: none;
-    outline: none;
-  }
+    .tiptap {
+      border: none;
+      outline: none;
+    }
 
-  line-height: 1.5;
-  pos-image {
-    --max-width: 100%;
-  }
+    line-height: 1.5;
+    pos-image {
+      --max-width: 100%;
+    }
 
-  footer {
-    .status {
-      display: flex;
-      align-content: center;
-      align-items: center;
-      gap: var(--size-1);
-      font-size: var(--scale-000);
-      color: var(--pos-subtle-text-color);
+    header {
+      flex-direction: row;
+      justify-content: flex-end;
+      button {
+        display: inline-flex;
+        gap: var(--size-1);
+        justify-content: center;
+        align-items: center;
+        height: var(--size-8);
+        flex-shrink: 1;
+      }
+    }
+
+    footer {
+      .status {
+        display: flex;
+        align-content: center;
+        align-items: center;
+        gap: var(--size-1);
+        font-size: var(--scale-000);
+        color: var(--pos-subtle-text-color);
+      }
     }
   }
 }

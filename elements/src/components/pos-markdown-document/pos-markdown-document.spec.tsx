@@ -5,9 +5,10 @@ jest.mock('./shoelace', () => ({}));
 
 jest.mock('./rich-editor', () => ({
   RichEditor: jest.fn(function () {
-    this.onUpdate = () => {};
-    this.startEditing = () => {};
-    this.isModified = () => false;
+    this.onUpdate = jest.fn();
+    this.startEditing = jest.fn();
+    this.stopEditing = jest.fn();
+    this.isModified = jest.fn(() => false);
   }),
 }));
 
@@ -15,6 +16,8 @@ import { newSpecPage } from '@stencil/core/testing';
 import { PosMarkdownDocument } from './pos-markdown-document';
 
 import { when } from 'jest-when';
+import { getByRole } from '@testing-library/dom';
+import { RichEditor } from './rich-editor';
 
 describe('pos-markdown-document', () => {
   afterEach(() => {
@@ -48,9 +51,120 @@ This is a test document`;
 
     expect(page.root).toEqualHtml(`
       <pos-markdown-document>
-        <article><div></div></article>
+        <article>
+        <header>
+          <button><sl-icon name="pencil-square"></sl-icon>Edit</button>
+        </header>
+        <div></div></article>
       </pos-markdown-document>
     `);
+  });
+
+  describe('edit / view buttons', () => {
+    it('shows an edit button in the header', async () => {
+      const file = mockFile();
+      const page = await newSpecPage({
+        components: [PosMarkdownDocument],
+        template: () => <pos-markdown-document file={file} />,
+        supportsShadowDom: false,
+      });
+
+      await page.waitForChanges();
+
+      expect(page.root.querySelector('article header')).toEqualHtml(`
+        <header>
+          <button><sl-icon name="pencil-square"></sl-icon>Edit</button>
+        </header>
+    `);
+    });
+
+    it('edit button is replaced with view button after editing started', async () => {
+      const file = mockFile();
+      const page = await newSpecPage({
+        components: [PosMarkdownDocument],
+        template: () => <pos-markdown-document file={file} />,
+        supportsShadowDom: false,
+      });
+
+      const editButton = getByRole(page.root, 'button');
+      expect(editButton.textContent).toEqual('Edit');
+      editButton.click();
+      await page.waitForChanges();
+
+      expect(page.root.querySelector('article header')).toEqualHtml(`
+        <header>
+          <button>
+            <sl-icon name="eye"></sl-icon>
+            View
+          </button>
+        </header>
+    `);
+    });
+
+    it('switches back to view mode via view button', async () => {
+      const file = mockFile();
+      const page = await newSpecPage({
+        components: [PosMarkdownDocument],
+        template: () => <pos-markdown-document file={file} />,
+        supportsShadowDom: false,
+      });
+
+      page.rootInstance.startEditing();
+      await page.waitForChanges();
+
+      const viewButton = getByRole(page.root, 'button');
+      expect(viewButton.textContent).toEqual('View');
+      viewButton.click();
+      await page.waitForChanges();
+
+      expect(page.root.querySelector('article header')).toEqualHtml(`
+        <header>
+          <button>
+            <sl-icon name="pencil-square"></sl-icon>
+            Edit
+          </button>
+        </header>
+    `);
+    });
+
+    it('calls startEditing method when edit button is clicked', async () => {
+      const file = mockFile();
+      const page = await newSpecPage({
+        components: [PosMarkdownDocument],
+        template: () => <pos-markdown-document file={file} />,
+        supportsShadowDom: false,
+      });
+
+      const editButton = getByRole(page.root, 'button');
+      expect(editButton.textContent).toEqual('Edit');
+      editButton.click();
+      await page.waitForChanges();
+
+      const { RichEditor } = require('./rich-editor');
+      const editorInstance = RichEditor.mock.instances[0];
+      expect(editorInstance.startEditing).toHaveBeenCalled();
+    });
+
+    it('calls stopEditing method when view button is clicked', async () => {
+      const file = mockFile();
+      const page = await newSpecPage({
+        components: [PosMarkdownDocument],
+        template: () => <pos-markdown-document file={file} />,
+        supportsShadowDom: false,
+      });
+
+      page.rootInstance.startEditing();
+      await page.waitForChanges();
+
+      const viewButton = getByRole(page.root, 'button');
+      expect(viewButton.textContent).toEqual('View');
+      viewButton.click();
+      await page.waitForChanges();
+
+      const { RichEditor } = require('./rich-editor');
+      const editorInstance = RichEditor.mock.instances[0];
+      expect(editorInstance.stopEditing).toHaveBeenCalled();
+    });
   });
 
   describe('Images', () => {
