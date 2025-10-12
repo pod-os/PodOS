@@ -7,6 +7,9 @@ import { SanitizedHtml } from '../sanitize';
 export class RichEditor {
   private readonly editor: Editor;
 
+  private modified = false;
+  private editingJustChanged = false;
+
   /**
    * @param target The element to render to
    * @param content The content to show in the editor
@@ -19,9 +22,38 @@ export class RichEditor {
       content: content.value,
       editable: false,
     });
+    this.editor.on('update', () => {
+      if (this.editingJustChanged) {
+        this.editingJustChanged = false;
+        return;
+      }
+      this.modified = true;
+    });
   }
 
   onUpdate(callback: () => void) {
     this.editor.on('update', callback);
+  }
+
+  isEditable() {
+    return this.editor.isEditable;
+  }
+
+  startEditing() {
+    this.editingJustChanged = true;
+    this.editor.setEditable(true);
+  }
+
+  stopEditing() {
+    this.editingJustChanged = true;
+    this.editor.setEditable(false);
+  }
+
+  isModified() {
+    return this.modified;
+  }
+
+  getContent() {
+    return this.editor.getHTML();
   }
 }

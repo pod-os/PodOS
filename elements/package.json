@@ -26,6 +26,7 @@
     "@shoelace-style/shoelace": "^2.20.1",
     "@stencil/core": "4.24.0",
     "@stencil/store": "^2.2.0",
+    "@testing-library/user-event": "^14.6.1",
     "@tiptap/core": "^3.6.5",
     "@tiptap/extension-image": "^3.6.5",
     "@tiptap/pm": "^3.6.5",
