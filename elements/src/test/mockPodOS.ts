@@ -21,9 +21,12 @@ const alice = {
 
 export function mockPodOS() {
   const sessionInfo$ = new BehaviorSubject({ isLoggedIn: false, webId: '' });
+  const fileFetcher = {
+    fetchFile: jest.fn(),
+  };
   const os = {
     fetch: jest.fn(),
-    fetchFile: jest.fn(),
+    files: () => fileFetcher,
     store: {
       get: jest.fn(),
     },

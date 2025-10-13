@@ -64,7 +64,7 @@ export class PosImage {
       this.imageError = null;
       this.networkError = null;
       this.brokenFile = null;
-      const file = await this.os.fetchFile(this.src);
+      const file = await this.os.files().fetchFile(this.src);
       this.resourceLoadedEmitter.emit(this.src);
       if (file.blob()) {
         this.dataUri = URL.createObjectURL(file.blob());

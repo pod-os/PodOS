@@ -19,7 +19,7 @@ describe('pos-image', () => {
     const file = mockBinaryFile(pngBlob);
     jest.spyOn(URL, 'createObjectURL').mockReturnValue('blob:fake-png-data');
     const loadingPromise = new Promise(resolve => setTimeout(() => resolve(file), 1));
-    when(os.fetchFile).calledWith('https://pod.test/image.png').mockReturnValue(loadingPromise);
+    when(os.files().fetchFile).calledWith('https://pod.test/image.png').mockReturnValue(loadingPromise);
     const page = await newSpecPage({
       components: [PosApp, PosImage],
       html: `<pos-app>
@@ -48,7 +48,7 @@ describe('pos-image', () => {
     const file = mockBinaryFile(pngBlob);
     jest.spyOn(URL, 'createObjectURL').mockReturnValue('blob:fake-png-data');
     const loadingPromise = new Promise(resolve => setTimeout(() => resolve(file), 1));
-    when(os.fetchFile).calledWith('https://pod.test/image.png').mockReturnValue(loadingPromise);
+    when(os.files().fetchFile).calledWith('https://pod.test/image.png').mockReturnValue(loadingPromise);
     const page = await newSpecPage({
       components: [PosApp, PosImage],
       html: `<pos-app>
@@ -72,7 +72,7 @@ describe('pos-image', () => {
 
   it('renders img tag with src when fetching image data failed', async () => {
     const os = mockPodOS();
-    when(os.fetchFile).calledWith('https://pod.test/image.png').mockRejectedValue(new Error('network error'));
+    when(os.files().fetchFile).calledWith('https://pod.test/image.png').mockRejectedValue(new Error('network error'));
     const page = await newSpecPage({
       components: [PosApp, PosImage],
       html: `<pos-app>
@@ -101,7 +101,7 @@ describe('pos-image', () => {
         code: 403,
       },
     } as unknown as BrokenFile;
-    when(os.fetchFile).calledWith('https://pod.test/image.png').mockResolvedValue(brokenImage);
+    when(os.files().fetchFile).calledWith('https://pod.test/image.png').mockResolvedValue(brokenImage);
     const page = await newSpecPage({
       components: [PosApp, PosImage],
       html: `<pos-app>
