@@ -13,12 +13,15 @@ jest.mock('./rich-editor', () => ({
   }),
 }));
 
+jest.mock('./html2markdown');
+
 import { newSpecPage } from '@stencil/core/testing';
 import { PosMarkdownDocument } from './pos-markdown-document';
 
 import { when } from 'jest-when';
 import { getByRole } from '@testing-library/dom';
 import { EMPTY, of, Subject } from 'rxjs';
+import { html2markdown } from './html2markdown';
 
 describe('pos-markdown-document', () => {
   afterEach(() => {
@@ -326,15 +329,17 @@ This is a test document`;
   });
 
   describe('document modified', () => {
-    it('emits pod-os:document-modified event when changes are observed', async () => {
+    it('emits pod-os:document-modified event with markdown content when changes are observed', async () => {
       const file = mockFile();
       const onDocumentModified = jest.fn();
 
       const { RichEditor } = require('./rich-editor');
       RichEditor.mockImplementation(function () {
         this.onUpdate = jest.fn();
-        this.observeChanges = jest.fn(() => of({ content: 'changed content' }));
+        this.observeChanges = jest.fn(() => of({ content: 'changed html content' }));
       });
+
+      when(html2markdown).calledWith('changed html content').mockReturnValue('changed markdown content');
 
       await newSpecPage({
         components: [PosMarkdownDocument],
@@ -343,7 +348,7 @@ This is a test document`;
       });
 
       expect(onDocumentModified).toHaveBeenCalledWith(
-        expect.objectContaining({ detail: { file, newContent: 'changed content' } }),
+        expect.objectContaining({ detail: { file, newContent: 'changed markdown content' } }),
       );
     });
 
