@@ -68,6 +68,25 @@
 
     .content {
       padding: var(--size-4);
+
+      pre {
+        code {
+          display: block;
+          padding: var(--size-4);
+          overflow-x: auto;
+          background-color: var(--color-black);
+          font-family: monospace;
+          color: var(--color-white);
+          line-height: 1.6;
+          border-radius: var(--radius-lg);
+        }
+      }
+
+      blockquote {
+        border-left: var(--size-1) solid var(--pos-primary-color);
+        margin-left: var(--size-4);
+        padding-left: var(--size-4);
+      }
     }
   }
 }
