@@ -6,7 +6,7 @@
 
 # Class: UriService
 
-Defined in: [uri/UriService.ts:4](https://github.com/pod-os/PodOS/blob/5f8057b37a40843b32a1365a54e4283e9f14e36c/core/src/uri/UriService.ts#L4)
+Defined in: [uri/UriService.ts:4](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/uri/UriService.ts#L4)
 
 ## Constructors
 
@@ -14,7 +14,7 @@ Defined in: [uri/UriService.ts:4](https://github.com/pod-os/PodOS/blob/5f8057b37
 
 > **new UriService**(`store`): `UriService`
 
-Defined in: [uri/UriService.ts:7](https://github.com/pod-os/PodOS/blob/5f8057b37a40843b32a1365a54e4283e9f14e36c/core/src/uri/UriService.ts#L7)
+Defined in: [uri/UriService.ts:7](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/uri/UriService.ts#L7)
 
 #### Parameters
 
@@ -32,7 +32,7 @@ Defined in: [uri/UriService.ts:7](https://github.com/pod-os/PodOS/blob/5f8057b37
 
 > **proposeUriForNewThing**(`referenceUri`, `name`): `string`
 
-Defined in: [uri/UriService.ts:17](https://github.com/pod-os/PodOS/blob/5f8057b37a40843b32a1365a54e4283e9f14e36c/core/src/uri/UriService.ts#L17)
+Defined in: [uri/UriService.ts:17](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/uri/UriService.ts#L17)
 
 Proposes a URI for a new thing based on what the referenceUri identifies:
 - if a container, the new URI is in this container

@@ -6,7 +6,7 @@
 
 # Interface: Term
 
-Defined in: [terms/Term.ts:4](https://github.com/pod-os/PodOS/blob/5f8057b37a40843b32a1365a54e4283e9f14e36c/core/src/terms/Term.ts#L4)
+Defined in: [terms/Term.ts:4](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/terms/Term.ts#L4)
 
 Represents a term from a RDF vocabulary
 
@@ -16,7 +16,7 @@ Represents a term from a RDF vocabulary
 
 > **shorthand**: `string`
 
-Defined in: [terms/Term.ts:12](https://github.com/pod-os/PodOS/blob/5f8057b37a40843b32a1365a54e4283e9f14e36c/core/src/terms/Term.ts#L12)
+Defined in: [terms/Term.ts:12](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/terms/Term.ts#L12)
 
 Shorthand syntax of the term, using a well-known prefix, e.g. foaf:name
 
@@ -26,6 +26,6 @@ Shorthand syntax of the term, using a well-known prefix, e.g. foaf:name
 
 > **uri**: `string`
 
-Defined in: [terms/Term.ts:8](https://github.com/pod-os/PodOS/blob/5f8057b37a40843b32a1365a54e4283e9f14e36c/core/src/terms/Term.ts#L8)
+Defined in: [terms/Term.ts:8](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/terms/Term.ts#L8)
 
 Full URI of the term, e.g. http://xmlns.com/foaf/0.1/name

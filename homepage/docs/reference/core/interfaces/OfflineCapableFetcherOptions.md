@@ -6,7 +6,7 @@
 
 # Interface: OfflineCapableFetcherOptions
 
-Defined in: [offline-cache/OfflineCapableFetcher.ts:14](https://github.com/pod-os/PodOS/blob/5f8057b37a40843b32a1365a54e4283e9f14e36c/core/src/offline-cache/OfflineCapableFetcher.ts#L14)
+Defined in: [offline-cache/OfflineCapableFetcher.ts:14](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/offline-cache/OfflineCapableFetcher.ts#L14)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [offline-cache/OfflineCapableFetcher.ts:14](https://github.com/pod-o
 
 > **fetch**: (`uri`) => `Promise`\<`Response`\>
 
-Defined in: [offline-cache/OfflineCapableFetcher.ts:15](https://github.com/pod-os/PodOS/blob/5f8057b37a40843b32a1365a54e4283e9f14e36c/core/src/offline-cache/OfflineCapableFetcher.ts#L15)
+Defined in: [offline-cache/OfflineCapableFetcher.ts:15](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/offline-cache/OfflineCapableFetcher.ts#L15)
 
 #### Parameters
 
@@ -32,7 +32,7 @@ Defined in: [offline-cache/OfflineCapableFetcher.ts:15](https://github.com/pod-o
 
 > **isOnline**: () => `boolean`
 
-Defined in: [offline-cache/OfflineCapableFetcher.ts:16](https://github.com/pod-os/PodOS/blob/5f8057b37a40843b32a1365a54e4283e9f14e36c/core/src/offline-cache/OfflineCapableFetcher.ts#L16)
+Defined in: [offline-cache/OfflineCapableFetcher.ts:16](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/offline-cache/OfflineCapableFetcher.ts#L16)
 
 #### Returns
 
@@ -44,4 +44,4 @@ Defined in: [offline-cache/OfflineCapableFetcher.ts:16](https://github.com/pod-o
 
 > **offlineCache**: [`OfflineCache`](OfflineCache.md)
 
-Defined in: [offline-cache/OfflineCapableFetcher.ts:17](https://github.com/pod-os/PodOS/blob/5f8057b37a40843b32a1365a54e4283e9f14e36c/core/src/offline-cache/OfflineCapableFetcher.ts#L17)
+Defined in: [offline-cache/OfflineCapableFetcher.ts:17](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/offline-cache/OfflineCapableFetcher.ts#L17)

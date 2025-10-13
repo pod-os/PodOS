@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- [`PodOS.files()`](https://pod-os.org/reference/core/classes/PodOS/#files): New method to access file operations (fetchFile, etc.)
+- [`PodOS.files().putFile()`](https://pod-os.org/reference/core/classes/FileFetcher/#putfile): New method to update files
+
+### Changed
+
+- Deprecated [`PodOS.fetchFile()`](https://pod-os.org/reference/core/classes/podos/#fetchfile) in favor of using [`PodOS.files().fetchFile()`](https://pod-os.org/reference/core/classes/FileFetcher/#fetchFile)
+
 ## 0.19.0
 
 ### Changed

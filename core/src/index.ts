@@ -91,8 +91,21 @@ export class PodOS {
     return this.store.fetchAll(uris);
   }
 
+  /**
+   * @deprecated Use {@link FileFetcher.fetchFile} via {@link PodOS.files} instead
+   * @param {string} url - URL identifying the file
+   * @returns {Promise<SolidFile>} An object representing the fetched file
+   */
   fetchFile(url: string): Promise<SolidFile> {
-    return this.fileFetcher.fetchFile(url);
+    return this.files().fetchFile(url);
+  }
+
+  /**
+   * Provides access to file operations such as fetching and updating files in the pod
+   * @returns {FileFetcher} An instance of FileFetcher that handles file operations
+   */
+  files(): FileFetcher {
+    return this.fileFetcher;
   }
 
   addPropertyValue(
