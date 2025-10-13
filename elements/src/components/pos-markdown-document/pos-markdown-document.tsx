@@ -6,7 +6,8 @@ import { sanitize, SanitizedHtml } from './sanitize';
 import { RichEditor } from './rich-editor';
 
 import './shoelace';
-import { Subject, takeUntil, tap } from 'rxjs';
+import { map, Subject, takeUntil, tap } from 'rxjs';
+import { html2markdown } from './html2markdown';
 
 interface ModifiedFile {
   file: SolidFile;
@@ -67,11 +68,12 @@ export class PosMarkdownDocument {
       .observeChanges()
       .pipe(
         takeUntil(this.disconnected$),
-        tap(changes => {
+        map(changes => html2markdown(changes.content)),
+        tap(markdown => {
           this.isModified = false;
           this.documentModified.emit({
             file: this.file,
-            newContent: changes.content,
+            newContent: markdown,
           });
         }),
       )
