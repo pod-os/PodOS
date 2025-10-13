@@ -23,6 +23,7 @@ export function mockPodOS() {
   const sessionInfo$ = new BehaviorSubject({ isLoggedIn: false, webId: '' });
   const fileFetcher = {
     fetchFile: jest.fn(),
+    putFile: jest.fn(),
   };
   const os = {
     fetch: jest.fn(),
