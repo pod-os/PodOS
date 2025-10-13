@@ -275,6 +275,38 @@ describe('pos-document', () => {
       </pos-document>
   `);
   });
+
+  describe('saving modified documents', () => {
+    it('calls os.files().putFile on pod-os:document-modified event', async () => {
+      // given a file
+      const file = mockBinaryFile(
+        new Blob(['# Test'], {
+          type: 'text/markdown',
+        }),
+      );
+
+      // and a page with a pos-document
+      const page = await newSpecPage({
+        components: [PosDocument],
+        html: `<pos-document src="https://pod.test/test.md" />`,
+      });
+
+      // and PodOS can put the file successfully
+      const os = mockPodOS();
+      when(os.files().putFile)
+        .calledWith('https://pod.test/test.md', file)
+        .mockResolvedValue(new Response(null, { status: 200 }));
+      await page.rootInstance.setOs(os);
+
+      // when the file was modified with new content
+      page.root.dispatchEvent(
+        new CustomEvent('pod-os:document-modified', { detail: { file, newContent: 'new content' } }),
+      );
+
+      // then the new content is put to the original file
+      expect(os.files().putFile).toHaveBeenCalledWith(file, 'new content');
+    });
+  });
 });
 
 function mockBinaryFile(pngBlob) {

@@ -1,5 +1,5 @@
 import { PodOS, BrokenFile as BrokenFileData, SolidFile } from '@pod-os/core';
-import { Component, Event, EventEmitter, h, Prop, State, Watch } from '@stencil/core';
+import { Component, Event, EventEmitter, h, Listen, Prop, State, Watch } from '@stencil/core';
 import session from '../../store/session';
 import { BrokenFile } from '../broken-file/BrokenFile';
 
@@ -45,6 +45,12 @@ export class PosDocument {
   setOs = async (os: PodOS) => {
     this.os = os;
   };
+
+  @Listen('pod-os:document-modified')
+  async handleDocumentModified(event: CustomEvent) {
+    const { file, newContent } = event.detail;
+    await this.os.files().putFile(file, newContent);
+  }
 
   @Watch('os')
   @Watch('src')
