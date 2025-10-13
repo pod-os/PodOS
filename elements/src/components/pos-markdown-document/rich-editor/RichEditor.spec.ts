@@ -167,7 +167,7 @@ describe('RichEditor', () => {
         tiptap.commands.insertContent('Modified ');
 
         expect(editor.isModified()).toBe(true);
-        jest.advanceTimersByTime(2999);
+        jest.advanceTimersByTime(999);
         expect(save).toHaveBeenCalledTimes(0);
         expect(editor.isModified()).toBe(true);
         jest.advanceTimersByTime(1);
@@ -196,14 +196,14 @@ describe('RichEditor', () => {
         const tiptap = editor.editor;
 
         tiptap.commands.insertContent('edit 1 ');
-        jest.advanceTimersByTime(2999);
+        jest.advanceTimersByTime(999);
         tiptap.commands.insertContent('edit 2 ');
-        jest.advanceTimersByTime(2999);
+        jest.advanceTimersByTime(999);
         tiptap.commands.insertContent('edit 3 ');
 
         expect(editor.isModified()).toBe(true);
         expect(save).toHaveBeenCalledTimes(0);
-        jest.advanceTimersByTime(3000);
+        jest.advanceTimersByTime(1000);
         expect(save).toHaveBeenCalledTimes(1);
         expect(save).toHaveBeenLastCalledWith({
           content: '<h1>edit 1 edit 2 edit 3 Hello World</h1><p></p>',

@@ -71,7 +71,7 @@ export class RichEditor {
    * Provides an observable that communicates the latest editor content after changes have settled
    * @param debounce - time (in millisecond) that has to pass without further modifications, until the changes are communicated
    */
-  observeChanges(debounce: number = 3000) {
+  observeChanges(debounce: number = 1000) {
     return this.modifications.pipe(
       debounceTime(debounce),
       tap(() => (this.modified = false)),
