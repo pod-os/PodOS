@@ -56,7 +56,7 @@ This is a test document`;
     expect(page.root).toEqualHtml(`
       <pos-markdown-document>
         <article>
-          <div></div>
+          <div class="content"></div>
         </article>
       </pos-markdown-document>
     `);
@@ -93,13 +93,11 @@ This is a test document`;
       editButton.click();
       await page.waitForChanges();
 
-      expect(page.root.querySelector('article header')).toEqualHtml(`
-        <header>
+      expect(page.root.querySelector('article header button')).toEqualHtml(`
           <button>
             <sl-icon name="eye"></sl-icon>
             View
           </button>
-        </header>
     `);
     });
 
@@ -288,20 +286,18 @@ This is a test document`;
       const file = mockFile();
       const page = await newSpecPage({
         components: [PosMarkdownDocument],
-        template: () => <pos-markdown-document file={file} />,
+        template: () => <pos-markdown-document editable file={file} />,
         supportsShadowDom: false,
       });
 
       page.rootInstance.startEditing();
       await page.waitForChanges();
 
-      expect(page.root.querySelector('footer')).toEqualHtml(`
-      <footer>
+      expect(page.root.querySelector('header .status')).toEqualHtml(`
         <span class="status">
           <sl-icon name="check2-circle"></sl-icon>
           all saved
         </span>
-      </footer>
     `);
     });
 
@@ -309,7 +305,7 @@ This is a test document`;
       const file = mockFile();
       const page = await newSpecPage({
         components: [PosMarkdownDocument],
-        template: () => <pos-markdown-document file={file} />,
+        template: () => <pos-markdown-document editable file={file} />,
         supportsShadowDom: false,
       });
 
@@ -317,13 +313,11 @@ This is a test document`;
       page.rootInstance.isModified = true;
       await page.waitForChanges();
 
-      expect(page.root.querySelector('footer')).toEqualHtml(`
-      <footer>
+      expect(page.root.querySelector('header .status')).toEqualHtml(`
         <span class="status">
           <sl-icon name="clock-history"></sl-icon>
           pending changes
         </span>
-      </footer>
     `);
     });
   });
