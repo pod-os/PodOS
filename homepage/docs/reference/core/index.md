@@ -1,7 +1,5 @@
 [**@pod-os/core**](README.md)
 
-v0.18.0
-
 *** 
 
 # @pod-os/core
@@ -12,6 +10,7 @@ v0.18.0
 - [AssumeAlwaysOnline](classes/AssumeAlwaysOnline.md)
 - [BinaryFile](classes/BinaryFile.md)
 - [BrokenFile](classes/BrokenFile.md)
+- [FileFetcher](classes/FileFetcher.md)
 - [HttpStatus](classes/HttpStatus.md)
 - [LabelIndex](classes/LabelIndex.md)
 - [LdpContainer](classes/LdpContainer.md)
@@ -21,7 +20,9 @@ v0.18.0
 - [RdfDocument](classes/RdfDocument.md)
 - [SearchGateway](classes/SearchGateway.md)
 - [SearchIndex](classes/SearchIndex.md)
+- [Store](classes/Store.md)
 - [Thing](classes/Thing.md)
+- [UriService](classes/UriService.md)
 - [WebIdProfile](classes/WebIdProfile.md)
 
 ## Interfaces
@@ -30,8 +31,10 @@ v0.18.0
 - [ContainerContent](interfaces/ContainerContent.md)
 - [Literal](interfaces/Literal.md)
 - [OfflineCache](interfaces/OfflineCache.md)
+- [OfflineCapableFetcherOptions](interfaces/OfflineCapableFetcherOptions.md)
 - [OnlineStatus](interfaces/OnlineStatus.md)
 - [PodOsConfiguration](interfaces/PodOsConfiguration.md)
+- [PodOsModule](interfaces/PodOsModule.md)
 - [PodOsSession](interfaces/PodOsSession.md)
 - [RdfType](interfaces/RdfType.md)
 - [Relation](interfaces/Relation.md)

@@ -6,7 +6,7 @@
 
 # Class: AnonymousSession
 
-Defined in: [authentication/index.ts:20](https://github.com/pod-os/PodOS/blob/5f8057b37a40843b32a1365a54e4283e9f14e36c/core/src/authentication/index.ts#L20)
+Defined in: [authentication/index.ts:20](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/authentication/index.ts#L20)
 
 ## Implements
 
@@ -30,7 +30,7 @@ Defined in: [authentication/index.ts:20](https://github.com/pod-os/PodOS/blob/5f
 
 > **get** **authenticatedFetch**(): (`url`, `init?`) => `Promise`\<`Response`\>
 
-Defined in: [authentication/index.ts:27](https://github.com/pod-os/PodOS/blob/5f8057b37a40843b32a1365a54e4283e9f14e36c/core/src/authentication/index.ts#L27)
+Defined in: [authentication/index.ts:27](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/authentication/index.ts#L27)
 
 ##### Returns
 
@@ -60,7 +60,7 @@ Defined in: [authentication/index.ts:27](https://github.com/pod-os/PodOS/blob/5f
 
 > **login**(): `Promise`\<`void`\>
 
-Defined in: [authentication/index.ts:38](https://github.com/pod-os/PodOS/blob/5f8057b37a40843b32a1365a54e4283e9f14e36c/core/src/authentication/index.ts#L38)
+Defined in: [authentication/index.ts:38](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/authentication/index.ts#L38)
 
 #### Returns
 
@@ -76,7 +76,7 @@ Defined in: [authentication/index.ts:38](https://github.com/pod-os/PodOS/blob/5f
 
 > **logout**(): `Promise`\<`void`\>
 
-Defined in: [authentication/index.ts:42](https://github.com/pod-os/PodOS/blob/5f8057b37a40843b32a1365a54e4283e9f14e36c/core/src/authentication/index.ts#L42)
+Defined in: [authentication/index.ts:42](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/authentication/index.ts#L42)
 
 #### Returns
 
@@ -92,7 +92,7 @@ Defined in: [authentication/index.ts:42](https://github.com/pod-os/PodOS/blob/5f
 
 > **observeSession**(): `BehaviorSubject`\<[`SessionInfo`](../type-aliases/SessionInfo.md)\>
 
-Defined in: [authentication/index.ts:34](https://github.com/pod-os/PodOS/blob/5f8057b37a40843b32a1365a54e4283e9f14e36c/core/src/authentication/index.ts#L34)
+Defined in: [authentication/index.ts:34](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/authentication/index.ts#L34)
 
 #### Returns
 

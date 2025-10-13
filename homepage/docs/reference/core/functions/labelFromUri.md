@@ -8,7 +8,7 @@
 
 > **labelFromUri**(`uri`): `string`
 
-Defined in: [thing/labelFromUri.ts:5](https://github.com/pod-os/PodOS/blob/5f8057b37a40843b32a1365a54e4283e9f14e36c/core/src/thing/labelFromUri.ts#L5)
+Defined in: [thing/labelFromUri.ts:5](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/thing/labelFromUri.ts#L5)
 
 Generates a short human-readable label for a given URI
 

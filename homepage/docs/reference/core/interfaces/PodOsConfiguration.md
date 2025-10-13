@@ -6,7 +6,7 @@
 
 # Interface: PodOsConfiguration
 
-Defined in: [index.ts:33](https://github.com/pod-os/PodOS/blob/5f8057b37a40843b32a1365a54e4283e9f14e36c/core/src/index.ts#L33)
+Defined in: [index.ts:33](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/index.ts#L33)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [index.ts:33](https://github.com/pod-os/PodOS/blob/5f8057b37a40843b3
 
 > `optional` **internalStore**: `IndexedFormula`
 
-Defined in: [index.ts:37](https://github.com/pod-os/PodOS/blob/5f8057b37a40843b32a1365a54e4283e9f14e36c/core/src/index.ts#L37)
+Defined in: [index.ts:37](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/index.ts#L37)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [index.ts:37](https://github.com/pod-os/PodOS/blob/5f8057b37a40843b3
 
 > `optional` **offlineCache**: [`OfflineCache`](OfflineCache.md)
 
-Defined in: [index.ts:34](https://github.com/pod-os/PodOS/blob/5f8057b37a40843b32a1365a54e4283e9f14e36c/core/src/index.ts#L34)
+Defined in: [index.ts:34](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/index.ts#L34)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [index.ts:34](https://github.com/pod-os/PodOS/blob/5f8057b37a40843b3
 
 > `optional` **onlineStatus**: [`OnlineStatus`](OnlineStatus.md)
 
-Defined in: [index.ts:35](https://github.com/pod-os/PodOS/blob/5f8057b37a40843b32a1365a54e4283e9f14e36c/core/src/index.ts#L35)
+Defined in: [index.ts:35](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/index.ts#L35)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [index.ts:35](https://github.com/pod-os/PodOS/blob/5f8057b37a40843b3
 
 > `optional` **session**: [`PodOsSession`](PodOsSession.md)
 
-Defined in: [index.ts:36](https://github.com/pod-os/PodOS/blob/5f8057b37a40843b32a1365a54e4283e9f14e36c/core/src/index.ts#L36)
+Defined in: [index.ts:36](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/index.ts#L36)

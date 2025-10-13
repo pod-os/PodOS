@@ -7,6 +7,11 @@ import { SolidFile } from "./SolidFile";
 export class FileFetcher {
   constructor(private session: PodOsSession) {}
 
+  /**
+   * Fetch the contents of the given file
+   * @param {string} url - URL identifying the file
+   * @returns {Promise<SolidFile>} An object representing the fetched file
+   */
   async fetchFile(url: string): Promise<SolidFile> {
     const response = await this.session.authenticatedFetch(url);
     if (response.ok) {
@@ -18,5 +23,21 @@ export class FileFetcher {
         new HttpStatus(response.status, response.statusText),
       );
     }
+  }
+
+  /**
+   * Updates the contents of a file (overrides old content with the given one)
+   * @param file - The file to update
+   * @param newContent - The content to put into the file, overriding all existing
+   * @returns {Promise<Response>} The HTTP response
+   */
+  async putFile(file: SolidFile, newContent: string): Promise<Response> {
+    return await this.session.authenticatedFetch(file.url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": file.blob()?.type ?? "text/plain",
+      },
+      body: newContent,
+    });
   }
 }
