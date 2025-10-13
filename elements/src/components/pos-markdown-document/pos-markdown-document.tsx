@@ -127,11 +127,11 @@ export class PosMarkdownDocument {
 
   private getStatus() {
     return this.isModified ? (
-      <span class="status">
+      <span class="status pending">
         <sl-icon name="clock-history"></sl-icon>pending changes
       </span>
     ) : (
-      <span class="status">
+      <span class="status success">
         <sl-icon name="check2-circle"></sl-icon>all saved
       </span>
     );

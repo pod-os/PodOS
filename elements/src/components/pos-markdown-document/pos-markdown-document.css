@@ -28,25 +28,72 @@
       flex-direction: row;
       justify-content: flex-end;
       button {
+        background: var(--pos-primary-color);
+        color: var(--pos-primary-text-color);
+        outline: none;
+        border: none;
+        border-radius: var(--radius-xs);
         display: inline-flex;
         gap: var(--size-1);
         justify-content: center;
         align-items: center;
         height: var(--size-8);
         flex-shrink: 1;
+
+        &:focus {
+          outline: var(--pos-input-focus-outline);
+        }
+
+        &:hover {
+          filter: brightness(110%);
+          box-shadow: var(--shadow-md);
+        }
       }
       .status {
         display: flex;
         align-content: center;
         align-items: center;
         gap: var(--size-1);
-        font-size: var(--scale-000);
-        color: var(--pos-subtle-text-color);
+        font-size: var(--scale-00);
+
+        &.pending {
+          animation: pending-fade 1s ease forwards;
+        }
+
+        &.success {
+          animation: success-flash 2s ease forwards;
+        }
       }
     }
 
     .content {
       padding: var(--size-4);
     }
+  }
+}
+
+@keyframes pending-fade {
+  0% {
+    opacity: 0;
+    color: var(--pos-subtle-text-color);
+  }
+  100% {
+    opacity: 1;
+    color: var(--pos-primary-color);
+  }
+}
+
+@keyframes success-flash {
+  0% {
+    opacity: 0;
+    color: var(--pos-subtle-text-color);
+  }
+  50% {
+    opacity: 1;
+    color: var(--color-green-500);
+  }
+  100% {
+    opacity: 1;
+    color: var(--pos-subtle-text-color);
   }
 }

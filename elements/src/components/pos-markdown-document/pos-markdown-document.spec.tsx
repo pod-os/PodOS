@@ -294,7 +294,7 @@ This is a test document`;
       await page.waitForChanges();
 
       expect(page.root.querySelector('header .status')).toEqualHtml(`
-        <span class="status">
+        <span class="status success">
           <sl-icon name="check2-circle"></sl-icon>
           all saved
         </span>
@@ -314,7 +314,7 @@ This is a test document`;
       await page.waitForChanges();
 
       expect(page.root.querySelector('header .status')).toEqualHtml(`
-        <span class="status">
+        <span class="status pending">
           <sl-icon name="clock-history"></sl-icon>
           pending changes
         </span>
