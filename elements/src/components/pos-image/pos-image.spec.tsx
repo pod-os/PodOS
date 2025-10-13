@@ -45,7 +45,7 @@ describe('pos-image', () => {
       html: `<pos-image src="https://pod.test/image.png" alt="image" />`,
     });
     const os = mockPodOS();
-    when(os.fetchFile)
+    when(os.files().fetchFile)
       .calledWith('https://pod.test/image.png')
       .mockReturnValue(new Promise(() => null));
     await page.rootInstance.setOs(os);
@@ -66,7 +66,7 @@ describe('pos-image', () => {
       html: `<pos-image src="https://pod.test/image.png" alt="image" />`,
     });
     const os = mockPodOS();
-    when(os.fetchFile).calledWith('https://pod.test/image.png').mockResolvedValue(file);
+    when(os.files().fetchFile).calledWith('https://pod.test/image.png').mockResolvedValue(file);
     await page.rootInstance.setOs(os);
     await page.waitForChanges();
     expect(URL.createObjectURL).toHaveBeenCalledWith(pngBlob);
@@ -86,7 +86,7 @@ describe('pos-image', () => {
       html: `<pos-image src="https://pod.test/image.png" alt="image" blurred-background/>`,
     });
     const os = mockPodOS();
-    when(os.fetchFile).calledWith('https://pod.test/image.png').mockResolvedValue(file);
+    when(os.files().fetchFile).calledWith('https://pod.test/image.png').mockResolvedValue(file);
     await page.rootInstance.setOs(os);
     await page.waitForChanges();
     expect(URL.createObjectURL).toHaveBeenCalledWith(pngBlob);
@@ -108,7 +108,7 @@ describe('pos-image', () => {
     });
     page.root.addEventListener('pod-os:resource-loaded', onResourceLoaded);
     const os = mockPodOS();
-    when(os.fetchFile).calledWith('https://pod.test/image.png').mockResolvedValue(file);
+    when(os.files().fetchFile).calledWith('https://pod.test/image.png').mockResolvedValue(file);
     await page.rootInstance.setOs(os);
     await page.waitForChanges();
     expect(onResourceLoaded).toHaveBeenCalled();
@@ -121,7 +121,7 @@ describe('pos-image', () => {
       html: `<pos-image src="https://pod.test/image.png" />`,
     });
     const os = mockPodOS();
-    when(os.fetchFile).calledWith('https://pod.test/image.png').mockRejectedValue(new Error('network error'));
+    when(os.files().fetchFile).calledWith('https://pod.test/image.png').mockRejectedValue(new Error('network error'));
     await page.rootInstance.setOs(os);
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
@@ -139,7 +139,7 @@ describe('pos-image', () => {
       html: `<pos-image src="https://pod.test/image.png" />`,
     });
     const os = mockPodOS();
-    when(os.fetchFile).calledWith('https://pod.test/image.png').mockRejectedValue(new Error('network error'));
+    when(os.files().fetchFile).calledWith('https://pod.test/image.png').mockRejectedValue(new Error('network error'));
     await page.rootInstance.setOs(os);
     await page.waitForChanges();
     page.rootInstance.onImageError({});
@@ -168,7 +168,7 @@ describe('pos-image', () => {
       html: `<pos-image src="https://pod.test/image.png" />`,
     });
     const os = mockPodOS();
-    when(os.fetchFile).calledWith('https://pod.test/image.png').mockResolvedValue(brokenImage);
+    when(os.files().fetchFile).calledWith('https://pod.test/image.png').mockResolvedValue(brokenImage);
     await page.rootInstance.setOs(os);
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
@@ -189,8 +189,8 @@ describe('pos-image', () => {
       html: `<pos-image src="https://pod.test/image.png" />`,
     });
     const os = mockPodOS();
-    when(os.fetchFile).calledWith('https://pod.test/image.png').mockResolvedValue(file);
-    when(os.fetchFile)
+    when(os.files().fetchFile).calledWith('https://pod.test/image.png').mockResolvedValue(file);
+    when(os.files().fetchFile)
       .calledWith('https://pod.test/other.png')
       .mockReturnValue(new Promise(() => null));
     await page.rootInstance.setOs(os);
@@ -213,8 +213,8 @@ describe('pos-image', () => {
       html: `<pos-image src="https://pod.test/image.png" />`,
     });
     const os = mockPodOS();
-    when(os.fetchFile).calledWith('https://pod.test/image.png').mockResolvedValueOnce(file);
-    when(os.fetchFile)
+    when(os.files().fetchFile).calledWith('https://pod.test/image.png').mockResolvedValueOnce(file);
+    when(os.files().fetchFile)
       .calledWith('https://pod.test/image.png')
       .mockReturnValueOnce(new Promise(() => null));
     await page.rootInstance.setOs(os);
@@ -247,8 +247,8 @@ describe('pos-image', () => {
       html: `<pos-image src="https://pod.test/image.png" />`,
     });
     const os = mockPodOS();
-    when(os.fetchFile).calledWith('https://pod.test/image.png').mockResolvedValueOnce(unauthorizedFile);
-    when(os.fetchFile).calledWith('https://pod.test/image.png').mockResolvedValueOnce(file);
+    when(os.files().fetchFile).calledWith('https://pod.test/image.png').mockResolvedValueOnce(unauthorizedFile);
+    when(os.files().fetchFile).calledWith('https://pod.test/image.png').mockResolvedValueOnce(file);
     await page.rootInstance.setOs(os);
     expect(sessionChanged).toBeDefined();
     sessionChanged();

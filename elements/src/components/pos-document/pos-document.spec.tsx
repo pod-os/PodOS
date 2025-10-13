@@ -48,7 +48,7 @@ describe('pos-document', () => {
       html: `<pos-document src="https://pod.test/test.pdf" />`,
     });
     const os = mockPodOS();
-    when(os.fetchFile)
+    when(os.files().fetchFile)
       .calledWith('https://pod.test/test.pdf')
       .mockReturnValue(new Promise(() => null));
     await page.rootInstance.setOs(os);
@@ -69,7 +69,7 @@ describe('pos-document', () => {
       html: `<pos-document src="https://pod.test/test.pdf" />`,
     });
     const os = mockPodOS();
-    when(os.fetchFile).calledWith('https://pod.test/test.pdf').mockResolvedValue(file);
+    when(os.files().fetchFile).calledWith('https://pod.test/test.pdf').mockResolvedValue(file);
     await page.rootInstance.setOs(os);
     await page.waitForChanges();
     expect(URL.createObjectURL).toHaveBeenCalledWith(pdfBlob);
@@ -92,7 +92,7 @@ describe('pos-document', () => {
       html: `<pos-document src="https://pod.test/test.md" />`,
     });
     const os = mockPodOS();
-    when(os.fetchFile).calledWith('https://pod.test/test.md').mockResolvedValue(file);
+    when(os.files().fetchFile).calledWith('https://pod.test/test.md').mockResolvedValue(file);
     when(os.store.get).calledWith('https://pod.test/test.md').mockReturnValue({ editable: true });
     await page.rootInstance.setOs(os);
     await page.waitForChanges();
@@ -118,7 +118,7 @@ describe('pos-document', () => {
       html: `<pos-document src="https://pod.test/test.md" />`,
     });
     const os = mockPodOS();
-    when(os.fetchFile).calledWith('https://pod.test/test.md').mockResolvedValue(file);
+    when(os.files().fetchFile).calledWith('https://pod.test/test.md').mockResolvedValue(file);
     when(os.store.get).calledWith('https://pod.test/test.md').mockReturnValue({ editable: false });
     await page.rootInstance.setOs(os);
     await page.waitForChanges();
@@ -143,7 +143,7 @@ describe('pos-document', () => {
     });
     page.root.addEventListener('pod-os:resource-loaded', onResourceLoaded);
     const os = mockPodOS();
-    when(os.fetchFile).calledWith('https://pod.test/test.pdf').mockResolvedValue(file);
+    when(os.files().fetchFile).calledWith('https://pod.test/test.pdf').mockResolvedValue(file);
     await page.rootInstance.setOs(os);
     await page.waitForChanges();
     expect(onResourceLoaded).toHaveBeenCalled();
@@ -156,7 +156,7 @@ describe('pos-document', () => {
       html: `<pos-document src="https://pod.test/test.pdf" />`,
     });
     const os = mockPodOS();
-    when(os.fetchFile).calledWith('https://pod.test/test.pdf').mockRejectedValue(new Error('network error'));
+    when(os.files().fetchFile).calledWith('https://pod.test/test.pdf').mockRejectedValue(new Error('network error'));
     await page.rootInstance.setOs(os);
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
@@ -181,7 +181,7 @@ describe('pos-document', () => {
       html: `<pos-document src="https://pod.test/test.pdf" />`,
     });
     const os = mockPodOS();
-    when(os.fetchFile).calledWith('https://pod.test/test.pdf').mockResolvedValue(brokenImage);
+    when(os.files().fetchFile).calledWith('https://pod.test/test.pdf').mockResolvedValue(brokenImage);
     await page.rootInstance.setOs(os);
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
@@ -202,8 +202,8 @@ describe('pos-document', () => {
       html: `<pos-document src="https://pod.test/test.pdf" />`,
     });
     const os = mockPodOS();
-    when(os.fetchFile).calledWith('https://pod.test/test.pdf').mockResolvedValue(file);
-    when(os.fetchFile)
+    when(os.files().fetchFile).calledWith('https://pod.test/test.pdf').mockResolvedValue(file);
+    when(os.files().fetchFile)
       .calledWith('https://pod.test/other.png')
       .mockReturnValue(new Promise(() => null));
     await page.rootInstance.setOs(os);
@@ -227,8 +227,8 @@ describe('pos-document', () => {
       html: `<pos-document src="https://pod.test/test.pdf" />`,
     });
     const os = mockPodOS();
-    when(os.fetchFile).calledWith('https://pod.test/test.pdf').mockResolvedValueOnce(file);
-    when(os.fetchFile)
+    when(os.files().fetchFile).calledWith('https://pod.test/test.pdf').mockResolvedValueOnce(file);
+    when(os.files().fetchFile)
       .calledWith('https://pod.test/test.pdf')
       .mockReturnValueOnce(new Promise(() => null));
     await page.rootInstance.setOs(os);
@@ -261,8 +261,8 @@ describe('pos-document', () => {
       html: `<pos-document src="https://pod.test/test.pdf" />`,
     });
     const os = mockPodOS();
-    when(os.fetchFile).calledWith('https://pod.test/test.pdf').mockResolvedValueOnce(unauthorizedFile);
-    when(os.fetchFile).calledWith('https://pod.test/test.pdf').mockResolvedValueOnce(file);
+    when(os.files().fetchFile).calledWith('https://pod.test/test.pdf').mockResolvedValueOnce(unauthorizedFile);
+    when(os.files().fetchFile).calledWith('https://pod.test/test.pdf').mockResolvedValueOnce(file);
     await page.rootInstance.setOs(os);
     expect(sessionChanged).toBeDefined();
     sessionChanged();

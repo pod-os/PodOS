@@ -51,7 +51,7 @@ export class PosDocument {
   async fetchBlob() {
     try {
       this.loading = true;
-      const file = await this.os.fetchFile(this.src);
+      const file = await this.os.files().fetchFile(this.src);
       const thing = this.os.store.get(this.src);
       this.isEditable = thing?.editable;
       this.resourceLoadedEmitter.emit(this.src);
