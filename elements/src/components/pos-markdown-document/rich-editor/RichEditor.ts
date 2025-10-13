@@ -3,7 +3,7 @@ import StarterKit from '@tiptap/starter-kit';
 import { PosImageNode } from './PosImageNode';
 import { PosRichLinkMark } from './PosRichLinkMark';
 import { SanitizedHtml } from '../sanitize';
-import { BehaviorSubject, tap } from 'rxjs';
+import { Subject, tap } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
 export class RichEditor {
@@ -16,7 +16,7 @@ export class RichEditor {
   private modified = false;
 
   private editingJustChanged = false;
-  private readonly modifications = new BehaviorSubject<{ content: string }>({ content: '' });
+  private readonly modifications = new Subject<{ content: string }>();
 
   /**
    * @param target The element to render to
