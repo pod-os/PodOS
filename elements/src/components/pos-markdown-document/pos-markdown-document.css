@@ -1,5 +1,6 @@
 :host {
   article {
+    padding: 0;
     &:focus-within {
       outline: var(--pos-input-focus-outline);
     }
@@ -15,6 +16,15 @@
     }
 
     header {
+      position: sticky;
+      background-color: var(--pos-background-color);
+      border-bottom: var(--size-px) solid var(--pos-border-color);
+      border-top-left-radius: inherit;
+      border-top-right-radius: inherit;
+      overflow: hidden;
+      z-index: var(--layer-1);
+      top: 0;
+      padding: var(--size-1);
       flex-direction: row;
       justify-content: flex-end;
       button {
@@ -25,9 +35,6 @@
         height: var(--size-8);
         flex-shrink: 1;
       }
-    }
-
-    footer {
       .status {
         display: flex;
         align-content: center;
@@ -36,6 +43,10 @@
         font-size: var(--scale-000);
         color: var(--pos-subtle-text-color);
       }
+    }
+
+    .content {
+      padding: var(--size-4);
     }
   }
 }

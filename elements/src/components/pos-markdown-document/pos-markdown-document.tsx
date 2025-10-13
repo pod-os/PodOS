@@ -108,6 +108,7 @@ export class PosMarkdownDocument {
       <article>
         {this.editable ? (
           <header>
+            {this.isEditing ? this.getStatus() : null}
             {this.isEditing ? (
               <button onClick={() => this.stopEditing()}>
                 <sl-icon name="eye"></sl-icon>View
@@ -119,25 +120,20 @@ export class PosMarkdownDocument {
             )}
           </header>
         ) : null}
-        <div ref={el => (this.editorEl = el)}></div>
-        {this.isEditing ? this.getFooter() : null}
+        <div class="content" ref={el => (this.editorEl = el)}></div>
       </article>
     );
   }
 
-  private getFooter() {
-    return (
-      <footer>
-        {this.isModified ? (
-          <span class="status">
-            <sl-icon name="clock-history"></sl-icon>pending changes
-          </span>
-        ) : (
-          <span class="status">
-            <sl-icon name="check2-circle"></sl-icon>all saved
-          </span>
-        )}
-      </footer>
+  private getStatus() {
+    return this.isModified ? (
+      <span class="status">
+        <sl-icon name="clock-history"></sl-icon>pending changes
+      </span>
+    ) : (
+      <span class="status">
+        <sl-icon name="check2-circle"></sl-icon>all saved
+      </span>
     );
   }
 }
