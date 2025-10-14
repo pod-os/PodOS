@@ -1,13 +1,13 @@
 import { SolidFile } from '@pod-os/core';
 import { Component, h, Method, Prop, State, Event, EventEmitter } from '@stencil/core';
 
-import { marked } from 'marked';
 import { sanitize, SanitizedHtml } from './sanitize';
 import { RichEditor } from './rich-editor';
 
 import './shoelace';
 import { map, Subject, takeUntil, tap } from 'rxjs';
 import { html2markdown } from './html2markdown';
+import { markdown2html } from './markdown2html';
 
 interface ModifiedFile {
   file: SolidFile;
@@ -55,7 +55,7 @@ export class PosMarkdownDocument {
 
   async componentWillLoad() {
     const markdown = await this.file.blob().text();
-    const html = await marked(markdown);
+    const html = await markdown2html(markdown);
     this.sanitizedHtml = sanitize(html);
   }
 
