@@ -1,3 +1,5 @@
+import { PodOS } from '@pod-os/core';
+
 jest.mock('../pod-os', () => ({
   createPodOS: jest.fn(),
 }));
@@ -19,7 +21,7 @@ const alice = {
   picture: 'https://pod.example/alice/me.jpg',
 };
 
-export function mockPodOS() {
+export function mockPodOS(): PodOS {
   const sessionInfo$ = new BehaviorSubject({ isLoggedIn: false, webId: '' });
   const fileFetcher = {
     fetchFile: jest.fn(),
@@ -49,5 +51,5 @@ export function mockPodOS() {
       }),
     });
   (createPodOS as jest.Mock).mockReturnValue(os);
-  return os;
+  return os as unknown as PodOS;
 }

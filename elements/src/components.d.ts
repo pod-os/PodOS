@@ -112,6 +112,10 @@ export namespace Components {
          */
         "file": SolidFile;
         /**
+          * HTTP response from the last saving the document
+         */
+        "savingResponse"?: Response;
+        /**
           * Switch to editing mode
          */
         "startEditing": () => Promise<void>;
@@ -544,6 +548,7 @@ declare global {
     interface HTMLPosDocumentElementEventMap {
         "pod-os:init": any;
         "pod-os:resource-loaded": string;
+        "pod-os:error": Error;
     }
     interface HTMLPosDocumentElement extends Components.PosDocument, HTMLStencilElement {
         addEventListener<K extends keyof HTMLPosDocumentElementEventMap>(type: K, listener: (this: HTMLPosDocumentElement, ev: PosDocumentCustomEvent<HTMLPosDocumentElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -1173,6 +1178,10 @@ declare namespace LocalJSX {
     }
     interface PosDocument {
         "alt"?: string;
+        /**
+          * Emitted when an error occurs during file operations.
+         */
+        "onPod-os:error"?: (event: PosDocumentCustomEvent<Error>) => void;
         "onPod-os:init"?: (event: PosDocumentCustomEvent<any>) => void;
         /**
           * Indicates that the resource given in `src` property has been loaded.
@@ -1257,6 +1266,10 @@ declare namespace LocalJSX {
           * Event emitted when the document has been modified
          */
         "onPod-os:document-modified"?: (event: PosMarkdownDocumentCustomEvent<ModifiedFile>) => void;
+        /**
+          * HTTP response from the last saving the document
+         */
+        "savingResponse"?: Response;
     }
     interface PosNavigation {
         "onPod-os:init"?: (event: PosNavigationCustomEvent<any>) => void;

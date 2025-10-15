@@ -4,7 +4,7 @@ jest.mock('../broken-file/BrokenFile');
 import { h } from '@stencil/core';
 
 import { Components } from '../../components';
-import { BinaryFile, BrokenFile as BrokenFileData } from '@pod-os/core';
+import { BinaryFile, BrokenFile as BrokenFileData, PodOS, Thing } from '@pod-os/core';
 import { newSpecPage } from '@stencil/core/testing';
 import { Blob } from 'buffer';
 import { mockPodOS } from '../../test/mockPodOS';
@@ -93,7 +93,9 @@ describe('pos-document', () => {
     });
     const os = mockPodOS();
     when(os.files().fetchFile).calledWith('https://pod.test/test.md').mockResolvedValue(file);
-    when(os.store.get).calledWith('https://pod.test/test.md').mockReturnValue({ editable: true });
+    when(os.store.get)
+      .calledWith('https://pod.test/test.md')
+      .mockReturnValue({ editable: true } as unknown as Thing);
     await page.rootInstance.setOs(os);
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
@@ -119,7 +121,9 @@ describe('pos-document', () => {
     });
     const os = mockPodOS();
     when(os.files().fetchFile).calledWith('https://pod.test/test.md').mockResolvedValue(file);
-    when(os.store.get).calledWith('https://pod.test/test.md').mockReturnValue({ editable: false });
+    when(os.store.get)
+      .calledWith('https://pod.test/test.md')
+      .mockReturnValue({ editable: false } as unknown as Thing);
     await page.rootInstance.setOs(os);
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
@@ -294,7 +298,7 @@ describe('pos-document', () => {
       // and PodOS can put the file successfully
       const os = mockPodOS();
       when(os.files().putFile)
-        .calledWith('https://pod.test/test.md', file)
+        .calledWith(file, 'new content')
         .mockResolvedValue(new Response(null, { status: 200 }));
       await page.rootInstance.setOs(os);
 
@@ -305,6 +309,97 @@ describe('pos-document', () => {
 
       // then the new content is put to the original file
       expect(os.files().putFile).toHaveBeenCalledWith(file, 'new content');
+    });
+
+    describe('errors during save', () => {
+      let os: PodOS;
+      let page;
+      let file: BinaryFile;
+      let errorSpy: jest.Mock;
+      beforeEach(async () => {
+        // Given a markdown file
+        const markdownBlob = new Blob(['# Test'], {
+          type: 'text/markdown',
+        });
+        file = mockBinaryFile(markdownBlob);
+        page = await newSpecPage({
+          components: [PosDocument],
+          html: `<pos-document src="https://pod.test/test.md" />`,
+        });
+
+        // and the file can be fetched initially
+        os = mockPodOS();
+        when(os.files().fetchFile).calledWith('https://pod.test/test.md').mockResolvedValue(file);
+        when(os.store.get)
+          .calledWith('https://pod.test/test.md')
+          .mockReturnValue({ editable: true } as unknown as Thing);
+        await page.rootInstance.setOs(os);
+        await page.waitForChanges();
+
+        // and the page listens to pod-os:error events
+        errorSpy = jest.fn();
+        page.root.addEventListener('pod-os:error', errorSpy);
+
+        // and the pos-markdown-component shows up
+        expect(page.root).toEqualHtml(`
+          <pos-document src="https://pod.test/test.md">
+            <mock:shadow-root>
+              <pos-markdown-document editable></pos-markdown-document>
+          </pos-document>
+      `);
+      });
+
+      it('emits pod-os:error when putFile responds with non-ok http status', async () => {
+        // but PodOS will fail to put the file responding with non-ok http status
+        let error = { status: 401, statusText: 'Unauthorized', ok: false } as Response;
+        when(os.files().putFile).calledWith(file, 'new content').mockResolvedValue(error);
+        await page.rootInstance.setOs(os);
+
+        // when the file was modified with new content
+        page.root.dispatchEvent(
+          new CustomEvent('pod-os:document-modified', { detail: { file, newContent: 'new content' } }),
+        );
+
+        // then the new content is put to the original file
+        expect(os.files().putFile).toHaveBeenCalledWith(file, 'new content');
+
+        await page.waitForChanges();
+
+        // and a pod-os:error event is emitted
+        expect(errorSpy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            detail: new Error(`Failed to save file: 401 Unauthorized`),
+          }),
+        );
+      });
+
+      it('emits pod-os:error when putFile responds with exception', async () => {
+        // but PodOS will fail to put the file, throwing an error
+        let error = { status: 401, statusText: 'Unauthorized', ok: false } as Response;
+        when(os.files().putFile)
+          .calledWith(file, 'new content')
+          .mockImplementation(() => {
+            throw new Error('Network error');
+          });
+        await page.rootInstance.setOs(os);
+
+        // when the file was modified with new content
+        page.root.dispatchEvent(
+          new CustomEvent('pod-os:document-modified', { detail: { file, newContent: 'new content' } }),
+        );
+
+        // then the new content is put to the original file
+        expect(os.files().putFile).toHaveBeenCalledWith(file, 'new content');
+
+        await page.waitForChanges();
+
+        // and a pod-os:error event is emitted
+        expect(errorSpy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            detail: new Error('Network error'),
+          }),
+        );
+      });
     });
   });
 });

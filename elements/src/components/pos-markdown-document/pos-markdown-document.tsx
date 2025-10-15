@@ -27,6 +27,12 @@ export class PosMarkdownDocument {
   file: SolidFile;
 
   /**
+   * HTTP response from the last saving the document
+   */
+  @Prop()
+  savingResponse?: Response;
+
+  /**
    * Whether the current user has the permission to edit the file
    */
   @Prop()
