@@ -37,6 +37,11 @@ export class PosDocument {
    */
   @Event({ eventName: 'pod-os:resource-loaded' }) resourceLoadedEmitter: EventEmitter<string>;
 
+  /**
+   * Emitted when an error occurs during file operations.
+   */
+  @Event({ eventName: 'pod-os:error' }) errorEmitter: EventEmitter<Error>;
+
   componentWillLoad() {
     session.onChange('isLoggedIn', () => this.fetchBlob());
     this.initializeOsEmitter.emit(this.setOs);
@@ -49,7 +54,15 @@ export class PosDocument {
   @Listen('pod-os:document-modified')
   async handleDocumentModified(event: CustomEvent) {
     const { file, newContent } = event.detail;
-    await this.os.files().putFile(file, newContent);
+    try {
+      const response = await this.os.files().putFile(file, newContent);
+      if (!response.ok) {
+        const error = new Error(`Failed to save file: ${response.status} ${response.statusText}`);
+        this.errorEmitter.emit(error);
+      }
+    } catch (error) {
+      this.errorEmitter.emit(error);
+    }
   }
 
   @Watch('os')
