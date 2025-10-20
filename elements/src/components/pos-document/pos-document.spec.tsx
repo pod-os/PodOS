@@ -1,3 +1,5 @@
+import { waitFor } from '@testing-library/dom';
+
 jest.mock('../broken-file/BrokenFile');
 
 // noinspection ES6UnusedImports
@@ -351,9 +353,8 @@ describe('pos-document', () => {
 
       it('emits pod-os:error when putFile responds with non-ok http status', async () => {
         // but PodOS will fail to put the file responding with non-ok http status
-        let error = { status: 401, statusText: 'Unauthorized', ok: false } as Response;
+        const error = { status: 401, statusText: 'Unauthorized', ok: false } as Response;
         when(os.files().putFile).calledWith(file, 'new content').mockResolvedValue(error);
-        await page.rootInstance.setOs(os);
 
         // when the file was modified with new content
         page.root.dispatchEvent(
@@ -375,13 +376,11 @@ describe('pos-document', () => {
 
       it('emits pod-os:error when putFile responds with exception', async () => {
         // but PodOS will fail to put the file, throwing an error
-        let error = { status: 401, statusText: 'Unauthorized', ok: false } as Response;
         when(os.files().putFile)
           .calledWith(file, 'new content')
           .mockImplementation(() => {
             throw new Error('Network error');
           });
-        await page.rootInstance.setOs(os);
 
         // when the file was modified with new content
         page.root.dispatchEvent(
@@ -399,6 +398,35 @@ describe('pos-document', () => {
             detail: new Error('Network error'),
           }),
         );
+      });
+
+      it('flags markdown document with error iff last saving failed', async () => {
+        // when PUT fails
+        const error = { status: 401, statusText: 'Unauthorized', ok: false } as Response;
+        when(os.files().putFile).mockResolvedValue(error);
+
+        page.root.dispatchEvent(
+          new CustomEvent('pod-os:document-modified', { detail: { file, newContent: 'new content' } }),
+        );
+
+        await page.waitForChanges(); // wait for put to resolve
+        await page.waitForChanges(); // wait for rerender
+
+        // then error indication is passed to pos-markdown-document
+        const markdownDocFailed = page.root.shadowRoot.querySelector('pos-markdown-document');
+        expect(markdownDocFailed).toHaveAttribute('savingFailed');
+
+        // but when PUT then succeeds again
+        when(os.files().putFile).mockResolvedValue({ ok: true } as Response);
+        page.root.dispatchEvent(
+          new CustomEvent('pod-os:document-modified', { detail: { file, newContent: 'new content' } }),
+        );
+        await page.waitForChanges(); // wait for put to resolve
+        await page.waitForChanges(); // wait for rerender
+
+        // then the error indication is removed again
+        const markdownDocRecovered = page.root.shadowRoot.querySelector('pos-markdown-document');
+        expect(markdownDocRecovered).not.toHaveAttribute('savingFailed');
       });
     });
   });
