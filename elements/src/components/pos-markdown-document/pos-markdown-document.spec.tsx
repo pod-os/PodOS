@@ -294,9 +294,9 @@ This is a test document`;
       await page.waitForChanges();
 
       expect(page.root.querySelector('header .status')).toEqualHtml(`
-        <span class="status success">
-          <sl-icon name="check2-circle"></sl-icon>
-          all saved
+        <span class="status success" role="status" aria-live="polite" aria-labelledby="status-message">
+          <sl-icon name="check2-circle" aria-hidden="true"></sl-icon>
+          <span id="status-message">all saved</span>
         </span>
     `);
     });
@@ -313,9 +313,9 @@ This is a test document`;
       await page.waitForChanges();
 
       expect(page.root.querySelector('header .status')).toEqualHtml(`
-        <span class="error status">
-          <sl-icon name="x-octagon"></sl-icon>
-          saving failed
+        <span class="error status" role="status" aria-live="polite" aria-labelledby="status-message">
+          <sl-icon name="x-octagon" aria-hidden="true"></sl-icon>
+          <span id="status-message">saving failed</span>
         </span>
     `);
     });
@@ -333,9 +333,9 @@ This is a test document`;
       await page.waitForChanges();
 
       expect(page.root.querySelector('header .status')).toEqualHtml(`
-        <span class="status pending">
-          <sl-icon name="clock-history"></sl-icon>
-          pending changes
+        <span class="status pending" role="status" aria-live="polite" aria-labelledby="status-message">
+          <sl-icon name="clock-history" aria-hidden="true"></sl-icon>
+          <span id="status-message">pending changes</span>
         </span>
     `);
     });
@@ -353,9 +353,9 @@ This is a test document`;
       await page.waitForChanges();
 
       expect(page.root.querySelector('header .status')).toEqualHtml(`
-        <span class="status pending">
-          <sl-icon name="clock-history"></sl-icon>
-          pending changes
+        <span class="status pending" role="status" aria-live="polite" aria-labelledby="status-message">
+          <sl-icon name="clock-history" aria-hidden="true"></sl-icon>
+          <span id="status-message">pending changes</span>
         </span>
     `);
     });

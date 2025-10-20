@@ -151,9 +151,12 @@ function Status({ status, icon, message }) {
         status: true,
         [status]: true,
       }}
+      role="status"
+      aria-live="polite"
+      aria-labelledby="status-message"
     >
-      <sl-icon name={icon}></sl-icon>
-      {message}
+      <sl-icon name={icon} aria-hidden="true"></sl-icon>
+      <span id="status-message">{message}</span>
     </span>
   );
 }

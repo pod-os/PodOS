@@ -65,7 +65,9 @@ test.describe("Markdown documents", () => {
     });
 
     await test.step("then changes are saved", async () => {
-      await expect(page.getByText("All saved")).toBeVisible();
+      await expect(
+        page.getByRole("status", { name: "all saved" })
+      ).toBeVisible();
     });
 
     await test.step("and content persists after refresh", async () => {
