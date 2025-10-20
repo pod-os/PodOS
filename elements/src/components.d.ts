@@ -112,9 +112,9 @@ export namespace Components {
          */
         "file": SolidFile;
         /**
-          * HTTP response from the last saving the document
+          * Whether saving the latest changes failed
          */
-        "savingResponse"?: Response;
+        "savingFailed": boolean;
         /**
           * Switch to editing mode
          */
@@ -1267,9 +1267,9 @@ declare namespace LocalJSX {
          */
         "onPod-os:document-modified"?: (event: PosMarkdownDocumentCustomEvent<ModifiedFile>) => void;
         /**
-          * HTTP response from the last saving the document
+          * Whether saving the latest changes failed
          */
-        "savingResponse"?: Response;
+        "savingFailed"?: boolean;
     }
     interface PosNavigation {
         "onPod-os:init"?: (event: PosNavigationCustomEvent<any>) => void;

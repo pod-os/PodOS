@@ -25,6 +25,9 @@ export class PosDocument {
   private error: Error;
 
   @State()
+  private savingFailed = false;
+
+  @State()
   private loading: boolean = true;
 
   @State()
@@ -55,12 +58,15 @@ export class PosDocument {
   async handleDocumentModified(event: CustomEvent) {
     const { file, newContent } = event.detail;
     try {
+      this.savingFailed = false;
       const response = await this.os.files().putFile(file, newContent);
       if (!response.ok) {
+        this.savingFailed = true;
         const error = new Error(`Failed to save file: ${response.status} ${response.statusText}`);
         this.errorEmitter.emit(error);
       }
     } catch (error) {
+      this.savingFailed = true;
       this.errorEmitter.emit(error);
     }
   }
@@ -98,7 +104,13 @@ export class PosDocument {
       return <BrokenFile file={this.brokenFile} />;
     }
     if (this.file.blob().type === 'text/markdown') {
-      return <pos-markdown-document editable={this.isEditable} file={this.file}></pos-markdown-document>;
+      return (
+        <pos-markdown-document
+          editable={this.isEditable}
+          savingFailed={this.savingFailed}
+          file={this.file}
+        ></pos-markdown-document>
+      );
     } else {
       return <iframe src={URL.createObjectURL(this.file.blob())}></iframe>;
     }
