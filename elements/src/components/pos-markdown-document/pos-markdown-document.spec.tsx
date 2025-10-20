@@ -301,11 +301,50 @@ This is a test document`;
     `);
     });
 
+    it('shows that saving the changes failed', async () => {
+      const file = mockFile();
+      const page = await newSpecPage({
+        components: [PosMarkdownDocument],
+        template: () => <pos-markdown-document savingFailed editable file={file} />,
+        supportsShadowDom: false,
+      });
+
+      page.rootInstance.startEditing();
+      await page.waitForChanges();
+
+      expect(page.root.querySelector('header .status')).toEqualHtml(`
+        <span class="error status">
+          <sl-icon name="x-octagon"></sl-icon>
+          saving failed
+        </span>
+    `);
+    });
+
     it('shows pending changes, if editor has been modified', async () => {
       const file = mockFile();
       const page = await newSpecPage({
         components: [PosMarkdownDocument],
         template: () => <pos-markdown-document editable file={file} />,
+        supportsShadowDom: false,
+      });
+
+      page.rootInstance.startEditing();
+      page.rootInstance.isModified = true;
+      await page.waitForChanges();
+
+      expect(page.root.querySelector('header .status')).toEqualHtml(`
+        <span class="status pending">
+          <sl-icon name="clock-history"></sl-icon>
+          pending changes
+        </span>
+    `);
+    });
+
+    it('shows pending changes, if editor has been modified even if last saving failed', async () => {
+      const file = mockFile();
+      const page = await newSpecPage({
+        components: [PosMarkdownDocument],
+        template: () => <pos-markdown-document savingFailed editable file={file} />,
         supportsShadowDom: false,
       });
 

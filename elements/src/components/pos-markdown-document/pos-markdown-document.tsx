@@ -117,11 +117,13 @@ export class PosMarkdownDocument {
             {this.isEditing ? this.getStatus() : null}
             {this.isEditing ? (
               <button onClick={() => this.stopEditing()}>
-                <sl-icon name="eye"></sl-icon>View
+                <sl-icon name="eye"></sl-icon>
+                View
               </button>
             ) : (
               <button onClick={() => this.startEditing()}>
-                <sl-icon name="pencil-square"></sl-icon>Edit
+                <sl-icon name="pencil-square"></sl-icon>
+                Edit
               </button>
             )}
           </header>
@@ -132,14 +134,26 @@ export class PosMarkdownDocument {
   }
 
   private getStatus() {
-    return this.isModified ? (
-      <span class="status pending">
-        <sl-icon name="clock-history"></sl-icon>pending changes
-      </span>
-    ) : (
-      <span class="status success">
-        <sl-icon name="check2-circle"></sl-icon>all saved
-      </span>
-    );
+    if (this.isModified) {
+      return <Status status="pending" message="pending changes" icon="clock-history"></Status>;
+    }
+    if (this.savingFailed) {
+      return <Status status="error" message="saving failed" icon="x-octagon"></Status>;
+    }
+    return <Status status="success" message="all saved" icon="check2-circle"></Status>;
   }
+}
+
+function Status({ status, icon, message }) {
+  return (
+    <span
+      class={{
+        status: true,
+        [status]: true,
+      }}
+    >
+      <sl-icon name={icon}></sl-icon>
+      {message}
+    </span>
+  );
 }
