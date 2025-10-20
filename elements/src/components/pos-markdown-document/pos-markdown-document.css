@@ -63,6 +63,10 @@
         &.success {
           animation: success-flash 2s ease forwards;
         }
+
+        &.error {
+          animation: error-flash 2s ease infinite;
+        }
       }
     }
 
@@ -114,5 +118,18 @@
   100% {
     opacity: 1;
     color: var(--pos-subtle-text-color);
+  }
+}
+
+@keyframes error-flash {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+    color: var(--color-red-500);
+  }
+  100% {
+    opacity: 0;
   }
 }
