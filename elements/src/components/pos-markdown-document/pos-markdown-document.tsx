@@ -95,7 +95,7 @@ export class PosMarkdownDocument {
    * Switch to editing mode
    */
   @Method()
-  startEditing() {
+  async startEditing() {
     this.editor.startEditing();
     this.isEditing = true;
   }
@@ -104,7 +104,7 @@ export class PosMarkdownDocument {
    * Switch to view mode
    */
   @Method()
-  stopEditing() {
+  async stopEditing() {
     this.editor.stopEditing();
     this.isEditing = false;
   }
