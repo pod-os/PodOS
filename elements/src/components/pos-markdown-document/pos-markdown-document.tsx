@@ -1,13 +1,10 @@
 import { SolidFile } from '@pod-os/core';
 import { Component, h, Method, Prop, State, Event, EventEmitter } from '@stencil/core';
 
-import { sanitize, SanitizedHtml } from './sanitize';
 import { RichEditor } from './rich-editor';
 
 import './shoelace';
 import { map, Subject, takeUntil, tap } from 'rxjs';
-import { html2markdown } from './html2markdown';
-import { markdown2html } from './markdown2html';
 
 interface ModifiedFile {
   file: SolidFile;
@@ -39,7 +36,7 @@ export class PosMarkdownDocument {
   editable: boolean = false;
 
   @State()
-  private sanitizedHtml: SanitizedHtml;
+  private markdown: string;
 
   private editorEl: HTMLElement;
 
@@ -60,13 +57,11 @@ export class PosMarkdownDocument {
   private readonly disconnected$ = new Subject<void>();
 
   async componentWillLoad() {
-    const markdown = await this.file.blob().text();
-    const html = await markdown2html(markdown);
-    this.sanitizedHtml = sanitize(html);
+    this.markdown = await this.file.blob().text();
   }
 
   componentDidLoad() {
-    this.editor = new RichEditor(this.editorEl, this.sanitizedHtml, this.file.url);
+    this.editor = new RichEditor(this.editorEl, this.markdown, this.file.url);
     this.editor.onUpdate(() => {
       this.isModified = this.editor.isModified();
     });
@@ -74,7 +69,7 @@ export class PosMarkdownDocument {
       .observeChanges()
       .pipe(
         takeUntil(this.disconnected$),
-        map(changes => html2markdown(changes.content)),
+        map(changes => changes.content),
         tap(markdown => {
           this.isModified = false;
           this.documentModified.emit({

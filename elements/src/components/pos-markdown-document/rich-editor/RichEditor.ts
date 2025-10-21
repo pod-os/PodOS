@@ -1,8 +1,8 @@
 import { Editor } from '@tiptap/core';
+import { Markdown } from '@tiptap/markdown';
 import StarterKit from '@tiptap/starter-kit';
 import { PosImageNode } from './PosImageNode';
 import { PosRichLinkMark } from './PosRichLinkMark';
-import { SanitizedHtml } from '../sanitize';
 import { Subject, tap } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
@@ -23,11 +23,12 @@ export class RichEditor {
    * @param content The content to show in the editor
    * @param baseUrl Base URL for relative links and relative image src
    */
-  constructor(target: HTMLElement, content: SanitizedHtml, baseUrl: string) {
+  constructor(target: HTMLElement, content: string, baseUrl: string) {
     this.editor = new Editor({
       element: target,
-      extensions: [StarterKit.configure({ link: false }), PosImageNode(baseUrl), PosRichLinkMark(baseUrl)],
-      content: content.value,
+      extensions: [Markdown, StarterKit.configure({ link: false }), PosImageNode(baseUrl), PosRichLinkMark(baseUrl)],
+      content: content,
+      contentType: 'markdown',
       editable: false,
     });
     this.editor.on('update', () => {
@@ -36,7 +37,7 @@ export class RichEditor {
         return;
       }
       this.modified = true;
-      this.modifications.next({ content: this.editor.getHTML() });
+      this.modifications.next({ content: this.editor.getMarkdown() });
     });
   }
 
@@ -50,13 +51,12 @@ export class RichEditor {
 
   startEditing() {
     this.editingJustChanged = true;
-    this.editor.setEditable(true);
+    this.editor.setEditable(true, false);
     this.editor.commands.focus();
   }
 
   stopEditing() {
-    this.editingJustChanged = true;
-    this.editor.setEditable(false);
+    this.editor.setEditable(false, false);
   }
 
   isModified() {
@@ -64,7 +64,7 @@ export class RichEditor {
   }
 
   getContent() {
-    return this.editor.getHTML();
+    return this.editor.getMarkdown();
   }
 
   /**
