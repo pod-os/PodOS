@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+
+### Added
+
+- [pos-markdown-document](https://pod-os.org/reference/elements/components/pos-markdown-document/): Render and edit Markdown documents with WYSIWYG editor and auto-save
+
+### Changed
+
+- [pos-document](https://pod-os.org/reference/elements/components/pos-document/):
+  - Now renders Markdown files using the new [pos-markdown-document](https://pod-os.org/reference/elements/components/pos-markdown-document/) component
+- [pos-app-document-viewer](https://pod-os.org/reference/elements/apps/pos-app-document-viewer/):
+  - Removed redundant information that is already present in the generic view
+  - provides dedicated view & editor for markdown
+  - ⚠ This element will be probably renamed in the future, since it also provides document editors
+
+
+
 ## 0.30.1
 
 ### Fixed
