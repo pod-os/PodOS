@@ -16,7 +16,6 @@
 
 ### Used by
 
- - [pos-app-document-viewer](../../apps/pos-app-document-viewer)
  - [pos-app-generic](../../apps/pos-app-generic)
  - [pos-app-image-viewer](../../apps/pos-app-image-viewer)
  - [pos-app-ldp-container](../../apps/pos-app-ldp-container)
@@ -32,7 +31,6 @@
 graph TD;
   pos-type-badges --> ion-badge
   pos-type-badges --> ion-icon
-  pos-app-document-viewer --> pos-type-badges
   pos-app-generic --> pos-type-badges
   pos-app-image-viewer --> pos-type-badges
   pos-app-ldp-container --> pos-type-badges

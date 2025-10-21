@@ -16,7 +16,6 @@
 
 ### Used by
 
- - [pos-app-document-viewer](../../apps/pos-app-document-viewer)
  - [pos-app-generic](../../apps/pos-app-generic)
  - [pos-app-image-viewer](../../apps/pos-app-image-viewer)
  - [pos-app-ldp-container](../../apps/pos-app-ldp-container)
@@ -35,7 +34,6 @@ graph TD;
   pos-predicate --> ion-icon
   pos-add-literal-value --> ion-icon
   pos-add-literal-value --> pos-select-term
-  pos-app-document-viewer --> pos-literals
   pos-app-generic --> pos-literals
   pos-app-image-viewer --> pos-literals
   pos-app-ldp-container --> pos-literals

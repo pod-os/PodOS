@@ -20,7 +20,6 @@ Displays a human-readable label of the resource, provided by [Thing.label()](htt
 
 ### Used by
 
- - [pos-app-document-viewer](../../apps/pos-app-document-viewer)
  - [pos-app-generic](../../apps/pos-app-generic)
  - [pos-app-image-viewer](../../apps/pos-app-image-viewer)
  - [pos-app-ldp-container](../../apps/pos-app-ldp-container)
@@ -33,7 +32,6 @@ Displays a human-readable label of the resource, provided by [Thing.label()](htt
 ### Graph
 ```mermaid
 graph TD;
-  pos-app-document-viewer --> pos-label
   pos-app-generic --> pos-label
   pos-app-image-viewer --> pos-label
   pos-app-ldp-container --> pos-label
