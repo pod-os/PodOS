@@ -33,7 +33,7 @@
     "@tiptap/starter-kit": "^3.7.2",
     "@types/turndown": "^5.0.5",
     "@uvdsl/solid-oidc-client-browser": "^0.1.3",
-    "dompurify": "^3.2.7",
+    "dompurify": "^3.3.0",
     "idb": "^8.0.3",
     "pollen-css": "^5.0.2",
     "rxjs": "^7.8.2",
