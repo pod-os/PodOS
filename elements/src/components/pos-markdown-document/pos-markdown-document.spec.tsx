@@ -13,15 +13,11 @@ jest.mock('./rich-editor', () => ({
   }),
 }));
 
-jest.mock('./html2markdown');
-
 import { newSpecPage } from '@stencil/core/testing';
 import { PosMarkdownDocument } from './pos-markdown-document';
 
-import { when } from 'jest-when';
 import { getByRole } from '@testing-library/dom';
 import { EMPTY, of, Subject } from 'rxjs';
-import { html2markdown } from './html2markdown';
 
 describe('pos-markdown-document', () => {
   afterEach(() => {
@@ -48,9 +44,9 @@ This is a test document`;
 
     expectEditor(
       'https://pod.test/document/readme.md',
-      `<h2>Test</h2>
-<p>This is a test document</p>
-`,
+      `## Test
+
+This is a test document`,
     );
 
     expect(page.root).toEqualHtml(`
@@ -185,11 +181,7 @@ This is a test document`;
         supportsShadowDom: false,
       });
 
-      expectEditor(
-        'https://pod.test/document/readme.md',
-        `<p><img src="image.jpg" alt="Alt text"></p>
-`,
-      );
+      expectEditor('https://pod.test/document/readme.md', `![Alt text](image.jpg)`);
     });
 
     it('renders image with absolute URL and a title', async () => {
@@ -202,16 +194,13 @@ This is a test document`;
           },
         }),
       };
-      const page = await newSpecPage({
+      await newSpecPage({
         components: [PosMarkdownDocument],
         template: () => <pos-markdown-document file={file} />,
         supportsShadowDom: false,
       });
 
-      expectEditor(
-        'https://pod.test/document/readme.md',
-        '<p><img src="https://pod.test/image.jpg" alt="Alt text" title="Image Title"></p>\n',
-      );
+      expectEditor('https://pod.test/document/readme.md', '![Alt text](https://pod.test/image.jpg "Image Title")');
     });
   });
 
@@ -231,7 +220,7 @@ This is a test document`;
         template: () => <pos-markdown-document file={file} />,
         supportsShadowDom: false,
       });
-      expectEditor('https://pod.test/document/readme.md', '<p><a href="file.md">Other file</a></p>\n');
+      expectEditor('https://pod.test/document/readme.md', '[Other file](file.md)');
     });
 
     it('renders absolute links', async () => {
@@ -250,35 +239,8 @@ This is a test document`;
         supportsShadowDom: false,
       });
 
-      expectEditor(
-        'https://pod.test/document/readme.md',
-        '<p><a href="https://other-pod.test/document/file.md">Other file</a></p>\n',
-      );
+      expectEditor('https://pod.test/document/readme.md', '[Other file](https://other-pod.test/document/file.md)');
     });
-  });
-
-  it('sanitizes markdown', async () => {
-    const sanitizeSpy = jest.spyOn(require('./sanitize'), 'sanitize');
-    const maliciousCode = `<div>malicious code</div>`;
-
-    when(sanitizeSpy).calledWith(maliciousCode).mockReturnValue({ value: 'sanitized code' });
-    const file = {
-      url: 'https://pod.test/document/readme.md',
-      blob: () => ({
-        text: () => {
-          return Promise.resolve(maliciousCode);
-        },
-      }),
-    };
-    const page = await newSpecPage({
-      components: [PosMarkdownDocument],
-      template: () => <pos-markdown-document file={file} />,
-      supportsShadowDom: false,
-    });
-
-    expectEditor('https://pod.test/document/readme.md', 'sanitized code');
-
-    expect(sanitizeSpy).toHaveBeenCalledWith('<div>malicious code</div>');
   });
 
   describe('modification status', () => {
@@ -369,10 +331,8 @@ This is a test document`;
       const { RichEditor } = require('./rich-editor');
       RichEditor.mockImplementation(function () {
         this.onUpdate = jest.fn();
-        this.observeChanges = jest.fn(() => of({ content: 'changed html content' }));
+        this.observeChanges = jest.fn(() => of({ content: 'changed markdown content' }));
       });
-
-      when(html2markdown).calledWith('changed html content').mockReturnValue('changed markdown content');
 
       await newSpecPage({
         components: [PosMarkdownDocument],
@@ -419,9 +379,7 @@ function expectEditor(expectedBaseUrl: string, expectedContent: string) {
   const { RichEditor } = require('./rich-editor');
   const [_, content, baseUrl] = RichEditor.mock.calls[0];
   expect(RichEditor).toHaveBeenCalled();
-  expect(content).toEqual({
-    value: expectedContent,
-  });
+  expect(content).toEqual(expectedContent);
   expect(baseUrl).toEqual(expectedBaseUrl);
 }
 
