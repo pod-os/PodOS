@@ -27,7 +27,7 @@ export class PosMarkdownDocument {
    * Current save status
    */
   @Prop()
-  saveStatus: 'idle' | 'pending' | 'failed' = 'idle';
+  saveStatus: 'idle' | 'saving' | 'failed' = 'idle';
 
   /**
    * Whether the current user has the permission to edit the file
@@ -135,7 +135,7 @@ export class PosMarkdownDocument {
     if (this.saveStatus === 'failed') {
       return <Status status="error" message="saving failed" icon="x-octagon"></Status>;
     }
-    if (this.saveStatus === 'pending') {
+    if (this.saveStatus === 'saving') {
       return <Status status="saving" message="saving changes" icon="cloud-upload"></Status>;
     }
     return <Status status="success" message="all saved" icon="check2-circle"></Status>;
