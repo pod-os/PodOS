@@ -282,6 +282,25 @@ This is a test document`,
     `);
     });
 
+    it('shows that a save is in progress', async () => {
+      const file = mockFile();
+      const page = await newSpecPage({
+        components: [PosMarkdownDocument],
+        template: () => <pos-markdown-document saveStatus="pending" editable file={file} />,
+        supportsShadowDom: false,
+      });
+
+      page.rootInstance.startEditing();
+      await page.waitForChanges();
+
+      expect(page.root.querySelector('header .status')).toEqualHtml(`
+        <span class="status saving" role="status" aria-live="polite" aria-labelledby="status-message">
+          <sl-icon name="cloud-upload" aria-hidden="true"></sl-icon>
+          <span id="status-message">saving changes</span>
+        </span>
+    `);
+    });
+
     it('shows pending changes, if editor has been modified', async () => {
       const file = mockFile();
       const page = await newSpecPage({
@@ -306,7 +325,7 @@ This is a test document`,
       const file = mockFile();
       const page = await newSpecPage({
         components: [PosMarkdownDocument],
-        template: () => <pos-markdown-document savingFailed editable file={file} />,
+        template: () => <pos-markdown-document saveStatus="failed" editable file={file} />,
         supportsShadowDom: false,
       });
 
