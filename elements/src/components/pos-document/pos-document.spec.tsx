@@ -313,7 +313,7 @@ describe('pos-document', () => {
       expect(os.files().putFile).toHaveBeenCalledWith(file, 'new content');
     });
 
-    it('shows pending status while save is in progress', async () => {
+    it('shows saving status while save is in progress', async () => {
       // given a file
       const markdownBlob = new Blob(['# Test'], {
         type: 'text/markdown',
@@ -351,9 +351,9 @@ describe('pos-document', () => {
       );
       await page.waitForChanges(); // wait for event processing
 
-      // then the saveStatus is pending
-      const markdownDocPending = page.root.shadowRoot.querySelector('pos-markdown-document');
-      expect(markdownDocPending).toEqualAttribute('saveStatus', 'pending');
+      // then the saveStatus is "saving"
+      const markdownDocSaving = page.root.shadowRoot.querySelector('pos-markdown-document');
+      expect(markdownDocSaving).toEqualAttribute('saveStatus', 'saving');
 
       // when the save operation completes successfully
       resolvePut();
