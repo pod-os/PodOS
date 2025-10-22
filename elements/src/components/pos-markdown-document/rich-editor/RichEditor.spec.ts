@@ -154,4 +154,73 @@ describe('RichEditor', () => {
       });
     });
   });
+
+  describe('sanitization', () => {
+    const emptyParagraph = '<p><br class="ProseMirror-trailingBreak"></p>';
+
+    function editorWithContent(content: string) {
+      const div = document.createElement('div');
+      new RichEditor(div, content, 'https://pod.test');
+      return div.children[0].innerHTML;
+    }
+
+    it('removes scripts', () => {
+      const html = editorWithContent("<script>alert('xss')</script>");
+      expect(html).toEqual(emptyParagraph);
+    });
+
+    it('removes click handlers', () => {
+      const html = editorWithContent(`<div onclick="alert('xss')">click me</div>`);
+      expect(html).toEqual('<p>click me</p>');
+    });
+
+    it('removes malicious image onerror attribute', () => {
+      const html = editorWithContent(`<img src="x" onerror="alert('xss')">`);
+      expect(html).toEqual(
+        '<pos-image src="https://pod.test/x" contenteditable="false" class="ProseMirror-selectednode"></pos-image>',
+      );
+    });
+
+    it('removes malicious image src attribute', () => {
+      const html = editorWithContent(`<img src="javascript:alert('xss')">`);
+      expect(html).toEqual('<pos-image contenteditable="false" class="ProseMirror-selectednode"></pos-image>');
+    });
+
+    it('removes malicious markdown images', () => {
+      const html = editorWithContent(`![](javascript:alert('xss'))`);
+      expect(html).toEqual('<pos-image contenteditable="false" class="ProseMirror-selectednode"></pos-image>');
+    });
+
+    it('removes malicious html link', () => {
+      const html = editorWithContent(`<a href="javascript:alert('xss')">click me</a>`);
+      expect(html).toEqual('<p>click me</p>');
+    });
+
+    it('removes malicious markdown links', () => {
+      const html = editorWithContent(`[click me](javascript:alert('xss'))`);
+      expect(html).toEqual('<p><pos-rich-link>click me</pos-rich-link></p>');
+    });
+
+    it('removes malicious iframes', () => {
+      const html = editorWithContent(`<iframe src="javascript:alert('xss')"></iframe>`);
+      expect(html).toEqual(emptyParagraph);
+    });
+
+    it('removes data URLs with embedded scripts', () => {
+      const html = editorWithContent(
+        `<a href="data:text/html;base64,PHNjcmlwdD5hbGVydCgneHNzJyk8L3NjcmlwdD4=">click</a>`,
+      );
+      expect(html).toEqual('<p>click</p>');
+    });
+
+    it('removes malicious pos-rich-link', () => {
+      const html = editorWithContent(`<pos-rich-link uri="javascript:alert('xss')">example</pos-rich-link>`);
+      expect(html).toEqual('<p>example</p>');
+    });
+
+    it('removes malicious pos-image', () => {
+      const html = editorWithContent(`<pos-image src="javascript:alert('xss')" onerror="alert('xss')">`);
+      expect(html).toEqual(emptyParagraph);
+    });
+  });
 });
