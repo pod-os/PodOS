@@ -37,8 +37,6 @@ Related issues:
 ## Decision Outcome
 
 - Markdown will be edited and rendered using TipTap
-- Markdown will be converted to HTML using `marked`
-- Edited HTML will be converted back to Markdown using `turndown`
 
 ### Positive Consequences
 
@@ -91,6 +89,7 @@ Related issues:
 - very extensible
 - extensive documentation
 - based on ProseMirror, so everything ProseMirror can do should be possible as well
+- official Markdown support
 - Core functionality works out of the box even when run headless:
     - shortcuts for basic formatting (e.g. `CTRL-B` for Bold)
     - inserting links & image URLs
@@ -102,6 +101,7 @@ Related issues:
 - the default UI is built on React and not suitable for PodOS
 - advanced features are only available commercially
 - it works internally with HTML, so Markdown has to be converted back and forth
+  - TipTap just released an [official extension](https://tiptap.dev/docs/editor/markdown) for that.
 - custom Nodes and Marks will not allow editable shadow dom contents:
     - https://discuss.prosemirror.net/t/shadow-dom-support/99/9
 
@@ -110,5 +110,3 @@ Related issues:
 - [Toast UI Editor](https://ui.toast.com/tui-editor)
 - [ProseMirror](https://prosemirror.net/)
 - [TipTap](https://tiptap.dev/)
-- [marked](https://marked.js.org)
-- [turndown](https://www.npmjs.com/package/turndown)
