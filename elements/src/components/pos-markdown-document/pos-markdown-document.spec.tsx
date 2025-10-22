@@ -267,7 +267,7 @@ This is a test document`,
       const file = mockFile();
       const page = await newSpecPage({
         components: [PosMarkdownDocument],
-        template: () => <pos-markdown-document savingFailed editable file={file} />,
+        template: () => <pos-markdown-document saveStatus="failed" editable file={file} />,
         supportsShadowDom: false,
       });
 

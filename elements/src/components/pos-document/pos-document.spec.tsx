@@ -103,7 +103,7 @@ describe('pos-document', () => {
     expect(page.root).toEqualHtml(`
       <pos-document src="https://pod.test/test.md">
         <mock:shadow-root>
-          <pos-markdown-document editable></pos-markdown-document>
+          <pos-markdown-document editable saveStatus="idle"></pos-markdown-document>
         </mock:shadow-root>
       </pos-document>
   `);
@@ -131,7 +131,7 @@ describe('pos-document', () => {
     expect(page.root).toEqualHtml(`
       <pos-document src="https://pod.test/test.md">
         <mock:shadow-root>
-          <pos-markdown-document></pos-markdown-document>
+          <pos-markdown-document saveStatus="idle"></pos-markdown-document>
         </mock:shadow-root>
       </pos-document>
   `);
@@ -346,7 +346,7 @@ describe('pos-document', () => {
         expect(page.root).toEqualHtml(`
           <pos-document src="https://pod.test/test.md">
             <mock:shadow-root>
-              <pos-markdown-document editable></pos-markdown-document>
+              <pos-markdown-document editable saveStatus="idle"></pos-markdown-document>
           </pos-document>
       `);
       });
@@ -414,7 +414,7 @@ describe('pos-document', () => {
 
         // then error indication is passed to pos-markdown-document
         const markdownDocFailed = page.root.shadowRoot.querySelector('pos-markdown-document');
-        expect(markdownDocFailed).toHaveAttribute('savingFailed');
+        expect(markdownDocFailed).toEqualAttribute('saveStatus', 'failed');
 
         // but when PUT then succeeds again
         when(os.files().putFile).mockResolvedValue({ ok: true } as Response);
@@ -426,7 +426,7 @@ describe('pos-document', () => {
 
         // then the error indication is removed again
         const markdownDocRecovered = page.root.shadowRoot.querySelector('pos-markdown-document');
-        expect(markdownDocRecovered).not.toHaveAttribute('savingFailed');
+        expect(markdownDocRecovered).toEqualAttribute('saveStatus', 'idle');
       });
     });
   });
