@@ -25,7 +25,7 @@ export class PosDocument {
   private error: Error;
 
   @State()
-  private saveStatus: 'idle' | 'failed' = 'idle';
+  private saveStatus: 'idle' | 'pending' | 'failed' = 'idle';
 
   @State()
   private loading: boolean = true;
@@ -58,9 +58,11 @@ export class PosDocument {
   async handleDocumentModified(event: CustomEvent) {
     const { file, newContent } = event.detail;
     try {
-      this.saveStatus = 'idle';
+      this.saveStatus = 'pending';
       const response = await this.os.files().putFile(file, newContent);
-      if (!response.ok) {
+      if (response.ok) {
+        this.saveStatus = 'idle';
+      } else {
         this.saveStatus = 'failed';
         const error = new Error(`Failed to save file: ${response.status} ${response.statusText}`);
         this.errorEmitter.emit(error);

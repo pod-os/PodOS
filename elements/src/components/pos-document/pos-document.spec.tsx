@@ -313,6 +313,58 @@ describe('pos-document', () => {
       expect(os.files().putFile).toHaveBeenCalledWith(file, 'new content');
     });
 
+    it('shows pending status while save is in progress', async () => {
+      // given a file
+      const markdownBlob = new Blob(['# Test'], {
+        type: 'text/markdown',
+      });
+      const file = mockBinaryFile(markdownBlob);
+
+      // and a page with a pos-document
+      const page = await newSpecPage({
+        components: [PosDocument],
+        html: `<pos-document src="https://pod.test/test.md" />`,
+      });
+
+      // and PodOS can put the file successfully
+      const os = mockPodOS();
+      when(os.files().fetchFile).calledWith('https://pod.test/test.md').mockResolvedValue(file);
+      when(os.store.get)
+        .calledWith('https://pod.test/test.md')
+        .mockReturnValue({ editable: true } as unknown as Thing);
+      await page.rootInstance.setOs(os);
+      await page.waitForChanges();
+
+      // and the saveStatus is idle initially
+      const markdownDocInitial = page.root.shadowRoot.querySelector('pos-markdown-document');
+      expect(markdownDocInitial).toEqualAttribute('saveStatus', 'idle');
+
+      // when a save operation is triggered but hasn't resolved yet
+      let resolvePut;
+      const putPromise = new Promise<Response>(resolve => {
+        resolvePut = () => resolve({ ok: true } as Response);
+      });
+      when(os.files().putFile).calledWith(file, 'modified content').mockReturnValue(putPromise);
+
+      page.root.dispatchEvent(
+        new CustomEvent('pod-os:document-modified', { detail: { file, newContent: 'modified content' } }),
+      );
+      await page.waitForChanges(); // wait for event processing
+
+      // then the saveStatus is pending
+      const markdownDocPending = page.root.shadowRoot.querySelector('pos-markdown-document');
+      expect(markdownDocPending).toEqualAttribute('saveStatus', 'pending');
+
+      // when the save operation completes successfully
+      resolvePut();
+      await page.waitForChanges(); // wait for put to resolve
+      await page.waitForChanges(); // wait for rerender
+
+      // then the saveStatus returns to idle
+      const markdownDocCompleted = page.root.shadowRoot.querySelector('pos-markdown-document');
+      expect(markdownDocCompleted).toEqualAttribute('saveStatus', 'idle');
+    });
+
     describe('errors during save', () => {
       let os: PodOS;
       let page;
