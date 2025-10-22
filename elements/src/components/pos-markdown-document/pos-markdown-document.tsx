@@ -135,6 +135,9 @@ export class PosMarkdownDocument {
     if (this.saveStatus === 'failed') {
       return <Status status="error" message="saving failed" icon="x-octagon"></Status>;
     }
+    if (this.saveStatus === 'pending') {
+      return <Status status="saving" message="saving changes" icon="cloud-upload"></Status>;
+    }
     return <Status status="success" message="all saved" icon="check2-circle"></Status>;
   }
 }
