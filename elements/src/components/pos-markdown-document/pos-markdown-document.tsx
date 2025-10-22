@@ -63,7 +63,7 @@ export class PosMarkdownDocument {
   componentDidLoad() {
     this.editor = new RichEditor(this.editorEl, this.markdown, this.file.url);
     this.editor.onUpdate(() => {
-      this.isModified = this.editor.isModified();
+      this.isModified = true;
     });
     this.editor
       .observeChanges()
