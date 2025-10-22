@@ -134,3 +134,11 @@ If you see an alert box at any point, the client application is vulnerable to XS
 <a href="data:text/html,<script>alert('Protocol Handler XSS')</script>">Click me</a>
 <a href="vbscript:msgbox('Protocol Handler XSS')">Click me</a>
 
+```markdown
+[click me](javascript:alert('Protocol Handler XSS'))
+![](javascript:alert('Protocol Handler XSS'))
+```
+[click me](javascript:alert('ProtocolHandlerXSS'))
+![](javascript:alert('ProtocolHandlerXSS'))
+
+
