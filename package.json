@@ -34,7 +34,6 @@
   },
   "homepage": "https://github.com/pod-os/pod-os#readme",
   "devDependencies": {
-    "marked": "^16.4.0",
     "prettier": "^3.2.5"
   },
   "workspaces": [
