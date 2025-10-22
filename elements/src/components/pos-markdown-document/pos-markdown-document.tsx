@@ -24,10 +24,10 @@ export class PosMarkdownDocument {
   file: SolidFile;
 
   /**
-   * Whether saving the latest changes failed
+   * Current save status
    */
   @Prop()
-  savingFailed: boolean = false;
+  saveStatus: 'idle' | 'failed' = 'idle';
 
   /**
    * Whether the current user has the permission to edit the file
@@ -132,7 +132,7 @@ export class PosMarkdownDocument {
     if (this.isModified) {
       return <Status status="pending" message="pending changes" icon="clock-history"></Status>;
     }
-    if (this.savingFailed) {
+    if (this.saveStatus === 'failed') {
       return <Status status="error" message="saving failed" icon="x-octagon"></Status>;
     }
     return <Status status="success" message="all saved" icon="check2-circle"></Status>;

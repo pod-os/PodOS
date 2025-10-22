@@ -25,7 +25,7 @@ export class PosDocument {
   private error: Error;
 
   @State()
-  private savingFailed = false;
+  private saveStatus: 'idle' | 'failed' = 'idle';
 
   @State()
   private loading: boolean = true;
@@ -58,15 +58,15 @@ export class PosDocument {
   async handleDocumentModified(event: CustomEvent) {
     const { file, newContent } = event.detail;
     try {
-      this.savingFailed = false;
+      this.saveStatus = 'idle';
       const response = await this.os.files().putFile(file, newContent);
       if (!response.ok) {
-        this.savingFailed = true;
+        this.saveStatus = 'failed';
         const error = new Error(`Failed to save file: ${response.status} ${response.statusText}`);
         this.errorEmitter.emit(error);
       }
     } catch (error) {
-      this.savingFailed = true;
+      this.saveStatus = 'failed';
       this.errorEmitter.emit(error);
     }
   }
@@ -107,7 +107,7 @@ export class PosDocument {
       return (
         <pos-markdown-document
           editable={this.isEditable}
-          savingFailed={this.savingFailed}
+          saveStatus={this.saveStatus}
           file={this.file}
         ></pos-markdown-document>
       );
