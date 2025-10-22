@@ -27,7 +27,7 @@ export class PosMarkdownDocument {
    * Current save status
    */
   @Prop()
-  saveStatus: 'idle' | 'failed' = 'idle';
+  saveStatus: 'idle' | 'pending' | 'failed' = 'idle';
 
   /**
    * Whether the current user has the permission to edit the file

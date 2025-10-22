@@ -114,7 +114,7 @@ export namespace Components {
         /**
           * Current save status
          */
-        "saveStatus": 'idle' | 'failed';
+        "saveStatus": 'idle' | 'pending' | 'failed';
         /**
           * Switch to editing mode
          */
@@ -1269,7 +1269,7 @@ declare namespace LocalJSX {
         /**
           * Current save status
          */
-        "saveStatus"?: 'idle' | 'failed';
+        "saveStatus"?: 'idle' | 'pending' | 'failed';
     }
     interface PosNavigation {
         "onPod-os:init"?: (event: PosNavigationCustomEvent<any>) => void;
