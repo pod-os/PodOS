@@ -67,6 +67,10 @@
         &.error {
           animation: error-flash 2s ease infinite;
         }
+
+        &.saving {
+          animation: saving-flash 2s ease infinite;
+        }
       }
     }
 
@@ -128,6 +132,19 @@
   50% {
     opacity: 1;
     color: var(--color-red-500);
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes saving-flash {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+    color: var(--pos-primary-color);
   }
   100% {
     opacity: 0;
