@@ -84,53 +84,6 @@ describe('RichEditor', () => {
       expect(editor.isEditable()).toBe(false);
     });
 
-    it('is not modified initially', () => {
-      const div = document.createElement('div');
-      const editor = new RichEditor(div, '# Hello World', 'https://pod.test');
-      expect(editor.isModified()).toBe(false);
-    });
-
-    it('is not modified when editing starts, but nothing is changed yet', done => {
-      const div = document.createElement('div');
-      const editor = new RichEditor(div, '# Hello World\n', 'https://pod.test');
-      editor.startEditing();
-      expect(editor.isModified()).toBe(false);
-      setTimeout(() => {
-        expect(editor.isModified()).toBe(false);
-        done();
-      }, 1);
-    });
-
-    it('is not modified by auto-appending an empty paragraph (trailing node)', () => {
-      const div = document.createElement('div');
-      const editor = new RichEditor(div, '# Hello World', 'https://pod.test');
-      editor.startEditing();
-      expect(editor.isModified()).toBe(false);
-      expect(editor.getContent()).toEqual('# Hello World\n\n');
-    });
-
-    it('is not modified when editing starts and stops without changes', () => {
-      const div = document.createElement('div');
-      const editor = new RichEditor(div, '# Hello World\n\n', 'https://pod.test');
-      editor.startEditing();
-      expect(editor.isModified()).toBe(false);
-      editor.stopEditing();
-      expect(editor.isModified()).toBe(false);
-    });
-
-    it('is modified after content has been changed', async () => {
-      const div = document.createElement('div');
-      const editor = new RichEditor(div, '# Hello World', 'https://pod.test');
-      editor.startEditing();
-      expect(editor.isModified()).toBe(false);
-
-      // @ts-ignore Accessing a private field here for testing
-      const tiptap = editor.editor;
-      tiptap.commands.insertContent('Modified ');
-
-      expect(editor.isModified()).toBe(true);
-    });
-
     describe('observe changes', () => {
       let subscription: Subscription;
       beforeEach(() => {
@@ -160,16 +113,13 @@ describe('RichEditor', () => {
         const tiptap = editor.editor;
         tiptap.commands.insertContent('Modified ');
 
-        expect(editor.isModified()).toBe(true);
         jest.advanceTimersByTime(999);
         expect(save).toHaveBeenCalledTimes(0);
-        expect(editor.isModified()).toBe(true);
         jest.advanceTimersByTime(1);
         expect(save).toHaveBeenCalledTimes(1);
         expect(save).toHaveBeenLastCalledWith({
           content: '# Modified Hello World\n\n',
         });
-        expect(editor.isModified()).toBe(false);
       });
 
       it('waits until changes have settled for 3 seconds', async () => {
@@ -195,14 +145,12 @@ describe('RichEditor', () => {
         jest.advanceTimersByTime(999);
         tiptap.commands.insertContent('edit 3 ');
 
-        expect(editor.isModified()).toBe(true);
         expect(save).toHaveBeenCalledTimes(0);
         jest.advanceTimersByTime(1000);
         expect(save).toHaveBeenCalledTimes(1);
         expect(save).toHaveBeenLastCalledWith({
           content: '# edit 1 edit 2 edit 3 Hello World\n\n',
         });
-        expect(editor.isModified()).toBe(false);
       });
     });
   });

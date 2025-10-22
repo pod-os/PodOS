@@ -3,19 +3,12 @@ import { Markdown } from '@tiptap/markdown';
 import StarterKit from '@tiptap/starter-kit';
 import { PosImageNode } from './PosImageNode';
 import { PosRichLinkMark } from './PosRichLinkMark';
-import { Subject, tap } from 'rxjs';
+import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
 export class RichEditor {
   private readonly editor: Editor;
 
-  /**
-   * Whether the editor has been modified since the latest changes have been observed
-   * @private
-   */
-  private modified = false;
-
-  private editingJustChanged = false;
   private readonly modifications = new Subject<{ content: string }>();
 
   /**
@@ -32,11 +25,6 @@ export class RichEditor {
       editable: false,
     });
     this.editor.on('update', () => {
-      if (this.editingJustChanged) {
-        this.editingJustChanged = false;
-        return;
-      }
-      this.modified = true;
       this.modifications.next({ content: this.editor.getMarkdown() });
     });
   }
@@ -50,17 +38,12 @@ export class RichEditor {
   }
 
   startEditing() {
-    this.editingJustChanged = true;
     this.editor.setEditable(true, false);
     this.editor.commands.focus();
   }
 
   stopEditing() {
     this.editor.setEditable(false, false);
-  }
-
-  isModified() {
-    return this.modified;
   }
 
   getContent() {
@@ -72,9 +55,6 @@ export class RichEditor {
    * @param debounce - time (in millisecond) that has to pass without further modifications, until the changes are communicated
    */
   observeChanges(debounce: number = 1000) {
-    return this.modifications.pipe(
-      debounceTime(debounce),
-      tap(() => (this.modified = false)),
-    );
+    return this.modifications.pipe(debounceTime(debounce));
   }
 }
