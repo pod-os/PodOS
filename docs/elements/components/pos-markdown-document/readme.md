@@ -5,11 +5,11 @@
 
 ## Properties
 
-| Property       | Attribute       | Description                                                  | Type        | Default     |
-| -------------- | --------------- | ------------------------------------------------------------ | ----------- | ----------- |
-| `editable`     | `editable`      | Whether the current user has the permission to edit the file | `boolean`   | `false`     |
-| `file`         | --              | The file to show / edit                                      | `SolidFile` | `undefined` |
-| `savingFailed` | `saving-failed` | Whether saving the latest changes failed                     | `boolean`   | `false`     |
+| Property     | Attribute     | Description                                                  | Type                             | Default     |
+| ------------ | ------------- | ------------------------------------------------------------ | -------------------------------- | ----------- |
+| `editable`   | `editable`    | Whether the current user has the permission to edit the file | `boolean`                        | `false`     |
+| `file`       | --            | The file to show / edit                                      | `SolidFile`                      | `undefined` |
+| `saveStatus` | `save-status` | Current save status                                          | `"failed" \| "idle" \| "saving"` | `'idle'`    |
 
 
 ## Events
