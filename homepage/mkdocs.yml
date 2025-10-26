@@ -7,6 +7,20 @@ plugins:
   - search
   - awesome-nav
   - blog
+  - rss:
+      match_path: "blog/posts/.*"
+      date_from_meta:
+        as_creation: date.created
+        as_update: date.updated
+
+extra:
+  social:
+    - icon: fontawesome/solid/rss
+      name: RSS Feed
+      link: /feed_rss_created.xml
+    - icon: fontawesome/brands/mastodon
+      name: PodOS on the Fediverse
+      link: https://floss.social/@PodOS
 
 extra_css:
   - stylesheets/extra.css
