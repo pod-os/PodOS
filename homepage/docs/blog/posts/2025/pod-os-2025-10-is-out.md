@@ -46,5 +46,5 @@ PodOS 2025.10 includes the following components:
 
 For those of you interested in the full list of changes, here are the release notes:
 
-- [@pod-os/elements](https://github.com/pod-os/PodOS/blob/2025-10/elements/CHANGELOG.md#changelog)
-- [@pod-os/core](https://github.com/pod-os/PodOS/blob/2025-10/core/CHANGELOG.md#changelog)
+- [@pod-os/elements](https://github.com/pod-os/PodOS/blob/2025.10/elements/CHANGELOG.md#changelog)
+- [@pod-os/core](https://github.com/pod-os/PodOS/blob/2025.10/core/CHANGELOG.md#changelog)
