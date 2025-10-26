@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- [pos-container-toolbar](https://pod-os.org/reference/elements/components/pos-container-toolbar/): A toolbar for LDP containers that allows adding new files and folders to a container
+
+### Changes
+
+- [pos-container-contents](https://pod-os.org/reference/elements/components/pos-container-contents/): Now uses the new [pos-container-toolbar](https://pod-os.org/reference/elements/components/pos-container-toolbar/) component to show container actions
+
 ## 0.31.0
 
 ### Added

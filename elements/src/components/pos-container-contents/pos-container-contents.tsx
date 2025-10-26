@@ -1,5 +1,5 @@
 import { Thing, ContainerContent, LdpContainer } from '@pod-os/core';
-import { Component, Event, EventEmitter, h, State } from '@stencil/core';
+import { Component, Event, EventEmitter, h, Host, State } from '@stencil/core';
 import { ResourceAware, subscribeResource } from '../events/ResourceAware';
 
 @Component({
@@ -34,6 +34,13 @@ export class PosContainerContents implements ResourceAware {
         </pos-resource>
       </li>
     ));
-    return this.contents.length > 0 ? <ul>{items}</ul> : <p>The container is empty</p>;
+    return this.contents.length > 0 ? (
+      <Host>
+        <pos-container-toolbar></pos-container-toolbar>
+        <ul>{items}</ul>
+      </Host>
+    ) : (
+      <p>The container is empty</p>
+    );
   }
 }

@@ -37,6 +37,7 @@ describe('pos-container-contents', () => {
 
     expect(page.root).toEqualHtml(`
       <pos-container-contents>
+        <pos-container-toolbar></pos-container-toolbar>
         <ul>
           <li>
             <pos-resource lazy="" uri="https://pod.test/container/file">
@@ -97,30 +98,33 @@ describe('pos-container-contents', () => {
     });
     await page.waitForChanges();
 
-    expect(page.root).toEqualHtml(`<pos-container-contents>
-  <ul>
-    <li>
-      <pos-resource lazy="" uri="https://pod.test/container/a-file-on-top-of-the-list">
-        <pos-container-item>
-          a-file-on-top-of-the-list
-        </pos-container-item>
-      </pos-resource>
-    </li>
-    <li>
-      <pos-resource lazy="" uri="https://pod.test/container/file">
-        <pos-container-item>
-          file
-        </pos-container-item>
-      </pos-resource>
-    </li>
-    <li>
-      <pos-resource lazy="" uri="https://pod.test/container/subdir/">
-        <pos-container-item>
-          subdir
-        </pos-container-item>
-      </pos-resource>
-    </li>
-  </ul>
-</pos-container-contents>`);
+    expect(page.root).toEqualHtml(`
+      <pos-container-contents>
+        <pos-container-toolbar></pos-container-toolbar>
+        <ul>
+          <li>
+            <pos-resource lazy="" uri="https://pod.test/container/a-file-on-top-of-the-list">
+              <pos-container-item>
+                a-file-on-top-of-the-list
+              </pos-container-item>
+            </pos-resource>
+          </li>
+          <li>
+            <pos-resource lazy="" uri="https://pod.test/container/file">
+              <pos-container-item>
+                file
+              </pos-container-item>
+            </pos-resource>
+          </li>
+          <li>
+            <pos-resource lazy="" uri="https://pod.test/container/subdir/">
+              <pos-container-item>
+                subdir
+              </pos-container-item>
+            </pos-resource>
+          </li>
+        </ul>
+      </pos-container-contents>
+    `);
   });
 });

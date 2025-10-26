@@ -43,6 +43,8 @@ export namespace Components {
     }
     interface PosContainerItem {
     }
+    interface PosContainerToolbar {
+    }
     interface PosDescription {
     }
     /**
@@ -518,6 +520,12 @@ declare global {
     var HTMLPosContainerItemElement: {
         prototype: HTMLPosContainerItemElement;
         new (): HTMLPosContainerItemElement;
+    };
+    interface HTMLPosContainerToolbarElement extends Components.PosContainerToolbar, HTMLStencilElement {
+    }
+    var HTMLPosContainerToolbarElement: {
+        prototype: HTMLPosContainerToolbarElement;
+        new (): HTMLPosContainerToolbarElement;
     };
     interface HTMLPosDescriptionElementEventMap {
         "pod-os:resource": any;
@@ -1073,6 +1081,7 @@ declare global {
         "pos-app-settings": HTMLPosAppSettingsElement;
         "pos-container-contents": HTMLPosContainerContentsElement;
         "pos-container-item": HTMLPosContainerItemElement;
+        "pos-container-toolbar": HTMLPosContainerToolbarElement;
         "pos-description": HTMLPosDescriptionElement;
         "pos-dialog": HTMLPosDialogElement;
         "pos-document": HTMLPosDocumentElement;
@@ -1167,6 +1176,8 @@ declare namespace LocalJSX {
     interface PosContainerItem {
         "onPod-os:link"?: (event: PosContainerItemCustomEvent<any>) => void;
         "onPod-os:resource"?: (event: PosContainerItemCustomEvent<any>) => void;
+    }
+    interface PosContainerToolbar {
     }
     interface PosDescription {
         "onPod-os:resource"?: (event: PosDescriptionCustomEvent<any>) => void;
@@ -1426,6 +1437,7 @@ declare namespace LocalJSX {
         "pos-app-settings": PosAppSettings;
         "pos-container-contents": PosContainerContents;
         "pos-container-item": PosContainerItem;
+        "pos-container-toolbar": PosContainerToolbar;
         "pos-description": PosDescription;
         "pos-dialog": PosDialog;
         "pos-document": PosDocument;
@@ -1478,6 +1490,7 @@ declare module "@stencil/core" {
             "pos-app-settings": LocalJSX.PosAppSettings & JSXBase.HTMLAttributes<HTMLPosAppSettingsElement>;
             "pos-container-contents": LocalJSX.PosContainerContents & JSXBase.HTMLAttributes<HTMLPosContainerContentsElement>;
             "pos-container-item": LocalJSX.PosContainerItem & JSXBase.HTMLAttributes<HTMLPosContainerItemElement>;
+            "pos-container-toolbar": LocalJSX.PosContainerToolbar & JSXBase.HTMLAttributes<HTMLPosContainerToolbarElement>;
             "pos-description": LocalJSX.PosDescription & JSXBase.HTMLAttributes<HTMLPosDescriptionElement>;
             /**
              * Styled wrapper around native dialog element, with slots `title` and `content`

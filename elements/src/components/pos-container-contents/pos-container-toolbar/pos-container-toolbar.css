@@ -1,0 +1,11 @@
+:host {
+  display: flex;
+  gap: var(--size-1);
+  padding-bottom: var(--size-1);
+
+  button {
+    padding: var(--size-2);
+    aspect-ratio: 1/1;
+    display: flex;
+  }
+}
