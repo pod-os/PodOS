@@ -1,7 +1,10 @@
+import { fireEvent, getAllByRole, getByRole, queryByRole, screen } from '@testing-library/dom';
+
 jest.mock('./shoelace', () => {});
 import { newSpecPage } from '@stencil/core/testing';
 
 import { PosContainerToolbar } from './pos-container-toolbar';
+import { userEvent } from '@testing-library/user-event';
 
 describe('pos-container-toolbar', () => {
   it('renders', async () => {
@@ -25,5 +28,36 @@ describe('pos-container-toolbar', () => {
         </sl-tooltip>
       </pos-container-toolbar>
     `);
+  });
+
+  it('emits event when new file button is clicked', async () => {
+    const page = await newSpecPage({
+      components: [PosContainerToolbar],
+      html: `<pos-container-toolbar />`,
+      supportsShadowDom: false,
+    });
+    const onCreateNewFile = jest.fn();
+    page.root.addEventListener('pod-os:create-new-file', onCreateNewFile);
+    screen.logTestingPlaygroundURL();
+    const buttons = getAllByRole(page.root, 'button');
+    const newFileButton = buttons[0];
+    expect(newFileButton).toEqualAttribute('aria-label', 'Create new file');
+    fireEvent.click(newFileButton);
+    expect(onCreateNewFile).toHaveBeenCalled();
+  });
+  it('emits event when new folder button is clicked', async () => {
+    const page = await newSpecPage({
+      components: [PosContainerToolbar],
+      html: `<pos-container-toolbar />`,
+      supportsShadowDom: false,
+    });
+    const onCreateNewFolder = jest.fn();
+    page.root.addEventListener('pod-os:create-new-folder', onCreateNewFolder);
+    screen.logTestingPlaygroundURL();
+    const buttons = getAllByRole(page.root, 'button');
+    const newFolderButton = buttons[1];
+    expect(newFolderButton).toEqualAttribute('aria-label', 'Create new folder');
+    fireEvent.click(newFolderButton);
+    expect(onCreateNewFolder).toHaveBeenCalled();
   });
 });
