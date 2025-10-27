@@ -3,6 +3,8 @@ import { PodOsSession } from "../authentication";
 import { BinaryFile } from "./BinaryFile";
 import { BrokenFile } from "./BrokenFile";
 import { FileFetcher } from "./FileFetcher";
+import { LdpContainer } from "../ldp-container";
+import { graph } from "rdflib";
 
 describe("FileFetcher", () => {
   describe("fetch file", () => {
@@ -160,6 +162,55 @@ describe("FileFetcher", () => {
         status: 403,
         statusText: "Forbidden",
       } as Response);
+    });
+  });
+
+  describe("create new container", () => {
+    let fileFetcher: FileFetcher;
+    let session: PodOsSession;
+    beforeEach(() => {
+      // given a session
+      session = mockSession();
+      // and a file fetcher
+      fileFetcher = new FileFetcher(session);
+      // and PUT usually works
+      when(session.authenticatedFetch)
+        .calledWith(expect.anything(), expect.anything())
+        .mockResolvedValue({
+          ok: true,
+          status: 200,
+          statusText: "OK",
+        } as Response);
+    });
+
+    it("creates a new container using PUT request", async () => {
+      const parent = new LdpContainer(
+        "https://pod.test/parent/",
+        graph(),
+        true,
+      );
+      await fileFetcher.createNewFolder(parent, "sub-folder");
+      expect(session.authenticatedFetch).toHaveBeenCalledWith(
+        "https://pod.test/parent/sub-folder/",
+        expect.objectContaining({
+          method: "PUT",
+        }),
+      );
+    });
+
+    it("encodes name as URI", async () => {
+      const parent = new LdpContainer(
+        "https://pod.test/parent/",
+        graph(),
+        true,
+      );
+      await fileFetcher.createNewFolder(parent, "My (new?) / <folder>!");
+      expect(session.authenticatedFetch).toHaveBeenCalledWith(
+        "https://pod.test/parent/My%20(new%3F)%20%2F%20%3Cfolder%3E!/",
+        expect.objectContaining({
+          method: "PUT",
+        }),
+      );
     });
   });
 
