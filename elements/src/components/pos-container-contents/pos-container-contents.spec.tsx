@@ -7,7 +7,6 @@ import { newSpecPage } from '@stencil/core/testing';
 import { PosContainerContents } from './pos-container-contents';
 import { Components, LdpContainer } from '../../components';
 import PosCreateNewContainerItem = Components.PosCreateNewContainerItem;
-import { userEvent } from '@testing-library/user-event';
 import { pressKey } from '../../test/pressKey';
 
 describe('pos-container-contents', () => {

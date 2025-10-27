@@ -6,11 +6,15 @@ describe('pos-create-new-container-item', () => {
     const page = await newSpecPage({
       components: [PosCreateNewContainerItem],
       html: `<pos-create-new-container-item type="file"/>`,
+      supportsShadowDom: false,
     });
 
     expect(page.root).toEqualHtml(`
       <pos-create-new-container-item type="file">
-        <input placeholder="Enter file name" type="text">
+        <form>
+          <sl-icon name="file-earmark-plus"></sl-icon>
+          <input placeholder="Enter file name" type="text">
+        </form>
       </pos-create-new-container-item>
     `);
   });
@@ -19,11 +23,15 @@ describe('pos-create-new-container-item', () => {
     const page = await newSpecPage({
       components: [PosCreateNewContainerItem],
       html: `<pos-create-new-container-item type="folder"/>`,
+      supportsShadowDom: false,
     });
 
     expect(page.root).toEqualHtml(`
       <pos-create-new-container-item type="folder">
-        <input placeholder="Enter folder name" type="text">
+        <form>
+          <sl-icon name="folder-plus"></sl-icon>
+          <input placeholder="Enter folder name" type="text">
+        </form>
       </pos-create-new-container-item>
     `);
   });

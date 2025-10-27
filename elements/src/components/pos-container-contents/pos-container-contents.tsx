@@ -49,7 +49,7 @@ export class PosContainerContents implements ResourceAware {
   render() {
     if (this.loading) return null;
     const items = this.contents.map(it => (
-      <li>
+      <li key={it.uri}>
         <pos-resource lazy={true} uri={it.uri}>
           <pos-container-item>{it.name}</pos-container-item>
         </pos-resource>
@@ -57,7 +57,7 @@ export class PosContainerContents implements ResourceAware {
     ));
     if (this.createNewItem !== null) {
       items.unshift(
-        <li>
+        <li key="new-item">
           <pos-create-new-container-item
             type={this.createNewItem}
             container={this.container}

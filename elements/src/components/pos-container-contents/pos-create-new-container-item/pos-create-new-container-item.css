@@ -1,0 +1,9 @@
+:host {
+  form {
+    display: flex;
+    align-items: center;
+    gap: var(--size-2);
+    padding: var(--size-4);
+    background-color: var(--pos-background-color);
+  }
+}
