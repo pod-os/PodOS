@@ -214,6 +214,63 @@ describe("FileFetcher", () => {
     });
   });
 
+  describe("create new file", () => {
+    let fileFetcher: FileFetcher;
+    let session: PodOsSession;
+    beforeEach(() => {
+      // given a session
+      session = mockSession();
+      // and a file fetcher
+      fileFetcher = new FileFetcher(session);
+      // and PUT usually works
+      when(session.authenticatedFetch)
+        .calledWith(expect.anything(), expect.anything())
+        .mockResolvedValue({
+          ok: true,
+          status: 200,
+          statusText: "OK",
+        } as Response);
+    });
+
+    it("creates a new turtle file by default", async () => {
+      const parent = new LdpContainer(
+        "https://pod.test/parent/",
+        graph(),
+        true,
+      );
+      await fileFetcher.createNewFile(parent, "my-file");
+      expect(session.authenticatedFetch).toHaveBeenCalledWith(
+        "https://pod.test/parent/my-file",
+        expect.objectContaining({
+          method: "PUT",
+          headers: {
+            "Content-Type": "text/turtle",
+            "If-None-Match": "*",
+          },
+        }),
+      );
+    });
+
+    it("encodes name as URI", async () => {
+      const parent = new LdpContainer(
+        "https://pod.test/parent/",
+        graph(),
+        true,
+      );
+      await fileFetcher.createNewFile(parent, "My (new?) / <file>!");
+      expect(session.authenticatedFetch).toHaveBeenCalledWith(
+        "https://pod.test/parent/My%20(new%3F)%20%2F%20%3Cfile%3E!",
+        expect.objectContaining({
+          method: "PUT",
+          headers: {
+            "Content-Type": "text/turtle",
+            "If-None-Match": "*",
+          },
+        }),
+      );
+    });
+  });
+
   function mockSession() {
     return {
       authenticatedFetch: jest.fn(),

@@ -43,7 +43,14 @@ export class FileFetcher {
   }
 
   async createNewFile(container: LdpContainer, name: string) {
-    console.log("TODO createNewFile", container, name);
+    const encodedName = encodeURIComponent(name);
+    await this.session.authenticatedFetch(container.uri + encodedName, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "text/turtle",
+        "If-None-Match": "*",
+      },
+    });
   }
 
   async createNewFolder(container: LdpContainer, name: string) {
