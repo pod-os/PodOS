@@ -5,8 +5,10 @@ jest.mock('@pod-os/core', () => ({}));
 import { newSpecPage } from '@stencil/core/testing';
 
 import { PosContainerContents } from './pos-container-contents';
-import { Components } from '../../components';
+import { Components, LdpContainer } from '../../components';
 import PosCreateNewContainerItem = Components.PosCreateNewContainerItem;
+import { userEvent } from '@testing-library/user-event';
+import { pressKey } from '../../test/pressKey';
 
 describe('pos-container-contents', () => {
   it('are empty initially', async () => {
@@ -134,23 +136,27 @@ describe('pos-container-contents', () => {
   });
 
   describe('new files and folders', () => {
-    it('shows input to create a new file when event occurs', async () => {
+    let page;
+    let container: LdpContainer;
+    beforeEach(async () => {
       // Given a page with container contents
-      const page = await newSpecPage({
+      page = await newSpecPage({
         components: [PosContainerContents],
         html: `<pos-container-contents />`,
         supportsShadowDom: false,
       });
 
       // and a container resource is available
-      const container = {
+      container = {
         contains: () => [],
-      };
+      } as LdpContainer;
       await page.rootInstance.receiveResource({
         assume: () => container,
       });
       await page.waitForChanges();
+    });
 
+    it('shows input to create a new file when event occurs', async () => {
       // when the toolbar fires a create-new-file event
       const toolbar = page.root.querySelector('pos-container-toolbar');
       expect(toolbar).not.toBeNull();
@@ -173,22 +179,6 @@ describe('pos-container-contents', () => {
     });
 
     it('shows input to create a new container when event occurs', async () => {
-      // Given a page with container contents
-      const page = await newSpecPage({
-        components: [PosContainerContents],
-        html: `<pos-container-contents />`,
-        supportsShadowDom: false,
-      });
-
-      // and a container resource is available
-      const container = {
-        contains: () => [],
-      };
-      await page.rootInstance.receiveResource({
-        assume: () => container,
-      });
-      await page.waitForChanges();
-
       // when the toolbar fires a create-new-folder event
       const toolbar = page.root.querySelector('pos-container-toolbar');
       expect(toolbar).not.toBeNull();
@@ -208,6 +198,18 @@ describe('pos-container-contents', () => {
       // and the current container is passed into it
       const createNew: PosCreateNewContainerItem = page.root.querySelector('pos-create-new-container-item');
       expect(createNew.container).toEqual(container);
+    });
+
+    it('hides input to create a new file or folder when escape is pressed', async () => {
+      // and a new file should be created
+      page.rootInstance.createNewItem = 'file';
+      expect(page.root.querySelector('pos-create-new-container-item')).toBeDefined();
+
+      // when the user presses escape
+      await pressKey(page, 'Escape');
+
+      // then the input is hidden
+      expect(page.root.querySelector('pos-create-new-container-item')).toBeNull();
     });
   });
 });

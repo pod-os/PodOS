@@ -1,5 +1,5 @@
 import { ContainerContent, LdpContainer, Thing } from '@pod-os/core';
-import { Component, Event, EventEmitter, h, Host, State } from '@stencil/core';
+import { Component, Event, EventEmitter, h, Host, Listen, State } from '@stencil/core';
 import { ResourceAware, subscribeResource } from '../events/ResourceAware';
 
 @Component({
@@ -31,6 +31,13 @@ export class PosContainerContents implements ResourceAware {
 
   componentWillLoad() {
     subscribeResource(this);
+  }
+
+  @Listen('keydown')
+  handleKeyDown(ev: KeyboardEvent) {
+    if (ev.key === 'Escape') {
+      this.createNewItem = null;
+    }
   }
 
   receiveResource = (resource: Thing) => {
