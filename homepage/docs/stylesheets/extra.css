@@ -24,3 +24,11 @@ section.hero {
     gap: 2rem;
   }
 }
+
+@media (max-width: 600px) {
+  article {
+    img {
+      width: 100%;
+    }
+  }
+}
