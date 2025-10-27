@@ -2,6 +2,8 @@
  * @jest-environment @happy-dom/jest-environment
  */
 
+jest.mock('../../events/usePodOS');
+
 import { newSpecPage } from '@stencil/core/testing';
 import { PosCreateNewContainerItem } from './pos-create-new-container-item';
 import { screen } from '@testing-library/dom';

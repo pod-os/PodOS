@@ -39,6 +39,8 @@ export function mockPodOS(): PodOS {
     }),
     proposeUriForNewThing: jest.fn(),
     addNewThing: jest.fn().mockResolvedValue(void null),
+    createNewFile: jest.fn().mockResolvedValue(void null),
+    createNewFolder: jest.fn().mockResolvedValue(void null),
     fetchProfile: jest.fn(),
     buildSearchIndex: jest.fn(),
   };
