@@ -62,7 +62,7 @@ describe('pos-create-new-container-item', () => {
     fireEvent.input(input, { target: { value: 'new-file.md' } });
     const form = page.root.querySelector('form');
     fireEvent.submit(form);
-    expect(os.createNewFile).toHaveBeenCalledWith(page.rootInstance.container, 'new-file.md');
+    expect(os.files().createNewFile).toHaveBeenCalledWith(page.rootInstance.container, 'new-file.md');
   });
 
   it('creates a new folder in the container', async () => {
@@ -76,6 +76,6 @@ describe('pos-create-new-container-item', () => {
     fireEvent.input(input, { target: { value: 'New New Folder 2' } });
     const form = page.root.querySelector('form');
     fireEvent.submit(form);
-    expect(os.createNewFolder).toHaveBeenCalledWith(page.rootInstance.container, 'New New Folder 2');
+    expect(os.files().createNewFolder).toHaveBeenCalledWith(page.rootInstance.container, 'New New Folder 2');
   });
 });

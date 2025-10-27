@@ -17,7 +17,6 @@ import {
   OnlineStatus,
 } from "./offline-cache";
 import { IndexedFormula } from "rdflib";
-import { LdpContainer } from "../types";
 
 export * from "./authentication";
 export * from "./files";
@@ -127,14 +126,6 @@ export class PodOS {
 
   proposeUriForNewThing(referenceUri: string, name: string) {
     return this.uriService.proposeUriForNewThing(referenceUri, name);
-  }
-
-  async createNewFile(container: LdpContainer, name: string) {
-    console.log("TODO createNewFile", container, name);
-  }
-
-  async createNewFolder(container: LdpContainer, name: string) {
-    console.log("TODO createNewFolder", container, name);
   }
 
   /**

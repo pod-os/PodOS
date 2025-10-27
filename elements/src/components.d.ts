@@ -5,9 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { LdpContainer, PodOS, SolidFile, Thing } from "@pod-os/core";
 import { ToolConfig } from "./components/pos-type-router/selectToolsForTypes";
-export { LdpContainer, PodOS, SolidFile, Thing } from "@pod-os/core";
 export { ToolConfig } from "./components/pos-type-router/selectToolsForTypes";
 export namespace Components {
     interface PosAddLiteralValue {

@@ -3,6 +3,7 @@ import { BinaryFile } from "./BinaryFile";
 import { BrokenFile } from "./BrokenFile";
 import { HttpStatus } from "./HttpStatus";
 import { SolidFile } from "./SolidFile";
+import { LdpContainer } from "../ldp-container";
 
 export class FileFetcher {
   constructor(private session: PodOsSession) {}
@@ -39,5 +40,13 @@ export class FileFetcher {
       },
       body: newContent,
     });
+  }
+
+  async createNewFile(container: LdpContainer, name: string) {
+    console.log("TODO createNewFile", container, name);
+  }
+
+  async createNewFolder(container: LdpContainer, name: string) {
+    console.log("TODO createNewFolder", container, name);
   }
 }

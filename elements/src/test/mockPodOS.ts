@@ -26,6 +26,8 @@ export function mockPodOS(): PodOS {
   const fileFetcher = {
     fetchFile: jest.fn(),
     putFile: jest.fn(),
+    createNewFile: jest.fn().mockResolvedValue(void null),
+    createNewFolder: jest.fn().mockResolvedValue(void null),
   };
   const os = {
     fetch: jest.fn(),
@@ -39,8 +41,6 @@ export function mockPodOS(): PodOS {
     }),
     proposeUriForNewThing: jest.fn(),
     addNewThing: jest.fn().mockResolvedValue(void null),
-    createNewFile: jest.fn().mockResolvedValue(void null),
-    createNewFolder: jest.fn().mockResolvedValue(void null),
     fetchProfile: jest.fn(),
     buildSearchIndex: jest.fn(),
   };

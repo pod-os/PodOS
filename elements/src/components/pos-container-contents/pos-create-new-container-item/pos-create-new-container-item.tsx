@@ -63,9 +63,9 @@ export class PosCreateNewContainerItem {
   private async submit(e: Event) {
     e.preventDefault();
     if (this.type === 'file') {
-      await this.os.createNewFile(this.container, this.name);
+      await this.os.files().createNewFile(this.container, this.name);
     } else {
-      await this.os.createNewFolder(this.container, this.name);
+      await this.os.files().createNewFolder(this.container, this.name);
     }
   }
 }
