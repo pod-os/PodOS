@@ -5,9 +5,9 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { PodOS, SolidFile, Thing } from "@pod-os/core";
+import { LdpContainer, PodOS, SolidFile, Thing } from "@pod-os/core";
 import { ToolConfig } from "./components/pos-type-router/selectToolsForTypes";
-export { PodOS, SolidFile, Thing } from "@pod-os/core";
+export { LdpContainer, PodOS, SolidFile, Thing } from "@pod-os/core";
 export { ToolConfig } from "./components/pos-type-router/selectToolsForTypes";
 export namespace Components {
     interface PosAddLiteralValue {
@@ -44,6 +44,10 @@ export namespace Components {
     interface PosContainerItem {
     }
     interface PosContainerToolbar {
+    }
+    interface PosCreateNewContainerItem {
+        "container": LdpContainer;
+        "type": 'file' | 'folder';
     }
     interface PosDescription {
     }
@@ -259,6 +263,10 @@ export interface PosContainerContentsCustomEvent<T> extends CustomEvent<T> {
 export interface PosContainerItemCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosContainerItemElement;
+}
+export interface PosContainerToolbarCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosContainerToolbarElement;
 }
 export interface PosDescriptionCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -521,11 +529,29 @@ declare global {
         prototype: HTMLPosContainerItemElement;
         new (): HTMLPosContainerItemElement;
     };
+    interface HTMLPosContainerToolbarElementEventMap {
+        "pod-os:create-new-file": void;
+        "pod-os:create-new-folder": void;
+    }
     interface HTMLPosContainerToolbarElement extends Components.PosContainerToolbar, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosContainerToolbarElementEventMap>(type: K, listener: (this: HTMLPosContainerToolbarElement, ev: PosContainerToolbarCustomEvent<HTMLPosContainerToolbarElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosContainerToolbarElementEventMap>(type: K, listener: (this: HTMLPosContainerToolbarElement, ev: PosContainerToolbarCustomEvent<HTMLPosContainerToolbarElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosContainerToolbarElement: {
         prototype: HTMLPosContainerToolbarElement;
         new (): HTMLPosContainerToolbarElement;
+    };
+    interface HTMLPosCreateNewContainerItemElement extends Components.PosCreateNewContainerItem, HTMLStencilElement {
+    }
+    var HTMLPosCreateNewContainerItemElement: {
+        prototype: HTMLPosCreateNewContainerItemElement;
+        new (): HTMLPosCreateNewContainerItemElement;
     };
     interface HTMLPosDescriptionElementEventMap {
         "pod-os:resource": any;
@@ -1082,6 +1108,7 @@ declare global {
         "pos-container-contents": HTMLPosContainerContentsElement;
         "pos-container-item": HTMLPosContainerItemElement;
         "pos-container-toolbar": HTMLPosContainerToolbarElement;
+        "pos-create-new-container-item": HTMLPosCreateNewContainerItemElement;
         "pos-description": HTMLPosDescriptionElement;
         "pos-dialog": HTMLPosDialogElement;
         "pos-document": HTMLPosDocumentElement;
@@ -1178,6 +1205,12 @@ declare namespace LocalJSX {
         "onPod-os:resource"?: (event: PosContainerItemCustomEvent<any>) => void;
     }
     interface PosContainerToolbar {
+        "onPod-os:create-new-file"?: (event: PosContainerToolbarCustomEvent<void>) => void;
+        "onPod-os:create-new-folder"?: (event: PosContainerToolbarCustomEvent<void>) => void;
+    }
+    interface PosCreateNewContainerItem {
+        "container": LdpContainer;
+        "type": 'file' | 'folder';
     }
     interface PosDescription {
         "onPod-os:resource"?: (event: PosDescriptionCustomEvent<any>) => void;
@@ -1438,6 +1471,7 @@ declare namespace LocalJSX {
         "pos-container-contents": PosContainerContents;
         "pos-container-item": PosContainerItem;
         "pos-container-toolbar": PosContainerToolbar;
+        "pos-create-new-container-item": PosCreateNewContainerItem;
         "pos-description": PosDescription;
         "pos-dialog": PosDialog;
         "pos-document": PosDocument;
@@ -1491,6 +1525,7 @@ declare module "@stencil/core" {
             "pos-container-contents": LocalJSX.PosContainerContents & JSXBase.HTMLAttributes<HTMLPosContainerContentsElement>;
             "pos-container-item": LocalJSX.PosContainerItem & JSXBase.HTMLAttributes<HTMLPosContainerItemElement>;
             "pos-container-toolbar": LocalJSX.PosContainerToolbar & JSXBase.HTMLAttributes<HTMLPosContainerToolbarElement>;
+            "pos-create-new-container-item": LocalJSX.PosCreateNewContainerItem & JSXBase.HTMLAttributes<HTMLPosCreateNewContainerItemElement>;
             "pos-description": LocalJSX.PosDescription & JSXBase.HTMLAttributes<HTMLPosDescriptionElement>;
             /**
              * Styled wrapper around native dialog element, with slots `title` and `content`

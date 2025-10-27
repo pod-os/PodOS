@@ -1,4 +1,4 @@
-import { Thing, ContainerContent, LdpContainer } from '@pod-os/core';
+import { ContainerContent, LdpContainer, Thing } from '@pod-os/core';
 import { Component, Event, EventEmitter, h, Host, State } from '@stencil/core';
 import { ResourceAware, subscribeResource } from '../events/ResourceAware';
 
@@ -8,6 +8,9 @@ import { ResourceAware, subscribeResource } from '../events/ResourceAware';
   styleUrl: 'pos-container-contents.css',
 })
 export class PosContainerContents implements ResourceAware {
+  @State()
+  container: LdpContainer;
+
   @State() contents: ContainerContent[] = [];
 
   @State() loading = true;
@@ -15,14 +18,25 @@ export class PosContainerContents implements ResourceAware {
   @Event({ eventName: 'pod-os:resource' })
   subscribeResource: EventEmitter;
 
+  @State()
+  private createNewItem: 'file' | 'folder' | null = null;
+
+  onCreateNewFile() {
+    this.createNewItem = 'file';
+  }
+
+  onCreateNewFolder() {
+    this.createNewItem = 'folder';
+  }
+
   componentWillLoad() {
     subscribeResource(this);
   }
 
   receiveResource = (resource: Thing) => {
-    const doc = resource.assume(LdpContainer);
+    this.container = resource.assume(LdpContainer);
     this.loading = false;
-    this.contents = doc.contains().sort((a, b) => a.name.localeCompare(b.name));
+    this.contents = this.container.contains().sort((a, b) => a.name.localeCompare(b.name));
   };
 
   render() {
@@ -34,13 +48,24 @@ export class PosContainerContents implements ResourceAware {
         </pos-resource>
       </li>
     ));
-    return this.contents.length > 0 ? (
+    if (this.createNewItem !== null) {
+      items.unshift(
+        <li>
+          <pos-create-new-container-item
+            type={this.createNewItem}
+            container={this.container}
+          ></pos-create-new-container-item>
+        </li>,
+      );
+    }
+    return (
       <Host>
-        <pos-container-toolbar></pos-container-toolbar>
-        <ul>{items}</ul>
+        <pos-container-toolbar
+          onPod-os:create-new-file={() => this.onCreateNewFile()}
+          onPod-os:create-new-folder={() => this.onCreateNewFolder()}
+        ></pos-container-toolbar>
+        {items.length > 0 ? <ul>{items}</ul> : <p>The container is empty</p>}
       </Host>
-    ) : (
-      <p>The container is empty</p>
     );
   }
 }
