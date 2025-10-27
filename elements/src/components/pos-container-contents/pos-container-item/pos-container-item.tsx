@@ -1,7 +1,7 @@
 import { Thing } from '@pod-os/core';
 import { Component, Event, EventEmitter, h, State } from '@stencil/core';
-import { ResourceAware, subscribeResource } from '../events/ResourceAware';
-import { selectIconForTypes } from './selectIconForTypes';
+import { ResourceAware, subscribeResource } from '../../events/ResourceAware';
+import { selectIconForTypes } from '../selectIconForTypes';
 
 @Component({
   tag: 'pos-container-item',
