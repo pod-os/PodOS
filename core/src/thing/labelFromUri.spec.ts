@@ -14,9 +14,23 @@ describe("label from URI", () => {
     expect(result).toBe("file.ttl");
   });
 
+  it("decodes URI components from file name", () => {
+    const result = labelFromUri(
+      "https://jane.doe.example/container/My%20(weird%3F)%20%2F%20%3Cfile%3E!.ttl",
+    );
+    expect(result).toBe("My (weird?) / <file>!.ttl");
+  });
+
   it("container name is used if no file is present", () => {
     const result = labelFromUri("https://jane.doe.example/container/");
-    expect(result).toBe("container/");
+    expect(result).toBe("container");
+  });
+
+  it("decodes URI components from folder name", () => {
+    const result = labelFromUri(
+      "https://jane.doe.example/container/My%20(weird%3F)%20%2F%20%3Cfolder%3E!/",
+    );
+    expect(result).toBe("My (weird?) / <folder>!");
   });
 
   describe("if fragments are too generic", () => {

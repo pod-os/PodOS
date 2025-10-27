@@ -8,7 +8,8 @@ export function labelFromUri(uri: string) {
     return (getFilename(url) || url.host + url.pathname) + url.hash;
   }
 
-  return labelFromFragment(url.hash) || getFilename(url) || url.host;
+  const name = labelFromFragment(url.hash) || getFilename(url) || url.host;
+  return name.endsWith("/") ? name.slice(0, -1) : name;
 }
 
 function labelFromFragment(fragment: string | null) {
@@ -20,11 +21,12 @@ function isTooGeneric(fragment: string) {
   return genericFragments.includes(fragment);
 }
 
-function getFilename(url: URL) {
+function getFilename(url: URL): string | null {
   if (url.pathname.endsWith("/")) {
     const containerName = url.pathname.split("/").at(-2);
-    return containerName ? containerName + "/" : null;
+    return containerName ? decodeURIComponent(containerName) + "/" : null;
   } else {
-    return url.pathname.split("/").pop();
+    const name = url.pathname.split("/").pop();
+    return name ? decodeURIComponent(name) : null;
   }
 }

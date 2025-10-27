@@ -1,5 +1,5 @@
 import { IndexedFormula, sym } from "rdflib";
-import { Thing } from "../thing";
+import { labelFromUri, Thing } from "../thing";
 
 export interface ContainerContent {
   uri: string;
@@ -23,10 +23,7 @@ export class LdpContainer extends Thing {
     );
     return contains.map((content) => ({
       uri: content.object.value,
-      name: content.object.value.replace(
-        new RegExp(`${this.uri}([^/]*)/?`),
-        "$1",
-      ),
+      name: labelFromUri(content.object.value),
     }));
   }
 }

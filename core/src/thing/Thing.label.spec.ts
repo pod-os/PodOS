@@ -25,7 +25,7 @@ describe("Thing", function () {
       it("container name is used if no file is present", () => {
         const store = graph();
         const it = new Thing("https://jane.doe.example/container/", store);
-        expect(it.label()).toBe("container/");
+        expect(it.label()).toBe("container");
       });
 
       describe("if fragments are too generic", () => {
