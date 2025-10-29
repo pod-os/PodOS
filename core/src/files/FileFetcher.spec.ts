@@ -183,19 +183,23 @@ describe("FileFetcher", () => {
         } as Response);
     });
 
-    it("creates a new container using PUT request", async () => {
+    it("creates a new container using PUT request and returns it", async () => {
       const parent = new LdpContainer(
         "https://pod.test/parent/",
         graph(),
         true,
       );
-      await fileFetcher.createNewFolder(parent, "sub-folder");
+      const newFolder = await fileFetcher.createNewFolder(parent, "sub-folder");
       expect(session.authenticatedFetch).toHaveBeenCalledWith(
         "https://pod.test/parent/sub-folder/",
         expect.objectContaining({
           method: "PUT",
         }),
       );
+      expect(newFolder).toEqual({
+        url: "https://pod.test/parent/sub-folder/",
+        name: "sub-folder",
+      });
     });
 
     it("encodes name as URI", async () => {
@@ -232,13 +236,13 @@ describe("FileFetcher", () => {
         } as Response);
     });
 
-    it("creates a new turtle file by default", async () => {
+    it("creates a new turtle file by default and returns it", async () => {
       const parent = new LdpContainer(
         "https://pod.test/parent/",
         graph(),
         true,
       );
-      await fileFetcher.createNewFile(parent, "my-file");
+      const newFile = await fileFetcher.createNewFile(parent, "my-file");
       expect(session.authenticatedFetch).toHaveBeenCalledWith(
         "https://pod.test/parent/my-file",
         expect.objectContaining({
@@ -249,6 +253,11 @@ describe("FileFetcher", () => {
           },
         }),
       );
+      expect(newFile).toEqual({
+        url: "https://pod.test/parent/my-file",
+        name: "my-file",
+        contentType: "text/turtle",
+      });
     });
 
     it("encodes name as URI", async () => {

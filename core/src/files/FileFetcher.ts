@@ -4,6 +4,7 @@ import { BrokenFile } from "./BrokenFile";
 import { HttpStatus } from "./HttpStatus";
 import { SolidFile } from "./SolidFile";
 import { LdpContainer } from "../ldp-container";
+import Result = lunr.Index.Result;
 
 export class FileFetcher {
   constructor(private session: PodOsSession) {}
@@ -42,21 +43,47 @@ export class FileFetcher {
     });
   }
 
-  async createNewFile(container: LdpContainer, name: string) {
+  async createNewFile(container: LdpContainer, name: string): Promise<NewFile> {
     const encodedName = encodeURIComponent(name);
-    await this.session.authenticatedFetch(container.uri + encodedName, {
+    const url = container.uri + encodedName;
+    const contentType = "text/turtle";
+    await this.session.authenticatedFetch(url, {
       method: "PUT",
       headers: {
-        "Content-Type": "text/turtle",
+        "Content-Type": contentType,
         "If-None-Match": "*",
       },
     });
+    return {
+      url,
+      name,
+      contentType: contentType,
+    };
   }
 
-  async createNewFolder(container: LdpContainer, name: string) {
+  async createNewFolder(
+    container: LdpContainer,
+    name: string,
+  ): Promise<NewFolder> {
     const encodedName = encodeURIComponent(name);
-    await this.session.authenticatedFetch(container.uri + encodedName + "/", {
+    const url = container.uri + encodedName + "/";
+    await this.session.authenticatedFetch(url, {
       method: "PUT",
     });
+    return {
+      url,
+      name,
+    };
   }
+}
+
+interface NewFolder {
+  url: string;
+  name: string;
+}
+
+interface NewFile {
+  url: string;
+  name: string;
+  contentType: string;
 }
