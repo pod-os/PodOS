@@ -46,14 +46,17 @@ export class FileFetcher {
   async createNewFile(container: LdpContainer, name: string): Promise<NewFile> {
     const encodedName = encodeURIComponent(name);
     const url = container.uri + encodedName;
-    const contentType = "text/turtle";
-    await this.session.authenticatedFetch(url, {
+    const contentType = "text/turtle"; // TODO determine content type
+    const response = await this.session.authenticatedFetch(url, {
       method: "PUT",
       headers: {
         "Content-Type": contentType,
         "If-None-Match": "*",
       },
     });
+    if (!response.ok) {
+      throw response;
+    }
     return {
       url,
       name,

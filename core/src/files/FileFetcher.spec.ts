@@ -219,64 +219,114 @@ describe("FileFetcher", () => {
   });
 
   describe("create new file", () => {
-    let fileFetcher: FileFetcher;
-    let session: PodOsSession;
-    beforeEach(() => {
-      // given a session
-      session = mockSession();
-      // and a file fetcher
-      fileFetcher = new FileFetcher(session);
-      // and PUT usually works
-      when(session.authenticatedFetch)
-        .calledWith(expect.anything(), expect.anything())
-        .mockResolvedValue({
-          ok: true,
-          status: 200,
-          statusText: "OK",
-        } as Response);
-    });
+    describe("if successful", () => {
+      let fileFetcher: FileFetcher;
+      let session: PodOsSession;
+      beforeEach(() => {
+        // given a session
+        session = mockSession();
+        // and a file fetcher
+        fileFetcher = new FileFetcher(session);
+        // and PUT usually works
+        when(session.authenticatedFetch)
+          .calledWith(expect.anything(), expect.anything())
+          .mockResolvedValue({
+            ok: true,
+            status: 200,
+            statusText: "OK",
+          } as Response);
+      });
 
-    it("creates a new turtle file by default and returns it", async () => {
-      const parent = new LdpContainer(
-        "https://pod.test/parent/",
-        graph(),
-        true,
-      );
-      const newFile = await fileFetcher.createNewFile(parent, "my-file");
-      expect(session.authenticatedFetch).toHaveBeenCalledWith(
-        "https://pod.test/parent/my-file",
-        expect.objectContaining({
-          method: "PUT",
-          headers: {
-            "Content-Type": "text/turtle",
-            "If-None-Match": "*",
-          },
-        }),
-      );
-      expect(newFile).toEqual({
-        url: "https://pod.test/parent/my-file",
-        name: "my-file",
-        contentType: "text/turtle",
+      it("creates a new turtle file by default and returns it", async () => {
+        const parent = new LdpContainer(
+          "https://pod.test/parent/",
+          graph(),
+          true,
+        );
+        const newFile = await fileFetcher.createNewFile(parent, "my-file");
+        expect(session.authenticatedFetch).toHaveBeenCalledWith(
+          "https://pod.test/parent/my-file",
+          expect.objectContaining({
+            method: "PUT",
+            headers: {
+              "Content-Type": "text/turtle",
+              "If-None-Match": "*",
+            },
+          }),
+        );
+        expect(newFile).toEqual({
+          url: "https://pod.test/parent/my-file",
+          name: "my-file",
+          contentType: "text/turtle",
+        });
+      });
+
+      it("encodes name as URI", async () => {
+        const parent = new LdpContainer(
+          "https://pod.test/parent/",
+          graph(),
+          true,
+        );
+        await fileFetcher.createNewFile(parent, "My (new?) / <file>!");
+        expect(session.authenticatedFetch).toHaveBeenCalledWith(
+          "https://pod.test/parent/My%20(new%3F)%20%2F%20%3Cfile%3E!",
+          expect.objectContaining({
+            method: "PUT",
+            headers: {
+              "Content-Type": "text/turtle",
+              "If-None-Match": "*",
+            },
+          }),
+        );
       });
     });
 
-    it("encodes name as URI", async () => {
-      const parent = new LdpContainer(
-        "https://pod.test/parent/",
-        graph(),
-        true,
-      );
-      await fileFetcher.createNewFile(parent, "My (new?) / <file>!");
-      expect(session.authenticatedFetch).toHaveBeenCalledWith(
-        "https://pod.test/parent/My%20(new%3F)%20%2F%20%3Cfile%3E!",
-        expect.objectContaining({
-          method: "PUT",
-          headers: {
-            "Content-Type": "text/turtle",
-            "If-None-Match": "*",
-          },
-        }),
-      );
+    describe("if it fails", () => {
+      let fileFetcher: FileFetcher;
+      let session: PodOsSession;
+      beforeEach(() => {
+        // given a session
+        session = mockSession();
+        // and a file fetcher
+        fileFetcher = new FileFetcher(session);
+      });
+
+      it("rejects promise on http error code", async () => {
+        // and PUT responds with http error code
+        const httpResponse = {
+          ok: false,
+          status: 401,
+          statusText: "Internal Server Error",
+        } as Response;
+        when(session.authenticatedFetch)
+          .calledWith(expect.anything(), expect.anything())
+          .mockResolvedValue(httpResponse);
+        // when a new file is created
+        const parent = new LdpContainer(
+          "https://pod.test/parent/",
+          graph(),
+          true,
+        );
+        const newFile = fileFetcher.createNewFile(parent, "my-file");
+        // then the promise is rejected with the http response
+        await expect(newFile).rejects.toBe(httpResponse);
+      });
+
+      it("rejects promise on error", async () => {
+        // and PUT fails with error
+        when(session.authenticatedFetch)
+          .calledWith(expect.anything(), expect.anything())
+          .mockRejectedValue(new Error("Network Error"));
+        // when a new file is created
+        const parent = new LdpContainer(
+          "https://pod.test/parent/",
+          graph(),
+          true,
+        );
+        const newFile = fileFetcher.createNewFile(parent, "my-file");
+        // then the promise is rejected with the http response
+        await expect(newFile).rejects.toEqual(new Error("Network Error"));
+      });
     });
   });
 
