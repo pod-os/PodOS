@@ -166,55 +166,117 @@ describe("FileFetcher", () => {
   });
 
   describe("create new container", () => {
-    let fileFetcher: FileFetcher;
-    let session: PodOsSession;
-    beforeEach(() => {
-      // given a session
-      session = mockSession();
-      // and a file fetcher
-      fileFetcher = new FileFetcher(session);
-      // and PUT usually works
-      when(session.authenticatedFetch)
-        .calledWith(expect.anything(), expect.anything())
-        .mockResolvedValue({
-          ok: true,
-          status: 200,
-          statusText: "OK",
-        } as Response);
-    });
+    describe("if successful", () => {
+      let fileFetcher: FileFetcher;
+      let session: PodOsSession;
+      beforeEach(() => {
+        // given a session
+        session = mockSession();
+        // and a file fetcher
+        fileFetcher = new FileFetcher(session);
+        // and PUT usually works
+        when(session.authenticatedFetch)
+          .calledWith(expect.anything(), expect.anything())
+          .mockResolvedValue({
+            ok: true,
+            status: 200,
+            statusText: "OK",
+          } as Response);
+      });
 
-    it("creates a new container using PUT request and returns it", async () => {
-      const parent = new LdpContainer(
-        "https://pod.test/parent/",
-        graph(),
-        true,
-      );
-      const newFolder = await fileFetcher.createNewFolder(parent, "sub-folder");
-      expect(session.authenticatedFetch).toHaveBeenCalledWith(
-        "https://pod.test/parent/sub-folder/",
-        expect.objectContaining({
-          method: "PUT",
-        }),
-      );
-      expect(newFolder).toEqual({
-        url: "https://pod.test/parent/sub-folder/",
-        name: "sub-folder",
+      it("creates a new container using PUT request and returns it", async () => {
+        const parent = new LdpContainer(
+          "https://pod.test/parent/",
+          graph(),
+          true,
+        );
+        const result = await fileFetcher.createNewFolder(parent, "sub-folder");
+        expect(session.authenticatedFetch).toHaveBeenCalledWith(
+          "https://pod.test/parent/sub-folder/",
+          expect.objectContaining({
+            method: "PUT",
+          }),
+        );
+        expect(result.isOk()).toBe(true);
+        expect(result._unsafeUnwrap()).toEqual({
+          url: "https://pod.test/parent/sub-folder/",
+          name: "sub-folder",
+        });
+      });
+
+      it("encodes name as URI", async () => {
+        const parent = new LdpContainer(
+          "https://pod.test/parent/",
+          graph(),
+          true,
+        );
+        await fileFetcher.createNewFolder(parent, "My (new?) / <folder>!");
+        expect(session.authenticatedFetch).toHaveBeenCalledWith(
+          "https://pod.test/parent/My%20(new%3F)%20%2F%20%3Cfolder%3E!/",
+          expect.objectContaining({
+            method: "PUT",
+          }),
+        );
       });
     });
 
-    it("encodes name as URI", async () => {
-      const parent = new LdpContainer(
-        "https://pod.test/parent/",
-        graph(),
-        true,
-      );
-      await fileFetcher.createNewFolder(parent, "My (new?) / <folder>!");
-      expect(session.authenticatedFetch).toHaveBeenCalledWith(
-        "https://pod.test/parent/My%20(new%3F)%20%2F%20%3Cfolder%3E!/",
-        expect.objectContaining({
-          method: "PUT",
-        }),
-      );
+    describe("if it fails", () => {
+      let fileFetcher: FileFetcher;
+      let session: PodOsSession;
+      beforeEach(() => {
+        // given a session
+        session = mockSession();
+        // and a file fetcher
+        fileFetcher = new FileFetcher(session);
+      });
+
+      it("returns error result on bad http status codes", async () => {
+        // and PUT responds with http error code
+        const httpResponse = {
+          ok: false,
+          status: 401,
+          statusText: "Unauthorized",
+        } as Response;
+        when(session.authenticatedFetch)
+          .calledWith(expect.anything(), expect.anything())
+          .mockResolvedValue(httpResponse);
+        // when a new file is created
+        const parent = new LdpContainer(
+          "https://pod.test/parent/",
+          graph(),
+          true,
+        );
+        const result = await fileFetcher.createNewFolder(parent, "my-folder");
+        // then the result is an http error
+        expect(result.isErr()).toBe(true);
+        expect(result._unsafeUnwrapErr()).toEqual({
+          type: "http",
+          status: 401,
+          title: "The folder could not be created",
+          detail: "The server responded with 401 Unauthorized",
+        });
+      });
+
+      it("returns error result if fetch is rejected with an error", async () => {
+        // and PUT fails with an error
+        when(session.authenticatedFetch)
+          .calledWith(expect.anything(), expect.anything())
+          .mockRejectedValue(new Error("Network Error"));
+        // when a new file is created
+        const parent = new LdpContainer(
+          "https://pod.test/parent/",
+          graph(),
+          true,
+        );
+        const result = await fileFetcher.createNewFolder(parent, "my-folder");
+        // then the result is a network error
+        expect(result.isErr()).toBe(true);
+        expect(result._unsafeUnwrapErr()).toEqual({
+          type: "network",
+          title: "The folder could not be created",
+          detail: "The server could not be reached: Network Error",
+        });
+      });
     });
   });
 
@@ -243,7 +305,7 @@ describe("FileFetcher", () => {
           graph(),
           true,
         );
-        const newFile = await fileFetcher.createNewFile(parent, "my-file");
+        const result = await fileFetcher.createNewFile(parent, "my-file");
         expect(session.authenticatedFetch).toHaveBeenCalledWith(
           "https://pod.test/parent/my-file",
           expect.objectContaining({
@@ -254,7 +316,9 @@ describe("FileFetcher", () => {
             },
           }),
         );
-        expect(newFile).toEqual({
+        expect(result.isOk()).toBe(true);
+        const newFIle = result._unsafeUnwrap();
+        expect(newFIle).toEqual({
           url: "https://pod.test/parent/my-file",
           name: "my-file",
           contentType: "text/turtle",
@@ -291,12 +355,12 @@ describe("FileFetcher", () => {
         fileFetcher = new FileFetcher(session);
       });
 
-      it("rejects promise on http error code", async () => {
+      it("returns error result on bad http status codes", async () => {
         // and PUT responds with http error code
         const httpResponse = {
           ok: false,
           status: 401,
-          statusText: "Internal Server Error",
+          statusText: "Unauthorized",
         } as Response;
         when(session.authenticatedFetch)
           .calledWith(expect.anything(), expect.anything())
@@ -307,13 +371,19 @@ describe("FileFetcher", () => {
           graph(),
           true,
         );
-        const newFile = fileFetcher.createNewFile(parent, "my-file");
-        // then the promise is rejected with the http response
-        await expect(newFile).rejects.toBe(httpResponse);
+        const result = await fileFetcher.createNewFile(parent, "my-file");
+        // then the result is an http error
+        expect(result.isErr()).toBe(true);
+        expect(result._unsafeUnwrapErr()).toEqual({
+          type: "http",
+          status: 401,
+          title: "The file could not be created",
+          detail: "The server responded with 401 Unauthorized",
+        });
       });
 
-      it("rejects promise on error", async () => {
-        // and PUT fails with error
+      it("returns error result if fetch is rejected with an error", async () => {
+        // and PUT fails with an error
         when(session.authenticatedFetch)
           .calledWith(expect.anything(), expect.anything())
           .mockRejectedValue(new Error("Network Error"));
@@ -323,9 +393,14 @@ describe("FileFetcher", () => {
           graph(),
           true,
         );
-        const newFile = fileFetcher.createNewFile(parent, "my-file");
-        // then the promise is rejected with the http response
-        await expect(newFile).rejects.toEqual(new Error("Network Error"));
+        const result = await fileFetcher.createNewFile(parent, "my-file");
+        // then the result is a network error
+        expect(result.isErr()).toBe(true);
+        expect(result._unsafeUnwrapErr()).toEqual({
+          type: "network",
+          title: "The file could not be created",
+          detail: "The server could not be reached: Network Error",
+        });
       });
     });
   });

@@ -4,7 +4,13 @@ import { BrokenFile } from "./BrokenFile";
 import { HttpStatus } from "./HttpStatus";
 import { SolidFile } from "./SolidFile";
 import { LdpContainer } from "../ldp-container";
-import Result = lunr.Index.Result;
+import {
+  HttpProblem,
+  httpProblem,
+  NetworkProblem,
+  networkProblem,
+} from "./problems";
+import { err, ok, ResultAsync } from "neverthrow";
 
 export class FileFetcher {
   constructor(private session: PodOsSession) {}
@@ -43,40 +49,52 @@ export class FileFetcher {
     });
   }
 
-  async createNewFile(container: LdpContainer, name: string): Promise<NewFile> {
+  createNewFile(
+    container: LdpContainer,
+    name: string,
+  ): ResultAsync<NewFile, NotCreated> {
     const encodedName = encodeURIComponent(name);
     const url = container.uri + encodedName;
     const contentType = "text/turtle"; // TODO determine content type
-    const response = await this.session.authenticatedFetch(url, {
-      method: "PUT",
-      headers: {
-        "Content-Type": contentType,
-        "If-None-Match": "*",
-      },
-    });
-    if (!response.ok) {
-      throw response;
-    }
-    return {
-      url,
-      name,
-      contentType: contentType,
-    };
+    return ResultAsync.fromPromise(
+      this.session.authenticatedFetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-Type": contentType,
+          "If-None-Match": "*",
+        },
+      }),
+      (e) => networkProblem("The file could not be created", e as Error),
+    ).andThen((response) =>
+      response.ok
+        ? ok({
+            url,
+            name,
+            contentType,
+          })
+        : err(httpProblem("The file could not be created", response)),
+    );
   }
 
-  async createNewFolder(
+  createNewFolder(
     container: LdpContainer,
     name: string,
-  ): Promise<NewFolder> {
+  ): ResultAsync<NewFolder, NotCreated> {
     const encodedName = encodeURIComponent(name);
     const url = container.uri + encodedName + "/";
-    await this.session.authenticatedFetch(url, {
-      method: "PUT",
-    });
-    return {
-      url,
-      name,
-    };
+    return ResultAsync.fromPromise(
+      this.session.authenticatedFetch(url, {
+        method: "PUT",
+      }),
+      (e) => networkProblem("The folder could not be created", e as Error),
+    ).andThen((response) =>
+      response.ok
+        ? ok({
+            url,
+            name,
+          })
+        : err(httpProblem("The folder could not be created", response)),
+    );
   }
 }
 
@@ -90,3 +108,5 @@ interface NewFile {
   name: string;
   contentType: string;
 }
+
+type NotCreated = HttpProblem | NetworkProblem;
