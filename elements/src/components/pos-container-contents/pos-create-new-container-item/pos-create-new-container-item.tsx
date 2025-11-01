@@ -1,5 +1,5 @@
 import { LdpContainer, PodOS } from '@pod-os/core';
-import { Component, Element, h, Prop, State } from '@stencil/core';
+import { Component, Element, EventEmitter, h, Prop, State, Event } from '@stencil/core';
 import { usePodOS } from '../../events/usePodOS';
 
 @Component({
@@ -21,6 +21,8 @@ export class PosCreateNewContainerItem {
 
   @State()
   name: string;
+
+  @Event({ eventName: 'pod-os:link' }) linkEmitter: EventEmitter<string>;
 
   input: HTMLInputElement;
 
@@ -62,10 +64,17 @@ export class PosCreateNewContainerItem {
 
   private async submit(e: Event) {
     e.preventDefault();
+    let result = await this.createNew();
+    if (result.isOk()) {
+      this.linkEmitter.emit(result.value.url);
+    }
+  }
+
+  private async createNew() {
     if (this.type === 'file') {
-      await this.os.files().createNewFile(this.container, this.name);
+      return this.os.files().createNewFile(this.container, this.name);
     } else {
-      await this.os.files().createNewFolder(this.container, this.name);
+      return this.os.files().createNewFolder(this.container, this.name);
     }
   }
 }
