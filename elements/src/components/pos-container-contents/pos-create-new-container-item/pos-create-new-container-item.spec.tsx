@@ -1,4 +1,4 @@
-import { PodOS } from '@pod-os/core';
+import { PodOS, HttpProblem } from '@pod-os/core';
 
 jest.mock('../../events/usePodOS');
 
@@ -9,7 +9,7 @@ import { when } from 'jest-when';
 
 import { mockPodOS } from '../../../test/mockPodOS';
 import { fireEvent } from '@testing-library/dom';
-import { ok, okAsync } from 'neverthrow';
+import { errAsync, ok, okAsync } from 'neverthrow';
 
 describe('pos-create-new-container-item', () => {
   let os: PodOS;
@@ -88,6 +88,34 @@ describe('pos-create-new-container-item', () => {
     );
   });
 
+  it('emits an error if file creation fails', async () => {
+    // given a component to create a new file
+    const page = await newSpecPage({
+      components: [PosCreateNewContainerItem],
+      html: `<pos-create-new-container-item type="file"/>`,
+      supportsShadowDom: false,
+    });
+    page.rootInstance.container = { fake: 'Container' };
+    // and the page listens to error events
+    const errorListener = jest.fn();
+    page.root.addEventListener('pod-os:error', errorListener);
+    // and a new file fails to create
+    const problem: HttpProblem = {
+      type: 'http',
+      title: 'Something failed',
+    };
+    when(os.files().createNewFile).mockResolvedValue(errAsync(problem));
+    // when the user enters a file name
+    const input = page.root.querySelector('input');
+    fireEvent.input(input, { target: { value: 'new-file.md' } });
+    // and submits
+    const form = page.root.querySelector('form');
+    fireEvent.submit(form);
+    // then an error is emitted
+    await page.waitForChanges();
+    expect(errorListener).toHaveBeenCalledWith(expect.objectContaining({ detail: problem }));
+  });
+
   it('creates a new folder in the container', async () => {
     // given a component to create a new folder
     const page = await newSpecPage({
@@ -121,5 +149,33 @@ describe('pos-create-new-container-item', () => {
         detail: 'https://pod.test/container/new-new-folder-2/',
       }),
     );
+  });
+
+  it('emits an error if folder creation fails', async () => {
+    // given a component to create a new folder
+    const page = await newSpecPage({
+      components: [PosCreateNewContainerItem],
+      html: `<pos-create-new-container-item type="folder"/>`,
+      supportsShadowDom: false,
+    });
+    page.rootInstance.container = { fake: 'Container' };
+    // and the page listens to error events
+    const errorListener = jest.fn();
+    page.root.addEventListener('pod-os:error', errorListener);
+    // and a new folder fails to create
+    const problem: HttpProblem = {
+      type: 'http',
+      title: 'Something failed',
+    };
+    when(os.files().createNewFolder).mockResolvedValue(errAsync(problem));
+    // when the user enters a file name
+    const input = page.root.querySelector('input');
+    fireEvent.input(input, { target: { value: 'new-file.md' } });
+    // and submits
+    const form = page.root.querySelector('form');
+    fireEvent.submit(form);
+    // then an error is emitted
+    await page.waitForChanges();
+    expect(errorListener).toHaveBeenCalledWith(expect.objectContaining({ detail: problem }));
   });
 });

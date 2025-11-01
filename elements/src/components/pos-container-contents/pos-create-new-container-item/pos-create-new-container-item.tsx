@@ -1,4 +1,4 @@
-import { LdpContainer, PodOS } from '@pod-os/core';
+import { LdpContainer, PodOS, Problem } from '@pod-os/core';
 import { Component, Element, EventEmitter, h, Prop, State, Event } from '@stencil/core';
 import { usePodOS } from '../../events/usePodOS';
 
@@ -23,6 +23,7 @@ export class PosCreateNewContainerItem {
   name: string;
 
   @Event({ eventName: 'pod-os:link' }) linkEmitter: EventEmitter<string>;
+  @Event({ eventName: 'pod-os:error' }) errorEmitter: EventEmitter<Problem>;
 
   input: HTMLInputElement;
 
@@ -67,6 +68,8 @@ export class PosCreateNewContainerItem {
     let result = await this.createNew();
     if (result.isOk()) {
       this.linkEmitter.emit(result.value.url);
+    } else {
+      this.errorEmitter.emit(result.error);
     }
   }
 
