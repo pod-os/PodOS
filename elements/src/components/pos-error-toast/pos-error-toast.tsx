@@ -1,5 +1,6 @@
 import { toastController } from '@ionic/core';
 import { Component, h, Host, Listen } from '@stencil/core';
+import { Problem } from '@pod-os/core';
 
 @Component({
   tag: 'pos-error-toast',
@@ -17,7 +18,12 @@ export class PosErrorToast {
   async catchError(event) {
     event.stopPropagation();
     console.error(event.detail);
-    await this.showToast(event.detail.message);
+    if (event.detail instanceof Error) {
+      await this.showToast(event.detail.message);
+    } else {
+      const problem = event.detail as Problem;
+      await this.showToast(problem.title + ': ' + problem.detail);
+    }
   }
 
   private async showToast(message: string) {
