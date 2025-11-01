@@ -1,17 +1,28 @@
-import { toastController } from '@ionic/core';
-import { Component, h, Host, Listen } from '@stencil/core';
+import { Component, h, Host, Listen, State } from '@stencil/core';
 import { Problem } from '@pod-os/core';
+
+import './shoelace';
+import { SlAlert } from '@shoelace-style/shoelace';
 
 @Component({
   tag: 'pos-error-toast',
   shadow: true,
 })
 export class PosErrorToast {
+  private alert: SlAlert;
+
+  @State()
+  private title: string;
+
+  @State()
+  private message: string;
+
   @Listen('unhandledrejection', { target: 'window' })
   async unhandledRejection(event: PromiseRejectionEvent) {
     event.stopPropagation();
     console.error('unhandled promise rejection', event);
-    await this.showToast(event.reason.toString());
+    this.title = 'Unhandled promise rejection';
+    this.message = event.reason.toString();
   }
 
   @Listen('pod-os:error')
@@ -19,39 +30,25 @@ export class PosErrorToast {
     event.stopPropagation();
     console.error(event.detail);
     if (event.detail instanceof Error) {
-      await this.showToast(event.detail.message);
+      this.title = 'Error';
+      this.message = event.detail.message;
     } else {
       const problem = event.detail as Problem;
-      await this.showToast(problem.title + ': ' + problem.detail);
+      this.title = problem.title;
+      this.message = problem.detail;
     }
+    await this.alert.toast();
   }
 
-  private async showToast(message: string) {
-    const toast = await toastController.create({
-      message,
-      duration: 10000,
-      position: 'top',
-      color: 'danger',
-      buttons: [
-        {
-          text: 'Dismiss',
-          role: 'cancel',
-        },
-      ],
-    });
-
-    await toast.present();
-  }
   render() {
     return (
       <Host>
-        <ion-toast
-          trigger="never"
-          message="Workarround to preload ion-toast and ion-ripple-effect to be able to show errors while offline"
-          duration={0}
-        >
-          <ion-ripple-effect></ion-ripple-effect>
-        </ion-toast>
+        <sl-alert ref={el => (this.alert = el)} variant="danger" duration="10000" closable>
+          <sl-icon slot="icon" name="check2-circle"></sl-icon>
+          <strong>{this.title}</strong>
+          <br />
+          {this.message}
+        </sl-alert>
         <slot></slot>
       </Host>
     );
