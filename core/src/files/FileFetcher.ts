@@ -9,7 +9,7 @@ import {
   httpProblem,
   NetworkProblem,
   networkProblem,
-} from "./problems";
+} from "../problems";
 import { err, ok, ResultAsync } from "neverthrow";
 
 export class FileFetcher {

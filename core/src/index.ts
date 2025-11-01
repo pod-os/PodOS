@@ -29,6 +29,7 @@ export * from "./offline-cache";
 export * from "./terms";
 export * from "./Store";
 export * from "./uri";
+export * from "./problems";
 
 export interface PodOsConfiguration {
   offlineCache?: OfflineCache;
