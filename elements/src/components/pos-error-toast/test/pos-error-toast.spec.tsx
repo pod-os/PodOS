@@ -17,7 +17,7 @@ describe('pos-error-toast', () => {
     expect(page.root).toEqualHtml(`
       <pos-error-toast>
         <sl-alert closable="" duration="10000" variant="danger">
-          <sl-icon name="check2-circle" slot="icon"></sl-icon>
+          <sl-icon name="exclamation-octagon" slot="icon"></sl-icon>
           <strong></strong>
           <br>
         </sl-alert>
@@ -57,7 +57,7 @@ describe('pos-error-toast', () => {
       expect(page.root).toEqualHtml(`
       <pos-error-toast>
         <sl-alert closable="" duration="10000" variant="danger">
-          <sl-icon name="check2-circle" slot="icon"></sl-icon>
+          <sl-icon name="exclamation-octagon" slot="icon"></sl-icon>
           <strong>
             Error
           </strong>
@@ -87,7 +87,7 @@ describe('pos-error-toast', () => {
       expect(page.root).toEqualHtml(`
       <pos-error-toast>
         <sl-alert closable="" duration="10000" variant="danger">
-          <sl-icon name="check2-circle" slot="icon"></sl-icon>
+          <sl-icon name="exclamation-octagon" slot="icon"></sl-icon>
           <strong>
             Some Problem
           </strong>

@@ -44,7 +44,7 @@ export class PosErrorToast {
     return (
       <Host>
         <sl-alert ref={el => (this.alert = el)} variant="danger" duration="10000" closable>
-          <sl-icon slot="icon" name="check2-circle"></sl-icon>
+          <sl-icon slot="icon" name="exclamation-octagon"></sl-icon>
           <strong>{this.title}</strong>
           <br />
           {this.message}
