@@ -1,6 +1,9 @@
 import { expect } from "@playwright/test";
 
 import { test } from "./fixtures";
+import { alice } from "./fixtures/credentials";
+import { signIn } from "./actions/signIn";
+import { v4 as random } from "uuid";
 
 test.describe("An LDP container", () => {
   test("show its own contents", async ({ page, navigationBar }) => {
@@ -64,5 +67,37 @@ test.describe("An LDP container", () => {
       "name",
       "folder-outline",
     );
+  });
+
+  test("can create a new file in the container", async ({
+    page,
+    navigationBar,
+    ldpContainerTool,
+  }) => {
+    const filename = random();
+
+    await test.step("Given PodOS Browser is open", async () => {
+      await page.goto("/");
+    });
+
+    await test.step("and the pod owner is signed in", async () => {
+      await signIn(page, alice);
+    });
+
+    await test.step("and a container is shown ", async () => {
+      await navigationBar.fillAndSubmit("http://localhost:4000/alice/");
+    });
+
+    await test.step("when the user creates a new file", async () => {
+      await ldpContainerTool.createNewFile(filename);
+    });
+
+    await test.step("then the file is created and shown", async () => {
+      const heading = page.getByRole("heading");
+      await expect(heading).toHaveText(filename);
+      expect(await navigationBar.inputValue()).toEqual(
+        `http://localhost:4000/alice/${filename}`,
+      );
+    });
   });
 });
