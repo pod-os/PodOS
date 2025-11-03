@@ -18,4 +18,14 @@ export class ContainerContents {
     await input.fill(newFile);
     await input.press("Enter");
   }
+
+  async submitNewFolder(newFile: string) {
+    const input = this.list
+      .getByRole("textbox", {
+        name: `Enter folder name`,
+      })
+      .describe("Folder name input");
+    await input.fill(newFile);
+    await input.press("Enter");
+  }
 }

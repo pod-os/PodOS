@@ -14,4 +14,10 @@ export class ContainerToolbar {
       .getByRole("button", { name: "Create new file" })
       .describe("Create new file button");
   }
+
+  newFolderButton() {
+    return this.toolbar
+      .getByRole("button", { name: "Create new folder" })
+      .describe("Create new folder button");
+  }
 }

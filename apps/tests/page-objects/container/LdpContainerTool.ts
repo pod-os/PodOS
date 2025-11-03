@@ -13,6 +13,11 @@ export class LdpContainerTool {
 
   async createNewFile(newFile: string) {
     await this.toolbar.newFileButton().click();
-    this.contents.submitNewFile(newFile);
+    await this.contents.submitNewFile(newFile);
+  }
+
+  async createNewFolder(folderName: string) {
+    await this.toolbar.newFolderButton().click();
+    await this.contents.submitNewFolder(folderName);
   }
 }
