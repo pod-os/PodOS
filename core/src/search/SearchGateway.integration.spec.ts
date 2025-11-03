@@ -6,7 +6,6 @@ import {
   expectPatchRequest,
   mockNotFound,
   mockTurtleDocument,
-  // @ts-expect-error compiler does not resolve module correctly
 } from "@solid-data-modules/rdflib-utils/test-support";
 import { WebIdProfile } from "../profile";
 import { graph, lit, st, sym } from "rdflib";

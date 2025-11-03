@@ -2,7 +2,6 @@ import { OfflineCapableFetcher } from "./OfflineCapableFetcher";
 import { graph, sym } from "rdflib";
 import { when } from "jest-when";
 import { OfflineCache } from "./OfflineCache";
-// @ts-expect-error compiler does not resolve module correctly
 import { mockTurtleDocument } from "@solid-data-modules/rdflib-utils/test-support";
 
 describe(OfflineCapableFetcher.name, () => {
