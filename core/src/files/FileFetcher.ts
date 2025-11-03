@@ -12,6 +12,8 @@ import {
 } from "../problems";
 import { err, ok, ResultAsync } from "neverthrow";
 
+import mime from "mime/lite";
+
 export class FileFetcher {
   constructor(private session: PodOsSession) {}
 
@@ -55,12 +57,12 @@ export class FileFetcher {
   ): ResultAsync<NewFile, NotCreated> {
     const encodedName = encodeURIComponent(name);
     const url = container.uri + encodedName;
-    const contentType = "text/turtle"; // TODO determine content type
+    const contentTypeHeader = mime.getType(encodedName) ?? "text/turtle";
     return ResultAsync.fromPromise(
       this.session.authenticatedFetch(url, {
         method: "PUT",
         headers: {
-          "Content-Type": contentType,
+          "Content-Type": contentTypeHeader,
           "If-None-Match": "*",
         },
       }),
@@ -70,7 +72,7 @@ export class FileFetcher {
         ? ok({
             url,
             name,
-            contentType,
+            contentType: contentTypeHeader,
           })
         : err(httpProblem("The file could not be created", response)),
     );

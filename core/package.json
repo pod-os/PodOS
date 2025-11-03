@@ -52,6 +52,7 @@
     "@types/lunr": "^2.3.7",
     "buffer": "^6.0.3",
     "lunr": "^2.3.9",
+    "mime": "^4.1.0",
     "neverthrow": "^8.2.0",
     "rdf-namespaces": "^1.16.0",
     "rdflib": "2.3.0",

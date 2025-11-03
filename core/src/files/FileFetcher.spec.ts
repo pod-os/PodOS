@@ -325,6 +325,57 @@ describe("FileFetcher", () => {
         });
       });
 
+      it.each([
+        {
+          extension: ".ttl",
+          contentType: "text/turtle",
+        },
+        {
+          extension: ".md",
+          contentType: "text/markdown",
+        },
+        {
+          extension: ".txt",
+          contentType: "text/plain",
+        },
+        {
+          extension: ".png",
+          contentType: "image/png",
+        },
+        {
+          extension: ".pdf",
+          contentType: "application/pdf",
+        },
+      ])(
+        "uses content type $contentType for file with extension $extension",
+        async ({ extension, contentType }) => {
+          const parent = new LdpContainer(
+            "https://pod.test/parent/",
+            graph(),
+            true,
+          );
+          const name = `file${extension}`;
+          const result = await fileFetcher.createNewFile(parent, name);
+          expect(session.authenticatedFetch).toHaveBeenCalledWith(
+            `https://pod.test/parent/${name}`,
+            expect.objectContaining({
+              method: "PUT",
+              headers: {
+                "Content-Type": contentType,
+                "If-None-Match": "*",
+              },
+            }),
+          );
+          expect(result.isOk()).toBe(true);
+          const newFIle = result._unsafeUnwrap();
+          expect(newFIle).toEqual({
+            url: `https://pod.test/parent/${name}`,
+            name,
+            contentType,
+          });
+        },
+      );
+
       it("encodes name as URI", async () => {
         const parent = new LdpContainer(
           "https://pod.test/parent/",
