@@ -16,7 +16,7 @@ export class PosContainerToolbar {
 
   render() {
     return (
-      <Host>
+      <Host role="toolbar" aria-label="Container actions">
         <sl-tooltip content="Create new file">
           <button aria-label="Create new file" onClick={() => this.createNewFile.emit()}>
             <sl-icon name="file-earmark-plus"></sl-icon>

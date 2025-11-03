@@ -43,7 +43,7 @@ describe('pos-container-contents', () => {
     expect(page.root).toEqualHtml(`
       <pos-container-contents>
         <pos-container-toolbar></pos-container-toolbar>
-        <ul>
+        <ul aria-label="Container contents">
           <li>
             <pos-resource lazy="" uri="https://pod.test/container/file">
               <pos-container-item>
@@ -107,7 +107,7 @@ describe('pos-container-contents', () => {
     expect(page.root).toEqualHtml(`
       <pos-container-contents>
         <pos-container-toolbar></pos-container-toolbar>
-        <ul>
+        <ul aria-label="Container contents">
           <li>
             <pos-resource lazy="" uri="https://pod.test/container/a-file-on-top-of-the-list">
               <pos-container-item>
@@ -166,7 +166,7 @@ describe('pos-container-contents', () => {
       expect(page.root).toEqualHtml(`
       <pos-container-contents>
         <pos-container-toolbar></pos-container-toolbar>
-        <ul>
+        <ul aria-label="Container contents">
           <li><pos-create-new-container-item type="file"></pos-create-new-container-item></li>
         </ul>
       </pos-container-contents>
@@ -188,7 +188,7 @@ describe('pos-container-contents', () => {
       expect(page.root).toEqualHtml(`
       <pos-container-contents>
         <pos-container-toolbar></pos-container-toolbar>
-        <ul>
+        <ul aria-label="Container contents">
           <li><pos-create-new-container-item type="folder"></pos-create-new-container-item></li>
         </ul>
       </pos-container-contents>

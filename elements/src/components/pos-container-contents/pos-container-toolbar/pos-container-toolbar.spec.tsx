@@ -15,7 +15,7 @@ describe('pos-container-toolbar', () => {
     });
 
     expect(page.root).toEqualHtml(`
-      <pos-container-toolbar>
+      <pos-container-toolbar aria-label="Container actions" role="toolbar">
         <sl-tooltip content="Create new file">
           <button aria-label="Create new file">
             <sl-icon name="file-earmark-plus"></sl-icon>

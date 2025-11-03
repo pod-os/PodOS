@@ -71,7 +71,7 @@ export class PosContainerContents implements ResourceAware {
           onPod-os:create-new-file={() => this.onCreateNewFile()}
           onPod-os:create-new-folder={() => this.onCreateNewFolder()}
         ></pos-container-toolbar>
-        {items.length > 0 ? <ul>{items}</ul> : <p>The container is empty</p>}
+        {items.length > 0 ? <ul aria-label="Container contents">{items}</ul> : <p>The container is empty</p>}
       </Host>
     );
   }
