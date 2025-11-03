@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- [`PodOS.files().createNewFile()`](https://pod-os.org/reference/core/classes/FileFetcher/#createNewFile): New method to create new files within a container
+- [`PodOS.files().createNewFolder()`](https://pod-os.org/reference/core/classes/FileFetcher/#createNewFolder): New method to create new folders within a container
+- [`Problem`](https://pod-os.org/reference/core/classes/problem/): A new type to describe domain errors in PodOS
+
+### Changed
+
+- [`labelFromUri(uri: string)`](https://pod-os.org/reference/core/functions/labelfromuri/): add deconding for special characters in URIs, so that they become human readable
+- [`LdpContainer.contains()`](https://pod-os.org/reference/core/classes/ldpcontainer/#contains): Container names now align with the logic from `labelFromUri` 
+
 ## 0.20.0
 
 ### Added

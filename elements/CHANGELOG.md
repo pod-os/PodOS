@@ -13,6 +13,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changes
 
 - [pos-container-contents](https://pod-os.org/reference/elements/components/pos-container-contents/): Now uses the new [pos-container-toolbar](https://pod-os.org/reference/elements/components/pos-container-toolbar/) component to show container actions
+- [pos-error-toast](https://pod-os.org/reference/elements/components/pos-error-toast/):
+  - Now based on shoelace alert instead of ionic, which brings a new, more aligned design
+  - Can handle `pos-os:error` events containing a PodOS [`Problem`](https://pod-os.org/reference/core/classes/problem/) in addition to a TypeScript `Error`
 
 ## 0.31.0
 
