@@ -6,7 +6,7 @@
 
 # Interface: NetworkProblem
 
-Defined in: [problems/index.ts:12](https://github.com/pod-os/PodOS/blob/de9215ad8ec55ee6f58ed59e3dc31dc7c0c3e462/core/src/problems/index.ts#L12)
+Defined in: [problems/index.ts:11](https://github.com/pod-os/PodOS/blob/b4172200853c8560e232f709e37ef34147eba6d7/core/src/problems/index.ts#L11)
 
 Roughly resembling RFC 7807 Problem Details
 https://datatracker.ietf.org/doc/html/rfc7807
@@ -21,7 +21,7 @@ https://datatracker.ietf.org/doc/html/rfc7807
 
 > `optional` **detail**: `string`
 
-Defined in: [problems/index.ts:9](https://github.com/pod-os/PodOS/blob/de9215ad8ec55ee6f58ed59e3dc31dc7c0c3e462/core/src/problems/index.ts#L9)
+Defined in: [problems/index.ts:8](https://github.com/pod-os/PodOS/blob/b4172200853c8560e232f709e37ef34147eba6d7/core/src/problems/index.ts#L8)
 
 #### Inherited from
 
@@ -29,23 +29,11 @@ Defined in: [problems/index.ts:9](https://github.com/pod-os/PodOS/blob/de9215ad8
 
 ***
 
-### status?
-
-> `optional` **status**: `number`
-
-Defined in: [problems/index.ts:8](https://github.com/pod-os/PodOS/blob/de9215ad8ec55ee6f58ed59e3dc31dc7c0c3e462/core/src/problems/index.ts#L8)
-
-#### Inherited from
-
-[`Problem`](Problem.md).[`status`](Problem.md#status)
-
-***
-
 ### title
 
 > **title**: `string`
 
-Defined in: [problems/index.ts:7](https://github.com/pod-os/PodOS/blob/de9215ad8ec55ee6f58ed59e3dc31dc7c0c3e462/core/src/problems/index.ts#L7)
+Defined in: [problems/index.ts:7](https://github.com/pod-os/PodOS/blob/b4172200853c8560e232f709e37ef34147eba6d7/core/src/problems/index.ts#L7)
 
 #### Inherited from
 
@@ -57,7 +45,7 @@ Defined in: [problems/index.ts:7](https://github.com/pod-os/PodOS/blob/de9215ad8
 
 > **type**: `"network"`
 
-Defined in: [problems/index.ts:13](https://github.com/pod-os/PodOS/blob/de9215ad8ec55ee6f58ed59e3dc31dc7c0c3e462/core/src/problems/index.ts#L13)
+Defined in: [problems/index.ts:12](https://github.com/pod-os/PodOS/blob/b4172200853c8560e232f709e37ef34147eba6d7/core/src/problems/index.ts#L12)
 
 #### Overrides
 

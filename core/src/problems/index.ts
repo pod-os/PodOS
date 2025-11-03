@@ -5,7 +5,6 @@
 export interface Problem {
   type: string;
   title: string;
-  status?: number;
   detail?: string;
 }
 
@@ -15,6 +14,7 @@ export interface NetworkProblem extends Problem {
 
 export interface HttpProblem extends Problem {
   type: "http";
+  status: number;
 }
 
 export function httpProblem(title: string, response: Response): HttpProblem {
