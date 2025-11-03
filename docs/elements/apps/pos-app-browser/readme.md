@@ -42,10 +42,6 @@ graph TD;
   pos-app-browser --> pos-resource
   pos-app-browser --> pos-type-router
   pos-app --> ion-progress-bar
-  pos-error-toast --> ion-toast
-  pos-error-toast --> ion-ripple-effect
-  ion-toast --> ion-icon
-  ion-toast --> ion-ripple-effect
   pos-add-new-thing --> ion-icon
   pos-add-new-thing --> pos-dialog
   pos-add-new-thing --> pos-new-thing-form

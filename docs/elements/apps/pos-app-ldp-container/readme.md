@@ -25,6 +25,8 @@ graph TD;
   pos-app-ldp-container --> pos-literals
   pos-container-contents --> pos-resource
   pos-container-contents --> pos-container-item
+  pos-container-contents --> pos-create-new-container-item
+  pos-container-contents --> pos-container-toolbar
   pos-resource --> ion-progress-bar
   pos-container-item --> ion-icon
   pos-subjects --> pos-rich-link
