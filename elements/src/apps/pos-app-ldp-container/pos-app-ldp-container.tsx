@@ -17,9 +17,9 @@ export class PosAppLdpContainer {
           </details>
         </section>
         <section>
-          <article>
+          <article aria-labelledby="container-title">
             <header>
-              <h1>
+              <h1 id="container-title">
                 <pos-label />
               </h1>
               <pos-type-badges />
