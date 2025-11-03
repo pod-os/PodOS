@@ -1,6 +1,6 @@
 [**@pod-os/core**](README.md)
 
-*** 
+***
 
 # @pod-os/core
 
@@ -29,13 +29,16 @@
 
 - [CachedRdfDocument](interfaces/CachedRdfDocument.md)
 - [ContainerContent](interfaces/ContainerContent.md)
+- [HttpProblem](interfaces/HttpProblem.md)
 - [Literal](interfaces/Literal.md)
+- [NetworkProblem](interfaces/NetworkProblem.md)
 - [OfflineCache](interfaces/OfflineCache.md)
 - [OfflineCapableFetcherOptions](interfaces/OfflineCapableFetcherOptions.md)
 - [OnlineStatus](interfaces/OnlineStatus.md)
 - [PodOsConfiguration](interfaces/PodOsConfiguration.md)
 - [PodOsModule](interfaces/PodOsModule.md)
 - [PodOsSession](interfaces/PodOsSession.md)
+- [Problem](interfaces/Problem.md)
 - [RdfType](interfaces/RdfType.md)
 - [Relation](interfaces/Relation.md)
 - [SolidFile](interfaces/SolidFile.md)
@@ -49,5 +52,7 @@
 
 ## Functions
 
+- [httpProblem](functions/httpProblem.md)
 - [labelFromUri](functions/labelFromUri.md)
 - [listKnownTerms](functions/listKnownTerms.md)
+- [networkProblem](functions/networkProblem.md)

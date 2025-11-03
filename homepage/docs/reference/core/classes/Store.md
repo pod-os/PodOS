@@ -6,7 +6,7 @@
 
 # Class: Store
 
-Defined in: [Store.ts:29](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/Store.ts#L29)
+Defined in: [Store.ts:29](https://github.com/pod-os/PodOS/blob/de9215ad8ec55ee6f58ed59e3dc31dc7c0c3e462/core/src/Store.ts#L29)
 
 The internalStore contains all data that is known locally.
 It can be used to fetch additional data from the web and also update data and sync it back to editable resources.
@@ -17,7 +17,7 @@ It can be used to fetch additional data from the web and also update data and sy
 
 > **new Store**(`session`, `offlineCache`, `onlineStatus`, `internalStore`): `Store`
 
-Defined in: [Store.ts:33](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/Store.ts#L33)
+Defined in: [Store.ts:33](https://github.com/pod-os/PodOS/blob/de9215ad8ec55ee6f58ed59e3dc31dc7c0c3e462/core/src/Store.ts#L33)
 
 #### Parameters
 
@@ -47,7 +47,7 @@ Defined in: [Store.ts:33](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116
 
 > **addNewThing**(`uri`, `name`, `type`): `Promise`\<`void`\>
 
-Defined in: [Store.ts:106](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/Store.ts#L106)
+Defined in: [Store.ts:106](https://github.com/pod-os/PodOS/blob/de9215ad8ec55ee6f58ed59e3dc31dc7c0c3e462/core/src/Store.ts#L106)
 
 #### Parameters
 
@@ -73,7 +73,7 @@ Defined in: [Store.ts:106](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c11
 
 > **addPropertyValue**(`thing`, `property`, `value`): `Promise`\<`void`\>
 
-Defined in: [Store.ts:88](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/Store.ts#L88)
+Defined in: [Store.ts:88](https://github.com/pod-os/PodOS/blob/de9215ad8ec55ee6f58ed59e3dc31dc7c0c3e462/core/src/Store.ts#L88)
 
 Adds a new value to the property of the given thing
 
@@ -101,7 +101,7 @@ Adds a new value to the property of the given thing
 
 > **executeUpdate**(`operation`): `Promise`\<`void`\>
 
-Defined in: [Store.ts:133](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/Store.ts#L133)
+Defined in: [Store.ts:133](https://github.com/pod-os/PodOS/blob/de9215ad8ec55ee6f58ed59e3dc31dc7c0c3e462/core/src/Store.ts#L133)
 
 #### Parameters
 
@@ -119,7 +119,7 @@ Defined in: [Store.ts:133](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c11
 
 > **fetch**(`uri`): `Promise`\<`Response`\>
 
-Defined in: [Store.ts:51](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/Store.ts#L51)
+Defined in: [Store.ts:51](https://github.com/pod-os/PodOS/blob/de9215ad8ec55ee6f58ed59e3dc31dc7c0c3e462/core/src/Store.ts#L51)
 
 Fetch data for the given URI to the internalStore
 
@@ -139,7 +139,7 @@ Fetch data for the given URI to the internalStore
 
 > **fetchAll**(`uris`): `Promise`\<`PromiseSettledResult`\<`Response`\>[]\>
 
-Defined in: [Store.ts:68](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/Store.ts#L68)
+Defined in: [Store.ts:68](https://github.com/pod-os/PodOS/blob/de9215ad8ec55ee6f58ed59e3dc31dc7c0c3e462/core/src/Store.ts#L68)
 
 Fetch all the given URIs in parallel and put the data to the internalStore
 
@@ -159,7 +159,7 @@ Fetch all the given URIs in parallel and put the data to the internalStore
 
 > **flagAuthorizationMetadata**(): `void`
 
-Defined in: [Store.ts:137](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/Store.ts#L137)
+Defined in: [Store.ts:137](https://github.com/pod-os/PodOS/blob/de9215ad8ec55ee6f58ed59e3dc31dc7c0c3e462/core/src/Store.ts#L137)
 
 #### Returns
 
@@ -171,7 +171,7 @@ Defined in: [Store.ts:137](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c11
 
 > **get**(`uri`): [`Thing`](Thing.md)
 
-Defined in: [Store.ts:77](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/Store.ts#L77)
+Defined in: [Store.ts:77](https://github.com/pod-os/PodOS/blob/de9215ad8ec55ee6f58ed59e3dc31dc7c0c3e462/core/src/Store.ts#L77)
 
 Retrieve the thing identified by the given URI from the internalStore
 
@@ -191,7 +191,7 @@ Retrieve the thing identified by the given URI from the internalStore
 
 > **loadModule**\<`T`\>(`module`): `T`
 
-Defined in: [Store.ts:141](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/Store.ts#L141)
+Defined in: [Store.ts:141](https://github.com/pod-os/PodOS/blob/de9215ad8ec55ee6f58ed59e3dc31dc7c0c3e462/core/src/Store.ts#L141)
 
 #### Type Parameters
 

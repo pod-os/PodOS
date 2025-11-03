@@ -12,7 +12,7 @@ and this project adheres to
 
 - [`PodOS.files().createNewFile()`](https://pod-os.org/reference/core/classes/FileFetcher/#createNewFile): New method to create new files within a container
 - [`PodOS.files().createNewFolder()`](https://pod-os.org/reference/core/classes/FileFetcher/#createNewFolder): New method to create new folders within a container
-- [`Problem`](https://pod-os.org/reference/core/classes/problem/): A new type to describe domain errors in PodOS
+- [`Problem`](https://pod-os.org/reference/core/interfaces/problem/): A new type to describe domain errors in PodOS
 
 ### Changed
 

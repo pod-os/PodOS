@@ -6,7 +6,7 @@
 
 # Interface: OfflineCache
 
-Defined in: [offline-cache/OfflineCache.ts:7](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/offline-cache/OfflineCache.ts#L7)
+Defined in: [offline-cache/OfflineCache.ts:7](https://github.com/pod-os/PodOS/blob/de9215ad8ec55ee6f58ed59e3dc31dc7c0c3e462/core/src/offline-cache/OfflineCache.ts#L7)
 
 ## Methods
 
@@ -14,7 +14,7 @@ Defined in: [offline-cache/OfflineCache.ts:7](https://github.com/pod-os/PodOS/bl
 
 > **clear**(): `void`
 
-Defined in: [offline-cache/OfflineCache.ts:10](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/offline-cache/OfflineCache.ts#L10)
+Defined in: [offline-cache/OfflineCache.ts:10](https://github.com/pod-os/PodOS/blob/de9215ad8ec55ee6f58ed59e3dc31dc7c0c3e462/core/src/offline-cache/OfflineCache.ts#L10)
 
 #### Returns
 
@@ -24,9 +24,9 @@ Defined in: [offline-cache/OfflineCache.ts:10](https://github.com/pod-os/PodOS/b
 
 ### get()
 
-> **get**(`url`): `Promise`\<`undefined` \| [`CachedRdfDocument`](CachedRdfDocument.md)\>
+> **get**(`url`): `Promise`\<[`CachedRdfDocument`](CachedRdfDocument.md) \| `undefined`\>
 
-Defined in: [offline-cache/OfflineCache.ts:9](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/offline-cache/OfflineCache.ts#L9)
+Defined in: [offline-cache/OfflineCache.ts:9](https://github.com/pod-os/PodOS/blob/de9215ad8ec55ee6f58ed59e3dc31dc7c0c3e462/core/src/offline-cache/OfflineCache.ts#L9)
 
 #### Parameters
 
@@ -36,7 +36,7 @@ Defined in: [offline-cache/OfflineCache.ts:9](https://github.com/pod-os/PodOS/bl
 
 #### Returns
 
-`Promise`\<`undefined` \| [`CachedRdfDocument`](CachedRdfDocument.md)\>
+`Promise`\<[`CachedRdfDocument`](CachedRdfDocument.md) \| `undefined`\>
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: [offline-cache/OfflineCache.ts:9](https://github.com/pod-os/PodOS/bl
 
 > **put**(`document`): `void`
 
-Defined in: [offline-cache/OfflineCache.ts:8](https://github.com/pod-os/PodOS/blob/90fd10a51a0e6c116e360caca550a03a7f7126ea/core/src/offline-cache/OfflineCache.ts#L8)
+Defined in: [offline-cache/OfflineCache.ts:8](https://github.com/pod-os/PodOS/blob/de9215ad8ec55ee6f58ed59e3dc31dc7c0c3e462/core/src/offline-cache/OfflineCache.ts#L8)
 
 #### Parameters
 
