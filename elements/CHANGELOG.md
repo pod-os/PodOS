@@ -17,10 +17,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - Now based on shoelace alert instead of ionic, which brings a new, more aligned design
   - Can handle `pos-os:error` events containing a PodOS [`Problem`](https://pod-os.org/reference/core/interfaces/problem/) in addition to a TypeScript `Error`
 
-### Fixed
-
-- Update to @uvdsl/solid-oidc-client-browser `0.2.0` fixes issues with session refresh (see [#16](https://github.com/uvdsl/solid-oidc-client-browser/issues/16), [#13](https://github.com/uvdsl/solid-oidc-client-browser/issues/13))
-
 ## 0.31.0
 
 ### Added
