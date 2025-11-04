@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Fixed
+
+- Update to @uvdsl/solid-oidc-client-browser `0.2.0` fixes issues with session refresh (see [#16](https://github.com/uvdsl/solid-oidc-client-browser/issues/16), [#13](https://github.com/uvdsl/solid-oidc-client-browser/issues/13))
+
 ## 0.32.0
 
 ### Added
