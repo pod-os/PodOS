@@ -36,7 +36,7 @@ export class PosApp {
    */
   @Event({ eventName: 'pod-os:loaded' }) podOsLoadedEmitter: EventEmitter<{
     os: PodOS;
-    authenticatedFetch: typeof global.fetch;
+    authenticatedFetch: typeof globalThis.fetch;
   }>;
 
   private readonly disconnected$ = new Subject<void>();

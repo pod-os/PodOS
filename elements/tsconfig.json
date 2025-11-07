@@ -5,7 +5,8 @@
     "declaration": false,
     "experimentalDecorators": true,
     "lib": ["dom", "es2023"],
-    "moduleResolution": "node",
+    "types": [],
+    "moduleResolution": "bundler",
     "module": "esnext",
     "target": "es2017",
     "noUnusedLocals": true,
@@ -15,5 +16,5 @@
     "skipLibCheck": true // https://github.com/ionic-team/ionicons/issues/1011#issuecomment-962038754
   },
   "include": ["src", "./jest-setup.ts"],
-  "exclude": ["node_modules", "src/test/**/*", "**/*.spec.ts", "**/*.spec.tsx"]
+  "exclude": ["node_modules", "src/test/**/*", "**/*.spec.ts", "**/*.spec.tsx", "**/__test/**"]
 }
