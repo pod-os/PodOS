@@ -1,7 +1,7 @@
 # Elements implement reactivity by setting Stencil state from rxjs observables defined in PodOS core
 
 - Status: accepted
-- Deciders: jg10, angelo-v
+- Deciders: [jg10](https://jg10.solidcommunity.net/profile/card#me), [Angelo Veltens](https://angelo.veltens.org/profile/card#me)
 
 
 Technical Story: The UI provided by PodOS elements should update reactively to changes to the global graph store [#37](https://github.com/pod-os/PodOS/issues/37)
