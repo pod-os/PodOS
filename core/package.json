@@ -1,13 +1,25 @@
 {
   "name": "@pod-os/core",
+  "description": "Core module of PodOS",
   "version": "0.21.0",
+  "type": "module",
   "main": "./dist/index.js",
   "types": "./types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./types/index.d.ts",
+      "require": "./lib/index.js"
+    }
+  },
   "files": [
     "lib/",
     "dist/",
     "types/"
   ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
@@ -60,9 +72,6 @@
     "slugify": "^1.6.6",
     "url": "^0.11.4"
   },
-  "directories": {
-    "lib": "lib"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pod-os/pod-os.git"
@@ -70,6 +79,5 @@
   "bugs": {
     "url": "https://github.com/pod-os/pod-os/issues"
   },
-  "homepage": "https://github.com/pod-os/pod-os#readme",
-  "description": ""
+  "homepage": "https://github.com/pod-os/pod-os#readme"
 }
