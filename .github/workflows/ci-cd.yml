@@ -20,9 +20,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - run: npm ci
-      - run: npm run lint
-      - run: npm run build
-      - run: npm test
+      - run: npm run lint --workspace=core --workspace elements --if-present
+      - run: npm run build --workspace=core --workspace elements
+      - run: npm test --workspace=core --workspace elements
       - name: Save @pod-os/core build
         if: github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@v4
