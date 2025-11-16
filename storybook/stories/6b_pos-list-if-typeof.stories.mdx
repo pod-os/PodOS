@@ -1,0 +1,32 @@
+import { html } from "lit-html";
+
+import { Canvas, Meta, Story } from "@storybook/addon-docs/blocks";
+
+<Meta
+  title="Basics"
+  args={{
+    uri: "https://pod-os.solidcommunity.net/",
+    type: "http://www.w3.org/ns/ldp#Container",
+    fetch: false,
+  }}
+/>
+
+## pos-list if-typeof
+
+Renders all things of a given type found in the current store, with a custom
+template. The related resources can optionally be fetched before rendering. The
+attribute `all-from-store` is optional and inferred by default.
+
+<Canvas withSource="open">
+  <Story name="pos-list if-typeof">
+    {({ uri, type, fetch }) => html`
+<pos-resource uri=${uri}>
+  This resource is loaded so there is something in the store.
+</pos-resource>
+The template is repeated for each item:
+<pos-list all-from-store if-typeof=${type} ?fetch=${fetch}>
+  <template> :-) </template>
+</pos-list>
+`}
+  </Story>
+</Canvas>
