@@ -5,8 +5,10 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { HttpProblem, LdpContainer, NetworkProblem, PodOS, Problem, SolidFile, Thing } from "@pod-os/core";
 import { ToolConfig } from "./components/pos-type-router/selectToolsForTypes";
 import { ResultAsync } from "neverthrow";
+export { HttpProblem, LdpContainer, NetworkProblem, PodOS, Problem, SolidFile, Thing } from "@pod-os/core";
 export { ToolConfig } from "./components/pos-type-router/selectToolsForTypes";
 export { ResultAsync } from "neverthrow";
 export namespace Components {
@@ -106,6 +108,10 @@ export namespace Components {
           * @default false
          */
         "fetch": boolean;
+        /**
+          * URI of a class for which instances will be listed
+         */
+        "ifTypeof": string;
         /**
           * URI of the predicate to follow
          */
@@ -734,6 +740,7 @@ declare global {
     };
     interface HTMLPosListElementEventMap {
         "pod-os:resource": any;
+        "pod-os:init": any;
     }
     interface HTMLPosListElement extends Components.PosList, HTMLStencilElement {
         addEventListener<K extends keyof HTMLPosListElementEventMap>(type: K, listener: (this: HTMLPosListElement, ev: PosListCustomEvent<HTMLPosListElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -1349,6 +1356,11 @@ declare namespace LocalJSX {
           * @default false
          */
         "fetch"?: boolean;
+        /**
+          * URI of a class for which instances will be listed
+         */
+        "ifTypeof"?: string;
+        "onPod-os:init"?: (event: PosListCustomEvent<any>) => void;
         "onPod-os:resource"?: (event: PosListCustomEvent<any>) => void;
         /**
           * URI of the predicate to follow
