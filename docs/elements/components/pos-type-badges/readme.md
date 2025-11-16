@@ -21,16 +21,9 @@
  - [pos-app-ldp-container](../../apps/pos-app-ldp-container)
  - [pos-app-rdf-document](../../apps/pos-app-rdf-document)
 
-### Depends on
-
-- ion-badge
-- ion-icon
-
 ### Graph
 ```mermaid
 graph TD;
-  pos-type-badges --> ion-badge
-  pos-type-badges --> ion-icon
   pos-app-generic --> pos-type-badges
   pos-app-image-viewer --> pos-type-badges
   pos-app-ldp-container --> pos-type-badges

@@ -46,14 +46,9 @@ Type: `Promise<void>`
  - [pos-rich-link](../pos-rich-link)
  - [pos-user-menu](../pos-user-menu)
 
-### Depends on
-
-- ion-progress-bar
-
 ### Graph
 ```mermaid
 graph TD;
-  pos-resource --> ion-progress-bar
   pos-app-browser --> pos-resource
   pos-container-contents --> pos-resource
   pos-list --> pos-resource

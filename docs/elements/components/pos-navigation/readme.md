@@ -37,7 +37,6 @@ graph TD;
   pos-navigation-bar --> pos-make-findable
   pos-make-findable --> pos-resource
   pos-make-findable --> pos-label
-  pos-resource --> ion-progress-bar
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
   pos-rich-link --> pos-resource

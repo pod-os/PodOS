@@ -28,11 +28,9 @@
 graph TD;
   pos-reverse-relations --> pos-predicate
   pos-reverse-relations --> pos-rich-link
-  pos-predicate --> ion-icon
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
   pos-rich-link --> pos-resource
-  pos-resource --> ion-progress-bar
   pos-app-generic --> pos-reverse-relations
   style pos-reverse-relations fill:#f9f,stroke:#333,stroke-width:4px
 ```

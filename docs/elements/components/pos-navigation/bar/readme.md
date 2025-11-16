@@ -34,7 +34,6 @@ graph TD;
   pos-navigation-bar --> pos-make-findable
   pos-make-findable --> pos-resource
   pos-make-findable --> pos-label
-  pos-resource --> ion-progress-bar
   pos-navigation --> pos-navigation-bar
   style pos-navigation-bar fill:#f9f,stroke:#333,stroke-width:4px
 ```

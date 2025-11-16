@@ -28,21 +28,14 @@ graph TD;
   pos-app-generic --> pos-relations
   pos-app-generic --> pos-reverse-relations
   pos-picture --> pos-image
-  pos-image --> ion-skeleton-text
-  pos-image --> ion-icon
-  pos-type-badges --> ion-badge
-  pos-type-badges --> ion-icon
   pos-literals --> pos-predicate
   pos-literals --> pos-add-literal-value
-  pos-predicate --> ion-icon
-  pos-add-literal-value --> ion-icon
   pos-add-literal-value --> pos-select-term
   pos-relations --> pos-predicate
   pos-relations --> pos-rich-link
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
   pos-rich-link --> pos-resource
-  pos-resource --> ion-progress-bar
   pos-reverse-relations --> pos-predicate
   pos-reverse-relations --> pos-rich-link
   style pos-app-generic fill:#f9f,stroke:#333,stroke-width:4px

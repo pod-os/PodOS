@@ -33,7 +33,6 @@ graph TD;
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
   pos-rich-link --> pos-resource
-  pos-resource --> ion-progress-bar
   pos-app-browser --> pos-internal-router
   style pos-internal-router fill:#f9f,stroke:#333,stroke-width:4px
 ```

@@ -27,18 +27,12 @@ graph TD;
   pos-container-contents --> pos-container-item
   pos-container-contents --> pos-create-new-container-item
   pos-container-contents --> pos-container-toolbar
-  pos-resource --> ion-progress-bar
-  pos-container-item --> ion-icon
   pos-subjects --> pos-rich-link
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
   pos-rich-link --> pos-resource
-  pos-type-badges --> ion-badge
-  pos-type-badges --> ion-icon
   pos-literals --> pos-predicate
   pos-literals --> pos-add-literal-value
-  pos-predicate --> ion-icon
-  pos-add-literal-value --> ion-icon
   pos-add-literal-value --> pos-select-term
   style pos-app-ldp-container fill:#f9f,stroke:#333,stroke-width:4px
 ```

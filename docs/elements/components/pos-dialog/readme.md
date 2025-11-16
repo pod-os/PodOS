@@ -39,14 +39,9 @@ Type: `Promise<void>`
  - [pos-add-new-thing](../pos-add-new-thing)
  - [pos-login](../pos-login)
 
-### Depends on
-
-- ion-icon
-
 ### Graph
 ```mermaid
 graph TD;
-  pos-dialog --> ion-icon
   pos-add-new-thing --> pos-dialog
   pos-login --> pos-dialog
   style pos-dialog fill:#f9f,stroke:#333,stroke-width:4px

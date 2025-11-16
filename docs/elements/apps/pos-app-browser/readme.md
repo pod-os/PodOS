@@ -41,18 +41,14 @@ graph TD;
   pos-app-browser --> pos-internal-router
   pos-app-browser --> pos-resource
   pos-app-browser --> pos-type-router
-  pos-app --> ion-progress-bar
-  pos-add-new-thing --> ion-icon
   pos-add-new-thing --> pos-dialog
   pos-add-new-thing --> pos-new-thing-form
-  pos-dialog --> ion-icon
   pos-new-thing-form --> pos-select-term
   pos-navigation --> pos-navigation-bar
   pos-navigation --> pos-rich-link
   pos-navigation-bar --> pos-make-findable
   pos-make-findable --> pos-resource
   pos-make-findable --> pos-label
-  pos-resource --> ion-progress-bar
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
   pos-rich-link --> pos-resource
@@ -62,8 +58,6 @@ graph TD;
   pos-login --> pos-picture
   pos-login --> pos-label
   pos-picture --> pos-image
-  pos-image --> ion-skeleton-text
-  pos-image --> ion-icon
   pos-user-menu --> pos-resource
   pos-user-menu --> pos-picture
   pos-user-menu --> pos-label

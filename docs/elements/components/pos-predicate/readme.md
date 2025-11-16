@@ -26,14 +26,9 @@ This will only show the predicate itself, not any value. If you want to display 
  - [pos-relations](../pos-relations)
  - [pos-reverse-relations](../pos-reverse-relations)
 
-### Depends on
-
-- ion-icon
-
 ### Graph
 ```mermaid
 graph TD;
-  pos-predicate --> ion-icon
   pos-literals --> pos-predicate
   pos-relations --> pos-predicate
   pos-reverse-relations --> pos-predicate

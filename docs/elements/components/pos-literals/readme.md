@@ -31,8 +31,6 @@
 graph TD;
   pos-literals --> pos-predicate
   pos-literals --> pos-add-literal-value
-  pos-predicate --> ion-icon
-  pos-add-literal-value --> ion-icon
   pos-add-literal-value --> pos-select-term
   pos-app-generic --> pos-literals
   pos-app-image-viewer --> pos-literals

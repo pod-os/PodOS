@@ -36,10 +36,7 @@ graph TD;
   pos-user-menu --> pos-resource
   pos-user-menu --> pos-picture
   pos-user-menu --> pos-label
-  pos-resource --> ion-progress-bar
   pos-picture --> pos-image
-  pos-image --> ion-skeleton-text
-  pos-image --> ion-icon
   pos-app-browser --> pos-user-menu
   style pos-user-menu fill:#f9f,stroke:#333,stroke-width:4px
 ```

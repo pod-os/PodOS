@@ -45,8 +45,6 @@
 ```mermaid
 graph TD;
   pos-picture --> pos-image
-  pos-image --> ion-skeleton-text
-  pos-image --> ion-icon
   pos-app-generic --> pos-picture
   pos-login --> pos-picture
   pos-user-menu --> pos-picture

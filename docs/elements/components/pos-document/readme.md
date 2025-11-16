@@ -30,16 +30,12 @@
 
 ### Depends on
 
-- ion-skeleton-text
 - [pos-markdown-document](../pos-markdown-document)
-- ion-icon
 
 ### Graph
 ```mermaid
 graph TD;
-  pos-document --> ion-skeleton-text
   pos-document --> pos-markdown-document
-  pos-document --> ion-icon
   pos-app-document-viewer --> pos-document
   style pos-document fill:#f9f,stroke:#333,stroke-width:4px
 ```

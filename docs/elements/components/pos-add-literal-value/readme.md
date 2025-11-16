@@ -23,13 +23,11 @@
 
 ### Depends on
 
-- ion-icon
 - [pos-select-term](../pos-select-term)
 
 ### Graph
 ```mermaid
 graph TD;
-  pos-add-literal-value --> ion-icon
   pos-add-literal-value --> pos-select-term
   pos-literals --> pos-add-literal-value
   style pos-add-literal-value fill:#f9f,stroke:#333,stroke-width:4px

@@ -28,7 +28,6 @@
 ```mermaid
 graph TD;
   pos-list --> pos-resource
-  pos-resource --> ion-progress-bar
   style pos-list fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

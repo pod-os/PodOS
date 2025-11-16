@@ -22,9 +22,7 @@
 ```mermaid
 graph TD;
   pos-app-document-viewer --> pos-document
-  pos-document --> ion-skeleton-text
   pos-document --> pos-markdown-document
-  pos-document --> ion-icon
   style pos-app-document-viewer fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

@@ -28,14 +28,8 @@ graph TD;
   pos-app-image-viewer --> pos-label
   pos-app-image-viewer --> pos-type-badges
   pos-app-image-viewer --> pos-literals
-  pos-image --> ion-skeleton-text
-  pos-image --> ion-icon
-  pos-type-badges --> ion-badge
-  pos-type-badges --> ion-icon
   pos-literals --> pos-predicate
   pos-literals --> pos-add-literal-value
-  pos-predicate --> ion-icon
-  pos-add-literal-value --> ion-icon
   pos-add-literal-value --> pos-select-term
   style pos-app-image-viewer fill:#f9f,stroke:#333,stroke-width:4px
 ```

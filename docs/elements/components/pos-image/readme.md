@@ -47,16 +47,9 @@ Renders a normal link if even this fails.
  - [pos-app-image-viewer](../../apps/pos-app-image-viewer)
  - [pos-picture](../pos-picture)
 
-### Depends on
-
-- ion-skeleton-text
-- ion-icon
-
 ### Graph
 ```mermaid
 graph TD;
-  pos-image --> ion-skeleton-text
-  pos-image --> ion-icon
   pos-app-image-viewer --> pos-image
   pos-picture --> pos-image
   style pos-image fill:#f9f,stroke:#333,stroke-width:4px

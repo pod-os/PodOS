@@ -45,7 +45,6 @@ graph TD;
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
   pos-rich-link --> pos-resource
-  pos-resource --> ion-progress-bar
   pos-example-resources --> pos-rich-link
   pos-navigation --> pos-rich-link
   pos-relations --> pos-rich-link
