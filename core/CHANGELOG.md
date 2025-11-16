@@ -17,6 +17,8 @@ and this project adheres to
 - [`Thing.container()`](https://pod-os.org/reference/core/classes/Thing/#container): Get the LDP container URI for a thing
 - [`Store.additions$`](https://pod-os.org/reference/core/classes/Store/#additions) and [`Store.removals$`](https://pod-os.org/reference/core/classes/Store/#removals) are `rxjs` `Subject`s for listening
   to changes to the store
+- [`Store.findMembers`](https://pod-os.org/reference/core/classes/Store/#findMembers) returns instances of classes and subclasses
+- [`Store.observeFindMembers`](https://pod-os.org/reference/core/classes/Store/#observeFindMembers) returns an `Observable` and pushes new values when graph is updated
 
 ### Changed
 
