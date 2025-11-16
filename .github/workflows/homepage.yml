@@ -1,8 +1,10 @@
 name: Deploy Homepage
 on:
   push:
-    branches:
-      - main
+    paths:
+      - homepage/**
+      - docs/**
+      - .github/workflows/homepage.yml
 
 jobs:
   build:
