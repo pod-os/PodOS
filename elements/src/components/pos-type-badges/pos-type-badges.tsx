@@ -2,6 +2,9 @@ import { RdfType, Thing } from '@pod-os/core';
 import { Component, Event, EventEmitter, h, Host, State } from '@stencil/core';
 import { ResourceAware, subscribeResource } from '../events/ResourceAware';
 
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+import '@shoelace-style/shoelace/dist/components/tooltip/tooltip.js';
+
 @Component({
   tag: 'pos-type-badges',
   shadow: true,
@@ -36,24 +39,32 @@ export class PosTypeBadges implements ResourceAware {
     if (this.isExpanded) {
       return (
         <div class="types expanded">
-          <ion-badge class="toggle" onClick={() => this.toggleDetails()}>
-            <ion-icon name="contract-outline"></ion-icon>
-          </ion-badge>
-          {this.data.map(it => (
-            <ion-badge>{it.uri}</ion-badge>
-          ))}
+          <sl-tooltip content="Collapse types">
+            <button class="toggle" onClick={() => this.toggleDetails()}>
+              <sl-icon name="arrows-collapse"></sl-icon>
+            </button>
+          </sl-tooltip>
+          <ul>
+            {this.data.map(it => (
+              <li>{it.uri}</li>
+            ))}
+          </ul>
         </div>
       );
     } else {
       return (
         <Host>
           <div class="types">
-            {this.typeLabels.map(it => (
-              <ion-badge>{it}</ion-badge>
-            ))}
-            <ion-badge class="toggle" onClick={() => this.toggleDetails()}>
-              <ion-icon name="expand-outline"></ion-icon>
-            </ion-badge>
+            <ul>
+              {this.typeLabels.map(it => (
+                <li>{it}</li>
+              ))}
+            </ul>
+            <sl-tooltip content="Expand types">
+              <button class="toggle" onClick={() => this.toggleDetails()}>
+                <sl-icon name="arrows-expand"></sl-icon>
+              </button>
+            </sl-tooltip>
           </div>
         </Host>
       );

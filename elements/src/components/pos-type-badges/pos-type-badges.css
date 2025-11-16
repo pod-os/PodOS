@@ -7,17 +7,34 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
+  ul {
+    flex-direction: column;
+  }
 }
 
-ion-badge {
-  color: #333;
-  background: #eee;
-}
-
-ion-badge.toggle {
+button.toggle {
+  display: flex;
   cursor: pointer;
+  justify-content: center;
+  align-items: center;
+  aspect-ratio: 1 / 1;
 }
 
-ion-badge.toggle:hover {
-  background: #ddd;
+ul {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  font-size: var(--size-3);
+  gap: var(--size-2);
+  li {
+    cursor: default;
+    display: inline-flex;
+    align-items: center;
+    padding: var(--size-1);
+    border-radius: var(--radius-sm);
+    background-color: var(--pos-subtle-text-color);
+    color: var(--pos-background-color);
+    list-style: none;
+  }
 }

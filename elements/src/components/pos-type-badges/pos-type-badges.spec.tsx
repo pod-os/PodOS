@@ -33,7 +33,7 @@ describe('pos-type-badges', () => {
     });
     await page.waitForChanges();
 
-    expect(page.root.shadowRoot.querySelector('ion-badge')).toEqualHtml(`<ion-badge>SomeType</ion-badge>`);
+    expect(page.root.shadowRoot.querySelector('li')).toEqualHtml(`<li>SomeType</li>`);
   });
 
   it('renders multiple types', async () => {
@@ -59,12 +59,11 @@ describe('pos-type-badges', () => {
     });
     await page.waitForChanges();
 
-    let badges = page.root.shadowRoot.querySelectorAll('ion-badge');
-    expect(badges[0]).toEqualHtml(`<ion-badge>SomeType</ion-badge>`);
-    expect(badges[1]).toEqualHtml(`<ion-badge>SecondType</ion-badge>`);
-    expect(badges[2]).toEqualHtml(`<ion-badge>AnotherType</ion-badge>`);
-    expect(badges[3]).toEqualHtml(`<ion-badge class="toggle"><ion-icon name="expand-outline"></ion-icon></ion-badge>`);
-    expect(badges).toHaveLength(4);
+    let badges = page.root.shadowRoot.querySelectorAll('li');
+    expect(badges[0]).toEqualHtml(`<li>SomeType</li>`);
+    expect(badges[1]).toEqualHtml(`<li>SecondType</li>`);
+    expect(badges[2]).toEqualHtml(`<li>AnotherType</li>`);
+    expect(badges).toHaveLength(3);
   });
 
   it('renders only one badge for the same type label from different vocabs', async () => {
@@ -90,9 +89,16 @@ describe('pos-type-badges', () => {
     });
     await page.waitForChanges();
 
-    let badges = page.root.shadowRoot.querySelectorAll('ion-badge');
+    let badges = page.root.shadowRoot.querySelectorAll('li');
     expect(badges[0]).toEqualText(`SomeType`);
-    expect(badges[1]).not.toEqualText(`SomeType`);
+    expect(badges).toHaveLength(1);
+
+    const button = page.root.shadowRoot.querySelector('button');
+    expect(button).toEqualHtml(`
+      <button class="toggle">
+        <sl-icon name="arrows-expand"></sl-icon>
+      </button>
+    `);
   });
 
   it('renders all type URIs when expanded', async () => {
@@ -119,11 +125,17 @@ describe('pos-type-badges', () => {
     await page.rootInstance.toggleDetails();
     await page.waitForChanges();
 
-    let badges = page.root.shadowRoot.querySelectorAll('ion-badge');
-    expect(badges[0]).toEqualHtml(`<ion-badge class="toggle"><ion-icon name="contract-outline"></ion-icon></ion-badge>`);
-    expect(badges[1]).toEqualHtml(`<ion-badge>https://vocab.test/SomeType</ion-badge>`);
-    expect(badges[2]).toEqualHtml(`<ion-badge>https://second-vocab.test/SomeType</ion-badge>`);
-    expect(badges[3]).toEqualHtml(`<ion-badge>https://another-vocab.test/SomeType</ion-badge>`);
-    expect(badges).toHaveLength(4);
+    const badges = page.root.shadowRoot.querySelectorAll('li');
+    expect(badges[0]).toEqualHtml(`<li>https://vocab.test/SomeType</li>`);
+    expect(badges[1]).toEqualHtml(`<li>https://second-vocab.test/SomeType</li>`);
+    expect(badges[2]).toEqualHtml(`<li>https://another-vocab.test/SomeType</li>`);
+    expect(badges).toHaveLength(3);
+
+    const button = page.root.shadowRoot.querySelector('button');
+    expect(button).toEqualHtml(`
+      <button class="toggle">
+        <sl-icon name="arrows-collapse"></sl-icon>
+      </button>
+    `);
   });
 });
