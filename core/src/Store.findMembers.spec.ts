@@ -1,7 +1,7 @@
 import { graph, IndexedFormula, literal, quad, sym } from "rdflib";
 import { PodOsSession } from "./authentication";
 import { Store } from "./Store";
-import { Observable, Subject, subscribeOn, Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 
 describe("Store", () => {
   describe("findMembers", () => {
