@@ -21,7 +21,15 @@ import {
   AssumeAlwaysOnline,
   OnlineStatus,
 } from "./offline-cache";
-import { Subject } from "rxjs";
+import {
+  distinctUntilChanged,
+  filter,
+  map,
+  merge,
+  Observable,
+  startWith,
+  Subject,
+} from "rxjs";
 import { Quad } from "rdflib/lib/tf-types";
 
 /**
@@ -154,6 +162,35 @@ export class Store {
       fetcher: this.fetcher,
       updater: this.updater,
     });
+  }
+
+  /**
+   * Finds instances of the given class or its sub-classes
+   * @param {string} classUri
+   * @returns {string[]} An array of URIs
+   */
+  findMembers(classUri: string): string[] {
+    return Object.keys(this.internalStore.findMemberURIs(sym(classUri)));
+  }
+
+  /**
+   * Get an Observable that will push new results from {@link findMembers} when it changes
+   * @param {string} classUri
+   * @returns {Observable<string[]>} Observable that pushes an array of URIs of instances of the given class or its sub-classes
+   */
+  observeFindMembers(classUri: string): Observable<string[]> {
+    return merge(this.additions$, this.removals$).pipe(
+      filter(
+        (quad) =>
+          quad.predicate.value ==
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" ||
+          quad.predicate.value ==
+            "http://www.w3.org/2000/01/rdf-schema#subClassOf",
+      ),
+      map(() => this.findMembers(classUri)),
+      startWith(this.findMembers(classUri)),
+      distinctUntilChanged((prev, curr) => prev.length == curr.length),
+    );
   }
 }
 
