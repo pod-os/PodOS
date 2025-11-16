@@ -2,6 +2,8 @@ import { newSpecPage } from '@stencil/core/testing';
 import { PosPredicate } from './pos-predicate';
 import { getByRole } from '@testing-library/dom';
 
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+
 describe('pos-predicate', () => {
   it('renders', async () => {
     const page = await newSpecPage({
@@ -12,9 +14,11 @@ describe('pos-predicate', () => {
 
     expect(page.root).toEqualHtml(`
      <pos-predicate label="test-label" uri="https://predicate.test">
-      <button title="https://predicate.test">
-        test-label
-      </button>
+      <sl-tooltip content="https://predicate.test">
+        <button>
+          test-label
+        </button>
+      </sl-tooltip>
     </pos-predicate>
     `);
   });
@@ -34,9 +38,11 @@ describe('pos-predicate', () => {
         <a href="https://predicate.test">
           https://predicate.test
         </a>
-        <button aria-label="collapse URI to test-label">
-          <ion-icon name="chevron-back-circle-outline"></ion-icon>
-        </button>
+        <sl-tooltip content="Collapse URI">
+          <button aria-label="collapse URI to test-label">
+            <sl-icon name="arrow-left-circle"></sl-icon>
+          </button>
+</sl-tooltip>
       </div>
     </pos-predicate>
     `);
@@ -55,9 +61,11 @@ describe('pos-predicate', () => {
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
      <pos-predicate label="test-label" uri="https://predicate.test">
-      <button title="https://predicate.test">
-        test-label
-      </button>
+        <sl-tooltip content="https://predicate.test">
+          <button>
+            test-label
+          </button>
+        </sl-tooltip>
     </pos-predicate>
     `);
   });

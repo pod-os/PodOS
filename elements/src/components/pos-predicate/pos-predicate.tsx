@@ -1,5 +1,8 @@
 import { Component, h, Prop, State } from '@stencil/core';
 
+import '@shoelace-style/shoelace/dist/components/tooltip/tooltip.js';
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+
 /**
  * Displays an RDF term (predicate) in a human-friendly way, using a provided label. The user can still expand the label
  * to the full URI to see the actual predicate.
@@ -32,16 +35,18 @@ export class PosPredicate {
       return (
         <div class="container">
           <a href={this.uri}>{this.uri}</a>
-          <button aria-label={`collapse URI to ${this.label}`} onClick={() => (this.expanded = false)}>
-            <ion-icon name="chevron-back-circle-outline"></ion-icon>
-          </button>
+          <sl-tooltip content={`Collapse URI`}>
+            <button aria-label={`collapse URI to ${this.label}`} onClick={() => (this.expanded = false)}>
+              <sl-icon name="arrow-left-circle"></sl-icon>
+            </button>
+          </sl-tooltip>
         </div>
       );
     } else {
       return (
-        <button onClick={() => (this.expanded = true)} title={this.uri}>
-          {this.label}
-        </button>
+        <sl-tooltip content={`${this.uri}`}>
+          <button onClick={() => (this.expanded = true)}>{this.label}</button>
+        </sl-tooltip>
       );
     }
   }
