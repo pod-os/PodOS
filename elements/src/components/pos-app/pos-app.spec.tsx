@@ -333,7 +333,7 @@ describe('pos-app', () => {
       expect(page.root).toEqualHtml(`
         <pos-app>
           <mock:shadow-root>
-            <ion-progress-bar type="indeterminate"></ion-progress-bar>
+            <sl-progress-bar indeterminate></sl-progress-bar>
           </mock:shadow-root>
           <div>
             app body

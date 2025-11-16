@@ -99,7 +99,7 @@ describe('pos-resource with a pos-label child', () => {
         </mock:shadow-root>
         <pos-resource uri="https://resource.test">
           <mock:shadow-root>
-            <ion-progress-bar type="indeterminate"></ion-progress-bar>
+            <sl-progress-bar indeterminate></sl-progress-bar>
           </mock:shadow-root>
           <pos-label>
             <mock:shadow-root>

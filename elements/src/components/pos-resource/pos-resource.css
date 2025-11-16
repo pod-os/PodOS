@@ -9,3 +9,7 @@ details.error {
     color: var(--pos-normal-text-color);
   }
 }
+
+sl-progress-bar {
+  --height: var(--size-1);
+}

@@ -15,7 +15,7 @@ describe('pos-resource', () => {
     expect(page.root).toEqualHtml(`
       <pos-resource uri="https://resource.test/">
         <mock:shadow-root>
-          <ion-progress-bar type="indeterminate"></ion-progress-bar>
+          <sl-progress-bar indeterminate></sl-progress-bar>
         </mock:shadow-root>
       </pos-resource>
   `);
@@ -35,7 +35,7 @@ describe('pos-resource', () => {
     expect(page.root).toEqualHtml(`
       <pos-resource uri="https://resource.test/">
         <mock:shadow-root>
-          <ion-progress-bar type="indeterminate"></ion-progress-bar>
+          <sl-progress-bar indeterminate></sl-progress-bar>
         </mock:shadow-root>
       </pos-resource>
   `);
@@ -121,7 +121,7 @@ describe('pos-resource', () => {
     expect(page.root).toEqualHtml(`
       <pos-resource uri="https://other-resource.test">
         <mock:shadow-root>
-          <ion-progress-bar type="indeterminate"></ion-progress-bar>
+          <sl-progress-bar indeterminate></sl-progress-bar>
         </mock:shadow-root>
       </pos-resource>
   `);
@@ -145,7 +145,7 @@ describe('pos-resource', () => {
     expect(page.root).toEqualHtml(`
       <pos-resource uri="https://resource.test/">
         <mock:shadow-root>
-          <ion-progress-bar type="indeterminate"></ion-progress-bar>
+          <sl-progress-bar indeterminate></sl-progress-bar>
         </mock:shadow-root>
       </pos-resource>
   `);
@@ -186,7 +186,7 @@ describe('pos-resource', () => {
       expect(page.root).toEqualHtml(`
       <pos-resource lazy uri="https://resource.test/">
         <mock:shadow-root>
-          <ion-progress-bar type="indeterminate"></ion-progress-bar>
+          <sl-progress-bar indeterminate></sl-progress-bar>
         </mock:shadow-root>
       </pos-resource>
   `);
@@ -217,7 +217,7 @@ describe('pos-resource', () => {
         expect(page.root).toEqualHtml(`
       <pos-resource lazy uri="https://resource.test/">
         <mock:shadow-root>
-          <ion-progress-bar type="indeterminate"></ion-progress-bar>
+          <sl-progress-bar indeterminate></sl-progress-bar>
         </mock:shadow-root>
       </pos-resource>
   `);

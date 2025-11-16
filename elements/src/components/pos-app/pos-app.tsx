@@ -6,6 +6,8 @@ import { createPodOS } from '../../pod-os';
 import { Subject, takeUntil } from 'rxjs';
 import { BrowserSession } from '../../authentication';
 
+import '@shoelace-style/shoelace/dist/components/progress-bar/progress-bar.js';
+
 interface InitializeOsEvent extends CustomEvent {
   detail: Function;
 }
@@ -103,6 +105,6 @@ export class PosApp {
   }
 
   render() {
-    return this.loading ? <ion-progress-bar type="indeterminate"></ion-progress-bar> : <slot></slot>;
+    return this.loading ? <sl-progress-bar indeterminate></sl-progress-bar> : <slot></slot>;
   }
 }

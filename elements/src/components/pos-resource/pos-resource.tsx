@@ -5,6 +5,8 @@ import session from '../../store/session';
 import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../events/PodOsAware';
 import { ResourceReceiver } from '../events/ResourceAware';
 
+import '@shoelace-style/shoelace/dist/components/progress-bar/progress-bar.js';
+
 interface SubscribeResourceEvent extends CustomEvent {
   detail: ResourceReceiver;
 }
@@ -87,7 +89,7 @@ export class PosResource implements PodOsAware {
 
   render() {
     if (this.loading) {
-      return <ion-progress-bar type="indeterminate" />;
+      return <sl-progress-bar indeterminate />;
     }
     if (this.error) {
       return (
