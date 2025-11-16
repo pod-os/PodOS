@@ -3,6 +3,8 @@ import { BrokenFile } from '../broken-file/BrokenFile';
 import { Component, Event, EventEmitter, h, Host, Prop, State, Watch } from '@stencil/core';
 import session from '../../store/session';
 
+import '@shoelace-style/shoelace/dist/components/skeleton/skeleton.js';
+
 /**
  * Tries fetch an image with the solid authentication, and can visualize http errors like 403 or 404 if this fails.
  * Falls back to classic `<img src="...">` on network errors like CORS.
@@ -85,7 +87,7 @@ export class PosImage {
 
   render() {
     if (this.loading) {
-      return <ion-skeleton-text animated={true}></ion-skeleton-text>;
+      return <sl-skeleton effect="sheen"></sl-skeleton>;
     }
     if (this.networkError) {
       // probably a CORS error

@@ -3,6 +3,8 @@ import { Component, Event, EventEmitter, h, Listen, Prop, State, Watch } from '@
 import session from '../../store/session';
 import { BrokenFile } from '../broken-file/BrokenFile';
 
+import '@shoelace-style/shoelace/dist/components/skeleton/skeleton.js';
+
 @Component({
   tag: 'pos-document',
   styleUrl: 'pos-document.css',
@@ -97,7 +99,7 @@ export class PosDocument {
 
   render() {
     if (this.loading) {
-      return <ion-skeleton-text animated={true}></ion-skeleton-text>;
+      return <Skeleton />;
     }
     if (this.error) {
       return <div class="error">{this.error.message}</div>;
@@ -117,4 +119,17 @@ export class PosDocument {
       return <iframe src={URL.createObjectURL(this.file.blob())}></iframe>;
     }
   }
+}
+
+function Skeleton() {
+  return (
+    <div class="skeleton">
+      <sl-skeleton effect="sheen"></sl-skeleton>
+      <sl-skeleton effect="sheen"></sl-skeleton>
+      <sl-skeleton effect="sheen"></sl-skeleton>
+      <sl-skeleton effect="sheen"></sl-skeleton>
+      <sl-skeleton effect="sheen"></sl-skeleton>
+      <sl-skeleton effect="sheen"></sl-skeleton>
+    </div>
+  );
 }

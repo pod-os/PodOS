@@ -38,11 +38,24 @@ describe('pos-document', () => {
     expect(page.root).toEqualHtml(`
       <pos-document src="https://pod.test/test.pdf">
         <mock:shadow-root>
-          <ion-skeleton-text animated=""></ion-skeleton-text>
+          ${skeleton()}
         </mock:shadow-root>
       </pos-document>
   `);
   });
+
+  function skeleton() {
+    return `
+    <div class="skeleton">
+      <sl-skeleton effect="sheen"></sl-skeleton>
+      <sl-skeleton effect="sheen"></sl-skeleton>
+      <sl-skeleton effect="sheen"></sl-skeleton>
+      <sl-skeleton effect="sheen"></sl-skeleton>
+      <sl-skeleton effect="sheen"></sl-skeleton>
+      <sl-skeleton effect="sheen"></sl-skeleton>
+    </div>
+    `;
+  }
 
   it('renders loading indicator while fetching', async () => {
     const page = await newSpecPage({
@@ -58,7 +71,7 @@ describe('pos-document', () => {
     expect(page.root).toEqualHtml(`
       <pos-document src="https://pod.test/test.pdf">
         <mock:shadow-root>
-          <ion-skeleton-text animated=""></ion-skeleton-text>
+          ${skeleton()}
         </mock:shadow-root>
       </pos-document>
   `);
@@ -218,7 +231,7 @@ describe('pos-document', () => {
     expect(page.root).toEqualHtml(`
       <pos-document src="https://pod.test/other.png">
         <mock:shadow-root>
-          <ion-skeleton-text animated=""></ion-skeleton-text>
+          ${skeleton()}
         </mock:shadow-root>
       </pos-document>
   `);
@@ -244,7 +257,7 @@ describe('pos-document', () => {
     expect(page.root).toEqualHtml(`
       <pos-document src="https://pod.test/test.pdf">
         <mock:shadow-root>
-          <ion-skeleton-text animated=""></ion-skeleton-text>
+          ${skeleton()}
         </mock:shadow-root>
       </pos-document>
   `);

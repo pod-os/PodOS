@@ -15,7 +15,6 @@
 }
 
 img,
-ion-skeleton-text,
 div.error {
   border-radius: var(--border-radius);
   width: var(--width);
@@ -61,4 +60,13 @@ a.error {
 
 .text {
   font-size: calc(var(--width) / 20);
+}
+
+sl-skeleton {
+  --border-radius: inherit;
+  width: var(--width);
+  height: var(--height);
+  max-width: var(--max-width);
+  max-height: var(--max-height);
+  aspect-ratio: 16 / 9;
 }

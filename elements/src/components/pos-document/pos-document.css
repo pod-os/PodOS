@@ -38,3 +38,23 @@ a {
 .text {
   font-size: calc(var(--width) / 20);
 }
+
+.skeleton {
+  display: flex;
+  gap: var(--size-2);
+  flex-direction: column;
+
+  sl-skeleton {
+    &:nth-child(2) {
+      width: 95%;
+    }
+
+    &:nth-child(4) {
+      width: 90%;
+    }
+
+    &:last-child {
+      width: 50%;
+    }
+  }
+}

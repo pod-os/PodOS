@@ -33,7 +33,7 @@ describe('pos-image', () => {
     expect(page.root).toEqualHtml(`
       <pos-image src="https://pod.test/image.png" alt="image">
         <mock:shadow-root>
-          <ion-skeleton-text animated=""></ion-skeleton-text>
+          <sl-skeleton effect="sheen"></sl-skeleton>
         </mock:shadow-root>
       </pos-image>
   `);
@@ -53,7 +53,7 @@ describe('pos-image', () => {
     expect(page.root).toEqualHtml(`
       <pos-image src="https://pod.test/image.png" alt="image">
         <mock:shadow-root>
-          <ion-skeleton-text animated=""></ion-skeleton-text>
+          <sl-skeleton effect="sheen"></sl-skeleton>
         </mock:shadow-root>
       </pos-image>
   `);
@@ -199,7 +199,7 @@ describe('pos-image', () => {
     expect(page.root).toEqualHtml(`
       <pos-image src="https://pod.test/other.png">
         <mock:shadow-root>
-          <ion-skeleton-text animated=""></ion-skeleton-text>
+          <sl-skeleton effect="sheen"></sl-skeleton>
         </mock:shadow-root>
       </pos-image>
   `);
@@ -224,7 +224,7 @@ describe('pos-image', () => {
     expect(page.root).toEqualHtml(`
       <pos-image src="https://pod.test/image.png">
         <mock:shadow-root>
-          <ion-skeleton-text animated=""></ion-skeleton-text>
+          <sl-skeleton effect="sheen"></sl-skeleton>
         </mock:shadow-root>
       </pos-image>
   `);

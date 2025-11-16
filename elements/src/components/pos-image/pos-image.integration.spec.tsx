@@ -62,7 +62,7 @@ describe('pos-image', () => {
         </mock:shadow-root>
         <pos-image src="https://pod.test/image.png">
           <mock:shadow-root>
-            <ion-skeleton-text animated></ion-skeleton-text>
+            <sl-skeleton effect="sheen"></sl-skeleton>
           </mock:shadow-root>
         </pos-image>
     </pos-app>
