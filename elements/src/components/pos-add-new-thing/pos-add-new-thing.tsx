@@ -1,5 +1,7 @@
 import { Component, Host, h, Prop } from '@stencil/core';
 
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+
 @Component({
   tag: 'pos-add-new-thing',
   styleUrl: 'pos-add-new-thing.css',
@@ -18,7 +20,7 @@ export class PosAddNewThing {
     return (
       <Host>
         <button id="new" title="Add a new thing" onClick={() => this.openDialog()}>
-          <ion-icon name="add-circle-outline"></ion-icon>
+          <sl-icon name="plus-circle"></sl-icon>
         </button>
         <pos-dialog ref={el => (this.dialog = el as HTMLPosDialogElement)}>
           <span slot="title">Add a new thing</span>

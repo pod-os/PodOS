@@ -7,6 +7,7 @@ import { newSpecPage } from '@stencil/core/testing';
 import { when } from 'jest-when';
 import { PosAddLiteralValue } from '../pos-add-literal-value';
 import { fireEvent } from '@testing-library/dom';
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 
 describe('pos-add-literal-value', () => {
   it('renders nothing initially', async () => {
@@ -51,7 +52,7 @@ describe('pos-add-literal-value', () => {
     expect(page.root).toEqualHtml(`
       <pos-add-literal-value>
         <mock:shadow-root>
-            <ion-icon name="add-circle-outline"></ion-icon>
+            <sl-icon name="plus-circle"></sl-icon>
             <pos-select-term placeholder="Add literal"></pos-select-term>
             <input placeholder="" />
         </mock:shadow-root>

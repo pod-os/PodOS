@@ -12,7 +12,7 @@ describe('select icon for types', () => {
         label: 'irrelevant here',
       },
     ]);
-    expect(icon).toEqual('folder-outline');
+    expect(icon).toEqual('folder2');
   });
 
   it('selects a file icon for other ldp resources', () => {
@@ -22,11 +22,11 @@ describe('select icon for types', () => {
         label: 'irrelevant here',
       },
     ]);
-    expect(icon).toEqual('document-outline');
+    expect(icon).toEqual('file-earmark');
   });
 
   it('selects question mark icon if types are empty', () => {
     const icon = selectIconForTypes([]);
-    expect(icon).toEqual('help-outline');
+    expect(icon).toEqual('question-diamond');
   });
 });

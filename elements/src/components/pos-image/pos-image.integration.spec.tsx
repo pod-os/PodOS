@@ -118,7 +118,7 @@ describe('pos-image', () => {
               <div>
                 <a class="error">
                   <div>
-                    <ion-icon name="lock-closed-outline"></ion-icon>
+                    <sl-icon name="lock"></sl-icon>
                   </div>
                   <div class="code">
                     403

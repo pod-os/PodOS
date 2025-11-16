@@ -12,7 +12,7 @@ describe('pos-add-new-thing', () => {
 <pos-add-new-thing reference-uri="https://pod.test/">
     <mock:shadow-root>
         <button id="new" title="Add a new thing">
-            <ion-icon name="add-circle-outline"></ion-icon>
+            <sl-icon name="plus-circle"></sl-icon>
         </button>
         <pos-dialog>
                 <span slot="title">

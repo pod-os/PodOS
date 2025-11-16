@@ -16,7 +16,7 @@ describe('BrokenFile', () => {
       <div>
         <a class="error" href="https://pod.test/image.png">
           <div>
-            <ion-icon name="lock-closed-outline"></ion-icon>
+            <sl-icon name="lock"></sl-icon>
           </div>
           <div class="code">
             401
@@ -30,10 +30,10 @@ describe('BrokenFile', () => {
 
   it.each`
     code   | iconName
-    ${401} | ${'lock-closed-outline'}
-    ${403} | ${'lock-closed-outline'}
-    ${404} | ${'help-circle-outline'}
-    ${500} | ${'alert-circle-outline'}
+    ${401} | ${'lock'}
+    ${403} | ${'lock'}
+    ${404} | ${'question-circle'}
+    ${500} | ${'exclamation-circle'}
   `(`renders $iconName icon for status $code`, async ({ code, iconName }) => {
     const brokenFile = {
       url: 'https://pod.test/image.png',
@@ -42,6 +42,6 @@ describe('BrokenFile', () => {
     } as unknown as BrokenFileData;
     const component = <BrokenFile file={brokenFile} />;
     const page = await renderFunctionalComponent(component);
-    expect(page.root.querySelector('ion-icon')).toEqualAttribute('name', iconName);
+    expect(page.root.querySelector('sl-icon')).toEqualAttribute('name', iconName);
   });
 });

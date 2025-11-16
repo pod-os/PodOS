@@ -2,11 +2,11 @@ import { RdfType } from '@pod-os/core';
 
 export function selectIconForTypes(types: RdfType[]) {
   if (containsType(types, 'http://www.w3.org/ns/ldp#Container')) {
-    return 'folder-outline';
+    return 'folder2';
   } else if (containsType(types, 'http://www.w3.org/ns/ldp#Resource')) {
-    return 'document-outline';
+    return 'file-earmark';
   } else {
-    return 'help-outline';
+    return 'question-diamond';
   }
 }
 

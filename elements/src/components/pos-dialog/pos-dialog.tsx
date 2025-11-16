@@ -1,5 +1,7 @@
 import { Component, Host, h, Method } from '@stencil/core';
 
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+
 /**
  * Styled wrapper around native dialog element, with slots `title` and `content`
  */
@@ -28,7 +30,7 @@ export class PosDialog {
           <header>
             <slot name="title" />
             <button tabindex={-1} id="close" title="Close" onClick={() => this.close()}>
-              <ion-icon name="close-outline"></ion-icon>
+              <sl-icon name="x"></sl-icon>
             </button>
           </header>
           <slot name="content" />

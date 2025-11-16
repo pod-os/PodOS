@@ -7,7 +7,7 @@ describe('pos-dialog', () => {
     const page = await newSpecPage({
       components: [PosDialog],
       html: `<pos-dialog><span slot="title">Title</span><span slot="content">Content</span></pos-dialog>`,
-      supportsShadowDom: false
+      supportsShadowDom: false,
     });
     expect(page.root).toEqualHtml(`
 <pos-dialog>
@@ -15,7 +15,7 @@ describe('pos-dialog', () => {
             <header>
                 <span slot="title">Title</span>
                 <button tabindex="-1" id="close" title="Close">
-                    <ion-icon name="close-outline"></ion-icon>
+                    <sl-icon name="x"></sl-icon>
                 </button>
             </header>
             <span slot="content">Content</span>
@@ -34,7 +34,7 @@ describe('pos-dialog', () => {
     const dialog = page.root.querySelector('dialog');
     dialog.showModal = jest.fn();
 
-    page.rootInstance.showModal()
+    page.rootInstance.showModal();
 
     expect(dialog.showModal).toHaveBeenCalled();
   });
@@ -49,7 +49,7 @@ describe('pos-dialog', () => {
     const dialog = page.root.querySelector('dialog');
     dialog.close = jest.fn();
 
-    page.rootInstance.close()
+    page.rootInstance.close();
 
     expect(dialog.close).toHaveBeenCalled();
   });
@@ -69,5 +69,4 @@ describe('pos-dialog', () => {
 
     expect(dialog.close).toHaveBeenCalled();
   });
-
 });

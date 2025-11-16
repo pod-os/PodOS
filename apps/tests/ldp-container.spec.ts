@@ -51,22 +51,16 @@ test.describe("An LDP container", () => {
     );
 
     // and for each item in the list a icon is shown, indicating whether it is a folder or document
-    await expect(item1.locator("ion-icon")).toHaveAttribute(
+    await expect(item1.locator("sl-icon")).toHaveAttribute("name", "folder2");
+    await expect(item2.locator("sl-icon")).toHaveAttribute(
       "name",
-      "folder-outline",
+      "file-earmark",
     );
-    await expect(item2.locator("ion-icon")).toHaveAttribute(
+    await expect(item3.locator("sl-icon")).toHaveAttribute(
       "name",
-      "document-outline",
+      "file-earmark",
     );
-    await expect(item3.locator("ion-icon")).toHaveAttribute(
-      "name",
-      "document-outline",
-    );
-    await expect(item4.locator("ion-icon")).toHaveAttribute(
-      "name",
-      "folder-outline",
-    );
+    await expect(item4.locator("sl-icon")).toHaveAttribute("name", "folder2");
   });
 
   test("can create a new file in the container", async ({

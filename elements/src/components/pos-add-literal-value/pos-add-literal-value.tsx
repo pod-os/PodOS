@@ -73,7 +73,7 @@ export class PosAddLiteralValue implements ResourceAware, PodOsAware {
     }
     return (
       <Host>
-        <ion-icon name="add-circle-outline"></ion-icon>
+        <sl-icon name="plus-circle"></sl-icon>
         <pos-select-term placeholder="Add literal" onPod-os:term-selected={ev => this.onTermSelected(ev)} />
         <input
           ref={el => (this.valueInput = el)}

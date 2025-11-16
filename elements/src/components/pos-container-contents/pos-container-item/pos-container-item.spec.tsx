@@ -36,7 +36,7 @@ describe('pos-container-item', () => {
     expect(page.root).toEqualHtml(`
       <pos-container-item>
         <a>
-          <ion-icon name="document-outline" slot="start"></ion-icon>
+          <sl-icon name="file-earmark" slot="start"></sl-icon>
           file name
         </a>
       </pos-container-item>
@@ -61,7 +61,7 @@ describe('pos-container-item', () => {
     expect(page.root).toEqualHtml(`
         <pos-container-item>
             <a>
-                <ion-icon name="folder-outline" slot="start"></ion-icon>
+                <sl-icon name="folder2" slot="start"></sl-icon>
                 folder name
             </a>
         </pos-container-item>

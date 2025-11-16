@@ -43,9 +43,8 @@ img {
   box-sizing: border-box;
 }
 
-.error ion-icon {
+.error sl-icon {
   color: #282828;
-  --ionicon-stroke-width: calc(var(--width) / 5);
   font-size: calc(var(--width) / 2);
 }
 
