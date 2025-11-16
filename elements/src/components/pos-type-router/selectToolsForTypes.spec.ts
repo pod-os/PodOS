@@ -97,4 +97,23 @@ describe('select tools for types', () => {
       AvailableTools.Generic,
     ]);
   });
+
+  it('favours HTML tool over generic if one is available', () => {
+    const registeredTools = [
+      {
+        element: 'pos-html-tool',
+        label: 'Example tool',
+        icon: 'list-ul',
+        types: [
+          {
+            uri: 'https://schema.org/Recipe',
+            priority: 20,
+          },
+        ],
+      },
+    ];
+    const types = [{ uri: 'https://schema.org/Recipe', label: 'Recipe' }];
+    const tools = selectToolsForTypes(types, registeredTools);
+    expect(tools).toEqual([registeredTools[0], AvailableTools.Generic]);
+  });
 });
