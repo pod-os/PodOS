@@ -3,7 +3,7 @@ import { sanitizeHtmlTool } from './sanitizeHtmlTool';
 
 @Component({
   tag: 'pos-html-tool',
-  shadow: true,
+  shadow: false,
 })
 export class PosHtmlTool {
   /**
