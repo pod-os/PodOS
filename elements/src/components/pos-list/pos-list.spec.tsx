@@ -1,5 +1,7 @@
 import { newSpecPage } from '@stencil/core/testing';
 import { PosList } from './pos-list';
+import { when } from 'jest-when';
+import { Subject } from 'rxjs';
 
 describe('pos-list', () => {
   it('contains only template initially', async () => {
@@ -68,6 +70,33 @@ describe('pos-list', () => {
     const el: HTMLElement = page.root as unknown as HTMLElement;
 
     expect(el.querySelectorAll('pos-resource')).toHaveLength(2);
+  });
+
+  it('renders the template for all things of the given type', async () => {
+    const page = await newSpecPage({
+      components: [PosList],
+      html: `
+      <pos-list if-typeof="http://schema.org/Recipe">
+        <template>
+          Test
+        </template>
+      </pos-list>`,
+    });
+    const os = {
+      store: {
+        observeFindMembers: jest.fn(),
+      },
+    };
+
+    const observed$ = new Subject<String[]>();
+
+    when(os.store.observeFindMembers).calledWith('http://schema.org/Recipe').mockReturnValue(observed$);
+    await page.rootInstance.receivePodOs(os);
+    observed$.next(['https://recipe.test/1']);
+    await page.waitForChanges();
+
+    const el: HTMLElement = page.root as unknown as HTMLElement;
+    expect(el.querySelector('pos-resource')?.getAttribute('about')).toEqual('https://recipe.test/1');
   });
 
   it('displays error on missing template', async () => {
