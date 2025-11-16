@@ -21,7 +21,6 @@
     "generate": "stencil generate"
   },
   "dependencies": {
-    "@ionic/core": "^7.8.6",
     "@pod-os/core": "^0.21.0",
     "@shoelace-style/shoelace": "^2.20.1",
     "@stencil/core": "4.24.0",
