@@ -34,6 +34,7 @@ export function mockPodOS(): PodOS {
     files: () => fileFetcher,
     store: {
       get: jest.fn(),
+      observeFindMembers: jest.fn(),
     },
     observeSession: () => sessionInfo$,
     login: jest.fn().mockImplementation(() => {
