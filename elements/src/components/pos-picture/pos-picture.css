@@ -16,6 +16,9 @@
 
 button.add {
   display: none;
+  align-items: center;
+  gap: var(--size-1);
+  padding: var(--size-1);
   position: absolute;
   bottom: var(--size-2);
   right: var(--size-2);
@@ -24,7 +27,10 @@ button.add {
 
 :host(:hover) button.add {
   display: flex;
-  align-items: center;
-  gap: var(--size-1);
-  padding: var(--size-1);
+}
+
+@media (pointer: coarse) {
+  button.add {
+    display: flex;
+  }
 }
