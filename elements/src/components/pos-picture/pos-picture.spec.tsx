@@ -99,7 +99,7 @@ describe('pos-picture', () => {
 
     const editButton = page.root?.shadowRoot?.querySelector('button');
     expect(editButton).not.toBeNull();
-    expect(editButton?.textContent).toEqual('Add picture');
+    expect(editButton?.textContent).toEqual('Upload picture');
   });
 
   it('shows file upload on button click', async () => {

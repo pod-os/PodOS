@@ -9,4 +9,22 @@
   --height: 300px;
   --border-radius: var(--border-radius, 0);
   --object-fit: var(--object-fit, cover);
+
+  display: block;
+  position: relative;
+}
+
+button.add {
+  display: none;
+  position: absolute;
+  bottom: var(--size-2);
+  right: var(--size-2);
+  z-index: var(--layer-top);
+}
+
+:host(:hover) button.add {
+  display: flex;
+  align-items: center;
+  gap: var(--size-1);
+  padding: var(--size-1);
 }
