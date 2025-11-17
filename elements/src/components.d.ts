@@ -253,6 +253,8 @@ export namespace Components {
      */
     interface PosTypeRouter {
     }
+    interface PosUpload {
+    }
     interface PosUserMenu {
         "webId": string;
     }
@@ -1097,6 +1099,12 @@ declare global {
         prototype: HTMLPosTypeRouterElement;
         new (): HTMLPosTypeRouterElement;
     };
+    interface HTMLPosUploadElement extends Components.PosUpload, HTMLStencilElement {
+    }
+    var HTMLPosUploadElement: {
+        prototype: HTMLPosUploadElement;
+        new (): HTMLPosUploadElement;
+    };
     interface HTMLPosUserMenuElementEventMap {
         "pod-os:logout": any;
         "pod-os:link": any;
@@ -1183,6 +1191,7 @@ declare global {
         "pos-tool-select": HTMLPosToolSelectElement;
         "pos-type-badges": HTMLPosTypeBadgesElement;
         "pos-type-router": HTMLPosTypeRouterElement;
+        "pos-upload": HTMLPosUploadElement;
         "pos-user-menu": HTMLPosUserMenuElement;
         "pos-value": HTMLPosValueElement;
     }
@@ -1512,6 +1521,8 @@ declare namespace LocalJSX {
     interface PosTypeRouter {
         "onPod-os:resource"?: (event: PosTypeRouterCustomEvent<any>) => void;
     }
+    interface PosUpload {
+    }
     interface PosUserMenu {
         "onPod-os:link"?: (event: PosUserMenuCustomEvent<any>) => void;
         "onPod-os:logout"?: (event: PosUserMenuCustomEvent<any>) => void;
@@ -1575,6 +1586,7 @@ declare namespace LocalJSX {
         "pos-tool-select": PosToolSelect;
         "pos-type-badges": PosTypeBadges;
         "pos-type-router": PosTypeRouter;
+        "pos-upload": PosUpload;
         "pos-user-menu": PosUserMenu;
         "pos-value": PosValue;
     }
@@ -1656,6 +1668,7 @@ declare module "@stencil/core" {
              * This component is responsible for rendering tools that are useful to interact with the current resource.
              */
             "pos-type-router": LocalJSX.PosTypeRouter & JSXBase.HTMLAttributes<HTMLPosTypeRouterElement>;
+            "pos-upload": LocalJSX.PosUpload & JSXBase.HTMLAttributes<HTMLPosUploadElement>;
             "pos-user-menu": LocalJSX.PosUserMenu & JSXBase.HTMLAttributes<HTMLPosUserMenuElement>;
             /**
              * Shows a single value linked to the resource using the given predicate.
