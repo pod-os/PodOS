@@ -15,6 +15,11 @@ export class PosPicture implements ResourceAware {
    */
   @Prop() blurredBackground: boolean = false;
 
+  /**
+   * Disable the upload functionality.
+   */
+  @Prop() noUpload: boolean = false;
+
   @State() resource: Thing;
 
   @State() isUploading: boolean = false;
@@ -42,7 +47,7 @@ export class PosPicture implements ResourceAware {
   }
 
   private renderUploadButton() {
-    if (!this.resource?.editable) {
+    if (!this.resource?.editable || this.noUpload) {
       return null;
     }
 
