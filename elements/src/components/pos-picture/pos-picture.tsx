@@ -41,27 +41,28 @@ export class PosPicture implements ResourceAware {
     return <pos-upload onPod-os:files-selected={this.exitUploadMode}></pos-upload>;
   }
 
+  private renderUploadButton() {
+    if (!this.resource?.editable) {
+      return null;
+    }
+
+    return (
+      <button class="add" onClick={this.enterUploadMode}>
+        <sl-icon name="cloud-plus"></sl-icon>Upload picture
+      </button>
+    );
+  }
+
   private renderPicture() {
     const picture = this.resource?.picture();
 
     if (!picture) {
-      return [
-        <slot></slot>,
-        this.resource?.editable ? (
-          <button class="add" onClick={this.enterUploadMode}>
-            <sl-icon name="cloud-plus"></sl-icon>Upload picture
-          </button>
-        ) : null,
-      ];
+      return [<slot></slot>, this.renderUploadButton()];
     }
 
     return [
       <pos-image blurredBackground={this.blurredBackground} src={picture.url} alt={this.resource.label()}></pos-image>,
-      this.resource.editable ? (
-        <button class="add" onClick={this.enterUploadMode}>
-          <sl-icon name="cloud-plus"></sl-icon>Upload picture
-        </button>
-      ) : null,
+      this.renderUploadButton(),
     ];
   }
 

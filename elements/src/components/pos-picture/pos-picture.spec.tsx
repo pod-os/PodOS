@@ -132,7 +132,9 @@ describe('pos-picture', () => {
 
       expect(page.root?.shadowRoot?.querySelector('pos-upload')).toBeNull();
     });
+  });
 
+  describe('upload button without picture', () => {
     it('renders upload button when resource has no picture', async () => {
       // Given an editable resource without a picture
       const page = await newSpecPage({
