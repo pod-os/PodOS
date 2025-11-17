@@ -104,7 +104,7 @@ describe('pos-login', () => {
         <div class="container">
           <pos-resource uri="https://pod.example/alice#me">
             <span class="user-data">
-              <pos-picture></pos-picture>
+              <pos-picture no-upload=""></pos-picture>
               <pos-label></pos-label>
             </span>
           </pos-resource>
@@ -148,5 +148,22 @@ describe('pos-login', () => {
       </pos-dialog>
     </pos-login>
   `);
+  });
+
+  it('disables upload on avatar picture', async () => {
+    // Given a logged-in user
+    session.state.isLoggedIn = true;
+    session.state.webId = 'https://pod.example/alice#me';
+    const page = await newSpecPage({
+      components: [PosLogin],
+      supportsShadowDom: false,
+      html: `<pos-login></pos-login>`,
+    });
+
+    // When the component renders the avatar
+    const picture = page.root?.querySelector('pos-picture');
+
+    // Then the upload functionality should be disabled
+    expect(picture).toHaveAttribute('no-upload');
   });
 });
