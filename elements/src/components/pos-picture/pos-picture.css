@@ -34,3 +34,19 @@ button.add {
     display: flex;
   }
 }
+
+.no-picture {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--height);
+  width: var(--width);
+  position: relative;
+}
+
+.no-picture button.add {
+  position: static;
+  margin-top: var(--size-2);
+  display: flex;
+}
