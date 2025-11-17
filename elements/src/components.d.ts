@@ -5,7 +5,9 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { LdpContainer, PodOS, Problem, SolidFile, Thing } from "@pod-os/core";
 import { ToolConfig } from "./components/pos-type-router/selectToolsForTypes";
+export { LdpContainer, PodOS, Problem, SolidFile, Thing } from "@pod-os/core";
 export { ToolConfig } from "./components/pos-type-router/selectToolsForTypes";
 export namespace Components {
     interface PosAddLiteralValue {
@@ -14,13 +16,20 @@ export namespace Components {
         "referenceUri": string;
     }
     interface PosApp {
+        /**
+          * @default false
+         */
         "restorePreviousSession": boolean;
     }
     interface PosAppBrowser {
         /**
           * The mode the app is running in:  - standalone: use this when you deploy it as a standalone web application - pod: use this when you host this app as a default interface for you pod
+          * @default 'standalone'
          */
         "mode": 'standalone' | 'pod';
+        /**
+          * @default false
+         */
         "restorePreviousSession": boolean;
     }
     interface PosAppDashboard {
@@ -75,11 +84,15 @@ export namespace Components {
         "alt": string;
         /**
           * Use a blurred version of the image as its own background, if the image is scaled down to fit into the container.
+          * @default false
          */
         "blurredBackground": boolean;
         "src": string;
     }
     interface PosInternalRouter {
+        /**
+          * @default 'pod-os:dashboard'
+         */
         "uri": string;
     }
     /**
@@ -90,6 +103,7 @@ export namespace Components {
     interface PosList {
         /**
           * Whether listed resources should be fetched before being displayed
+          * @default false
          */
         "fetch": boolean;
         /**
@@ -109,6 +123,7 @@ export namespace Components {
     interface PosMarkdownDocument {
         /**
           * Whether the current user has the permission to edit the file
+          * @default false
          */
         "editable": boolean;
         /**
@@ -117,6 +132,7 @@ export namespace Components {
         "file": SolidFile;
         /**
           * Current save status
+          * @default 'idle'
          */
         "saveStatus": 'idle' | 'saving' | 'failed';
         /**
@@ -131,6 +147,7 @@ export namespace Components {
     interface PosNavigation {
         /**
           * Initial value of the navigation bar
+          * @default ''
          */
         "uri": string;
     }
@@ -144,6 +161,7 @@ export namespace Components {
     interface PosPicture {
         /**
           * Use a blurred version of the image as its own background, if the image is scaled down to fit into the container.
+          * @default false
          */
         "blurredBackground": boolean;
     }
@@ -166,6 +184,9 @@ export namespace Components {
     }
     interface PosResource {
         "fetch": () => Promise<void>;
+        /**
+          * @default false
+         */
         "lazy": boolean;
         "uri": string;
     }
@@ -193,11 +214,18 @@ export namespace Components {
     interface PosRouter {
         /**
           * The mode defines what default URI will be used, if no URI param is given  - standalone: reroute to pod-os:dashboard - pod: reroute to the URI that is shown in the actual browser
+          * @default 'standalone'
          */
         "mode": 'standalone' | 'pod';
     }
     interface PosSelectTerm {
+        /**
+          * @default 'Type to search...'
+         */
         "placeholder": string;
+        /**
+          * @default ''
+         */
         "value": string;
     }
     interface PosSettingOfflineCache {
@@ -214,6 +242,7 @@ export namespace Components {
         "selected": ToolConfig;
         /**
           * All tools that are available
+          * @default []
          */
         "tools": ToolConfig[];
     }
@@ -265,6 +294,10 @@ export interface PosContainerItemCustomEvent<T> extends CustomEvent<T> {
 export interface PosContainerToolbarCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosContainerToolbarElement;
+}
+export interface PosCreateNewContainerItemCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosCreateNewContainerItemElement;
 }
 export interface PosDescriptionCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -405,7 +438,7 @@ declare global {
         "pod-os:session-restored": { url: string };
         "pod-os:loaded": {
     os: PodOS;
-    authenticatedFetch: typeof global.fetch;
+    authenticatedFetch: typeof globalThis.fetch;
   };
     }
     interface HTMLPosAppElement extends Components.PosApp, HTMLStencilElement {
@@ -545,7 +578,19 @@ declare global {
         prototype: HTMLPosContainerToolbarElement;
         new (): HTMLPosContainerToolbarElement;
     };
+    interface HTMLPosCreateNewContainerItemElementEventMap {
+        "pod-os:link": string;
+        "pod-os:error": Problem;
+    }
     interface HTMLPosCreateNewContainerItemElement extends Components.PosCreateNewContainerItem, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosCreateNewContainerItemElementEventMap>(type: K, listener: (this: HTMLPosCreateNewContainerItemElement, ev: PosCreateNewContainerItemCustomEvent<HTMLPosCreateNewContainerItemElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosCreateNewContainerItemElementEventMap>(type: K, listener: (this: HTMLPosCreateNewContainerItemElement, ev: PosCreateNewContainerItemCustomEvent<HTMLPosCreateNewContainerItemElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosCreateNewContainerItemElement: {
         prototype: HTMLPosCreateNewContainerItemElement;
@@ -1164,19 +1209,26 @@ declare namespace LocalJSX {
          */
         "onPod-os:loaded"?: (event: PosAppCustomEvent<{
     os: PodOS;
-    authenticatedFetch: typeof global.fetch;
+    authenticatedFetch: typeof globalThis.fetch;
   }>) => void;
         /**
           * Fired whenever the session was restored
          */
         "onPod-os:session-restored"?: (event: PosAppCustomEvent<{ url: string }>) => void;
+        /**
+          * @default false
+         */
         "restorePreviousSession"?: boolean;
     }
     interface PosAppBrowser {
         /**
           * The mode the app is running in:  - standalone: use this when you deploy it as a standalone web application - pod: use this when you host this app as a default interface for you pod
+          * @default 'standalone'
          */
         "mode"?: 'standalone' | 'pod';
+        /**
+          * @default false
+         */
         "restorePreviousSession"?: boolean;
     }
     interface PosAppDashboard {
@@ -1208,6 +1260,8 @@ declare namespace LocalJSX {
     }
     interface PosCreateNewContainerItem {
         "container": LdpContainer;
+        "onPod-os:error"?: (event: PosCreateNewContainerItemCustomEvent<Problem>) => void;
+        "onPod-os:link"?: (event: PosCreateNewContainerItemCustomEvent<string>) => void;
         "type": 'file' | 'folder';
     }
     interface PosDescription {
@@ -1247,6 +1301,7 @@ declare namespace LocalJSX {
         "alt"?: string;
         /**
           * Use a blurred version of the image as its own background, if the image is scaled down to fit into the container.
+          * @default false
          */
         "blurredBackground"?: boolean;
         "onPod-os:init"?: (event: PosImageCustomEvent<any>) => void;
@@ -1257,6 +1312,9 @@ declare namespace LocalJSX {
         "src"?: string;
     }
     interface PosInternalRouter {
+        /**
+          * @default 'pod-os:dashboard'
+         */
         "uri"?: string;
     }
     /**
@@ -1268,6 +1326,7 @@ declare namespace LocalJSX {
     interface PosList {
         /**
           * Whether listed resources should be fetched before being displayed
+          * @default false
          */
         "fetch"?: boolean;
         "onPod-os:resource"?: (event: PosListCustomEvent<any>) => void;
@@ -1298,6 +1357,7 @@ declare namespace LocalJSX {
     interface PosMarkdownDocument {
         /**
           * Whether the current user has the permission to edit the file
+          * @default false
          */
         "editable"?: boolean;
         /**
@@ -1310,6 +1370,7 @@ declare namespace LocalJSX {
         "onPod-os:document-modified"?: (event: PosMarkdownDocumentCustomEvent<ModifiedFile>) => void;
         /**
           * Current save status
+          * @default 'idle'
          */
         "saveStatus"?: 'idle' | 'saving' | 'failed';
     }
@@ -1318,6 +1379,7 @@ declare namespace LocalJSX {
         "onPod-os:link"?: (event: PosNavigationCustomEvent<any>) => void;
         /**
           * Initial value of the navigation bar
+          * @default ''
          */
         "uri"?: string;
     }
@@ -1335,6 +1397,7 @@ declare namespace LocalJSX {
     interface PosPicture {
         /**
           * Use a blurred version of the image as its own background, if the image is scaled down to fit into the container.
+          * @default false
          */
         "blurredBackground"?: boolean;
         "onPod-os:resource"?: (event: PosPictureCustomEvent<any>) => void;
@@ -1358,6 +1421,9 @@ declare namespace LocalJSX {
         "onPod-os:resource"?: (event: PosRelationsCustomEvent<any>) => void;
     }
     interface PosResource {
+        /**
+          * @default false
+         */
         "lazy"?: boolean;
         "onPod-os:init"?: (event: PosResourceCustomEvent<any>) => void;
         /**
@@ -1394,6 +1460,7 @@ declare namespace LocalJSX {
     interface PosRouter {
         /**
           * The mode defines what default URI will be used, if no URI param is given  - standalone: reroute to pod-os:dashboard - pod: reroute to the URI that is shown in the actual browser
+          * @default 'standalone'
          */
         "mode"?: 'standalone' | 'pod';
         /**
@@ -1407,7 +1474,13 @@ declare namespace LocalJSX {
           * Fires when a term is entered or selected
          */
         "onPod-os:term-selected"?: (event: PosSelectTermCustomEvent<any>) => void;
+        /**
+          * @default 'Type to search...'
+         */
         "placeholder"?: string;
+        /**
+          * @default ''
+         */
         "value"?: string;
     }
     interface PosSettingOfflineCache {
@@ -1426,6 +1499,7 @@ declare namespace LocalJSX {
         "selected"?: ToolConfig;
         /**
           * All tools that are available
+          * @default []
          */
         "tools"?: ToolConfig[];
     }
