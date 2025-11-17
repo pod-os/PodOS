@@ -36,6 +36,7 @@ describe('pos-login', () => {
     fireEvent(loginForm, new CustomEvent('pod-os:idp-url-selected', { detail: 'https://idp.test' }));
 
     await page.waitForChanges();
+    await page.waitForChanges(); // as of stencil 4.38.3, another wait is needed until the component re-renders
 
     // then she is logged in using this idp
     expect(os.login).toHaveBeenCalledWith('https://idp.test');
