@@ -7,13 +7,12 @@ describe('pos-select-term', () => {
     const page = await newSpecPage({
       components: [PosSelectTerm],
       html: `<pos-select-term></pos-select-term>`,
+      supportsShadowDom: false,
     });
     expect(page.root).toEqualHtml(`
       <pos-select-term>
-        <mock:shadow-root>
           <input part="input" value="" list="terms" placeholder="Type to search...">
           <datalist part="terms" id="terms"></datalist>
-        </mock:shadow-root>
       </pos-select-term>
     `);
   });
@@ -31,6 +30,7 @@ describe('pos-select-term', () => {
     const page = await newSpecPage({
       components: [PosSelectTerm],
       html: `<pos-select-term></pos-select-term>`,
+      supportsShadowDom: false,
     });
     page.rootInstance.receivePodOs({
       listKnownTerms: () => [
@@ -43,12 +43,10 @@ describe('pos-select-term', () => {
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
       <pos-select-term>
-        <mock:shadow-root>
           <input part="input" value="" list="terms" placeholder="Type to search...">
           <datalist part="terms" id="terms">
             <option value="http://schema.org/name">schema:name</option>
           </datalist>
-        </mock:shadow-root>
       </pos-select-term>
     `);
   });
