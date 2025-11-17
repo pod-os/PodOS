@@ -6,3 +6,7 @@
 # PodOS Core
 
 Core logic of PodOS
+
+## Usage
+
+See [examples directory](./examples) for usage examples.
