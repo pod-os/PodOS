@@ -76,7 +76,7 @@ export class PosLogin {
     return [
       <pos-resource uri={session.state.webId}>
         <span class="user-data">
-          <pos-picture />
+          <pos-picture no-upload />
           <pos-label />
         </span>
       </pos-resource>,
