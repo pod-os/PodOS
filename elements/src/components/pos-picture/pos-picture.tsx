@@ -35,7 +35,7 @@ export class PosPicture implements ResourceAware {
 
   render() {
     if (this.isEditing) {
-      return <input type="file" />;
+      return <pos-upload></pos-upload>;
     }
 
     const pic = this.resource ? this.resource.picture() : null;

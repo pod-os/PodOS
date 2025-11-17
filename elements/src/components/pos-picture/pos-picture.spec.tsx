@@ -118,7 +118,7 @@ describe('pos-picture', () => {
     editButton?.click();
     await page.waitForChanges();
 
-    const fileInput = page.root?.shadowRoot?.querySelector('input[type="file"]');
+    const fileInput = page.root?.shadowRoot?.querySelector('pos-upload');
     expect(fileInput).not.toBeNull();
   });
 });
