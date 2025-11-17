@@ -164,5 +164,25 @@ describe('pos-picture', () => {
       // Then the upload button should be visible
       expect(uploadButton).not.toBeNull();
     });
+
+    it('does not render upload button when no-upload is set', async () => {
+      // Given an editable resource with no-upload attribute
+      const page = await newSpecPage({
+        components: [PosPicture],
+        html: `<pos-picture no-upload />`,
+      });
+      await page.rootInstance.receiveResource({
+        label: () => 'a picture',
+        picture: () => ({ url: 'https://resource.test/picture.png' }),
+        editable: true,
+      });
+      await page.waitForChanges();
+
+      // When the component renders
+      const uploadButton = page.root?.shadowRoot?.querySelector('button');
+
+      // Then the upload button should not be visible
+      expect(uploadButton).toBeNull();
+    });
   });
 });

@@ -164,6 +164,11 @@ export namespace Components {
           * @default false
          */
         "blurredBackground": boolean;
+        /**
+          * Disable the upload functionality.
+          * @default false
+         */
+        "noUpload": boolean;
     }
     /**
      * Displays an RDF term (predicate) in a human-friendly way, using a provided label. The user can still expand the label
@@ -1429,6 +1434,11 @@ declare namespace LocalJSX {
           * @default false
          */
         "blurredBackground"?: boolean;
+        /**
+          * Disable the upload functionality.
+          * @default false
+         */
+        "noUpload"?: boolean;
         "onPod-os:resource"?: (event: PosPictureCustomEvent<any>) => void;
     }
     /**
