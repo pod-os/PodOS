@@ -16,7 +16,7 @@ describe('pos-user-menu', () => {
           <pos-resource uri="https://pod.example/alice#me">
             <sl-dropdown>
               <button slot="trigger" aria-label="User menu" >
-                <pos-picture>
+                <pos-picture no-upload>
                   <sl-avatar></sl-avatar>
                 </pos-picture>
               </button>
