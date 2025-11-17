@@ -1,4 +1,4 @@
-import { Component, h, State } from '@stencil/core';
+import { Component, h, Prop, State } from '@stencil/core';
 
 @Component({
   tag: 'pos-upload',
@@ -6,6 +6,12 @@ import { Component, h, State } from '@stencil/core';
   shadow: true,
 })
 export class PosUpload {
+  /**
+   * The accepted file types, as defined by the HTML5 `accept` attribute.
+   */
+  @Prop()
+  accept: string = 'image/*';
+
   @State() dragover: boolean = false;
 
   render() {
@@ -17,7 +23,7 @@ export class PosUpload {
           }}
           type="file"
           multiple
-          accept="image/*"
+          accept={this.accept}
           onDragEnter={() => (this.dragover = true)}
           onDragLeave={() => (this.dragover = false)}
           onDrop={() => (this.dragover = false)}
