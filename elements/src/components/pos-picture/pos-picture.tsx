@@ -46,8 +46,12 @@ export class PosPicture implements ResourceAware {
     return <pos-upload onPod-os:files-selected={this.exitUploadMode}></pos-upload>;
   }
 
+  private shouldShowUploadButton(): boolean {
+    return this.resource?.editable === true && !this.noUpload;
+  }
+
   private renderUploadButton() {
-    if (!this.resource?.editable || this.noUpload) {
+    if (!this.shouldShowUploadButton()) {
       return null;
     }
 
