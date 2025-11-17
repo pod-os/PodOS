@@ -57,7 +57,12 @@ export class PosPicture implements ResourceAware {
     const picture = this.resource?.picture();
 
     if (!picture) {
-      return [<slot></slot>, this.renderUploadButton()];
+      return (
+        <div class="no-picture">
+          <slot></slot>
+          {this.renderUploadButton()}
+        </div>
+      );
     }
 
     return [

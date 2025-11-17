@@ -9,7 +9,11 @@ describe('pos-picture', () => {
     });
     expect(page.root).toEqualHtml(`
       <pos-picture>
-        <mock:shadow-root><slot></slot></mock:shadow-root>
+        <mock:shadow-root>
+          <div class="no-picture">
+            <slot></slot>
+          </div>
+        </mock:shadow-root>
       </pos-picture>
   `);
   });
@@ -63,7 +67,11 @@ describe('pos-picture', () => {
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
       <pos-picture>
-        <mock:shadow-root><slot></slot></mock:shadow-root>
+        <mock:shadow-root>
+          <div class="no-picture">
+            <slot></slot>
+          </div>
+        </mock:shadow-root>
       </pos-picture>
   `);
   });
@@ -80,7 +88,9 @@ describe('pos-picture', () => {
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
       <pos-picture>
-        No picture, but this nice text
+        <div class="no-picture">
+          No picture, but this nice text
+        </div>
       </pos-picture>
   `);
   });
