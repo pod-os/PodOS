@@ -63,5 +63,28 @@ describe("Thing", function () {
       );
       expect(it.anyValue(firstPredicate, secondPredicate)).toBe("second value");
     });
+
+    it("is undefined when called with no predicates", () => {
+      const store = graph();
+      const uri = "https://jane.doe.example/container/file.ttl#fragment";
+      store.add(sym(uri), sym("https://vocab.test/predicate"), "value");
+      const it = new Thing(uri, store);
+
+      const result = it.anyValue();
+
+      expect(result).toBeUndefined();
+    });
+
+    it("returns first value when predicates contain duplicates", () => {
+      const predicate = "https://vocab.test/predicate";
+      const store = graph();
+      const uri = "https://jane.doe.example/container/file.ttl#fragment";
+      store.add(sym(uri), sym(predicate), "test value");
+      const it = new Thing(uri, store);
+
+      const result = it.anyValue(predicate, predicate, predicate);
+
+      expect(result).toBe("test value");
+    });
   });
 });
