@@ -254,6 +254,11 @@ export namespace Components {
     interface PosTypeRouter {
     }
     interface PosUpload {
+        /**
+          * The accepted file types, as defined by the HTML5 `accept` attribute.
+          * @default 'image/*'
+         */
+        "accept": string;
     }
     interface PosUserMenu {
         "webId": string;
@@ -400,6 +405,10 @@ export interface PosTypeBadgesCustomEvent<T> extends CustomEvent<T> {
 export interface PosTypeRouterCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosTypeRouterElement;
+}
+export interface PosUploadCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosUploadElement;
 }
 export interface PosUserMenuCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -1099,7 +1108,18 @@ declare global {
         prototype: HTMLPosTypeRouterElement;
         new (): HTMLPosTypeRouterElement;
     };
+    interface HTMLPosUploadElementEventMap {
+        "pod-os:files-selected": FileList;
+    }
     interface HTMLPosUploadElement extends Components.PosUpload, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosUploadElementEventMap>(type: K, listener: (this: HTMLPosUploadElement, ev: PosUploadCustomEvent<HTMLPosUploadElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosUploadElementEventMap>(type: K, listener: (this: HTMLPosUploadElement, ev: PosUploadCustomEvent<HTMLPosUploadElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosUploadElement: {
         prototype: HTMLPosUploadElement;
@@ -1522,6 +1542,15 @@ declare namespace LocalJSX {
         "onPod-os:resource"?: (event: PosTypeRouterCustomEvent<any>) => void;
     }
     interface PosUpload {
+        /**
+          * The accepted file types, as defined by the HTML5 `accept` attribute.
+          * @default 'image/*'
+         */
+        "accept"?: string;
+        /**
+          * Fires when files are selected from the file input.
+         */
+        "onPod-os:files-selected"?: (event: PosUploadCustomEvent<FileList>) => void;
     }
     interface PosUserMenu {
         "onPod-os:link"?: (event: PosUserMenuCustomEvent<any>) => void;

@@ -1,4 +1,4 @@
-import { Component, h, Prop, State } from '@stencil/core';
+import { Component, h, Prop, State, Event, EventEmitter } from '@stencil/core';
 
 @Component({
   tag: 'pos-upload',
@@ -12,7 +12,19 @@ export class PosUpload {
   @Prop()
   accept: string = 'image/*';
 
+  /**
+   * Fires when files are selected from the file input.
+   */
+  @Event({ eventName: 'pod-os:files-selected' }) filesSelected: EventEmitter<FileList>;
+
   @State() dragover: boolean = false;
+
+  private readonly handleChange = (event: Event) => {
+    const input = event.target as HTMLInputElement;
+    if (input.files) {
+      this.filesSelected.emit(input.files);
+    }
+  };
 
   render() {
     return (
@@ -27,6 +39,7 @@ export class PosUpload {
           onDragEnter={() => (this.dragover = true)}
           onDragLeave={() => (this.dragover = false)}
           onDrop={() => (this.dragover = false)}
+          onChange={this.handleChange}
         ></input>
       </form>
     );

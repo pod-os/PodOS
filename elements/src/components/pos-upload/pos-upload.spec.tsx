@@ -67,4 +67,29 @@ describe('pos-upload', () => {
       expect(input).not.toHaveClass('dragover');
     });
   });
+
+  it('emits pod-os:files-selected event when file input changes', async () => {
+    const page = await newSpecPage({
+      components: [PosUpload],
+      html: `<pos-upload />`,
+      supportsShadowDom: false,
+    });
+    const input = page.root?.querySelector('input');
+
+    const eventSpy = jest.fn();
+    page.root?.addEventListener('pod-os:files-selected', eventSpy);
+
+    const mockFiles = [new File(['content'], 'test.png', { type: 'image/png' })];
+
+    Object.defineProperty(input, 'files', {
+      value: mockFiles,
+      writable: false,
+    });
+
+    input?.dispatchEvent(new Event('change', { bubbles: true }));
+    await page.waitForChanges();
+
+    expect(eventSpy).toHaveBeenCalledTimes(1);
+    expect(eventSpy.mock.calls[0][0].detail).toBe(mockFiles);
+  });
 });
