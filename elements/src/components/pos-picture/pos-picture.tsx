@@ -43,8 +43,16 @@ export class PosPicture implements ResourceAware {
 
   private renderPicture() {
     const picture = this.resource?.picture();
+
     if (!picture) {
-      return <slot></slot>;
+      return [
+        <slot></slot>,
+        this.resource?.editable ? (
+          <button class="add" onClick={this.enterUploadMode}>
+            <sl-icon name="cloud-plus"></sl-icon>Upload picture
+          </button>
+        ) : null,
+      ];
     }
 
     return [
