@@ -164,8 +164,10 @@ describe('pos-picture', () => {
       // Then the upload button should be visible
       expect(uploadButton).not.toBeNull();
     });
+  });
 
-    it('does not render upload button when no-upload is set', async () => {
+  describe('no-upload property', () => {
+    it('disables upload button when no-upload is set', async () => {
       // Given an editable resource with no-upload attribute
       const page = await newSpecPage({
         components: [PosPicture],
