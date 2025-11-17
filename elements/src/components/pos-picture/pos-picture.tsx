@@ -2,6 +2,8 @@ import { Component, Event, EventEmitter, State, h, Prop } from '@stencil/core';
 import { Thing } from '@pod-os/core';
 import { ResourceAware, subscribeResource } from '../events/ResourceAware';
 
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+
 @Component({
   tag: 'pos-picture',
   shadow: true,
@@ -41,8 +43,8 @@ export class PosPicture implements ResourceAware {
     return [
       <pos-image blurredBackground={this.blurredBackground} src={pic.url} alt={this.resource.label()}></pos-image>,
       this.resource.editable ? (
-        <button class="edit" onClick={this.showFileUpload}>
-          Add picture
+        <button class="add" onClick={this.showFileUpload}>
+          <sl-icon name="cloud-plus"></sl-icon>Upload picture
         </button>
       ) : null,
     ];
