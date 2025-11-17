@@ -1,0 +1,26 @@
+form {
+  input {
+    aspect-ratio: 16 / 9;
+    border: var(--size-1) dashed var(--pos-subtle-text-color);
+    fill: white;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='100%' width='100%'><text fill='black' x='50%' y='50%' font-size='1rem' font-family='sans-serif' text-anchor='middle'>Drop or select file</text></svg>");
+    background-repeat: no-repeat;
+    background-position: center;
+    padding: var(--size-2);
+    &:hover,
+    &.dragover {
+      border-color: var(--pos-primary-color);
+    }
+    &.dragover {
+      background-color: var(--pos-primary-highlight-color);
+    }
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  form {
+    input {
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='100%' width='100%'><text fill='white' x='50%' y='50%' font-size='1rem' font-family='sans-serif' text-anchor='middle'>Drop or select file</text></svg>");
+    }
+  }
+}
