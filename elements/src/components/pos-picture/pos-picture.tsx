@@ -17,7 +17,7 @@ export class PosPicture implements ResourceAware {
 
   @State() resource: Thing;
 
-  @State() isEditing: boolean = false;
+  @State() isUploading: boolean = false;
 
   @Event({ eventName: 'pod-os:resource' }) subscribeResource: EventEmitter;
 
@@ -29,24 +29,35 @@ export class PosPicture implements ResourceAware {
     this.resource = resource;
   };
 
-  private readonly showFileUpload = () => {
-    this.isEditing = true;
+  private readonly enterUploadMode = () => {
+    this.isUploading = true;
   };
 
-  render() {
-    if (this.isEditing) {
-      return <pos-upload></pos-upload>;
+  private readonly exitUploadMode = () => {
+    this.isUploading = false;
+  };
+
+  private renderUpload() {
+    return <pos-upload onPod-os:files-selected={this.exitUploadMode}></pos-upload>;
+  }
+
+  private renderPicture() {
+    const picture = this.resource?.picture();
+    if (!picture) {
+      return <slot></slot>;
     }
 
-    const pic = this.resource ? this.resource.picture() : null;
-    if (!pic) return <slot></slot>;
     return [
-      <pos-image blurredBackground={this.blurredBackground} src={pic.url} alt={this.resource.label()}></pos-image>,
+      <pos-image blurredBackground={this.blurredBackground} src={picture.url} alt={this.resource.label()}></pos-image>,
       this.resource.editable ? (
-        <button class="add" onClick={this.showFileUpload}>
+        <button class="add" onClick={this.enterUploadMode}>
           <sl-icon name="cloud-plus"></sl-icon>Upload picture
         </button>
       ) : null,
     ];
+  }
+
+  render() {
+    return this.isUploading ? this.renderUpload() : this.renderPicture();
   }
 }
