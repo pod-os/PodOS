@@ -18,6 +18,7 @@ body {
   --pos-subtle-text-color: var(--color-grey-600);
   --pos-disabled-text-color: var(--pos-subtle-text-color);
   --pos-primary-color: var(--color-blue-800);
+  --pos-primary-highlight-color: var(--color-blue-300);
   --pos-disabled-color: var(--color-grey-100);
   --pos-background-color: var(--color-grey-50);
   --pos-input-background-color: var(--color-white);
@@ -56,6 +57,7 @@ body {
     --pos-subtle-text-color: var(--color-grey-400);
     --pos-disabled-text-color: var(--color-grey-700);
     --pos-primary-color: var(--color-blue-400);
+    --pos-primary-highlight-color: var(--color-blue-600);
     --pos-disabled-color: var(--color-slate-800);
     --pos-background-color: var(--color-grey-900);
     --pos-input-background-color: var(--color-slate-700);
