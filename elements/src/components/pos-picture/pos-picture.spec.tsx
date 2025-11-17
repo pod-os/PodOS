@@ -84,4 +84,41 @@ describe('pos-picture', () => {
       </pos-picture>
   `);
   });
+
+  it('renders edit button when editable', async () => {
+    const page = await newSpecPage({
+      components: [PosPicture],
+      html: `<pos-picture editable />`,
+    });
+    await page.rootInstance.receiveResource({
+      label: () => 'anything',
+      picture: () => ({ url: 'https://resource.test/picture.png' }),
+      editable: true,
+    });
+    await page.waitForChanges();
+
+    const editButton = page.root?.shadowRoot?.querySelector('button');
+    expect(editButton).not.toBeNull();
+    expect(editButton?.textContent).toEqual('Add picture');
+  });
+
+  it('shows file upload on button click', async () => {
+    const page = await newSpecPage({
+      components: [PosPicture],
+      html: `<pos-picture />`,
+    });
+    await page.rootInstance.receiveResource({
+      label: () => 'anything',
+      picture: () => ({ url: 'https://resource.test/picture.png' }),
+      editable: true,
+    });
+    await page.waitForChanges();
+
+    const editButton = page.root?.shadowRoot?.querySelector('button');
+    editButton?.click();
+    await page.waitForChanges();
+
+    const fileInput = page.root?.shadowRoot?.querySelector('input[type="file"]');
+    expect(fileInput).not.toBeNull();
+  });
 });

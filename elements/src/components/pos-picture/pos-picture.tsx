@@ -15,6 +15,8 @@ export class PosPicture implements ResourceAware {
 
   @State() resource: Thing;
 
+  @State() isEditing: boolean = false;
+
   @Event({ eventName: 'pod-os:resource' }) subscribeResource: EventEmitter;
 
   componentWillLoad() {
@@ -25,9 +27,24 @@ export class PosPicture implements ResourceAware {
     this.resource = resource;
   };
 
+  private readonly showFileUpload = () => {
+    this.isEditing = true;
+  };
+
   render() {
+    if (this.isEditing) {
+      return <input type="file" />;
+    }
+
     const pic = this.resource ? this.resource.picture() : null;
     if (!pic) return <slot></slot>;
-    return <pos-image blurredBackground={this.blurredBackground} src={pic.url} alt={this.resource.label()}></pos-image>;
+    return [
+      <pos-image blurredBackground={this.blurredBackground} src={pic.url} alt={this.resource.label()}></pos-image>,
+      this.resource.editable ? (
+        <button class="edit" onClick={this.showFileUpload}>
+          Add picture
+        </button>
+      ) : null,
+    ];
   }
 }
