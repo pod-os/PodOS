@@ -132,5 +132,25 @@ describe('pos-picture', () => {
 
       expect(page.root?.shadowRoot?.querySelector('pos-upload')).toBeNull();
     });
+
+    it('renders upload button when resource has no picture', async () => {
+      // Given an editable resource without a picture
+      const page = await newSpecPage({
+        components: [PosPicture],
+        html: `<pos-picture />`,
+      });
+      await page.rootInstance.receiveResource({
+        label: () => 'resource without picture',
+        picture: () => null,
+        editable: true,
+      });
+      await page.waitForChanges();
+
+      // When the component renders
+      const uploadButton = page.root?.shadowRoot?.querySelector('button');
+
+      // Then the upload button should be visible
+      expect(uploadButton).not.toBeNull();
+    });
   });
 });
