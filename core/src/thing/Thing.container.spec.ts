@@ -1,0 +1,57 @@
+import { graph } from "rdflib";
+import { Thing } from "./Thing";
+
+describe("Thing", () => {
+  describe("container", () => {
+    it("returns the container for a thing", () => {
+      // given a thing in a container
+      const store = graph();
+      const thing = new Thing("https://pod.test/things/thing1", store);
+
+      // when getting the container
+      const container = thing.container();
+
+      // then the container URI is returned
+      expect(container.uri).toBe("https://pod.test/things/");
+    });
+
+    it("returns the container for a thing with fragment containing slash", () => {
+      // given a thing with a URI that has a fragment containing a slash
+      const store = graph();
+      const thing = new Thing(
+        "https://pod.test/things/thing1#path/to/fragment",
+        store,
+      );
+
+      // when getting the container
+      const container = thing.container();
+
+      // then the container URI is returned without the fragment
+      expect(container.uri).toBe("https://pod.test/things/");
+    });
+
+    it("returns the container for a thing that is a document", () => {
+      // given a thing with that is a document
+      const store = graph();
+      const thing = new Thing("https://pod.test/things/thing1", store);
+
+      // when getting the container
+      const container = thing.container();
+
+      // then the container URI is returned
+      expect(container.uri).toBe("https://pod.test/things/");
+    });
+
+    it("returns the parent container for a thing that is itself a container", () => {
+      // given a thing with that is a container
+      const store = graph();
+      const thing = new Thing("https://pod.test/things/thing1/", store);
+
+      // when getting the container
+      const container = thing.container();
+
+      // then the container URI is returned
+      expect(container.uri).toBe("https://pod.test/things/");
+    });
+  });
+});
