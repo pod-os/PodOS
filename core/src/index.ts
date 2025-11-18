@@ -4,6 +4,7 @@ import { SessionInfo, PodOsSession } from "./authentication";
 import { SolidFile } from "./files";
 import { FileFetcher } from "./files/FileFetcher";
 import { loadContactsModule } from "./modules/contacts";
+import { PictureGateway } from "./picture";
 import { WebIdProfile } from "./profile";
 import { LabelIndex, SearchGateway } from "./search";
 import { Store } from "./Store";
@@ -17,12 +18,15 @@ import {
   OnlineStatus,
 } from "./offline-cache";
 import { IndexedFormula } from "rdflib";
+import { ResultAsync } from "neverthrow";
+import { HttpProblem, NetworkProblem } from "./problems";
 
 export * from "./authentication";
 export * from "./files";
 export * from "./thing";
 export * from "./rdf-document";
 export * from "./ldp-container";
+export * from "./picture";
 export * from "./profile";
 export * from "./search";
 export * from "./offline-cache";
@@ -44,6 +48,7 @@ export class PodOS {
   readonly uriService: UriService;
   private readonly fileFetcher: FileFetcher;
   private readonly searchGateway: SearchGateway;
+  private readonly pictureGateway: PictureGateway;
   private readonly offlineCache: OfflineCache;
 
   constructor({
@@ -61,9 +66,10 @@ export class PodOS {
       internalStore,
     );
     this.searchGateway = new SearchGateway(this.store);
+    this.fileFetcher = new FileFetcher(this.session);
+    this.pictureGateway = new PictureGateway(this.store, this.fileFetcher);
     this.flagAuthorizationMetaDataOnSessionChange();
     this.uriService = new UriService(this.store);
-    this.fileFetcher = new FileFetcher(this.session);
   }
 
   /*
@@ -188,5 +194,20 @@ export class PodOS {
    */
   async createDefaultLabelIndex(profile: WebIdProfile): Promise<LabelIndex> {
     return await this.searchGateway.createDefaultLabelIndex(profile);
+  }
+
+  /**
+   * Uploads a picture file and associates it with a thing.
+   * The container is automatically derived from the thing's URI.
+   *
+   * @param thing - The thing to add the picture to
+   * @param pictureFile - The picture file to upload
+   * @returns Result with the picture URL or error
+   */
+  uploadAndAddPicture(
+    thing: Thing,
+    pictureFile: Blob,
+  ): ResultAsync<{ url: string }, HttpProblem | NetworkProblem> {
+    return this.pictureGateway.uploadAndAddPicture(thing, pictureFile);
   }
 }

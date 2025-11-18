@@ -8,46 +8,72 @@ and this project adheres to
 
 ## Unreleased
 
-- `Store.additions$` and `Store.removals$` are `rxjs` `Subject`s for listening to changes to the store
+### Added
+
+- `PictureGateway`: New gateway class to handle picture upload and linking
+  operations
+- `PodOS.uploadAndAddPicture()`: Upload a picture file and associate it with a thing using schema:image predicate
+- `Store.additions$` and `Store.removals$` are `rxjs` `Subject`s for listening
+  to changes to the store
 
 ## 0.21.0
 
 ### Added
 
-- [`PodOS.files().createNewFile()`](https://pod-os.org/reference/core/classes/FileFetcher/#createNewFile): New method to create new files within a container
-- [`PodOS.files().createNewFolder()`](https://pod-os.org/reference/core/classes/FileFetcher/#createNewFolder): New method to create new folders within a container
-- [`Problem`](https://pod-os.org/reference/core/interfaces/problem/): A new type to describe domain errors in PodOS
+- [`PodOS.files().createNewFile()`](https://pod-os.org/reference/core/classes/FileFetcher/#createNewFile):
+  New method to create new files within a container
+- [`PodOS.files().createNewFolder()`](https://pod-os.org/reference/core/classes/FileFetcher/#createNewFolder):
+  New method to create new folders within a container
+- [`Problem`](https://pod-os.org/reference/core/interfaces/problem/): A new type
+  to describe domain errors in PodOS
 
 ### Changed
 
-- [`labelFromUri(uri: string)`](https://pod-os.org/reference/core/functions/labelfromuri/): add deconding for special characters in URIs, so that they become human readable
-- [`LdpContainer.contains()`](https://pod-os.org/reference/core/classes/ldpcontainer/#contains): Container names now align with the logic from `labelFromUri` 
+- [`labelFromUri(uri: string)`](https://pod-os.org/reference/core/functions/labelfromuri/):
+  add deconding for special characters in URIs, so that they become human
+  readable
+- [`LdpContainer.contains()`](https://pod-os.org/reference/core/classes/ldpcontainer/#contains):
+  Container names now align with the logic from `labelFromUri`
 
 ## 0.20.0
 
 ### Added
 
-- [`PodOS.files()`](https://pod-os.org/reference/core/classes/PodOS/#files): New method to access file operations (fetchFile, etc.)
-- [`PodOS.files().putFile()`](https://pod-os.org/reference/core/classes/FileFetcher/#putfile): New method to update files
+- [`PodOS.files()`](https://pod-os.org/reference/core/classes/PodOS/#files): New
+  method to access file operations (fetchFile, etc.)
+- [`PodOS.files().putFile()`](https://pod-os.org/reference/core/classes/FileFetcher/#putfile):
+  New method to update files
 
 ### Changed
 
-- Deprecated [`PodOS.fetchFile()`](https://pod-os.org/reference/core/classes/podos/#fetchfile) in favor of using [`PodOS.files().fetchFile()`](https://pod-os.org/reference/core/classes/FileFetcher/#fetchFile)
+- Deprecated
+  [`PodOS.fetchFile()`](https://pod-os.org/reference/core/classes/podos/#fetchfile)
+  in favor of using
+  [`PodOS.files().fetchFile()`](https://pod-os.org/reference/core/classes/FileFetcher/#fetchFile)
 
 ## 0.19.0
 
 ### Changed
 
-- PodOS can now handle JSON-LD documents as regular RDF documents and work with their data 
+- PodOS can now handle JSON-LD documents as regular RDF documents and work with
+  their data
 
 ## 0.18.0
 
 ### ⚠ BREAKING CHANGES
 
-- `BrowserSession` has moved to `@pod-os/elements`, since it is browser-specific which `core` should not be.
-- `Store` restricted access to rdflib internals like `fetcher`, `updater` and `graph`
-  - If you need access to those, you can now pass your own [rdflib.js](https://github.com/linkeddata/rdflib.js) store in the constructor of `PodOS`. The `fetcher` and `updater` will be attached to this store.
-  - ⚠ PodOS uses rdflib.js internally, we consider it to be an implementation detail. In the future the interface might change to only support [RDF/JS](https://rdf.js.org). Please consider this before coupling your PodOS app too much to rdflib.js.
+- `BrowserSession` has moved to `@pod-os/elements`, since it is browser-specific
+  which `core` should not be.
+- `Store` restricted access to rdflib internals like `fetcher`, `updater` and
+  `graph`
+  - If you need access to those, you can now pass your own
+    [rdflib.js](https://github.com/linkeddata/rdflib.js) store in the
+    constructor of `PodOS`. The `fetcher` and `updater` will be attached to this
+    store.
+  - ⚠ PodOS uses rdflib.js internally, we consider it to be an implementation
+    detail. In the future the interface might change to only support
+    [RDF/JS](https://rdf.js.org). Please consider this before coupling your
+    PodOS app too much to rdflib.js.
 
 ### Changed
 
@@ -63,42 +89,50 @@ and this project adheres to
 
 ### Fixed
 
-- Rolled back to solid-client-authn-browser 2.3, due to login issues with newer versions.
+- Rolled back to solid-client-authn-browser 2.3, due to login issues with newer
+  versions.
 
 ## 0.16.0
 
 ### Added
 
 - Capability to cache data for offline usage
-  - `OfflineCapableFetcher`: Drop-in replacement for rdflib.js fetcher that can cache data given a cache implementation
-  - `NoOfflineCache`: Fallback "cache" for offline usage, which is actually does not cache anything at all. 
+  - `OfflineCapableFetcher`: Drop-in replacement for rdflib.js fetcher that can
+    cache data given a cache implementation
+  - `NoOfflineCache`: Fallback "cache" for offline usage, which is actually does
+    not cache anything at all.
 
 ### Changed
 
 - `PodOS`
-  - the constructor can now take an optional `PodOsConfiguration`, to set up offline cache depending on the environment
+  - the constructor can now take an optional `PodOsConfiguration`, to set up
+    offline cache depending on the environment
   - offline cache will be cleared on logout
 
 ## 0.15.0
 
 ### Added
 
-- `createDefaultLabelIndex`: a function to create a new label index document at a default location and set it up in the user's profile / settings
+- `createDefaultLabelIndex`: a function to create a new label index document at
+  a default location and set it up in the user's profile / settings
 - `SearchIndex.rebuild()`: rebuild the search index with updated data
 
 ## 0.14.0
 
 ### Added
 
-- `addToLabelIndex`: a function to include a thing in a label index, so that it can be found via search
-- `LabelIndex.contains`: a method to check if a label index contains a specific URI
+- `addToLabelIndex`: a function to include a thing in a label index, so that it
+  can be found via search
+- `LabelIndex.contains`: a method to check if a label index contains a specific
+  URI
 
 ## 0.13.0
 
 ### Changed
 
 - `Thing.label()`: Shorter fallbacks, instead of full URI, if no label is known
-- added a predicate `label` to `Thing.literals()`, `Thing.relations()` and `Thing.reverseRelations()`
+- added a predicate `label` to `Thing.literals()`, `Thing.relations()` and
+  `Thing.reverseRelations()`
 
 ### Added
 
@@ -109,12 +143,15 @@ and this project adheres to
 ### Added
 
 - `loadContactsModule`: asynchronously load the contacts data-module
-- `onSessionRestore`: Register a callback to get notified about restored sessions
-- `observeSession`: Returns a rxjs observable that allows to observe the current session state and all changes to it
+- `onSessionRestore`: Register a callback to get notified about restored
+  sessions
+- `observeSession`: Returns a rxjs observable that allows to observe the current
+  session state and all changes to it
 
 ### Changed
 
-- `handleIncomingRedirect`: Added parameter `restorePreviousSession` to allow automatic session restore
+- `handleIncomingRedirect`: Added parameter `restorePreviousSession` to allow
+  automatic session restore
 - `trackSession`: Deprecated in favor of `observeSession`
 
 ## 0.11.0
@@ -125,16 +162,20 @@ and this project adheres to
 
 ### Changed
 
-- `WebIdProfile`: removed `getPrivateLabelIndex` in favour of `getPrivateLabelIndexes` to get all label indexes, not just one
+- `WebIdProfile`: removed `getPrivateLabelIndex` in favour of
+  `getPrivateLabelIndexes` to get all label indexes, not just one
 
 ## 0.10.0
 
 ### Added
 
-- `loadPreferencesFile`: A method to load the preferences file mentioned in the WebID profile document
-- `buildSearchIndex`: Create a search index to perform a text search for items in the private label index
+- `loadPreferencesFile`: A method to load the preferences file mentioned in the
+  WebID profile document
+- `buildSearchIndex`: Create a search index to perform a text search for items
+  in the private label index
 - `SearchIndex`: A fast, in-memory search index based on data from label indexes
-- `WebIdProfile`: A class to help find the preferences document and private label index of a given WebID
+- `WebIdProfile`: A class to help find the preferences document and private
+  label index of a given WebID
 
 ## 0.9.0
 
