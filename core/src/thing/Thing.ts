@@ -233,4 +233,17 @@ export class Thing {
   ) {
     return new SpecificThing(this.uri, this.store, this.editable);
   }
+
+  /**
+   * Returns the container that contains this thing's document
+   * The container URI is derived from the thing's URI.
+   */
+  container(): { uri: string } {
+    const doc = sym(this.uri).doc();
+    const baseUri = doc.value.endsWith("/")
+      ? doc.value.slice(0, -1)
+      : doc.value;
+    const uri = new URL(".", baseUri).toString();
+    return { uri };
+  }
 }
