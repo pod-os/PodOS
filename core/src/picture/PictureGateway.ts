@@ -4,7 +4,8 @@ import { Store } from "../Store";
 import { FileFetcher } from "../files/FileFetcher";
 import { HttpProblem, NetworkProblem } from "../problems";
 import { LdpContainer } from "../ldp-container";
-import { graph } from "rdflib";
+
+const DEFAULT_PICTURE_FILENAME = "picture.png";
 
 export class PictureGateway {
   constructor(
@@ -25,12 +26,16 @@ export class PictureGateway {
     thing: Thing,
     pictureFile: Blob,
   ): ResultAsync<UploadedPicture, HttpProblem | NetworkProblem> {
-    const containerUri = thing.uri.substring(0, thing.uri.lastIndexOf("/") + 1);
-    const container = new LdpContainer(containerUri, graph(), true);
+    const container = this.getContainerFromThing(thing);
 
     return this.fileFetcher
-      .createNewFile(container, "picture.png")
+      .createNewFile(container, DEFAULT_PICTURE_FILENAME)
       .map((file) => ({ url: file.url }));
+  }
+
+  private getContainerFromThing(thing: Thing): LdpContainer {
+    const containerUri = thing.container().uri;
+    return this.store.get(containerUri).assume(LdpContainer);
   }
 }
 
