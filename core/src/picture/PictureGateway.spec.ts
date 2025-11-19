@@ -1,5 +1,5 @@
 import { graph } from "rdflib";
-import { ok, err } from "neverthrow";
+import { err, ok } from "neverthrow";
 import { PictureGateway } from "./PictureGateway";
 import { Store } from "../Store";
 import { FileFetcher } from "../files/FileFetcher";
@@ -9,6 +9,7 @@ describe("PictureGateway", () => {
   let gateway: PictureGateway;
   let fileFetcher: jest.Mocked<FileFetcher>;
   let thing: Thing;
+  let mockStore: Store;
 
   beforeEach(() => {
     // given a thing in a container
@@ -18,16 +19,17 @@ describe("PictureGateway", () => {
     // and a file fetcher that can create files
     fileFetcher = createMockFileFetcher();
 
+    // and a mock store
+    mockStore = createMockStore();
+
     // and a picture gateway
-    gateway = new PictureGateway(createMockStore(), fileFetcher);
+    gateway = new PictureGateway(mockStore, fileFetcher);
   });
 
   describe("uploadAndAddPicture", () => {
     it("uploads the file including its content", async () => {
       // given a picture file with binary content
-      const pictureFile = new File(["picture binary data"], "photo.jpg", {
-        type: "image/jpeg",
-      });
+      const pictureFile = createPictureFile("photo.jpg", "picture binary data");
 
       // when uploading and adding the picture
       await gateway.uploadAndAddPicture(thing, pictureFile);
@@ -43,17 +45,16 @@ describe("PictureGateway", () => {
 
     it("returns the created file with all metadata", async () => {
       // given a picture file to upload
-      const pictureFile = new File(["data"], "vacation.jpg", {
-        type: "image/jpeg",
-      });
+      const pictureFile = createPictureFile("vacation.jpg");
 
       // and the file fetcher will return the created file metadata
+      const fileMetadata = {
+        url: "https://pod.test/things/vacation.jpg",
+        name: "vacation.jpg",
+        contentType: "image/jpeg",
+      };
       fileFetcher.createNewFile.mockReturnValue(
-        ok({
-          url: "https://pod.test/things/vacation.jpg",
-          name: "vacation.jpg",
-          contentType: "image/jpeg",
-        }) as unknown as ReturnType<FileFetcher["createNewFile"]>,
+        ok(fileMetadata) as unknown as ReturnType<FileFetcher["createNewFile"]>,
       );
 
       // when uploading and adding the picture
@@ -61,18 +62,12 @@ describe("PictureGateway", () => {
 
       // then the result contains all file metadata
       expect(result.isOk()).toBe(true);
-      expect(result._unsafeUnwrap()).toEqual({
-        url: "https://pod.test/things/vacation.jpg",
-        name: "vacation.jpg",
-        contentType: "image/jpeg",
-      });
+      expect(result._unsafeUnwrap()).toEqual(fileMetadata);
     });
 
     it("returns an error when file creation fails", async () => {
       // given a picture file to upload
-      const pictureFile = new File(["data"], "photo.jpg", {
-        type: "image/jpeg",
-      });
+      const pictureFile = createPictureFile("photo.jpg");
 
       // and the file creation will fail with an HTTP error
       const httpError = {
@@ -95,9 +90,7 @@ describe("PictureGateway", () => {
 
     it("adds the uploaded image URL to the thing as schema:image", async () => {
       // given a picture file to upload
-      const pictureFile = new File(["data"], "sunset.jpg", {
-        type: "image/jpeg",
-      });
+      const pictureFile = createPictureFile("sunset.jpg");
 
       // and the file fetcher will create the file at a specific URL
       fileFetcher.createNewFile.mockReturnValue(
@@ -108,14 +101,12 @@ describe("PictureGateway", () => {
         }) as unknown as ReturnType<FileFetcher["createNewFile"]>,
       );
 
-      // and a mock store that tracks update operations
-      const mockStore = createMockStore();
+      // and we track store update operations
       const mockExecuteUpdate = jest.fn().mockResolvedValue(undefined);
       mockStore.executeUpdate = mockExecuteUpdate;
-      const gatewayWithMockStore = new PictureGateway(mockStore, fileFetcher);
 
       // when uploading and adding the picture
-      await gatewayWithMockStore.uploadAndAddPicture(thing, pictureFile);
+      await gateway.uploadAndAddPicture(thing, pictureFile);
 
       // then the store is updated with schema:image pointing to the file URL
       expect(mockExecuteUpdate).toHaveBeenCalledWith(
@@ -137,6 +128,12 @@ describe("PictureGateway", () => {
       );
     });
   });
+
+  function createPictureFile(filename: string, content: string = "data"): File {
+    return new File([content], filename, {
+      type: "image/jpeg",
+    });
+  }
 
   function createMockFileFetcher(): jest.Mocked<FileFetcher> {
     return {
