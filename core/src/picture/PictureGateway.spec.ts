@@ -127,6 +127,35 @@ describe("PictureGateway", () => {
         }),
       );
     });
+
+    it("returns a network error when linking the picture to the thing fails", async () => {
+      // given a picture file to upload
+      const pictureFile = createPictureFile("photo.jpg");
+
+      // and the file creation succeeds
+      fileFetcher.createNewFile.mockReturnValue(
+        ok({
+          url: "https://pod.test/things/photo.jpg",
+          name: "photo.jpg",
+          contentType: "image/jpeg",
+        }) as unknown as ReturnType<FileFetcher["createNewFile"]>,
+      );
+
+      // and the store update will fail
+      mockStore.executeUpdate = jest
+        .fn()
+        .mockRejectedValue(new Error("Network failure"));
+
+      // when uploading and adding the picture
+      const result = await gateway.uploadAndAddPicture(thing, pictureFile);
+
+      // then the result contains a network error
+      expect(result.isErr()).toBe(true);
+      expect(result._unsafeUnwrapErr()).toEqual({
+        type: "network",
+        title: "Failed to link picture to thing",
+      });
+    });
   });
 
   function createPictureFile(filename: string, content: string = "data"): File {
