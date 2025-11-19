@@ -1,7 +1,7 @@
 import { ResultAsync } from "neverthrow";
 import { Thing } from "../thing";
 import { Store } from "../Store";
-import { FileFetcher } from "../files/FileFetcher";
+import { FileFetcher, NewFile } from "../files";
 import { HttpProblem, NetworkProblem } from "../problems";
 import { LdpContainer } from "../ldp-container";
 
@@ -18,7 +18,7 @@ export class PictureGateway {
    *
    * @param thing - The thing to add the picture to
    * @param pictureFile - The picture file to upload
-   * @returns Result with the picture URL or error
+   * @returns Result with the uploaded picture metadata (url, name, contentType) or error
    */
   uploadAndAddPicture(
     thing: Thing,
@@ -26,13 +26,7 @@ export class PictureGateway {
   ): ResultAsync<UploadedPicture, HttpProblem | NetworkProblem> {
     const container = this.getContainerFromThing(thing);
 
-    return this.fileFetcher
-      .createNewFile(container, pictureFile)
-      .map((file) => ({
-        url: file.url,
-        name: file.name,
-        contentType: file.contentType,
-      }));
+    return this.fileFetcher.createNewFile(container, pictureFile);
   }
 
   private getContainerFromThing(thing: Thing): LdpContainer {
@@ -40,8 +34,4 @@ export class PictureGateway {
   }
 }
 
-export interface UploadedPicture {
-  url: string;
-  name: string;
-  contentType: string;
-}
+type UploadedPicture = NewFile;

@@ -107,12 +107,12 @@ export class FileFetcher {
   }
 }
 
-interface NewFolder {
+export interface NewFolder {
   url: string;
   name: string;
 }
 
-interface NewFile {
+export interface NewFile {
   url: string;
   name: string;
   contentType: string;
