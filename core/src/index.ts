@@ -206,7 +206,7 @@ export class PodOS {
    */
   uploadAndAddPicture(
     thing: Thing,
-    pictureFile: Blob,
+    pictureFile: File,
   ): ResultAsync<{ url: string }, HttpProblem | NetworkProblem> {
     return this.pictureGateway.uploadAndAddPicture(thing, pictureFile);
   }
