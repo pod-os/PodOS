@@ -32,8 +32,7 @@ export class PictureGateway {
   }
 
   private getContainerFromThing(thing: Thing): LdpContainer {
-    const containerUri = thing.container().uri;
-    return this.store.get(containerUri).assume(LdpContainer);
+    return this.store.get(thing.container().uri).assume(LdpContainer);
   }
 }
 
