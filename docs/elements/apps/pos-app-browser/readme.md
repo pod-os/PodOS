@@ -57,6 +57,7 @@ graph TD;
   pos-login --> pos-resource
   pos-login --> pos-picture
   pos-login --> pos-label
+  pos-picture --> pos-upload
   pos-picture --> pos-image
   pos-user-menu --> pos-resource
   pos-user-menu --> pos-picture

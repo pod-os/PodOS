@@ -36,6 +36,7 @@ graph TD;
   pos-user-menu --> pos-resource
   pos-user-menu --> pos-picture
   pos-user-menu --> pos-label
+  pos-picture --> pos-upload
   pos-picture --> pos-image
   pos-app-browser --> pos-user-menu
   style pos-user-menu fill:#f9f,stroke:#333,stroke-width:4px
