@@ -4,9 +4,7 @@ import { Store } from "../Store";
 import { FileFetcher, NewFile } from "../files";
 import { HttpProblem, NetworkProblem } from "../problems";
 import { LdpContainer } from "../ldp-container";
-import { st, sym } from "rdflib";
-
-const SCHEMA_IMAGE = "http://schema.org/image";
+import { createPictureLinkOperation } from "./createPictureLinkOperation";
 
 export class PictureGateway {
   constructor(
@@ -38,21 +36,10 @@ export class PictureGateway {
     thing: Thing,
     file: NewFile,
   ): ResultAsync<NewFile, NetworkProblem> {
+    const operation = createPictureLinkOperation(thing, file);
+
     return ResultAsync.fromPromise(
-      this.store
-        .executeUpdate({
-          deletions: [],
-          filesToCreate: [],
-          insertions: [
-            st(
-              sym(thing.uri),
-              sym(SCHEMA_IMAGE),
-              sym(file.url),
-              sym(thing.uri).doc(),
-            ),
-          ],
-        })
-        .then(() => file),
+      this.store.executeUpdate(operation).then(() => file),
       () => ({
         type: "network" as const,
         title: "Failed to link picture to thing",
