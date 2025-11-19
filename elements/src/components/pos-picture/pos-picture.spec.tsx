@@ -1,5 +1,23 @@
+jest.mock('../events/usePodOS');
+
 import { newSpecPage } from '@stencil/core/testing';
 import { PosPicture } from './pos-picture';
+import { usePodOS } from '../events/usePodOS';
+import { when } from 'jest-when';
+
+/**
+ * Helper function to create a mock FileList containing a single file
+ */
+function createMockFileList(file: File): FileList {
+  return {
+    0: file,
+    length: 1,
+    item: (index: number) => (index === 0 ? file : null),
+    [Symbol.iterator]: function* () {
+      yield file;
+    },
+  } as unknown as FileList;
+}
 
 describe('pos-picture', () => {
   it('is empty initially', async () => {
@@ -185,6 +203,52 @@ describe('pos-picture', () => {
 
       // Then the upload button should not be visible
       expect(uploadButton).toBeNull();
+    });
+  });
+
+  describe('uploading picture', () => {
+    it('adds a single selected picture to the thing', async () => {
+      // Given a PodOS instance with uploadAndAddPicture
+      const mockUploadAndAddPicture = jest.fn();
+      when(usePodOS).mockResolvedValue({
+        uploadAndAddPicture: mockUploadAndAddPicture,
+      } as any);
+
+      // And an editable resource without a picture
+      const page = await newSpecPage({
+        components: [PosPicture],
+        html: `<pos-picture />`,
+      });
+
+      const mockResource = {
+        label: () => 'a resource',
+        picture: () => null,
+        editable: true,
+      };
+
+      await page.rootInstance.receiveResource(mockResource);
+      await page.waitForChanges();
+
+      // And the user enters upload mode
+      const uploadButton = page.root?.shadowRoot?.querySelector('button');
+      uploadButton?.click();
+      await page.waitForChanges();
+
+      // When a single picture file is selected
+      const mockFile = new File(['image content'], 'picture.jpg', {
+        type: 'image/jpeg',
+      });
+      const posUpload = page.root?.shadowRoot?.querySelector('pos-upload');
+      posUpload?.dispatchEvent(
+        new CustomEvent('pod-os:files-selected', {
+          bubbles: true,
+          detail: createMockFileList(mockFile),
+        }),
+      );
+      await page.waitForChanges();
+
+      // Then the picture should be uploaded and added to the thing
+      expect(mockUploadAndAddPicture).toHaveBeenCalledWith(mockResource, mockFile);
     });
   });
 });
