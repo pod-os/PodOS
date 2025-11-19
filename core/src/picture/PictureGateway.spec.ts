@@ -16,7 +16,34 @@ describe("PictureGateway", () => {
     thing = new Thing("https://pod.test/things/thing1", store, true);
 
     // and a file fetcher that can create files
-    fileFetcher = {
+    fileFetcher = createMockFileFetcher();
+
+    // and a picture gateway
+    gateway = new PictureGateway(createMockStore(), fileFetcher);
+  });
+
+  describe("uploadAndAddPicture", () => {
+    it("uploads the file including its content", async () => {
+      // given a picture file with binary content
+      const pictureFile = new File(["picture binary data"], "photo.jpg", {
+        type: "image/jpeg",
+      });
+
+      // when uploading and adding the picture
+      await gateway.uploadAndAddPicture(thing, pictureFile);
+
+      // then the file object with content is passed to createNewFile
+      expect(fileFetcher.createNewFile).toHaveBeenCalledWith(
+        expect.objectContaining({
+          uri: "https://pod.test/things/",
+        }),
+        pictureFile,
+      );
+    });
+  });
+
+  function createMockFileFetcher(): jest.Mocked<FileFetcher> {
+    return {
       createNewFile: jest.fn().mockReturnValue(
         ok({
           url: "https://pod.test/things/picture.png",
@@ -25,42 +52,18 @@ describe("PictureGateway", () => {
         }),
       ),
     } as unknown as jest.Mocked<FileFetcher>;
+  }
 
-    // and a picture gateway
-    gateway = new PictureGateway(mockStore(), fileFetcher);
-  });
-
-  describe("uploadAndAddPicture", () => {
-    it("uploads the file including its content", async () => {
-      // given a picture file with specific content
-      const fileContent = "picture binary data";
-      const pictureWithContent = new File([fileContent], "photo.jpg", {
-        type: "image/jpeg",
-      });
-
-      // when uploading and adding the picture
-      await gateway.uploadAndAddPicture(thing, pictureWithContent);
-
-      // then the file object with content is passed to createNewFile
-      expect(fileFetcher.createNewFile).toHaveBeenCalledWith(
-        expect.objectContaining({
-          uri: "https://pod.test/things/",
-        }),
-        pictureWithContent,
-      );
-    });
-  });
+  function createMockStore(): Store {
+    const store = graph();
+    return {
+      fetcher: {
+        load: jest.fn(),
+      },
+      updater: {
+        update: jest.fn(),
+      },
+      get: jest.fn((uri: string) => new Thing(uri, store, true)),
+    } as unknown as Store;
+  }
 });
-
-function mockStore(): Store {
-  const store = graph();
-  return {
-    fetcher: {
-      load: jest.fn(),
-    },
-    updater: {
-      update: jest.fn(),
-    },
-    get: jest.fn((uri: string) => new Thing(uri, store, true)),
-  } as unknown as Store;
-}
