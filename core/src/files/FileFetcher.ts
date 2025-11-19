@@ -53,11 +53,17 @@ export class FileFetcher {
 
   createNewFile(
     container: LdpContainer,
-    name: string,
+    name: string | File,
   ): ResultAsync<NewFile, NotCreated> {
-    const encodedName = encodeURIComponent(name);
+    const isFile = name instanceof File;
+    const fileName = isFile ? name.name : name;
+    const encodedName = encodeURIComponent(fileName);
     const url = container.uri + encodedName;
-    const contentTypeHeader = mime.getType(encodedName) ?? "text/turtle";
+    const contentTypeHeader = isFile
+      ? name.type
+      : (mime.getType(encodedName) ?? "text/turtle");
+    const body = isFile ? name : undefined;
+
     return ResultAsync.fromPromise(
       this.session.authenticatedFetch(url, {
         method: "PUT",
@@ -65,13 +71,14 @@ export class FileFetcher {
           "Content-Type": contentTypeHeader,
           "If-None-Match": "*",
         },
+        body,
       }),
       (e) => networkProblem("The file could not be created", e as Error),
     ).andThen((response) =>
       response.ok
         ? ok({
             url,
-            name,
+            name: fileName,
             contentType: contentTypeHeader,
           })
         : err(httpProblem("The file could not be created", response)),

@@ -394,6 +394,45 @@ describe("FileFetcher", () => {
           }),
         );
       });
+
+      it("creates a new file given a File instance", async () => {
+        // given a parent container
+        const parent = new LdpContainer(
+          "https://pod.test/parent/",
+          graph(),
+          true,
+        );
+
+        // and a File instance to upload
+        const file = new File(["picture data"], "photo.png", {
+          type: "image/png",
+        });
+
+        // when creating a new file with the File instance
+        const result = await fileFetcher.createNewFile(parent, file);
+
+        // then the file content is uploaded
+        expect(session.authenticatedFetch).toHaveBeenCalledWith(
+          "https://pod.test/parent/photo.png",
+          expect.objectContaining({
+            method: "PUT",
+            headers: {
+              "Content-Type": "image/png",
+              "If-None-Match": "*",
+            },
+            body: file,
+          }),
+        );
+
+        // and the result contains the uploaded file information
+        expect(result.isOk()).toBe(true);
+        const newFile = result._unsafeUnwrap();
+        expect(newFile).toEqual({
+          url: "https://pod.test/parent/photo.png",
+          name: "photo.png",
+          contentType: "image/png",
+        });
+      });
     });
 
     describe("if it fails", () => {
