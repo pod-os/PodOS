@@ -28,7 +28,11 @@ export class PictureGateway {
 
     return this.fileFetcher
       .createNewFile(container, pictureFile)
-      .map((file) => ({ url: file.url }));
+      .map((file) => ({
+        url: file.url,
+        name: file.name,
+        contentType: file.contentType,
+      }));
   }
 
   private getContainerFromThing(thing: Thing): LdpContainer {
@@ -38,4 +42,6 @@ export class PictureGateway {
 
 export interface UploadedPicture {
   url: string;
+  name: string;
+  contentType: string;
 }

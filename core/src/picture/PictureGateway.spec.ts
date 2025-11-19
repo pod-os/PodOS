@@ -40,6 +40,33 @@ describe("PictureGateway", () => {
         pictureFile,
       );
     });
+
+    it("returns the created file with all metadata", async () => {
+      // given a picture file to upload
+      const pictureFile = new File(["data"], "vacation.jpg", {
+        type: "image/jpeg",
+      });
+
+      // and the file fetcher will return the created file metadata
+      fileFetcher.createNewFile.mockReturnValue(
+        ok({
+          url: "https://pod.test/things/vacation.jpg",
+          name: "vacation.jpg",
+          contentType: "image/jpeg",
+        }) as unknown as ReturnType<FileFetcher["createNewFile"]>,
+      );
+
+      // when uploading and adding the picture
+      const result = await gateway.uploadAndAddPicture(thing, pictureFile);
+
+      // then the result contains all file metadata
+      expect(result.isOk()).toBe(true);
+      expect(result._unsafeUnwrap()).toEqual({
+        url: "https://pod.test/things/vacation.jpg",
+        name: "vacation.jpg",
+        contentType: "image/jpeg",
+      });
+    });
   });
 
   function createMockFileFetcher(): jest.Mocked<FileFetcher> {
