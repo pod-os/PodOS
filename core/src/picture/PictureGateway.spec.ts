@@ -9,17 +9,11 @@ describe("PictureGateway", () => {
   let gateway: PictureGateway;
   let fileFetcher: jest.Mocked<FileFetcher>;
   let thing: Thing;
-  let pictureFile: File;
 
   beforeEach(() => {
     // given a thing in a container
     const store = graph();
     thing = new Thing("https://pod.test/things/thing1", store, true);
-
-    // and a picture file to upload
-    pictureFile = new File(["picture data"], "my-picture.png", {
-      type: "image/png",
-    });
 
     // and a file fetcher that can create files
     fileFetcher = {
@@ -37,16 +31,22 @@ describe("PictureGateway", () => {
   });
 
   describe("uploadAndAddPicture", () => {
-    it("uploads the given file to the things container", async () => {
-      // when uploading and adding the picture
-      await gateway.uploadAndAddPicture(thing, pictureFile);
+    it("uploads the file including its content", async () => {
+      // given a picture file with specific content
+      const fileContent = "picture binary data";
+      const pictureWithContent = new File([fileContent], "photo.jpg", {
+        type: "image/jpeg",
+      });
 
-      // then the file is uploaded to the things container
+      // when uploading and adding the picture
+      await gateway.uploadAndAddPicture(thing, pictureWithContent);
+
+      // then the file object with content is passed to createNewFile
       expect(fileFetcher.createNewFile).toHaveBeenCalledWith(
         expect.objectContaining({
           uri: "https://pod.test/things/",
         }),
-        "my-picture.png",
+        pictureWithContent,
       );
     });
   });
