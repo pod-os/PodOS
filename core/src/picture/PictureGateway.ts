@@ -4,6 +4,7 @@ import { Store } from "../Store";
 import { FileFetcher, NewFile } from "../files";
 import { HttpProblem, NetworkProblem } from "../problems";
 import { LdpContainer } from "../ldp-container";
+import { st, sym } from "rdflib";
 
 export class PictureGateway {
   constructor(
@@ -26,7 +27,27 @@ export class PictureGateway {
   ): ResultAsync<UploadedPicture, HttpProblem | NetworkProblem> {
     const container = this.getContainerFromThing(thing);
 
-    return this.fileFetcher.createNewFile(container, pictureFile);
+    return this.fileFetcher
+      .createNewFile(container, pictureFile)
+      .andThen((file) =>
+        ResultAsync.fromPromise(
+          this.store
+            .executeUpdate({
+              deletions: [],
+              filesToCreate: [],
+              insertions: [
+                st(
+                  sym(thing.uri),
+                  sym("http://schema.org/image"),
+                  sym(file.url),
+                  sym(thing.uri).doc(),
+                ),
+              ],
+            })
+            .then(() => file),
+          () => ({ type: "network" as const, title: "Failed to update thing" }),
+        ),
+      );
   }
 
   private getContainerFromThing(thing: Thing): LdpContainer {

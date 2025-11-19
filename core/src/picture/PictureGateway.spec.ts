@@ -92,6 +92,50 @@ describe("PictureGateway", () => {
       expect(result.isErr()).toBe(true);
       expect(result._unsafeUnwrapErr()).toEqual(httpError);
     });
+
+    it("adds the uploaded image URL to the thing as schema:image", async () => {
+      // given a picture file to upload
+      const pictureFile = new File(["data"], "sunset.jpg", {
+        type: "image/jpeg",
+      });
+
+      // and the file fetcher will create the file at a specific URL
+      fileFetcher.createNewFile.mockReturnValue(
+        ok({
+          url: "https://pod.test/things/sunset.jpg",
+          name: "sunset.jpg",
+          contentType: "image/jpeg",
+        }) as unknown as ReturnType<FileFetcher["createNewFile"]>,
+      );
+
+      // and a mock store that tracks update operations
+      const mockStore = createMockStore();
+      const mockExecuteUpdate = jest.fn().mockResolvedValue(undefined);
+      mockStore.executeUpdate = mockExecuteUpdate;
+      const gatewayWithMockStore = new PictureGateway(mockStore, fileFetcher);
+
+      // when uploading and adding the picture
+      await gatewayWithMockStore.uploadAndAddPicture(thing, pictureFile);
+
+      // then the store is updated with schema:image pointing to the file URL
+      expect(mockExecuteUpdate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          insertions: expect.arrayContaining([
+            expect.objectContaining({
+              subject: expect.objectContaining({
+                value: "https://pod.test/things/thing1",
+              }),
+              predicate: expect.objectContaining({
+                value: "http://schema.org/image",
+              }),
+              object: expect.objectContaining({
+                value: "https://pod.test/things/sunset.jpg",
+              }),
+            }),
+          ]),
+        }),
+      );
+    });
   });
 
   function createMockFileFetcher(): jest.Mocked<FileFetcher> {
@@ -116,6 +160,7 @@ describe("PictureGateway", () => {
         update: jest.fn(),
       },
       get: jest.fn((uri: string) => new Thing(uri, store, true)),
+      executeUpdate: jest.fn().mockResolvedValue(undefined),
     } as unknown as Store;
   }
 });
