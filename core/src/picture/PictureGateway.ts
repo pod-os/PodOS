@@ -5,8 +5,6 @@ import { FileFetcher } from "../files/FileFetcher";
 import { HttpProblem, NetworkProblem } from "../problems";
 import { LdpContainer } from "../ldp-container";
 
-const DEFAULT_PICTURE_FILENAME = "picture.png";
-
 export class PictureGateway {
   constructor(
     private readonly store: Store,
@@ -24,12 +22,12 @@ export class PictureGateway {
    */
   uploadAndAddPicture(
     thing: Thing,
-    pictureFile: Blob,
+    pictureFile: File,
   ): ResultAsync<UploadedPicture, HttpProblem | NetworkProblem> {
     const container = this.getContainerFromThing(thing);
 
     return this.fileFetcher
-      .createNewFile(container, DEFAULT_PICTURE_FILENAME)
+      .createNewFile(container, pictureFile.name)
       .map((file) => ({ url: file.url }));
   }
 

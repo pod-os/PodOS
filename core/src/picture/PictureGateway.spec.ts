@@ -9,7 +9,7 @@ describe("PictureGateway", () => {
   let gateway: PictureGateway;
   let fileFetcher: jest.Mocked<FileFetcher>;
   let thing: Thing;
-  let pictureFile: Blob;
+  let pictureFile: File;
 
   beforeEach(() => {
     // given a thing in a container
@@ -17,14 +17,16 @@ describe("PictureGateway", () => {
     thing = new Thing("https://pod.test/things/thing1", store, true);
 
     // and a picture file to upload
-    pictureFile = new Blob(["picture data"], { type: "image/png" });
+    pictureFile = new File(["picture data"], "my-picture.png", {
+      type: "image/png",
+    });
 
     // and a file fetcher that can create files
     fileFetcher = {
       createNewFile: jest.fn().mockReturnValue(
         ok({
           url: "https://pod.test/things/picture.png",
-          name: "picture.png",
+          name: "my-picture.png",
           contentType: "image/png",
         }),
       ),
@@ -44,7 +46,7 @@ describe("PictureGateway", () => {
         expect.objectContaining({
           uri: "https://pod.test/things/",
         }),
-        expect.any(String),
+        "my-picture.png",
       );
     });
   });
