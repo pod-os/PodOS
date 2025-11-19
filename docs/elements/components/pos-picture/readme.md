@@ -10,6 +10,7 @@
 | Property            | Attribute            | Description                                                                                                      | Type      | Default |
 | ------------------- | -------------------- | ---------------------------------------------------------------------------------------------------------------- | --------- | ------- |
 | `blurredBackground` | `blurred-background` | Use a blurred version of the image as its own background, if the image is scaled down to fit into the container. | `boolean` | `false` |
+| `noUpload`          | `no-upload`          | Disable the upload functionality.                                                                                | `boolean` | `false` |
 
 
 ## Events
@@ -39,11 +40,13 @@
 
 ### Depends on
 
+- [pos-upload](../pos-upload)
 - [pos-image](../pos-image)
 
 ### Graph
 ```mermaid
 graph TD;
+  pos-picture --> pos-upload
   pos-picture --> pos-image
   pos-app-generic --> pos-picture
   pos-login --> pos-picture

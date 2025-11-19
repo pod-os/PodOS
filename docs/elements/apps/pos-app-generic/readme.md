@@ -27,6 +27,7 @@ graph TD;
   pos-app-generic --> pos-literals
   pos-app-generic --> pos-relations
   pos-app-generic --> pos-reverse-relations
+  pos-picture --> pos-upload
   pos-picture --> pos-image
   pos-literals --> pos-predicate
   pos-literals --> pos-add-literal-value

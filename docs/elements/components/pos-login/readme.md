@@ -34,6 +34,7 @@ graph TD;
   pos-login --> pos-resource
   pos-login --> pos-picture
   pos-login --> pos-label
+  pos-picture --> pos-upload
   pos-picture --> pos-image
   pos-app-browser --> pos-login
   style pos-login fill:#f9f,stroke:#333,stroke-width:4px
