@@ -1,5 +1,5 @@
 import { graph } from "rdflib";
-import { ok } from "neverthrow";
+import { ok, err } from "neverthrow";
 import { PictureGateway } from "./PictureGateway";
 import { Store } from "../Store";
 import { FileFetcher } from "../files/FileFetcher";
@@ -66,6 +66,31 @@ describe("PictureGateway", () => {
         name: "vacation.jpg",
         contentType: "image/jpeg",
       });
+    });
+
+    it("returns an error when file creation fails", async () => {
+      // given a picture file to upload
+      const pictureFile = new File(["data"], "photo.jpg", {
+        type: "image/jpeg",
+      });
+
+      // and the file creation will fail with an HTTP error
+      const httpError = {
+        type: "http" as const,
+        status: 403,
+        title: "Upload forbidden",
+        detail: "The server responded with 403 Forbidden",
+      };
+      fileFetcher.createNewFile.mockReturnValue(
+        err(httpError) as unknown as ReturnType<FileFetcher["createNewFile"]>,
+      );
+
+      // when uploading and adding the picture
+      const result = await gateway.uploadAndAddPicture(thing, pictureFile);
+
+      // then the result contains the error
+      expect(result.isErr()).toBe(true);
+      expect(result._unsafeUnwrapErr()).toEqual(httpError);
     });
   });
 
