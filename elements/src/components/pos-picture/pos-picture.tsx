@@ -1,6 +1,7 @@
-import { Component, Event, EventEmitter, State, h, Prop } from '@stencil/core';
-import { Thing } from '@pod-os/core';
+import { Component, Element, Event, EventEmitter, State, h, Prop } from '@stencil/core';
+import { PodOS, Thing } from '@pod-os/core';
 import { ResourceAware, subscribeResource } from '../events/ResourceAware';
+import { usePodOS } from '../events/usePodOS';
 
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 
@@ -20,14 +21,19 @@ export class PosPicture implements ResourceAware {
    */
   @Prop() noUpload: boolean = false;
 
+  @Element() el: HTMLElement;
+
   @State() resource: Thing;
+
+  @State() os: PodOS;
 
   @State() isUploading: boolean = false;
 
   @Event({ eventName: 'pod-os:resource' }) subscribeResource: EventEmitter;
 
-  componentWillLoad() {
+  async componentWillLoad() {
     subscribeResource(this);
+    this.os = await usePodOS(this.el);
   }
 
   receiveResource = (resource: Thing) => {
@@ -42,8 +48,16 @@ export class PosPicture implements ResourceAware {
     this.isUploading = false;
   };
 
+  private readonly handleFilesSelected = (event: CustomEvent<FileList>) => {
+    const files = event.detail;
+    if (files.length > 0) {
+      this.os.uploadAndAddPicture(this.resource, files[0]);
+    }
+    this.exitUploadMode();
+  };
+
   private renderUpload() {
-    return <pos-upload onPod-os:files-selected={this.exitUploadMode}></pos-upload>;
+    return <pos-upload onPod-os:files-selected={this.handleFilesSelected}></pos-upload>;
   }
 
   private shouldShowUploadButton(): boolean {
