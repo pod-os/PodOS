@@ -27,7 +27,7 @@ export class PictureGateway {
     const container = this.getContainerFromThing(thing);
 
     return this.fileFetcher
-      .createNewFile(container, pictureFile.name)
+      .createNewFile(container, pictureFile)
       .map((file) => ({ url: file.url }));
   }
 
