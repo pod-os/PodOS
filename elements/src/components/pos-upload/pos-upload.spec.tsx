@@ -36,7 +36,7 @@ describe('pos-upload', () => {
     });
     expect(page.root).toEqualHtml(`
       <pos-upload>
-        <div></div>
+        <div class="container"></div>
       </pos-upload>
     `);
   });
