@@ -37,15 +37,15 @@ export class PosUpload {
       uppy.emit('upload-start', files);
 
       for (const file of files) {
-        if (!(file.data instanceof File)) {
-          throw new TypeError('Expected file to be a File object');
+        if (file.data instanceof File) {
+          this.uploader(file.data)
+            .map(() => {
+              uppy.emit('upload-success', files[0], { status: 201 });
+            })
+            .mapErr(it => uppy.emit('upload-error', files[0], new Error(it.title + ' - ' + it.detail)));
+        } else {
+          uppy.emit('upload-error', files[0], new Error('Expected file to be a File object'));
         }
-
-        this.uploader(file.data)
-          .map(() => {
-            uppy.emit('upload-success', files[0], { status: 201 });
-          })
-          .mapErr(it => uppy.emit('upload-error', files[0], new Error(it.title + ' - ' + it.detail)));
       }
     });
   }
