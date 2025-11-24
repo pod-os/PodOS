@@ -39,13 +39,13 @@ export class PosUpload {
 
       for (const file of files) {
         if (file.data instanceof File) {
-          this.uploader(file.data)
+          await this.uploader(file.data)
             .map(() => {
-              uppy.emit('upload-success', files[0], { status: 201 });
+              uppy.emit('upload-success', file, { status: 201 });
             })
-            .mapErr(it => uppy.emit('upload-error', files[0], new Error(it.title + ' - ' + it.detail)));
+            .mapErr(it => uppy.emit('upload-error', file, new Error(it.title + ' - ' + it.detail)));
         } else {
-          uppy.emit('upload-error', files[0], new Error('Expected file to be a File object'));
+          uppy.emit('upload-error', file, new Error('Expected file to be a File object'));
         }
       }
     });
