@@ -48,16 +48,17 @@ export class PosPicture implements ResourceAware {
     this.isUploading = false;
   };
 
-  private readonly handleFilesSelected = (event: CustomEvent<FileList>) => {
-    const files = event.detail;
-    if (files.length > 0) {
-      this.os.uploadAndAddPicture(this.resource, files[0]);
-    }
-    this.exitUploadMode();
-  };
-
   private renderUpload() {
-    return <pos-upload onPod-os:files-selected={this.handleFilesSelected}></pos-upload>;
+    return (
+      <div>
+        <pos-upload
+          uploader={(file: File) => {
+            return this.os.uploadAndAddPicture(this.resource, file);
+          }}
+        ></pos-upload>
+        <button onClick={() => this.exitUploadMode()}>Close upload</button>
+      </div>
+    );
   }
 
   private shouldShowUploadButton(): boolean {
