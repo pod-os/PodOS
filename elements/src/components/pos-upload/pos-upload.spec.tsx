@@ -122,4 +122,31 @@ describe('pos-upload', () => {
       new Error('Failed - Some details about the failure'),
     );
   });
+
+  it('throws error if selected items are no File for some reason', async () => {
+    // given an upload component with an upload function
+    const uploadFn = jest.fn();
+    await newSpecPage({
+      components: [PosUpload],
+      template: () => <pos-upload uploader={uploadFn} />,
+    });
+
+    // and a single file has been selected for upload
+    const blobToUpload = [{ data: new Blob([''], { type: 'image/png' }) }];
+    when(getFilesByIds).calledWith(['image.png']).mockReturnValue(blobToUpload);
+
+    // when upload is triggered for the file
+    expect(addUploader).toHaveBeenCalled();
+    const uploader = addUploader.mock.calls[0][0];
+    uploader(['image.png']);
+
+    // then the upload start is promoted
+    expect(emit).toHaveBeenCalledWith('upload-start', blobToUpload);
+
+    // and upload-error is promoted for the blob
+    expect(emit).toHaveBeenCalledWith('upload-error', blobToUpload[0], new Error('Expected file to be a File object'));
+
+    // and the upload function is not called
+    expect(uploadFn).not.toHaveBeenCalled();
+  });
 });
