@@ -26,6 +26,7 @@ export class PosUpload {
       inline: true,
       target: this.uppy,
       width: 'inherit',
+      height: 'inherit',
     });
     uppy.setOptions({
       restrictions: {
@@ -51,6 +52,6 @@ export class PosUpload {
   }
 
   render() {
-    return <div ref={el => (this.uppy = el)}></div>;
+    return <div class="container" ref={el => (this.uppy = el)}></div>;
   }
 }
