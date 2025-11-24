@@ -5,6 +5,7 @@ const setOptions = jest.fn();
 const addUploader = jest.fn();
 const getFilesByIds = jest.fn();
 const emit = jest.fn();
+
 class MockUppy {
   use = jest.fn().mockImplementation(() => this);
   setOptions = setOptions;
@@ -18,9 +19,8 @@ jest.mock('@uppy/dashboard', () => ({}));
 
 import { newSpecPage } from '@stencil/core/testing';
 import { PosUpload } from './pos-upload';
-import { waitFor } from '@testing-library/dom';
 import { when } from 'jest-when';
-import { err, ok, Ok, ResultAsync } from 'neverthrow';
+import { err, ok } from 'neverthrow';
 import { HttpProblem } from '@pod-os/core';
 
 describe('pos-upload', () => {
@@ -80,13 +80,41 @@ describe('pos-upload', () => {
     // when upload is triggered for the file
     expect(addUploader).toHaveBeenCalled();
     const uploader = addUploader.mock.calls[0][0];
-    uploader(['image.png']);
+    await uploader(['image.png']);
 
     // then the upload start is promoted
     expect(emit).toHaveBeenCalledWith('upload-start', filesToUpload);
 
     // and upload-success is promoted for the file
     expect(emit).toHaveBeenCalledWith('upload-success', filesToUpload[0], { status: 201 });
+  });
+
+  it('uses the uploader function to successfully upload multiple files', async () => {
+    // given an upload component with an upload function that works fine
+    const uploadFn = jest.fn().mockReturnValue(ok({ url: 'https://pod.test/image.png' }));
+    await newSpecPage({
+      components: [PosUpload],
+      template: () => <pos-upload uploader={uploadFn} />,
+    });
+
+    // and multiple files have been selected for upload
+    const filesToUpload = [
+      { data: new File([''], 'image.png', { type: 'image/png' }) },
+      { data: new File([''], 'file.pdf', { type: 'application/pdf' }) },
+    ];
+    when(getFilesByIds).calledWith(['image.png', 'file.pdf']).mockReturnValue(filesToUpload);
+
+    // when upload is triggered for the files
+    expect(addUploader).toHaveBeenCalled();
+    const uploader = addUploader.mock.calls[0][0];
+    await uploader(['image.png', 'file.pdf']);
+
+    // then the upload start is promoted
+    expect(emit).toHaveBeenCalledWith('upload-start', filesToUpload);
+
+    // and upload-success is promoted for each file
+    expect(emit).toHaveBeenCalledWith('upload-success', filesToUpload[0], { status: 201 });
+    expect(emit).toHaveBeenCalledWith('upload-success', filesToUpload[1], { status: 201 });
   });
 
   it('promotes the failure of a file upload', async () => {
@@ -110,7 +138,7 @@ describe('pos-upload', () => {
     // when upload is triggered for the file
     expect(addUploader).toHaveBeenCalled();
     const uploader = addUploader.mock.calls[0][0];
-    uploader(['image.png']);
+    await uploader(['image.png']);
 
     // then the upload start is promoted
     expect(emit).toHaveBeenCalledWith('upload-start', filesToUpload);
@@ -119,6 +147,52 @@ describe('pos-upload', () => {
     expect(emit).toHaveBeenCalledWith(
       'upload-error',
       filesToUpload[0],
+      new Error('Failed - Some details about the failure'),
+    );
+  });
+
+  it('can upload one file, while failing the other', async () => {
+    // given an upload component with an upload function that works fine for only one of two files
+    const workingFile = new File(['working'], 'works.png', { type: 'image/png' });
+    const failingFile = new File(['failing'], 'fails.pdf', { type: 'application/pdf' });
+
+    const uploadFn = jest.fn();
+    when(uploadFn)
+      .calledWith(workingFile)
+      .mockReturnValue(ok({ url: 'https://pod.test/works.png' }));
+    when(uploadFn)
+      .calledWith(failingFile)
+      .mockReturnValue(
+        err({
+          type: 'http',
+          title: 'Failed',
+          detail: 'Some details about the failure',
+          status: 429,
+        }),
+      );
+    await newSpecPage({
+      components: [PosUpload],
+      template: () => <pos-upload uploader={uploadFn} />,
+    });
+
+    // and multiple files have been selected for upload
+    const filesToUpload = [{ data: workingFile }, { data: failingFile }];
+    when(getFilesByIds).calledWith(['works.png', 'fails.pdf']).mockReturnValue(filesToUpload);
+
+    // when upload is triggered for the files
+    expect(addUploader).toHaveBeenCalled();
+    const uploader = addUploader.mock.calls[0][0];
+    await uploader(['works.png', 'fails.pdf']);
+
+    // then the upload start is promoted
+    expect(emit).toHaveBeenCalledWith('upload-start', filesToUpload);
+
+    // and upload-success is promoted for the working file
+    expect(emit).toHaveBeenCalledWith('upload-success', filesToUpload[0], { status: 201 });
+    // but upload-error is promoted for the failing file containing problem title and details
+    expect(emit).toHaveBeenCalledWith(
+      'upload-error',
+      filesToUpload[1],
       new Error('Failed - Some details about the failure'),
     );
   });
@@ -138,7 +212,7 @@ describe('pos-upload', () => {
     // when upload is triggered for the file
     expect(addUploader).toHaveBeenCalled();
     const uploader = addUploader.mock.calls[0][0];
-    uploader(['image.png']);
+    await uploader(['image.png']);
 
     // then the upload start is promoted
     expect(emit).toHaveBeenCalledWith('upload-start', blobToUpload);
