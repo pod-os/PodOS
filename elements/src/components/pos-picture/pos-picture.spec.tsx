@@ -1,3 +1,5 @@
+import { Components } from '../../components';
+
 jest.mock('../events/usePodOS');
 
 import { newSpecPage } from '@stencil/core/testing';
@@ -144,18 +146,13 @@ describe('pos-picture', () => {
       expect(posUpload).not.toBeNull();
     });
 
-    it('exits upload mode when files are selected', async () => {
+    it('exits upload mode when close button is clicked', async () => {
       const uploadButton = page.root?.shadowRoot?.querySelector('button');
       uploadButton?.click();
       await page.waitForChanges();
 
-      const posUpload = page.root?.shadowRoot?.querySelector('pos-upload');
-      posUpload?.dispatchEvent(
-        new CustomEvent('pod-os:files-selected', {
-          bubbles: true,
-          detail: [],
-        }),
-      );
+      const closeButton = page.root?.shadowRoot?.querySelector('button');
+      closeButton.click();
       await page.waitForChanges();
 
       expect(page.root?.shadowRoot?.querySelector('pos-upload')).toBeNull();
@@ -207,7 +204,7 @@ describe('pos-picture', () => {
   });
 
   describe('uploading picture', () => {
-    it('adds a single selected picture to the thing', async () => {
+    it('adds uploaded picture to the thing', async () => {
       // Given a PodOS instance with uploadAndAddPicture
       const mockUploadAndAddPicture = jest.fn();
       when(usePodOS).mockResolvedValue({
@@ -234,18 +231,12 @@ describe('pos-picture', () => {
       uploadButton?.click();
       await page.waitForChanges();
 
-      // When a single picture file is selected
+      // When a picture file is uploaded
       const mockFile = new File(['image content'], 'picture.jpg', {
         type: 'image/jpeg',
       });
-      const posUpload = page.root?.shadowRoot?.querySelector('pos-upload');
-      posUpload?.dispatchEvent(
-        new CustomEvent('pod-os:files-selected', {
-          bubbles: true,
-          detail: createMockFileList(mockFile),
-        }),
-      );
-      await page.waitForChanges();
+      const posUpload: Components.PosUpload = page.root?.shadowRoot?.querySelector('pos-upload');
+      posUpload.uploader(mockFile);
 
       // Then the picture should be uploaded and added to the thing
       expect(mockUploadAndAddPicture).toHaveBeenCalledWith(mockResource, mockFile);

@@ -1,4 +1,9 @@
-import { Component, h, Prop, State, Event, EventEmitter } from '@stencil/core';
+import { Component, h, Prop } from '@stencil/core';
+
+import Uppy from '@uppy/core';
+import Dashboard from '@uppy/dashboard';
+import { ResultAsync } from 'neverthrow';
+import { HttpProblem, NetworkProblem } from '@pod-os/core';
 
 @Component({
   tag: 'pos-upload',
@@ -7,41 +12,45 @@ import { Component, h, Prop, State, Event, EventEmitter } from '@stencil/core';
 })
 export class PosUpload {
   /**
-   * The accepted file types, as defined by the HTML5 `accept` attribute.
+   * The accepted file types.
    */
   @Prop()
-  accept: string = 'image/*';
+  accept: string[] = ['image/*'];
 
-  /**
-   * Fires when files are selected from the file input.
-   */
-  @Event({ eventName: 'pod-os:files-selected' }) filesSelected: EventEmitter<FileList>;
+  @Prop() uploader: (file: File) => ResultAsync<{ url: string }, HttpProblem | NetworkProblem>;
 
-  @State() dragover: boolean = false;
+  uppy: HTMLElement;
 
-  private readonly handleChange = (event: Event) => {
-    const input = event.target as HTMLInputElement;
-    if (input.files) {
-      this.filesSelected.emit(input.files);
-    }
-  };
+  componentDidRender() {
+    const uppy = new Uppy().use(Dashboard, {
+      inline: true,
+      target: this.uppy,
+      width: 'inherit',
+    });
+    uppy.setOptions({
+      restrictions: {
+        allowedFileTypes: this.accept,
+      },
+    });
+    uppy.addUploader(async fileIds => {
+      const files = uppy.getFilesByIds(fileIds);
+      uppy.emit('upload-start', files);
+
+      for (const file of files) {
+        if (!(file.data instanceof File)) {
+          throw new TypeError('Expected file to be a File object');
+        }
+
+        this.uploader(file.data)
+          .map(() => {
+            uppy.emit('upload-success', files[0], { status: 201 });
+          })
+          .mapErr(it => uppy.emit('upload-error', files[0], new Error(it.title + ' - ' + it.detail)));
+      }
+    });
+  }
 
   render() {
-    return (
-      <form>
-        <input
-          class={{
-            dragover: this.dragover,
-          }}
-          type="file"
-          multiple
-          accept={this.accept}
-          onDragEnter={() => (this.dragover = true)}
-          onDragLeave={() => (this.dragover = false)}
-          onDrop={() => (this.dragover = false)}
-          onChange={this.handleChange}
-        ></input>
-      </form>
-    );
+    return <div ref={el => (this.uppy = el)}></div>;
   }
 }

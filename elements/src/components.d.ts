@@ -5,10 +5,12 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { LdpContainer, PodOS, Problem, SolidFile, Thing } from "@pod-os/core";
+import { HttpProblem, LdpContainer, NetworkProblem, PodOS, Problem, SolidFile, Thing } from "@pod-os/core";
 import { ToolConfig } from "./components/pos-type-router/selectToolsForTypes";
-export { LdpContainer, PodOS, Problem, SolidFile, Thing } from "@pod-os/core";
+import { ResultAsync } from "neverthrow";
+export { HttpProblem, LdpContainer, NetworkProblem, PodOS, Problem, SolidFile, Thing } from "@pod-os/core";
 export { ToolConfig } from "./components/pos-type-router/selectToolsForTypes";
+export { ResultAsync } from "neverthrow";
 export namespace Components {
     interface PosAddLiteralValue {
     }
@@ -260,10 +262,11 @@ export namespace Components {
     }
     interface PosUpload {
         /**
-          * The accepted file types, as defined by the HTML5 `accept` attribute.
-          * @default 'image/*'
+          * The accepted file types.
+          * @default ['image/*']
          */
-        "accept": string;
+        "accept": string[];
+        "uploader": (file: File) => ResultAsync<{ url: string }, HttpProblem | NetworkProblem>;
     }
     interface PosUserMenu {
         "webId": string;
@@ -410,10 +413,6 @@ export interface PosTypeBadgesCustomEvent<T> extends CustomEvent<T> {
 export interface PosTypeRouterCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosTypeRouterElement;
-}
-export interface PosUploadCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLPosUploadElement;
 }
 export interface PosUserMenuCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -1113,18 +1112,7 @@ declare global {
         prototype: HTMLPosTypeRouterElement;
         new (): HTMLPosTypeRouterElement;
     };
-    interface HTMLPosUploadElementEventMap {
-        "pod-os:files-selected": FileList;
-    }
     interface HTMLPosUploadElement extends Components.PosUpload, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLPosUploadElementEventMap>(type: K, listener: (this: HTMLPosUploadElement, ev: PosUploadCustomEvent<HTMLPosUploadElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLPosUploadElementEventMap>(type: K, listener: (this: HTMLPosUploadElement, ev: PosUploadCustomEvent<HTMLPosUploadElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosUploadElement: {
         prototype: HTMLPosUploadElement;
@@ -1553,14 +1541,11 @@ declare namespace LocalJSX {
     }
     interface PosUpload {
         /**
-          * The accepted file types, as defined by the HTML5 `accept` attribute.
-          * @default 'image/*'
+          * The accepted file types.
+          * @default ['image/*']
          */
-        "accept"?: string;
-        /**
-          * Fires when files are selected from the file input.
-         */
-        "onPod-os:files-selected"?: (event: PosUploadCustomEvent<FileList>) => void;
+        "accept"?: string[];
+        "uploader"?: (file: File) => ResultAsync<{ url: string }, HttpProblem | NetworkProblem>;
     }
     interface PosUserMenu {
         "onPod-os:link"?: (event: PosUserMenuCustomEvent<any>) => void;
