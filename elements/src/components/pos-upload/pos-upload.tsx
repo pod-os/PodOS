@@ -2,6 +2,7 @@ import { Component, h, Prop } from '@stencil/core';
 
 import Uppy from '@uppy/core';
 import Dashboard from '@uppy/dashboard';
+import ImageEditor from '@uppy/image-editor';
 import { ResultAsync } from 'neverthrow';
 import { HttpProblem, NetworkProblem } from '@pod-os/core';
 
@@ -22,12 +23,12 @@ export class PosUpload {
   uppy: HTMLElement;
 
   componentDidRender() {
-    const uppy = new Uppy().use(Dashboard, {
-      inline: true,
-      target: this.uppy,
-      width: 'inherit',
-      height: 'inherit',
-    });
+    const uppy = new Uppy()
+      .use(Dashboard, {
+        inline: true,
+        target: this.uppy,
+      })
+      .use(ImageEditor);
     uppy.setOptions({
       restrictions: {
         allowedFileTypes: this.accept,

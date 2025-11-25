@@ -33,6 +33,7 @@
     "@tiptap/starter-kit": "^3.10.1",
     "@uppy/core": "^5.1.1",
     "@uppy/dashboard": "^5.0.4",
+    "@uppy/image-editor": "^4.0.2",
     "@uvdsl/solid-oidc-client-browser": "^0.1.3",
     "idb": "^8.0.3",
     "neverthrow": "^8.2.0",

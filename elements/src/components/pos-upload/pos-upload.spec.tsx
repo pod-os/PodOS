@@ -16,6 +16,7 @@ class MockUppy {
 
 jest.mock('@uppy/core', () => MockUppy);
 jest.mock('@uppy/dashboard', () => ({}));
+jest.mock('@uppy/image-editor', () => ({}));
 
 import { newSpecPage } from '@stencil/core/testing';
 import { PosUpload } from './pos-upload';
