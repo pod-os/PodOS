@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - Removed dependency on ionic components. If your PodOS-based application relies on those, you have to include ionic yourself to continue using them.
 
+## Added
+
+- [pos-upload](https://pod-os.org/reference/elements/components/pos-upload/): A file upload component with drag-and-drop support based on [Uppy](https://uppy.io/)
+
 ## Changes
 
 - replaced several icons that came with ionic
@@ -19,6 +23,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - [pos-type-badges](https://pod-os.org/reference/elements/components/pos-type-badges/):
   - style changes
   - added tooltips to the expand / collapse button
+- [pos-picture](https://pod-os.org/reference/elements/components/pos-picture/):
+  - Added picture upload functionality with drag-and-drop interface
+  - Shows upload button on hover when resource is editable
+  - New `no-upload` property to disable upload functionality
+  - Upload button shown even when no picture is present
 
 ## 0.32.0
 
@@ -94,7 +103,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - fires event `pod-os:loaded` as soon as PodOS is ready to be used
   - this event gives access to the PodOS instance and an authenticated fetcher
 
-
 ## 0.27.0
 
 ### ⚠ BREAKING CHANGES
@@ -130,10 +138,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### ⚠ BREAKING CHANGES
 
-- The global stylesheet (elements.css) now applies theming based on the user's system preferences (dark vs. light), this also affects the document body background by default. 
+- The global stylesheet (elements.css) now applies theming based on the user's system preferences (dark vs. light), this also affects the document body background by default.
   - If you don't like that, you may overwrite the background with your own style, but keep in mind that in dark mode other styles may rely on a dark background (e.g., white text)
   - You may choose not to include the stylesheet at all, in that case make sure to at least [include pollen.css](https://www.pollen.style/basics/getting-started#quick-start), because PodOS relies on variables defined there. Additionally, you should define the PodOS-specific variables. Take a look into [global.css](https://github.com/pod-os/PodOS/blob/main/elements/src/global.css) to see what is available and what the default is.
-  
+
 ### Added
 
 - [pos-list](../docs/elements/components/pos-list):
@@ -236,7 +244,7 @@ Rolled back to stencil to 4.24, due to a blank page issue with the ionic version
 
 ### Changed
 
-- [pos-label](../docs/elements/components/pos-label): shorter fallback labels 
+- [pos-label](../docs/elements/components/pos-label): shorter fallback labels
 - [pos-rich-link](../docs/elements/components/pos-rich-link): Redesigned to reduce clutter and duplicate information
 - [pos-relations](../docs/elements/components/pos-relations): shorter labels for predicates & redesign
 - [pos-reverse-relations](../docs/elements/components/pos-reverse-relations): shorter labels for predicates & redesign
@@ -270,7 +278,7 @@ Rolled back to stencil to 4.24, due to a blank page issue with the ionic version
   - The router does not include a `pos-resource` and `pos-type-router` anymore. You have to include them yourself, if you want to restore the old behaviour:
 
 ```tsx
-<pos-router onPod-os:route-changed={e => this.uri = e.detail}>
+<pos-router onPod-os:route-changed={e => (this.uri = e.detail)}>
   <pos-resource uri={this.uri}>
     <pos-type-router />
   </pos-resource>
@@ -300,7 +308,7 @@ Rolled back to stencil to 4.24, due to a blank page issue with the ionic version
   - new property `restore-previous-session` allows to restore the session after a refresh or opening in new tab
 - [pos-router](../docs/elements/components/pos-router)
   - will navigate back to the original URL after a session has been restored
-  
+
 ## 0.16.0
 
 ### Added

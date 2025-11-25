@@ -12,9 +12,17 @@ and this project adheres to
 
 - `PictureGateway`: New gateway class to handle picture upload and linking
   operations
-- `PodOS.uploadAndAddPicture()`: Upload a picture file and associate it with a thing using schema:image predicate
+- `PodOS.uploadAndAddPicture()`: Upload a picture file and associate it with a
+  thing using schema:image predicate
+- `Thing.container()`: Get the LDP container URI for a thing
 - `Store.additions$` and `Store.removals$` are `rxjs` `Subject`s for listening
   to changes to the store
+
+### Changed
+
+- [`PodOS.files().createNewFile()`](https://pod-os.org/reference/core/classes/FileFetcher/#createNewFile):
+  Now accepts `File` instances in addition to `Blob` objects, automatically
+  using the file's name and type
 
 ## 0.21.0
 
