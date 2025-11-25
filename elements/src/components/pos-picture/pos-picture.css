@@ -50,3 +50,16 @@ button.add {
   margin-top: var(--size-2);
   display: flex;
 }
+
+.upload-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-2);
+  padding: var(--size-2);
+  button.close {
+    display: flex;
+    align-items: center;
+    gap: var(--size-1);
+    padding: var(--size-1);
+  }
+}

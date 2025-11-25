@@ -8,7 +8,7 @@
   height: var(--height);
   width: var(--width);
   box-sizing: border-box;
-  padding: var(--size-2);
+  padding: 0;
   .uppy-Root,
   .uppy-Dashboard {
     height: 100%;

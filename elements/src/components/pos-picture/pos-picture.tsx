@@ -50,13 +50,15 @@ export class PosPicture implements ResourceAware {
 
   private renderUpload() {
     return (
-      <div>
+      <div class="upload-container">
+        <button class="close" onClick={() => this.exitUploadMode()}>
+          <sl-icon name="x-circle"></sl-icon>Close upload
+        </button>
         <pos-upload
           uploader={(file: File) => {
             return this.os.uploadAndAddPicture(this.resource, file);
           }}
         ></pos-upload>
-        <button onClick={() => this.exitUploadMode()}>Close upload</button>
       </div>
     );
   }
