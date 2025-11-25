@@ -8,7 +8,7 @@
 
 > **networkProblem**(`title`, `cause`): [`NetworkProblem`](../interfaces/NetworkProblem.md)
 
-Defined in: [problems/index.ts:29](https://github.com/pod-os/PodOS/blob/de9215ad8ec55ee6f58ed59e3dc31dc7c0c3e462/core/src/problems/index.ts#L29)
+Defined in: [problems/index.ts:29](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/problems/index.ts#L29)
 
 ## Parameters
 

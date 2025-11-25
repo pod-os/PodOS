@@ -16,6 +16,7 @@
 - [LdpContainer](classes/LdpContainer.md)
 - [NoOfflineCache](classes/NoOfflineCache.md)
 - [OfflineCapableFetcher](classes/OfflineCapableFetcher.md)
+- [PictureGateway](classes/PictureGateway.md)
 - [PodOS](classes/PodOS.md)
 - [RdfDocument](classes/RdfDocument.md)
 - [SearchGateway](classes/SearchGateway.md)
@@ -32,6 +33,8 @@
 - [HttpProblem](interfaces/HttpProblem.md)
 - [Literal](interfaces/Literal.md)
 - [NetworkProblem](interfaces/NetworkProblem.md)
+- [NewFile](interfaces/NewFile.md)
+- [NewFolder](interfaces/NewFolder.md)
 - [OfflineCache](interfaces/OfflineCache.md)
 - [OfflineCapableFetcherOptions](interfaces/OfflineCapableFetcherOptions.md)
 - [OnlineStatus](interfaces/OnlineStatus.md)
@@ -52,6 +55,7 @@
 
 ## Functions
 
+- [createPictureLinkOperation](functions/createPictureLinkOperation.md)
 - [httpProblem](functions/httpProblem.md)
 - [labelFromUri](functions/labelFromUri.md)
 - [listKnownTerms](functions/listKnownTerms.md)

@@ -10,12 +10,12 @@ and this project adheres to
 
 ### Added
 
-- `PictureGateway`: New gateway class to handle picture upload and linking
+- [`PictureGateway`](https://pod-os.org/reference/core/classes/PictureGateway/): New gateway class to handle picture upload and linking
   operations
-- `PodOS.uploadAndAddPicture()`: Upload a picture file and associate it with a
+- [`PodOS.uploadAndAddPicture()`](https://pod-os.org/reference/core/classes/PictureGateway/#uploadandaddpicture): Upload a picture file and associate it with a
   thing using schema:image predicate
-- `Thing.container()`: Get the LDP container URI for a thing
-- `Store.additions$` and `Store.removals$` are `rxjs` `Subject`s for listening
+- [`Thing.container()`](https://pod-os.org/reference/core/classes/Thing/#container): Get the LDP container URI for a thing
+- [`Store.additions$`](https://pod-os.org/reference/core/classes/Store/#additions) and [`Store.removals$`](https://pod-os.org/reference/core/classes/Store/#removals) are `rxjs` `Subject`s for listening
   to changes to the store
 
 ### Changed

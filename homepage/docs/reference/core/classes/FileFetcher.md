@@ -6,7 +6,7 @@
 
 # Class: FileFetcher
 
-Defined in: [files/FileFetcher.ts:17](https://github.com/pod-os/PodOS/blob/de9215ad8ec55ee6f58ed59e3dc31dc7c0c3e462/core/src/files/FileFetcher.ts#L17)
+Defined in: [files/FileFetcher.ts:17](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/files/FileFetcher.ts#L17)
 
 ## Constructors
 
@@ -14,7 +14,7 @@ Defined in: [files/FileFetcher.ts:17](https://github.com/pod-os/PodOS/blob/de921
 
 > **new FileFetcher**(`session`): `FileFetcher`
 
-Defined in: [files/FileFetcher.ts:18](https://github.com/pod-os/PodOS/blob/de9215ad8ec55ee6f58ed59e3dc31dc7c0c3e462/core/src/files/FileFetcher.ts#L18)
+Defined in: [files/FileFetcher.ts:18](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/files/FileFetcher.ts#L18)
 
 #### Parameters
 
@@ -30,9 +30,9 @@ Defined in: [files/FileFetcher.ts:18](https://github.com/pod-os/PodOS/blob/de921
 
 ### createNewFile()
 
-> **createNewFile**(`container`, `name`): `ResultAsync`\<`NewFile`, `NotCreated`\>
+> **createNewFile**(`container`, `name`): `ResultAsync`\<[`NewFile`](../interfaces/NewFile.md), `NotCreated`\>
 
-Defined in: [files/FileFetcher.ts:54](https://github.com/pod-os/PodOS/blob/de9215ad8ec55ee6f58ed59e3dc31dc7c0c3e462/core/src/files/FileFetcher.ts#L54)
+Defined in: [files/FileFetcher.ts:54](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/files/FileFetcher.ts#L54)
 
 #### Parameters
 
@@ -42,19 +42,19 @@ Defined in: [files/FileFetcher.ts:54](https://github.com/pod-os/PodOS/blob/de921
 
 ##### name
 
-`string`
+`string` | `File`
 
 #### Returns
 
-`ResultAsync`\<`NewFile`, `NotCreated`\>
+`ResultAsync`\<[`NewFile`](../interfaces/NewFile.md), `NotCreated`\>
 
 ***
 
 ### createNewFolder()
 
-> **createNewFolder**(`container`, `name`): `ResultAsync`\<`NewFolder`, `NotCreated`\>
+> **createNewFolder**(`container`, `name`): `ResultAsync`\<[`NewFolder`](../interfaces/NewFolder.md), `NotCreated`\>
 
-Defined in: [files/FileFetcher.ts:81](https://github.com/pod-os/PodOS/blob/de9215ad8ec55ee6f58ed59e3dc31dc7c0c3e462/core/src/files/FileFetcher.ts#L81)
+Defined in: [files/FileFetcher.ts:88](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/files/FileFetcher.ts#L88)
 
 #### Parameters
 
@@ -68,7 +68,7 @@ Defined in: [files/FileFetcher.ts:81](https://github.com/pod-os/PodOS/blob/de921
 
 #### Returns
 
-`ResultAsync`\<`NewFolder`, `NotCreated`\>
+`ResultAsync`\<[`NewFolder`](../interfaces/NewFolder.md), `NotCreated`\>
 
 ***
 
@@ -76,7 +76,7 @@ Defined in: [files/FileFetcher.ts:81](https://github.com/pod-os/PodOS/blob/de921
 
 > **fetchFile**(`url`): `Promise`\<[`SolidFile`](../interfaces/SolidFile.md)\>
 
-Defined in: [files/FileFetcher.ts:25](https://github.com/pod-os/PodOS/blob/de9215ad8ec55ee6f58ed59e3dc31dc7c0c3e462/core/src/files/FileFetcher.ts#L25)
+Defined in: [files/FileFetcher.ts:25](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/files/FileFetcher.ts#L25)
 
 Fetch the contents of the given file
 
@@ -100,7 +100,7 @@ An object representing the fetched file
 
 > **putFile**(`file`, `newContent`): `Promise`\<`Response`\>
 
-Defined in: [files/FileFetcher.ts:44](https://github.com/pod-os/PodOS/blob/de9215ad8ec55ee6f58ed59e3dc31dc7c0c3e462/core/src/files/FileFetcher.ts#L44)
+Defined in: [files/FileFetcher.ts:44](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/files/FileFetcher.ts#L44)
 
 Updates the contents of a file (overrides old content with the given one)
 
