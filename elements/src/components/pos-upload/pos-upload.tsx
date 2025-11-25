@@ -28,6 +28,7 @@ export class PosUpload {
       .use(Dashboard, {
         inline: true,
         target: this.uppy,
+        theme: 'auto',
       })
       .use(ImageEditor)
       .use(Webcam, { modes: ['picture'] });
