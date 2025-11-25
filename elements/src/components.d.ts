@@ -5,10 +5,8 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { HttpProblem, LdpContainer, NetworkProblem, PodOS, Problem, SolidFile, Thing } from "@pod-os/core";
 import { ToolConfig } from "./components/pos-type-router/selectToolsForTypes";
 import { ResultAsync } from "neverthrow";
-export { HttpProblem, LdpContainer, NetworkProblem, PodOS, Problem, SolidFile, Thing } from "@pod-os/core";
 export { ToolConfig } from "./components/pos-type-router/selectToolsForTypes";
 export { ResultAsync } from "neverthrow";
 export namespace Components {
