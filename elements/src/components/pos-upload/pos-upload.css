@@ -1,6 +1,7 @@
 @import '~@uppy/core/dist/style.min.css';
 @import '~@uppy/dashboard/dist/style.min.css';
 @import '~@uppy/image-editor/dist/style.min.css';
+@import '~@uppy/webcam/dist/style.min.css';
 
 .container {
   aspect-ratio: 4 / 3;

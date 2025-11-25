@@ -3,6 +3,7 @@ import { Component, h, Prop } from '@stencil/core';
 import Uppy from '@uppy/core';
 import Dashboard from '@uppy/dashboard';
 import ImageEditor from '@uppy/image-editor';
+import Webcam from '@uppy/webcam';
 import { ResultAsync } from 'neverthrow';
 import { HttpProblem, NetworkProblem } from '@pod-os/core';
 
@@ -28,7 +29,8 @@ export class PosUpload {
         inline: true,
         target: this.uppy,
       })
-      .use(ImageEditor);
+      .use(ImageEditor)
+      .use(Webcam, { modes: ['picture'] });
     uppy.setOptions({
       restrictions: {
         allowedFileTypes: this.accept,
