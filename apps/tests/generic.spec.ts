@@ -1,6 +1,7 @@
 import { expect } from "@playwright/test";
 
 import { test } from "./fixtures";
+import { GenericThingPage } from "./page-objects/GenericThingPage";
 
 test("show generic information about unknown types of things", async ({
   page,
@@ -14,18 +15,17 @@ test("show generic information about unknown types of things", async ({
     "http://localhost:4000/alice/public/generic/resource#it",
   );
 
+  const somethingPage = new GenericThingPage(page, "Something");
+
   // then page shows a heading with the resource name
-  const heading = page.getByRole("heading");
-  await expect(heading).toHaveText("Something");
+  await expect(somethingPage.heading()).toHaveText("Something");
 
   // and it shows the description of the resource
-  const overview = page.getByRole("article", { name: "Something" });
-  await expect(overview).toHaveText(/A very generic item/);
+  await expect(somethingPage.overview()).toHaveText(/A very generic item/);
 
   // and the type of the resource
-  await expect(overview).toHaveText(/Thing/);
+  await expect(somethingPage.overview()).toHaveText(/Thing/);
 
   // and the image
-  const image = overview.getByAltText("Something");
-  await expect(image).toHaveAttribute("src", /blob:/);
+  await expect(somethingPage.picture()).toHaveAttribute("src", /blob:/);
 });

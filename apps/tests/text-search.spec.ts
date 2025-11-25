@@ -3,6 +3,8 @@ import { signIn } from "./actions/signIn";
 import { alice } from "./fixtures/credentials";
 
 import { test } from "./fixtures";
+import { GenericThingPage } from "./page-objects/GenericThingPage";
+
 test.describe("Text search", () => {
   test("finds a thing based on the label index", async ({
     page,
@@ -23,8 +25,8 @@ test.describe("Text search", () => {
     });
 
     await test.step("then the page shows the selected resource", async () => {
-      const overview = page.getByRole("article", { name: "Something" });
-      await expect(overview, "show description").toHaveText(
+      const somethingPage = new GenericThingPage(page, "Something");
+      await expect(somethingPage.overview(), "show description").toHaveText(
         /A very generic item/,
       );
     });

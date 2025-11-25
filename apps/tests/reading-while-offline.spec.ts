@@ -1,6 +1,7 @@
 import { expect } from "@playwright/test";
 
 import { test } from "./fixtures";
+import { GenericThingPage } from "./page-objects/GenericThingPage";
 
 test("can access cached resources while offline", async ({
   page,
@@ -19,14 +20,16 @@ test("can access cached resources while offline", async ({
     });
   });
 
-  await test.step("and the they have visited a resource", async () => {
-    await navigationBar.fillAndSubmit(
-      "http://localhost:4000/alice/public/generic/resource#it",
-    );
+  const somethingPage =
+    await test.step("and the they have visited a resource", async () => {
+      await navigationBar.fillAndSubmit(
+        "http://localhost:4000/alice/public/generic/resource#it",
+      );
 
-    const heading = page.getByRole("heading");
-    await expect(heading).toHaveText("Something");
-  });
+      const genericPage = new GenericThingPage(page, "Something");
+      await expect(genericPage.heading()).toHaveText("Something");
+      return genericPage;
+    });
 
   await test.step("and the user has returned to the home page", async () => {
     await page.goto("/");
@@ -43,15 +46,12 @@ test("can access cached resources while offline", async ({
   });
 
   await test.step("then the cached content is still accessible", async () => {
-    const heading = page.getByRole("heading");
-    await expect(heading).toHaveText("Something");
+    await expect(somethingPage.heading()).toHaveText("Something");
 
-    const overview = page.getByRole("article", { name: "Something" });
-    await expect(overview).toHaveText(/A very generic item/);
-    await expect(overview).toHaveText(/Thing/);
+    await expect(somethingPage.overview()).toHaveText(/A very generic item/);
+    await expect(somethingPage.overview()).toHaveText(/Thing/);
 
-    const image = overview.getByAltText("Something");
-    await expect(image).toHaveAttribute("src", /blob:/);
+    await expect(somethingPage.picture()).toHaveAttribute("src", /blob:/);
   });
 
   await test.step("cleanup: restore online mode", async () => {
