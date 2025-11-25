@@ -2,6 +2,7 @@ import { expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
 import { test } from "./fixtures";
+import { GenericThingPage } from "./page-objects/GenericThingPage";
 
 test.describe("accessibility", () => {
   ["light", "dark"].forEach((colorScheme: "light" | "dark") => {
@@ -20,8 +21,8 @@ test.describe("accessibility", () => {
           "http://localhost:4000/alice/public/generic/resource#it",
         );
 
-        const heading = page.getByRole("heading");
-        await expect(heading).toHaveText("Something");
+        const somethingPage = new GenericThingPage(page, "Something");
+        await expect(somethingPage.heading()).toHaveText("Something");
       });
 
       await test.step("then it has no contrast issues", async () => {

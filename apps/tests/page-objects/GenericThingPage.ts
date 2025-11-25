@@ -3,23 +3,25 @@ import { FileUpload } from "./FileUpload";
 
 export class GenericThingPage {
   private readonly page: Page;
+  private readonly thingName: string;
 
-  constructor(page: Page) {
+  constructor(page: Page, thingName: string) {
     this.page = page;
+    this.thingName = thingName;
   }
 
   heading(): Locator {
     return this.page.getByRole("heading").describe("Heading");
   }
 
-  overview(thingName: string): Locator {
+  overview(): Locator {
     return this.page
-      .getByRole("article", { name: thingName })
+      .getByRole("article", { name: this.thingName })
       .describe("Overview");
   }
 
-  picture(thingName: string): Locator {
-    return this.overview(thingName).getByAltText(thingName).describe("Picture");
+  picture(): Locator {
+    return this.overview().getByAltText(this.thingName).describe("Picture");
   }
 
   private uploadPictureButton(): Locator {
@@ -37,7 +39,7 @@ export class GenericThingPage {
     return this.page.locator("pos-relations").describe("Relations section");
   }
 
-  imageRelation(imageName: string): Locator {
-    return this.relationsSection().getByRole("link", { name: imageName });
+  relation(targetName: string): Locator {
+    return this.relationsSection().getByRole("link", { name: targetName });
   }
 }
