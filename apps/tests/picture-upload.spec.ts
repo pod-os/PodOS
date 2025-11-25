@@ -4,9 +4,16 @@ import { alice } from "./fixtures/credentials";
 import { test } from "./fixtures";
 import * as path from "node:path";
 
+const THING_NAME = "Thing Without Picture";
+const THING_URL =
+  "http://localhost:4000/alice/acb50d31-42af-4d4c-9ead-e2d5e70d7317/thing-without-picture#it";
+const TEST_IMAGE_PATH = path.join(__dirname, "./assets/test-tube.png");
+const TEST_IMAGE_NAME = "test-tube.png";
+
 test("can upload a picture to a thing that has no picture", async ({
   page,
   navigationBar,
+  genericThingPage,
 }) => {
   await test.step("Given PodOS Browser is open", async () => {
     await page.goto("/");
@@ -17,84 +24,45 @@ test("can upload a picture to a thing that has no picture", async ({
   });
 
   await test.step("When navigating to a thing without a picture", async () => {
-    await navigationBar.fillAndSubmit(
-      "http://localhost:4000/alice/acb50d31-42af-4d4c-9ead-e2d5e70d7317/thing-without-picture#it",
-    );
+    await navigationBar.fillAndSubmit(THING_URL);
   });
 
   await test.step("Then the thing is displayed without a picture", async () => {
-    const heading = page.getByRole("heading").describe("Heading");
-    await expect(heading).toHaveText("Thing Without Picture");
-
-    const overview = page
-      .getByRole("article", {
-        name: "Thing Without Picture",
-      })
-      .describe("Overview");
-    await expect(overview).toHaveText(/A generic item that has no picture yet/);
-
-    const noPictureImage = overview
-      .getByAltText("Thing Without Picture")
-      .describe("Picture");
-    await expect(noPictureImage).not.toBeVisible();
+    await expect(genericThingPage.heading()).toHaveText(THING_NAME);
+    await expect(genericThingPage.overview(THING_NAME)).toHaveText(
+      /A generic item that has no picture yet/,
+    );
+    await expect(genericThingPage.picture(THING_NAME)).not.toBeVisible();
   });
 
-  await test.step("When I click the upload button", async () => {
-    const overview = page.getByRole("article", {
-      name: "Thing Without Picture",
+  const pictureUpload =
+    await test.step("When I open the picture upload", async () => {
+      return await genericThingPage.openPictureUpload();
     });
-    const uploadButton = overview.getByRole("button", {
-      name: /Upload picture/,
-    });
-    await uploadButton.click();
-  });
 
   await test.step("And I select and upload an image file", async () => {
-    const fileChooserPromise = page.waitForEvent("filechooser");
-    const browseButton = page.getByRole("button", { name: "browse files" });
-    await browseButton.click();
-
-    const fileChooser = await fileChooserPromise;
-    await fileChooser.setFiles(path.join(__dirname, "./assets/test-tube.png"));
-
-    const uploadButton = page.getByRole("button", { name: "Upload 1 file" });
-    await uploadButton.click();
+    await pictureUpload.selectAndUploadFile(TEST_IMAGE_PATH);
   });
 
   await test.step("And I close the upload interface", async () => {
-    const closeButton = page
-      .getByRole("button", { name: "Close upload" })
-      .describe("Close button");
-    await closeButton.click();
+    await pictureUpload.close();
   });
 
   await test.step("Then the upload interface is gone", async () => {
-    const uploadDialog = page.locator("pos-upload").describe("Upload area");
-    await expect(uploadDialog).not.toBeVisible();
+    await expect(pictureUpload.uploadArea()).not.toBeVisible();
   });
 
   await test.step("And I can see the uploaded picture", async () => {
-    const overview = page.getByRole("article", {
-      name: "Thing Without Picture",
-    });
-    const uploadedImage = overview
-      .getByAltText("Thing Without Picture")
-      .describe("Uploaded picture");
-    await expect(uploadedImage).toBeVisible();
-    await expect(uploadedImage).toHaveAttribute("src", /blob:/);
+    await expect(genericThingPage.picture(THING_NAME)).toBeVisible();
+    await expect(genericThingPage.picture(THING_NAME)).toHaveAttribute(
+      "src",
+      /blob:/,
+    );
   });
 
   await test.step("And I can see the picture link in the relations section", async () => {
     await page.reload(); // needed until https://github.com/pod-os/PodOS/issues/37 is implemented
-    const relationsSection = page
-      .locator("pos-relations")
-      .describe("Relations section");
-    await expect(relationsSection).toBeVisible();
-
-    const relations = page.locator("pos-relations");
-    const imageRelation = relations.getByRole("link", {
-      name: "test-tube.png",
-    });
-    await expect(imageRelation).toBeVisible();
+    await expect(genericThingPage.relationsSection()).toBeVisible();
+    await expect(genericThingPage.imageRelation(TEST_IMAGE_NAME)).toBeVisible();
   });
 });
