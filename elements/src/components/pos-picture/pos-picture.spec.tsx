@@ -7,20 +7,6 @@ import { PosPicture } from './pos-picture';
 import { usePodOS } from '../events/usePodOS';
 import { when } from 'jest-when';
 
-/**
- * Helper function to create a mock FileList containing a single file
- */
-function createMockFileList(file: File): FileList {
-  return {
-    0: file,
-    length: 1,
-    item: (index: number) => (index === 0 ? file : null),
-    [Symbol.iterator]: function* () {
-      yield file;
-    },
-  } as unknown as FileList;
-}
-
 describe('pos-picture', () => {
   it('is empty initially', async () => {
     const page = await newSpecPage({
