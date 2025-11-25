@@ -5,16 +5,10 @@
 
 ## Properties
 
-| Property | Attribute | Description                                                          | Type     | Default     |
-| -------- | --------- | -------------------------------------------------------------------- | -------- | ----------- |
-| `accept` | `accept`  | The accepted file types, as defined by the HTML5 `accept` attribute. | `string` | `'image/*'` |
-
-
-## Events
-
-| Event                   | Description                                        | Type                    |
-| ----------------------- | -------------------------------------------------- | ----------------------- |
-| `pod-os:files-selected` | Fires when files are selected from the file input. | `CustomEvent<FileList>` |
+| Property   | Attribute | Description              | Type                                                                           | Default       |
+| ---------- | --------- | ------------------------ | ------------------------------------------------------------------------------ | ------------- |
+| `accept`   | --        | The accepted file types. | `string[]`                                                                     | `['image/*']` |
+| `uploader` | --        |                          | `(file: File) => ResultAsync<{ url: string; }, HttpProblem \| NetworkProblem>` | `undefined`   |
 
 
 ## Dependencies
