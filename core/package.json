@@ -30,6 +30,7 @@
     "build:types:watch": "rimraf types && tsc --emitDeclarationOnly --outDir types --watch",
     "build:watch": "node esbuild/watch-esm.mjs",
     "build:doc": "typedoc",
+    "postbuild:doc": "./scripts/postprocess-typedoc.sh",
     "dev": "run-p build:types:watch build:watch",
     "build": " npm run build:bundle && npm run build:types && npm run build:esm"
   },
