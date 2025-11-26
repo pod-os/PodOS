@@ -8,7 +8,7 @@
 
 > **createPictureLinkOperation**(`thing`, `file`): `UpdateOperation`
 
-Defined in: [picture/createPictureLinkOperation.ts:16](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/picture/createPictureLinkOperation.ts#L16)
+Defined in: [picture/createPictureLinkOperation.ts:16](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/picture/createPictureLinkOperation.ts#L16)
 
 Creates an update operation to link a picture file to a thing.
 Uses schema:image as the predicate to establish the relationship.

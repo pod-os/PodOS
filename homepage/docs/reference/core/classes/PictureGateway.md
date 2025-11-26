@@ -6,7 +6,7 @@
 
 # Class: PictureGateway
 
-Defined in: [picture/PictureGateway.ts:9](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/picture/PictureGateway.ts#L9)
+Defined in: [picture/PictureGateway.ts:9](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/picture/PictureGateway.ts#L9)
 
 ## Constructors
 
@@ -14,7 +14,7 @@ Defined in: [picture/PictureGateway.ts:9](https://github.com/pod-os/PodOS/blob/4
 
 > **new PictureGateway**(`store`, `fileFetcher`): `PictureGateway`
 
-Defined in: [picture/PictureGateway.ts:10](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/picture/PictureGateway.ts#L10)
+Defined in: [picture/PictureGateway.ts:10](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/picture/PictureGateway.ts#L10)
 
 #### Parameters
 
@@ -36,7 +36,7 @@ Defined in: [picture/PictureGateway.ts:10](https://github.com/pod-os/PodOS/blob/
 
 > **uploadAndAddPicture**(`thing`, `pictureFile`): `ResultAsync`\<[`NewFile`](../interfaces/NewFile.md), [`NetworkProblem`](../interfaces/NetworkProblem.md) \| [`HttpProblem`](../interfaces/HttpProblem.md)\>
 
-Defined in: [picture/PictureGateway.ts:24](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/picture/PictureGateway.ts#L24)
+Defined in: [picture/PictureGateway.ts:24](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/picture/PictureGateway.ts#L24)
 
 Uploads a picture file and associates it with a thing.
 The container is automatically derived from the thing's URI.

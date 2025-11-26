@@ -6,7 +6,7 @@
 
 # Class: BrokenFile
 
-Defined in: [files/BrokenFile.ts:4](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/files/BrokenFile.ts#L4)
+Defined in: [files/BrokenFile.ts:4](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/files/BrokenFile.ts#L4)
 
 ## Implements
 
@@ -18,7 +18,7 @@ Defined in: [files/BrokenFile.ts:4](https://github.com/pod-os/PodOS/blob/4c4065d
 
 > **new BrokenFile**(`url`, `status`): `BrokenFile`
 
-Defined in: [files/BrokenFile.ts:5](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/files/BrokenFile.ts#L5)
+Defined in: [files/BrokenFile.ts:5](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/files/BrokenFile.ts#L5)
 
 #### Parameters
 
@@ -40,7 +40,7 @@ Defined in: [files/BrokenFile.ts:5](https://github.com/pod-os/PodOS/blob/4c4065d
 
 > `readonly` **status**: [`HttpStatus`](HttpStatus.md)
 
-Defined in: [files/BrokenFile.ts:7](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/files/BrokenFile.ts#L7)
+Defined in: [files/BrokenFile.ts:7](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/files/BrokenFile.ts#L7)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [files/BrokenFile.ts:7](https://github.com/pod-os/PodOS/blob/4c4065d
 
 > `readonly` **url**: `string`
 
-Defined in: [files/BrokenFile.ts:6](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/files/BrokenFile.ts#L6)
+Defined in: [files/BrokenFile.ts:6](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/files/BrokenFile.ts#L6)
 
 #### Implementation of
 
@@ -60,7 +60,7 @@ Defined in: [files/BrokenFile.ts:6](https://github.com/pod-os/PodOS/blob/4c4065d
 
 > **blob**(): `Blob` \| `null`
 
-Defined in: [files/BrokenFile.ts:14](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/files/BrokenFile.ts#L14)
+Defined in: [files/BrokenFile.ts:14](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/files/BrokenFile.ts#L14)
 
 #### Returns
 
@@ -76,7 +76,7 @@ Defined in: [files/BrokenFile.ts:14](https://github.com/pod-os/PodOS/blob/4c4065
 
 > **toString**(): `string`
 
-Defined in: [files/BrokenFile.ts:10](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/files/BrokenFile.ts#L10)
+Defined in: [files/BrokenFile.ts:10](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/files/BrokenFile.ts#L10)
 
 Returns a string representation of an object.
 

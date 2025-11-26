@@ -6,7 +6,7 @@
 
 # Class: PodOS
 
-Defined in: [index.ts:45](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/index.ts#L45)
+Defined in: [index.ts:45](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/index.ts#L45)
 
 ## Constructors
 
@@ -14,7 +14,7 @@ Defined in: [index.ts:45](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e
 
 > **new PodOS**(`__namedParameters`): `PodOS`
 
-Defined in: [index.ts:54](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/index.ts#L54)
+Defined in: [index.ts:54](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/index.ts#L54)
 
 #### Parameters
 
@@ -32,7 +32,7 @@ Defined in: [index.ts:54](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e
 
 > `readonly` **store**: [`Store`](Store.md)
 
-Defined in: [index.ts:47](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/index.ts#L47)
+Defined in: [index.ts:47](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/index.ts#L47)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [index.ts:47](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e
 
 > `readonly` **uriService**: [`UriService`](UriService.md)
 
-Defined in: [index.ts:48](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/index.ts#L48)
+Defined in: [index.ts:48](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/index.ts#L48)
 
 ## Methods
 
@@ -48,7 +48,7 @@ Defined in: [index.ts:48](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e
 
 > **addNewThing**(`uri`, `name`, `type`): `Promise`\<`void`\>
 
-Defined in: [index.ts:130](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/index.ts#L130)
+Defined in: [index.ts:130](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/index.ts#L130)
 
 #### Parameters
 
@@ -74,7 +74,7 @@ Defined in: [index.ts:130](https://github.com/pod-os/PodOS/blob/4c4065daede8a874
 
 > **addPropertyValue**(`thing`, `property`, `value`): `Promise`\<`void`\>
 
-Defined in: [index.ts:118](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/index.ts#L118)
+Defined in: [index.ts:118](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/index.ts#L118)
 
 #### Parameters
 
@@ -100,7 +100,7 @@ Defined in: [index.ts:118](https://github.com/pod-os/PodOS/blob/4c4065daede8a874
 
 > **addToLabelIndex**(`thing`, `labelIndex`): `Promise`\<`void`\>
 
-Defined in: [index.ts:185](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/index.ts#L185)
+Defined in: [index.ts:185](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/index.ts#L185)
 
 Adds a label of the given thing to the label index, so that it can be found after the search index has been rebuilt
 
@@ -128,7 +128,7 @@ The index to update
 
 > **buildSearchIndex**(`profile`): `Promise`\<[`SearchIndex`](SearchIndex.md)\>
 
-Defined in: [index.ts:163](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/index.ts#L163)
+Defined in: [index.ts:163](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/index.ts#L163)
 
 Fetch the private label index for the given profile and build a search index from it
 
@@ -148,7 +148,7 @@ Fetch the private label index for the given profile and build a search index fro
 
 > **createDefaultLabelIndex**(`profile`): `Promise`\<[`LabelIndex`](LabelIndex.md)\>
 
-Defined in: [index.ts:195](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/index.ts#L195)
+Defined in: [index.ts:195](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/index.ts#L195)
 
 Creates a new label index document at a default location and links it to the user's profile or preferences document
 
@@ -172,7 +172,7 @@ the newly created label index
 
 > **fetch**(`uri`): `Promise`\<`Response`\>
 
-Defined in: [index.ts:93](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/index.ts#L93)
+Defined in: [index.ts:93](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/index.ts#L93)
 
 #### Parameters
 
@@ -190,7 +190,7 @@ Defined in: [index.ts:93](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e
 
 > **fetchAll**(`uris`): `Promise`\<`PromiseSettledResult`\<`Response`\>[]\>
 
-Defined in: [index.ts:97](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/index.ts#L97)
+Defined in: [index.ts:97](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/index.ts#L97)
 
 #### Parameters
 
@@ -208,7 +208,7 @@ Defined in: [index.ts:97](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e
 
 > **fetchFile**(`url`): `Promise`\<[`SolidFile`](../interfaces/SolidFile.md)\>
 
-Defined in: [index.ts:106](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/index.ts#L106)
+Defined in: [index.ts:106](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/index.ts#L106)
 
 #### Parameters
 
@@ -234,7 +234,7 @@ Use [FileFetcher.fetchFile](FileFetcher.md#fetchfile) via [PodOS.files](#files) 
 
 > **fetchProfile**(`webId`): `Promise`\<[`WebIdProfile`](WebIdProfile.md)\>
 
-Defined in: [index.ts:149](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/index.ts#L149)
+Defined in: [index.ts:149](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/index.ts#L149)
 
 Fetch the WebId profile and preferences file for the given WebID
 
@@ -254,7 +254,7 @@ Fetch the WebId profile and preferences file for the given WebID
 
 > **files**(): [`FileFetcher`](FileFetcher.md)
 
-Defined in: [index.ts:114](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/index.ts#L114)
+Defined in: [index.ts:114](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/index.ts#L114)
 
 Provides access to file operations such as fetching and updating files in the pod
 
@@ -270,7 +270,7 @@ An instance of FileFetcher that handles file operations
 
 > **listKnownTerms**(): [`Term`](../interfaces/Term.md)[]
 
-Defined in: [index.ts:126](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/index.ts#L126)
+Defined in: [index.ts:126](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/index.ts#L126)
 
 #### Returns
 
@@ -282,7 +282,7 @@ Defined in: [index.ts:126](https://github.com/pod-os/PodOS/blob/4c4065daede8a874
 
 > **loadContactsModule**(): `Promise`\<`ContactsModule`\>
 
-Defined in: [index.ts:176](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/index.ts#L176)
+Defined in: [index.ts:176](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/index.ts#L176)
 
 #### Returns
 
@@ -294,7 +294,7 @@ Defined in: [index.ts:176](https://github.com/pod-os/PodOS/blob/4c4065daede8a874
 
 > **login**(`oidcIssuer`): `Promise`\<`void`\>
 
-Defined in: [index.ts:172](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/index.ts#L172)
+Defined in: [index.ts:172](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/index.ts#L172)
 
 #### Parameters
 
@@ -312,7 +312,7 @@ Defined in: [index.ts:172](https://github.com/pod-os/PodOS/blob/4c4065daede8a874
 
 > **logout**(): `Promise`\<`void`\>
 
-Defined in: [index.ts:167](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/index.ts#L167)
+Defined in: [index.ts:167](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/index.ts#L167)
 
 #### Returns
 
@@ -324,7 +324,7 @@ Defined in: [index.ts:167](https://github.com/pod-os/PodOS/blob/4c4065daede8a874
 
 > **observeSession**(): `BehaviorSubject`\<[`SessionInfo`](../type-aliases/SessionInfo.md)\>
 
-Defined in: [index.ts:141](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/index.ts#L141)
+Defined in: [index.ts:141](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/index.ts#L141)
 
 returns a behavior subject that can be used to observe changes in the session state
 
@@ -338,7 +338,7 @@ returns a behavior subject that can be used to observe changes in the session st
 
 > **proposeUriForNewThing**(`referenceUri`, `name`): `string`
 
-Defined in: [index.ts:134](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/index.ts#L134)
+Defined in: [index.ts:134](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/index.ts#L134)
 
 #### Parameters
 
@@ -360,7 +360,7 @@ Defined in: [index.ts:134](https://github.com/pod-os/PodOS/blob/4c4065daede8a874
 
 > **uploadAndAddPicture**(`thing`, `pictureFile`): `ResultAsync`\<\{ `url`: `string`; \}, [`NetworkProblem`](../interfaces/NetworkProblem.md) \| [`HttpProblem`](../interfaces/HttpProblem.md)\>
 
-Defined in: [index.ts:207](https://github.com/pod-os/PodOS/blob/4c4065daede8a874e199beaf6d6ff670f4934259/core/src/index.ts#L207)
+Defined in: [index.ts:207](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/index.ts#L207)
 
 Uploads a picture file and associates it with a thing.
 The container is automatically derived from the thing's URI.
