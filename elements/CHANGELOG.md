@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+- [pos-list](../docs/elements/components/pos-list):
+  - renders the template for all things from the store if they match the type given in attribute `if-typeof`
+
+## 0.33.0
+
 ## Breaking Changes
 
 - Removed dependency on ionic components. If your PodOS-based application relies on those, you have to include ionic yourself to continue using them.
@@ -28,8 +33,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - Shows upload button on hover when resource is editable
   - New `no-upload` property to disable upload functionality
   - Upload button shown even when no picture is present
-- [pos-list](../docs/elements/components/pos-list): 
-  - renders the template for all things from the store if they match the type given in attribute `if-typeof`
 
 ## 0.32.0
 
