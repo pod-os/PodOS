@@ -12,4 +12,5 @@
     foaf:name "Alice" ;
     solid:oidcIssuer <http://localhost:3000/> ;
     pim:preferencesFile </alice/settings/prefs.ttl> ;
+    solid:publicTypeIndex </alice/settings/publicTypeIndex.ttl>
 .
