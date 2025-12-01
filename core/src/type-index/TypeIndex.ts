@@ -37,7 +37,7 @@ export class TypeIndex extends Thing {
         subject,
         solid("instance"),
         null,
-        null, //TODO check for correct doc
+        sym(this.uri),
       );
       const instances: RegistrationTarget[] = instanceStatements.map((it) => ({
         type: "instance",

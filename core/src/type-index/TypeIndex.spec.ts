@@ -222,5 +222,41 @@ describe("TypeIndex", () => {
         forClass: "https://schema.org/VideoGame",
       });
     });
+
+    it("does not return instances from wrong document", () => {
+      // Given a type index with one registration for an instance container
+      const store = graph();
+      const typeIndexUri = "https://pod.test/settings/typeIndex.ttl";
+      const registrationUri = `${typeIndexUri}#VideoGames`;
+
+      store.add(
+        quad(
+          sym(registrationUri),
+          solid("forClass"),
+          schema("VideoGame"),
+          sym(typeIndexUri),
+        ),
+      );
+      store.add(
+        quad(
+          sym(registrationUri),
+          solid("instance"),
+          sym("https://pod.test/games/minecraft#it"),
+          sym("https://wrong.dcument"),
+        ),
+      );
+
+      const typeIndex = new TypeIndex(typeIndexUri, store);
+
+      // When listing all entries
+      const registrations = typeIndex.listAll();
+
+      // Then nothing is returned
+      expect(registrations).toHaveLength(1);
+      expect(registrations[0]).toEqual({
+        targets: [],
+        forClass: "https://schema.org/VideoGame",
+      });
+    });
   });
 });
