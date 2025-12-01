@@ -14,6 +14,7 @@ describe("ProfileGateway", () => {
     // given a store
     store = {
       fetch: jest.fn(),
+      fetchAll: jest.fn(),
       get: jest.fn(),
     } as unknown as Store;
     // and a profile
@@ -83,13 +84,13 @@ describe("ProfileGateway", () => {
     await gateway.fetchProfile("https://alice.example/profile/card#me");
 
     // then the public type index is fetched via the store
-    expect(store.fetch).toHaveBeenCalledWith(
+    expect(store.fetchAll).toHaveBeenCalledWith([
       "https://alice.example/settings/publicTypeIndex.ttl",
-    );
+    ]);
   });
 
   it("fetches the private type index", async () => {
-    // Given the profile has a public type index
+    // Given the profile has a private type index
     getPrivateTypeIndex.mockReturnValue(
       "https://alice.example/settings/privateTypeIndex.ttl",
     );
@@ -101,8 +102,31 @@ describe("ProfileGateway", () => {
     await gateway.fetchProfile("https://alice.example/profile/card#me");
 
     // then the public type index is fetched via the store
-    expect(store.fetch).toHaveBeenCalledWith(
+    expect(store.fetchAll).toHaveBeenCalledWith([
+      "https://alice.example/settings/privateTypeIndex.ttl",
+    ]);
+  });
+
+  it("fetches the private and public type index in parallel", async () => {
+    // Given the profile has a private type index
+    getPrivateTypeIndex.mockReturnValue(
       "https://alice.example/settings/privateTypeIndex.ttl",
     );
+    // and a profile has a public type index
+    getPublicTypeIndex.mockReturnValue(
+      "https://alice.example/settings/publicTypeIndex.ttl",
+    );
+
+    // and a profile gateway
+    const gateway = new ProfileGateway(store);
+
+    // when fetching the profile
+    await gateway.fetchProfile("https://alice.example/profile/card#me");
+
+    // then the public and private type indexes are fetched via the store in parallel
+    expect(store.fetchAll).toHaveBeenCalledWith([
+      "https://alice.example/settings/privateTypeIndex.ttl",
+      "https://alice.example/settings/publicTypeIndex.ttl",
+    ]);
   });
 });

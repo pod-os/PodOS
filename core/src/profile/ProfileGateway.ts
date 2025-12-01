@@ -12,12 +12,9 @@ export class ProfileGateway {
     }
     const publicTypeIndex = profile.getPublicTypeIndex();
     const privateTypeIndex = profile.getPrivateTypeIndex();
-    if (publicTypeIndex) {
-      await this.store.fetch(publicTypeIndex);
-    }
-    if (privateTypeIndex) {
-      await this.store.fetch(privateTypeIndex);
-    }
+    await this.store.fetchAll(
+      [privateTypeIndex, publicTypeIndex].filter((it) => it !== undefined),
+    );
     return profile;
   }
 }
