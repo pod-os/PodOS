@@ -1,0 +1,1 @@
+export { TypeIndex } from "./TypeIndex";
