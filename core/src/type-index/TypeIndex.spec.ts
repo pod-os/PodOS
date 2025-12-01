@@ -114,6 +114,47 @@ describe("TypeIndex", () => {
       });
     });
 
+    it("returns a single registration for an instance", () => {
+      // Given a type index with one registration for an instance container
+      const store = graph();
+      const typeIndexUri = "https://pod.test/settings/typeIndex.ttl";
+      const registrationUri = `${typeIndexUri}#VideoGames`;
+
+      store.add(
+        quad(
+          sym(registrationUri),
+          solid("forClass"),
+          schema("VideoGame"),
+          sym(typeIndexUri),
+        ),
+      );
+      store.add(
+        quad(
+          sym(registrationUri),
+          solid("instance"),
+          sym("https://pod.test/games/minecraft#it"),
+          sym(typeIndexUri),
+        ),
+      );
+
+      const typeIndex = new TypeIndex(typeIndexUri, store);
+
+      // When listing all entries
+      const registrations = typeIndex.listAll();
+
+      // Then one registration is returned with correct properties
+      expect(registrations).toHaveLength(1);
+      expect(registrations[0]).toEqual({
+        forClass: "https://schema.org/VideoGame",
+        targets: [
+          {
+            type: "instance",
+            uri: "https://pod.test/games/minecraft#it",
+          },
+        ],
+      });
+    });
+
     it("does not return registrations from wrong document", () => {
       // Given a type index with one registration for an instance container
       const store = graph();

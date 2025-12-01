@@ -1,6 +1,6 @@
 import { Thing } from "../thing";
 import { IndexedFormula, sym } from "rdflib";
-import { TypeRegistration } from "./TypeRegistration";
+import { RegistrationTarget, TypeRegistration } from "./TypeRegistration";
 import { solid } from "@solid-data-modules/rdflib-utils";
 
 /**
@@ -32,11 +32,25 @@ export class TypeIndex extends Thing {
         null,
         sym(this.uri),
       );
-      return {
-        targets: instanceContainerStatements.map((it) => ({
+
+      const instanceStatements = this.store.statementsMatching(
+        subject,
+        solid("instance"),
+        null,
+        null, //TODO check for correct doc
+      );
+      const instances: RegistrationTarget[] = instanceStatements.map((it) => ({
+        type: "instance",
+        uri: it.object.value,
+      }));
+
+      const instanceContainers: RegistrationTarget[] =
+        instanceContainerStatements.map((it) => ({
           type: "container",
           uri: it.object.value,
-        })),
+        }));
+      return {
+        targets: [...instanceContainers, ...instances],
         forClass: forClassStatements[0].object.value,
       };
     });
