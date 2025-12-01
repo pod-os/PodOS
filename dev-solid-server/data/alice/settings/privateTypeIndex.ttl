@@ -1,0 +1,10 @@
+@prefix :       <#>.
+@prefix terms:  <http://www.w3.org/ns/solid/terms#>.
+@prefix vcard:  <http://www.w3.org/2006/vcard/ns#>.
+
+@prefix schema: <http://schema.org/>.
+
+:AddressBook
+    a terms:TypeRegistration ;
+    terms:instance </alice/contacts/index.ttl#this> ;
+    terms:forClass vcard:AddressBook .

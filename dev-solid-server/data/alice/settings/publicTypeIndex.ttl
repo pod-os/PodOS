@@ -1,0 +1,9 @@
+@prefix :      <#>.
+@prefix terms: <http://www.w3.org/ns/solid/terms#>.
+
+@prefix schema: <http://schema.org/>.
+
+:VideoGames
+    a              terms:TypeRegistration ;
+    terms:forClass schema:VideoGame ;
+    terms:instanceContainer </alice/games/> .
