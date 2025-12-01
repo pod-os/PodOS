@@ -181,4 +181,26 @@ describe("WebID profile", () => {
       );
     });
   });
+
+  describe("private type index", () => {
+    it("is undefined when nothing in store", () => {
+      const profile = new WebIdProfile("https://alice.test#me", graph(), false);
+      expect(profile.getPrivateTypeIndex()).toBeUndefined();
+    });
+    it("is undefined when nothing in preferences document", () => {
+      const profile = new WebIdProfile("https://alice.test#me", graph(), false);
+      expect(profile.getPrivateTypeIndex()).toBeUndefined();
+    });
+    it("is read from privateType triple in preferences document", () => {
+      const store = graph();
+      store.add(
+        sym("https://alice.test#me"),
+        sym("http://www.w3.org/ns/pim/space#preferencesFile"),
+        sym("https://alice.test/preferences"),
+        sym("https://alice.test"),
+      );
+      const profile = new WebIdProfile("https://alice.test#me", store, false);
+      expect(profile.getPrivateTypeIndex()).toBe(undefined);
+    });
+  });
 });
