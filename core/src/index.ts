@@ -20,6 +20,7 @@ import {
 import { IndexedFormula } from "rdflib";
 import { ResultAsync } from "neverthrow";
 import { HttpProblem, NetworkProblem } from "./problems";
+import { ProfileGateway } from "./profile";
 
 export * from "./authentication";
 export * from "./files";
@@ -50,6 +51,7 @@ export class PodOS {
   private readonly searchGateway: SearchGateway;
   private readonly pictureGateway: PictureGateway;
   private readonly offlineCache: OfflineCache;
+  private readonly profileGateway: ProfileGateway;
 
   constructor({
     session = {} as PodOsSession,
@@ -70,6 +72,7 @@ export class PodOS {
     this.pictureGateway = new PictureGateway(this.store, this.fileFetcher);
     this.flagAuthorizationMetaDataOnSessionChange();
     this.uriService = new UriService(this.store);
+    this.profileGateway = new ProfileGateway(this.store);
   }
 
   /*
@@ -147,13 +150,7 @@ export class PodOS {
    * @param webId
    */
   async fetchProfile(webId: string) {
-    await this.fetch(webId);
-    const profile: WebIdProfile = this.store.get(webId).assume(WebIdProfile);
-    const preferences = profile.getPreferencesFile();
-    if (preferences) {
-      await this.fetch(preferences);
-    }
-    return profile;
+    return this.profileGateway.fetchProfile(webId);
   }
 
   /**
