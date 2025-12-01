@@ -212,6 +212,75 @@ describe("TypeIndex", () => {
       });
     });
 
+    describe("multiple registrations", () => {
+      it("returns multiple registration for different classes", () => {
+        // Given a type index with registrations for two different classes
+        const store = graph();
+        const typeIndexUri = "https://pod.test/settings/typeIndex.ttl";
+        const firstRegistrationUri = `${typeIndexUri}#FirstRegistration`;
+        const secondRegistrationUri = `${typeIndexUri}#SecondRegistration`;
+
+        store.add(
+          quad(
+            sym(firstRegistrationUri),
+            solid("forClass"),
+            schema("VideoGame"),
+            sym(typeIndexUri),
+          ),
+        );
+        store.add(
+          quad(
+            sym(firstRegistrationUri),
+            solid("instanceContainer"),
+            sym("https://pod.test/games/"),
+            sym(typeIndexUri),
+          ),
+        );
+        store.add(
+          quad(
+            sym(secondRegistrationUri),
+            solid("forClass"),
+            schema("Thing"),
+            sym(typeIndexUri),
+          ),
+        );
+        store.add(
+          quad(
+            sym(secondRegistrationUri),
+            solid("instanceContainer"),
+            sym("https://pod.test/things/"),
+            sym(typeIndexUri),
+          ),
+        );
+
+        const typeIndex = new TypeIndex(typeIndexUri, store);
+
+        // When listing all entries
+        const registrations = typeIndex.listAll();
+
+        // Then both registrations are returned
+        expect(registrations).toHaveLength(2);
+        expect(registrations[0]).toEqual({
+          forClass: "https://schema.org/VideoGame",
+          targets: [
+            {
+              type: "container",
+              uri: "https://pod.test/games/",
+            },
+          ],
+        });
+        expect(registrations[1]).toEqual({
+          forClass: "https://schema.org/Thing",
+          targets: [
+            {
+              type: "container",
+              uri: "https://pod.test/things/",
+            },
+          ],
+        });
+      });
+    });
+
     describe("document verification", () => {
       it("does not return registrations from wrong document", () => {
         // Given a type index with one registration for an instance container

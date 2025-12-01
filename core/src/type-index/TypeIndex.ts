@@ -51,7 +51,7 @@ export class TypeIndex extends Thing {
         }));
       return {
         targets: [...instanceContainers, ...instances],
-        forClass: forClassStatements[0].object.value,
+        forClass: statement.object.value,
       };
     });
   }
