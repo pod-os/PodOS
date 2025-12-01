@@ -8,6 +8,7 @@ describe("ProfileGateway", () => {
   let store: Store;
   let profile: WebIdProfile;
   let getPreferencesFile: jest.Mock;
+  let getPublicTypeIndex: jest.Mock;
   beforeEach(() => {
     // given a store
     store = {
@@ -16,8 +17,10 @@ describe("ProfileGateway", () => {
     } as unknown as Store;
     // and a profile
     getPreferencesFile = jest.fn();
+    getPublicTypeIndex = jest.fn();
     profile = {
       getPreferencesFile,
+      getPublicTypeIndex,
     } as unknown as WebIdProfile;
     const assume = jest.fn();
     when(assume).calledWith(WebIdProfile).mockReturnValue(profile);
@@ -27,8 +30,9 @@ describe("ProfileGateway", () => {
   });
 
   it("fetches the profile without preferences", async () => {
-    // Given the profile has no preferences file
+    // Given the profile has no preferences file and type index
     getPreferencesFile.mockReturnValue(undefined);
+    getPublicTypeIndex.mockReturnValue(undefined);
 
     // and a profile gateway
     const gateway = new ProfileGateway(store);
@@ -56,9 +60,28 @@ describe("ProfileGateway", () => {
 
     // when fetching the profile
     await gateway.fetchProfile("https://alice.example/profile/card#me");
+
     // then the preferences file is fetched via the store
     expect(store.fetch).toHaveBeenCalledWith(
       "https://alice.example/settings/pref.ttl",
+    );
+  });
+
+  it("fetches the public type index", async () => {
+    // Given the profile has a public type index
+    getPublicTypeIndex.mockReturnValue(
+      "https://alice.example/settings/publicTypeIndex.ttl",
+    );
+
+    // and a profile gateway
+    const gateway = new ProfileGateway(store);
+
+    // when fetching the profile
+    await gateway.fetchProfile("https://alice.example/profile/card#me");
+
+    // then the public type index is fetched via the store
+    expect(store.fetch).toHaveBeenCalledWith(
+      "https://alice.example/settings/publicTypeIndex.ttl",
     );
   });
 });
