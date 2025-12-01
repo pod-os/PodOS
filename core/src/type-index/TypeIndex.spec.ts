@@ -57,6 +57,51 @@ describe("TypeIndex", () => {
       });
     });
 
+    it("returns a single registration with multiple instance containers", () => {
+      // Given a type index with one registration for several instance containers
+      const store = graph();
+      const typeIndexUri = "https://pod.test/settings/typeIndex.ttl";
+      const registrationUri = `${typeIndexUri}#VideoGames`;
+
+      store.add(
+        quad(
+          sym(registrationUri),
+          solid("forClass"),
+          schema("VideoGame"),
+          sym(typeIndexUri),
+        ),
+      );
+      store.add(
+        quad(
+          sym(registrationUri),
+          solid("instanceContainer"),
+          sym("https://pod.test/games/"),
+          sym(typeIndexUri),
+        ),
+      );
+      store.add(
+        quad(
+          sym(registrationUri),
+          solid("instanceContainer"),
+          sym("https://pod.test/more-games/"),
+          sym(typeIndexUri),
+        ),
+      );
+
+      const typeIndex = new TypeIndex(typeIndexUri, store);
+
+      // When listing all entries
+      const registrations = typeIndex.listAll();
+
+      // Then one registration is returned with multiple target uris
+      expect(registrations).toHaveLength(1);
+      expect(registrations[0]).toEqual({
+        type: "container",
+        targetUris: ["https://pod.test/games/", "https://pod.test/more-games/"],
+        forClass: "https://schema.org/VideoGame",
+      });
+    });
+
     it("does not return registrations from wrong document", () => {
       // Given a type index with one registration for an instance container
       const store = graph();
