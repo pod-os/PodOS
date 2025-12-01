@@ -33,8 +33,10 @@ export class TypeIndex extends Thing {
         sym(this.uri),
       );
       return {
-        type: "container",
-        targetUris: instanceContainerStatements.map((it) => it.object.value),
+        targets: instanceContainerStatements.map((it) => ({
+          type: "container",
+          uri: it.object.value,
+        })),
         forClass: forClassStatements[0].object.value,
       };
     });

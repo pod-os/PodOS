@@ -51,9 +51,13 @@ describe("TypeIndex", () => {
       // Then one registration is returned with correct properties
       expect(registrations).toHaveLength(1);
       expect(registrations[0]).toEqual({
-        type: "container",
-        targetUris: ["https://pod.test/games/"],
         forClass: "https://schema.org/VideoGame",
+        targets: [
+          {
+            type: "container",
+            uri: "https://pod.test/games/",
+          },
+        ],
       });
     });
 
@@ -96,9 +100,17 @@ describe("TypeIndex", () => {
       // Then one registration is returned with multiple target uris
       expect(registrations).toHaveLength(1);
       expect(registrations[0]).toEqual({
-        type: "container",
-        targetUris: ["https://pod.test/games/", "https://pod.test/more-games/"],
         forClass: "https://schema.org/VideoGame",
+        targets: [
+          {
+            type: "container",
+            uri: "https://pod.test/games/",
+          },
+          {
+            type: "container",
+            uri: "https://pod.test/more-games/",
+          },
+        ],
       });
     });
 
@@ -165,8 +177,7 @@ describe("TypeIndex", () => {
       // Then nothing is returned
       expect(registrations).toHaveLength(1);
       expect(registrations[0]).toEqual({
-        type: "container",
-        targetUris: [],
+        targets: [],
         forClass: "https://schema.org/VideoGame",
       });
     });
