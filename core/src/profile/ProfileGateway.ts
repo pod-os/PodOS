@@ -11,8 +11,12 @@ export class ProfileGateway {
       await this.store.fetch(preferences);
     }
     const publicTypeIndex = profile.getPublicTypeIndex();
+    const privateTypeIndex = profile.getPrivateTypeIndex();
     if (publicTypeIndex) {
       await this.store.fetch(publicTypeIndex);
+    }
+    if (privateTypeIndex) {
+      await this.store.fetch(privateTypeIndex);
     }
     return profile;
   }
