@@ -24,6 +24,13 @@ export class WebIdProfile extends Thing {
   }
 
   /**
+   * Returns the URI of the public type index document
+   */
+  getPublicTypeIndex() {
+    return this.profileQuery.queryPublicTypeIndex()?.value;
+  }
+
+  /**
    * Returns the URIs of the private label indexes
    */
   getPrivateLabelIndexes(): string[] {

@@ -161,4 +161,24 @@ describe("WebID profile", () => {
       expect(profile.getPrivateLabelIndexes()).toEqual([]);
     });
   });
+
+  describe("public type index", () => {
+    it("is undefined when nothing in store", () => {
+      const profile = new WebIdProfile("https://alice.test#me", graph(), false);
+      expect(profile.getPublicTypeIndex()).toBeUndefined();
+    });
+    it("is read from publicTypeIndex triple in profile document", () => {
+      const store = graph();
+      store.add(
+        sym("https://alice.test#me"),
+        sym("http://www.w3.org/ns/solid/terms#publicTypeIndex"),
+        sym("https://alice.test/publicTypeIndex"),
+        sym("https://alice.test"),
+      );
+      const profile = new WebIdProfile("https://alice.test#me", store, false);
+      expect(profile.getPublicTypeIndex()).toBe(
+        "https://alice.test/publicTypeIndex",
+      );
+    });
+  });
 });
