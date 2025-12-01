@@ -1,5 +1,5 @@
 import { Thing } from "../thing";
-import { IndexedFormula } from "rdflib";
+import { IndexedFormula, sym } from "rdflib";
 import { TypeRegistration } from "./TypeRegistration";
 import { solid } from "@solid-data-modules/rdflib-utils";
 
@@ -20,7 +20,7 @@ export class TypeIndex extends Thing {
       null,
       solid("forClass"),
       null,
-      null, // TODO check correct document
+      sym(this.uri),
     );
 
     return forClassStatements.map((statement) => {
@@ -30,11 +30,11 @@ export class TypeIndex extends Thing {
         subject,
         solid("instanceContainer"),
         null,
-        null, // TODO check correct document
+        sym(this.uri),
       );
       return {
         type: "container",
-        targetUri: instanceContainerStatements[0].object.value,
+        targetUris: instanceContainerStatements.map((it) => it.object.value),
         forClass: forClassStatements[0].object.value,
       };
     });

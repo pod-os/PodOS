@@ -7,7 +7,7 @@ export interface TypeRegistration {
   /**
    * URI the index point to (resembling terms:instance or terms:instanceContainer)
    */
-  targetUri: string;
+  targetUris: string[];
 
   /**
    * RDF class of the indexed item(s) (resembling terms:forClass)

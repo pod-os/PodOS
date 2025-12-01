@@ -27,13 +27,19 @@ describe("TypeIndex", () => {
       const registrationUri = `${typeIndexUri}#VideoGames`;
 
       store.add(
-        quad(sym(registrationUri), solid("forClass"), schema("VideoGame")),
+        quad(
+          sym(registrationUri),
+          solid("forClass"),
+          schema("VideoGame"),
+          sym(typeIndexUri),
+        ),
       );
       store.add(
         quad(
           sym(registrationUri),
           solid("instanceContainer"),
           sym("https://pod.test/games/"),
+          sym(typeIndexUri),
         ),
       );
 
@@ -46,7 +52,76 @@ describe("TypeIndex", () => {
       expect(registrations).toHaveLength(1);
       expect(registrations[0]).toEqual({
         type: "container",
-        targetUri: "https://pod.test/games/",
+        targetUris: ["https://pod.test/games/"],
+        forClass: "https://schema.org/VideoGame",
+      });
+    });
+
+    it("does not return registrations from wrong document", () => {
+      // Given a type index with one registration for an instance container
+      const store = graph();
+      const typeIndexUri = "https://pod.test/settings/typeIndex.ttl";
+      const registrationUri = `${typeIndexUri}#VideoGames`;
+
+      store.add(
+        quad(
+          sym(registrationUri),
+          solid("forClass"),
+          schema("VideoGame"),
+          sym("https://wrong.dcument"),
+        ),
+      );
+      store.add(
+        quad(
+          sym(registrationUri),
+          solid("instanceContainer"),
+          sym("https://pod.test/games/"),
+          sym(typeIndexUri),
+        ),
+      );
+
+      const typeIndex = new TypeIndex(typeIndexUri, store);
+
+      // When listing all entries
+      const registrations = typeIndex.listAll();
+
+      // Then nothing is returned
+      expect(registrations).toEqual([]);
+    });
+
+    it("does not return instance containers from wrong document", () => {
+      // Given a type index with one registration for an instance container
+      const store = graph();
+      const typeIndexUri = "https://pod.test/settings/typeIndex.ttl";
+      const registrationUri = `${typeIndexUri}#VideoGames`;
+
+      store.add(
+        quad(
+          sym(registrationUri),
+          solid("forClass"),
+          schema("VideoGame"),
+          sym(typeIndexUri),
+        ),
+      );
+      store.add(
+        quad(
+          sym(registrationUri),
+          solid("instanceContainer"),
+          sym("https://pod.test/games/"),
+          sym("https://wrong.dcument"),
+        ),
+      );
+
+      const typeIndex = new TypeIndex(typeIndexUri, store);
+
+      // When listing all entries
+      const registrations = typeIndex.listAll();
+
+      // Then nothing is returned
+      expect(registrations).toHaveLength(1);
+      expect(registrations[0]).toEqual({
+        type: "container",
+        targetUris: [],
         forClass: "https://schema.org/VideoGame",
       });
     });
