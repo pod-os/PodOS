@@ -259,6 +259,9 @@ export namespace Components {
     }
     interface PosTypeBadges {
     }
+    interface PosTypeIndexEntries {
+        "uri": string;
+    }
     /**
      * This component is responsible for rendering tools that are useful to interact with the current resource.
      */
@@ -1097,6 +1100,12 @@ declare global {
         prototype: HTMLPosTypeBadgesElement;
         new (): HTMLPosTypeBadgesElement;
     };
+    interface HTMLPosTypeIndexEntriesElement extends Components.PosTypeIndexEntries, HTMLStencilElement {
+    }
+    var HTMLPosTypeIndexEntriesElement: {
+        prototype: HTMLPosTypeIndexEntriesElement;
+        new (): HTMLPosTypeIndexEntriesElement;
+    };
     interface HTMLPosTypeRouterElementEventMap {
         "pod-os:resource": any;
     }
@@ -1208,6 +1217,7 @@ declare global {
         "pos-subjects": HTMLPosSubjectsElement;
         "pos-tool-select": HTMLPosToolSelectElement;
         "pos-type-badges": HTMLPosTypeBadgesElement;
+        "pos-type-index-entries": HTMLPosTypeIndexEntriesElement;
         "pos-type-router": HTMLPosTypeRouterElement;
         "pos-upload": HTMLPosUploadElement;
         "pos-user-menu": HTMLPosUserMenuElement;
@@ -1543,6 +1553,9 @@ declare namespace LocalJSX {
     interface PosTypeBadges {
         "onPod-os:resource"?: (event: PosTypeBadgesCustomEvent<any>) => void;
     }
+    interface PosTypeIndexEntries {
+        "uri"?: string;
+    }
     /**
      * This component is responsible for rendering tools that are useful to interact with the current resource.
      */
@@ -1619,6 +1632,7 @@ declare namespace LocalJSX {
         "pos-subjects": PosSubjects;
         "pos-tool-select": PosToolSelect;
         "pos-type-badges": PosTypeBadges;
+        "pos-type-index-entries": PosTypeIndexEntries;
         "pos-type-router": PosTypeRouter;
         "pos-upload": PosUpload;
         "pos-user-menu": PosUserMenu;
@@ -1698,6 +1712,7 @@ declare module "@stencil/core" {
              */
             "pos-tool-select": LocalJSX.PosToolSelect & JSXBase.HTMLAttributes<HTMLPosToolSelectElement>;
             "pos-type-badges": LocalJSX.PosTypeBadges & JSXBase.HTMLAttributes<HTMLPosTypeBadgesElement>;
+            "pos-type-index-entries": LocalJSX.PosTypeIndexEntries & JSXBase.HTMLAttributes<HTMLPosTypeIndexEntriesElement>;
             /**
              * This component is responsible for rendering tools that are useful to interact with the current resource.
              */
