@@ -100,6 +100,57 @@ describe('pos-type-index-entries', () => {
 
     // then it shows a single entry with multiple targets
     expect(page.root).toEqualHtml(`
+        <pos-type-index-entries uri="https://alice.example/settings/publicTypeIndex">
+          <dl>
+            <dt><pos-predicate uri="http://schema.org/VideoGame" label="http://schema.org/VideoGame"></dt>
+            <dd>
+              <pos-rich-link uri="https://alice.example/games/minecraft#it">
+              </pos-rich-link>
+            </dd>
+            <dd>
+              <pos-rich-link uri="https://alice.example/games/zelda#it">
+              </pos-rich-link>
+            </dd>
+          </dl>
+        </pos-type-index-entries>
+      `);
+  });
+
+  it('renders multiple entries for different classes', async () => {
+    // given multiple registrations for different classes
+    const registrations: TypeRegistration[] = [
+      {
+        forClass: 'http://schema.org/VideoGame',
+        targets: [
+          {
+            uri: 'https://alice.example/games/minecraft#it',
+            type: 'instance',
+          },
+        ],
+      },
+      {
+        forClass: 'http://schema.org/MusicAlbum',
+        targets: [
+          {
+            uri: 'https://alice.example/albums/dark-side#it',
+            type: 'instance',
+          },
+        ],
+      },
+    ];
+    const typeIndex = {
+      listAll: jest.fn().mockReturnValue(registrations),
+    } as unknown as TypeIndex;
+    mockTypeIndex(typeIndex);
+
+    // when the component is rendered
+    const page = await newSpecPage({
+      components: [PosTypeIndexEntries],
+      html: `<pos-type-index-entries uri="https://alice.example/settings/publicTypeIndex"/>`,
+    });
+
+    // then it shows entries for both classes
+    expect(page.root).toEqualHtml(`
        <pos-type-index-entries uri="https://alice.example/settings/publicTypeIndex">
          <dl>
            <dt><pos-predicate uri="http://schema.org/VideoGame" label="http://schema.org/VideoGame"></dt>
@@ -107,8 +158,11 @@ describe('pos-type-index-entries', () => {
              <pos-rich-link uri="https://alice.example/games/minecraft#it">
              </pos-rich-link>
            </dd>
+         </dl>
+         <dl>
+           <dt><pos-predicate uri="http://schema.org/MusicAlbum" label="http://schema.org/MusicAlbum"></dt>
            <dd>
-             <pos-rich-link uri="https://alice.example/games/zelda#it">
+             <pos-rich-link uri="https://alice.example/albums/dark-side#it">
              </pos-rich-link>
            </dd>
          </dl>
