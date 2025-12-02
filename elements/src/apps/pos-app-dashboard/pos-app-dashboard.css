@@ -7,3 +7,12 @@
   align-items: start;
   justify-items: stretch;
 }
+
+.card {
+  border: var(--size-px) solid var(--pos-border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--size-8);
+  max-width: var(--size-96);
+  background: var(--pos-card-background);
+}

@@ -27,7 +27,17 @@ const LoggedIn = ({ profile }: { profile: WebIdProfile }) => {
   const privateTypeIndex = profile.getPrivateTypeIndex();
   return [
     <pos-example-resources></pos-example-resources>,
-    publicTypeIndex ? <pos-type-index-entries uri={publicTypeIndex}></pos-type-index-entries> : null,
-    privateTypeIndex ? <pos-type-index-entries uri={privateTypeIndex}></pos-type-index-entries> : null,
+    publicTypeIndex ? (
+      <div class="card">
+        <h2>Your public things</h2>
+        <pos-type-index-entries uri={publicTypeIndex}></pos-type-index-entries>
+      </div>
+    ) : null,
+    privateTypeIndex ? (
+      <div class="card">
+        <h2>Your private things</h2>
+        <pos-type-index-entries uri={privateTypeIndex}></pos-type-index-entries>
+      </div>
+    ) : null,
   ];
 };

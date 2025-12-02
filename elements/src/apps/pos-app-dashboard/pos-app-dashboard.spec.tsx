@@ -42,8 +42,8 @@ describe('pos-app-dashboard', () => {
     expect(page.root).toEqualHtml(`
       <pos-app-dashboard>
         <pos-example-resources></pos-example-resources>
-        <pos-type-index-entries uri="https://alice.example/settings/publicTypeIndex"></pos-type-index-entries>
-        <pos-type-index-entries uri="https://alice.example/settings/privateTypeIndex"></pos-type-index-entries>
+        <div class="card"><h2>Your public things</h2><pos-type-index-entries uri="https://alice.example/settings/publicTypeIndex"></pos-type-index-entries></div>
+        <div class="card"><h2>Your private things</h2><pos-type-index-entries uri="https://alice.example/settings/privateTypeIndex"></pos-type-index-entries></div>
       </pos-app-dashboard>
     `);
   });
