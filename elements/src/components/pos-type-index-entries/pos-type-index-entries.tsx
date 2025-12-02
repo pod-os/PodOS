@@ -28,9 +28,11 @@ export class PosTypeIndexEntries {
           {/*TODO short label*/}
           <pos-predicate uri={it.forClass} label={it.forClass}></pos-predicate>
         </dt>
-        <dd>
-          <pos-rich-link uri={it.targets[0].uri}></pos-rich-link>
-        </dd>
+        {it.targets.map(target => (
+          <dd>
+            <pos-rich-link uri={target.uri}></pos-rich-link>
+          </dd>
+        ))}
       </dl>
     ));
   }

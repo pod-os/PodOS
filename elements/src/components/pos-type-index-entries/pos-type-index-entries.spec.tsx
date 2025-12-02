@@ -60,15 +60,59 @@ describe('pos-type-index-entries', () => {
 
     // then it shows one entry
     expect(page.root).toEqualHtml(`
-      <pos-type-index-entries uri="https://alice.example/settings/publicTypeIndex">
-        <dl>
-          <dt><pos-predicate uri="http://schema.org/VideoGame" label="http://schema.org/VideoGame"></dt>
-          <dd>
-            <pos-rich-link uri="https://alice.example/games/minecraft#it">
-            </pos-rich-link>
-          </dd>
-        </dl>
-      </pos-type-index-entries>
-    `);
+       <pos-type-index-entries uri="https://alice.example/settings/publicTypeIndex">
+         <dl>
+           <dt><pos-predicate uri="http://schema.org/VideoGame" label="http://schema.org/VideoGame"></dt>
+           <dd>
+             <pos-rich-link uri="https://alice.example/games/minecraft#it">
+             </pos-rich-link>
+           </dd>
+         </dl>
+       </pos-type-index-entries>
+     `);
+  });
+
+  it('renders multiple entries for a single class', async () => {
+    // given a registration with multiple targets for the same class
+    const registration: TypeRegistration = {
+      forClass: 'http://schema.org/VideoGame',
+      targets: [
+        {
+          uri: 'https://alice.example/games/minecraft#it',
+          type: 'instance',
+        },
+        {
+          uri: 'https://alice.example/games/zelda#it',
+          type: 'instance',
+        },
+      ],
+    };
+    const typeIndex = {
+      listAll: jest.fn().mockReturnValue([registration]),
+    } as unknown as TypeIndex;
+    mockTypeIndex(typeIndex);
+
+    // when the component is rendered
+    const page = await newSpecPage({
+      components: [PosTypeIndexEntries],
+      html: `<pos-type-index-entries uri="https://alice.example/settings/publicTypeIndex"/>`,
+    });
+
+    // then it shows a single entry with multiple targets
+    expect(page.root).toEqualHtml(`
+       <pos-type-index-entries uri="https://alice.example/settings/publicTypeIndex">
+         <dl>
+           <dt><pos-predicate uri="http://schema.org/VideoGame" label="http://schema.org/VideoGame"></dt>
+           <dd>
+             <pos-rich-link uri="https://alice.example/games/minecraft#it">
+             </pos-rich-link>
+           </dd>
+           <dd>
+             <pos-rich-link uri="https://alice.example/games/zelda#it">
+             </pos-rich-link>
+           </dd>
+         </dl>
+       </pos-type-index-entries>
+     `);
   });
 });
