@@ -7,6 +7,10 @@ export interface TypeRegistration {
    */
   forClass: string;
   /**
+   * Short label for the class URI
+   */
+  label: string;
+  /**
    * The containers or things this registration points to
    */
   targets: RegistrationTarget[];

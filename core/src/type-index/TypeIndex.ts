@@ -2,6 +2,7 @@ import { Thing } from "../thing";
 import { IndexedFormula, sym } from "rdflib";
 import { RegistrationTarget, TypeRegistration } from "./TypeRegistration";
 import { solid } from "@solid-data-modules/rdflib-utils";
+import { labelForType } from "../thing/labelForType";
 
 /**
  * Represents a private or public type index document
@@ -49,9 +50,11 @@ export class TypeIndex extends Thing {
           type: "container",
           uri: it.object.value,
         }));
+
       return {
         targets: [...instanceContainers, ...instances],
         forClass: statement.object.value,
+        label: labelForType(statement.object.value),
       };
     });
   }

@@ -51,15 +51,17 @@ describe("TypeIndex", () => {
 
         // Then one registration is returned with correct properties
         expect(registrations).toHaveLength(1);
-        expect(registrations[0]).toEqual({
-          forClass: "https://schema.org/VideoGame",
-          targets: [
-            {
-              type: "container",
-              uri: "https://pod.test/games/",
-            },
-          ],
-        });
+        expect(registrations[0]).toEqual(
+          expect.objectContaining({
+            forClass: "https://schema.org/VideoGame",
+            targets: [
+              {
+                type: "container",
+                uri: "https://pod.test/games/",
+              },
+            ],
+          }),
+        );
       });
 
       it("returns a single registration with multiple instance containers", () => {
@@ -100,19 +102,21 @@ describe("TypeIndex", () => {
 
         // Then one registration is returned with multiple target uris
         expect(registrations).toHaveLength(1);
-        expect(registrations[0]).toEqual({
-          forClass: "https://schema.org/VideoGame",
-          targets: [
-            {
-              type: "container",
-              uri: "https://pod.test/games/",
-            },
-            {
-              type: "container",
-              uri: "https://pod.test/more-games/",
-            },
-          ],
-        });
+        expect(registrations[0]).toEqual(
+          expect.objectContaining({
+            forClass: "https://schema.org/VideoGame",
+            targets: [
+              {
+                type: "container",
+                uri: "https://pod.test/games/",
+              },
+              {
+                type: "container",
+                uri: "https://pod.test/more-games/",
+              },
+            ],
+          }),
+        );
       });
     });
 
@@ -147,15 +151,17 @@ describe("TypeIndex", () => {
 
         // Then one registration is returned with correct properties
         expect(registrations).toHaveLength(1);
-        expect(registrations[0]).toEqual({
-          forClass: "https://schema.org/VideoGame",
-          targets: [
-            {
-              type: "instance",
-              uri: "https://pod.test/games/minecraft#it",
-            },
-          ],
-        });
+        expect(registrations[0]).toEqual(
+          expect.objectContaining({
+            forClass: "https://schema.org/VideoGame",
+            targets: [
+              {
+                type: "instance",
+                uri: "https://pod.test/games/minecraft#it",
+              },
+            ],
+          }),
+        );
       });
 
       it("returns a single registration with multiple instances", () => {
@@ -196,19 +202,21 @@ describe("TypeIndex", () => {
 
         // Then one registration is returned with multiple target uris
         expect(registrations).toHaveLength(1);
-        expect(registrations[0]).toEqual({
-          forClass: "https://schema.org/VideoGame",
-          targets: [
-            {
-              type: "instance",
-              uri: "https://pod.test/games/minecraft#it",
-            },
-            {
-              type: "instance",
-              uri: "https://pod.test/games/fallout3#it",
-            },
-          ],
-        });
+        expect(registrations[0]).toEqual(
+          expect.objectContaining({
+            forClass: "https://schema.org/VideoGame",
+            targets: [
+              {
+                type: "instance",
+                uri: "https://pod.test/games/minecraft#it",
+              },
+              {
+                type: "instance",
+                uri: "https://pod.test/games/fallout3#it",
+              },
+            ],
+          }),
+        );
       });
     });
 
@@ -260,24 +268,28 @@ describe("TypeIndex", () => {
 
         // Then both registrations are returned
         expect(registrations).toHaveLength(2);
-        expect(registrations[0]).toEqual({
-          forClass: "https://schema.org/VideoGame",
-          targets: [
-            {
-              type: "container",
-              uri: "https://pod.test/games/",
-            },
-          ],
-        });
-        expect(registrations[1]).toEqual({
-          forClass: "https://schema.org/Thing",
-          targets: [
-            {
-              type: "container",
-              uri: "https://pod.test/things/",
-            },
-          ],
-        });
+        expect(registrations[0]).toEqual(
+          expect.objectContaining({
+            forClass: "https://schema.org/VideoGame",
+            targets: [
+              {
+                type: "container",
+                uri: "https://pod.test/games/",
+              },
+            ],
+          }),
+        );
+        expect(registrations[1]).toEqual(
+          expect.objectContaining({
+            forClass: "https://schema.org/Thing",
+            targets: [
+              {
+                type: "container",
+                uri: "https://pod.test/things/",
+              },
+            ],
+          }),
+        );
       });
     });
 
@@ -344,10 +356,12 @@ describe("TypeIndex", () => {
 
         // Then nothing is returned
         expect(registrations).toHaveLength(1);
-        expect(registrations[0]).toEqual({
-          targets: [],
-          forClass: "https://schema.org/VideoGame",
-        });
+        expect(registrations[0]).toEqual(
+          expect.objectContaining({
+            forClass: "https://schema.org/VideoGame",
+            targets: [],
+          }),
+        );
       });
 
       it("does not return instances from wrong document", () => {
@@ -380,11 +394,49 @@ describe("TypeIndex", () => {
 
         // Then nothing is returned
         expect(registrations).toHaveLength(1);
-        expect(registrations[0]).toEqual({
-          targets: [],
-          forClass: "https://schema.org/VideoGame",
-        });
+        expect(registrations[0]).toEqual(
+          expect.objectContaining({
+            forClass: "https://schema.org/VideoGame",
+            targets: [],
+          }),
+        );
       });
+    });
+  });
+
+  describe("label for class URI", () => {
+    it("includes a short label for the class URI", () => {
+      // Given: a type index with a registration for a class
+      const store = graph();
+      const typeIndexUri = "https://pod.test/settings/typeIndex.ttl";
+      const registrationUri = `${typeIndexUri}#VideoGames`;
+
+      store.add(
+        quad(
+          sym(registrationUri),
+          solid("forClass"),
+          schema("VideoGame"),
+          sym(typeIndexUri),
+        ),
+      );
+      store.add(
+        quad(
+          sym(registrationUri),
+          solid("instanceContainer"),
+          sym("https://pod.test/games/"),
+          sym(typeIndexUri),
+        ),
+      );
+
+      const typeIndex = new TypeIndex(typeIndexUri, store);
+
+      // When: listing all entries
+      const registrations = typeIndex.listAll();
+
+      // Then: the registration includes a label for the class URI
+      expect(registrations).toHaveLength(1);
+      expect(registrations[0]).toHaveProperty("label");
+      expect(registrations[0].label).toBe("VideoGame");
     });
   });
 });
