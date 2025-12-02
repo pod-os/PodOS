@@ -35,6 +35,7 @@ export * from "./terms";
 export * from "./Store";
 export * from "./uri";
 export * from "./problems";
+export * from "./type-index";
 
 export interface PodOsConfiguration {
   offlineCache?: OfflineCache;

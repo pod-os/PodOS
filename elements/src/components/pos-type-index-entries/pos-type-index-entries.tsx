@@ -1,4 +1,4 @@
-import { Component, Element, Prop, State, Host, h } from '@stencil/core';
+import { Component, Element, h, Prop, State } from '@stencil/core';
 import { usePodOS } from '../events/usePodOS';
 import { TypeIndex, TypeRegistration } from '@pod-os/core';
 
@@ -22,6 +22,16 @@ export class PosTypeIndexEntries {
   }
 
   render() {
-    return <Host></Host>;
+    return this.entries.map(it => (
+      <dl>
+        <dt>
+          {/*TODO short label*/}
+          <pos-predicate uri={it.forClass} label={it.forClass}></pos-predicate>
+        </dt>
+        <dd>
+          <pos-rich-link uri={it.targets[0].uri}></pos-rich-link>
+        </dd>
+      </dl>
+    ));
   }
 }
