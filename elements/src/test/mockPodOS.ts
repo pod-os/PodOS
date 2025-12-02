@@ -11,9 +11,12 @@ jest.mock('../authentication', () => ({
   }),
 }));
 
+jest.mock('../components/events/usePodOS');
+
 import { when } from 'jest-when';
 import { BehaviorSubject, EMPTY } from 'rxjs';
 import { createPodOS } from '../pod-os';
+import { usePodOS } from '../components/events/usePodOS';
 
 const alice = {
   webId: 'https://pod.example/alice#me',
@@ -54,5 +57,7 @@ export function mockPodOS(): PodOS {
       }),
     });
   (createPodOS as jest.Mock).mockReturnValue(os);
+  when(usePodOS).mockResolvedValue(os as unknown as PodOS);
+
   return os as unknown as PodOS;
 }
