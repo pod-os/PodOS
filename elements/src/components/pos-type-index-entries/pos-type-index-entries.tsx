@@ -25,8 +25,7 @@ export class PosTypeIndexEntries {
     return this.entries.map(it => (
       <dl>
         <dt>
-          {/*TODO short label*/}
-          <pos-predicate uri={it.forClass} label={it.forClass}></pos-predicate>
+          <pos-predicate uri={it.forClass} label={it.label}></pos-predicate>
         </dt>
         {it.targets.map(target => (
           <dd>

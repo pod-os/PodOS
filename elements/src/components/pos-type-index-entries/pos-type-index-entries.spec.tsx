@@ -40,6 +40,7 @@ describe('pos-type-index-entries', () => {
     // given a single registration
     const registration: TypeRegistration = {
       forClass: 'http://schema.org/VideoGame',
+      label: 'VideoGame',
       targets: [
         {
           uri: 'https://alice.example/games/minecraft#it',
@@ -62,7 +63,7 @@ describe('pos-type-index-entries', () => {
     expect(page.root).toEqualHtml(`
        <pos-type-index-entries uri="https://alice.example/settings/publicTypeIndex">
          <dl>
-           <dt><pos-predicate uri="http://schema.org/VideoGame" label="http://schema.org/VideoGame"></dt>
+           <dt><pos-predicate uri="http://schema.org/VideoGame" label="VideoGame"></dt>
            <dd>
              <pos-rich-link uri="https://alice.example/games/minecraft#it">
              </pos-rich-link>
@@ -76,6 +77,7 @@ describe('pos-type-index-entries', () => {
     // given a registration with multiple targets for the same class
     const registration: TypeRegistration = {
       forClass: 'http://schema.org/VideoGame',
+      label: 'VideoGame',
       targets: [
         {
           uri: 'https://alice.example/games/minecraft#it',
@@ -102,7 +104,7 @@ describe('pos-type-index-entries', () => {
     expect(page.root).toEqualHtml(`
         <pos-type-index-entries uri="https://alice.example/settings/publicTypeIndex">
           <dl>
-            <dt><pos-predicate uri="http://schema.org/VideoGame" label="http://schema.org/VideoGame"></dt>
+            <dt><pos-predicate uri="http://schema.org/VideoGame" label="VideoGame"></dt>
             <dd>
               <pos-rich-link uri="https://alice.example/games/minecraft#it">
               </pos-rich-link>
@@ -121,6 +123,7 @@ describe('pos-type-index-entries', () => {
     const registrations: TypeRegistration[] = [
       {
         forClass: 'http://schema.org/VideoGame',
+        label: 'VideoGame',
         targets: [
           {
             uri: 'https://alice.example/games/minecraft#it',
@@ -130,6 +133,7 @@ describe('pos-type-index-entries', () => {
       },
       {
         forClass: 'http://schema.org/MusicAlbum',
+        label: 'MusicAlbum',
         targets: [
           {
             uri: 'https://alice.example/albums/dark-side#it',
@@ -153,14 +157,14 @@ describe('pos-type-index-entries', () => {
     expect(page.root).toEqualHtml(`
        <pos-type-index-entries uri="https://alice.example/settings/publicTypeIndex">
          <dl>
-           <dt><pos-predicate uri="http://schema.org/VideoGame" label="http://schema.org/VideoGame"></dt>
+           <dt><pos-predicate uri="http://schema.org/VideoGame" label="VideoGame"></dt>
            <dd>
              <pos-rich-link uri="https://alice.example/games/minecraft#it">
              </pos-rich-link>
            </dd>
          </dl>
          <dl>
-           <dt><pos-predicate uri="http://schema.org/MusicAlbum" label="http://schema.org/MusicAlbum"></dt>
+           <dt><pos-predicate uri="http://schema.org/MusicAlbum" label="MusicAlbum"></dt>
            <dd>
              <pos-rich-link uri="https://alice.example/albums/dark-side#it">
              </pos-rich-link>
