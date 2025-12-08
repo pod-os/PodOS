@@ -48,6 +48,11 @@ export namespace Components {
     }
     interface PosAppSettings {
     }
+    /**
+     * Lists whatever is attached to the current thing
+     */
+    interface PosAttachments {
+    }
     interface PosContainerContents {
     }
     interface PosContainerItem {
@@ -551,6 +556,15 @@ declare global {
     var HTMLPosAppSettingsElement: {
         prototype: HTMLPosAppSettingsElement;
         new (): HTMLPosAppSettingsElement;
+    };
+    /**
+     * Lists whatever is attached to the current thing
+     */
+    interface HTMLPosAttachmentsElement extends Components.PosAttachments, HTMLStencilElement {
+    }
+    var HTMLPosAttachmentsElement: {
+        prototype: HTMLPosAttachmentsElement;
+        new (): HTMLPosAttachmentsElement;
     };
     interface HTMLPosContainerContentsElementEventMap {
         "pod-os:resource": any;
@@ -1197,6 +1211,7 @@ declare global {
         "pos-app-ldp-container": HTMLPosAppLdpContainerElement;
         "pos-app-rdf-document": HTMLPosAppRdfDocumentElement;
         "pos-app-settings": HTMLPosAppSettingsElement;
+        "pos-attachments": HTMLPosAttachmentsElement;
         "pos-container-contents": HTMLPosContainerContentsElement;
         "pos-container-item": HTMLPosContainerItemElement;
         "pos-container-toolbar": HTMLPosContainerToolbarElement;
@@ -1298,6 +1313,11 @@ declare namespace LocalJSX {
     interface PosAppRdfDocument {
     }
     interface PosAppSettings {
+    }
+    /**
+     * Lists whatever is attached to the current thing
+     */
+    interface PosAttachments {
     }
     interface PosContainerContents {
         "onPod-os:resource"?: (event: PosContainerContentsCustomEvent<any>) => void;
@@ -1618,6 +1638,7 @@ declare namespace LocalJSX {
         "pos-app-ldp-container": PosAppLdpContainer;
         "pos-app-rdf-document": PosAppRdfDocument;
         "pos-app-settings": PosAppSettings;
+        "pos-attachments": PosAttachments;
         "pos-container-contents": PosContainerContents;
         "pos-container-item": PosContainerItem;
         "pos-container-toolbar": PosContainerToolbar;
@@ -1675,6 +1696,10 @@ declare module "@stencil/core" {
             "pos-app-ldp-container": LocalJSX.PosAppLdpContainer & JSXBase.HTMLAttributes<HTMLPosAppLdpContainerElement>;
             "pos-app-rdf-document": LocalJSX.PosAppRdfDocument & JSXBase.HTMLAttributes<HTMLPosAppRdfDocumentElement>;
             "pos-app-settings": LocalJSX.PosAppSettings & JSXBase.HTMLAttributes<HTMLPosAppSettingsElement>;
+            /**
+             * Lists whatever is attached to the current thing
+             */
+            "pos-attachments": LocalJSX.PosAttachments & JSXBase.HTMLAttributes<HTMLPosAttachmentsElement>;
             "pos-container-contents": LocalJSX.PosContainerContents & JSXBase.HTMLAttributes<HTMLPosContainerContentsElement>;
             "pos-container-item": LocalJSX.PosContainerItem & JSXBase.HTMLAttributes<HTMLPosContainerItemElement>;
             "pos-container-toolbar": LocalJSX.PosContainerToolbar & JSXBase.HTMLAttributes<HTMLPosContainerToolbarElement>;

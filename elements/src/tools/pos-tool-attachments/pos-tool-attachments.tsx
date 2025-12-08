@@ -1,4 +1,4 @@
-import { Component, h, Host } from '@stencil/core';
+import { Component, h } from '@stencil/core';
 
 /**
  * A tool to manage attachments of a thing.
@@ -8,6 +8,6 @@ import { Component, h, Host } from '@stencil/core';
 })
 export class PosToolAttachments {
   render() {
-    return <Host>Coming soon</Host>;
+    return <pos-attachments></pos-attachments>;
   }
 }
