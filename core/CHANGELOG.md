@@ -10,6 +10,10 @@ and this project adheres to
 
 ## Added
 
+- [`AttachmentGateway`](https://pod-os.org/reference/core/classes/AttachmentGateway/):
+  New gateway class to handle attachment upload and linking operations
+- [`PodOS.attachments()`](https://pod-os.org/reference/core/classes/PodOS/#attachments):
+  Access to the attachment gateway
 - [`TypeIndex`](https://pod-os.org/reference/core/classes/TypeIndex/): New class
   to represent and work with Solid type index documents
 - [`WebIdProfile.getPublicTypeIndex()`](https://pod-os.org/reference/core/classes/WebIdProfile/#getPublicTypeIndex):

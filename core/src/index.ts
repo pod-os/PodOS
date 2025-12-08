@@ -3,6 +3,7 @@ import { BehaviorSubject, tap } from "rxjs";
 import { PodOsSession, SessionInfo } from "./authentication";
 import { FileFetcher, FileGateway, SolidFile } from "./files";
 import { loadContactsModule } from "./modules/contacts";
+import { AttachmentGateway } from "./attachments";
 import { PictureGateway } from "./picture";
 import { ProfileGateway, WebIdProfile } from "./profile";
 import { LabelIndex, SearchGateway } from "./search";
@@ -25,6 +26,7 @@ export * from "./files";
 export * from "./thing";
 export * from "./rdf-document";
 export * from "./ldp-container";
+export * from "./attachments";
 export * from "./picture";
 export * from "./profile";
 export * from "./search";
@@ -49,6 +51,7 @@ export class PodOS {
   private readonly fileFetcher: FileFetcher;
   private readonly searchGateway: SearchGateway;
   private readonly fileGateway: FileGateway;
+  private readonly attachmentGateway: AttachmentGateway;
   private readonly pictureGateway: PictureGateway;
   private readonly offlineCache: OfflineCache;
   private readonly profileGateway: ProfileGateway;
@@ -70,6 +73,7 @@ export class PodOS {
     this.searchGateway = new SearchGateway(this.store);
     this.fileFetcher = new FileFetcher(this.session);
     this.fileGateway = new FileGateway(this.store, this.fileFetcher);
+    this.attachmentGateway = new AttachmentGateway(this.fileGateway);
     this.pictureGateway = new PictureGateway(this.fileGateway);
     this.flagAuthorizationMetaDataOnSessionChange();
     this.uriService = new UriService(this.store);
@@ -207,5 +211,13 @@ export class PodOS {
     pictureFile: File,
   ): ResultAsync<{ url: string }, HttpProblem | NetworkProblem> {
     return this.pictureGateway.uploadAndAddPicture(thing, pictureFile);
+  }
+
+  /**
+   * Provides access to attachment operations such as uploading and linking attachments to things
+   * @returns {AttachmentGateway} An instance of AttachmentGateway that handles attachment operations
+   */
+  attachments(): AttachmentGateway {
+    return this.attachmentGateway;
   }
 }
