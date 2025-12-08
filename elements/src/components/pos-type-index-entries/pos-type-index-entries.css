@@ -1,0 +1,14 @@
+dl {
+  > * {
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-1);
+  }
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4);
+  dd {
+    margin: 0;
+  }
+}

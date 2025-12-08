@@ -32,6 +32,8 @@ describe('pos-type-index-entries', () => {
     // then it shows nothing
     expect(page.root).toEqualHtml(`
       <pos-type-index-entries uri="https://alice.example/settings/publicTypeIndex">
+        <mock:shadow-root>
+        </mock:shadow-root>
       </pos-type-index-entries>
     `);
   });
@@ -57,17 +59,20 @@ describe('pos-type-index-entries', () => {
     const page = await newSpecPage({
       components: [PosTypeIndexEntries],
       html: `<pos-type-index-entries uri="https://alice.example/settings/publicTypeIndex"/>`,
+      supportsShadowDom: false,
     });
 
     // then it shows one entry
     expect(page.root).toEqualHtml(`
        <pos-type-index-entries uri="https://alice.example/settings/publicTypeIndex">
          <dl>
-           <dt><pos-predicate uri="http://schema.org/VideoGame" label="VideoGame"></dt>
-           <dd>
-             <pos-rich-link uri="https://alice.example/games/minecraft#it">
-             </pos-rich-link>
-           </dd>
+          <div>
+             <dt><pos-predicate uri="http://schema.org/VideoGame" label="VideoGame"></dt>
+             <dd>
+               <pos-rich-link uri="https://alice.example/games/minecraft#it">
+               </pos-rich-link>
+             </dd>
+           </div>
          </dl>
        </pos-type-index-entries>
      `);
@@ -98,21 +103,24 @@ describe('pos-type-index-entries', () => {
     const page = await newSpecPage({
       components: [PosTypeIndexEntries],
       html: `<pos-type-index-entries uri="https://alice.example/settings/publicTypeIndex"/>`,
+      supportsShadowDom: false,
     });
 
     // then it shows a single entry with multiple targets
     expect(page.root).toEqualHtml(`
         <pos-type-index-entries uri="https://alice.example/settings/publicTypeIndex">
           <dl>
-            <dt><pos-predicate uri="http://schema.org/VideoGame" label="VideoGame"></dt>
-            <dd>
-              <pos-rich-link uri="https://alice.example/games/minecraft#it">
-              </pos-rich-link>
-            </dd>
-            <dd>
-              <pos-rich-link uri="https://alice.example/games/zelda#it">
-              </pos-rich-link>
-            </dd>
+            <div>
+              <dt><pos-predicate uri="http://schema.org/VideoGame" label="VideoGame"></dt>
+              <dd>
+                <pos-rich-link uri="https://alice.example/games/minecraft#it">
+                </pos-rich-link>
+              </dd>
+              <dd>
+                <pos-rich-link uri="https://alice.example/games/zelda#it">
+                </pos-rich-link>
+              </dd>
+            </div>
           </dl>
         </pos-type-index-entries>
       `);
@@ -151,24 +159,27 @@ describe('pos-type-index-entries', () => {
     const page = await newSpecPage({
       components: [PosTypeIndexEntries],
       html: `<pos-type-index-entries uri="https://alice.example/settings/publicTypeIndex"/>`,
+      supportsShadowDom: false,
     });
 
     // then it shows entries for both classes
     expect(page.root).toEqualHtml(`
        <pos-type-index-entries uri="https://alice.example/settings/publicTypeIndex">
          <dl>
-           <dt><pos-predicate uri="http://schema.org/VideoGame" label="VideoGame"></dt>
-           <dd>
-             <pos-rich-link uri="https://alice.example/games/minecraft#it">
-             </pos-rich-link>
-           </dd>
-         </dl>
-         <dl>
-           <dt><pos-predicate uri="http://schema.org/MusicAlbum" label="MusicAlbum"></dt>
-           <dd>
-             <pos-rich-link uri="https://alice.example/albums/dark-side#it">
-             </pos-rich-link>
-           </dd>
+          <div>
+             <dt><pos-predicate uri="http://schema.org/VideoGame" label="VideoGame"></dt>
+             <dd>
+               <pos-rich-link uri="https://alice.example/games/minecraft#it">
+               </pos-rich-link>
+             </dd>
+           </div>
+           <div>
+             <dt><pos-predicate uri="http://schema.org/MusicAlbum" label="MusicAlbum"></dt>
+             <dd>
+               <pos-rich-link uri="https://alice.example/albums/dark-side#it">
+               </pos-rich-link>
+             </dd>
+           </div>
          </dl>
        </pos-type-index-entries>
      `);

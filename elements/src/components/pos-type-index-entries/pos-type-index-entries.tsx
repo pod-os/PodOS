@@ -4,6 +4,8 @@ import { TypeIndex, TypeRegistration } from '@pod-os/core';
 
 @Component({
   tag: 'pos-type-index-entries',
+  shadow: true,
+  styleUrl: 'pos-type-index-entries.css',
 })
 export class PosTypeIndexEntries {
   @Prop() uri: string;
@@ -22,8 +24,9 @@ export class PosTypeIndexEntries {
   }
 
   render() {
-    return this.entries.map(it => (
-      <dl>
+    if (this.entries.length === 0) return null;
+    const entries = this.entries.map(it => (
+      <div>
         <dt>
           <pos-predicate uri={it.forClass} label={it.label}></pos-predicate>
         </dt>
@@ -32,7 +35,8 @@ export class PosTypeIndexEntries {
             <pos-rich-link uri={target.uri}></pos-rich-link>
           </dd>
         ))}
-      </dl>
+      </div>
     ));
+    return <dl>{entries}</dl>;
   }
 }
