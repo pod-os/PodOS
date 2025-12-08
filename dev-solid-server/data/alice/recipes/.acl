@@ -1,0 +1,17 @@
+@prefix : <#>.
+@prefix acl: <http://www.w3.org/ns/auth/acl#>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+
+:OwnerAccess
+    a acl:Authorization;
+    acl:agent <../../../alice/profile/card#me>;
+    acl:mode acl:Read, acl:Write, acl:Control;
+    acl:accessTo </alice/recipes/>;
+    acl:default <./> .
+
+:PublicReadAccess
+    a acl:Authorization;
+    acl:agentClass foaf:Agent;
+    acl:mode acl:Read;
+    acl:accessTo </alice/recipes/>;
+    acl:default <./> .

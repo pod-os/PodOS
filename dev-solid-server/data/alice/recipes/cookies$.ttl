@@ -1,0 +1,45 @@
+@prefix :       <#> .
+@prefix schema: <http://schema.org/> .
+@prefix flow:   <http://www.w3.org/2005/01/wf/flow#> .
+
+:this a schema:Recipe;
+      schema:name "Classic Chocolate Chip Cookies";
+      schema:description "Delicious homemade chocolate chip cookies with a soft and chewy texture";
+      schema:author [
+            a schema:Person;
+            schema:name "Alice"
+      ];
+      schema:recipeYield "24 cookies";
+      schema:prepTime "PT15M";
+      schema:cookTime "PT12M";
+      schema:totalTime "PT27M";
+      schema:recipeCategory "Dessert";
+      schema:recipeCuisine "American";
+      schema:recipeIngredients 
+            "2 1/4 cups all-purpose flour",
+            "1 teaspoon baking soda",
+            "1 teaspoon salt",
+            "1 cup butter, softened",
+            "3/4 cup granulated sugar",
+            "3/4 cup packed brown sugar",
+            "2 large eggs",
+            "2 teaspoons vanilla extract",
+            "2 cups chocolate chips";
+      schema:recipeInstructions 
+            "Preheat oven to 375°F (190°C)",
+            "Mix flour, baking soda and salt in small bowl",
+            "Beat butter and both sugars until creamy in large mixer bowl",
+            "Add eggs and vanilla extract; beat well",
+            "Gradually beat in flour mixture",
+            "Stir in chocolate chips",
+            "Drop rounded tablespoons onto ungreased baking sheets",
+            "Bake for 9 to 12 minutes or until golden brown",
+            "Cool on baking sheets for 2 minutes; remove to wire racks";
+       schema:image <./cookies-image.png>;
+       schema:aggregateRating [
+             a schema:AggregateRating;
+             schema:ratingValue "4.8";
+             schema:ratingCount "152"
+       ];
+       flow:attachment <./cookies-recipe.pdf>
+.

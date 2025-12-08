@@ -7,3 +7,8 @@
     a              terms:TypeRegistration ;
     terms:forClass schema:VideoGame ;
     terms:instanceContainer </alice/games/> .
+
+:Recipes
+    a              terms:TypeRegistration ;
+    terms:forClass schema:Recipe ;
+    terms:instanceContainer </alice/recipes/> .
