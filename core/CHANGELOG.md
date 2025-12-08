@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+## Added
+
+- [`TypeIndex`](https://pod-os.org/reference/core/classes/TypeIndex/): New class
+  to represent and work with Solid type index documents
+- [`WebIdProfile.getPublicTypeIndex()`](https://pod-os.org/reference/core/classes/WebIdProfile/#getPublicTypeIndex):
+  Get the public type index URI for a user
+- [`WebIdProfile.getPrivateTypeIndex()`](https://pod-os.org/reference/core/classes/WebIdProfile/#getPrivateTypeIndex):
+  Get the private type index URI for a user
+- [`ProfileGateway`](https://pod-os.org/reference/core/classes/ProfileGateway/)
+  now fetches type indexes in parallel for improved performance
+
 ## 0.23.0
 
 ## Added
