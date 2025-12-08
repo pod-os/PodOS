@@ -1,16 +1,13 @@
 import { ResultAsync } from "neverthrow";
 import { Thing } from "../thing";
-import { Store } from "../Store";
-import { FileFetcher, NewFile } from "../files";
+import { FileGateway, NewFile } from "../files";
 import { HttpProblem, NetworkProblem } from "../problems";
-import { LdpContainer } from "../ldp-container";
-import { createPictureLinkOperation } from "./createPictureLinkOperation";
 
+/**
+ * Gateway for picture-related operations on Solid Pods and the store.
+ */
 export class PictureGateway {
-  constructor(
-    private readonly store: Store,
-    private readonly fileFetcher: FileFetcher,
-  ) {}
+  constructor(private readonly attachmentGateway: FileGateway) {}
 
   /**
    * Uploads a picture file and associates it with a thing.
@@ -25,30 +22,11 @@ export class PictureGateway {
     thing: Thing,
     pictureFile: File,
   ): ResultAsync<UploadedPicture, HttpProblem | NetworkProblem> {
-    const container = this.getContainerFromThing(thing);
-
-    return this.fileFetcher
-      .createNewFile(container, pictureFile)
-      .andThen((file) => this.linkPictureToThing(thing, file));
-  }
-
-  private linkPictureToThing(
-    thing: Thing,
-    file: NewFile,
-  ): ResultAsync<NewFile, NetworkProblem> {
-    const operation = createPictureLinkOperation(thing, file);
-
-    return ResultAsync.fromPromise(
-      this.store.executeUpdate(operation).then(() => file),
-      () => ({
-        type: "network" as const,
-        title: "Failed to link picture to thing",
-      }),
+    return this.attachmentGateway.uploadAndLinkFile(
+      thing,
+      "http://schema.org/image",
+      pictureFile,
     );
-  }
-
-  private getContainerFromThing(thing: Thing): LdpContainer {
-    return this.store.get(thing.container().uri).assume(LdpContainer);
   }
 }
 

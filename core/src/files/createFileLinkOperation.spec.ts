@@ -1,7 +1,7 @@
 import { graph } from "rdflib";
 import { Thing } from "../thing";
 import { NewFile } from "../files";
-import { createPictureLinkOperation } from "./createPictureLinkOperation";
+import { createFileLinkOperation } from "./createFileLinkOperation";
 
 describe("createPictureLinkOperation", () => {
   it("creates an update operation linking a picture to a thing with schema:image", () => {
@@ -17,7 +17,11 @@ describe("createPictureLinkOperation", () => {
     };
 
     // when creating the picture link operation
-    const operation = createPictureLinkOperation(thing, file);
+    const operation = createFileLinkOperation(
+      thing,
+      "http://schema.org/image",
+      file,
+    );
 
     // then the operation has no deletions or files to create
     expect(operation.deletions).toEqual([]);

@@ -1,11 +1,10 @@
 import { ContactsModule } from "@solid-data-modules/contacts-rdflib";
 import { BehaviorSubject, tap } from "rxjs";
-import { SessionInfo, PodOsSession } from "./authentication";
-import { SolidFile } from "./files";
-import { FileFetcher } from "./files/FileFetcher";
+import { PodOsSession, SessionInfo } from "./authentication";
+import { FileFetcher, FileGateway, SolidFile } from "./files";
 import { loadContactsModule } from "./modules/contacts";
 import { PictureGateway } from "./picture";
-import { WebIdProfile } from "./profile";
+import { ProfileGateway, WebIdProfile } from "./profile";
 import { LabelIndex, SearchGateway } from "./search";
 import { Store } from "./Store";
 import { listKnownTerms, Term } from "./terms";
@@ -20,7 +19,6 @@ import {
 import { IndexedFormula } from "rdflib";
 import { ResultAsync } from "neverthrow";
 import { HttpProblem, NetworkProblem } from "./problems";
-import { ProfileGateway } from "./profile";
 
 export * from "./authentication";
 export * from "./files";
@@ -50,6 +48,7 @@ export class PodOS {
   readonly uriService: UriService;
   private readonly fileFetcher: FileFetcher;
   private readonly searchGateway: SearchGateway;
+  private readonly fileGateway: FileGateway;
   private readonly pictureGateway: PictureGateway;
   private readonly offlineCache: OfflineCache;
   private readonly profileGateway: ProfileGateway;
@@ -70,7 +69,8 @@ export class PodOS {
     );
     this.searchGateway = new SearchGateway(this.store);
     this.fileFetcher = new FileFetcher(this.session);
-    this.pictureGateway = new PictureGateway(this.store, this.fileFetcher);
+    this.fileGateway = new FileGateway(this.store, this.fileFetcher);
+    this.pictureGateway = new PictureGateway(this.fileGateway);
     this.flagAuthorizationMetaDataOnSessionChange();
     this.uriService = new UriService(this.store);
     this.profileGateway = new ProfileGateway(this.store);

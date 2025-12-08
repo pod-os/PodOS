@@ -14,6 +14,9 @@ import { err, ok, ResultAsync } from "neverthrow";
 
 import mime from "mime/lite";
 
+/**
+ * Handles HTTP operations for files, like fetching and updating file contents.
+ */
 export class FileFetcher {
   constructor(private session: PodOsSession) {}
 

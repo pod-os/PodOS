@@ -4,26 +4,23 @@ import { PictureGateway } from "./PictureGateway";
 import { Store } from "../Store";
 import { FileFetcher } from "../files/FileFetcher";
 import { Thing } from "../thing";
+import { FileGateway } from "../files/FileGateway";
 
 describe("PictureGateway", () => {
   let gateway: PictureGateway;
-  let fileFetcher: jest.Mocked<FileFetcher>;
+  let attachmentGateway: jest.Mocked<FileGateway>;
   let thing: Thing;
-  let mockStore: Store;
 
   beforeEach(() => {
     // given a thing in a container
     const store = graph();
     thing = new Thing("https://pod.test/things/thing1", store, true);
 
-    // and a file fetcher that can create files
-    fileFetcher = createMockFileFetcher();
-
-    // and a mock store
-    mockStore = createMockStore();
+    // and an attachment gateway
+    attachmentGateway = createMockAttachmentGateway();
 
     // and a picture gateway
-    gateway = new PictureGateway(mockStore, fileFetcher);
+    gateway = new PictureGateway(attachmentGateway);
   });
 
   describe("uploadAndAddPicture", () => {
@@ -34,11 +31,10 @@ describe("PictureGateway", () => {
       // when uploading and adding the picture
       await gateway.uploadAndAddPicture(thing, pictureFile);
 
-      // then the file object with content is passed to createNewFile
-      expect(fileFetcher.createNewFile).toHaveBeenCalledWith(
-        expect.objectContaining({
-          uri: "https://pod.test/things/",
-        }),
+      // then the file object with content is passed to uploadAndAddFile
+      expect(attachmentGateway.uploadAndLinkFile).toHaveBeenCalledWith(
+        thing,
+        "http://schema.org/image",
         pictureFile,
       );
     });
@@ -53,7 +49,7 @@ describe("PictureGateway", () => {
         name: "vacation.jpg",
         contentType: "image/jpeg",
       };
-      fileFetcher.createNewFile.mockReturnValue(
+      attachmentGateway.uploadAndLinkFile.mockReturnValue(
         ok(fileMetadata) as unknown as ReturnType<FileFetcher["createNewFile"]>,
       );
 
@@ -76,7 +72,7 @@ describe("PictureGateway", () => {
         title: "Upload forbidden",
         detail: "The server responded with 403 Forbidden",
       };
-      fileFetcher.createNewFile.mockReturnValue(
+      attachmentGateway.uploadAndLinkFile.mockReturnValue(
         err(httpError) as unknown as ReturnType<FileFetcher["createNewFile"]>,
       );
 
@@ -87,75 +83,6 @@ describe("PictureGateway", () => {
       expect(result.isErr()).toBe(true);
       expect(result._unsafeUnwrapErr()).toEqual(httpError);
     });
-
-    it("adds the uploaded image URL to the thing as schema:image", async () => {
-      // given a picture file to upload
-      const pictureFile = createPictureFile("sunset.jpg");
-
-      // and the file fetcher will create the file at a specific URL
-      fileFetcher.createNewFile.mockReturnValue(
-        ok({
-          url: "https://pod.test/things/sunset.jpg",
-          name: "sunset.jpg",
-          contentType: "image/jpeg",
-        }) as unknown as ReturnType<FileFetcher["createNewFile"]>,
-      );
-
-      // and we track store update operations
-      const mockExecuteUpdate = jest.fn().mockResolvedValue(undefined);
-      mockStore.executeUpdate = mockExecuteUpdate;
-
-      // when uploading and adding the picture
-      await gateway.uploadAndAddPicture(thing, pictureFile);
-
-      // then the store is updated with schema:image pointing to the file URL
-      expect(mockExecuteUpdate).toHaveBeenCalledWith(
-        expect.objectContaining({
-          insertions: expect.arrayContaining([
-            expect.objectContaining({
-              subject: expect.objectContaining({
-                value: "https://pod.test/things/thing1",
-              }),
-              predicate: expect.objectContaining({
-                value: "http://schema.org/image",
-              }),
-              object: expect.objectContaining({
-                value: "https://pod.test/things/sunset.jpg",
-              }),
-            }),
-          ]),
-        }),
-      );
-    });
-
-    it("returns a network error when linking the picture to the thing fails", async () => {
-      // given a picture file to upload
-      const pictureFile = createPictureFile("photo.jpg");
-
-      // and the file creation succeeds
-      fileFetcher.createNewFile.mockReturnValue(
-        ok({
-          url: "https://pod.test/things/photo.jpg",
-          name: "photo.jpg",
-          contentType: "image/jpeg",
-        }) as unknown as ReturnType<FileFetcher["createNewFile"]>,
-      );
-
-      // and the store update will fail
-      mockStore.executeUpdate = jest
-        .fn()
-        .mockRejectedValue(new Error("Network failure"));
-
-      // when uploading and adding the picture
-      const result = await gateway.uploadAndAddPicture(thing, pictureFile);
-
-      // then the result contains a network error
-      expect(result.isErr()).toBe(true);
-      expect(result._unsafeUnwrapErr()).toEqual({
-        type: "network",
-        title: "Failed to link picture to thing",
-      });
-    });
   });
 
   function createPictureFile(filename: string, content: string = "data"): File {
@@ -164,29 +91,15 @@ describe("PictureGateway", () => {
     });
   }
 
-  function createMockFileFetcher(): jest.Mocked<FileFetcher> {
+  function createMockAttachmentGateway(): jest.Mocked<FileGateway> {
     return {
-      createNewFile: jest.fn().mockReturnValue(
+      uploadAndLinkFile: jest.fn().mockReturnValue(
         ok({
           url: "https://pod.test/things/picture.png",
           name: "my-picture.png",
           contentType: "image/png",
         }),
       ),
-    } as unknown as jest.Mocked<FileFetcher>;
-  }
-
-  function createMockStore(): Store {
-    const store = graph();
-    return {
-      fetcher: {
-        load: jest.fn(),
-      },
-      updater: {
-        update: jest.fn(),
-      },
-      get: jest.fn((uri: string) => new Thing(uri, store, true)),
-      executeUpdate: jest.fn().mockResolvedValue(undefined),
-    } as unknown as Store;
+    } as unknown as jest.Mocked<FileGateway>;
   }
 });

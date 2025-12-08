@@ -3,3 +3,4 @@ export * from "./BinaryFile";
 export * from "./BrokenFile";
 export * from "./HttpStatus";
 export * from "./FileFetcher";
+export * from "./FileGateway";
