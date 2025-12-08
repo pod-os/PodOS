@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## Added
 
 - [pos-tool-attachments](https://pod-os.org/reference/elements/tools/pos-tool-attachments/): New tool to manage attachments of a thing
+- [pos-attachments](https://pod-os.org/reference/elements/components/pos-attachments/): New component to display attachments of a thing
 - [pos-type-index-entries](https://pod-os.org/reference/elements/components/pos-type-index-entries/): New component to display type index entries
 
 ### Changed
