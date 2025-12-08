@@ -28,6 +28,11 @@ export interface RdfType {
   label: string;
 }
 
+export interface Attachment {
+  uri: string;
+  label: string;
+}
+
 export class Thing {
   constructor(
     readonly uri: string,
@@ -216,6 +221,21 @@ export class Thing {
     return Object.keys(uriMap).map((uri) => ({
       uri,
       label: labelForType(uri),
+    }));
+  }
+
+  /**
+   * Returns all attachments linked to this thing
+   */
+  attachments(): Attachment[] {
+    const statements = this.store.statementsMatching(
+      sym(this.uri),
+      sym("http://www.w3.org/2005/01/wf/flow#attachment"),
+    );
+
+    return statements.map((statement) => ({
+      uri: statement.object.value,
+      label: labelFromUri(statement.object.value),
     }));
   }
 
