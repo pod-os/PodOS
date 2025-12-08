@@ -7,6 +7,8 @@ import { useResource } from '../events/useResource';
  */
 @Component({
   tag: 'pos-attachments',
+  styleUrl: 'pos-attachments.css',
+  shadow: true,
 })
 export class PosAttachments {
   @Element() el: HTMLElement;

@@ -18,6 +18,7 @@ describe('pos-attachments', () => {
     const page = await newSpecPage({
       components: [PosAttachments],
       html: `<pos-attachments />`,
+      supportsShadowDom: false,
     });
 
     expect(page.root).toEqualHtml(`

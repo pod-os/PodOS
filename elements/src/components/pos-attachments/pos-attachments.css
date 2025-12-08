@@ -1,0 +1,25 @@
+:host {
+  --background-base-color: color-mix(in srgb, var(--pos-background-color), var(--color-grey-800) 10%);
+  --background-color-even: hsl(from var(--background-base-color) h s calc(l + 7));
+  --background-color-odd: hsl(from var(--background-base-color) h s calc(l + 10));
+  --border-color: var(--background-base-color);
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-1);
+
+    li {
+      padding: var(--size-1);
+      &:nth-child(even) {
+        background-color: var(--background-color-even);
+      }
+      &:nth-child(odd) {
+        background-color: var(--background-color-odd);
+      }
+    }
+  }
+}
