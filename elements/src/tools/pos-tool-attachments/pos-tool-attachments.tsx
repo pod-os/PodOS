@@ -1,4 +1,7 @@
-import { Component, h, Host } from '@stencil/core';
+import { Component, h, Host, Element, State } from '@stencil/core';
+import { PodOS, Thing } from '@pod-os/core';
+import { usePodOS } from '../../components/events/usePodOS';
+import { useResource } from '../../components/events/useResource';
 
 /**
  * A tool to manage attachments of a thing.
@@ -13,6 +16,16 @@ import { Component, h, Host } from '@stencil/core';
   shadow: true,
 })
 export class PosToolAttachments {
+  @Element() el: HTMLElement;
+
+  @State() os: PodOS;
+  @State() resource: Thing;
+
+  async componentWillLoad() {
+    this.os = await usePodOS(this.el);
+    this.resource = await useResource(this.el);
+  }
+
   render() {
     return (
       <Host>
@@ -25,8 +38,8 @@ export class PosToolAttachments {
         <section>
           <pos-upload
             accept={['*/*']}
-            uploader={() => {
-              throw new Error('Not yet implemented');
+            uploader={file => {
+              return this.os.attachments().uploadAndAddAttachment(this.resource, file);
             }}
           ></pos-upload>
         </section>
