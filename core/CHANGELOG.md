@@ -21,7 +21,7 @@ and this project adheres to
 - [`WebIdProfile.getPrivateTypeIndex()`](https://pod-os.org/reference/core/classes/WebIdProfile/#getPrivateTypeIndex):
   Get the private type index URI for a user
 - [`ProfileGateway`](https://pod-os.org/reference/core/classes/ProfileGateway/)
-  now fetches type indexes in parallel for improved performance
+  Gateway for profile-related operations on Solid Pods and the store.
 
 ## 0.23.0
 

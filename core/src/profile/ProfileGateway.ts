@@ -1,6 +1,9 @@
 import { WebIdProfile } from "./WebIdProfile";
 import { Store } from "../Store";
 
+/**
+ * Gateway for profile-related operations on Solid Pods and the store.
+ */
 export class ProfileGateway {
   constructor(private readonly store: Store) {}
   async fetchProfile(webId: string): Promise<WebIdProfile> {
