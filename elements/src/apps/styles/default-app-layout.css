@@ -18,8 +18,10 @@ section {
     flex-direction: row;
     flex-wrap: wrap;
 
-    section:first-of-type {
-      flex: 1;
+    section {
+      &:first-of-type {
+        flex: 1;
+      }
     }
 
     section:not(:first-of-type) {
