@@ -1,7 +1,6 @@
 import { graph } from "rdflib";
 import { err, ok } from "neverthrow";
 import { PictureGateway } from "./PictureGateway";
-import { Store } from "../Store";
 import { FileFetcher } from "../files/FileFetcher";
 import { Thing } from "../thing";
 import { FileGateway } from "../files/FileGateway";
