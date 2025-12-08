@@ -22,6 +22,14 @@ export class PosToolAttachments {
             <pos-attachments></pos-attachments>
           </article>
         </section>
+        <section>
+          <pos-upload
+            accept={['*/*']}
+            uploader={() => {
+              throw new Error('Not yet implemented');
+            }}
+          ></pos-upload>
+        </section>
       </Host>
     );
   }
