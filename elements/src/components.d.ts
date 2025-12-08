@@ -244,6 +244,11 @@ export namespace Components {
     interface PosSubjects {
     }
     /**
+     * A tool to manage attachments of a thing.
+     */
+    interface PosToolAttachments {
+    }
+    /**
      * Allows selecting a tool from within a set of available tools
      */
     interface PosToolSelect {
@@ -1063,6 +1068,15 @@ declare global {
         prototype: HTMLPosSubjectsElement;
         new (): HTMLPosSubjectsElement;
     };
+    /**
+     * A tool to manage attachments of a thing.
+     */
+    interface HTMLPosToolAttachmentsElement extends Components.PosToolAttachments, HTMLStencilElement {
+    }
+    var HTMLPosToolAttachmentsElement: {
+        prototype: HTMLPosToolAttachmentsElement;
+        new (): HTMLPosToolAttachmentsElement;
+    };
     interface HTMLPosToolSelectElementEventMap {
         "pod-os:tool-selected": ToolConfig;
     }
@@ -1215,6 +1229,7 @@ declare global {
         "pos-select-term": HTMLPosSelectTermElement;
         "pos-setting-offline-cache": HTMLPosSettingOfflineCacheElement;
         "pos-subjects": HTMLPosSubjectsElement;
+        "pos-tool-attachments": HTMLPosToolAttachmentsElement;
         "pos-tool-select": HTMLPosToolSelectElement;
         "pos-type-badges": HTMLPosTypeBadgesElement;
         "pos-type-index-entries": HTMLPosTypeIndexEntriesElement;
@@ -1536,6 +1551,11 @@ declare namespace LocalJSX {
         "onPod-os:resource"?: (event: PosSubjectsCustomEvent<any>) => void;
     }
     /**
+     * A tool to manage attachments of a thing.
+     */
+    interface PosToolAttachments {
+    }
+    /**
      * Allows selecting a tool from within a set of available tools
      */
     interface PosToolSelect {
@@ -1630,6 +1650,7 @@ declare namespace LocalJSX {
         "pos-select-term": PosSelectTerm;
         "pos-setting-offline-cache": PosSettingOfflineCache;
         "pos-subjects": PosSubjects;
+        "pos-tool-attachments": PosToolAttachments;
         "pos-tool-select": PosToolSelect;
         "pos-type-badges": PosTypeBadges;
         "pos-type-index-entries": PosTypeIndexEntries;
@@ -1707,6 +1728,10 @@ declare module "@stencil/core" {
             "pos-select-term": LocalJSX.PosSelectTerm & JSXBase.HTMLAttributes<HTMLPosSelectTermElement>;
             "pos-setting-offline-cache": LocalJSX.PosSettingOfflineCache & JSXBase.HTMLAttributes<HTMLPosSettingOfflineCacheElement>;
             "pos-subjects": LocalJSX.PosSubjects & JSXBase.HTMLAttributes<HTMLPosSubjectsElement>;
+            /**
+             * A tool to manage attachments of a thing.
+             */
+            "pos-tool-attachments": LocalJSX.PosToolAttachments & JSXBase.HTMLAttributes<HTMLPosToolAttachmentsElement>;
             /**
              * Allows selecting a tool from within a set of available tools
              */

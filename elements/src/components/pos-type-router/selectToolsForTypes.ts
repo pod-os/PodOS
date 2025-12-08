@@ -60,7 +60,8 @@ export function selectToolsForTypes(types: RdfType[]) {
     .filter(onlyRelevant)
     .toSorted(byPriority)
     .map(it => it.tool)
-    .concat(AvailableTools.Generic);
+    .concat(AvailableTools.Generic)
+    .concat(AvailableTools.Attachments);
 }
 
 const maxPriorityFor = (typeUris: Set<string>) => tool =>

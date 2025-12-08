@@ -3,14 +3,14 @@ import { selectToolsForTypes } from './selectToolsForTypes';
 import { AvailableTools } from './availableTools';
 
 describe('select tools for types', () => {
-  it('uses generic app by default', () => {
+  it('uses generic app and attachments by default', () => {
     const tools = selectToolsForTypes([]);
-    expect(tools).toEqual([AvailableTools.Generic]);
+    expect(tools).toEqual([AvailableTools.Generic, AvailableTools.Attachments]);
   });
 
-  it('uses generic app for unknown types', () => {
+  it('uses generic app  and attachments for unknown types', () => {
     const tools = selectToolsForTypes([{ uri: 'http://example', label: 'Resource' }]);
-    expect(tools).toEqual([AvailableTools.Generic]);
+    expect(tools).toEqual([AvailableTools.Generic, AvailableTools.Attachments]);
   });
 
   it.each`
@@ -23,7 +23,7 @@ describe('select tools for types', () => {
   `(`selects app $expectedApp app for single type $typeUri`, ({ typeUri, expectedApp }) => {
     const types: RdfType[] = [{ uri: typeUri, label: 'irrelevant here' }];
     const tools = selectToolsForTypes(types);
-    expect(tools).toEqual([expectedApp, AvailableTools.Generic]);
+    expect(tools).toEqual([expectedApp, AvailableTools.Generic, AvailableTools.Attachments]);
   });
 
   it('favours document viewer over other apps for pdf document', () => {
@@ -34,7 +34,12 @@ describe('select tools for types', () => {
       { uri: 'http://www.w3.org/ns/ldp#Resource', label: 'Resource' },
     ];
     const tools = selectToolsForTypes(types);
-    expect(tools).toEqual([AvailableTools.DocumentViewer, AvailableTools.ImageViewer, AvailableTools.Generic]);
+    expect(tools).toEqual([
+      AvailableTools.DocumentViewer,
+      AvailableTools.ImageViewer,
+      AvailableTools.Generic,
+      AvailableTools.Attachments,
+    ]);
   });
 
   it('favours document viewer over other apps for html document', () => {
@@ -45,7 +50,7 @@ describe('select tools for types', () => {
       { uri: 'http://www.w3.org/ns/ldp#Resource', label: 'Resource' },
     ];
     const tools = selectToolsForTypes(types);
-    expect(tools).toEqual([AvailableTools.DocumentViewer, AvailableTools.Generic]);
+    expect(tools).toEqual([AvailableTools.DocumentViewer, AvailableTools.Generic, AvailableTools.Attachments]);
   });
 
   it('favours document viewer over other apps for markdown document', () => {
@@ -55,7 +60,7 @@ describe('select tools for types', () => {
       { uri: 'http://www.w3.org/ns/ldp#Resource', label: 'Resource' },
     ];
     const tools = selectToolsForTypes(types);
-    expect(tools).toEqual([AvailableTools.DocumentViewer, AvailableTools.Generic]);
+    expect(tools).toEqual([AvailableTools.DocumentViewer, AvailableTools.Generic, AvailableTools.Attachments]);
   });
 
   it('favours image viewer over other apps for images', () => {
@@ -66,7 +71,12 @@ describe('select tools for types', () => {
       { uri: 'http://www.w3.org/ns/ldp#Resource', label: 'Resource' },
     ];
     const tools = selectToolsForTypes(types);
-    expect(tools).toEqual([AvailableTools.ImageViewer, AvailableTools.DocumentViewer, AvailableTools.Generic]);
+    expect(tools).toEqual([
+      AvailableTools.ImageViewer,
+      AvailableTools.DocumentViewer,
+      AvailableTools.Generic,
+      AvailableTools.Attachments,
+    ]);
   });
 
   it('favours rdf document app over other apps for rdf documents', () => {
@@ -77,7 +87,12 @@ describe('select tools for types', () => {
       { uri: 'http://www.w3.org/ns/ldp#Resource', label: 'Resource' },
     ];
     const tools = selectToolsForTypes(types);
-    expect(tools).toEqual([AvailableTools.RdfDocument, AvailableTools.DocumentViewer, AvailableTools.Generic]);
+    expect(tools).toEqual([
+      AvailableTools.RdfDocument,
+      AvailableTools.DocumentViewer,
+      AvailableTools.Generic,
+      AvailableTools.Attachments,
+    ]);
   });
 
   it('favours ldp container app over other apps for ldp containers', () => {
@@ -95,6 +110,7 @@ describe('select tools for types', () => {
       AvailableTools.RdfDocument,
       AvailableTools.DocumentViewer,
       AvailableTools.Generic,
+      AvailableTools.Attachments,
     ]);
   });
 });

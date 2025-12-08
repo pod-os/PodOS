@@ -7,6 +7,12 @@ export const AvailableTools: { [key: string]: ToolConfig } = {
     icon: 'list-ul',
     types: [], // since this is included everywhere, it does not need to specify types
   },
+  Attachments: {
+    element: 'pos-tool-attachments',
+    label: 'Attach',
+    icon: 'paperclip',
+    types: [], // since this is included everywhere, it does not need to specify types
+  },
   RdfDocument: {
     element: 'pos-app-rdf-document',
     label: 'Things',
