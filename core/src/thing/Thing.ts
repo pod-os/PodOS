@@ -5,6 +5,7 @@ import {
   isNamedNode,
   sym,
 } from "rdflib";
+import { flow } from "../namespaces";
 import { accumulateSubjects } from "./accumulateSubjects";
 import { accumulateValues } from "./accumulateValues";
 import { isRdfType } from "./isRdfType";
@@ -230,13 +231,15 @@ export class Thing {
   attachments(): Attachment[] {
     const statements = this.store.statementsMatching(
       sym(this.uri),
-      sym("http://www.w3.org/2005/01/wf/flow#attachment"),
+      flow("attachment"),
     );
 
-    return statements.map((statement) => ({
-      uri: statement.object.value,
-      label: labelFromUri(statement.object.value),
-    }));
+    return statements
+      .filter((it) => isNamedNode(it.object))
+      .map((statement) => ({
+        uri: statement.object.value,
+        label: labelFromUri(statement.object.value),
+      }));
   }
 
   /**
