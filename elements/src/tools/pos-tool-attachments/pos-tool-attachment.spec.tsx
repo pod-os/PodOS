@@ -11,12 +11,22 @@ import { useResource } from '../../components/events/useResource';
 
 describe('pos-tool-attachments', () => {
   it('renders', async () => {
+    // given a thing that can receive attachments
+    const mockThing = {
+      uri: 'https://pod.test/things/thing1',
+      editable: true,
+    } as Thing;
+
+    when(useResource).mockResolvedValue(mockThing);
+
+    // when the component renders
     const page = await newSpecPage({
       components: [PosToolAttachments],
       html: `<pos-tool-attachments />`,
       supportsShadowDom: false,
     });
 
+    // then it shows a list and an upload feature
     expect(page.root).toEqualHtml(`
       <pos-tool-attachments>
         <section>
@@ -38,6 +48,7 @@ describe('pos-tool-attachments', () => {
     // given: a thing that can receive attachments
     const mockThing = {
       uri: 'https://pod.test/things/thing1',
+      editable: true,
     } as Thing;
 
     when(useResource).mockResolvedValue(mockThing);
@@ -76,5 +87,34 @@ describe('pos-tool-attachments', () => {
 
     // then: the file should be uploaded and linked to the thing
     expect(mockUploadAndAddAttachment).toHaveBeenCalledWith(mockThing, testFile);
+  });
+
+  it('does not show pos-upload if resource is not editable', async () => {
+    // given: a resource that is not editable
+    const mockThing = {
+      uri: 'https://pod.test/things/thing1',
+      editable: false,
+    } as Thing;
+
+    when(useResource).mockResolvedValue(mockThing);
+
+    // and: a PodOS instance
+    const mockOs = {
+      attachments: jest.fn().mockReturnValue({
+        uploadAndAddAttachment: jest.fn(),
+      }),
+    } as unknown as PodOS;
+
+    when(usePodOS).mockResolvedValue(mockOs);
+
+    // when: the component renders
+    const page = await newSpecPage({
+      components: [PosToolAttachments],
+      html: `<pos-tool-attachments />`,
+      supportsShadowDom: false,
+    });
+
+    // then: the pos-upload element should not be present
+    expect(page.root?.querySelector('pos-upload')).toBeNull();
   });
 });

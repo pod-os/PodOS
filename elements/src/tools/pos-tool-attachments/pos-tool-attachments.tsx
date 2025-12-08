@@ -36,12 +36,14 @@ export class PosToolAttachments {
           </article>
         </section>
         <section>
-          <pos-upload
-            accept={['*/*']}
-            uploader={file => {
-              return this.os.attachments().uploadAndAddAttachment(this.resource, file);
-            }}
-          ></pos-upload>
+          {this.resource?.editable ? (
+            <pos-upload
+              accept={['*/*']}
+              uploader={file => {
+                return this.os.attachments().uploadAndAddAttachment(this.resource, file);
+              }}
+            ></pos-upload>
+          ) : null}
         </section>
       </Host>
     );
