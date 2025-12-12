@@ -129,4 +129,28 @@ describe("ProfileGateway", () => {
       "https://alice.example/settings/publicTypeIndex.ttl",
     ]);
   });
+
+  it("continues profile fetch when preferences file fetch fails", async () => {
+    // given a profile with a preferences file
+    getPreferencesFile.mockReturnValue(
+      "https://alice.example/settings/pref.ttl",
+    );
+    // and fetching the preferences file returns 404
+    when(store.fetch)
+      .calledWith("https://alice.example/settings/pref.ttl")
+      .mockRejectedValue(
+        new Error(
+          "Fetcher: <https://alice.example/settings/pref.ttl> 404 - Not Found",
+        ),
+      );
+
+    // when fetching the profile
+    const gateway = new ProfileGateway(store);
+    const result = await gateway.fetchProfile(
+      "https://alice.example/profile/card#me",
+    );
+
+    // then the profile is returned successfully
+    expect(result).toBe(profile);
+  });
 });
