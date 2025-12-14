@@ -8,7 +8,7 @@ and this project adheres to
 
 ## Unreleased
 
-## Added
+### Added
 
 - [`AttachmentGateway`](https://pod-os.org/reference/core/classes/AttachmentGateway/):
   New gateway class to handle attachment upload and linking operations
@@ -23,9 +23,13 @@ and this project adheres to
 - [`ProfileGateway`](https://pod-os.org/reference/core/classes/ProfileGateway/)
   Gateway for profile-related operations on Solid Pods and the store.
 
+### Fixed
+
+- continues profile fetch when preferences file fetch fails https://github.com/pod-os/PodOS/issues/174
+
 ## 0.23.0
 
-## Added
+### Added
 
 - [`Store.findMembers`](https://pod-os.org/reference/core/classes/Store/#findMembers) returns instances of classes and subclasses
 - [`Store.observeFindMembers`](https://pod-os.org/reference/core/classes/Store/#observeFindMembers) returns an `Observable` and pushes new values when graph is updated
