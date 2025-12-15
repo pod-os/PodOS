@@ -2,7 +2,6 @@ jest.mock('../events/useResource');
 
 import '@testing-library/jest-dom';
 import { newSpecPage } from '@stencil/core/testing';
-import { screen, within } from '@testing-library/dom';
 import { PosAttachments } from './pos-attachments';
 import { useResource } from '../events/useResource';
 
@@ -55,5 +54,44 @@ describe('pos-attachments', () => {
           </li>
         </ul>
       </pos-attachments>`);
+  });
+
+  describe('addToList', () => {
+    it('adds an attachment to the list', async () => {
+      const initialAttachment = {
+        uri: 'http://example.com/existing.pdf',
+        label: 'Existing Document',
+      };
+
+      when(useResource).mockResolvedValue({
+        attachments: jest.fn().mockReturnValue([initialAttachment]),
+      } as unknown as Thing);
+
+      const page = await newSpecPage({
+        components: [PosAttachments],
+        html: `<pos-attachments />`,
+        supportsShadowDom: false,
+      });
+
+      const newAttachment = {
+        uri: 'http://example.com/new.pdf',
+        label: 'New Document',
+      };
+
+      await page.rootInstance.addToList(newAttachment);
+      await page.waitForChanges();
+
+      expect(page.root).toEqualHtml(`
+        <pos-attachments>
+          <ul>
+            <li>
+              <pos-rich-link uri="http://example.com/existing.pdf"></pos-rich-link>
+            </li>
+            <li>
+              <pos-rich-link uri="http://example.com/new.pdf"></pos-rich-link>
+            </li>
+          </ul>
+        </pos-attachments>`);
+    });
   });
 });

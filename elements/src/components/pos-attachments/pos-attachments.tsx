@@ -1,4 +1,4 @@
-import { Component, Element, h, Host, State } from '@stencil/core';
+import { Component, Element, h, Host, Method, State } from '@stencil/core';
 import { Attachment, Thing } from '@pod-os/core';
 import { useResource } from '../events/useResource';
 
@@ -15,6 +15,18 @@ export class PosAttachments {
 
   @State() resource: Thing;
   @State() attachments: Attachment[];
+
+  /**
+   * Adds an attachment visually to the list of attachments.
+   * This only adds an entry to the list, it does not actually upload the attachment.
+   * It is meant to be used after an attachment has been uploaded to update the view.
+   *
+   * @param attachment The attachment to add to the list.
+   */
+  @Method()
+  addToList(attachment: Attachment) {
+    this.attachments = [...this.attachments, attachment];
+  }
 
   async componentWillLoad() {
     this.resource = await useResource(this.el);

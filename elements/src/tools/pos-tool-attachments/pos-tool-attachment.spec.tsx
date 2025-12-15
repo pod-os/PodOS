@@ -77,6 +77,10 @@ describe('pos-tool-attachments', () => {
       supportsShadowDom: false,
     });
 
+    page.rootInstance.attachmentsElement = {
+      addToList: jest.fn(),
+    };
+
     // and: a file is selected for upload
     const testFile = new File(['test content'], 'document.pdf', {
       type: 'application/pdf',
@@ -87,6 +91,12 @@ describe('pos-tool-attachments', () => {
 
     // then: the file should be uploaded and linked to the thing
     expect(mockUploadAndAddAttachment).toHaveBeenCalledWith(mockThing, testFile);
+
+    // and: the list should be updated
+    expect(page.rootInstance.attachmentsElement.addToList).toHaveBeenCalledWith({
+      uri: 'https://pod.test/things/document.pdf',
+      label: 'document.pdf',
+    });
   });
 
   it('does not show pos-upload if resource is not editable', async () => {

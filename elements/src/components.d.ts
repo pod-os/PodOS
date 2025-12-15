@@ -5,10 +5,10 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { HttpProblem, LdpContainer, NetworkProblem, PodOS, Problem, SolidFile, Thing } from "@pod-os/core";
+import { Attachment, HttpProblem, LdpContainer, NetworkProblem, PodOS, Problem, SolidFile, Thing } from "@pod-os/core";
 import { ToolConfig } from "./components/pos-type-router/selectToolsForTypes";
 import { ResultAsync } from "neverthrow";
-export { HttpProblem, LdpContainer, NetworkProblem, PodOS, Problem, SolidFile, Thing } from "@pod-os/core";
+export { Attachment, HttpProblem, LdpContainer, NetworkProblem, PodOS, Problem, SolidFile, Thing } from "@pod-os/core";
 export { ToolConfig } from "./components/pos-type-router/selectToolsForTypes";
 export { ResultAsync } from "neverthrow";
 export namespace Components {
@@ -52,6 +52,11 @@ export namespace Components {
      * Lists whatever is attached to the current thing
      */
     interface PosAttachments {
+        /**
+          * Adds an attachment visually to the list of attachments. This only adds an entry to the list, it does not actually upload the attachment. It is meant to be used after an attachment has been uploaded to update the view.
+          * @param attachment The attachment to add to the list.
+         */
+        "addToList": (attachment: Attachment) => Promise<void>;
     }
     interface PosContainerContents {
     }
