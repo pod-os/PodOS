@@ -89,6 +89,41 @@ describe('pos-upload', () => {
 
     // and upload-success is promoted for the file
     expect(emit).toHaveBeenCalledWith('upload-success', filesToUpload[0], { status: 201 });
+
+    // and the upload function is called with the file
+    expect(uploadFn).toHaveBeenCalledWith(filesToUpload[0].data);
+  });
+
+  it('uses the uploader function to successfully upload a blob as new file', async () => {
+    // given an upload component with an upload function that works fine
+    const uploadFn = jest.fn().mockReturnValue(ok({ url: 'https://pod.test/image.png' }));
+    await newSpecPage({
+      components: [PosUpload],
+      template: () => <pos-upload uploader={uploadFn} />,
+    });
+
+    // and a single blob has been selected for upload
+    const filesToUpload = [{ data: new Blob(['file to upload']), name: 'file.txt', type: 'text/plain' }];
+    when(getFilesByIds).calledWith(['file.txt']).mockReturnValue(filesToUpload);
+
+    // when upload is triggered for the file
+    expect(addUploader).toHaveBeenCalled();
+    const uploader = addUploader.mock.calls[0][0];
+    await uploader(['file.txt']);
+
+    // then the upload start is promoted
+    expect(emit).toHaveBeenCalledWith('upload-start', filesToUpload);
+
+    // and upload-success is promoted for the file
+    expect(emit).toHaveBeenCalledWith('upload-success', filesToUpload[0], { status: 201 });
+
+    // and the upload function is called with the file
+    expect(uploadFn).toHaveBeenCalled();
+    const uploadedFile: File = uploadFn.mock.calls[0][0];
+    expect(uploadedFile instanceof File).toBeTruthy();
+    expect(await uploadedFile.bytes()).toEqual(new Uint8Array(Buffer.from('file to upload', 'utf-8')));
+    expect(uploadedFile.name).toEqual('file.txt');
+    expect(uploadedFile.type).toEqual('text/plain');
   });
 
   it('uses the uploader function to successfully upload multiple files', async () => {
@@ -199,7 +234,7 @@ describe('pos-upload', () => {
     );
   });
 
-  it('throws error if selected items are no File for some reason', async () => {
+  it('throws error if selected items are no File or Blob for some reason', async () => {
     // given an upload component with an upload function
     const uploadFn = jest.fn();
     await newSpecPage({
@@ -208,8 +243,8 @@ describe('pos-upload', () => {
     });
 
     // and a single file has been selected for upload
-    const blobToUpload = [{ data: new Blob([''], { type: 'image/png' }) }];
-    when(getFilesByIds).calledWith(['image.png']).mockReturnValue(blobToUpload);
+    const fileToUpload = [{ data: { size: 123 } }];
+    when(getFilesByIds).calledWith(['image.png']).mockReturnValue(fileToUpload);
 
     // when upload is triggered for the file
     expect(addUploader).toHaveBeenCalled();
@@ -217,10 +252,14 @@ describe('pos-upload', () => {
     await uploader(['image.png']);
 
     // then the upload start is promoted
-    expect(emit).toHaveBeenCalledWith('upload-start', blobToUpload);
+    expect(emit).toHaveBeenCalledWith('upload-start', fileToUpload);
 
     // and upload-error is promoted for the blob
-    expect(emit).toHaveBeenCalledWith('upload-error', blobToUpload[0], new Error('Expected file to be a File object'));
+    expect(emit).toHaveBeenCalledWith(
+      'upload-error',
+      fileToUpload[0],
+      new Error('Unknow data type - Expected file to be a File or Blob object'),
+    );
 
     // and the upload function is not called
     expect(uploadFn).not.toHaveBeenCalled();

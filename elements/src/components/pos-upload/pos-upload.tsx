@@ -1,11 +1,11 @@
 import { Component, h, Prop } from '@stencil/core';
 
-import Uppy from '@uppy/core';
+import Uppy, { Meta, UppyFile } from '@uppy/core';
 import Dashboard from '@uppy/dashboard';
 import ImageEditor from '@uppy/image-editor';
 import Webcam from '@uppy/webcam';
-import { ResultAsync } from 'neverthrow';
-import { HttpProblem, NetworkProblem } from '@pod-os/core';
+import { err, ok, Result, ResultAsync } from 'neverthrow';
+import { HttpProblem, NetworkProblem, Problem } from '@pod-os/core';
 
 @Component({
   tag: 'pos-upload',
@@ -42,17 +42,26 @@ export class PosUpload {
       uppy.emit('upload-start', files);
 
       for (const file of files) {
-        if (file.data instanceof File) {
-          await this.uploader(file.data)
-            .map(() => {
-              uppy.emit('upload-success', file, { status: 201 });
-            })
-            .mapErr(it => uppy.emit('upload-error', file, new Error(it.title + ' - ' + it.detail)));
-        } else {
-          uppy.emit('upload-error', file, new Error('Expected file to be a File object'));
-        }
+        await this.toFile(file)
+          .asyncAndThen(it => this.uploader(it))
+          .match(
+            () => uppy.emit('upload-success', file, { status: 201 }),
+            error => {
+              uppy.emit('upload-error', file, new Error(error.title + ' - ' + error.detail));
+            },
+          );
       }
     });
+  }
+
+  toFile(file: UppyFile<Meta, Record<string, never>>): Result<File, Problem> {
+    if (file.data instanceof File) {
+      return ok(file.data);
+    } else if (file.data instanceof Blob) {
+      return ok(new File([file.data], file.name, { type: file.type }));
+    } else {
+      return err({ type: 'file', title: 'Unknow data type', detail: 'Expected file to be a File or Blob object' });
+    }
   }
 
   render() {

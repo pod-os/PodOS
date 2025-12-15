@@ -12,6 +12,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - [pos-attachments](https://pod-os.org/reference/elements/components/pos-attachments/): New component to display attachments of a thing
 - [pos-type-index-entries](https://pod-os.org/reference/elements/components/pos-type-index-entries/): New component to display type index entries
 
+### Fixed
+
+- upload picture from device camera https://github.com/pod-os/PodOS/issues/171
+
 ### Changed
 
 - [pos-app-dashboard](https://pod-os.org/reference/elements/apps/pos-app-dashboard/)
