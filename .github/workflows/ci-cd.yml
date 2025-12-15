@@ -45,7 +45,7 @@ jobs:
             elements/package.json
           retention-days: 1
 
-  npm-publish-core-build:
+  npm-publish-core-snapshot:
     if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
@@ -70,9 +70,9 @@ jobs:
           token: ${{ secrets.NPM_TOKEN }}
           tag: ${{ env.GITHUB_REF_SLUG }}
 
-  npm-publish-elements-build:
+  npm-publish-elements-snapshot:
     if: github.ref == 'refs/heads/main'
-    needs: build
+    needs: [build, npm-publish-core-snapshot]
     runs-on: ubuntu-latest
     outputs:
       prereleaseVersion: ${{ steps.prerelease.outputs.version }}
@@ -80,6 +80,10 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: elements-build
+      - name: Update core dependency to snapshot version
+        run: |
+          CORE_SNAPSHOT="${{ needs.npm-publish-core-snapshot.outputs.prereleaseVersion }}"
+          sed -i "s/\"@pod-os\/core\": \"[^\"]*\"/\"@pod-os\/core\": \"${CORE_SNAPSHOT}\"/" package.json
       - uses: actions/setup-node@v3
         with:
           node-version: lts/*
@@ -96,14 +100,15 @@ jobs:
           tag: ${{ env.GITHUB_REF_SLUG }}
 
   deploy-preview-pod-os-browser:
-    needs: npm-publish-elements-build
-    if: needs.npm-publish-elements-build.outputs.releaseType != 'none'
+    needs: npm-publish-elements-snapshot
+    if: needs.npm-publish-elements-snapshot.outputs.releaseType != 'none'
     runs-on: ubuntu-22.04
     environment:
       name: preview
       url: ${{ steps.deploy.outputs.deploy_url }}
     env:
-      POD_OS_ELEMENTS_VERSION: ${{ needs.npm-publish-elements-build.outputs.prereleaseVersion }}
+      POD_OS_ELEMENTS_VERSION:
+        ${{ needs.npm-publish-elements-snapshot.outputs.prereleaseVersion }}
     steps:
       - uses: actions/checkout@v3
       - name: Deploy to Netlify (Preview)
@@ -117,12 +122,14 @@ jobs:
   build-pages:
     if: github.ref == 'refs/heads/main'
     needs:
-      - npm-publish-elements-build
-      - npm-publish-core-build
+      - npm-publish-elements-snapshot
+      - npm-publish-core-snapshot
     runs-on: ubuntu-latest
     steps:
-      - run: echo elements version is ${{ needs.npm-publish-elements-build.outputs.prereleaseVersion }}
-      - run: echo core version is ${{ needs.npm-publish-core-build.outputs.prereleaseVersion }}
+      - run:
+          echo elements version is ${{ needs.npm-publish-elements-snapshot.outputs.prereleaseVersion }}
+      - run:
+          echo core version is ${{ needs.npm-publish-core-snapshot.outputs.prereleaseVersion }}
       - uses: actions/checkout@v3
       - name: Setup Pages
         uses: actions/configure-pages@v2
@@ -137,7 +144,7 @@ jobs:
       - name: Build storybook
         working-directory: ./storybook
         env:
-          STORYBOOK_POD_OS_ELEMENTS_DIST_URL: https://cdn.jsdelivr.net/npm/@pod-os/elements@${{ needs.npm-publish-elements-build.outputs.prereleaseVersion }}/dist/elements
+          STORYBOOK_POD_OS_ELEMENTS_DIST_URL: https://cdn.jsdelivr.net/npm/@pod-os/elements@${{ needs.npm-publish-elements-snapshot.outputs.prereleaseVersion }}/dist/elements
         run: npm run build
 
       - name: Upload pages
@@ -161,34 +168,46 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-  npm-release-latest-core:
+  npm-release-core:
     if: github.ref == 'refs/heads/main'
-    needs: build
+    needs: [build, npm-publish-core-snapshot]
     runs-on: ubuntu-latest
+    environment: production
+    outputs:
+      releaseVersion: ${{ steps.release.outputs.version }}
     steps:
       - uses: actions/download-artifact@v4
         with:
           name: core-build
+      - name: Prepare release version
+        run: sed -i 's/-SNAPSHOT//' package.json
       - uses: actions/setup-node@v3
         with:
           node-version: lts/*
       - uses: JS-DevTools/npm-publish@v1
+        id: release
         name: Release @pod-os/core
         with:
           token: ${{ secrets.NPM_TOKEN }}
           tag: latest
 
-  npm-release-latest-elements:
+  npm-release-elements:
     if: github.ref == 'refs/heads/main'
-    needs: build
+    needs: [build, npm-publish-elements-snapshot, npm-release-core]
     runs-on: ubuntu-latest
+    environment: production
     outputs:
-      releaseType: ${{ steps.release.outputs.type }}
       releaseVersion: ${{ steps.release.outputs.version }}
     steps:
       - uses: actions/download-artifact@v4
         with:
           name: elements-build
+      - name: Update core dependency to release version
+        run: |
+          CORE_VERSION="${{ needs.npm-release-core.outputs.releaseVersion }}"
+          sed -i "s/\"@pod-os\/core\": \"[^\"]*\"/\"@pod-os\/core\": \"^${CORE_VERSION}\"/" package.json
+      - name: Prepare release version
+        run: sed -i 's/-SNAPSHOT//' package.json
       - uses: actions/setup-node@v3
         with:
           node-version: lts/*
@@ -200,15 +219,14 @@ jobs:
           tag: latest
 
   deploy-prod-pod-os-browser:
-    needs: npm-release-latest-elements
-    if: needs.npm-release-latest-elements.outputs.releaseType != 'none'
+    needs: npm-release-elements
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-22.04
-    # Define the environment with a URL
     environment:
       name: production
       url: ${{ steps.deploy.outputs.deploy_url }}
     env:
-      POD_OS_ELEMENTS_VERSION: ${{ needs.npm-release-latest-elements.outputs.releaseVersion }}
+      POD_OS_ELEMENTS_VERSION: ${{ needs.npm-release-elements.outputs.releaseVersion }}
     steps:
       - uses: actions/checkout@v3
       - name: Deploy to Netlify (Production)
