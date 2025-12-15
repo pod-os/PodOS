@@ -21,7 +21,8 @@ jobs:
 
       - run: npm ci
       - run: npm run lint --workspace=core --workspace elements --if-present
-      - run: npm run build --workspace=core --workspace elements
+      - run: npm run build --workspace=core
+      - run: npm run build --workspace=elements
       - run: npm test --workspace=core --workspace elements
       - name: Save @pod-os/core build
         if: github.ref == 'refs/heads/main'
