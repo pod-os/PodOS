@@ -84,7 +84,7 @@ jobs:
       - name: Update core dependency to snapshot version
         run: |
           CORE_SNAPSHOT="${{ needs.npm-publish-core-snapshot.outputs.prereleaseVersion }}"
-          sed -i "s/\"@pod-os\/core\": \"\\*\"/\"@pod-os\/core\": \"${CORE_SNAPSHOT}\"/" package.json
+          sed -i "s/\"@pod-os\/core\": \"[^\"]*\"/\"@pod-os\/core\": \"${CORE_SNAPSHOT}\"/" package.json
       - uses: actions/setup-node@v3
         with:
           node-version: lts/*
@@ -206,7 +206,7 @@ jobs:
       - name: Update core dependency to release version
         run: |
           CORE_VERSION="${{ needs.npm-release-core.outputs.releaseVersion }}"
-          sed -i "s/\"@pod-os\/core\": \"\\*\"/\"@pod-os\/core\": \"^${CORE_VERSION}\"/" package.json
+          sed -i "s/\"@pod-os\/core\": \"[^\"]*\"/\"@pod-os\/core\": \"^${CORE_VERSION}\"/" package.json
       - name: Prepare release version
         run: sed -i 's/-next\.0//' package.json
       - uses: actions/setup-node@v3
@@ -254,15 +254,19 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
       - name: Bump core to next development version
+        id: bump-core
         working-directory: ./core
         run: |
           npm version ${{ needs.npm-release-core.outputs.releaseVersion }} --no-git-tag-version
-          npm version preminor --preid=next --no-git-tag-version
-      - name: Bump elements to next development version
+          NEW_VERSION=$(npm version preminor --preid=next --no-git-tag-version)
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+      - name:
+          Bump elements to next development version and update core dependency
         working-directory: ./elements
         run: |
           npm version ${{ needs.npm-release-elements.outputs.releaseVersion }} --no-git-tag-version
           npm version preminor --preid=next --no-git-tag-version
+          sed -i "s/\"@pod-os\/core\": \"[^\"]*\"/\"@pod-os\/core\": \"${{ steps.bump-core.outputs.version }}\"/" package.json
       - name: Update package-lock.json
         run: npm install --package-lock-only
       - name: Commit and push version bumps
