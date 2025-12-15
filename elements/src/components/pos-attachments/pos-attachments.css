@@ -20,6 +20,35 @@
       &:nth-child(odd) {
         background-color: var(--background-color-odd);
       }
+
+      &.new {
+        animation:
+          newItemBounce 0.8s ease-out,
+          highlightFlash 2.5s ease-in-out;
+      }
     }
+  }
+}
+
+@keyframes newItemBounce {
+  0% {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes highlightFlash {
+  0% {
+    box-shadow: 0 0 20px var(--pos-primary-color);
+  }
+  100% {
+    box-shadow: 0 0 0 transparent;
   }
 }

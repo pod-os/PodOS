@@ -14,7 +14,7 @@ export class PosAttachments {
   @Element() el: HTMLElement;
 
   @State() resource: Thing;
-  @State() attachments: Attachment[];
+  @State() attachments: AttachmentListItem[];
 
   /**
    * Adds an attachment visually to the list of attachments.
@@ -25,7 +25,13 @@ export class PosAttachments {
    */
   @Method()
   addToList(attachment: Attachment) {
-    this.attachments = [...this.attachments, attachment];
+    this.attachments = [
+      ...this.attachments,
+      {
+        ...attachment,
+        newlyAdded: true,
+      },
+    ];
   }
 
   async componentWillLoad() {
@@ -41,7 +47,7 @@ export class PosAttachments {
     return (
       <ul>
         {this.attachments.map(it => (
-          <li>
+          <li class={{ new: it.newlyAdded }}>
             <pos-rich-link uri={it.uri}></pos-rich-link>
           </li>
         ))}
@@ -49,3 +55,5 @@ export class PosAttachments {
     );
   }
 }
+
+type AttachmentListItem = Attachment & { newlyAdded?: boolean };

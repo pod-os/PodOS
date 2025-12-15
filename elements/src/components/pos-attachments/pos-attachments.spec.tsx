@@ -87,7 +87,7 @@ describe('pos-attachments', () => {
             <li>
               <pos-rich-link uri="http://example.com/existing.pdf"></pos-rich-link>
             </li>
-            <li>
+            <li class="new">
               <pos-rich-link uri="http://example.com/new.pdf"></pos-rich-link>
             </li>
           </ul>
