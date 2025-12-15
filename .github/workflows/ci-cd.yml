@@ -83,7 +83,7 @@ jobs:
       - name: Update core dependency to snapshot version
         run: |
           CORE_SNAPSHOT="${{ needs.npm-publish-core-snapshot.outputs.prereleaseVersion }}"
-          sed -i "s/\"@pod-os\/core\": \"[^\"]*\"/\"@pod-os\/core\": \"${CORE_SNAPSHOT}\"/" package.json
+          sed -i "s/\"@pod-os\/core\": \"\\*\"/\"@pod-os\/core\": \"${CORE_SNAPSHOT}\"/" package.json
       - uses: actions/setup-node@v3
         with:
           node-version: lts/*
@@ -180,7 +180,7 @@ jobs:
         with:
           name: core-build
       - name: Prepare release version
-        run: sed -i 's/-SNAPSHOT//' package.json
+        run: sed -i 's/-next\.0//' package.json
       - uses: actions/setup-node@v3
         with:
           node-version: lts/*
@@ -205,9 +205,9 @@ jobs:
       - name: Update core dependency to release version
         run: |
           CORE_VERSION="${{ needs.npm-release-core.outputs.releaseVersion }}"
-          sed -i "s/\"@pod-os\/core\": \"[^\"]*\"/\"@pod-os\/core\": \"^${CORE_VERSION}\"/" package.json
+          sed -i "s/\"@pod-os\/core\": \"\\*\"/\"@pod-os\/core\": \"^${CORE_VERSION}\"/" package.json
       - name: Prepare release version
-        run: sed -i 's/-SNAPSHOT//' package.json
+        run: sed -i 's/-next\.0//' package.json
       - uses: actions/setup-node@v3
         with:
           node-version: lts/*
@@ -237,3 +237,35 @@ jobs:
           netlify-flags: '--prod'
           netlify-site-id: ${{ secrets.NETLIFY_POD_OS_BROWSER_SITE_ID }}
           netlify-auth-token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+
+  bump-snapshot-versions:
+    if: github.ref == 'refs/heads/main'
+    needs: [npm-release-core, npm-release-elements]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Bump core to next development version
+        working-directory: ./core
+        run: |
+          npm version ${{ needs.npm-release-core.outputs.releaseVersion }} --no-git-tag-version
+          npm version preminor --preid=next --no-git-tag-version
+      - name: Bump elements to next development version
+        working-directory: ./elements
+        run: |
+          npm version ${{ needs.npm-release-elements.outputs.releaseVersion }} --no-git-tag-version
+          npm version preminor --preid=next --no-git-tag-version
+      - name: Update package-lock.json
+        run: npm install --package-lock-only
+      - name: Commit and push version bumps
+        run: |
+          git add core/package.json elements/package.json package-lock.json
+          git commit -m "chore: bump to next development versions [skip ci]"
+          git push
