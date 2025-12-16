@@ -6,7 +6,7 @@
 
 # Class: SearchGateway
 
-Defined in: [search/SearchGateway.ts:9](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/search/SearchGateway.ts#L9)
+Defined in: [search/SearchGateway.ts:9](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/search/SearchGateway.ts#L9)
 
 ## Constructors
 
@@ -14,7 +14,7 @@ Defined in: [search/SearchGateway.ts:9](https://github.com/pod-os/PodOS/blob/03b
 
 > **new SearchGateway**(`store`): `SearchGateway`
 
-Defined in: [search/SearchGateway.ts:10](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/search/SearchGateway.ts#L10)
+Defined in: [search/SearchGateway.ts:10](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/search/SearchGateway.ts#L10)
 
 #### Parameters
 
@@ -32,7 +32,7 @@ Defined in: [search/SearchGateway.ts:10](https://github.com/pod-os/PodOS/blob/03
 
 > **addToLabelIndex**(`thing`, `labelIndex`): `Promise`\<`void`\>
 
-Defined in: [search/SearchGateway.ts:28](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/search/SearchGateway.ts#L28)
+Defined in: [search/SearchGateway.ts:28](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/search/SearchGateway.ts#L28)
 
 #### Parameters
 
@@ -54,7 +54,7 @@ Defined in: [search/SearchGateway.ts:28](https://github.com/pod-os/PodOS/blob/03
 
 > **buildSearchIndex**(`profile`): `Promise`\<[`SearchIndex`](SearchIndex.md)\>
 
-Defined in: [search/SearchGateway.ts:16](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/search/SearchGateway.ts#L16)
+Defined in: [search/SearchGateway.ts:16](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/search/SearchGateway.ts#L16)
 
 Fetch the private label index for the given profile and build a search index from it
 
@@ -74,7 +74,7 @@ Fetch the private label index for the given profile and build a search index fro
 
 > **createDefaultLabelIndex**(`profile`): `Promise`\<[`LabelIndex`](LabelIndex.md)\>
 
-Defined in: [search/SearchGateway.ts:32](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/search/SearchGateway.ts#L32)
+Defined in: [search/SearchGateway.ts:32](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/search/SearchGateway.ts#L32)
 
 #### Parameters
 

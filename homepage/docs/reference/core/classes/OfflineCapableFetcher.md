@@ -6,7 +6,7 @@
 
 # Class: OfflineCapableFetcher
 
-Defined in: [offline-cache/OfflineCapableFetcher.ts:20](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/offline-cache/OfflineCapableFetcher.ts#L20)
+Defined in: [offline-cache/OfflineCapableFetcher.ts:20](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/offline-cache/OfflineCapableFetcher.ts#L20)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [offline-cache/OfflineCapableFetcher.ts:20](https://github.com/pod-o
 
 > **new OfflineCapableFetcher**(`store`, `options`): `OfflineCapableFetcher`
 
-Defined in: [offline-cache/OfflineCapableFetcher.ts:25](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/offline-cache/OfflineCapableFetcher.ts#L25)
+Defined in: [offline-cache/OfflineCapableFetcher.ts:25](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/offline-cache/OfflineCapableFetcher.ts#L25)
 
 #### Parameters
 
@@ -46,7 +46,7 @@ Defined in: [offline-cache/OfflineCapableFetcher.ts:25](https://github.com/pod-o
 
 > **load**(`uri`, `options?`): `Promise`\<`Response`\>
 
-Defined in: [offline-cache/OfflineCapableFetcher.ts:36](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/offline-cache/OfflineCapableFetcher.ts#L36)
+Defined in: [offline-cache/OfflineCapableFetcher.ts:36](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/offline-cache/OfflineCapableFetcher.ts#L36)
 
 ##### Parameters
 
@@ -70,7 +70,7 @@ Defined in: [offline-cache/OfflineCapableFetcher.ts:36](https://github.com/pod-o
 
 > **load**(`uri`, `options?`): `Promise`\<`Response`\>
 
-Defined in: [offline-cache/OfflineCapableFetcher.ts:40](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/offline-cache/OfflineCapableFetcher.ts#L40)
+Defined in: [offline-cache/OfflineCapableFetcher.ts:40](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/offline-cache/OfflineCapableFetcher.ts#L40)
 
 ##### Parameters
 
@@ -94,7 +94,7 @@ Defined in: [offline-cache/OfflineCapableFetcher.ts:40](https://github.com/pod-o
 
 > **load**(`uri`, `options?`): `Promise`\<`Response`[]\>
 
-Defined in: [offline-cache/OfflineCapableFetcher.ts:44](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/offline-cache/OfflineCapableFetcher.ts#L44)
+Defined in: [offline-cache/OfflineCapableFetcher.ts:44](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/offline-cache/OfflineCapableFetcher.ts#L44)
 
 ##### Parameters
 

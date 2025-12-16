@@ -8,9 +8,11 @@
 
 - [AnonymousSession](classes/AnonymousSession.md)
 - [AssumeAlwaysOnline](classes/AssumeAlwaysOnline.md)
+- [AttachmentGateway](classes/AttachmentGateway.md)
 - [BinaryFile](classes/BinaryFile.md)
 - [BrokenFile](classes/BrokenFile.md)
 - [FileFetcher](classes/FileFetcher.md)
+- [FileGateway](classes/FileGateway.md)
 - [HttpStatus](classes/HttpStatus.md)
 - [LabelIndex](classes/LabelIndex.md)
 - [LdpContainer](classes/LdpContainer.md)
@@ -18,16 +20,19 @@
 - [OfflineCapableFetcher](classes/OfflineCapableFetcher.md)
 - [PictureGateway](classes/PictureGateway.md)
 - [PodOS](classes/PodOS.md)
+- [ProfileGateway](classes/ProfileGateway.md)
 - [RdfDocument](classes/RdfDocument.md)
 - [SearchGateway](classes/SearchGateway.md)
 - [SearchIndex](classes/SearchIndex.md)
 - [Store](classes/Store.md)
 - [Thing](classes/Thing.md)
+- [TypeIndex](classes/TypeIndex.md)
 - [UriService](classes/UriService.md)
 - [WebIdProfile](classes/WebIdProfile.md)
 
 ## Interfaces
 
+- [Attachment](interfaces/Attachment.md)
 - [CachedRdfDocument](interfaces/CachedRdfDocument.md)
 - [ContainerContent](interfaces/ContainerContent.md)
 - [HttpProblem](interfaces/HttpProblem.md)
@@ -47,6 +52,7 @@
 - [SolidFile](interfaces/SolidFile.md)
 - [Subject](interfaces/Subject.md)
 - [Term](interfaces/Term.md)
+- [TypeRegistration](interfaces/TypeRegistration.md)
 
 ## Type Aliases
 
@@ -55,7 +61,6 @@
 
 ## Functions
 
-- [createPictureLinkOperation](functions/createPictureLinkOperation.md)
 - [httpProblem](functions/httpProblem.md)
 - [labelFromUri](functions/labelFromUri.md)
 - [listKnownTerms](functions/listKnownTerms.md)

@@ -2,26 +2,29 @@
 
 ***
 
-[@pod-os/core](../globals.md) / Thing
+[@pod-os/core](../globals.md) / TypeIndex
 
-# Class: Thing
+# Class: TypeIndex
 
-Defined in: [thing/Thing.ts:37](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/thing/Thing.ts#L37)
+Defined in: [type-index/TypeIndex.ts:11](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/type-index/TypeIndex.ts#L11)
 
-## Extended by
+Represents a private or public type index document
 
-- [`RdfDocument`](RdfDocument.md)
-- [`LdpContainer`](LdpContainer.md)
-- [`WebIdProfile`](WebIdProfile.md)
-- [`TypeIndex`](TypeIndex.md)
+## Since
+
+0.24.0
+
+## Extends
+
+- [`Thing`](Thing.md)
 
 ## Constructors
 
 ### Constructor
 
-> **new Thing**(`uri`, `store`, `editable`): `Thing`
+> **new TypeIndex**(`uri`, `store`, `editable`): `TypeIndex`
 
-Defined in: [thing/Thing.ts:38](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/thing/Thing.ts#L38)
+Defined in: [type-index/TypeIndex.ts:12](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/type-index/TypeIndex.ts#L12)
 
 #### Parameters
 
@@ -37,11 +40,13 @@ Defined in: [thing/Thing.ts:38](https://github.com/pod-os/PodOS/blob/a5ceb94d911
 
 `boolean` = `false`
 
-Whether the Thing can be edited according to its access control settings
-
 #### Returns
 
-`Thing`
+`TypeIndex`
+
+#### Overrides
+
+[`Thing`](Thing.md).[`constructor`](Thing.md#constructor)
 
 ## Properties
 
@@ -49,9 +54,13 @@ Whether the Thing can be edited according to its access control settings
 
 > `readonly` **editable**: `boolean` = `false`
 
-Defined in: [thing/Thing.ts:44](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/thing/Thing.ts#L44)
+Defined in: [type-index/TypeIndex.ts:15](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/type-index/TypeIndex.ts#L15)
 
 Whether the Thing can be edited according to its access control settings
+
+#### Inherited from
+
+[`Thing`](Thing.md).[`editable`](Thing.md#editable)
 
 ***
 
@@ -59,7 +68,11 @@ Whether the Thing can be edited according to its access control settings
 
 > `readonly` **store**: `IndexedFormula`
 
-Defined in: [thing/Thing.ts:40](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/thing/Thing.ts#L40)
+Defined in: [type-index/TypeIndex.ts:14](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/type-index/TypeIndex.ts#L14)
+
+#### Inherited from
+
+[`Thing`](Thing.md).[`store`](Thing.md#store)
 
 ***
 
@@ -67,7 +80,11 @@ Defined in: [thing/Thing.ts:40](https://github.com/pod-os/PodOS/blob/a5ceb94d911
 
 > `readonly` **uri**: `string`
 
-Defined in: [thing/Thing.ts:39](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/thing/Thing.ts#L39)
+Defined in: [type-index/TypeIndex.ts:13](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/type-index/TypeIndex.ts#L13)
+
+#### Inherited from
+
+[`Thing`](Thing.md).[`uri`](Thing.md#uri)
 
 ## Methods
 
@@ -88,6 +105,10 @@ Returns any value linked from this thing via one of the given predicates
 #### Returns
 
 `undefined`
+
+#### Inherited from
+
+[`Thing`](Thing.md).[`anyValue`](Thing.md#anyvalue)
 
 ***
 
@@ -117,6 +138,10 @@ a subclass of Thing to assume
 
 `T`
 
+#### Inherited from
+
+[`Thing`](Thing.md).[`assume`](Thing.md#assume)
+
 ***
 
 ### attachments()
@@ -130,6 +155,10 @@ Returns all attachments linked to this thing
 #### Returns
 
 [`Attachment`](../interfaces/Attachment.md)[]
+
+#### Inherited from
+
+[`Thing`](Thing.md).[`attachments`](Thing.md#attachments)
 
 ***
 
@@ -150,6 +179,10 @@ The container URI is derived from the thing's URI.
 
 > **uri**: `string`
 
+#### Inherited from
+
+[`Thing`](Thing.md).[`container`](Thing.md#container)
+
 ***
 
 ### description()
@@ -164,6 +197,10 @@ used for descriptions, like `dct:description`, `schema:description` or `rdfs:com
 #### Returns
 
 `undefined`
+
+#### Inherited from
+
+[`Thing`](Thing.md).[`description`](Thing.md#description)
 
 ***
 
@@ -182,6 +219,22 @@ If no such term is present, it will derive a label from the URI.
 
 `string`
 
+#### Inherited from
+
+[`Thing`](Thing.md).[`label`](Thing.md#label)
+
+***
+
+### listAll()
+
+> **listAll**(): [`TypeRegistration`](../interfaces/TypeRegistration.md)[]
+
+Defined in: [type-index/TypeIndex.ts:20](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/type-index/TypeIndex.ts#L20)
+
+#### Returns
+
+[`TypeRegistration`](../interfaces/TypeRegistration.md)[]
+
 ***
 
 ### literals()
@@ -195,6 +248,10 @@ Returns all the literal values that are linked to this thing
 #### Returns
 
 [`Literal`](../interfaces/Literal.md)[]
+
+#### Inherited from
+
+[`Thing`](Thing.md).[`literals`](Thing.md#literals)
 
 ***
 
@@ -213,6 +270,10 @@ Tries to match common RDF terms used for pictures like `schema:image`,
 \{ `url`: `string`; \} \| `null`
 
 An object containing the `url` of the picture
+
+#### Inherited from
+
+[`Thing`](Thing.md).[`picture`](Thing.md#picture)
 
 ***
 
@@ -234,6 +295,10 @@ Returns all the links from this thing to other resources
 
 [`Relation`](../interfaces/Relation.md)[]
 
+#### Inherited from
+
+[`Thing`](Thing.md).[`relations`](Thing.md#relations)
+
 ***
 
 ### reverseRelations()
@@ -254,6 +319,10 @@ Returns all the links from other resources to this thing
 
 [`Relation`](../interfaces/Relation.md)[]
 
+#### Inherited from
+
+[`Thing`](Thing.md).[`reverseRelations`](Thing.md#reverserelations)
+
 ***
 
 ### types()
@@ -267,3 +336,7 @@ Retrieves a list of RDF types for this thing.
 #### Returns
 
 [`RdfType`](../interfaces/RdfType.md)[]
+
+#### Inherited from
+
+[`Thing`](Thing.md).[`types`](Thing.md#types)

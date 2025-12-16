@@ -6,7 +6,7 @@
 
 # Class: Store
 
-Defined in: [Store.ts:39](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/Store.ts#L39)
+Defined in: [Store.ts:39](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/Store.ts#L39)
 
 The Store contains all data that is known locally.
 It can be used to fetch additional data from the web and also update data and sync it back to editable resources.
@@ -17,7 +17,7 @@ It can be used to fetch additional data from the web and also update data and sy
 
 > **new Store**(`session`, `offlineCache`, `onlineStatus`, `internalStore`): `Store`
 
-Defined in: [Store.ts:45](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/Store.ts#L45)
+Defined in: [Store.ts:45](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/Store.ts#L45)
 
 #### Parameters
 
@@ -47,7 +47,7 @@ Defined in: [Store.ts:45](https://github.com/pod-os/PodOS/blob/03b667361962bb6ef
 
 > **additions$**: `Subject`\<`Quad`\<`Quad_Subject`, `Quad_Predicate`, `Quad_Object`, `Quad_Graph`\>\>
 
-Defined in: [Store.ts:42](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/Store.ts#L42)
+Defined in: [Store.ts:42](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/Store.ts#L42)
 
 ***
 
@@ -55,7 +55,7 @@ Defined in: [Store.ts:42](https://github.com/pod-os/PodOS/blob/03b667361962bb6ef
 
 > **removals$**: `Subject`\<`Quad`\<`Quad_Subject`, `Quad_Predicate`, `Quad_Object`, `Quad_Graph`\>\>
 
-Defined in: [Store.ts:43](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/Store.ts#L43)
+Defined in: [Store.ts:43](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/Store.ts#L43)
 
 ## Methods
 
@@ -63,7 +63,7 @@ Defined in: [Store.ts:43](https://github.com/pod-os/PodOS/blob/03b667361962bb6ef
 
 > **addNewThing**(`uri`, `name`, `type`): `Promise`\<`void`\>
 
-Defined in: [Store.ts:124](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/Store.ts#L124)
+Defined in: [Store.ts:124](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/Store.ts#L124)
 
 #### Parameters
 
@@ -89,7 +89,7 @@ Defined in: [Store.ts:124](https://github.com/pod-os/PodOS/blob/03b667361962bb6e
 
 > **addPropertyValue**(`thing`, `property`, `value`): `Promise`\<`void`\>
 
-Defined in: [Store.ts:106](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/Store.ts#L106)
+Defined in: [Store.ts:106](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/Store.ts#L106)
 
 Adds a new value to the property of the given thing
 
@@ -117,7 +117,7 @@ Adds a new value to the property of the given thing
 
 > **executeUpdate**(`operation`): `Promise`\<`void`\>
 
-Defined in: [Store.ts:151](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/Store.ts#L151)
+Defined in: [Store.ts:151](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/Store.ts#L151)
 
 #### Parameters
 
@@ -135,7 +135,7 @@ Defined in: [Store.ts:151](https://github.com/pod-os/PodOS/blob/03b667361962bb6e
 
 > **fetch**(`uri`): `Promise`\<`Response`\>
 
-Defined in: [Store.ts:69](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/Store.ts#L69)
+Defined in: [Store.ts:69](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/Store.ts#L69)
 
 Fetch data for the given URI to the internalStore
 
@@ -155,7 +155,7 @@ Fetch data for the given URI to the internalStore
 
 > **fetchAll**(`uris`): `Promise`\<`PromiseSettledResult`\<`Response`\>[]\>
 
-Defined in: [Store.ts:86](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/Store.ts#L86)
+Defined in: [Store.ts:86](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/Store.ts#L86)
 
 Fetch all the given URIs in parallel and put the data to the internalStore
 
@@ -175,7 +175,7 @@ Fetch all the given URIs in parallel and put the data to the internalStore
 
 > **findMembers**(`classUri`): `string`[]
 
-Defined in: [Store.ts:172](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/Store.ts#L172)
+Defined in: [Store.ts:172](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/Store.ts#L172)
 
 Finds instances of the given class or its sub-classes
 
@@ -197,7 +197,7 @@ An array of URIs
 
 > **flagAuthorizationMetadata**(): `void`
 
-Defined in: [Store.ts:155](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/Store.ts#L155)
+Defined in: [Store.ts:155](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/Store.ts#L155)
 
 #### Returns
 
@@ -209,7 +209,7 @@ Defined in: [Store.ts:155](https://github.com/pod-os/PodOS/blob/03b667361962bb6e
 
 > **get**(`uri`): [`Thing`](Thing.md)
 
-Defined in: [Store.ts:95](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/Store.ts#L95)
+Defined in: [Store.ts:95](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/Store.ts#L95)
 
 Retrieve the thing identified by the given URI from the internalStore
 
@@ -229,7 +229,7 @@ Retrieve the thing identified by the given URI from the internalStore
 
 > **loadModule**\<`T`\>(`module`): `T`
 
-Defined in: [Store.ts:159](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/Store.ts#L159)
+Defined in: [Store.ts:159](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/Store.ts#L159)
 
 #### Type Parameters
 
@@ -253,7 +253,7 @@ Defined in: [Store.ts:159](https://github.com/pod-os/PodOS/blob/03b667361962bb6e
 
 > **observeFindMembers**(`classUri`): `Observable`\<`string`[]\>
 
-Defined in: [Store.ts:181](https://github.com/pod-os/PodOS/blob/03b667361962bb6efdcf728fe7a8b99cb6805d41/core/src/Store.ts#L181)
+Defined in: [Store.ts:181](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/Store.ts#L181)
 
 Get an Observable that will push new results from [findMembers](#findmembers) when it changes
 
