@@ -1,0 +1,30 @@
+name: "Bump Version"
+description: "Bumps package version to next development cycle"
+inputs:
+  release-version:
+    description: "The release version to bump from (e.g., v0.24.0)"
+    required: true
+  working-directory:
+    description: "Directory containing the package.json to bump"
+    required: true
+outputs:
+  next-version:
+    description: "The new development version (e.g., 0.25.0-next.0)"
+    value: ${{ steps.bump.outputs.version }}
+runs:
+  using: "composite"
+  steps:
+    - name: Bump to next development version
+      id: bump
+      working-directory: ${{ inputs.working-directory }}
+      shell: bash
+      run: |
+        RELEASE_VERSION="${{ inputs.release-version }}"
+        RELEASE_VERSION="${RELEASE_VERSION#v}"
+
+        NEW_VERSION=$(npx semver -i preminor --preid next "$RELEASE_VERSION")
+
+        jq --arg v "$NEW_VERSION" '.version = $v' package.json > package.json.tmp
+        mv package.json.tmp package.json
+
+        echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT

@@ -255,18 +255,21 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
       - name: Bump core to next development version
         id: bump-core
-        working-directory: ./core
-        run: |
-          npm version ${{ needs.npm-release-core.outputs.releaseVersion }} --no-git-tag-version
-          NEW_VERSION=$(npm version preminor --preid=next --no-git-tag-version)
-          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
-      - name:
-          Bump elements to next development version and update core dependency
+        uses: ./.github/actions/bump-version
+        with:
+          release-version: ${{ needs.npm-release-core.outputs.releaseVersion }}
+          working-directory: ./core
+      - name: Bump elements to next development version
+        id: bump-elements
+        uses: ./.github/actions/bump-version
+        with:
+          release-version:
+            ${{ needs.npm-release-elements.outputs.releaseVersion }}
+          working-directory: ./elements
+      - name: Update elements core dependency
         working-directory: ./elements
         run: |
-          npm version ${{ needs.npm-release-elements.outputs.releaseVersion }} --no-git-tag-version
-          npm version preminor --preid=next --no-git-tag-version
-          sed -i "s/\"@pod-os\/core\": \"[^\"]*\"/\"@pod-os\/core\": \"${{ steps.bump-core.outputs.version }}\"/" package.json
+          sed -i "s/\"@pod-os\/core\": \"[^\"]*\"/\"@pod-os\/core\": \"${{ steps.bump-core.outputs.next-version }}\"/" package.json
       - name: Update package-lock.json
         run: npm install --package-lock-only
       - name: Commit and push version bumps
