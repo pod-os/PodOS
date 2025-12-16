@@ -8,6 +8,7 @@ import { createFileLinkOperation } from "./createFileLinkOperation";
 
 /**
  * Gateway for file-related operations on Solid Pods and the store.
+ * @since 0.24.0
  */
 export class FileGateway {
   constructor(

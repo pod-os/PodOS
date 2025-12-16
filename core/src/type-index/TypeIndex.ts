@@ -6,6 +6,7 @@ import { labelForType } from "../thing/labelForType";
 
 /**
  * Represents a private or public type index document
+ * @since 0.24.0
  */
 export class TypeIndex extends Thing {
   constructor(

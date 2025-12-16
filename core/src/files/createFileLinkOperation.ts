@@ -7,6 +7,9 @@ import { NewFile } from "../files";
  * Creates an update operation to link a file to a thing.
  * Uses given predicate to establish the relationship.
  *
+ * @since 0.24.0
+ * @internal
+ *
  * @param thing - The thing to link the file to
  * @param predicateUri - The URI of the predicate to use
  * @param file - The uploaded file metadata

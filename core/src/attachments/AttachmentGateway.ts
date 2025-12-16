@@ -5,6 +5,8 @@ import { HttpProblem, NetworkProblem } from "../problems";
 
 /**
  * Gateway for attachment-related operations on Solid Pods and the store.
+ *
+ * @since 0.24.0
  */
 export class AttachmentGateway {
   constructor(private readonly fileGateway: FileGateway) {}

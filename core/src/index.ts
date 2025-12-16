@@ -215,6 +215,7 @@ export class PodOS {
 
   /**
    * Provides access to attachment operations such as uploading and linking attachments to things
+   * @since 0.24.0
    * @returns {AttachmentGateway} An instance of AttachmentGateway that handles attachment operations
    */
   attachments(): AttachmentGateway {

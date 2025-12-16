@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 0.24.0
 
 ### Added
 
@@ -22,6 +22,10 @@ and this project adheres to
   Get the private type index URI for a user
 - [`ProfileGateway`](https://pod-os.org/reference/core/classes/ProfileGateway/)
   Gateway for profile-related operations on Solid Pods and the store.
+- [`FileGateway`](https://pod-os.org/reference/core/classes/FileGateway/)
+  Gateway for file-related operations on Solid Pods and the store.
+- [`AttachmentGateway`](https://pod-os.org/reference/core/classes/AttachmentGateway/)
+  Gateway for attachment-related operations on Solid Pods and the store.
 
 ### Fixed
 

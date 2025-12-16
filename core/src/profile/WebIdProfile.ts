@@ -28,6 +28,7 @@ export class WebIdProfile extends Thing {
 
   /**
    * Returns the URI of the public type index document
+   * @since 0.24.0
    */
   getPublicTypeIndex() {
     return this.profileQuery.queryPublicTypeIndex()?.value;
@@ -35,6 +36,7 @@ export class WebIdProfile extends Thing {
 
   /**
    * Returns the URI of the private type index document
+   * @since 0.24.0
    */
   getPrivateTypeIndex() {
     const preferences = this.profileQuery.queryPreferencesFile();
