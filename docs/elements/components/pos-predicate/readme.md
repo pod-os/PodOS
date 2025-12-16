@@ -25,6 +25,7 @@ This will only show the predicate itself, not any value. If you want to display 
  - [pos-literals](../pos-literals)
  - [pos-relations](../pos-relations)
  - [pos-reverse-relations](../pos-reverse-relations)
+ - [pos-type-index-entries](../pos-type-index-entries)
 
 ### Graph
 ```mermaid
@@ -32,6 +33,7 @@ graph TD;
   pos-literals --> pos-predicate
   pos-relations --> pos-predicate
   pos-reverse-relations --> pos-predicate
+  pos-type-index-entries --> pos-predicate
   style pos-predicate fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

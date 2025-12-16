@@ -27,11 +27,13 @@
 
 ### Used by
 
+ - [pos-attachments](../pos-attachments)
  - [pos-example-resources](../../apps/pos-app-dashboard/pos-example-resources)
  - [pos-navigation](../pos-navigation)
  - [pos-relations](../pos-relations)
  - [pos-reverse-relations](../pos-reverse-relations)
  - [pos-subjects](../pos-subjects)
+ - [pos-type-index-entries](../pos-type-index-entries)
 
 ### Depends on
 
@@ -45,11 +47,13 @@ graph TD;
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
   pos-rich-link --> pos-resource
+  pos-attachments --> pos-rich-link
   pos-example-resources --> pos-rich-link
   pos-navigation --> pos-rich-link
   pos-relations --> pos-rich-link
   pos-reverse-relations --> pos-rich-link
   pos-subjects --> pos-rich-link
+  pos-type-index-entries --> pos-rich-link
   style pos-rich-link fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

@@ -67,7 +67,10 @@ graph TD;
   pos-app-settings --> pos-setting-offline-cache
   pos-app-dashboard --> pos-getting-started
   pos-app-dashboard --> pos-example-resources
+  pos-app-dashboard --> pos-type-index-entries
   pos-example-resources --> pos-rich-link
+  pos-type-index-entries --> pos-predicate
+  pos-type-index-entries --> pos-rich-link
   pos-type-router --> pos-tool-select
   style pos-app-browser fill:#f9f,stroke:#333,stroke-width:4px
 ```

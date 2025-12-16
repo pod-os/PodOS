@@ -16,11 +16,13 @@
 ### Used by
 
  - [pos-picture](../pos-picture)
+ - [pos-tool-attachments](../../tools/pos-tool-attachments)
 
 ### Graph
 ```mermaid
 graph TD;
   pos-picture --> pos-upload
+  pos-tool-attachments --> pos-upload
   style pos-upload fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
