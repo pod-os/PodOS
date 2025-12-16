@@ -24,7 +24,7 @@ export class PosAttachments {
    * @param attachment The attachment to add to the list.
    */
   @Method()
-  addToList(attachment: Attachment) {
+  async addToList(attachment: Attachment) {
     this.attachments = [
       ...this.attachments,
       {
