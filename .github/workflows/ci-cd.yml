@@ -120,6 +120,17 @@ jobs:
           netlify-site-id: ${{ secrets.NETLIFY_POD_OS_BROWSER_SITE_ID }}
           netlify-auth-token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
 
+  approve-release:
+    if: github.ref == 'refs/heads/main'
+    needs: npm-publish-elements-snapshot
+    runs-on: ubuntu-latest
+    environment: release-approval
+    steps:
+      - name: Approve release
+        run:
+          echo "Release approved, proceeding with npm publish and production
+          deployment"
+
   build-pages:
     if: github.ref == 'refs/heads/main'
     needs:
@@ -171,9 +182,8 @@ jobs:
 
   npm-release-core:
     if: github.ref == 'refs/heads/main'
-    needs: [build, npm-publish-core-snapshot]
+    needs: [build, npm-publish-core-snapshot, approve-release]
     runs-on: ubuntu-latest
-    environment: production
     outputs:
       releaseVersion: ${{ steps.release.outputs.version }}
     steps:
@@ -196,7 +206,6 @@ jobs:
     if: github.ref == 'refs/heads/main'
     needs: [build, npm-publish-elements-snapshot, npm-release-core]
     runs-on: ubuntu-latest
-    environment: production
     outputs:
       releaseVersion: ${{ steps.release.outputs.version }}
     steps:
