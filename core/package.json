@@ -68,7 +68,7 @@
     "mime": "^4.1.0",
     "neverthrow": "^8.2.0",
     "rdf-namespaces": "^1.16.0",
-    "rdflib": "2.3.0",
+    "rdflib": "2.3.2",
     "rxjs": "^7.8.2",
     "slugify": "^1.6.6",
     "url": "^0.11.4"
