@@ -1,5 +1,6 @@
 import { Locator, Page } from "@playwright/test";
 import { FileUpload } from "./FileUpload";
+import { AttachmentTool } from "./AttachmentTool";
 
 export class GenericThingPage {
   private readonly page: Page;
@@ -41,5 +42,16 @@ export class GenericThingPage {
 
   relation(targetName: string): Locator {
     return this.relationsSection().getByRole("link", { name: targetName });
+  }
+
+  private attachToolButton(): Locator {
+    return this.page
+      .getByRole("tab", { name: /Attach/i })
+      .describe("Attach tool button");
+  }
+
+  async openAttachmentsTool(): Promise<AttachmentTool> {
+    await this.attachToolButton().click();
+    return new AttachmentTool(this.page);
   }
 }

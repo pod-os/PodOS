@@ -1,0 +1,6 @@
+@prefix : <#>.
+@prefix schema: <http://schema.org/>.
+
+<#it> a schema:Thing;
+    schema:name "Thing Without Attachments";
+    schema:description "A generic item that has no attachments yet" .
