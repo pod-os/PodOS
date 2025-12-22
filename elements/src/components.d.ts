@@ -254,8 +254,7 @@ export namespace Components {
     interface PosSubjects {
     }
     /**
-     * A tool to manage attachments of a thing!
-     * @since 0.35.0
+     * A tool to manage attachments of a thing.
      */
     interface PosToolAttachments {
     }
@@ -1089,8 +1088,7 @@ declare global {
         new (): HTMLPosSubjectsElement;
     };
     /**
-     * A tool to manage attachments of a thing!
-     * @since 0.35.0
+     * A tool to manage attachments of a thing.
      */
     interface HTMLPosToolAttachmentsElement extends Components.PosToolAttachments, HTMLStencilElement {
     }
@@ -1578,8 +1576,7 @@ declare namespace LocalJSX {
         "onPod-os:resource"?: (event: PosSubjectsCustomEvent<any>) => void;
     }
     /**
-     * A tool to manage attachments of a thing!
-     * @since 0.35.0
+     * A tool to manage attachments of a thing.
      */
     interface PosToolAttachments {
     }
@@ -1762,8 +1759,7 @@ declare module "@stencil/core" {
             "pos-setting-offline-cache": LocalJSX.PosSettingOfflineCache & JSXBase.HTMLAttributes<HTMLPosSettingOfflineCacheElement>;
             "pos-subjects": LocalJSX.PosSubjects & JSXBase.HTMLAttributes<HTMLPosSubjectsElement>;
             /**
-             * A tool to manage attachments of a thing!
-             * @since 0.35.0
+             * A tool to manage attachments of a thing.
              */
             "pos-tool-attachments": LocalJSX.PosToolAttachments & JSXBase.HTMLAttributes<HTMLPosToolAttachmentsElement>;
             /**
