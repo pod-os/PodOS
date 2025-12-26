@@ -31,7 +31,7 @@ export class PosUpload {
         theme: 'auto',
       })
       .use(ImageEditor)
-      .use(Webcam, { modes: ['picture'], showVideoSourceDropdown: true });
+      .use(Webcam, { modes: ['picture'], showVideoSourceDropdown: true, mobileNativeCamera: true });
     uppy.setOptions({
       restrictions: {
         allowedFileTypes: this.accept,
