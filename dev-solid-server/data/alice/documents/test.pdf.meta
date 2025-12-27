@@ -1,0 +1,11 @@
+@prefix schema: <https://schema.org/> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<test.pdf>
+    a schema:DigitalDocument ;
+    schema:description "A PDF document used for testing purposes." ;
+    dc:title "test.pdf" ;
+    dc:format "application/pdf" ;
+    dc:created "2024-01-01T00:00:00Z"^^xsd:dateTime ;
+    schema:fileFormat "application/pdf" .
