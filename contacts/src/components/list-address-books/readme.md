@@ -29,20 +29,13 @@
 ### Depends on
 
 - pos-resource
-- ion-icon
 - pos-label
 
 ### Graph
 ```mermaid
 graph TD;
   pos-contacts-list-address-books --> pos-resource
-  pos-contacts-list-address-books --> ion-icon
   pos-contacts-list-address-books --> pos-label
-  pos-resource --> ion-progress-bar
-  pos-resource --> ion-card
-  pos-resource --> ion-card-header
-  pos-resource --> ion-card-content
-  ion-card --> ion-ripple-effect
   pos-contacts-open-address-book --> pos-contacts-list-address-books
   style pos-contacts-list-address-books fill:#f9f,stroke:#333,stroke-width:4px
 ```

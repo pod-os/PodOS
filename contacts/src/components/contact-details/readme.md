@@ -29,7 +29,6 @@
 ### Depends on
 
 - [pos-contacts-loading-spinner](../loading-spinner)
-- ion-icon
 - [pos-contacts-phone-numbers](phone-numbers)
 - [pos-contacts-email-addresses](email-addresses)
 
@@ -37,11 +36,8 @@
 ```mermaid
 graph TD;
   pos-contacts-contact-details --> pos-contacts-loading-spinner
-  pos-contacts-contact-details --> ion-icon
   pos-contacts-contact-details --> pos-contacts-phone-numbers
   pos-contacts-contact-details --> pos-contacts-email-addresses
-  pos-contacts-phone-numbers --> ion-icon
-  pos-contacts-email-addresses --> ion-icon
   pos-contacts-address-book-page --> pos-contacts-contact-details
   style pos-contacts-contact-details fill:#f9f,stroke:#333,stroke-width:4px
 ```
