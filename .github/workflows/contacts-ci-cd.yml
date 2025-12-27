@@ -43,7 +43,7 @@ jobs:
         with:
           name: contacts-www
       - name: Deploy PodOS Contacts
-        run: npx netlify-cli deploy --site=pod-os-contacts --dir=www --prod
+        run: npx netlify-cli deploy --dir=www --prod
         env:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_POD_OS_CONTACTS_SITE_ID }}
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
