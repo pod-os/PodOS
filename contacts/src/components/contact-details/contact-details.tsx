@@ -1,6 +1,8 @@
 import { ContactsModule, FullContact } from '@solid-data-modules/contacts-rdflib';
 import { Component, h, Host, Prop, State, Watch, Event, EventEmitter } from '@stencil/core';
 
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+
 @Component({
   tag: 'pos-contacts-contact-details',
   styleUrl: './contact-details.css',
@@ -40,10 +42,10 @@ export class ContactDetails {
       <Host>
         <header>
           <button class="back" aria-label="Back to address book" onClick={() => this.closeContact.emit()}>
-            <ion-icon aria-hidden="true" name="arrow-back-outline"></ion-icon>
+            <sl-icon aria-hidden="true" name="arrow-left-short"></sl-icon>
           </button>
           <div class="overview">
-            <ion-icon size="large" name="person-circle-outline"></ion-icon>
+            <sl-icon class="avatar" name="person-circle"></sl-icon>
             <h2>{this.contact.name}</h2>
           </div>
         </header>

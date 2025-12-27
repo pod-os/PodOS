@@ -2,6 +2,8 @@ import { AddressBookLists, ContactsModule } from '@solid-data-modules/contacts-r
 import { Component, Event, EventEmitter, h, Prop, State, Watch } from '@stencil/core';
 import { PodOsModuleAware, PodOsModuleEventEmitter, subscribePodOsModule } from '../../events/PodOsModuleAware';
 
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+
 @Component({
   tag: 'pos-contacts-list-address-books',
   styleUrl: './list-address-books.css',
@@ -56,7 +58,7 @@ export class ListAddressBooks implements PodOsModuleAware<ContactsModule> {
             <li>
               <pos-resource uri={uri}>
                 <div class="label">
-                  <ion-icon name="book-outline"></ion-icon>
+                  <sl-icon name="book"></sl-icon>
                   <pos-label />
                 </div>
               </pos-resource>

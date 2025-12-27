@@ -28,7 +28,7 @@ header {
     align-items: center;
     width: 100%;
 
-    [role="img"] {
+    .avatar {
       width: var(--size-56);
       height: var(--size-56);
       opacity: 5%;
@@ -44,7 +44,7 @@ section {
   display: flex;
   flex-direction: column;
   padding: var(--size-6);
-  gap: var(--size-6)
+  gap: var(--size-6);
 }
 
 button.back {

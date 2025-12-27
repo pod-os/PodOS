@@ -5,6 +5,8 @@ import { usePodOS } from '../../events/usePodOS';
 // noinspection ES6PreferShortImport needs to be mocked
 import { debounceTime } from '../../utils/debounceTime';
 
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+
 @Component({
   tag: 'pos-contacts-address-book-page',
   styleUrl: './address-book-page.css',
@@ -88,7 +90,7 @@ export class AddressBookPage {
           <p>
             You might need to log in and then
             <button class="retry" onClick={() => this.retry()}>
-              <ion-icon name="reload-outline"></ion-icon>
+              <sl-icon name="arrow-clockwise"></sl-icon>
               retry
             </button>
           </p>
@@ -106,7 +108,7 @@ export class AddressBookPage {
       <Host>
         <header>
           <button class="menu" aria-label="open side navigation" onClick={() => this.openMenu()}>
-            <ion-icon aria-hidden="true" name="menu-outline"></ion-icon>
+            <sl-icon aria-hidden="true" name="list"></sl-icon>
           </button>
           <hgroup>
             <h1>{this.addressBook.title}</h1>
@@ -115,7 +117,7 @@ export class AddressBookPage {
         </header>
         <nav class={this.menuOpen ? 'active' : ''}>
           <button class="menu" aria-label="close side navigation" onClick={() => this.closeMenu()}>
-            <ion-icon aria-hidden="true" name="close-outline"></ion-icon>
+            <sl-icon aria-hidden="true" name="x"></sl-icon>
           </button>
           <pos-contacts-create-new-contact addressBookUri={this.uri} />
           <pos-contacts-group-list groups={this.addressBook.groups} />

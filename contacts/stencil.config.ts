@@ -1,4 +1,5 @@
 import { Config } from '@stencil/core';
+import { join } from 'path';
 
 export const config: Config = {
   namespace: 'contacts',
@@ -7,6 +8,12 @@ export const config: Config = {
     {
       type: 'dist',
       esmLoaderPath: '../loader',
+      copy: [
+        {
+          src: join(__dirname, '../node_modules/@shoelace-style/shoelace/dist/assets'),
+          dest: 'shoelace/assets',
+        },
+      ],
     },
     {
       type: 'dist-custom-elements',
@@ -27,11 +34,12 @@ export const config: Config = {
           src: 'netlify',
           dest: '',
         },
+        {
+          src: join(__dirname, '../node_modules/@shoelace-style/shoelace/dist/assets'),
+          dest: 'build/shoelace/assets',
+        },
       ],
       serviceWorker: null, // disable service workers
     },
   ],
-  testing: {
-    browserHeadless: 'new',
-  },
 };

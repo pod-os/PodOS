@@ -3,6 +3,8 @@ import { Component, Element, Event, EventEmitter, h, Listen, State } from '@sten
 import { Subject, takeUntil } from 'rxjs';
 import { usePodOS } from '../../events/usePodOS';
 
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+
 @Component({
   tag: 'pos-contacts-open-address-book',
   shadow: true,
@@ -56,7 +58,7 @@ export class OpenAddressBook {
           </div>
         )}
         <button title="open any other address book by it's URI" class="open" onClick={() => this.promptAndOpen()}>
-          <ion-icon name="folder-open-outline"></ion-icon>
+          <sl-icon name="folder2-open"></sl-icon>
           open other
         </button>
       </div>

@@ -1,6 +1,8 @@
 import { Email } from '@solid-data-modules/contacts-rdflib';
 import { Component, h, Prop } from '@stencil/core';
 
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+
 @Component({
   tag: 'pos-contacts-email-addresses',
   styleUrl: './email-addresses.css',
@@ -15,7 +17,7 @@ export class EmailAddresses {
     }
     return (
       <section aria-label="e-mail addresses">
-        <ion-icon aria-hidden="true" size="large" name="mail-outline"></ion-icon>
+        <sl-icon aria-hidden="true" size="large" name="envelope-at"></sl-icon>
         <ul>
           {this.emailAddresses.map(email => (
             <li>

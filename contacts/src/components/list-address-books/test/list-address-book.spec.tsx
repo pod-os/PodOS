@@ -64,7 +64,7 @@ describe('list address books', () => {
         <li>
           <pos-resource uri="https://alice.test/private/contacts/1">
             <div class="label">
-              <ion-icon name="book-outline"></ion-icon>
+              <sl-icon name="book"></sl-icon>
               <pos-label></pos-label>
             </div>
           </pos-resource>
@@ -96,7 +96,7 @@ describe('list address books', () => {
         <li>
           <pos-resource uri="https://alice.test/public/contacts/1">
             <div class="label">
-              <ion-icon name="book-outline"></ion-icon>
+              <sl-icon name="book"></sl-icon>
               <pos-label></pos-label>
             </div>
           </pos-resource>
@@ -128,7 +128,7 @@ describe('list address books', () => {
         <li>
           <pos-resource uri="https://alice.test/private/contacts/1">
             <div class="label">
-              <ion-icon name="book-outline"></ion-icon>
+              <sl-icon name="book"></sl-icon>
               <pos-label></pos-label>
             </div>
           </pos-resource>
@@ -138,7 +138,7 @@ describe('list address books', () => {
         <li>
           <pos-resource uri="https://alice.test/private/contacts/2">
             <div class="label">
-              <ion-icon name="book-outline"></ion-icon>
+              <sl-icon name="book"></sl-icon>
               <pos-label></pos-label>
             </div>
           </pos-resource>
@@ -148,7 +148,7 @@ describe('list address books', () => {
         <li>
           <pos-resource uri="https://alice.test/public/contacts/1">
             <div class="label">
-              <ion-icon name="book-outline"></ion-icon>
+              <sl-icon name="book"></sl-icon>
               <pos-label></pos-label>
             </div>
           </pos-resource>

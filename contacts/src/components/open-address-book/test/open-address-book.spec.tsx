@@ -11,7 +11,6 @@ import { OpenAddressBook } from '../open-address-book';
 describe('open address book', () => {
   let page;
   const sessionInfo$ = new BehaviorSubject<SessionInfo>({
-    sessionId: 'test-session',
     isLoggedIn: false,
     webId: '',
   });
@@ -35,7 +34,7 @@ describe('open address book', () => {
         Sign in to list your address books.
       </div>
       <button class="open" title="open any other address book by it's URI">
-        <ion-icon name="folder-open-outline"></ion-icon>
+        <sl-icon name="folder2-open"></sl-icon>
         open other
       </button>
     </div>
@@ -46,7 +45,6 @@ describe('open address book', () => {
     sessionInfo$.next({
       isLoggedIn: true,
       webId: 'https://alice.test/profile/card#me',
-      sessionId: 'test',
     });
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
@@ -54,7 +52,7 @@ describe('open address book', () => {
       <div id="container">
         <pos-contacts-list-address-books webid="https://alice.test/profile/card#me"></pos-contacts-list-address-books>
         <button class="open" title="open any other address book by it's URI">
-          <ion-icon name="folder-open-outline"></ion-icon>
+          <sl-icon name="folder2-open"></sl-icon>
           open other
         </button>
       </div>

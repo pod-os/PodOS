@@ -1,9 +1,7 @@
 :host {
   display: grid;
   grid-template-columns: auto;
-  grid-template-areas:
-    "header"
-    "main"
+  grid-template-areas: 'header' 'main';
 }
 
 header {
@@ -20,7 +18,7 @@ main {
   margin: var(--size-10);
   background-color: white;
   border-radius: var(--radius-xl);
-  padding: var(--size-4)
+  padding: var(--size-4);
 }
 
 .toolbar {
@@ -30,6 +28,3 @@ main {
   gap: var(--size-2);
   height: var(--size-10);
 }
-
-
-

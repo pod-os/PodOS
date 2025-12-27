@@ -6,9 +6,7 @@
   grid-template-columns: var(--size-80) auto;
   grid-template-rows: var(--header-height) auto;
   height: 100%;
-  grid-template-areas:
-    "header header"
-    "menu main"
+  grid-template-areas: 'header header' 'menu main';
 }
 
 button.menu {
@@ -16,11 +14,8 @@ button.menu {
 }
 
 @media only screen and (max-width: 600px) {
-
   :host {
-    grid-template-areas:
-    "header header"
-    "main main"
+    grid-template-areas: 'header header' 'main main';
   }
 
   button.menu {
@@ -63,7 +58,6 @@ button.menu {
   }
 }
 
-
 header {
   display: flex;
   flex-direction: row;
@@ -98,9 +92,8 @@ main {
   border-radius: var(--radius-xl);
 }
 
-
-
-main.error, main.loading {
+main.error,
+main.loading {
   display: flex;
   height: 100%;
   align-items: center;
@@ -145,5 +138,5 @@ main.error {
     border: var(--size-1) solid var(--color-grey-500);
     padding: var(--size-4);
     background: var(--color-grey-800);
-  };
+  }
 }

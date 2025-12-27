@@ -25,21 +25,21 @@
     "build:pwa": "pwa-asset-generator ../assets/logo.png ./www/icons --index ./www/index.html --manifest ./www/manifest.json"
   },
   "dependencies": {
-    "@pod-os/core": "^0.13.0",
-    "@pod-os/elements": "^0.21.0",
-    "@solid-data-modules/contacts-rdflib": "^0.7.0",
-    "@stencil/core": "^4.23.2",
-    "pollen-css": "^5.0.1",
-    "rxjs": "^7.8.1"
+    "@pod-os/core": "^0.24.0",
+    "@pod-os/elements": "^0.35.0",
+    "@solid-data-modules/contacts-rdflib": "^0.7.1",
+    "@stencil/core": "^4.40.1",
+    "pollen-css": "^5.0.2",
+    "rxjs": "^7.8.2"
   },
   "devDependencies": {
-    "@testing-library/dom": "^10.4.0",
-    "@testing-library/jest-dom": "^6.5.0",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
     "@types/jest": "^29.5.12",
-    "@types/node": "^22.10.5",
+    "@types/node": "^22.19.3",
     "jest": "^29.7.0",
     "jest-cli": "^29.7.0",
-    "jest-when": "^3.6.0",
+    "jest-when": "^3.7.0",
     "netlify-cli": "^17.38.1",
     "pwa-asset-generator": "^6.4.0",
     "stencil-router-v2": "^0.6.0"

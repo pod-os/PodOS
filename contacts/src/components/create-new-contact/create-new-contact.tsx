@@ -1,5 +1,7 @@
 import { Component, h, Host, Prop } from '@stencil/core';
 
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+
 @Component({
   tag: 'pos-contacts-create-new-contact',
   styleUrl: 'create-new-contact.css',
@@ -15,7 +17,7 @@ export class CreateNewContact {
     return (
       <Host>
         <button class="create" onClick={() => this.dialog.showModal()}>
-          <ion-icon name="person-add"></ion-icon>
+          <sl-icon name="person-fill-add"></sl-icon>
           Create contact
         </button>
         <pos-dialog ref={el => (this.dialog = el as HTMLPosDialogElement)}>

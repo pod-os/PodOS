@@ -24,7 +24,6 @@ describe('address-book-page', () => {
   beforeEach(() => {
     when(debounceTime).mockReturnValue(tap()); // disable the debounce time for testing
     sessionInfo$ = new BehaviorSubject<SessionInfo>({
-      sessionId: 'test-session',
       isLoggedIn: false,
       webId: '',
     });
@@ -107,7 +106,7 @@ describe('address-book-page', () => {
           <p>
             You might need to log in and then
             <button class='retry'>
-              <ion-icon name='reload-outline'></ion-icon>
+              <sl-icon name='arrow-clockwise'></sl-icon>
               retry
             </button>
           </p>

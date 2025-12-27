@@ -49,6 +49,9 @@ export namespace Components {
         "webId": string;
     }
     interface PosContactsLoadingSpinner {
+        /**
+          * @default 300
+         */
         "defer": number;
     }
     interface PosContactsOpenAddressBook {
@@ -327,6 +330,9 @@ declare namespace LocalJSX {
         "webId": string;
     }
     interface PosContactsLoadingSpinner {
+        /**
+          * @default 300
+         */
         "defer"?: number;
     }
     interface PosContactsOpenAddressBook {
