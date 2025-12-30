@@ -20,6 +20,7 @@ import {
 import { IndexedFormula } from "rdflib";
 import { ResultAsync } from "neverthrow";
 import { HttpProblem, NetworkProblem } from "./problems";
+import { loadModule } from "./modules";
 
 export * from "./authentication";
 export * from "./files";
@@ -177,6 +178,14 @@ export class PodOS {
 
   loadContactsModule(): Promise<ContactsModule> {
     return loadContactsModule(this.store);
+  }
+
+  /**
+   * Dynamically loads a module by its name and returns an instance of the module
+   * @param moduleName
+   */
+  loadModule<T>(moduleName: string): Promise<T> {
+    return loadModule(moduleName, this.store);
   }
 
   /**
