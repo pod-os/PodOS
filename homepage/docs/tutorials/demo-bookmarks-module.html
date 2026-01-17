@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>PodOS Getting Started</title>
+    <script
+      type="module"
+      src="https://esm.sh/@pod-os/elements@0.36.0/dist/elements/elements.esm.js"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://esm.sh/@pod-os/elements@0.36.0/dist/elements/elements.css"
+    />
+    <script type="importmap">
+      {
+        "imports": {
+          "bookmarks": "https://esm.sh/@solid-data-modules/bookmarks-rdflib"
+        }
+      }
+    </script>
+    <style>
+      pos-app {
+        display: block;
+        padding: 4rem;
+        margin: 1rem;
+        border-radius: 1rem;
+        background-color: var(--pos-background-color);
+      }
+      pos-resource {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+      }
+      .bookmark-card {
+        background: var(--pos-card-background);
+        border: var(--pos-border-solid);
+        border-radius: 0.5rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
+      }
+      .bookmark-content h3 {
+        margin: 0 0 0.5rem 0;
+      }
+      .bookmark-content h3 a {
+        color: var(--pos-primary-color);
+        text-decoration: none;
+      }
+      .bookmark-content h3 a:hover {
+        text-decoration: underline;
+      }
+      .bookmark-url {
+        color: var(--pos-secondary-text-color);
+        font-size: 0.9rem;
+        margin: 0.5rem 0;
+        word-break: break-all;
+      }
+      .bookmark-uri {
+        margin: 0.5rem 0 0 0;
+      }
+      .bookmark-uri small {
+        color: var(--pos-subtle-text-color);
+        font-size: 0.75rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <pos-app>
+        <section id="bookmarks">
+          <h1>Bookmarks</h1>
+        </section>
+      </pos-app>
+    </main>
+    <script type="module">
+      async function receiver(module) {
+        const bookmarks = await module.listBookmarks(
+          "https://pod-os.solidcommunity.net/bookmarks/index.ttl",
+        );
+
+        bookmarks.map((bookmark) => {
+          const bookmarkElement = document.createElement("div");
+          bookmarkElement.className = "bookmark-card";
+          bookmarkElement.innerHTML = `
+            <div class="bookmark-content">
+              <h3><a href="${bookmark.bookmarkedUrl}" target="_blank">${bookmark.title}</a></h3>
+              <p class="bookmark-url">${bookmark.bookmarkedUrl}</p>
+              <p class="bookmark-uri"><small>Resource URI: ${bookmark.uri}</small></p>
+            </div>
+          `;
+          document.getElementById("bookmarks").appendChild(bookmarkElement);
+          return bookmarkElement;
+        });
+      }
+      const section = document.getElementById("bookmarks");
+      section.dispatchEvent(
+        new CustomEvent("pod-os:module", {
+          bubbles: true,
+          composed: true,
+          detail: { module: "bookmarks", receiver },
+        }),
+      );
+    </script>
+  </body>
+</html>
