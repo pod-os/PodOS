@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.25.0
+
+### Breaking Changes
+
+- `PodOS.loadContactsModule` got removed, use [`PodOS.loadModule`](https://pod-os.org/reference/core/classes/PodOS/#loadmodule) instead
+- `@solid-data-modules/contacts-rdflib` is no longer part of core. If you need it, you must install it yourself and load it using [`PodOS.loadModule`](https://pod-os.org/reference/core/classes/PodOS/#loadmodule)
+
+### Added
+
+- [`PodOS.loadModule`](https://pod-os.org/reference/core/classes/PodOS/#loadmodule): Dynamically loads a module by its name
+
 ## 0.24.0
 
 ### Added

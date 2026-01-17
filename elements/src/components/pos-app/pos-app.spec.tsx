@@ -92,7 +92,7 @@ describe('pos-app', () => {
 
     it('loads the contacts module', async () => {
       // given
-      const loadContactsModule = jest.fn().mockResolvedValue('fake contacts module');
+      const loadModule = jest.fn().mockResolvedValue('fake contacts module');
       const receiver = jest.fn();
       const page = await newSpecPage({
         components: [PosApp],
@@ -100,7 +100,7 @@ describe('pos-app', () => {
         supportsShadowDom: false,
       });
       page.rootInstance.os = {
-        loadContactsModule,
+        loadModule,
       };
 
       // when
@@ -108,23 +108,9 @@ describe('pos-app', () => {
       await page.waitForChanges();
 
       // then
-      expect(loadContactsModule).toHaveBeenCalled();
+      expect(loadModule).toHaveBeenCalled();
       expect(receiver).toHaveBeenCalledWith('fake contacts module');
       page.rootInstance.disconnectedCallback();
-    });
-
-    it('throws an error if module is unknown', async () => {
-      const app = new PosApp();
-      await expect(() =>
-        app.loadModule(
-          new CustomEvent('pod-os:module', {
-            detail: {
-              module: 'unknown-module-name',
-              receiver: () => {},
-            },
-          }),
-        ),
-      ).rejects.toEqual(new Error('Unknown module "unknown-module-name"'));
     });
   });
 

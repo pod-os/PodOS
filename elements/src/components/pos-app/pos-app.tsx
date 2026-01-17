@@ -96,12 +96,8 @@ export class PosApp {
   @Listen('pod-os:module')
   async loadModule(event: RequestModuleEvent) {
     event.stopPropagation();
-    if (event.detail.module === 'contacts') {
-      const module = await this.os.loadContactsModule();
-      event.detail.receiver(module);
-    } else {
-      throw Error(`Unknown module "${event.detail.module}"`);
-    }
+    const module = await this.os.loadModule(event.detail.module);
+    event.detail.receiver(module);
   }
 
   render() {
