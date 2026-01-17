@@ -5,8 +5,9 @@
 
 # PodOS - Your personal online data operating system
 
-[![CI](https://github.com/pod-os/PodOS/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/pod-os/PodOS/actions)
-
+[![CI/CD](https://github.com/pod-os/PodOS/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/pod-os/PodOS/actions/workflows/ci-cd.yml)
+[![Contacts CI/CD](https://github.com/pod-os/PodOS/actions/workflows/contacts-ci-cd.yml/badge.svg)](https://github.com/pod-os/PodOS/actions/workflows/contacts-ci-cd.yml)
+[![Deploy Homepage](https://github.com/pod-os/PodOS/actions/workflows/homepage.yml/badge.svg)](https://github.com/pod-os/PodOS/actions/workflows/homepage.yml)
 
 PodOS is an online operating system that helps you to access and mange your data on the web.
 
