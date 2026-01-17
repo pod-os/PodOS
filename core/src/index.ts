@@ -1,8 +1,6 @@
-import { ContactsModule } from "@solid-data-modules/contacts-rdflib";
 import { BehaviorSubject, tap } from "rxjs";
 import { PodOsSession, SessionInfo } from "./authentication";
 import { FileFetcher, FileGateway, SolidFile } from "./files";
-import { loadContactsModule } from "./modules/contacts";
 import { AttachmentGateway } from "./attachments";
 import { PictureGateway } from "./picture";
 import { ProfileGateway, WebIdProfile } from "./profile";
@@ -174,10 +172,6 @@ export class PodOS {
 
   login(oidcIssuer = "http://localhost:3000") {
     return this.session.login(oidcIssuer);
-  }
-
-  loadContactsModule(): Promise<ContactsModule> {
-    return loadContactsModule(this.store);
   }
 
   /**
