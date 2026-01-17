@@ -6,7 +6,7 @@
 
 # Class: BinaryFile
 
-Defined in: [files/BinaryFile.ts:3](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/files/BinaryFile.ts#L3)
+Defined in: [files/BinaryFile.ts:3](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/files/BinaryFile.ts#L3)
 
 ## Implements
 
@@ -18,7 +18,7 @@ Defined in: [files/BinaryFile.ts:3](https://github.com/pod-os/PodOS/blob/a5ceb94
 
 > **new BinaryFile**(`url`, `data`): `BinaryFile`
 
-Defined in: [files/BinaryFile.ts:4](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/files/BinaryFile.ts#L4)
+Defined in: [files/BinaryFile.ts:4](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/files/BinaryFile.ts#L4)
 
 #### Parameters
 
@@ -40,7 +40,7 @@ Defined in: [files/BinaryFile.ts:4](https://github.com/pod-os/PodOS/blob/a5ceb94
 
 > `readonly` **url**: `string`
 
-Defined in: [files/BinaryFile.ts:5](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/files/BinaryFile.ts#L5)
+Defined in: [files/BinaryFile.ts:5](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/files/BinaryFile.ts#L5)
 
 #### Implementation of
 
@@ -52,7 +52,7 @@ Defined in: [files/BinaryFile.ts:5](https://github.com/pod-os/PodOS/blob/a5ceb94
 
 > **blob**(): `Blob`
 
-Defined in: [files/BinaryFile.ts:9](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/files/BinaryFile.ts#L9)
+Defined in: [files/BinaryFile.ts:9](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/files/BinaryFile.ts#L9)
 
 #### Returns
 

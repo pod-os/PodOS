@@ -6,7 +6,7 @@
 
 # Class: NoOfflineCache
 
-Defined in: [offline-cache/OfflineCache.ts:13](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/offline-cache/OfflineCache.ts#L13)
+Defined in: [offline-cache/OfflineCache.ts:13](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/offline-cache/OfflineCache.ts#L13)
 
 ## Implements
 
@@ -28,7 +28,7 @@ Defined in: [offline-cache/OfflineCache.ts:13](https://github.com/pod-os/PodOS/b
 
 > **clear**(): `void`
 
-Defined in: [offline-cache/OfflineCache.ts:18](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/offline-cache/OfflineCache.ts#L18)
+Defined in: [offline-cache/OfflineCache.ts:18](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/offline-cache/OfflineCache.ts#L18)
 
 #### Returns
 
@@ -44,7 +44,7 @@ Defined in: [offline-cache/OfflineCache.ts:18](https://github.com/pod-os/PodOS/b
 
 > **get**(): `Promise`\<`undefined`\>
 
-Defined in: [offline-cache/OfflineCache.ts:15](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/offline-cache/OfflineCache.ts#L15)
+Defined in: [offline-cache/OfflineCache.ts:15](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/offline-cache/OfflineCache.ts#L15)
 
 #### Returns
 
@@ -60,7 +60,7 @@ Defined in: [offline-cache/OfflineCache.ts:15](https://github.com/pod-os/PodOS/b
 
 > **put**(): `void`
 
-Defined in: [offline-cache/OfflineCache.ts:14](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/offline-cache/OfflineCache.ts#L14)
+Defined in: [offline-cache/OfflineCache.ts:14](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/offline-cache/OfflineCache.ts#L14)
 
 #### Returns
 
