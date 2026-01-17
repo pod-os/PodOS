@@ -6,7 +6,7 @@
 
 # Interface: CachedRdfDocument
 
-Defined in: [offline-cache/OfflineCache.ts:1](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/offline-cache/OfflineCache.ts#L1)
+Defined in: [offline-cache/OfflineCache.ts:1](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/offline-cache/OfflineCache.ts#L1)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [offline-cache/OfflineCache.ts:1](https://github.com/pod-os/PodOS/bl
 
 > **revision**: `string`
 
-Defined in: [offline-cache/OfflineCache.ts:3](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/offline-cache/OfflineCache.ts#L3)
+Defined in: [offline-cache/OfflineCache.ts:3](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/offline-cache/OfflineCache.ts#L3)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [offline-cache/OfflineCache.ts:3](https://github.com/pod-os/PodOS/bl
 
 > **statements**: `string`
 
-Defined in: [offline-cache/OfflineCache.ts:4](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/offline-cache/OfflineCache.ts#L4)
+Defined in: [offline-cache/OfflineCache.ts:4](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/offline-cache/OfflineCache.ts#L4)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [offline-cache/OfflineCache.ts:4](https://github.com/pod-os/PodOS/bl
 
 > **url**: `string`
 
-Defined in: [offline-cache/OfflineCache.ts:2](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/offline-cache/OfflineCache.ts#L2)
+Defined in: [offline-cache/OfflineCache.ts:2](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/offline-cache/OfflineCache.ts#L2)

@@ -6,7 +6,7 @@
 
 # Interface: PodOsSession
 
-Defined in: [authentication/index.ts:13](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/authentication/index.ts#L13)
+Defined in: [authentication/index.ts:13](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/authentication/index.ts#L13)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [authentication/index.ts:13](https://github.com/pod-os/PodOS/blob/a5
 
 > **authenticatedFetch**: [`AuthenticatedFetch`](../type-aliases/AuthenticatedFetch.md)
 
-Defined in: [authentication/index.ts:14](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/authentication/index.ts#L14)
+Defined in: [authentication/index.ts:14](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/authentication/index.ts#L14)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [authentication/index.ts:14](https://github.com/pod-os/PodOS/blob/a5
 
 > **login**: (`oidcIssuer`) => `Promise`\<`void`\>
 
-Defined in: [authentication/index.ts:16](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/authentication/index.ts#L16)
+Defined in: [authentication/index.ts:16](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/authentication/index.ts#L16)
 
 #### Parameters
 
@@ -40,7 +40,7 @@ Defined in: [authentication/index.ts:16](https://github.com/pod-os/PodOS/blob/a5
 
 > **logout**: () => `Promise`\<`void`\>
 
-Defined in: [authentication/index.ts:17](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/authentication/index.ts#L17)
+Defined in: [authentication/index.ts:17](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/authentication/index.ts#L17)
 
 #### Returns
 
@@ -52,7 +52,7 @@ Defined in: [authentication/index.ts:17](https://github.com/pod-os/PodOS/blob/a5
 
 > **observeSession**: () => `BehaviorSubject`\<[`SessionInfo`](../type-aliases/SessionInfo.md)\>
 
-Defined in: [authentication/index.ts:15](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/authentication/index.ts#L15)
+Defined in: [authentication/index.ts:15](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/authentication/index.ts#L15)
 
 #### Returns
 

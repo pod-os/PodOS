@@ -6,7 +6,7 @@
 
 # Class: AssumeAlwaysOnline
 
-Defined in: [offline-cache/OnlineStatus.ts:5](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/offline-cache/OnlineStatus.ts#L5)
+Defined in: [offline-cache/OnlineStatus.ts:5](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/offline-cache/OnlineStatus.ts#L5)
 
 ## Implements
 
@@ -28,7 +28,7 @@ Defined in: [offline-cache/OnlineStatus.ts:5](https://github.com/pod-os/PodOS/bl
 
 > **isOnline**(): `boolean`
 
-Defined in: [offline-cache/OnlineStatus.ts:6](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/offline-cache/OnlineStatus.ts#L6)
+Defined in: [offline-cache/OnlineStatus.ts:6](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/offline-cache/OnlineStatus.ts#L6)
 
 #### Returns
 

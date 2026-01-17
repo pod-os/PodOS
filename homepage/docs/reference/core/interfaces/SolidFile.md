@@ -6,7 +6,7 @@
 
 # Interface: SolidFile
 
-Defined in: [files/SolidFile.ts:1](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/files/SolidFile.ts#L1)
+Defined in: [files/SolidFile.ts:1](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/files/SolidFile.ts#L1)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [files/SolidFile.ts:1](https://github.com/pod-os/PodOS/blob/a5ceb94d
 
 > **blob**: () => `Blob` \| `null`
 
-Defined in: [files/SolidFile.ts:3](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/files/SolidFile.ts#L3)
+Defined in: [files/SolidFile.ts:3](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/files/SolidFile.ts#L3)
 
 #### Returns
 
@@ -26,4 +26,4 @@ Defined in: [files/SolidFile.ts:3](https://github.com/pod-os/PodOS/blob/a5ceb94d
 
 > **url**: `string`
 
-Defined in: [files/SolidFile.ts:2](https://github.com/pod-os/PodOS/blob/a5ceb94d91186b3cf4ceb28910e3f6d4c89dae68/core/src/files/SolidFile.ts#L2)
+Defined in: [files/SolidFile.ts:2](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/files/SolidFile.ts#L2)
