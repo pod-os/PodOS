@@ -138,4 +138,26 @@ describe('pos-if-else', () => {
         <div>No matches</div>
         `);
   });
+
+  it('renders matching condition with negation', async () => {
+    const page = await newSpecPage({
+      components: [PosIfElse],
+      html: `
+      <pos-if-else>
+        <template not if-typeof="http://schema.org/Video"><div>Not a Video</div></template>
+      </pos-if-else>`,
+    });
+    await page.rootInstance.receiveResource({
+      types: () => [
+        {
+          label: 'Recipe',
+          uri: 'http://schema.org/Recipe',
+        },
+      ],
+    });
+    await page.waitForChanges();
+    expect(page.root?.innerHTML).toEqualHtml(`
+        <div>Not a Video</div>
+        `);
+  });
 });

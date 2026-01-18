@@ -29,12 +29,14 @@ export class PosIfElse implements ResourceAware {
   }
 
   test(conditionElement): Boolean {
+    let state = null;
     if (conditionElement.getAttribute('if-typeof') !== null)
-      return this.resource
+      state = this.resource
         .types()
         .map(x => x.uri)
         .includes(conditionElement.getAttribute('if-typeof'));
-    return null;
+    if (conditionElement.getAttribute('not') != null) state = !state;
+    return state;
   }
 
   receiveResource = (resource: Thing) => {
