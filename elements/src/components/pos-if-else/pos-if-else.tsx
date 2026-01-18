@@ -46,7 +46,8 @@ export class PosIfElse implements ResourceAware {
     this.activeElements = [];
     this.conditionElements.forEach(el => {
       const elemState = this.test(el);
-      if (elemState) {
+      const includeCondition = !state === true || el.getAttribute('else') === null;
+      if (elemState && includeCondition) {
         state = elemState;
         this.activeElements.push(el);
       }
