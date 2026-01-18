@@ -99,6 +99,7 @@ describe('pos-if-else', () => {
         <template if-typeof="http://schema.org/Video"><div>Video 1</div></template>
         <template else if-typeof="http://schema.org/Recipe"><div>Recipe 1</div></template>
         <template else if-typeof="http://schema.org/Recipe"><div>Recipe 2</div></template>
+        <template else><div>No matches</div></template>
       </pos-if-else>`,
     });
     await page.rootInstance.receiveResource({
@@ -112,6 +113,29 @@ describe('pos-if-else', () => {
     await page.waitForChanges();
     expect(page.root?.innerHTML).toEqualHtml(`
         <div>Recipe 1</div>
+        `);
+  });
+
+  it('renders final else condition if no other templates match', async () => {
+    const page = await newSpecPage({
+      components: [PosIfElse],
+      html: `
+      <pos-if-else>
+        <template if-typeof="http://schema.org/Video"><div>Video 1</div></template>
+        <template else><div>No matches</div></template>
+      </pos-if-else>`,
+    });
+    await page.rootInstance.receiveResource({
+      types: () => [
+        {
+          label: 'Recipe',
+          uri: 'http://schema.org/Recipe',
+        },
+      ],
+    });
+    await page.waitForChanges();
+    expect(page.root?.innerHTML).toEqualHtml(`
+        <div>No matches</div>
         `);
   });
 });
