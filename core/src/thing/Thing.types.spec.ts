@@ -1,17 +1,34 @@
-import { graph, sym } from "rdflib";
+import { graph, sym, IndexedFormula } from "rdflib";
+import { PodOsSession } from "../authentication";
 import { Thing } from "./Thing";
+import { Store } from "../Store";
 
 describe("Thing", function () {
   describe("types", () => {
+    let store: IndexedFormula;
+    const mockSession = {} as unknown as PodOsSession;
+    let reactiveStore: Store;
+
+    beforeEach(() => {
+      store = graph();
+      reactiveStore = new Store(mockSession, undefined, undefined, store);
+    });
+
     it("are empty is nothing is found in store", () => {
-      const store = graph();
-      const it = new Thing("https://jane.doe.example/resource#it", store);
+      const it = new Thing(
+        "https://jane.doe.example/resource#it",
+        store,
+        reactiveStore,
+      );
       expect(it.types()).toEqual([]);
     });
 
     it("contains the single type of a resource", () => {
-      const store = graph();
-      const it = new Thing("https://jane.doe.example/resource#it", store);
+      const it = new Thing(
+        "https://jane.doe.example/resource#it",
+        store,
+        reactiveStore,
+      );
       store.add(
         sym("https://jane.doe.example/resource#it"),
         sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
@@ -26,8 +43,11 @@ describe("Thing", function () {
     });
 
     it("contains all the types of a resource", () => {
-      const store = graph();
-      const it = new Thing("https://jane.doe.example/resource#it", store);
+      const it = new Thing(
+        "https://jane.doe.example/resource#it",
+        store,
+        reactiveStore,
+      );
       store.add(
         sym("https://jane.doe.example/resource#it"),
         sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
@@ -60,8 +80,11 @@ describe("Thing", function () {
     });
 
     it("does not contain types of other things or other properties of the thing", () => {
-      const store = graph();
-      const it = new Thing("https://jane.doe.example/resource#it", store);
+      const it = new Thing(
+        "https://jane.doe.example/resource#it",
+        store,
+        reactiveStore,
+      );
       store.add(
         sym("https://jane.doe.example/resource#other"),
         sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),

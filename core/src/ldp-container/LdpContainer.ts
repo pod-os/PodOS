@@ -1,5 +1,6 @@
 import { IndexedFormula, sym } from "rdflib";
 import { labelFromUri, Thing } from "../thing";
+import { Store } from "../Store";
 
 export interface ContainerContent {
   uri: string;
@@ -9,9 +10,10 @@ export class LdpContainer extends Thing {
   constructor(
     readonly uri: string,
     readonly store: IndexedFormula,
+    readonly reactiveStore: Store,
     readonly editable: boolean = false,
   ) {
-    super(uri, store, editable);
+    super(uri, store, reactiveStore, editable);
   }
 
   contains(): ContainerContent[] {

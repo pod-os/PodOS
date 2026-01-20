@@ -11,6 +11,7 @@ import { accumulateValues } from "./accumulateValues";
 import { isRdfType } from "./isRdfType";
 import { labelForType } from "./labelForType";
 import { labelFromUri } from "./labelFromUri";
+import { Store } from "../Store";
 
 export interface Literal {
   predicate: string;
@@ -38,6 +39,7 @@ export class Thing {
   constructor(
     readonly uri: string,
     readonly store: IndexedFormula,
+    readonly reactiveStore: Store,
     /**
      * Whether the Thing can be edited according to its access control settings
      */
@@ -251,10 +253,16 @@ export class Thing {
     SpecificThing: new (
       uri: string,
       store: IndexedFormula,
+      reactiveStore: Store,
       editable: boolean,
     ) => T,
   ) {
-    return new SpecificThing(this.uri, this.store, this.editable);
+    return new SpecificThing(
+      this.uri,
+      this.store,
+      this.reactiveStore,
+      this.editable,
+    );
   }
 
   /**
