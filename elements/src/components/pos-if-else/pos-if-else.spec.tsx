@@ -1,7 +1,5 @@
 import { newSpecPage } from '@stencil/core/testing';
 import { PosIfElse } from './pos-if-else';
-import { when } from 'jest-when';
-import { Subject } from 'rxjs';
 
 describe('pos-if-else', () => {
   it('contains only templates initially', async () => {
