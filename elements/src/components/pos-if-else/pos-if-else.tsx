@@ -11,7 +11,6 @@ export class PosIfElse implements ResourceAware {
   @State() error: string = null;
   @State() resource: Thing;
   @State() conditionElements: NodeListOf<HTMLTemplateElement>;
-  @State() activeElements: HTMLTemplateElement[] = [];
   @State() templateString: string;
 
   @Event({ eventName: 'pod-os:resource' })
@@ -47,19 +46,19 @@ export class PosIfElse implements ResourceAware {
     if (this.error) return this.error;
     if (!this.resource) return null;
     let state = null;
-    this.activeElements = [];
+    let activeElements: HTMLTemplateElement[] = [];
     this.conditionElements.forEach(el => {
       const elemState = this.test(el);
       const includeCondition = !state === true || el.getAttribute('else') === null;
       if (elemState && includeCondition) {
         state = elemState;
-        this.activeElements.push(el);
+        activeElements.push(el);
       }
       if (elemState === null && includeCondition) {
-        this.activeElements.push(el);
+        activeElements.push(el);
       }
     });
-    const activeElementsContent = this.activeElements.map(el => el.innerHTML).join('\n');
+    const activeElementsContent = activeElements.map(el => el.innerHTML).join('\n');
     return <Host innerHTML={activeElementsContent}></Host>;
   }
 }
