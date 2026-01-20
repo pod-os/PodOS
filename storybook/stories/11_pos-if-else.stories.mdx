@@ -1,0 +1,34 @@
+import {html} from "lit-html";
+
+import {
+  Canvas,
+  Meta,
+  Story
+} from '@storybook/addon-docs/blocks';
+
+<Meta
+  title="Basics"
+  args={{ uri: "https://pod-os.solidcommunity.net/profile/card" }}
+/>
+
+## pos-if-else
+
+Selects a template to render based on properties of the subject uri
+
+<Canvas
+  withSource="open">
+  <Story
+    name="pos-if-else"
+  >
+    {({uri}) => html`
+    <pos-resource uri="${uri}">
+      <pos-if-else>
+        <template if-typeof="http://www.w3.org/ns/ldp#Container">Container</template>
+        <template if-typeof="http://www.w3.org/ns/ldp#BasicContainer">Basic Container</template>
+        <template else if-typeof="http://www.w3.org/ns/ldp#Resource">Resource and not a container</template>
+        <template else>Not a resource or container</template>
+      </pos-if-else>
+</pos-resource>
+    `}
+  </Story>
+</Canvas>
