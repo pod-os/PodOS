@@ -6,7 +6,6 @@ import { FileFetcher } from "./FileFetcher";
 import { LdpContainer } from "../ldp-container";
 import { Store } from "../Store";
 import { graph, IndexedFormula } from "rdflib";
-import { Internet } from "rdf-namespaces/dist/vcard";
 
 describe("FileFetcher", () => {
   describe("fetch file", () => {
