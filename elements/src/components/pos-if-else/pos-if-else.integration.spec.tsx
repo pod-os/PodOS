@@ -1,0 +1,42 @@
+import { newSpecPage } from '@stencil/core/testing';
+import { mockPodOS } from '../../test/mockPodOS';
+import { PosApp } from '../pos-app/pos-app';
+import { PosLabel } from '../pos-label/pos-label';
+import { PosIfElse } from './pos-if-else';
+import { PosResource } from '../pos-resource/pos-resource';
+import { when } from 'jest-when';
+import { Thing } from '@pod-os/core';
+
+describe('pos-if-else', () => {
+  it('renders template based on properties of resource', async () => {
+    const os = mockPodOS();
+    when(os.store.get)
+      .calledWith('https://resource.test')
+      .mockReturnValue({
+        uri: 'https://resource.test',
+        label: () => 'Recipe 1',
+        types: () => [
+          {
+            label: 'Recipe',
+            uri: 'http://schema.org/Recipe',
+          },
+        ],
+      } as unknown as Thing);
+    const page = await newSpecPage({
+      components: [PosApp, PosLabel, PosIfElse, PosResource],
+      supportsShadowDom: false,
+      html: `
+      <pos-app>
+        <pos-resource uri="https://resource.test" lazy="">
+          <pos-if-else>
+            <template if-typeof="http://schema.org/Recipe">
+              <pos-label />
+            </template>
+          </pos-list>
+        </pos-resource>
+      </pos-app>`,
+    });
+    expect((os.fetch as jest.Mock).mock.calls).toHaveLength(0);
+    expect(page.root?.innerText).toEqualText('Recipe 1');
+  });
+});
