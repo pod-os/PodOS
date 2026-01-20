@@ -1,5 +1,7 @@
-import { graph } from "rdflib";
+import { graph, IndexedFormula } from "rdflib";
+import { PodOsSession } from "../authentication";
 import { Thing } from "./Thing";
+import { Store } from "../Store";
 
 class SpecificThing extends Thing {
   getSpecificInfo() {
@@ -9,9 +11,21 @@ class SpecificThing extends Thing {
 
 describe("Thing", function () {
   describe("assume", () => {
+    let store: IndexedFormula;
+    const mockSession = {} as unknown as PodOsSession;
+    let reactiveStore: Store;
+
+    beforeEach(() => {
+      store = graph();
+      reactiveStore = new Store(mockSession, undefined, undefined, store);
+    });
+
     it("returns instance of specified subclass", () => {
-      const store = graph();
-      const thing = new Thing("https://jane.doe.example/resource#it", store);
+      const thing = new Thing(
+        "https://jane.doe.example/resource#it",
+        store,
+        reactiveStore,
+      );
 
       const result = thing.assume(SpecificThing);
 
@@ -20,10 +34,10 @@ describe("Thing", function () {
     });
 
     it("preserves uri when assuming subclass", () => {
-      const store = graph();
       const thing = new Thing(
         "https://jane.doe.example/resource#it",
         store,
+        reactiveStore,
         true,
       );
 
@@ -33,10 +47,10 @@ describe("Thing", function () {
     });
 
     it("preserves store when assuming subclass", () => {
-      const store = graph();
       const thing = new Thing(
         "https://jane.doe.example/resource#it",
         store,
+        reactiveStore,
         true,
       );
 
@@ -46,10 +60,10 @@ describe("Thing", function () {
     });
 
     it("preserves editable property when assuming subclass", () => {
-      const store = graph();
       const thing = new Thing(
         "https://jane.doe.example/resource#it",
         store,
+        reactiveStore,
         true,
       );
 
