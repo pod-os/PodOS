@@ -94,7 +94,7 @@ export class Store {
    */
   get(uri: string) {
     const editable = !!this.updater.editable(uri);
-    return new Thing(uri, this.internalStore, editable);
+    return new Thing(uri, this.internalStore, this, editable);
   }
 
   /**
