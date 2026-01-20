@@ -1,4 +1,4 @@
-import { graph, quad, sym } from "rdflib";
+import { graph, quad, sym, IndexedFormula } from "rdflib";
 import { PodOsSession } from "../authentication";
 import { TypeIndex } from "./TypeIndex";
 import { solid } from "@solid-data-modules/rdflib-utils";

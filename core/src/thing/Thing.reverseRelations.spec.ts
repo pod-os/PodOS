@@ -1,19 +1,29 @@
-import { graph, sym } from "rdflib";
+import { graph, IndexedFormula, sym } from "rdflib";
+import { PodOsSession } from "../authentication";
 import { Thing } from "./Thing";
+import { Store } from "../Store";
 
 describe("Thing", function () {
   describe("reverse relations", () => {
+    let store: IndexedFormula;
+    const mockSession = {} as unknown as PodOsSession;
+    let reactiveStore: Store;
+
+    beforeEach(() => {
+      store = graph();
+      reactiveStore = new Store(mockSession, undefined, undefined, store);
+    });
+
     it("are empty, if store is empty", () => {
-      const store = graph();
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
+        reactiveStore,
       );
       expect(it.reverseRelations()).toEqual([]);
     });
 
     it("contains a single relation from store", () => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
       store.add(
         sym("https://pod.example/resource"),
@@ -23,6 +33,7 @@ describe("Thing", function () {
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
+        reactiveStore,
       );
       const result = it.reverseRelations();
       expect(result).toEqual([
@@ -35,7 +46,6 @@ describe("Thing", function () {
     });
 
     it("contains multiple relations from store", () => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
       store.add(
         sym("https://pod.example/first"),
@@ -50,6 +60,7 @@ describe("Thing", function () {
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
+        reactiveStore,
       );
       const result = it.reverseRelations();
       expect(result).toEqual([
@@ -67,7 +78,6 @@ describe("Thing", function () {
     });
 
     it("contains multiple uris for a relation", () => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
       store.add(
         sym("https://pod.example/first"),
@@ -82,6 +92,7 @@ describe("Thing", function () {
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
+        reactiveStore,
       );
       const result = it.reverseRelations();
       expect(result).toEqual([
@@ -94,7 +105,6 @@ describe("Thing", function () {
     });
 
     it("contains multiple relations and uris", () => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
       store.add(
         sym("https://pod.example/first/1"),
@@ -119,6 +129,7 @@ describe("Thing", function () {
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
+        reactiveStore,
       );
       const result = it.reverseRelations();
       expect(result).toEqual([
@@ -144,7 +155,6 @@ describe("Thing", function () {
     });
 
     it("only follows the given predicate if provided", () => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
       store.add(
         sym("https://pod.example/first"),
@@ -157,7 +167,7 @@ describe("Thing", function () {
         sym("http://vocab.test/second"),
         sym(uri),
       );
-      const it = new Thing(uri, store);
+      const it = new Thing(uri, store, reactiveStore);
       const result = it.reverseRelations("http://vocab.test/first");
       expect(result).toEqual([
         {

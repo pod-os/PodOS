@@ -1,8 +1,10 @@
 import { graph } from "rdflib";
 import { ok } from "neverthrow";
 import { AttachmentGateway } from "./AttachmentGateway";
+import { PodOsSession } from "../authentication";
 import { Thing } from "../thing";
 import { FileGateway } from "../files";
+import { Store } from "../Store";
 
 describe("AttachmentGateway", () => {
   let gateway: AttachmentGateway;
@@ -10,9 +12,18 @@ describe("AttachmentGateway", () => {
   let thing: Thing;
 
   beforeEach(() => {
-    // given a thing in a container
-    const store = graph();
-    thing = new Thing("https://pod.test/things/thing1", store, true);
+    // given a store
+    const internalStore = graph();
+    const mockSession = {} as unknown as PodOsSession;
+    const store = new Store(mockSession, undefined, undefined, internalStore);
+
+    // and a thing in a container
+    thing = new Thing(
+      "https://pod.test/things/thing1",
+      internalStore,
+      store,
+      true,
+    );
 
     // and a file gateway
     fileGateway = createMockFileGateway();

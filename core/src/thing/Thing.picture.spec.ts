@@ -1,13 +1,24 @@
-import { blankNode, graph, sym } from "rdflib";
+import { blankNode, IndexedFormula, graph, sym } from "rdflib";
+import { PodOsSession } from "../authentication";
 import { Thing } from "./Thing";
+import { Store } from "../Store";
 
 describe("Thing", function () {
   describe("picture", () => {
+    let store: IndexedFormula;
+    const mockSession = {} as unknown as PodOsSession;
+    let reactiveStore: Store;
+
+    beforeEach(() => {
+      store = graph();
+      reactiveStore = new Store(mockSession, undefined, undefined, store);
+    });
+
     it("is null if nothing is found in store", () => {
-      const store = graph();
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
+        reactiveStore,
       );
       expect(it.picture()).toBe(null);
     });
@@ -25,7 +36,6 @@ describe("Thing", function () {
       "http://xmlns.com/foaf/0.1/depiction",
       "http://xmlns.com/foaf/0.1/thumbnail",
     ])("returns the image url from predicate %s", (predicate: string) => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
       store.add(
         sym(uri),
@@ -35,6 +45,7 @@ describe("Thing", function () {
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
+        reactiveStore,
       );
       const result = it.picture();
       expect(result).toEqual({
@@ -48,7 +59,6 @@ describe("Thing", function () {
     ])(
       "returns the url of an activity streams image blank node linked via %s",
       (predicate: string) => {
-        const store = graph();
         const subject = "https://jane.doe.example/container/file.ttl#fragment";
         const imageNode = blankNode();
         store.add(sym(subject), sym(predicate), imageNode);
@@ -60,6 +70,7 @@ describe("Thing", function () {
         const it = new Thing(
           "https://jane.doe.example/container/file.ttl#fragment",
           store,
+          reactiveStore,
         );
         expect(it.picture()).toEqual({
           url: "https://jane.doe.example/container/pic.jpg",
@@ -73,7 +84,6 @@ describe("Thing", function () {
     ])(
       "returns the url of an activity streams image named node linked via %s",
       (predicate: string) => {
-        const store = graph();
         const subject = "https://jane.doe.example/container/file.ttl#fragment";
         const imageNode = sym(
           "https://jane.doe.example/container/file.ttl#image",
@@ -87,6 +97,7 @@ describe("Thing", function () {
         const it = new Thing(
           "https://jane.doe.example/container/file.ttl#fragment",
           store,
+          reactiveStore,
         );
         expect(it.picture()).toEqual({
           url: "https://jane.doe.example/container/pic.jpg",
