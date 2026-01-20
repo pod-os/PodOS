@@ -88,6 +88,16 @@ export namespace Components {
     interface PosGettingStarted {
     }
     /**
+     * Selects a child template to render based on properties of the subject resource, usually defined by an ancestor `pos-resource` element.
+     * See [storybook](https://pod-os.github.io/PodOS/storybook/?path=/story/basics--pos-if-else) for an example.
+     * Template elements support the following attributes:
+     * - `if-typeof`: Test if the resource is of the specified type
+     * - `not`: Negates the result of the test
+     * - `else`: The test only evaluates to true if tests for preceding templates have failed
+     */
+    interface PosIfElse {
+    }
+    /**
      * Tries fetch an image with the solid authentication, and can visualize http errors like 403 or 404 if this fails.
      * Falls back to classic `<img src="...">` on network errors like CORS.
      * Renders a normal link if even this fails.
@@ -347,6 +357,10 @@ export interface PosDocumentCustomEvent<T> extends CustomEvent<T> {
 export interface PosGettingStartedCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosGettingStartedElement;
+}
+export interface PosIfElseCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosIfElseElement;
 }
 export interface PosImageCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -715,6 +729,31 @@ declare global {
     var HTMLPosGettingStartedElement: {
         prototype: HTMLPosGettingStartedElement;
         new (): HTMLPosGettingStartedElement;
+    };
+    interface HTMLPosIfElseElementEventMap {
+        "pod-os:resource": any;
+    }
+    /**
+     * Selects a child template to render based on properties of the subject resource, usually defined by an ancestor `pos-resource` element.
+     * See [storybook](https://pod-os.github.io/PodOS/storybook/?path=/story/basics--pos-if-else) for an example.
+     * Template elements support the following attributes:
+     * - `if-typeof`: Test if the resource is of the specified type
+     * - `not`: Negates the result of the test
+     * - `else`: The test only evaluates to true if tests for preceding templates have failed
+     */
+    interface HTMLPosIfElseElement extends Components.PosIfElse, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosIfElseElementEventMap>(type: K, listener: (this: HTMLPosIfElseElement, ev: PosIfElseCustomEvent<HTMLPosIfElseElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosIfElseElementEventMap>(type: K, listener: (this: HTMLPosIfElseElement, ev: PosIfElseCustomEvent<HTMLPosIfElseElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLPosIfElseElement: {
+        prototype: HTMLPosIfElseElement;
+        new (): HTMLPosIfElseElement;
     };
     interface HTMLPosImageElementEventMap {
         "pod-os:init": any;
@@ -1227,6 +1266,7 @@ declare global {
         "pos-error-toast": HTMLPosErrorToastElement;
         "pos-example-resources": HTMLPosExampleResourcesElement;
         "pos-getting-started": HTMLPosGettingStartedElement;
+        "pos-if-else": HTMLPosIfElseElement;
         "pos-image": HTMLPosImageElement;
         "pos-internal-router": HTMLPosInternalRouterElement;
         "pos-label": HTMLPosLabelElement;
@@ -1368,6 +1408,17 @@ declare namespace LocalJSX {
     }
     interface PosGettingStarted {
         "onPod-os:login"?: (event: PosGettingStartedCustomEvent<void>) => void;
+    }
+    /**
+     * Selects a child template to render based on properties of the subject resource, usually defined by an ancestor `pos-resource` element.
+     * See [storybook](https://pod-os.github.io/PodOS/storybook/?path=/story/basics--pos-if-else) for an example.
+     * Template elements support the following attributes:
+     * - `if-typeof`: Test if the resource is of the specified type
+     * - `not`: Negates the result of the test
+     * - `else`: The test only evaluates to true if tests for preceding templates have failed
+     */
+    interface PosIfElse {
+        "onPod-os:resource"?: (event: PosIfElseCustomEvent<any>) => void;
     }
     /**
      * Tries fetch an image with the solid authentication, and can visualize http errors like 403 or 404 if this fails.
@@ -1654,6 +1705,7 @@ declare namespace LocalJSX {
         "pos-error-toast": PosErrorToast;
         "pos-example-resources": PosExampleResources;
         "pos-getting-started": PosGettingStarted;
+        "pos-if-else": PosIfElse;
         "pos-image": PosImage;
         "pos-internal-router": PosInternalRouter;
         "pos-label": PosLabel;
@@ -1718,6 +1770,15 @@ declare module "@stencil/core" {
             "pos-error-toast": LocalJSX.PosErrorToast & JSXBase.HTMLAttributes<HTMLPosErrorToastElement>;
             "pos-example-resources": LocalJSX.PosExampleResources & JSXBase.HTMLAttributes<HTMLPosExampleResourcesElement>;
             "pos-getting-started": LocalJSX.PosGettingStarted & JSXBase.HTMLAttributes<HTMLPosGettingStartedElement>;
+            /**
+             * Selects a child template to render based on properties of the subject resource, usually defined by an ancestor `pos-resource` element.
+             * See [storybook](https://pod-os.github.io/PodOS/storybook/?path=/story/basics--pos-if-else) for an example.
+             * Template elements support the following attributes:
+             * - `if-typeof`: Test if the resource is of the specified type
+             * - `not`: Negates the result of the test
+             * - `else`: The test only evaluates to true if tests for preceding templates have failed
+             */
+            "pos-if-else": LocalJSX.PosIfElse & JSXBase.HTMLAttributes<HTMLPosIfElseElement>;
             /**
              * Tries fetch an image with the solid authentication, and can visualize http errors like 403 or 404 if this fails.
              * Falls back to classic `<img src="...">` on network errors like CORS.
