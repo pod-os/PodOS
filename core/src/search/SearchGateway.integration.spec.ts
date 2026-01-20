@@ -79,8 +79,13 @@ describe(SearchGateway.name, () => {
 
       // when that thing is added to a label index
       await gateway.addToLabelIndex(
-        new Thing("https://thing.example#it", internalStore, true),
-        new LabelIndex("https://pod.example/label-index", internalStore, true),
+        new Thing("https://thing.example#it", internalStore, store, true),
+        new LabelIndex(
+          "https://pod.example/label-index",
+          internalStore,
+          store,
+          true,
+        ),
       );
 
       // then the label of the thing is patched into the label index document
@@ -130,6 +135,7 @@ _:patch
           new WebIdProfile(
             "https://pod.example/profile/card#me",
             internalStore,
+            store,
             true,
           ),
         );
@@ -214,6 +220,7 @@ _:patch
           new WebIdProfile(
             "https://pod.example/profile/card#me",
             internalStore,
+            store,
             true,
           ),
         );

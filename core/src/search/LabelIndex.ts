@@ -1,6 +1,7 @@
 import { IndexedFormula, sym } from "rdflib";
 import { RdfDocument } from "../rdf-document";
 import { rdfs } from "../namespaces";
+import { Store } from "../Store";
 
 /**
  * Represents a label index document as described in
@@ -10,9 +11,10 @@ export class LabelIndex extends RdfDocument {
   constructor(
     readonly uri: string,
     readonly store: IndexedFormula,
+    readonly reactiveStore: Store,
     readonly editable: boolean = false,
   ) {
-    super(uri, store, editable);
+    super(uri, store, reactiveStore, editable);
   }
 
   /**

@@ -1,19 +1,29 @@
-import { blankNode, graph, sym } from "rdflib";
+import { blankNode, graph, sym, IndexedFormula } from "rdflib";
+import { PodOsSession } from "../authentication";
 import { Thing } from "./Thing";
+import { Store } from "../Store";
 
 describe("Thing", function () {
+  let store: IndexedFormula;
+  const mockSession = {} as unknown as PodOsSession;
+  let reactiveStore: Store;
+
+  beforeEach(() => {
+    store = graph();
+    reactiveStore = new Store(mockSession, undefined, undefined, store);
+  });
+
   describe("relations", () => {
     it("are empty, if store is empty", () => {
-      const store = graph();
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
+        reactiveStore,
       );
       expect(it.relations()).toEqual([]);
     });
 
     it("contains a single relation from store", () => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
       store.add(
         sym(uri),
@@ -23,6 +33,7 @@ describe("Thing", function () {
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
+        reactiveStore,
       );
       const result = it.relations();
       expect(result).toEqual([
@@ -35,7 +46,6 @@ describe("Thing", function () {
     });
 
     it("contains multiple relations from store", () => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
       store.add(
         sym(uri),
@@ -50,6 +60,7 @@ describe("Thing", function () {
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
+        reactiveStore,
       );
       const result = it.relations();
       expect(result).toEqual([
@@ -67,7 +78,6 @@ describe("Thing", function () {
     });
 
     it("contains multiple uris for a relation", () => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
       store.add(
         sym(uri),
@@ -82,6 +92,7 @@ describe("Thing", function () {
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
+        reactiveStore,
       );
       const result = it.relations();
       expect(result).toEqual([
@@ -94,7 +105,6 @@ describe("Thing", function () {
     });
 
     it("contains multiple relations and uris", () => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
       store.add(
         sym(uri),
@@ -119,6 +129,7 @@ describe("Thing", function () {
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
+        reactiveStore,
       );
       const result = it.relations();
       expect(result).toEqual([
@@ -144,7 +155,6 @@ describe("Thing", function () {
     });
 
     it("ignores non named nodes", () => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
       store.add(
         sym(uri),
@@ -156,6 +166,7 @@ describe("Thing", function () {
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
+        reactiveStore,
       );
       const result = it.relations();
       expect(result).toEqual([
@@ -168,7 +179,6 @@ describe("Thing", function () {
     });
 
     it("does not contain rdf types", () => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
       store.add(
         sym(uri),
@@ -183,6 +193,7 @@ describe("Thing", function () {
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
+        reactiveStore,
       );
       const result = it.relations();
       expect(result).toEqual([]);
@@ -190,7 +201,6 @@ describe("Thing", function () {
   });
 
   it("only follows the given predicate if provided", () => {
-    const store = graph();
     const uri = "https://jane.doe.example/container/file.ttl#fragment";
     store.add(
       sym(uri),
@@ -205,6 +215,7 @@ describe("Thing", function () {
     const it = new Thing(
       "https://jane.doe.example/container/file.ttl#fragment",
       store,
+      reactiveStore,
     );
     const result = it.relations("http://vocab.test/first");
     expect(result).toEqual([

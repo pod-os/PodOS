@@ -1,5 +1,6 @@
 import { IndexedFormula, sym } from "rdflib";
 import { Thing } from "../thing";
+import { Store } from "../Store";
 import {
   PreferencesQuery,
   ProfileQuery,
@@ -13,9 +14,10 @@ export class WebIdProfile extends Thing {
   constructor(
     readonly webId: string,
     readonly store: IndexedFormula,
+    readonly reactiveStore: Store,
     readonly editable: boolean = false,
   ) {
-    super(webId, store, editable);
+    super(webId, store, reactiveStore, editable);
     this.profileQuery = new ProfileQuery(sym(this.webId), this.store);
   }
 
