@@ -1,24 +1,35 @@
-import { blankNode, graph, sym } from "rdflib";
+import { blankNode, graph, IndexedFormula, sym } from "rdflib";
+import { PodOsSession } from "../authentication";
 import { Thing } from "./Thing";
+import { Store } from "../Store";
 
 describe("Thing", function () {
   describe("literals", () => {
+    let store: IndexedFormula;
+    const mockSession = {} as unknown as PodOsSession;
+    let reactiveStore: Store;
+
+    beforeEach(() => {
+      store = graph();
+      reactiveStore = new Store(mockSession, undefined, undefined, store);
+    });
+
     it("are empty, if store is empty", () => {
-      const store = graph();
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
+        reactiveStore,
       );
       expect(it.literals()).toEqual([]);
     });
 
     it("contains a single literal from store", () => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
       store.add(sym(uri), sym("http://vocab.test/predicate"), "literal value");
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
+        reactiveStore,
       );
       const result = it.literals();
       expect(result).toEqual([
@@ -31,13 +42,13 @@ describe("Thing", function () {
     });
 
     it("contains multiple literals from store", () => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
       store.add(sym(uri), sym("http://vocab.test/first"), "first value");
       store.add(sym(uri), sym("http://vocab.test/second"), "second value");
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
+        reactiveStore,
       );
       const result = it.literals();
       expect(result).toEqual([
@@ -55,13 +66,13 @@ describe("Thing", function () {
     });
 
     it("contains multiple values for a literal", () => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
       store.add(sym(uri), sym("http://vocab.test/predicate"), "first value");
       store.add(sym(uri), sym("http://vocab.test/predicate"), "second value");
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
+        reactiveStore,
       );
       const result = it.literals();
       expect(result).toEqual([
@@ -74,7 +85,6 @@ describe("Thing", function () {
     });
 
     it("contains multiple literals and values", () => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
       store.add(sym(uri), sym("http://vocab.test/first"), "value 1-1");
       store.add(sym(uri), sym("http://vocab.test/second"), "value 2-1");
@@ -83,6 +93,7 @@ describe("Thing", function () {
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
+        reactiveStore,
       );
       const result = it.literals();
       expect(result).toEqual([
@@ -105,7 +116,6 @@ describe("Thing", function () {
     });
 
     it("ignores non literals", () => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
       store.add(sym(uri), sym("http://vocab.test/literal"), "literal value");
       store.add(
@@ -117,6 +127,7 @@ describe("Thing", function () {
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
+        reactiveStore,
       );
       const result = it.literals();
       expect(result).toEqual([
