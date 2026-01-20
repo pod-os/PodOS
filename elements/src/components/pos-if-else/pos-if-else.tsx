@@ -7,6 +7,7 @@ import { ResourceAware, ResourceEventEmitter, subscribeResource } from '../event
  * See [storybook](https://pod-os.github.io/PodOS/storybook/?path=/story/basics--pos-if-else) for an example.
  *
  * Template elements support the following attributes:
+ * 
  * - `if-typeof`: Test if the resource is of the specified type
  * - `not`: Negates the result of the test
  * - `else`: The test only evaluates to true if tests for preceding templates have failed
