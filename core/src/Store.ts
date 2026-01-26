@@ -30,7 +30,13 @@ import {
   startWith,
   Subject,
 } from "rxjs";
-import { Quad, Term } from "rdflib/lib/tf-types";
+import {
+  Quad,
+  Quad_Graph,
+  Quad_Object,
+  Quad_Predicate,
+  Quad_Subject,
+} from "rdflib/lib/tf-types";
 
 /**
  * The Store contains all data that is known locally.
@@ -196,19 +202,42 @@ export class Store {
   /**
    * Determines whether the store includes a certain quad pattern, returning true or false as appropriate.
    *
-   * @param {Term|null|undefined} subject
-   * @param {Term|null|undefined} predicate
-   * @param {Term|null|undefined} object
-   * @param {Term|null|undefined} graph
+   * @param {Quad_Subject|null|undefined} subject
+   * @param {Quad_Predicate|null|undefined} predicate
+   * @param {Quad_Object|null|undefined} object
+   * @param {Quad_Graph|null|undefined} graph
    * @returns {Boolean} Whether the store includes the quad pattern
    */
   holds(
-    subject?: Term | null | undefined,
-    predicate?: Term | null | undefined,
-    object?: Term | null | undefined,
-    graph?: Term | null | undefined,
+    subject?: Quad_Subject | null | undefined,
+    predicate?: Quad_Predicate | null | undefined,
+    object?: Quad_Object | null | undefined,
+    graph?: Quad_Graph | null | undefined,
   ): Boolean {
     return this.internalStore.holds(subject, predicate, object, graph);
+  }
+
+  /**
+   * Statements matching the provided quad pattern
+   *
+   * @param {Quad_Subject|null|undefined} subject
+   * @param {Quad_Predicate|null|undefined} predicate
+   * @param {Quad_Object|null|undefined} object
+   * @param {Quad_Graph|null|undefined} graph
+   * @returns {Quad[]} Array of statements
+   */
+  statementsMatching(
+    subject?: Quad_Subject | null | undefined,
+    predicate?: Quad_Predicate | null | undefined,
+    object?: Quad_Object | null | undefined,
+    graph?: Quad_Graph | null | undefined,
+  ): Quad[] {
+    return this.internalStore.statementsMatching(
+      subject,
+      predicate,
+      object,
+      graph,
+    );
   }
 }
 
