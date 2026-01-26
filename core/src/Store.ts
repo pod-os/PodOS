@@ -4,6 +4,7 @@ import {
   IndexedFormula,
   lit,
   st,
+  Statement,
   sym,
   UpdateManager,
 } from "rdflib";
@@ -231,7 +232,7 @@ export class Store {
     predicate?: Quad_Predicate | null | undefined,
     object?: Quad_Object | null | undefined,
     graph?: Quad_Graph | null | undefined,
-  ): Quad[] {
+  ): Statement[] {
     return this.internalStore.statementsMatching(
       subject,
       predicate,
