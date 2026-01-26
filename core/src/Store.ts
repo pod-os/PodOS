@@ -207,14 +207,14 @@ export class Store {
    * @param {Quad_Predicate|null|undefined} predicate
    * @param {Quad_Object|null|undefined} object
    * @param {Quad_Graph|null|undefined} graph
-   * @returns {Boolean} Whether the store includes the quad pattern
+   * @returns {boolean} Whether the store includes the quad pattern
    */
   holds(
     subject?: Quad_Subject | null | undefined,
     predicate?: Quad_Predicate | null | undefined,
     object?: Quad_Object | null | undefined,
     graph?: Quad_Graph | null | undefined,
-  ): Boolean {
+  ): boolean {
     return this.internalStore.holds(subject, predicate, object, graph);
   }
 
