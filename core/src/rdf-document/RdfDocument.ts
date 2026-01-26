@@ -17,7 +17,7 @@ export class RdfDocument extends Thing {
   }
 
   subjects() {
-    const matches = this.store.statementsMatching(
+    const matches = this.reactiveStore.statementsMatching(
       null,
       null,
       null,

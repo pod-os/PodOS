@@ -20,7 +20,7 @@ export class TypeIndex extends Thing {
   }
 
   listAll(): TypeRegistration[] {
-    const forClassStatements = this.store.statementsMatching(
+    const forClassStatements = this.reactiveStore.statementsMatching(
       null,
       solid("forClass"),
       null,
@@ -30,14 +30,14 @@ export class TypeIndex extends Thing {
     return forClassStatements.map((statement) => {
       const subject = statement.subject;
 
-      const instanceContainerStatements = this.store.statementsMatching(
+      const instanceContainerStatements = this.reactiveStore.statementsMatching(
         subject,
         solid("instanceContainer"),
         null,
         sym(this.uri),
       );
 
-      const instanceStatements = this.store.statementsMatching(
+      const instanceStatements = this.reactiveStore.statementsMatching(
         subject,
         solid("instance"),
         null,
