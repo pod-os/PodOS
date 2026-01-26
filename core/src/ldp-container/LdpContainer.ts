@@ -17,7 +17,7 @@ export class LdpContainer extends Thing {
   }
 
   contains(): ContainerContent[] {
-    const contains = this.store.statementsMatching(
+    const contains = this.reactiveStore.statementsMatching(
       sym(this.uri),
       sym("http://www.w3.org/ns/ldp#contains"),
       null,

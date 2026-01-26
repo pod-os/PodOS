@@ -21,7 +21,7 @@ export class LabelIndex extends RdfDocument {
    * Returns the URIs and labels for all the things listed in the document.
    */
   getIndexedItems() {
-    const matches = this.store.statementsMatching(
+    const matches = this.reactiveStore.statementsMatching(
       null,
       rdfs("label"),
       null,
@@ -37,6 +37,11 @@ export class LabelIndex extends RdfDocument {
   }
 
   contains(uri: string) {
-    return this.store.holds(sym(uri), rdfs("label"), null, sym(this.uri));
+    return this.reactiveStore.holds(
+      sym(uri),
+      rdfs("label"),
+      null,
+      sym(this.uri),
+    );
   }
 }
