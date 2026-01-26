@@ -30,7 +30,7 @@ import {
   startWith,
   Subject,
 } from "rxjs";
-import { Quad } from "rdflib/lib/tf-types";
+import { Quad, Term } from "rdflib/lib/tf-types";
 
 /**
  * The Store contains all data that is known locally.
@@ -194,14 +194,21 @@ export class Store {
   }
 
   /**
-   * Determines whether a dataset includes a certain quad, returning true or false as appropriate.
+   * Determines whether the store includes a certain quad pattern, returning true or false as appropriate.
    *
-   * Implements https://rdf.js.org/dataset-spec/#dom-datasetcore-has
-   * @param {Quad} quad
-   * @returns {Boolean} Whether store's dataset includes the quad
+   * @param {Term|null|undefined} subject
+   * @param {Term|null|undefined} predicate
+   * @param {Term|null|undefined} object
+   * @param {Term|null|undefined} graph
+   * @returns {Boolean} Whether the store includes the quad pattern
    */
-  has(quad: Quad): Boolean {
-    return this.internalStore.holdsStatement(quad);
+  holds(
+    subject?: Term | null | undefined,
+    predicate?: Term | null | undefined,
+    object?: Term | null | undefined,
+    graph?: Term | null | undefined,
+  ): Boolean {
+    return this.internalStore.holds(subject, predicate, object, graph);
   }
 }
 
