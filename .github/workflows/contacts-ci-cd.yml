@@ -123,7 +123,7 @@ jobs:
         id: bump-contacts
         uses: ./.github/actions/bump-version
         with:
-          release-version: ${{ needs.npm-release-core.outputs.releaseVersion }}
+          release-version: ${{ needs.npm-release-contacts.outputs.releaseVersion }}
           working-directory: ./contacts
       - name: Update package-lock.json
         run: npm install --package-lock-only
