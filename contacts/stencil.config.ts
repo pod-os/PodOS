@@ -28,7 +28,7 @@ export const config: Config = {
           src: 'manifest.json',
         },
         {
-          src: 'favicon-32x32.png',
+          src: 'icons',
         },
         {
           src: 'netlify',
