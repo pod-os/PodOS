@@ -52,12 +52,6 @@ export class ContactsRouter {
           <Route path="/address-book">
             <pos-contacts-address-book-page uri={this.uri} />
           </Route>
-          <Route path="/contact">
-            <pos-contacts-contact uri={this.uri} />
-          </Route>
-          <Route path="/group">
-            <pos-contacts-group contactsModule={this.contactsModule} uri={this.uri} />
-          </Route>
         </Router.Switch>
       </Host>
     );
