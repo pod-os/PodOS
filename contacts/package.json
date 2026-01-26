@@ -46,6 +46,7 @@
     "jest-when": "^3.7.0",
     "netlify-cli": "^23.13.0",
     "pwa-asset-generator": "^6.4.0",
+    "semver": "^6.3.1",
     "stencil-router-v2": "^0.6.0"
   },
   "license": "MIT"
