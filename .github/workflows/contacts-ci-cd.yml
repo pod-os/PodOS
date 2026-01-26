@@ -23,6 +23,17 @@ jobs:
       - run: npm test -w contacts
       - run: npm run build
 
+      - name: Save @pod-os/contacts dist
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: contacts-dist
+          path: |
+            contacts/dist/
+            contacts/loader/
+            contacts/package.json
+          retention-days: 1
+
       - name: Save @pod-os/contacts www
         if: github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@v4
@@ -30,8 +41,35 @@ jobs:
           name: contacts-www
           path: |
             contacts/www/
+            contacts/dist/
             contacts/package.json
           retention-days: 1
+
+  npm-publish-contacts-snapshot:
+    if: github.ref == 'refs/heads/main'
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    outputs:
+      prereleaseVersion: ${{ steps.prerelease.outputs.version }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: contacts-dist
+      - uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+      - uses: rlespinasse/github-slug-action@v4.4.1
+      - name: prerelease version
+        run: |
+          echo "::set-output name=version::$(npm version prerelease --preid rc.${GITHUB_SHA_SHORT} --no-git-tag-version)"
+        id: prerelease
+      - run: echo prerelease version is ${{ steps.prerelease.outputs.version }}
+      - uses: JS-DevTools/npm-publish@v4
+        name: Publish @pod-os/contacts
+        with:
+          access: public
+          token: ${{ secrets.NPM_TOKEN }}
+          tag: ${{ env.GITHUB_REF_SLUG }}
 
   deploy-pod-os-contacts-app:
     needs: build
