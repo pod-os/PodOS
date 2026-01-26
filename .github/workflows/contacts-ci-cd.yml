@@ -71,6 +71,68 @@ jobs:
           token: ${{ secrets.NPM_TOKEN }}
           tag: ${{ env.GITHUB_REF_SLUG }}
 
+  approve-release:
+    if: github.ref == 'refs/heads/main'
+    needs: npm-publish-contacts-snapshot
+    runs-on: ubuntu-latest
+    environment: release-approval
+    steps:
+      - name: Approve release
+        run:
+          echo "Release approved, proceeding with npm publish and production
+          deployment"
+
+  npm-release-contacts:
+    if: github.ref == 'refs/heads/main'
+    needs: [ build, npm-publish-contacts-snapshot, approve-release ]
+    runs-on: ubuntu-latest
+    outputs:
+      releaseVersion: ${{ steps.release.outputs.version }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: contacts-dist
+      - name: Prepare release version
+        run: sed -i 's/-next\.0//' package.json
+      - uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+      - uses: JS-DevTools/npm-publish@v4
+        id: release
+        name: Release @pod-os/contacts
+        with:
+          access: public
+          token: ${{ secrets.NPM_TOKEN }}
+          tag: latest
+
+  bump-snapshot-versions:
+    if: github.ref == 'refs/heads/main'
+    needs: [ npm-release-contacts ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Bump contacts to next development version
+        id: bump-contacts
+        uses: ./.github/actions/bump-version
+        with:
+          release-version: ${{ needs.npm-release-core.outputs.releaseVersion }}
+          working-directory: ./contacts
+      - name: Update package-lock.json
+        run: npm install --package-lock-only
+      - name: Commit and push version bumps
+        run: |
+          git add contacts/package.json package-lock.json
+          git commit -m "chore(contacts): bump to next development versions [skip ci]"
+          git push
+
   deploy-pod-os-contacts-app:
     needs: build
     if: github.ref == 'refs/heads/main'
