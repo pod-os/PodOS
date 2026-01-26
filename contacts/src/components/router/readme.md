@@ -15,16 +15,12 @@
 
 - [pos-contacts-welcome-page](../welcome-page)
 - [pos-contacts-address-book-page](../address-book-page)
-- [pos-contacts-contact](..)
-- [pos-contacts-group](..)
 
 ### Graph
 ```mermaid
 graph TD;
   pos-contacts-router --> pos-contacts-welcome-page
   pos-contacts-router --> pos-contacts-address-book-page
-  pos-contacts-router --> pos-contacts-contact
-  pos-contacts-router --> pos-contacts-group
   pos-contacts-welcome-page --> pos-login
   pos-contacts-welcome-page --> pos-contacts-open-address-book
   pos-login --> pos-dialog

@@ -5,25 +5,46 @@
 <!-- Auto Generated Below -->
 
 
-## Properties
-
-| Property         | Attribute | Description | Type             | Default     |
-| ---------------- | --------- | ----------- | ---------------- | ----------- |
-| `contactsModule` | --        |             | `ContactsModule` | `undefined` |
-| `uri`            | `uri`     |             | `string`         | `undefined` |
-
-
 ## Dependencies
 
-### Used by
+### Depends on
 
- - [pos-contacts-router](router)
+- pos-app
+- [pos-contacts-router](router)
 
 ### Graph
 ```mermaid
 graph TD;
-  pos-contacts-router --> pos-contacts-group
-  style pos-contacts-group fill:#f9f,stroke:#333,stroke-width:4px
+  pos-contacts-app --> pos-app
+  pos-contacts-app --> pos-contacts-router
+  pos-contacts-router --> pos-contacts-welcome-page
+  pos-contacts-router --> pos-contacts-address-book-page
+  pos-contacts-welcome-page --> pos-login
+  pos-contacts-welcome-page --> pos-contacts-open-address-book
+  pos-login --> pos-dialog
+  pos-login --> pos-login-form
+  pos-login --> pos-resource
+  pos-login --> pos-picture
+  pos-login --> pos-label
+  pos-picture --> pos-upload
+  pos-picture --> pos-image
+  pos-contacts-open-address-book --> pos-contacts-list-address-books
+  pos-contacts-open-address-book --> pos-login
+  pos-contacts-list-address-books --> pos-resource
+  pos-contacts-list-address-books --> pos-label
+  pos-contacts-address-book-page --> pos-login
+  pos-contacts-address-book-page --> pos-contacts-loading-spinner
+  pos-contacts-address-book-page --> pos-contacts-create-new-contact
+  pos-contacts-address-book-page --> pos-contacts-group-list
+  pos-contacts-address-book-page --> pos-contacts-contact-details
+  pos-contacts-address-book-page --> pos-contacts-group-details
+  pos-contacts-address-book-page --> pos-contacts-contact-list
+  pos-contacts-create-new-contact --> pos-dialog
+  pos-contacts-create-new-contact --> pos-contacts-create-new-contact-form
+  pos-contacts-contact-details --> pos-contacts-loading-spinner
+  pos-contacts-contact-details --> pos-contacts-phone-numbers
+  pos-contacts-contact-details --> pos-contacts-email-addresses
+  style pos-contacts-app fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
 ----------------------------------------------

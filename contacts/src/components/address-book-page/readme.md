@@ -7,10 +7,9 @@
 
 ## Properties
 
-| Property           | Attribute | Description | Type             | Default     |
-| ------------------ | --------- | ----------- | ---------------- | ----------- |
-| `contactsModule`   | --        |             | `ContactsModule` | `undefined` |
-| `uri` _(required)_ | `uri`     |             | `string`         | `undefined` |
+| Property           | Attribute | Description | Type     | Default     |
+| ------------------ | --------- | ----------- | -------- | ----------- |
+| `uri` _(required)_ | `uri`     |             | `string` | `undefined` |
 
 
 ## Dependencies
