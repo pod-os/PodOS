@@ -50,10 +50,10 @@ export class ContactsRouter {
             <pos-contacts-welcome-page />
           </Route>
           <Route path="/address-book">
-            <pos-contacts-address-book-page contactsModule={this.contactsModule} uri={this.uri} />
+            <pos-contacts-address-book-page uri={this.uri} />
           </Route>
           <Route path="/contact">
-            <pos-contacts-contact contactsModule={this.contactsModule} uri={this.uri} />
+            <pos-contacts-contact uri={this.uri} />
           </Route>
           <Route path="/group">
             <pos-contacts-group contactsModule={this.contactsModule} uri={this.uri} />

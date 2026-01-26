@@ -1,7 +1,8 @@
 import { ContactsModule, FullContact } from '@solid-data-modules/contacts-rdflib';
-import { Component, h, Host, Prop, State, Watch, Event, EventEmitter } from '@stencil/core';
+import { Component, h, Host, Prop, State, Watch, Event, EventEmitter, Element } from '@stencil/core';
 
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+import { useContactsModule } from '../../events/useContactsModule';
 
 @Component({
   tag: 'pos-contacts-contact-details',
@@ -12,8 +13,7 @@ export class ContactDetails {
   @Prop()
   uri!: string;
 
-  @Prop()
-  contactsModule!: ContactsModule;
+  @Element() el: HTMLElement;
 
   @State()
   private contact: FullContact;
@@ -21,8 +21,12 @@ export class ContactDetails {
   @Event({ eventName: 'pod-os-contacts:contact-closed' })
   closeContact: EventEmitter<void>;
 
-  componentWillLoad() {
-    this.loadContact();
+  @State()
+  contactsModule!: ContactsModule;
+
+  async componentWillLoad() {
+    this.contactsModule = await useContactsModule(this.el);
+    await this.loadContact();
   }
 
   @Watch('uri')

@@ -6,6 +6,7 @@ import { usePodOS } from '../../events/usePodOS';
 import { debounceTime } from '../../utils/debounceTime';
 
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+import { useContactsModule } from '../../events/useContactsModule';
 
 @Component({
   tag: 'pos-contacts-address-book-page',
@@ -18,8 +19,8 @@ export class AddressBookPage {
   @Prop()
   uri!: string;
 
-  @Prop()
-  contactsModule: ContactsModule;
+  @State()
+  contactsModule!: ContactsModule;
 
   @State()
   addressBook: AddressBook;
@@ -40,6 +41,7 @@ export class AddressBookPage {
 
   async componentWillLoad() {
     const os = await usePodOS(this.el);
+    this.contactsModule = await useContactsModule(this.el);
     os.observeSession()
       .pipe(
         takeUntil(this.disconnected$),
@@ -124,13 +126,9 @@ export class AddressBookPage {
         </nav>
         <main>
           {this.selectedContact ? (
-            <pos-contacts-contact-details
-              onPod-os-contacts:contact-closed={() => this.closeContact()}
-              contactsModule={this.contactsModule}
-              uri={this.selectedContact.uri}
-            ></pos-contacts-contact-details>
+            <pos-contacts-contact-details onPod-os-contacts:contact-closed={() => this.closeContact()} uri={this.selectedContact.uri}></pos-contacts-contact-details>
           ) : this.selectedGroup ? (
-            <pos-contacts-group-details uri={this.selectedGroup.uri} contactsModule={this.contactsModule} />
+            <pos-contacts-group-details uri={this.selectedGroup.uri} />
           ) : (
             <pos-contacts-contact-list contacts={this.addressBook.contacts} />
           )}

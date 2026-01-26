@@ -1,19 +1,22 @@
 jest.mock('../../events/usePodOS');
-jest.mock('../../utils/debounceTime');
 
+jest.mock('../../events/useContactsModule');
+jest.mock('../../utils/debounceTime');
 import { PodOS, SessionInfo } from '@pod-os/core';
-import { ContactsModule } from '@solid-data-modules/contacts-rdflib';
+
+import { AddressBook, ContactsModule } from '@solid-data-modules/contacts-rdflib';
 
 // noinspection ES6UnusedImports
 import { h } from '@stencil/core';
-
 import { newSpecPage } from '@stencil/core/testing';
 
 import { fireEvent, getByRole } from '@testing-library/dom';
+
 import { when } from 'jest-when';
 import { BehaviorSubject, tap } from 'rxjs';
 import { usePodOS } from '../../events/usePodOS';
 import { AddressBookPage } from './address-book-page';
+import { useContactsModule } from '../../events/useContactsModule';
 
 // noinspection ES6PreferShortImport
 import { debounceTime } from '../../utils/debounceTime';
@@ -33,12 +36,10 @@ describe('address-book-page', () => {
   });
 
   it('shows loading indicator while there is no address book', async () => {
-    const module = {
-      readAddressBook: jest.fn(),
-    } as unknown as ContactsModule;
+    mockContactsModule();
     const page = await newSpecPage({
       components: [AddressBookPage],
-      template: () => <pos-contacts-address-book-page uri="https://pod.test/contacts#it" contactsModule={module}></pos-contacts-address-book-page>,
+      template: () => <pos-contacts-address-book-page uri="https://pod.test/contacts#it"></pos-contacts-address-book-page>,
       supportsShadowDom: false,
     });
     expect(page.root).toEqualHtml(`
@@ -53,12 +54,11 @@ describe('address-book-page', () => {
   describe('after loading an address book', () => {
     let page;
     beforeEach(async () => {
-      const module = {
-        readAddressBook: jest.fn().mockReturnValue({}),
-      } as unknown as ContactsModule;
+      const module = mockContactsModule();
+      when(module.readAddressBook).mockResolvedValue({} as unknown as AddressBook);
       page = await newSpecPage({
         components: [AddressBookPage],
-        template: () => <pos-contacts-address-book-page uri="https://pod.test/contacts#it" contactsModule={module}></pos-contacts-address-book-page>,
+        template: () => <pos-contacts-address-book-page uri="https://pod.test/contacts#it"></pos-contacts-address-book-page>,
         supportsShadowDom: false,
       });
     });
@@ -87,12 +87,11 @@ describe('address-book-page', () => {
 
   describe('when loading the address book failed', () => {
     it('the main part shows an error, login and retry', async () => {
-      const module = {
-        readAddressBook: jest.fn().mockRejectedValue({ error: 'fake error for testing' }),
-      } as unknown as ContactsModule;
+      const module = mockContactsModule();
+      when(module.readAddressBook).mockRejectedValue({ error: 'fake error for testing' });
       const page = await newSpecPage({
         components: [AddressBookPage],
-        template: () => <pos-contacts-address-book-page uri="https://pod.test/contacts#it" contactsModule={module}></pos-contacts-address-book-page>,
+        template: () => <pos-contacts-address-book-page uri="https://pod.test/contacts#it"></pos-contacts-address-book-page>,
         supportsShadowDom: false,
       });
       await page.waitForChanges();
@@ -116,12 +115,11 @@ describe('address-book-page', () => {
 
     it('retries to fetch the address book after login', async () => {
       const readAddressBook = jest.fn().mockRejectedValueOnce({ error: 'fake error for testing' }).mockResolvedValueOnce({});
-      const module = {
-        readAddressBook: readAddressBook,
-      } as unknown as ContactsModule;
+      const module = mockContactsModule();
+      when(module.readAddressBook).mockImplementation(readAddressBook);
       const page = await newSpecPage({
         components: [AddressBookPage],
-        template: () => <pos-contacts-address-book-page uri="https://pod.test/contacts#it" contactsModule={module}></pos-contacts-address-book-page>,
+        template: () => <pos-contacts-address-book-page uri="https://pod.test/contacts#it"></pos-contacts-address-book-page>,
         supportsShadowDom: false,
       });
       await page.waitForChanges();
@@ -141,12 +139,11 @@ describe('address-book-page', () => {
   describe('event handling', () => {
     let page;
     beforeEach(async () => {
-      const module = {
-        readAddressBook: jest.fn().mockReturnValue({}),
-      } as unknown as ContactsModule;
+      const module = mockContactsModule();
+      when(module.readAddressBook).mockResolvedValue({} as unknown as AddressBook);
       page = await newSpecPage({
         components: [AddressBookPage],
-        template: () => <pos-contacts-address-book-page uri="https://pod.test/contacts#it" contactsModule={module}></pos-contacts-address-book-page>,
+        template: () => <pos-contacts-address-book-page uri="https://pod.test/contacts#it"></pos-contacts-address-book-page>,
         supportsShadowDom: false,
       });
     });
@@ -275,4 +272,12 @@ describe('address-book-page', () => {
       });
     });
   });
+
+  function mockContactsModule() {
+    const module: ContactsModule = {
+      readAddressBook: jest.fn(),
+    } as unknown as ContactsModule;
+    when(useContactsModule).mockResolvedValue(module);
+    return module;
+  }
 });

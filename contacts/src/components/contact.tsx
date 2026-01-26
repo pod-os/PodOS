@@ -1,5 +1,6 @@
 import { ContactsModule, FullContact } from '@solid-data-modules/contacts-rdflib';
-import { Component, h, Host, Prop, State, Watch } from '@stencil/core';
+import { Component, Element, h, Host, Prop, State, Watch } from '@stencil/core';
+import { useContactsModule } from '../events/useContactsModule';
 
 @Component({
   tag: 'pos-contacts-contact',
@@ -8,14 +9,17 @@ export class Contact {
   @Prop()
   uri: string;
 
-  @Prop()
-  contactsModule: ContactsModule;
+  @Element() el: HTMLElement;
 
   @State()
   contact: FullContact;
 
-  componentWillLoad() {
-    this.loadContact();
+  @State()
+  contactsModule!: ContactsModule;
+
+  async componentWillLoad() {
+    this.contactsModule = await useContactsModule(this.el);
+    await this.loadContact();
   }
 
   @Watch('uri')

@@ -1,3 +1,5 @@
+jest.mock('../../events/useContactsModule');
+
 import { ContactsModule, FullContact } from '@solid-data-modules/contacts-rdflib';
 
 // noinspection ES6UnusedImports
@@ -6,15 +8,18 @@ import { newSpecPage } from '@stencil/core/testing';
 import { getByLabelText, getByRole } from '@testing-library/dom';
 import { when } from 'jest-when';
 import { ContactDetails } from './contact-details';
+import { useContactsModule } from '../../events/useContactsModule';
 
 describe('contact details', () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
+
   it('shows loading indicator while there is no contact', async () => {
-    const module: ContactsModule = {
-      readContact: jest.fn(),
-    } as unknown as ContactsModule;
+    mockContactsModule();
     const page = await newSpecPage({
       components: [ContactDetails],
-      template: () => <pos-contacts-contact-details uri="https://contact.example" contactsModule={module}></pos-contacts-contact-details>,
+      template: () => <pos-contacts-contact-details uri="https://contact.example"></pos-contacts-contact-details>,
       supportsShadowDom: false,
     });
     expect(page.root).toEqualHtml(`
@@ -29,9 +34,7 @@ describe('contact details', () => {
   describe('loaded contact', () => {
     let page;
     beforeEach(async () => {
-      const module: ContactsModule = {
-        readContact: jest.fn(),
-      } as unknown as ContactsModule;
+      const module: ContactsModule = mockContactsModule();
       const contact: FullContact = {
         emails: [],
         name: 'Alice',
@@ -41,7 +44,7 @@ describe('contact details', () => {
       when(module.readContact).calledWith('https://contact.example/alice').mockResolvedValue(contact);
       page = await newSpecPage({
         components: [ContactDetails],
-        template: () => <pos-contacts-contact-details uri="https://contact.example/alice" contactsModule={module}></pos-contacts-contact-details>,
+        template: () => <pos-contacts-contact-details uri="https://contact.example/alice"></pos-contacts-contact-details>,
         supportsShadowDom: false,
       });
     });
@@ -64,9 +67,7 @@ describe('contact details', () => {
 
   describe('back to address book', () => {
     it('emits event', async () => {
-      const module: ContactsModule = {
-        readContact: jest.fn(),
-      } as unknown as ContactsModule;
+      const module: ContactsModule = mockContactsModule();
       const contact: FullContact = {
         emails: [],
         name: 'Alice',
@@ -76,7 +77,7 @@ describe('contact details', () => {
       when(module.readContact).calledWith('https://contact.example/alice').mockResolvedValue(contact);
       const page = await newSpecPage({
         components: [ContactDetails],
-        template: () => <pos-contacts-contact-details uri="https://contact.example/alice" contactsModule={module}></pos-contacts-contact-details>,
+        template: () => <pos-contacts-contact-details uri="https://contact.example/alice"></pos-contacts-contact-details>,
         supportsShadowDom: false,
       });
       const onClose = jest.fn();
@@ -90,4 +91,12 @@ describe('contact details', () => {
       expect(onClose).toHaveBeenCalled();
     });
   });
+
+  function mockContactsModule() {
+    const module: ContactsModule = {
+      readContact: jest.fn(),
+    } as unknown as ContactsModule;
+    when(useContactsModule).mockResolvedValue(module);
+    return module;
+  }
 });

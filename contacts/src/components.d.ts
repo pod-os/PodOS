@@ -5,21 +5,18 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { Contact, ContactsModule, Email, Group, PhoneNumber } from "@solid-data-modules/contacts-rdflib";
-export { Contact, ContactsModule, Email, Group, PhoneNumber } from "@solid-data-modules/contacts-rdflib";
+import { Contact, Email, Group, PhoneNumber } from "@solid-data-modules/contacts-rdflib";
+export { Contact, Email, Group, PhoneNumber } from "@solid-data-modules/contacts-rdflib";
 export namespace Components {
     interface PosContactsAddressBookPage {
-        "contactsModule": ContactsModule;
         "uri": string;
     }
     interface PosContactsApp {
     }
     interface PosContactsContact {
-        "contactsModule": ContactsModule;
         "uri": string;
     }
     interface PosContactsContactDetails {
-        "contactsModule": ContactsModule;
         "uri": string;
     }
     interface PosContactsContactList {
@@ -39,7 +36,6 @@ export namespace Components {
         "uri": string;
     }
     interface PosContactsGroupDetails {
-        "contactsModule": ContactsModule;
         "uri": string;
     }
     interface PosContactsGroupList {
@@ -282,17 +278,14 @@ declare global {
 }
 declare namespace LocalJSX {
     interface PosContactsAddressBookPage {
-        "contactsModule"?: ContactsModule;
         "uri": string;
     }
     interface PosContactsApp {
     }
     interface PosContactsContact {
-        "contactsModule"?: ContactsModule;
         "uri"?: string;
     }
     interface PosContactsContactDetails {
-        "contactsModule": ContactsModule;
         "onPod-os-contacts:contact-closed"?: (event: PosContactsContactDetailsCustomEvent<void>) => void;
         "uri": string;
     }
@@ -317,7 +310,6 @@ declare namespace LocalJSX {
         "uri"?: string;
     }
     interface PosContactsGroupDetails {
-        "contactsModule": ContactsModule;
         "uri": string;
     }
     interface PosContactsGroupList {
