@@ -61,7 +61,7 @@ jobs:
       - uses: rlespinasse/github-slug-action@v4.4.1
       - name: prerelease version
         run: |
-          echo "::set-output name=version::$(npm version prerelease --preid rc.${GITHUB_SHA_SHORT} --no-git-tag-version)"
+          echo "version=$(npm version prerelease --preid rc.${GITHUB_SHA_SHORT} --no-git-tag-version)" >> $GITHUB_OUTPUT
         id: prerelease
       - run: echo prerelease version is ${{ steps.prerelease.outputs.version }}
       - uses: JS-DevTools/npm-publish@v4
