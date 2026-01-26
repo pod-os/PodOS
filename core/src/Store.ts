@@ -192,6 +192,17 @@ export class Store {
       distinctUntilChanged((prev, curr) => prev.length == curr.length),
     );
   }
+
+  /**
+   * Determines whether a dataset includes a certain quad, returning true or false as appropriate.
+   *
+   * Implements https://rdf.js.org/dataset-spec/#dom-datasetcore-has
+   * @param {Quad} quad
+   * @returns {Boolean} Whether store's dataset includes the quad
+   */
+  has(quad: Quad): Boolean {
+    return this.internalStore.holdsStatement(quad);
+  }
 }
 
 export interface PodOsModule<T> {

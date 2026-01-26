@@ -507,6 +507,41 @@ describe("Store", () => {
       );
     });
   });
+
+  describe("has", () => {
+    it("determines whether a dataset includes a certain quad, returning true or false as appropriate", async () => {
+      const internalStore = graph();
+      const store = new Store(
+        {} as PodOsSession,
+        undefined,
+        undefined,
+        internalStore,
+      );
+      internalStore.addAll([
+        quad(
+          sym("http://recipe.test/1"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://schema.org/Recipe"),
+        ),
+      ]);
+      const test_true = store.has(
+        quad(
+          sym("http://recipe.test/1"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://schema.org/Recipe"),
+        ),
+      );
+      const test_false = store.has(
+        quad(
+          sym("http://recipe.test/2"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://schema.org/Recipe"),
+        ),
+      );
+      expect(test_true).toBe(true);
+      expect(test_false).toBe(false);
+    });
+  });
 });
 
 export function thenSparqlUpdateIsSentToUrl(
