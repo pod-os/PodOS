@@ -22,7 +22,7 @@
     "build": "stencil build",
     "start": "stencil build --dev --watch --serve",
     "test": "jest ./src",
-    "build:pwa": "pwa-asset-generator ../assets/logo.png ./www/icons --index ./www/index.html --manifest ./www/manifest.json"
+    "build:pwa": "pwa-asset-generator ../assets/contacts-logo.svg ./www/icons --index ./www/index.html --manifest ./www/manifest.json"
   },
   "dependencies": {
     "@solid-data-modules/contacts-rdflib": "^0.7.1",
