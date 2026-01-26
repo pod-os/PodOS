@@ -537,6 +537,86 @@ describe("Store", () => {
       expect(test_true).toBe(true);
       expect(test_false).toBe(false);
     });
+    it.each([null, undefined])(
+      "supports undefined and null wildcards",
+      (wildcard: null | undefined) => {
+        const internalStore = graph();
+        const store = new Store(
+          {} as PodOsSession,
+          undefined,
+          undefined,
+          internalStore,
+        );
+        internalStore.addAll([
+          quad(
+            sym("http://recipe.test/1"),
+            sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+            sym("http://schema.org/Recipe"),
+            sym("http://recipe.test/1"),
+          ),
+        ]);
+        const test_subject_missing = store.holds(
+          wildcard,
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://schema.org/Recipe"),
+          sym("http://recipe.test/1"),
+        );
+        const test_predicate_missing = store.holds(
+          sym("http://recipe.test/1"),
+          wildcard,
+          sym("http://schema.org/Recipe"),
+          sym("http://recipe.test/1"),
+        );
+        const test_object_missing = store.holds(
+          sym("http://recipe.test/1"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          wildcard,
+          sym("http://recipe.test/1"),
+        );
+        const test_graph_missing = store.holds(
+          sym("http://recipe.test/1"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://schema.org/Recipe"),
+          wildcard,
+        );
+        expect(test_subject_missing).toBe(true);
+        expect(test_predicate_missing).toBe(true);
+        expect(test_object_missing).toBe(true);
+        expect(test_graph_missing).toBe(true);
+      },
+    );
+    it("supports missing args as wildcards", () => {
+      const internalStore = graph();
+      const store = new Store(
+        {} as PodOsSession,
+        undefined,
+        undefined,
+        internalStore,
+      );
+      internalStore.addAll([
+        quad(
+          sym("http://recipe.test/1"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://schema.org/Recipe"),
+          sym("http://recipe.test/1"),
+        ),
+      ]);
+      const test_graph_missing = store.holds(
+        sym("http://recipe.test/1"),
+        sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        sym("http://schema.org/Recipe"),
+      );
+      const test_object_missing = store.holds(
+        sym("http://recipe.test/1"),
+        sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+      );
+      const test_predicate_missing = store.holds(sym("http://recipe.test/1"));
+      const test_subject_missing = store.holds();
+      expect(test_subject_missing).toBe(true);
+      expect(test_predicate_missing).toBe(true);
+      expect(test_object_missing).toBe(true);
+      expect(test_graph_missing).toBe(true);
+    });
   });
 });
 
