@@ -25,14 +25,18 @@
     "build:pwa": "pwa-asset-generator ../assets/logo.png ./www/icons --index ./www/index.html --manifest ./www/manifest.json"
   },
   "dependencies": {
-    "@pod-os/core": "^0.25.0",
-    "@pod-os/elements": "0.36.0",
     "@solid-data-modules/contacts-rdflib": "^0.7.1",
     "@stencil/core": "^4.40.1",
     "pollen-css": "^5.0.2",
     "rxjs": "^7.8.2"
   },
+  "peerDependencies": {
+    "@pod-os/core": "0.x",
+    "@pod-os/elements": "0.x"
+  },
   "devDependencies": {
+    "@pod-os/core": "^0.25.0",
+    "@pod-os/elements": "^0.36.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@types/jest": "^29.5.12",
