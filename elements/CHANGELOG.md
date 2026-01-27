@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
-- [pos-if-else](https://pod-os.org/reference/elements/components/pos-if-else/): New component for conditional rendering
+- [pos-switch](https://pod-os.org/reference/elements/components/pos-switch/) and [pos-case](https://pod-os.org/reference/elements/components/pos-case/) : New components for conditional rendering
 
 ## 0.36.0
 
