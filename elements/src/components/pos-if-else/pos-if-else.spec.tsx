@@ -7,12 +7,16 @@ describe('pos-if-else', () => {
       components: [PosIfElse],
       html: `
       <pos-if-else>
-        <template if-typeof="http://schema.org/Recipe"><div>Test</div></template>
+        <pos-case if-typeof="http://schema.org/Recipe">
+          <template><div>Test</div></template>
+        </pos-case>
       </pos-if-else>`,
     });
     expect(page.root).toEqualHtml(`
       <pos-if-else>
-        <template if-typeof="http://schema.org/Recipe"><div>Test</div></template>
+        <pos-case if-typeof="http://schema.org/Recipe">
+          <template><div>Test</div></template>
+        </pos-case>
       </pos-if-else>
         `);
   });
@@ -22,15 +26,19 @@ describe('pos-if-else', () => {
       components: [PosIfElse],
       html: `
       <pos-if-else>
-        <template if-typeof="http://schema.org/Recipe"><div>Recipe</div></template>
-        <template if-typeof="http://schema.org/Video"><div>Video</div></template>
+        <pos-case if-typeof="http://schema.org/Recipe">
+          <template><div>Recipe</div></template>
+        </pos-case>
+        <pos-case if-typeof="http://schema.org/Video">
+          <template><div>Video</div></template>
+        </pos-case>
       </pos-if-else>`,
     });
     await page.rootInstance.receiveResource({ types: () => [] });
     await page.waitForChanges();
-    expect(page.rootInstance.conditionElements.length).toEqual(2);
-    expect(page.rootInstance.conditionElements[0].getAttribute('if-typeof')).toEqual('http://schema.org/Recipe');
-    expect(page.rootInstance.conditionElements[1].getAttribute('if-typeof')).toEqual('http://schema.org/Video');
+    expect(page.rootInstance.caseElements.length).toEqual(2);
+    expect(page.rootInstance.caseElements[0].getAttribute('if-typeof')).toEqual('http://schema.org/Recipe');
+    expect(page.rootInstance.caseElements[1].getAttribute('if-typeof')).toEqual('http://schema.org/Video');
   });
 
   it('does not load nested templates', async () => {
@@ -38,17 +46,17 @@ describe('pos-if-else', () => {
       components: [PosIfElse],
       html: `
       <pos-if-else>
-        <template if-typeof="http://schema.org/Recipe">
+        <pos-case if-typeof="http://schema.org/Recipe">
           <template>
-            <div>Test</div>
+            <pos-case></pos-case>
           </template>
-        </template>
+        </pos-case>
       </pos-if-else>`,
     });
     await page.rootInstance.receiveResource({ types: () => [] });
     await page.waitForChanges();
-    expect(page.rootInstance.conditionElements.length).toEqual(1);
-    expect(page.rootInstance.conditionElements[0].getAttribute('if-typeof')).toEqual('http://schema.org/Recipe');
+    expect(page.rootInstance.caseElements.length).toEqual(1);
+    expect(page.rootInstance.caseElements[0].getAttribute('if-typeof')).toEqual('http://schema.org/Recipe');
   });
 
   it('displays error on missing template', async () => {
@@ -61,7 +69,7 @@ describe('pos-if-else', () => {
 
     const el: HTMLElement = page.root as unknown as HTMLElement;
 
-    expect(el.textContent).toEqual('No template elements found');
+    expect(el.textContent).toEqual('No pos-case elements found');
   });
 
   it('renders matching condition templates', async () => {
@@ -69,9 +77,18 @@ describe('pos-if-else', () => {
       components: [PosIfElse],
       html: `
       <pos-if-else>
-        <template if-typeof="http://schema.org/Recipe"><div>Recipe 1</div></template>
-        <template if-typeof="http://schema.org/Recipe"><div>Recipe 2</div></template>
-        <template if-typeof="http://schema.org/Video"><div>Video 1</div></template>
+        <pos-case if-typeof="http://schema.org/Recipe">
+          <template>
+            <div>Recipe 1</div>
+          </template>
+        <pos-case if-typeof="http://schema.org/Recipe">
+          <template>
+            <div>Recipe 2</div>
+          </template>
+        <pos-case if-typeof="http://schema.org/Video">
+          <template>
+            <div>Video 1</div>
+          </template>
       </pos-if-else>`,
     });
     await page.rootInstance.receiveResource({
@@ -94,10 +111,10 @@ describe('pos-if-else', () => {
       components: [PosIfElse],
       html: `
       <pos-if-else>
-        <template if-typeof="http://schema.org/Video"><div>Video 1</div></template>
-        <template else if-typeof="http://schema.org/Recipe"><div>Recipe 1</div></template>
-        <template else if-typeof="http://schema.org/Recipe"><div>Recipe 2</div></template>
-        <template else><div>No matches</div></template>
+        <pos-case if-typeof="http://schema.org/Video"><template><div>Video 1</div></template></pos-case></pos-case>
+        <pos-case else if-typeof="http://schema.org/Recipe"><template><div>Recipe 1</div></template></pos-case>
+        <pos-case else if-typeof="http://schema.org/Recipe"><template><div>Recipe 2</div></template></pos-case>
+        <pos-case else><template><div>No matches</div></template></pos-case>
       </pos-if-else>`,
     });
     await page.rootInstance.receiveResource({
@@ -119,8 +136,8 @@ describe('pos-if-else', () => {
       components: [PosIfElse],
       html: `
       <pos-if-else>
-        <template if-typeof="http://schema.org/Video"><div>Video 1</div></template>
-        <template else><div>No matches</div></template>
+        <pos-case if-typeof="http://schema.org/Video"><template><div>Video 1</div></template></pos-case>
+        <pos-case else><template><div>No matches</div></template></pos-case>
       </pos-if-else>`,
     });
     await page.rootInstance.receiveResource({
@@ -142,7 +159,7 @@ describe('pos-if-else', () => {
       components: [PosIfElse],
       html: `
       <pos-if-else>
-        <template not if-typeof="http://schema.org/Video"><div>Not a Video</div></template>
+        <pos-case not if-typeof="http://schema.org/Video"><template><div>Not a Video</div></template></pos-case>
       </pos-if-else>`,
     });
     await page.rootInstance.receiveResource({
