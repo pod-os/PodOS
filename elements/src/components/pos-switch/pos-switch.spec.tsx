@@ -1,38 +1,38 @@
 import { newSpecPage } from '@stencil/core/testing';
-import { PosIfElse } from './pos-if-else';
+import { PosSwitch } from './pos-switch';
 
-describe('pos-if-else', () => {
+describe('pos-switch', () => {
   it('contains only templates initially', async () => {
     const page = await newSpecPage({
-      components: [PosIfElse],
+      components: [PosSwitch],
       html: `
-      <pos-if-else>
+      <pos-switch>
         <pos-case if-typeof="http://schema.org/Recipe">
           <template><div>Test</div></template>
         </pos-case>
-      </pos-if-else>`,
+      </pos-switch>`,
     });
     expect(page.root).toEqualHtml(`
-      <pos-if-else>
+      <pos-switch>
         <pos-case if-typeof="http://schema.org/Recipe">
           <template><div>Test</div></template>
         </pos-case>
-      </pos-if-else>
+      </pos-switch>
         `);
   });
 
   it('loads condition templates', async () => {
     const page = await newSpecPage({
-      components: [PosIfElse],
+      components: [PosSwitch],
       html: `
-      <pos-if-else>
+      <pos-switch>
         <pos-case if-typeof="http://schema.org/Recipe">
           <template><div>Recipe</div></template>
         </pos-case>
         <pos-case if-typeof="http://schema.org/Video">
           <template><div>Video</div></template>
         </pos-case>
-      </pos-if-else>`,
+      </pos-switch>`,
     });
     await page.rootInstance.receiveResource({ types: () => [] });
     await page.waitForChanges();
@@ -43,15 +43,15 @@ describe('pos-if-else', () => {
 
   it('does not load nested templates', async () => {
     const page = await newSpecPage({
-      components: [PosIfElse],
+      components: [PosSwitch],
       html: `
-      <pos-if-else>
+      <pos-switch>
         <pos-case if-typeof="http://schema.org/Recipe">
           <template>
             <pos-case></pos-case>
           </template>
         </pos-case>
-      </pos-if-else>`,
+      </pos-switch>`,
     });
     await page.rootInstance.receiveResource({ types: () => [] });
     await page.waitForChanges();
@@ -61,8 +61,8 @@ describe('pos-if-else', () => {
 
   it('displays error on missing template', async () => {
     const page = await newSpecPage({
-      components: [PosIfElse],
-      html: `<pos-if-else></pos-if-else>`,
+      components: [PosSwitch],
+      html: `<pos-switch></pos-switch>`,
     });
     await page.rootInstance.receiveResource({});
     await page.waitForChanges();
@@ -74,9 +74,9 @@ describe('pos-if-else', () => {
 
   it('renders matching condition templates', async () => {
     const page = await newSpecPage({
-      components: [PosIfElse],
+      components: [PosSwitch],
       html: `
-      <pos-if-else>
+      <pos-switch>
         <pos-case if-typeof="http://schema.org/Recipe">
           <template>
             <div>Recipe 1</div>
@@ -89,7 +89,7 @@ describe('pos-if-else', () => {
           <template>
             <div>Video 1</div>
           </template>
-      </pos-if-else>`,
+      </pos-switch>`,
     });
     await page.rootInstance.receiveResource({
       types: () => [
@@ -108,14 +108,14 @@ describe('pos-if-else', () => {
 
   it('renders matching condition templates with if-else logic', async () => {
     const page = await newSpecPage({
-      components: [PosIfElse],
+      components: [PosSwitch],
       html: `
-      <pos-if-else>
+      <pos-switch>
         <pos-case if-typeof="http://schema.org/Video"><template><div>Video 1</div></template></pos-case></pos-case>
         <pos-case else if-typeof="http://schema.org/Recipe"><template><div>Recipe 1</div></template></pos-case>
         <pos-case else if-typeof="http://schema.org/Recipe"><template><div>Recipe 2</div></template></pos-case>
         <pos-case else><template><div>No matches</div></template></pos-case>
-      </pos-if-else>`,
+      </pos-switch>`,
     });
     await page.rootInstance.receiveResource({
       types: () => [
@@ -133,12 +133,12 @@ describe('pos-if-else', () => {
 
   it('renders final else condition if no other templates match', async () => {
     const page = await newSpecPage({
-      components: [PosIfElse],
+      components: [PosSwitch],
       html: `
-      <pos-if-else>
+      <pos-switch>
         <pos-case if-typeof="http://schema.org/Video"><template><div>Video 1</div></template></pos-case>
         <pos-case else><template><div>No matches</div></template></pos-case>
-      </pos-if-else>`,
+      </pos-switch>`,
     });
     await page.rootInstance.receiveResource({
       types: () => [
@@ -156,11 +156,11 @@ describe('pos-if-else', () => {
 
   it('renders matching condition with negation', async () => {
     const page = await newSpecPage({
-      components: [PosIfElse],
+      components: [PosSwitch],
       html: `
-      <pos-if-else>
+      <pos-switch>
         <pos-case not if-typeof="http://schema.org/Video"><template><div>Not a Video</div></template></pos-case>
-      </pos-if-else>`,
+      </pos-switch>`,
     });
     await page.rootInstance.receiveResource({
       types: () => [

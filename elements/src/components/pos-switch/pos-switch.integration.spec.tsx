@@ -3,12 +3,12 @@ import { mockPodOS } from '../../test/mockPodOS';
 import { PosApp } from '../pos-app/pos-app';
 import { PosCase } from './pos-case/pos-case';
 import { PosLabel } from '../pos-label/pos-label';
-import { PosIfElse } from './pos-if-else';
+import { PosSwitch } from './pos-switch';
 import { PosResource } from '../pos-resource/pos-resource';
 import { when } from 'jest-when';
 import { Thing } from '@pod-os/core';
 
-describe('pos-if-else', () => {
+describe('pos-switch', () => {
   it('renders template based on properties of resource', async () => {
     const os = mockPodOS();
     when(os.store.get)
@@ -24,12 +24,12 @@ describe('pos-if-else', () => {
         ],
       } as unknown as Thing);
     const page = await newSpecPage({
-      components: [PosApp, PosCase, PosLabel, PosIfElse, PosResource],
+      components: [PosApp, PosCase, PosLabel, PosSwitch, PosResource],
       supportsShadowDom: false,
       html: `
       <pos-app>
         <pos-resource uri="https://resource.test" lazy="">
-          <pos-if-else>
+          <pos-switch>
             <pos-case if-typeof="http://schema.org/Video">
               <template>Will not render as resource is a recipe</template>
             </pos-case>
@@ -42,7 +42,7 @@ describe('pos-if-else', () => {
             <pos-case else if-typeof="http://schema.org/Recipe">
               <template>Will not render as previous conditions are satisfied</template>
             </pos-case>
-          </pos-if-else>
+          </pos-switch>
         </pos-resource>
       </pos-app>`,
     });

@@ -4,7 +4,7 @@ import { ResourceAware, ResourceEventEmitter, subscribeResource } from '../event
 
 /**
  * Selects a child template to render based on properties of the subject resource, usually defined by an ancestor `pos-resource` element.
- * See [storybook](https://pod-os.github.io/PodOS/storybook/?path=/story/basics--pos-if-else) for an example.
+ * See [storybook](https://pod-os.github.io/PodOS/storybook/?path=/story/basics--pos-switch) for an example.
  *
  * Template elements support the following attributes:
  *
@@ -13,10 +13,10 @@ import { ResourceAware, ResourceEventEmitter, subscribeResource } from '../event
  * - `else`: The test only evaluates to true if tests for preceding templates have failed
  */
 @Component({
-  tag: 'pos-if-else',
+  tag: 'pos-switch',
   shadow: false,
 })
-export class PosIfElse implements ResourceAware {
+export class PosSwitch implements ResourceAware {
   @Element() host: HTMLElement;
   @State() error: string = null;
   @State() resource: Thing;
