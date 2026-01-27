@@ -26,7 +26,7 @@ Selects a template to render based on properties of the subject uri
         <pos-case if-typeof="http://www.w3.org/ns/ldp#Container"><template>Container</template></pos-case>
         <pos-case if-typeof="http://www.w3.org/ns/ldp#BasicContainer"><template>Basic Container</template></pos-case>
         <pos-case else if-typeof="http://www.w3.org/ns/ldp#Resource"><template>Resource and not a container</template></pos-case>
-        <pos-case else><template>Not a resource or container</template>
+        <pos-case else><template>Not a resource or container</template></pos-case>
       </pos-switch>
 </pos-resource>
     `}
