@@ -4,6 +4,7 @@ import {
   IndexedFormula,
   lit,
   st,
+  Statement,
   sym,
   UpdateManager,
 } from "rdflib";
@@ -30,7 +31,13 @@ import {
   startWith,
   Subject,
 } from "rxjs";
-import { Quad } from "rdflib/lib/tf-types";
+import {
+  Quad,
+  Quad_Graph,
+  Quad_Object,
+  Quad_Predicate,
+  Quad_Subject,
+} from "rdflib/lib/tf-types";
 
 /**
  * The Store contains all data that is known locally.
@@ -94,7 +101,7 @@ export class Store {
    */
   get(uri: string) {
     const editable = !!this.updater.editable(uri);
-    return new Thing(uri, this.internalStore, editable);
+    return new Thing(uri, this.internalStore, this, editable);
   }
 
   /**
@@ -190,6 +197,47 @@ export class Store {
       map(() => this.findMembers(classUri)),
       startWith(this.findMembers(classUri)),
       distinctUntilChanged((prev, curr) => prev.length == curr.length),
+    );
+  }
+
+  /**
+   * Determines whether the store includes a certain quad pattern, returning true or false as appropriate.
+   *
+   * @param {Quad_Subject|null|undefined} subject
+   * @param {Quad_Predicate|null|undefined} predicate
+   * @param {Quad_Object|null|undefined} object
+   * @param {Quad_Graph|null|undefined} graph
+   * @returns {boolean} Whether the store includes the quad pattern
+   */
+  holds(
+    subject?: Quad_Subject | null | undefined,
+    predicate?: Quad_Predicate | null | undefined,
+    object?: Quad_Object | null | undefined,
+    graph?: Quad_Graph | null | undefined,
+  ): boolean {
+    return this.internalStore.holds(subject, predicate, object, graph);
+  }
+
+  /**
+   * Statements matching the provided quad pattern
+   *
+   * @param {Quad_Subject|null|undefined} subject
+   * @param {Quad_Predicate|null|undefined} predicate
+   * @param {Quad_Object|null|undefined} object
+   * @param {Quad_Graph|null|undefined} graph
+   * @returns {Quad[]} Array of statements
+   */
+  statementsMatching(
+    subject?: Quad_Subject | null | undefined,
+    predicate?: Quad_Predicate | null | undefined,
+    object?: Quad_Object | null | undefined,
+    graph?: Quad_Graph | null | undefined,
+  ): Statement[] {
+    return this.internalStore.statementsMatching(
+      subject,
+      predicate,
+      object,
+      graph,
     );
   }
 }

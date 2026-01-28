@@ -11,6 +11,7 @@ import { accumulateValues } from "./accumulateValues";
 import { isRdfType } from "./isRdfType";
 import { labelForType } from "./labelForType";
 import { labelFromUri } from "./labelFromUri";
+import { Store } from "../Store";
 
 export interface Literal {
   predicate: string;
@@ -38,6 +39,7 @@ export class Thing {
   constructor(
     readonly uri: string,
     readonly store: IndexedFormula,
+    readonly reactiveStore: Store,
     /**
      * Whether the Thing can be edited according to its access control settings
      */
@@ -74,7 +76,7 @@ export class Thing {
    * Returns all the literal values that are linked to this thing
    */
   literals(): Literal[] {
-    const statements = this.store.statementsMatching(sym(this.uri));
+    const statements = this.reactiveStore.statementsMatching(sym(this.uri));
 
     const values = statements
       .filter((it) => isLiteral(it.object))
@@ -91,7 +93,7 @@ export class Thing {
    * Returns all the links from this thing to other resources
    */
   relations(predicate?: string): Relation[] {
-    const statements = this.store.statementsMatching(
+    const statements = this.reactiveStore.statementsMatching(
       sym(this.uri),
       predicate ? sym(predicate) : null,
     );
@@ -111,7 +113,7 @@ export class Thing {
    * Returns all the links from other resources to this thing
    */
   reverseRelations(predicate?: string): Relation[] {
-    const statements = this.store.statementsMatching(
+    const statements = this.reactiveStore.statementsMatching(
       undefined,
       predicate ? sym(predicate) : null,
       sym(this.uri),
@@ -229,7 +231,7 @@ export class Thing {
    * Returns all attachments linked to this thing
    */
   attachments(): Attachment[] {
-    const statements = this.store.statementsMatching(
+    const statements = this.reactiveStore.statementsMatching(
       sym(this.uri),
       flow("attachment"),
     );
@@ -251,10 +253,16 @@ export class Thing {
     SpecificThing: new (
       uri: string,
       store: IndexedFormula,
+      reactiveStore: Store,
       editable: boolean,
     ) => T,
   ) {
-    return new SpecificThing(this.uri, this.store, this.editable);
+    return new SpecificThing(
+      this.uri,
+      this.store,
+      this.reactiveStore,
+      this.editable,
+    );
   }
 
   /**
