@@ -3,6 +3,7 @@ import { IndexedFormula, sym } from "rdflib";
 import { RegistrationTarget, TypeRegistration } from "./TypeRegistration";
 import { solid } from "@solid-data-modules/rdflib-utils";
 import { labelForType } from "../thing/labelForType";
+import { Store } from "../Store";
 
 /**
  * Represents a private or public type index document
@@ -12,13 +13,14 @@ export class TypeIndex extends Thing {
   constructor(
     readonly uri: string,
     readonly store: IndexedFormula,
+    readonly reactiveStore: Store,
     readonly editable: boolean = false,
   ) {
-    super(uri, store, editable);
+    super(uri, store, reactiveStore, editable);
   }
 
   listAll(): TypeRegistration[] {
-    const forClassStatements = this.store.statementsMatching(
+    const forClassStatements = this.reactiveStore.statementsMatching(
       null,
       solid("forClass"),
       null,
@@ -28,14 +30,14 @@ export class TypeIndex extends Thing {
     return forClassStatements.map((statement) => {
       const subject = statement.subject;
 
-      const instanceContainerStatements = this.store.statementsMatching(
+      const instanceContainerStatements = this.reactiveStore.statementsMatching(
         subject,
         solid("instanceContainer"),
         null,
         sym(this.uri),
       );
 
-      const instanceStatements = this.store.statementsMatching(
+      const instanceStatements = this.reactiveStore.statementsMatching(
         subject,
         solid("instance"),
         null,

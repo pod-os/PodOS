@@ -12,15 +12,16 @@ describe("PictureGateway", () => {
   let mockStore: Store;
 
   beforeEach(() => {
-    // given a thing in a container
+    // given a mock store
+    mockStore = createMockStore();
+
+    // and a thing in a container
     const store = graph();
-    thing = new Thing("https://pod.test/things/thing1", store, true);
+
+    thing = new Thing("https://pod.test/things/thing1", store, mockStore, true);
 
     // and a file fetcher that can create files
     fileFetcher = createMockFileFetcher();
-
-    // and a mock store
-    mockStore = createMockStore();
 
     // and a picture gateway
     gateway = new FileGateway(mockStore, fileFetcher);
@@ -205,7 +206,9 @@ describe("PictureGateway", () => {
       updater: {
         update: jest.fn(),
       },
-      get: jest.fn((uri: string) => new Thing(uri, store, true)),
+      get: jest.fn(
+        (uri: string) => new Thing(uri, store, {} as unknown as Store, true),
+      ),
       executeUpdate: jest.fn().mockResolvedValue(undefined),
     } as unknown as Store;
   }

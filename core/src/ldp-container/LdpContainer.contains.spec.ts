@@ -1,26 +1,41 @@
-import { graph, sym } from "rdflib";
+import { graph, IndexedFormula, sym } from "rdflib";
+import { PodOsSession } from "../authentication";
 import { LdpContainer } from "./LdpContainer";
+import { Store } from "../Store";
 
 describe("LDP container", () => {
   describe("contains", () => {
+    let store: IndexedFormula;
+    const mockSession = {} as unknown as PodOsSession;
+    let reactiveStore: Store;
+
+    beforeEach(() => {
+      store = graph();
+      reactiveStore = new Store(mockSession, undefined, undefined, store);
+    });
+
     it("contains nothing if store is empty", () => {
       const container = new LdpContainer(
         "https://pod.test/container/",
-        graph(),
+        store,
+        reactiveStore,
       );
       const result = container.contains();
       expect(result).toEqual([]);
     });
 
     it("contains a single file without types", () => {
-      const store = graph();
       store.add(
         sym("https://pod.test/container/"),
         sym("http://www.w3.org/ns/ldp#contains"),
         sym("https://pod.test/container/file"),
         sym("https://pod.test/container/"),
       );
-      const container = new LdpContainer("https://pod.test/container/", store);
+      const container = new LdpContainer(
+        "https://pod.test/container/",
+        store,
+        reactiveStore,
+      );
       const result = container.contains();
       expect(result).toEqual([
         {
@@ -31,7 +46,6 @@ describe("LDP container", () => {
     });
 
     it("contains multiple files / containers", () => {
-      const store = graph();
       store.add(
         sym("https://pod.test/container/"),
         sym("http://www.w3.org/ns/ldp#contains"),
@@ -58,7 +72,11 @@ describe("LDP container", () => {
         sym("https://pod.test/container/c/"),
         sym("https://pod.test/container/"),
       );
-      const container = new LdpContainer("https://pod.test/container/", store);
+      const container = new LdpContainer(
+        "https://pod.test/container/",
+        store,
+        reactiveStore,
+      );
       const result = container.contains();
       expect(result).toEqual([
         {

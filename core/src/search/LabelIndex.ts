@@ -1,6 +1,7 @@
 import { IndexedFormula, sym } from "rdflib";
 import { RdfDocument } from "../rdf-document";
 import { rdfs } from "../namespaces";
+import { Store } from "../Store";
 
 /**
  * Represents a label index document as described in
@@ -10,16 +11,17 @@ export class LabelIndex extends RdfDocument {
   constructor(
     readonly uri: string,
     readonly store: IndexedFormula,
+    readonly reactiveStore: Store,
     readonly editable: boolean = false,
   ) {
-    super(uri, store, editable);
+    super(uri, store, reactiveStore, editable);
   }
 
   /**
    * Returns the URIs and labels for all the things listed in the document.
    */
   getIndexedItems() {
-    const matches = this.store.statementsMatching(
+    const matches = this.reactiveStore.statementsMatching(
       null,
       rdfs("label"),
       null,
@@ -35,6 +37,11 @@ export class LabelIndex extends RdfDocument {
   }
 
   contains(uri: string) {
-    return this.store.holds(sym(uri), rdfs("label"), null, sym(this.uri));
+    return this.reactiveStore.holds(
+      sym(uri),
+      rdfs("label"),
+      null,
+      sym(this.uri),
+    );
   }
 }
