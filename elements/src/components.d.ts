@@ -58,6 +58,12 @@ export namespace Components {
          */
         "addToList": (attachment: Attachment) => Promise<void>;
     }
+    /**
+     * Defines a template to use if the specified condition is met - to be used with [pos-switch](https://pod-os.org/reference/elements/components/pos-switch/).
+     * See [storybook](https://pod-os.github.io/PodOS/storybook/?path=/story/basics--pos-switch) for an example.
+     */
+    interface PosCase {
+    }
     interface PosContainerContents {
     }
     interface PosContainerItem {
@@ -254,6 +260,16 @@ export namespace Components {
     interface PosSubjects {
     }
     /**
+     * Selects a child template to render based on properties of the subject resource, usually defined by an ancestor `pos-resource` element.
+     * See [storybook](https://pod-os.github.io/PodOS/storybook/?path=/story/basics--pos-switch) for an example.
+     * Template elements support the following attributes:
+     * - `if-typeof`: Test if the resource is of the specified type
+     * - `not`: Negates the result of the test
+     * - `else`: The test only evaluates to true if tests for preceding templates have failed
+     */
+    interface PosSwitch {
+    }
+    /**
      * A tool to manage attachments of a thing.
      */
     interface PosToolAttachments {
@@ -424,6 +440,10 @@ export interface PosSubjectsCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosSubjectsElement;
 }
+export interface PosSwitchCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosSwitchElement;
+}
 export interface PosToolSelectCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosToolSelectElement;
@@ -570,6 +590,16 @@ declare global {
     var HTMLPosAttachmentsElement: {
         prototype: HTMLPosAttachmentsElement;
         new (): HTMLPosAttachmentsElement;
+    };
+    /**
+     * Defines a template to use if the specified condition is met - to be used with [pos-switch](https://pod-os.org/reference/elements/components/pos-switch/).
+     * See [storybook](https://pod-os.github.io/PodOS/storybook/?path=/story/basics--pos-switch) for an example.
+     */
+    interface HTMLPosCaseElement extends Components.PosCase, HTMLStencilElement {
+    }
+    var HTMLPosCaseElement: {
+        prototype: HTMLPosCaseElement;
+        new (): HTMLPosCaseElement;
     };
     interface HTMLPosContainerContentsElementEventMap {
         "pod-os:resource": any;
@@ -1087,6 +1117,31 @@ declare global {
         prototype: HTMLPosSubjectsElement;
         new (): HTMLPosSubjectsElement;
     };
+    interface HTMLPosSwitchElementEventMap {
+        "pod-os:resource": any;
+    }
+    /**
+     * Selects a child template to render based on properties of the subject resource, usually defined by an ancestor `pos-resource` element.
+     * See [storybook](https://pod-os.github.io/PodOS/storybook/?path=/story/basics--pos-switch) for an example.
+     * Template elements support the following attributes:
+     * - `if-typeof`: Test if the resource is of the specified type
+     * - `not`: Negates the result of the test
+     * - `else`: The test only evaluates to true if tests for preceding templates have failed
+     */
+    interface HTMLPosSwitchElement extends Components.PosSwitch, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosSwitchElementEventMap>(type: K, listener: (this: HTMLPosSwitchElement, ev: PosSwitchCustomEvent<HTMLPosSwitchElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosSwitchElementEventMap>(type: K, listener: (this: HTMLPosSwitchElement, ev: PosSwitchCustomEvent<HTMLPosSwitchElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLPosSwitchElement: {
+        prototype: HTMLPosSwitchElement;
+        new (): HTMLPosSwitchElement;
+    };
     /**
      * A tool to manage attachments of a thing.
      */
@@ -1217,6 +1272,7 @@ declare global {
         "pos-app-rdf-document": HTMLPosAppRdfDocumentElement;
         "pos-app-settings": HTMLPosAppSettingsElement;
         "pos-attachments": HTMLPosAttachmentsElement;
+        "pos-case": HTMLPosCaseElement;
         "pos-container-contents": HTMLPosContainerContentsElement;
         "pos-container-item": HTMLPosContainerItemElement;
         "pos-container-toolbar": HTMLPosContainerToolbarElement;
@@ -1249,6 +1305,7 @@ declare global {
         "pos-select-term": HTMLPosSelectTermElement;
         "pos-setting-offline-cache": HTMLPosSettingOfflineCacheElement;
         "pos-subjects": HTMLPosSubjectsElement;
+        "pos-switch": HTMLPosSwitchElement;
         "pos-tool-attachments": HTMLPosToolAttachmentsElement;
         "pos-tool-select": HTMLPosToolSelectElement;
         "pos-type-badges": HTMLPosTypeBadgesElement;
@@ -1323,6 +1380,12 @@ declare namespace LocalJSX {
      * Lists whatever is attached to the current thing
      */
     interface PosAttachments {
+    }
+    /**
+     * Defines a template to use if the specified condition is met - to be used with [pos-switch](https://pod-os.org/reference/elements/components/pos-switch/).
+     * See [storybook](https://pod-os.github.io/PodOS/storybook/?path=/story/basics--pos-switch) for an example.
+     */
+    interface PosCase {
     }
     interface PosContainerContents {
         "onPod-os:resource"?: (event: PosContainerContentsCustomEvent<any>) => void;
@@ -1576,6 +1639,17 @@ declare namespace LocalJSX {
         "onPod-os:resource"?: (event: PosSubjectsCustomEvent<any>) => void;
     }
     /**
+     * Selects a child template to render based on properties of the subject resource, usually defined by an ancestor `pos-resource` element.
+     * See [storybook](https://pod-os.github.io/PodOS/storybook/?path=/story/basics--pos-switch) for an example.
+     * Template elements support the following attributes:
+     * - `if-typeof`: Test if the resource is of the specified type
+     * - `not`: Negates the result of the test
+     * - `else`: The test only evaluates to true if tests for preceding templates have failed
+     */
+    interface PosSwitch {
+        "onPod-os:resource"?: (event: PosSwitchCustomEvent<any>) => void;
+    }
+    /**
      * A tool to manage attachments of a thing.
      */
     interface PosToolAttachments {
@@ -1644,6 +1718,7 @@ declare namespace LocalJSX {
         "pos-app-rdf-document": PosAppRdfDocument;
         "pos-app-settings": PosAppSettings;
         "pos-attachments": PosAttachments;
+        "pos-case": PosCase;
         "pos-container-contents": PosContainerContents;
         "pos-container-item": PosContainerItem;
         "pos-container-toolbar": PosContainerToolbar;
@@ -1676,6 +1751,7 @@ declare namespace LocalJSX {
         "pos-select-term": PosSelectTerm;
         "pos-setting-offline-cache": PosSettingOfflineCache;
         "pos-subjects": PosSubjects;
+        "pos-switch": PosSwitch;
         "pos-tool-attachments": PosToolAttachments;
         "pos-tool-select": PosToolSelect;
         "pos-type-badges": PosTypeBadges;
@@ -1705,6 +1781,11 @@ declare module "@stencil/core" {
              * Lists whatever is attached to the current thing
              */
             "pos-attachments": LocalJSX.PosAttachments & JSXBase.HTMLAttributes<HTMLPosAttachmentsElement>;
+            /**
+             * Defines a template to use if the specified condition is met - to be used with [pos-switch](https://pod-os.org/reference/elements/components/pos-switch/).
+             * See [storybook](https://pod-os.github.io/PodOS/storybook/?path=/story/basics--pos-switch) for an example.
+             */
+            "pos-case": LocalJSX.PosCase & JSXBase.HTMLAttributes<HTMLPosCaseElement>;
             "pos-container-contents": LocalJSX.PosContainerContents & JSXBase.HTMLAttributes<HTMLPosContainerContentsElement>;
             "pos-container-item": LocalJSX.PosContainerItem & JSXBase.HTMLAttributes<HTMLPosContainerItemElement>;
             "pos-container-toolbar": LocalJSX.PosContainerToolbar & JSXBase.HTMLAttributes<HTMLPosContainerToolbarElement>;
@@ -1758,6 +1839,15 @@ declare module "@stencil/core" {
             "pos-select-term": LocalJSX.PosSelectTerm & JSXBase.HTMLAttributes<HTMLPosSelectTermElement>;
             "pos-setting-offline-cache": LocalJSX.PosSettingOfflineCache & JSXBase.HTMLAttributes<HTMLPosSettingOfflineCacheElement>;
             "pos-subjects": LocalJSX.PosSubjects & JSXBase.HTMLAttributes<HTMLPosSubjectsElement>;
+            /**
+             * Selects a child template to render based on properties of the subject resource, usually defined by an ancestor `pos-resource` element.
+             * See [storybook](https://pod-os.github.io/PodOS/storybook/?path=/story/basics--pos-switch) for an example.
+             * Template elements support the following attributes:
+             * - `if-typeof`: Test if the resource is of the specified type
+             * - `not`: Negates the result of the test
+             * - `else`: The test only evaluates to true if tests for preceding templates have failed
+             */
+            "pos-switch": LocalJSX.PosSwitch & JSXBase.HTMLAttributes<HTMLPosSwitchElement>;
             /**
              * A tool to manage attachments of a thing.
              */
