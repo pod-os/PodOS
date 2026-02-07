@@ -1,5 +1,5 @@
 import { when } from "jest-when";
-import { graph, sym, quad, IndexedFormula } from "rdflib";
+import { graph, sym, quad, IndexedFormula, blankNode } from "rdflib";
 import { Parser as SparqlParser, Update } from "sparqljs";
 import { AuthenticatedFetch, PodOsSession } from "./authentication";
 import { Store } from "./Store";
@@ -505,6 +505,67 @@ describe("Store", () => {
           <http://www.w3.org/2000/01/rdf-schema#label> "A new thing" .
       }`,
       );
+    });
+  });
+
+  describe("findTypes", () => {
+    let store: Store;
+    beforeEach(() => {
+      const internalStore = graph();
+      store = new Store(
+        {} as PodOsSession,
+        undefined,
+        undefined,
+        internalStore,
+      );
+      internalStore.addAll([
+        quad(
+          sym("http://recipe.test/1"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://schema.org/Recipe"),
+        ),
+        quad(
+          sym("http://recipe.test/RecipeClass"),
+          sym("http://www.w3.org/2000/01/rdf-schema#subClassOf"),
+          sym("http://schema.org/Recipe"),
+        ),
+        quad(
+          sym("http://recipe.test/2"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://recipe.test/RecipeClass"),
+        ),
+        quad(
+          sym("http://movie.test/1"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://movie.test/MovieClass"),
+        ),
+        quad(
+          blankNode("1"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://schema.org/Recipe"),
+        ),
+      ]);
+    });
+
+    it("finds types of a URI", () => {
+      const recipe1classes = store.findTypes("http://recipe.test/1");
+      expect(recipe1classes).toEqual(["http://schema.org/Recipe"]);
+      const recipe2classes = store.findTypes("http://recipe.test/2");
+      expect(recipe2classes).toContain("http://schema.org/Recipe");
+      expect(recipe2classes).toContain("http://recipe.test/RecipeClass");
+      expect(recipe2classes).toEqual(
+        expect.not.arrayContaining(["http://movie.test/MovieClass"]),
+      );
+    });
+
+    it("supports named nodes as argument", () => {
+      const recipe1classes = store.findTypes(sym("http://recipe.test/1"));
+      expect(recipe1classes).toEqual(["http://schema.org/Recipe"]);
+    });
+
+    it("supports blank nodes as argument", () => {
+      const classes = store.findTypes(blankNode("1"));
+      expect(classes).toEqual(["http://schema.org/Recipe"]);
     });
   });
 });
