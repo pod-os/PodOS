@@ -32,6 +32,8 @@ import {
   Subject,
 } from "rxjs";
 import {
+  BlankNode,
+  NamedNode,
   Quad,
   Quad_Graph,
   Quad_Object,
@@ -199,6 +201,11 @@ export class Store {
       startWith(this.findMembers(classUri)),
       distinctUntilChanged((prev, curr) => prev.length == curr.length),
     );
+  }
+
+  findTypes(uri: string | NamedNode | BlankNode): string[] {
+    if (typeof uri === "string") uri = sym(uri);
+    return Object.keys(this.internalStore.findTypeURIs(uri));
   }
 
   /**
