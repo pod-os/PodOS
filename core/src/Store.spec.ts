@@ -737,6 +737,122 @@ describe("Store", () => {
       expect(test_graph_missing).toEqual(addedQuads);
     });
   });
+
+  describe("each", () => {
+    it("throws error if no wildcard is present", async () => {
+      const internalStore = graph();
+      const store = new Store(
+        {} as PodOsSession,
+        undefined,
+        undefined,
+        internalStore,
+      );
+      const addedQuads = [
+        quad(
+          sym("http://recipe.test/1"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://schema.org/Recipe"),
+          sym("http://recipe.test/1"),
+        ),
+      ];
+      internalStore.addAll(addedQuads);
+      const missingWildcard = () => {
+        const result = store.each(
+          sym("http://recipe.test/1"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://schema.org/Recipe"),
+          sym("http://recipe.test/1"),
+        );
+      };
+      expect(missingWildcard).toThrow("No wildcard specified");
+    });
+    it.each([null, undefined])(
+      "supports undefined and null wildcards",
+      (wildcard: null | undefined) => {
+        const internalStore = graph();
+        const store = new Store(
+          {} as PodOsSession,
+          undefined,
+          undefined,
+          internalStore,
+        );
+        const addedQuads = [
+          quad(
+            sym("http://recipe.test/1"),
+            sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+            sym("http://schema.org/Recipe"),
+            sym("http://recipe.test/1"),
+          ),
+        ];
+        internalStore.addAll(addedQuads);
+        const test_subject_missing = store.each(
+          wildcard,
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://schema.org/Recipe"),
+          sym("http://recipe.test/1"),
+        );
+        const test_predicate_missing = store.each(
+          sym("http://recipe.test/1"),
+          wildcard,
+          sym("http://schema.org/Recipe"),
+          sym("http://recipe.test/1"),
+        );
+        const test_object_missing = store.each(
+          sym("http://recipe.test/1"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          wildcard,
+          sym("http://recipe.test/1"),
+        );
+        const test_graph_missing = store.each(
+          sym("http://recipe.test/1"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://schema.org/Recipe"),
+          wildcard,
+        );
+        expect(test_subject_missing).toEqual([sym("http://recipe.test/1")]);
+        expect(test_predicate_missing).toEqual([
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        ]);
+        expect(test_object_missing).toEqual([sym("http://schema.org/Recipe")]);
+        expect(test_graph_missing).toEqual([sym("http://recipe.test/1")]);
+      },
+    );
+    it("supports missing args as wildcards", () => {
+      const internalStore = graph();
+      const store = new Store(
+        {} as PodOsSession,
+        undefined,
+        undefined,
+        internalStore,
+      );
+      const addedQuads = [
+        quad(
+          sym("http://recipe.test/1"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://schema.org/Recipe"),
+          sym("http://recipe.test/1"),
+        ),
+      ];
+      internalStore.addAll(addedQuads);
+      const test_graph_missing = store.each(
+        sym("http://recipe.test/1"),
+        sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        sym("http://schema.org/Recipe"),
+      );
+      const test_object_missing = store.each(
+        sym("http://recipe.test/1"),
+        sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+      );
+      const test_predicate_missing = store.each(sym("http://recipe.test/1"));
+      const test_subject_missing = store.each();
+      expect(test_subject_missing).toEqual([sym("http://recipe.test/1")]);
+      expect(test_predicate_missing).toEqual([
+        sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+      ]);
+      expect(test_object_missing).toEqual([sym("http://schema.org/Recipe")]);
+      expect(test_graph_missing).toEqual([sym("http://recipe.test/1")]);
+    });
+  });
 });
 
 export function thenSparqlUpdateIsSentToUrl(
