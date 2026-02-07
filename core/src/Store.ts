@@ -37,6 +37,7 @@ import {
   Quad_Object,
   Quad_Predicate,
   Quad_Subject,
+  Term,
 } from "rdflib/lib/tf-types";
 
 /**
@@ -239,6 +240,39 @@ export class Store {
       object,
       graph,
     );
+  }
+
+  /**
+   * RDF/JS terms matching the first wildcard in the provided quad pattern
+   *
+   * @param {Quad_Subject|null|undefined} subject
+   * @param {Quad_Predicate|null|undefined} predicate
+   * @param {Quad_Object|null|undefined} object
+   * @param {Quad_Graph|null|undefined} graph
+   * @returns {Term[]} Array of terms
+   */
+  each(
+    subject?: Quad_Subject | null | undefined,
+    predicate?: Quad_Predicate | null | undefined,
+    object?: Quad_Object | null | undefined,
+    graph?: Quad_Graph | null | undefined,
+  ): Term[] {
+    const statements = this.statementsMatching(
+      subject,
+      predicate,
+      object,
+      graph,
+    );
+    if (!subject) {
+      return statements.map((statement) => statement.subject);
+    } else if (!predicate) {
+      return statements.map((statement) => statement.predicate);
+    } else if (!object) {
+      return statements.map((statement) => statement.object);
+    } else if (!graph) {
+      return statements.map((statement) => statement.graph);
+    }
+    throw new Error("No wildcard specified");
   }
 }
 
