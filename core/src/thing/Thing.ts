@@ -220,8 +220,8 @@ export class Thing {
    * Retrieves a list of RDF types for this thing.
    */
   types(): RdfType[] {
-    const uriMap = this.store.findTypeURIs(sym(this.uri));
-    return Object.keys(uriMap).map((uri) => ({
+    const uris = this.reactiveStore.findTypes(this.uri);
+    return uris.map((uri) => ({
       uri,
       label: labelForType(uri),
     }));
