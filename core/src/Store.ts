@@ -274,6 +274,42 @@ export class Store {
     }
     throw new Error("No wildcard specified");
   }
+
+  /**
+   * Any one RDF/JS term matching the first wildcard in the provided quad pattern
+   *
+   * @param {Quad_Subject|null|undefined} subject
+   * @param {Quad_Predicate|null|undefined} predicate
+   * @param {Quad_Object|null|undefined} object
+   * @param {Quad_Graph|null|undefined} graph
+   * @returns {Term} RDF/JS term
+   */
+  any(
+    subject?: Quad_Subject | null | undefined,
+    predicate?: Quad_Predicate | null | undefined,
+    object?: Quad_Object | null | undefined,
+    graph?: Quad_Graph | null | undefined,
+  ): Term | null {
+    const justOne = true;
+    const statements = this.internalStore.statementsMatching(
+      subject,
+      predicate,
+      object,
+      graph,
+      justOne,
+    );
+    if (statements.length == 0) return null;
+    if (!subject) {
+      return statements[0].subject;
+    } else if (!predicate) {
+      return statements[0].predicate;
+    } else if (!object) {
+      return statements[0].object;
+    } else if (!graph) {
+      return statements[0].graph;
+    }
+    throw new Error("No wildcard specified");
+  }
 }
 
 export interface PodOsModule<T> {
