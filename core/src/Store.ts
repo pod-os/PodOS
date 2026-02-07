@@ -282,7 +282,7 @@ export class Store {
    * @param {Quad_Predicate|null|undefined} predicate
    * @param {Quad_Object|null|undefined} object
    * @param {Quad_Graph|null|undefined} graph
-   * @returns {Term} RDF/JS term
+   * @returns {Term | null} RDF/JS term
    */
   any(
     subject?: Quad_Subject | null | undefined,
@@ -309,6 +309,24 @@ export class Store {
       return statements[0].graph;
     }
     throw new Error("No wildcard specified");
+  }
+
+  /**
+   * Value of any one RDF/JS term matching the first wildcard in the provided quad pattern
+   *
+   * @param {Quad_Subject|null|undefined} subject
+   * @param {Quad_Predicate|null|undefined} predicate
+   * @param {Quad_Object|null|undefined} object
+   * @param {Quad_Graph|null|undefined} graph
+   * @returns {string | undefined} value of RDF/JS term
+   */
+  anyValue(
+    subject?: Quad_Subject | null | undefined,
+    predicate?: Quad_Predicate | null | undefined,
+    object?: Quad_Object | null | undefined,
+    graph?: Quad_Graph | null | undefined,
+  ): string | undefined {
+    return this.any(subject, predicate, object, graph)?.value;
   }
 }
 
