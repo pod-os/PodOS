@@ -997,6 +997,52 @@ describe("Store", () => {
       expect(test_graph_missing).toEqual(sym("http://recipe.test/1"));
     });
   });
+
+  describe("anyValue", () => {
+    it("returns value for matching term from Store.any", () => {
+      const internalStore = graph();
+      const store = new Store(
+        {} as PodOsSession,
+        undefined,
+        undefined,
+        internalStore,
+      );
+      const addedQuads = [
+        quad(
+          sym("http://recipe.test/1"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://schema.org/Recipe"),
+          sym("http://recipe.test/1"),
+        ),
+        quad(
+          sym("http://recipe.test/2"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://schema.org/Recipe"),
+          sym("http://recipe.test/1"),
+        ),
+      ];
+      internalStore.addAll(addedQuads);
+      const result = store.anyValue(
+        sym("http://recipe.test/1"),
+        sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+      );
+      expect(result).toEqual("http://schema.org/Recipe");
+    });
+    it("returns undefined if there is no match", () => {
+      const internalStore = graph();
+      const store = new Store(
+        {} as PodOsSession,
+        undefined,
+        undefined,
+        internalStore,
+      );
+      const result = store.anyValue(
+        sym("http://recipe.test/1"),
+        sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+      );
+      expect(result).toEqual(undefined);
+    });
+  });
 });
 
 export function thenSparqlUpdateIsSentToUrl(
