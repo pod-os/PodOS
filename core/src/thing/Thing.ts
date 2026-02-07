@@ -135,7 +135,7 @@ export class Thing {
   anyValue(...predicateUris: string[]) {
     let value;
     predicateUris.some((it) => {
-      value = this.store.anyValue(sym(this.uri), sym(it));
+      value = this.reactiveStore.anyValue(sym(this.uri), sym(it));
       return Boolean(value);
     });
     return value;
@@ -191,11 +191,11 @@ export class Thing {
 
   private findActivityStreamsPicture() {
     const activityStreamsImage =
-      this.store.any(
+      this.reactiveStore.any(
         sym(this.uri),
         sym("https://www.w3.org/ns/activitystreams#image"),
       ) ||
-      this.store.any(
+      this.reactiveStore.any(
         sym(this.uri),
         sym("https://www.w3.org/ns/activitystreams#icon"),
       );
@@ -205,7 +205,7 @@ export class Thing {
     ) {
       return null;
     }
-    const url = this.store.anyValue(
+    const url = this.reactiveStore.anyValue(
       activityStreamsImage,
       sym("https://www.w3.org/ns/activitystreams#url"),
     );
