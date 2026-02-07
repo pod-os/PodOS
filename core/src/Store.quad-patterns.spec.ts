@@ -320,7 +320,7 @@ describe("Store", () => {
     });
     it("otherwise throws error if no wildcard is present", async () => {
       const missingWildcard = () => {
-        const result = store.any(
+        store.any(
           sym("http://recipe.test/recipe#1"),
           sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
           sym("http://schema.org/Recipe"),
