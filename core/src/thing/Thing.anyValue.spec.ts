@@ -26,7 +26,6 @@ describe("Thing", function () {
 
     it("is the only value for the predicate", () => {
       const predicate = "https://vocab.test/predicate";
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
       store.add(sym(uri), sym(predicate), "literal value");
       const it = new Thing(
