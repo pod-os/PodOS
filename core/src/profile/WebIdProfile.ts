@@ -55,7 +55,7 @@ export class WebIdProfile extends Thing {
    * Returns the URIs of the private label indexes
    */
   getPrivateLabelIndexes(): string[] {
-    const profileNodes = this.store.each(
+    const profileNodes = this.reactiveStore.each(
       sym(this.webId),
       sym("http://www.w3.org/ns/solid/terms#privateLabelIndex"),
       undefined,
@@ -64,7 +64,7 @@ export class WebIdProfile extends Thing {
 
     const preferences = this.getPreferencesFile();
     if (preferences) {
-      const preferencesNodes = this.store.each(
+      const preferencesNodes = this.reactiveStore.each(
         sym(this.webId),
         sym("http://www.w3.org/ns/solid/terms#privateLabelIndex"),
         undefined,
