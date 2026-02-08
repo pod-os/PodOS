@@ -618,6 +618,52 @@ describe("Store", () => {
       );
     });
   });
+
+  describe("profileQuery", () => {
+    it("instantiates ProfileQuery using provided internal store", () => {
+      const internalStore = graph();
+      const store = new Store(
+        {} as PodOsSession,
+        undefined,
+        undefined,
+        internalStore,
+      );
+      const webId = "https://pod.test/alice/profile/card#me";
+      internalStore.add(
+        sym(webId),
+        sym("http://www.w3.org/ns/solid/terms#publicTypeIndex"),
+        sym("https://pod.test/alice/settings/publicTypeIndex.ttl"),
+        sym(webId).doc(),
+      );
+      const query = store.profileQuery(webId);
+      const result = query.queryPublicTypeIndex();
+      expect(result).toEqual(
+        sym("https://pod.test/alice/settings/publicTypeIndex.ttl"),
+      );
+    });
+
+    it("supports named node as argument", () => {
+      const internalStore = graph();
+      const store = new Store(
+        {} as PodOsSession,
+        undefined,
+        undefined,
+        internalStore,
+      );
+      const webIdNode = sym("https://pod.test/alice/profile/card#me");
+      internalStore.add(
+        webIdNode,
+        sym("http://www.w3.org/ns/solid/terms#publicTypeIndex"),
+        sym("https://pod.test/alice/settings/publicTypeIndex.ttl"),
+        webIdNode.doc(),
+      );
+      const query = store.profileQuery(webIdNode);
+      const result = query.queryPublicTypeIndex();
+      expect(result).toEqual(
+        sym("https://pod.test/alice/settings/publicTypeIndex.ttl"),
+      );
+    });
+  });
 });
 
 export function thenSparqlUpdateIsSentToUrl(
