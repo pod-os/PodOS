@@ -1,20 +1,29 @@
-import { graph, sym } from "rdflib";
+import { graph, IndexedFormula, sym } from "rdflib";
+import { PodOsSession } from "../authentication";
 import { Thing } from "./Thing";
+import { Store } from "../Store";
 
 describe("Thing", function () {
   describe("label", () => {
+    let internalStore: IndexedFormula;
+    const mockSession = {} as unknown as PodOsSession;
+    let store: Store;
+
+    beforeEach(() => {
+      internalStore = graph();
+      store = new Store(mockSession, undefined, undefined, internalStore);
+    });
+
     describe("if nothing is found in the store", () => {
       it.each([
         "https://jane.doe.example/container/file.ttl#fragment",
         "https://jane.doe.example#fragment",
       ])("the fragment is used", (uri) => {
-        const store = graph();
         const it = new Thing(uri, store);
         expect(it.label()).toBe("fragment");
       });
 
       it("the file name is used, if no fragment is given", () => {
-        const store = graph();
         const it = new Thing(
           "https://jane.doe.example/container/file.ttl",
           store,
@@ -23,7 +32,6 @@ describe("Thing", function () {
       });
 
       it("container name is used if no file is present", () => {
-        const store = graph();
         const it = new Thing("https://jane.doe.example/container/", store);
         expect(it.label()).toBe("container");
       });
@@ -39,14 +47,12 @@ describe("Thing", function () {
           { uri: "https://jane.doe.example/#i", label: "jane.doe.example/#i" },
           { uri: "https://jane.doe.example/profile/#me", label: "profile/#me" },
         ])("file and fragment are both used", ({ uri, label }) => {
-          const store = graph();
           const it = new Thing(uri, store);
           expect(it.label()).toBe(label);
         });
       });
 
       it("the host name is used, if no path is given", () => {
-        const store = graph();
         const it = new Thing("https://jane.doe.example/", store);
         expect(it.label()).toBe("jane.doe.example");
       });
@@ -65,9 +71,8 @@ describe("Thing", function () {
       "http://schema.org/caption",
       "https://schema.org/caption",
     ])("returns the literal value of predicate %s", (predicate: string) => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      store.add(sym(uri), sym(predicate), "literal value");
+      internalStore.add(sym(uri), sym(predicate), "literal value");
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,

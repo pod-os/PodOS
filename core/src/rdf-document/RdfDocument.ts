@@ -1,5 +1,6 @@
 import { Thing } from "../thing";
-import { IndexedFormula, isNamedNode, sym } from "rdflib";
+import { isNamedNode, sym } from "rdflib";
+import { Store } from "../Store";
 
 export interface Subject {
   uri: string;
@@ -8,7 +9,7 @@ export interface Subject {
 export class RdfDocument extends Thing {
   constructor(
     readonly uri: string,
-    readonly store: IndexedFormula,
+    readonly store: Store,
     readonly editable: boolean = false,
   ) {
     super(uri, store, editable);

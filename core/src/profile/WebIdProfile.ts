@@ -1,9 +1,7 @@
-import { IndexedFormula, sym } from "rdflib";
+import { sym } from "rdflib";
 import { Thing } from "../thing";
-import {
-  PreferencesQuery,
-  ProfileQuery,
-} from "@solid-data-modules/rdflib-utils";
+import { Store } from "../Store";
+import { ProfileQuery } from "@solid-data-modules/rdflib-utils";
 
 /**
  * Allows finding things related to the WebID and their profile document
@@ -12,11 +10,11 @@ export class WebIdProfile extends Thing {
   private profileQuery: ProfileQuery;
   constructor(
     readonly webId: string,
-    readonly store: IndexedFormula,
+    readonly store: Store,
     readonly editable: boolean = false,
   ) {
     super(webId, store, editable);
-    this.profileQuery = new ProfileQuery(sym(this.webId), this.store);
+    this.profileQuery = this.store.profileQuery(this.webId);
   }
 
   /**
@@ -41,11 +39,7 @@ export class WebIdProfile extends Thing {
   getPrivateTypeIndex() {
     const preferences = this.profileQuery.queryPreferencesFile();
     if (!preferences) return undefined;
-    const query = new PreferencesQuery(
-      this.store,
-      sym(this.webId),
-      preferences,
-    );
+    const query = this.store.preferencesQuery(this.webId, preferences);
     return query.queryPrivateTypeIndex()?.value;
   }
 

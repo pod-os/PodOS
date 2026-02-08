@@ -1,8 +1,9 @@
 import { Thing } from "../thing";
-import { IndexedFormula, sym } from "rdflib";
+import { sym } from "rdflib";
 import { RegistrationTarget, TypeRegistration } from "./TypeRegistration";
 import { solid } from "@solid-data-modules/rdflib-utils";
 import { labelForType } from "../thing/labelForType";
+import { Store } from "../Store";
 
 /**
  * Represents a private or public type index document
@@ -11,7 +12,7 @@ import { labelForType } from "../thing/labelForType";
 export class TypeIndex extends Thing {
   constructor(
     readonly uri: string,
-    readonly store: IndexedFormula,
+    readonly store: Store,
     readonly editable: boolean = false,
   ) {
     super(uri, store, editable);

@@ -1,10 +1,20 @@
-import { blankNode, graph, sym } from "rdflib";
+import { blankNode, graph, IndexedFormula, sym } from "rdflib";
+import { PodOsSession } from "../authentication";
 import { Thing } from "./Thing";
+import { Store } from "../Store";
 
 describe("Thing", function () {
   describe("literals", () => {
+    let internalStore: IndexedFormula;
+    const mockSession = {} as unknown as PodOsSession;
+    let store: Store;
+
+    beforeEach(() => {
+      internalStore = graph();
+      store = new Store(mockSession, undefined, undefined, internalStore);
+    });
+
     it("are empty, if store is empty", () => {
-      const store = graph();
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
@@ -13,9 +23,12 @@ describe("Thing", function () {
     });
 
     it("contains a single literal from store", () => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      store.add(sym(uri), sym("http://vocab.test/predicate"), "literal value");
+      internalStore.add(
+        sym(uri),
+        sym("http://vocab.test/predicate"),
+        "literal value",
+      );
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
@@ -31,10 +44,17 @@ describe("Thing", function () {
     });
 
     it("contains multiple literals from store", () => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      store.add(sym(uri), sym("http://vocab.test/first"), "first value");
-      store.add(sym(uri), sym("http://vocab.test/second"), "second value");
+      internalStore.add(
+        sym(uri),
+        sym("http://vocab.test/first"),
+        "first value",
+      );
+      internalStore.add(
+        sym(uri),
+        sym("http://vocab.test/second"),
+        "second value",
+      );
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
@@ -55,10 +75,17 @@ describe("Thing", function () {
     });
 
     it("contains multiple values for a literal", () => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      store.add(sym(uri), sym("http://vocab.test/predicate"), "first value");
-      store.add(sym(uri), sym("http://vocab.test/predicate"), "second value");
+      internalStore.add(
+        sym(uri),
+        sym("http://vocab.test/predicate"),
+        "first value",
+      );
+      internalStore.add(
+        sym(uri),
+        sym("http://vocab.test/predicate"),
+        "second value",
+      );
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
@@ -74,12 +101,11 @@ describe("Thing", function () {
     });
 
     it("contains multiple literals and values", () => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      store.add(sym(uri), sym("http://vocab.test/first"), "value 1-1");
-      store.add(sym(uri), sym("http://vocab.test/second"), "value 2-1");
-      store.add(sym(uri), sym("http://vocab.test/second"), "value 2-2");
-      store.add(sym(uri), sym("http://vocab.test/third"), "value 3-1");
+      internalStore.add(sym(uri), sym("http://vocab.test/first"), "value 1-1");
+      internalStore.add(sym(uri), sym("http://vocab.test/second"), "value 2-1");
+      internalStore.add(sym(uri), sym("http://vocab.test/second"), "value 2-2");
+      internalStore.add(sym(uri), sym("http://vocab.test/third"), "value 3-1");
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
@@ -105,15 +131,22 @@ describe("Thing", function () {
     });
 
     it("ignores non literals", () => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      store.add(sym(uri), sym("http://vocab.test/literal"), "literal value");
-      store.add(
+      internalStore.add(
+        sym(uri),
+        sym("http://vocab.test/literal"),
+        "literal value",
+      );
+      internalStore.add(
         sym(uri),
         sym("http://vocab.test/url"),
         sym("https://url.test/"),
       );
-      store.add(sym(uri), sym("http://vocab.test/blank"), blankNode("blank"));
+      internalStore.add(
+        sym(uri),
+        sym("http://vocab.test/blank"),
+        blankNode("blank"),
+      );
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,

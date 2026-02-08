@@ -1,17 +1,24 @@
-import { graph, quad, sym } from "rdflib";
+import { graph, quad, sym, IndexedFormula } from "rdflib";
+import { PodOsSession } from "../authentication";
 import { TypeIndex } from "./TypeIndex";
 import { solid } from "@solid-data-modules/rdflib-utils";
 import { schema } from "../namespaces";
+import { Store } from "../Store";
 
 describe("TypeIndex", () => {
+  let internalStore: IndexedFormula;
+  const mockSession = {} as unknown as PodOsSession;
+  let store: Store;
+
+  beforeEach(() => {
+    internalStore = graph();
+    store = new Store(mockSession, undefined, undefined, internalStore);
+  });
+
   describe("listAll", () => {
     it("returns empty list if nothing is in store", () => {
       // Given: a type index with an empty store
-      const emptyStore = graph();
-      const typeIndex = new TypeIndex(
-        "https://pod.test/type-index.ttl",
-        emptyStore,
-      );
+      const typeIndex = new TypeIndex("https://pod.test/type-index.ttl", store);
 
       // When: calling listAll
       const registrations = typeIndex.listAll();
@@ -23,11 +30,10 @@ describe("TypeIndex", () => {
     describe("instance containers", () => {
       it("returns a single registration for an instance container", () => {
         // Given a type index with one registration for an instance container
-        const store = graph();
         const typeIndexUri = "https://pod.test/settings/typeIndex.ttl";
         const registrationUri = `${typeIndexUri}#VideoGames`;
 
-        store.add(
+        internalStore.add(
           quad(
             sym(registrationUri),
             solid("forClass"),
@@ -35,7 +41,7 @@ describe("TypeIndex", () => {
             sym(typeIndexUri),
           ),
         );
-        store.add(
+        internalStore.add(
           quad(
             sym(registrationUri),
             solid("instanceContainer"),
@@ -66,11 +72,10 @@ describe("TypeIndex", () => {
 
       it("returns a single registration with multiple instance containers", () => {
         // Given a type index with one registration for several instance containers
-        const store = graph();
         const typeIndexUri = "https://pod.test/settings/typeIndex.ttl";
         const registrationUri = `${typeIndexUri}#VideoGames`;
 
-        store.add(
+        internalStore.add(
           quad(
             sym(registrationUri),
             solid("forClass"),
@@ -78,7 +83,7 @@ describe("TypeIndex", () => {
             sym(typeIndexUri),
           ),
         );
-        store.add(
+        internalStore.add(
           quad(
             sym(registrationUri),
             solid("instanceContainer"),
@@ -86,7 +91,7 @@ describe("TypeIndex", () => {
             sym(typeIndexUri),
           ),
         );
-        store.add(
+        internalStore.add(
           quad(
             sym(registrationUri),
             solid("instanceContainer"),
@@ -123,11 +128,10 @@ describe("TypeIndex", () => {
     describe("single instance", () => {
       it("returns a single registration for an instance", () => {
         // Given a type index with one registration for an instance container
-        const store = graph();
         const typeIndexUri = "https://pod.test/settings/typeIndex.ttl";
         const registrationUri = `${typeIndexUri}#VideoGames`;
 
-        store.add(
+        internalStore.add(
           quad(
             sym(registrationUri),
             solid("forClass"),
@@ -135,7 +139,7 @@ describe("TypeIndex", () => {
             sym(typeIndexUri),
           ),
         );
-        store.add(
+        internalStore.add(
           quad(
             sym(registrationUri),
             solid("instance"),
@@ -166,11 +170,10 @@ describe("TypeIndex", () => {
 
       it("returns a single registration with multiple instances", () => {
         // Given a type index with one registration for several instances
-        const store = graph();
         const typeIndexUri = "https://pod.test/settings/typeIndex.ttl";
         const registrationUri = `${typeIndexUri}#VideoGames`;
 
-        store.add(
+        internalStore.add(
           quad(
             sym(registrationUri),
             solid("forClass"),
@@ -178,7 +181,7 @@ describe("TypeIndex", () => {
             sym(typeIndexUri),
           ),
         );
-        store.add(
+        internalStore.add(
           quad(
             sym(registrationUri),
             solid("instance"),
@@ -186,7 +189,7 @@ describe("TypeIndex", () => {
             sym(typeIndexUri),
           ),
         );
-        store.add(
+        internalStore.add(
           quad(
             sym(registrationUri),
             solid("instance"),
@@ -223,12 +226,11 @@ describe("TypeIndex", () => {
     describe("multiple registrations", () => {
       it("returns multiple registration for different classes", () => {
         // Given a type index with registrations for two different classes
-        const store = graph();
         const typeIndexUri = "https://pod.test/settings/typeIndex.ttl";
         const firstRegistrationUri = `${typeIndexUri}#FirstRegistration`;
         const secondRegistrationUri = `${typeIndexUri}#SecondRegistration`;
 
-        store.add(
+        internalStore.add(
           quad(
             sym(firstRegistrationUri),
             solid("forClass"),
@@ -236,7 +238,7 @@ describe("TypeIndex", () => {
             sym(typeIndexUri),
           ),
         );
-        store.add(
+        internalStore.add(
           quad(
             sym(firstRegistrationUri),
             solid("instanceContainer"),
@@ -244,7 +246,7 @@ describe("TypeIndex", () => {
             sym(typeIndexUri),
           ),
         );
-        store.add(
+        internalStore.add(
           quad(
             sym(secondRegistrationUri),
             solid("forClass"),
@@ -252,7 +254,7 @@ describe("TypeIndex", () => {
             sym(typeIndexUri),
           ),
         );
-        store.add(
+        internalStore.add(
           quad(
             sym(secondRegistrationUri),
             solid("instanceContainer"),
@@ -296,11 +298,10 @@ describe("TypeIndex", () => {
     describe("document verification", () => {
       it("does not return registrations from wrong document", () => {
         // Given a type index with one registration for an instance container
-        const store = graph();
         const typeIndexUri = "https://pod.test/settings/typeIndex.ttl";
         const registrationUri = `${typeIndexUri}#VideoGames`;
 
-        store.add(
+        internalStore.add(
           quad(
             sym(registrationUri),
             solid("forClass"),
@@ -308,7 +309,7 @@ describe("TypeIndex", () => {
             sym("https://wrong.dcument"),
           ),
         );
-        store.add(
+        internalStore.add(
           quad(
             sym(registrationUri),
             solid("instanceContainer"),
@@ -328,11 +329,10 @@ describe("TypeIndex", () => {
 
       it("does not return instance containers from wrong document", () => {
         // Given a type index with one registration for an instance container
-        const store = graph();
         const typeIndexUri = "https://pod.test/settings/typeIndex.ttl";
         const registrationUri = `${typeIndexUri}#VideoGames`;
 
-        store.add(
+        internalStore.add(
           quad(
             sym(registrationUri),
             solid("forClass"),
@@ -340,7 +340,7 @@ describe("TypeIndex", () => {
             sym(typeIndexUri),
           ),
         );
-        store.add(
+        internalStore.add(
           quad(
             sym(registrationUri),
             solid("instanceContainer"),
@@ -366,11 +366,10 @@ describe("TypeIndex", () => {
 
       it("does not return instances from wrong document", () => {
         // Given a type index with one registration for an instance container
-        const store = graph();
         const typeIndexUri = "https://pod.test/settings/typeIndex.ttl";
         const registrationUri = `${typeIndexUri}#VideoGames`;
 
-        store.add(
+        internalStore.add(
           quad(
             sym(registrationUri),
             solid("forClass"),
@@ -378,7 +377,7 @@ describe("TypeIndex", () => {
             sym(typeIndexUri),
           ),
         );
-        store.add(
+        internalStore.add(
           quad(
             sym(registrationUri),
             solid("instance"),
@@ -407,11 +406,10 @@ describe("TypeIndex", () => {
   describe("label for class URI", () => {
     it("includes a short label for the class URI", () => {
       // Given: a type index with a registration for a class
-      const store = graph();
       const typeIndexUri = "https://pod.test/settings/typeIndex.ttl";
       const registrationUri = `${typeIndexUri}#VideoGames`;
 
-      store.add(
+      internalStore.add(
         quad(
           sym(registrationUri),
           solid("forClass"),
@@ -419,7 +417,7 @@ describe("TypeIndex", () => {
           sym(typeIndexUri),
         ),
       );
-      store.add(
+      internalStore.add(
         quad(
           sym(registrationUri),
           solid("instanceContainer"),

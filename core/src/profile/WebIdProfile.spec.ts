@@ -1,15 +1,25 @@
-import { graph, sym } from "rdflib";
+import { graph, IndexedFormula, sym } from "rdflib";
+import { PodOsSession } from "../authentication";
+import { Store } from "../Store";
 import { WebIdProfile } from "./WebIdProfile";
 
 describe("WebID profile", () => {
+  let internalStore: IndexedFormula;
+  const mockSession = {} as unknown as PodOsSession;
+  let store: Store;
+
+  beforeEach(() => {
+    internalStore = graph();
+    store = new Store(mockSession, undefined, undefined, internalStore);
+  });
+
   describe("preferences file", () => {
     it("is undefined when nothing in store", () => {
-      const profile = new WebIdProfile("https://alice.test#me", graph(), false);
+      const profile = new WebIdProfile("https://alice.test#me", store, false);
       expect(profile.getPreferencesFile()).toBeUndefined();
     });
     it("is read from preferences file triple in profile document", () => {
-      const store = graph();
-      store.add(
+      internalStore.add(
         sym("https://alice.test#me"),
         sym("http://www.w3.org/ns/pim/space#preferencesFile"),
         sym("https://alice.test/preferences"),
@@ -22,8 +32,7 @@ describe("WebID profile", () => {
     });
 
     it("preferences file triple from elsewhere are ignored", () => {
-      const store = graph();
-      store.add(
+      internalStore.add(
         sym("https://alice.test#me"),
         sym("http://www.w3.org/ns/pim/space#preferencesFile"),
         sym("https://alice.test/preferences"),
@@ -36,12 +45,11 @@ describe("WebID profile", () => {
 
   describe("private label indexes", () => {
     it("are empty when nothing in store", () => {
-      const profile = new WebIdProfile("https://alice.test#me", graph(), false);
+      const profile = new WebIdProfile("https://alice.test#me", store, false);
       expect(profile.getPrivateLabelIndexes()).toEqual([]);
     });
     it("is read from private label index triple in profile document", () => {
-      const store = graph();
-      store.add(
+      internalStore.add(
         sym("https://alice.test#me"),
         sym("http://www.w3.org/ns/solid/terms#privateLabelIndex"),
         sym("https://alice.test/privateLabelIndex.ttl"),
@@ -54,14 +62,13 @@ describe("WebID profile", () => {
     });
 
     it("reads multiple private label index triples in profile document", () => {
-      const store = graph();
-      store.add(
+      internalStore.add(
         sym("https://alice.test#me"),
         sym("http://www.w3.org/ns/solid/terms#privateLabelIndex"),
         sym("https://alice.test/privateLabelIndex.ttl"),
         sym("https://alice.test"),
       );
-      store.add(
+      internalStore.add(
         sym("https://alice.test#me"),
         sym("http://www.w3.org/ns/solid/terms#privateLabelIndex"),
         sym("https://alice.test/secondPrivateLabelIndex.ttl"),
@@ -75,14 +82,13 @@ describe("WebID profile", () => {
     });
 
     it("is read from private label index triple in preferences file", () => {
-      const store = graph();
-      store.add(
+      internalStore.add(
         sym("https://alice.test#me"),
         sym("http://www.w3.org/ns/pim/space#preferencesFile"),
         sym("https://alice.test/preferences"),
         sym("https://alice.test"),
       );
-      store.add(
+      internalStore.add(
         sym("https://alice.test#me"),
         sym("http://www.w3.org/ns/solid/terms#privateLabelIndex"),
         sym("https://alice.test/privateLabelIndex.ttl"),
@@ -95,20 +101,19 @@ describe("WebID profile", () => {
     });
 
     it("reads multiple private label index triples in preferences file", () => {
-      const store = graph();
-      store.add(
+      internalStore.add(
         sym("https://alice.test#me"),
         sym("http://www.w3.org/ns/pim/space#preferencesFile"),
         sym("https://alice.test/preferences"),
         sym("https://alice.test"),
       );
-      store.add(
+      internalStore.add(
         sym("https://alice.test#me"),
         sym("http://www.w3.org/ns/solid/terms#privateLabelIndex"),
         sym("https://alice.test/privateLabelIndex.ttl"),
         sym("https://alice.test/preferences"),
       );
-      store.add(
+      internalStore.add(
         sym("https://alice.test#me"),
         sym("http://www.w3.org/ns/solid/terms#privateLabelIndex"),
         sym("https://alice.test/secondPrivateLabelIndex.ttl"),
@@ -122,20 +127,19 @@ describe("WebID profile", () => {
     });
 
     it("reads both private label indexes from profile and preferences file", () => {
-      const store = graph();
-      store.add(
+      internalStore.add(
         sym("https://alice.test#me"),
         sym("http://www.w3.org/ns/pim/space#preferencesFile"),
         sym("https://alice.test/preferences"),
         sym("https://alice.test"),
       );
-      store.add(
+      internalStore.add(
         sym("https://alice.test#me"),
         sym("http://www.w3.org/ns/solid/terms#privateLabelIndex"),
         sym("https://alice.test/preferencesPrivateLabelIndex.ttl"),
         sym("https://alice.test/preferences"),
       );
-      store.add(
+      internalStore.add(
         sym("https://alice.test#me"),
         sym("http://www.w3.org/ns/solid/terms#privateLabelIndex"),
         sym("https://alice.test/profilePrivateLabelIndex.ttl"),
@@ -150,8 +154,7 @@ describe("WebID profile", () => {
     });
 
     it("private label index triple from elsewhere are ignored", () => {
-      const store = graph();
-      store.add(
+      internalStore.add(
         sym("https://alice.test#me"),
         sym("http://www.w3.org/ns/solid/terms#privateLabelIndex"),
         sym("https://alice.test/privateLabelIndex.ttl"),
@@ -164,12 +167,11 @@ describe("WebID profile", () => {
 
   describe("public type index", () => {
     it("is undefined when nothing in store", () => {
-      const profile = new WebIdProfile("https://alice.test#me", graph(), false);
+      const profile = new WebIdProfile("https://alice.test#me", store, false);
       expect(profile.getPublicTypeIndex()).toBeUndefined();
     });
     it("is read from publicTypeIndex triple in profile document", () => {
-      const store = graph();
-      store.add(
+      internalStore.add(
         sym("https://alice.test#me"),
         sym("http://www.w3.org/ns/solid/terms#publicTypeIndex"),
         sym("https://alice.test/publicTypeIndex"),
@@ -184,16 +186,15 @@ describe("WebID profile", () => {
 
   describe("private type index", () => {
     it("is undefined when nothing in store", () => {
-      const profile = new WebIdProfile("https://alice.test#me", graph(), false);
+      const profile = new WebIdProfile("https://alice.test#me", store, false);
       expect(profile.getPrivateTypeIndex()).toBeUndefined();
     });
     it("is undefined when nothing in preferences document", () => {
-      const profile = new WebIdProfile("https://alice.test#me", graph(), false);
+      const profile = new WebIdProfile("https://alice.test#me", store, false);
       expect(profile.getPrivateTypeIndex()).toBeUndefined();
     });
     it("is read from privateType triple in preferences document", () => {
-      const store = graph();
-      store.add(
+      internalStore.add(
         sym("https://alice.test#me"),
         sym("http://www.w3.org/ns/pim/space#preferencesFile"),
         sym("https://alice.test/preferences"),

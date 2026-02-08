@@ -1,16 +1,11 @@
-import {
-  IndexedFormula,
-  isBlankNode,
-  isLiteral,
-  isNamedNode,
-  sym,
-} from "rdflib";
+import { isBlankNode, isLiteral, isNamedNode, sym } from "rdflib";
 import { flow } from "../namespaces";
 import { accumulateSubjects } from "./accumulateSubjects";
 import { accumulateValues } from "./accumulateValues";
 import { isRdfType } from "./isRdfType";
 import { labelForType } from "./labelForType";
 import { labelFromUri } from "./labelFromUri";
+import { Store } from "../Store";
 
 export interface Literal {
   predicate: string;
@@ -37,7 +32,7 @@ export interface Attachment {
 export class Thing {
   constructor(
     readonly uri: string,
-    readonly store: IndexedFormula,
+    readonly store: Store,
     /**
      * Whether the Thing can be edited according to its access control settings
      */
@@ -218,8 +213,8 @@ export class Thing {
    * Retrieves a list of RDF types for this thing.
    */
   types(): RdfType[] {
-    const uriMap = this.store.findTypeURIs(sym(this.uri));
-    return Object.keys(uriMap).map((uri) => ({
+    const uris = this.store.findTypes(this.uri);
+    return uris.map((uri) => ({
       uri,
       label: labelForType(uri),
     }));
@@ -248,11 +243,7 @@ export class Thing {
    * @param SpecificThing - a subclass of Thing to assume
    */
   assume<T>(
-    SpecificThing: new (
-      uri: string,
-      store: IndexedFormula,
-      editable: boolean,
-    ) => T,
+    SpecificThing: new (uri: string, store: Store, editable: boolean) => T,
   ) {
     return new SpecificThing(this.uri, this.store, this.editable);
   }

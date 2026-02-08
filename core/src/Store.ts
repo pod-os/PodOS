@@ -3,7 +3,9 @@ import {
   graph,
   IndexedFormula,
   lit,
+  NamedNode,
   st,
+  Statement,
   sym,
   UpdateManager,
 } from "rdflib";
@@ -12,6 +14,8 @@ import { Thing } from "./thing";
 import {
   executeUpdate,
   ModuleConfig,
+  PreferencesQuery,
+  ProfileQuery,
   UpdateOperation,
 } from "@solid-data-modules/rdflib-utils";
 import {
@@ -30,7 +34,15 @@ import {
   startWith,
   Subject,
 } from "rxjs";
-import { Quad } from "rdflib/lib/tf-types";
+import {
+  BlankNode,
+  Quad,
+  Quad_Graph,
+  Quad_Object,
+  Quad_Predicate,
+  Quad_Subject,
+  Term,
+} from "rdflib/lib/tf-types";
 
 /**
  * The Store contains all data that is known locally.
@@ -94,7 +106,7 @@ export class Store {
    */
   get(uri: string) {
     const editable = !!this.updater.editable(uri);
-    return new Thing(uri, this.internalStore, editable);
+    return new Thing(uri, this, editable);
   }
 
   /**
@@ -191,6 +203,175 @@ export class Store {
       startWith(this.findMembers(classUri)),
       distinctUntilChanged((prev, curr) => prev.length == curr.length),
     );
+  }
+
+  /**
+   * Finds types of the given resource
+   *
+   * @param {string|NamedNode|BlankNode} uri String or RDF/JS object
+   * @returns {string[]} An array of URIs of types
+   */
+  findTypes(uri: string | NamedNode | BlankNode): string[] {
+    if (typeof uri === "string") uri = sym(uri);
+    return Object.keys(this.internalStore.findTypeURIs(uri));
+  }
+
+  /**
+   * Determines whether the store includes a certain quad pattern, returning true or false as appropriate.
+   *
+   * @param {Quad_Subject|null|undefined} subject
+   * @param {Quad_Predicate|null|undefined} predicate
+   * @param {Quad_Object|null|undefined} object
+   * @param {Quad_Graph|null|undefined} graph
+   * @returns {boolean} Whether the store includes the quad pattern
+   */
+  holds(
+    subject?: Quad_Subject | null | undefined,
+    predicate?: Quad_Predicate | null | undefined,
+    object?: Quad_Object | null | undefined,
+    graph?: Quad_Graph | null | undefined,
+  ): boolean {
+    return this.internalStore.holds(subject, predicate, object, graph);
+  }
+
+  /**
+   * Statements matching the provided quad pattern
+   *
+   * @param {Quad_Subject|null|undefined} subject
+   * @param {Quad_Predicate|null|undefined} predicate
+   * @param {Quad_Object|null|undefined} object
+   * @param {Quad_Graph|null|undefined} graph
+   * @returns {Quad[]} Array of statements
+   */
+  statementsMatching(
+    subject?: Quad_Subject | null | undefined,
+    predicate?: Quad_Predicate | null | undefined,
+    object?: Quad_Object | null | undefined,
+    graph?: Quad_Graph | null | undefined,
+  ): Statement[] {
+    return this.internalStore.statementsMatching(
+      subject,
+      predicate,
+      object,
+      graph,
+    );
+  }
+
+  /**
+   * RDF/JS terms matching the first wildcard in the provided quad pattern
+   *
+   * @param {Quad_Subject|null|undefined} subject
+   * @param {Quad_Predicate|null|undefined} predicate
+   * @param {Quad_Object|null|undefined} object
+   * @param {Quad_Graph|null|undefined} graph
+   * @returns {Term[]} Array of terms
+   */
+  each(
+    subject?: Quad_Subject | null | undefined,
+    predicate?: Quad_Predicate | null | undefined,
+    object?: Quad_Object | null | undefined,
+    graph?: Quad_Graph | null | undefined,
+  ): Term[] {
+    const statements = this.statementsMatching(
+      subject,
+      predicate,
+      object,
+      graph,
+    );
+    if (!subject) {
+      return statements.map((statement) => statement.subject);
+    } else if (!predicate) {
+      return statements.map((statement) => statement.predicate);
+    } else if (!object) {
+      return statements.map((statement) => statement.object);
+    } else if (!graph) {
+      return statements.map((statement) => statement.graph);
+    }
+    throw new Error("No wildcard specified");
+  }
+
+  /**
+   * Any one RDF/JS term matching the first wildcard in the provided quad pattern
+   *
+   * @param {Quad_Subject|null|undefined} subject
+   * @param {Quad_Predicate|null|undefined} predicate
+   * @param {Quad_Object|null|undefined} object
+   * @param {Quad_Graph|null|undefined} graph
+   * @returns {Term | null} RDF/JS term
+   */
+  any(
+    subject?: Quad_Subject | null | undefined,
+    predicate?: Quad_Predicate | null | undefined,
+    object?: Quad_Object | null | undefined,
+    graph?: Quad_Graph | null | undefined,
+  ): Term | null {
+    const justOne = true;
+    const statements = this.internalStore.statementsMatching(
+      subject,
+      predicate,
+      object,
+      graph,
+      justOne,
+    );
+    if (statements.length == 0) return null;
+    if (!subject) {
+      return statements[0].subject;
+    } else if (!predicate) {
+      return statements[0].predicate;
+    } else if (!object) {
+      return statements[0].object;
+    } else if (!graph) {
+      return statements[0].graph;
+    }
+    throw new Error("No wildcard specified");
+  }
+
+  /**
+   * Value of any one RDF/JS term matching the first wildcard in the provided quad pattern
+   *
+   * @param {Quad_Subject|null|undefined} subject
+   * @param {Quad_Predicate|null|undefined} predicate
+   * @param {Quad_Object|null|undefined} object
+   * @param {Quad_Graph|null|undefined} graph
+   * @returns {string | undefined} value of RDF/JS term
+   */
+  anyValue(
+    subject?: Quad_Subject | null | undefined,
+    predicate?: Quad_Predicate | null | undefined,
+    object?: Quad_Object | null | undefined,
+    graph?: Quad_Graph | null | undefined,
+  ): string | undefined {
+    return this.any(subject, predicate, object, graph)?.value;
+  }
+
+  /**
+   * Create a query to fetch information from a user's preferences file
+   * 
+   * @param webId 
+   * @param preferencesDoc 
+   * @returns {PreferencesQuery} PreferencesQuery instance. See [@solid-data-modules/rdflib-utils
+](https://solid-contrib.github.io/data-modules/rdflib-utils/classes/index.PreferencesQuery.html)
+   */
+  preferencesQuery(
+    webId: string | NamedNode,
+    preferencesDoc: string | NamedNode,
+  ): PreferencesQuery {
+    if (typeof webId === "string") webId = sym(webId);
+    if (typeof preferencesDoc === "string")
+      preferencesDoc = sym(preferencesDoc);
+    return new PreferencesQuery(this.internalStore, webId, preferencesDoc);
+  }
+
+  /**
+   * Create a query to fetch information from a user's profile document
+   * 
+   * @param webId 
+   * @returns {ProfileQuery} ProfileQuery instance. See [@solid-data-modules/rdflib-utils
+](https://solid-contrib.github.io/data-modules/rdflib-utils/classes/index.ProfileQuery.html)
+   */
+  profileQuery(webId: string | NamedNode): ProfileQuery {
+    if (typeof webId === "string") webId = sym(webId);
+    return new ProfileQuery(webId, this.internalStore);
   }
 }
 

@@ -1,7 +1,9 @@
 import { graph } from "rdflib";
 import { err, ok } from "neverthrow";
+import { PodOsSession } from "../authentication";
 import { PictureGateway } from "./PictureGateway";
 import { FileFetcher } from "../files/FileFetcher";
+import { Store } from "../Store";
 import { Thing } from "../thing";
 import { FileGateway } from "../files/FileGateway";
 
@@ -12,7 +14,11 @@ describe("PictureGateway", () => {
 
   beforeEach(() => {
     // given a thing in a container
-    const store = graph();
+
+    const internalStore = graph();
+    const mockSession = {} as unknown as PodOsSession;
+    const store = new Store(mockSession, undefined, undefined, internalStore);
+
     thing = new Thing("https://pod.test/things/thing1", store, true);
 
     // and an attachment gateway

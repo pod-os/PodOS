@@ -1,10 +1,20 @@
-import { blankNode, graph, sym } from "rdflib";
+import { blankNode, graph, sym, IndexedFormula } from "rdflib";
+import { PodOsSession } from "../authentication";
 import { Thing } from "./Thing";
+import { Store } from "../Store";
 
 describe("Thing", function () {
+  let internalStore: IndexedFormula;
+  const mockSession = {} as unknown as PodOsSession;
+  let store: Store;
+
+  beforeEach(() => {
+    internalStore = graph();
+    store = new Store(mockSession, undefined, undefined, internalStore);
+  });
+
   describe("relations", () => {
     it("are empty, if store is empty", () => {
-      const store = graph();
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
@@ -13,9 +23,8 @@ describe("Thing", function () {
     });
 
     it("contains a single relation from store", () => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      store.add(
+      internalStore.add(
         sym(uri),
         sym("http://vocab.test/predicate"),
         sym("https://pod.example/resource"),
@@ -35,14 +44,13 @@ describe("Thing", function () {
     });
 
     it("contains multiple relations from store", () => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      store.add(
+      internalStore.add(
         sym(uri),
         sym("http://vocab.test/first"),
         sym("https://pod.example/first"),
       );
-      store.add(
+      internalStore.add(
         sym(uri),
         sym("http://vocab.test/second"),
         sym("https://pod.example/second"),
@@ -67,14 +75,13 @@ describe("Thing", function () {
     });
 
     it("contains multiple uris for a relation", () => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      store.add(
+      internalStore.add(
         sym(uri),
         sym("http://vocab.test/predicate"),
         sym("https://pod.example/first"),
       );
-      store.add(
+      internalStore.add(
         sym(uri),
         sym("http://vocab.test/predicate"),
         sym("https://pod.example/second"),
@@ -94,24 +101,23 @@ describe("Thing", function () {
     });
 
     it("contains multiple relations and uris", () => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      store.add(
+      internalStore.add(
         sym(uri),
         sym("http://vocab.test/first"),
         sym("https://pod.example/first/1"),
       );
-      store.add(
+      internalStore.add(
         sym(uri),
         sym("http://vocab.test/second"),
         sym("https://pod.example/second/1"),
       );
-      store.add(
+      internalStore.add(
         sym(uri),
         sym("http://vocab.test/second"),
         sym("https://pod.example/second/2"),
       );
-      store.add(
+      internalStore.add(
         sym(uri),
         sym("http://vocab.test/third"),
         sym("https://pod.example/third/1"),
@@ -144,15 +150,22 @@ describe("Thing", function () {
     });
 
     it("ignores non named nodes", () => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      store.add(
+      internalStore.add(
         sym(uri),
         sym("http://vocab.test/predicate"),
         sym("https://pod.example/resource"),
       );
-      store.add(sym(uri), sym("http://vocab.test/literal"), "literal value");
-      store.add(sym(uri), sym("http://vocab.test/blank"), blankNode("blank"));
+      internalStore.add(
+        sym(uri),
+        sym("http://vocab.test/literal"),
+        "literal value",
+      );
+      internalStore.add(
+        sym(uri),
+        sym("http://vocab.test/blank"),
+        blankNode("blank"),
+      );
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
@@ -168,14 +181,13 @@ describe("Thing", function () {
     });
 
     it("does not contain rdf types", () => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      store.add(
+      internalStore.add(
         sym(uri),
         sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
         sym("https://vocab.example/TypeA"),
       );
-      store.add(
+      internalStore.add(
         sym(uri),
         sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
         sym("https://vocab.example/TypeB"),
@@ -190,14 +202,13 @@ describe("Thing", function () {
   });
 
   it("only follows the given predicate if provided", () => {
-    const store = graph();
     const uri = "https://jane.doe.example/container/file.ttl#fragment";
-    store.add(
+    internalStore.add(
       sym(uri),
       sym("http://vocab.test/first"),
       sym("https://pod.example/first"),
     );
-    store.add(
+    internalStore.add(
       sym(uri),
       sym("http://vocab.test/second"),
       sym("https://pod.example/second"),
