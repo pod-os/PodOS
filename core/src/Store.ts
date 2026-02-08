@@ -205,6 +205,12 @@ export class Store {
     );
   }
 
+  /**
+   * Finds types of the given resource
+   *
+   * @param {string|NamedNode|BlankNode} uri String or RDF/JS object
+   * @returns {string[]} An array of URIs of types
+   */
   findTypes(uri: string | NamedNode | BlankNode): string[] {
     if (typeof uri === "string") uri = sym(uri);
     return Object.keys(this.internalStore.findTypeURIs(uri));
