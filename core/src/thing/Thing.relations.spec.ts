@@ -4,13 +4,13 @@ import { Thing } from "./Thing";
 import { Store } from "../Store";
 
 describe("Thing", function () {
-  let store: IndexedFormula;
+  let internalStore: IndexedFormula;
   const mockSession = {} as unknown as PodOsSession;
-  let reactiveStore: Store;
+  let store: Store;
 
   beforeEach(() => {
-    store = graph();
-    reactiveStore = new Store(mockSession, undefined, undefined, store);
+    internalStore = graph();
+    store = new Store(mockSession, undefined, undefined, internalStore);
   });
 
   describe("relations", () => {
@@ -18,14 +18,13 @@ describe("Thing", function () {
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
-        reactiveStore,
       );
       expect(it.relations()).toEqual([]);
     });
 
     it("contains a single relation from store", () => {
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      store.add(
+      internalStore.add(
         sym(uri),
         sym("http://vocab.test/predicate"),
         sym("https://pod.example/resource"),
@@ -33,7 +32,6 @@ describe("Thing", function () {
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
-        reactiveStore,
       );
       const result = it.relations();
       expect(result).toEqual([
@@ -47,12 +45,12 @@ describe("Thing", function () {
 
     it("contains multiple relations from store", () => {
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      store.add(
+      internalStore.add(
         sym(uri),
         sym("http://vocab.test/first"),
         sym("https://pod.example/first"),
       );
-      store.add(
+      internalStore.add(
         sym(uri),
         sym("http://vocab.test/second"),
         sym("https://pod.example/second"),
@@ -60,7 +58,6 @@ describe("Thing", function () {
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
-        reactiveStore,
       );
       const result = it.relations();
       expect(result).toEqual([
@@ -79,12 +76,12 @@ describe("Thing", function () {
 
     it("contains multiple uris for a relation", () => {
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      store.add(
+      internalStore.add(
         sym(uri),
         sym("http://vocab.test/predicate"),
         sym("https://pod.example/first"),
       );
-      store.add(
+      internalStore.add(
         sym(uri),
         sym("http://vocab.test/predicate"),
         sym("https://pod.example/second"),
@@ -92,7 +89,6 @@ describe("Thing", function () {
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
-        reactiveStore,
       );
       const result = it.relations();
       expect(result).toEqual([
@@ -106,22 +102,22 @@ describe("Thing", function () {
 
     it("contains multiple relations and uris", () => {
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      store.add(
+      internalStore.add(
         sym(uri),
         sym("http://vocab.test/first"),
         sym("https://pod.example/first/1"),
       );
-      store.add(
+      internalStore.add(
         sym(uri),
         sym("http://vocab.test/second"),
         sym("https://pod.example/second/1"),
       );
-      store.add(
+      internalStore.add(
         sym(uri),
         sym("http://vocab.test/second"),
         sym("https://pod.example/second/2"),
       );
-      store.add(
+      internalStore.add(
         sym(uri),
         sym("http://vocab.test/third"),
         sym("https://pod.example/third/1"),
@@ -129,7 +125,6 @@ describe("Thing", function () {
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
-        reactiveStore,
       );
       const result = it.relations();
       expect(result).toEqual([
@@ -156,17 +151,24 @@ describe("Thing", function () {
 
     it("ignores non named nodes", () => {
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      store.add(
+      internalStore.add(
         sym(uri),
         sym("http://vocab.test/predicate"),
         sym("https://pod.example/resource"),
       );
-      store.add(sym(uri), sym("http://vocab.test/literal"), "literal value");
-      store.add(sym(uri), sym("http://vocab.test/blank"), blankNode("blank"));
+      internalStore.add(
+        sym(uri),
+        sym("http://vocab.test/literal"),
+        "literal value",
+      );
+      internalStore.add(
+        sym(uri),
+        sym("http://vocab.test/blank"),
+        blankNode("blank"),
+      );
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
-        reactiveStore,
       );
       const result = it.relations();
       expect(result).toEqual([
@@ -180,12 +182,12 @@ describe("Thing", function () {
 
     it("does not contain rdf types", () => {
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      store.add(
+      internalStore.add(
         sym(uri),
         sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
         sym("https://vocab.example/TypeA"),
       );
-      store.add(
+      internalStore.add(
         sym(uri),
         sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
         sym("https://vocab.example/TypeB"),
@@ -193,7 +195,6 @@ describe("Thing", function () {
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
-        reactiveStore,
       );
       const result = it.relations();
       expect(result).toEqual([]);
@@ -202,12 +203,12 @@ describe("Thing", function () {
 
   it("only follows the given predicate if provided", () => {
     const uri = "https://jane.doe.example/container/file.ttl#fragment";
-    store.add(
+    internalStore.add(
       sym(uri),
       sym("http://vocab.test/first"),
       sym("https://pod.example/first"),
     );
-    store.add(
+    internalStore.add(
       sym(uri),
       sym("http://vocab.test/second"),
       sym("https://pod.example/second"),
@@ -215,7 +216,6 @@ describe("Thing", function () {
     const it = new Thing(
       "https://jane.doe.example/container/file.ttl#fragment",
       store,
-      reactiveStore,
     );
     const result = it.relations("http://vocab.test/first");
     expect(result).toEqual([

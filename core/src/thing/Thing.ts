@@ -1,10 +1,4 @@
-import {
-  IndexedFormula,
-  isBlankNode,
-  isLiteral,
-  isNamedNode,
-  sym,
-} from "rdflib";
+import { isBlankNode, isLiteral, isNamedNode, sym } from "rdflib";
 import { flow } from "../namespaces";
 import { accumulateSubjects } from "./accumulateSubjects";
 import { accumulateValues } from "./accumulateValues";
@@ -38,8 +32,7 @@ export interface Attachment {
 export class Thing {
   constructor(
     readonly uri: string,
-    readonly store: IndexedFormula,
-    readonly reactiveStore: Store,
+    readonly store: Store,
     /**
      * Whether the Thing can be edited according to its access control settings
      */
@@ -76,7 +69,7 @@ export class Thing {
    * Returns all the literal values that are linked to this thing
    */
   literals(): Literal[] {
-    const statements = this.reactiveStore.statementsMatching(sym(this.uri));
+    const statements = this.store.statementsMatching(sym(this.uri));
 
     const values = statements
       .filter((it) => isLiteral(it.object))
@@ -93,7 +86,7 @@ export class Thing {
    * Returns all the links from this thing to other resources
    */
   relations(predicate?: string): Relation[] {
-    const statements = this.reactiveStore.statementsMatching(
+    const statements = this.store.statementsMatching(
       sym(this.uri),
       predicate ? sym(predicate) : null,
     );
@@ -113,7 +106,7 @@ export class Thing {
    * Returns all the links from other resources to this thing
    */
   reverseRelations(predicate?: string): Relation[] {
-    const statements = this.reactiveStore.statementsMatching(
+    const statements = this.store.statementsMatching(
       undefined,
       predicate ? sym(predicate) : null,
       sym(this.uri),
@@ -135,7 +128,7 @@ export class Thing {
   anyValue(...predicateUris: string[]) {
     let value;
     predicateUris.some((it) => {
-      value = this.reactiveStore.anyValue(sym(this.uri), sym(it));
+      value = this.store.anyValue(sym(this.uri), sym(it));
       return Boolean(value);
     });
     return value;
@@ -191,11 +184,11 @@ export class Thing {
 
   private findActivityStreamsPicture() {
     const activityStreamsImage =
-      this.reactiveStore.any(
+      this.store.any(
         sym(this.uri),
         sym("https://www.w3.org/ns/activitystreams#image"),
       ) ||
-      this.reactiveStore.any(
+      this.store.any(
         sym(this.uri),
         sym("https://www.w3.org/ns/activitystreams#icon"),
       );
@@ -205,7 +198,7 @@ export class Thing {
     ) {
       return null;
     }
-    const url = this.reactiveStore.anyValue(
+    const url = this.store.anyValue(
       activityStreamsImage,
       sym("https://www.w3.org/ns/activitystreams#url"),
     );
@@ -220,7 +213,7 @@ export class Thing {
    * Retrieves a list of RDF types for this thing.
    */
   types(): RdfType[] {
-    const uris = this.reactiveStore.findTypes(this.uri);
+    const uris = this.store.findTypes(this.uri);
     return uris.map((uri) => ({
       uri,
       label: labelForType(uri),
@@ -231,7 +224,7 @@ export class Thing {
    * Returns all attachments linked to this thing
    */
   attachments(): Attachment[] {
-    const statements = this.reactiveStore.statementsMatching(
+    const statements = this.store.statementsMatching(
       sym(this.uri),
       flow("attachment"),
     );
@@ -250,19 +243,9 @@ export class Thing {
    * @param SpecificThing - a subclass of Thing to assume
    */
   assume<T>(
-    SpecificThing: new (
-      uri: string,
-      store: IndexedFormula,
-      reactiveStore: Store,
-      editable: boolean,
-    ) => T,
+    SpecificThing: new (uri: string, store: Store, editable: boolean) => T,
   ) {
-    return new SpecificThing(
-      this.uri,
-      this.store,
-      this.reactiveStore,
-      this.editable,
-    );
+    return new SpecificThing(this.uri, this.store, this.editable);
   }
 
   /**

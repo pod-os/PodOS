@@ -8,10 +8,10 @@ import { Store } from "../Store";
 
 describe(addToLabelIndex.name, () => {
   it("add the label of a thing to the label index", () => {
-    const store = graph();
+    const internalStore = graph();
     const mockSession = {} as unknown as PodOsSession;
-    const reactiveStore = new Store(mockSession, undefined, undefined, store);
-    store.add(
+    const store = new Store(mockSession, undefined, undefined, internalStore);
+    internalStore.add(
       st(
         sym("https://thing.test#it"),
         rdfs("label"),
@@ -19,16 +19,10 @@ describe(addToLabelIndex.name, () => {
         sym("https://thing.test"),
       ),
     );
-    const thing = new Thing(
-      "https://thing.test#it",
-      store,
-      reactiveStore,
-      true,
-    );
+    const thing = new Thing("https://thing.test#it", store, true);
     const labelIndex = new LabelIndex(
       "https://alice.test/label-index",
       store,
-      reactiveStore,
       true,
     );
     const result = addToLabelIndex(thing, labelIndex);

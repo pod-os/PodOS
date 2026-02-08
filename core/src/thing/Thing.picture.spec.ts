@@ -5,20 +5,19 @@ import { Store } from "../Store";
 
 describe("Thing", function () {
   describe("picture", () => {
-    let store: IndexedFormula;
+    let internalStore: IndexedFormula;
     const mockSession = {} as unknown as PodOsSession;
-    let reactiveStore: Store;
+    let store: Store;
 
     beforeEach(() => {
-      store = graph();
-      reactiveStore = new Store(mockSession, undefined, undefined, store);
+      internalStore = graph();
+      store = new Store(mockSession, undefined, undefined, internalStore);
     });
 
     it("is null if nothing is found in store", () => {
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
-        reactiveStore,
       );
       expect(it.picture()).toBe(null);
     });
@@ -37,7 +36,7 @@ describe("Thing", function () {
       "http://xmlns.com/foaf/0.1/thumbnail",
     ])("returns the image url from predicate %s", (predicate: string) => {
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      store.add(
+      internalStore.add(
         sym(uri),
         sym(predicate),
         sym("https://jane.doe.example/container/pic.jpg"),
@@ -45,7 +44,6 @@ describe("Thing", function () {
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
-        reactiveStore,
       );
       const result = it.picture();
       expect(result).toEqual({
@@ -61,8 +59,8 @@ describe("Thing", function () {
       (predicate: string) => {
         const subject = "https://jane.doe.example/container/file.ttl#fragment";
         const imageNode = blankNode();
-        store.add(sym(subject), sym(predicate), imageNode);
-        store.add(
+        internalStore.add(sym(subject), sym(predicate), imageNode);
+        internalStore.add(
           imageNode,
           sym("https://www.w3.org/ns/activitystreams#url"),
           sym("https://jane.doe.example/container/pic.jpg"),
@@ -70,7 +68,6 @@ describe("Thing", function () {
         const it = new Thing(
           "https://jane.doe.example/container/file.ttl#fragment",
           store,
-          reactiveStore,
         );
         expect(it.picture()).toEqual({
           url: "https://jane.doe.example/container/pic.jpg",
@@ -88,8 +85,8 @@ describe("Thing", function () {
         const imageNode = sym(
           "https://jane.doe.example/container/file.ttl#image",
         );
-        store.add(sym(subject), sym(predicate), imageNode);
-        store.add(
+        internalStore.add(sym(subject), sym(predicate), imageNode);
+        internalStore.add(
           imageNode,
           sym("https://www.w3.org/ns/activitystreams#url"),
           sym("https://jane.doe.example/container/pic.jpg"),
@@ -97,7 +94,6 @@ describe("Thing", function () {
         const it = new Thing(
           "https://jane.doe.example/container/file.ttl#fragment",
           store,
-          reactiveStore,
         );
         expect(it.picture()).toEqual({
           url: "https://jane.doe.example/container/pic.jpg",

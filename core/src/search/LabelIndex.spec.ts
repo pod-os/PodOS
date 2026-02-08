@@ -4,13 +4,13 @@ import { LabelIndex } from "./LabelIndex";
 import { Store } from "../Store";
 
 describe("label index", () => {
-  let store: IndexedFormula;
+  let internalStore: IndexedFormula;
   const mockSession = {} as unknown as PodOsSession;
-  let reactiveStore: Store;
+  let store: Store;
 
   beforeEach(() => {
-    store = graph();
-    reactiveStore = new Store(mockSession, undefined, undefined, store);
+    internalStore = graph();
+    store = new Store(mockSession, undefined, undefined, internalStore);
   });
 
   describe("get indexed items", () => {
@@ -18,7 +18,6 @@ describe("label index", () => {
       const index = new LabelIndex(
         "https://pod.example/label-index",
         store,
-        reactiveStore,
         false,
       );
       const result = index.getIndexedItems();
@@ -26,7 +25,7 @@ describe("label index", () => {
     });
 
     it("returns a single item and it's label", () => {
-      store.add(
+      internalStore.add(
         sym("https://pod.example/item#it"),
         sym("http://www.w3.org/2000/01/rdf-schema#label"),
         lit("The only item"),
@@ -35,7 +34,6 @@ describe("label index", () => {
       const index = new LabelIndex(
         "https://pod.example/label-index",
         store,
-        reactiveStore,
         false,
       );
       const result = index.getIndexedItems();
@@ -48,19 +46,19 @@ describe("label index", () => {
     });
 
     it("returns multiple items and their labels", () => {
-      store.add(
+      internalStore.add(
         sym("https://pod.example/item1#it"),
         sym("http://www.w3.org/2000/01/rdf-schema#label"),
         lit("First item"),
         sym("https://pod.example/label-index"),
       );
-      store.add(
+      internalStore.add(
         sym("https://pod.example/item2#it"),
         sym("http://www.w3.org/2000/01/rdf-schema#label"),
         lit("Second item"),
         sym("https://pod.example/label-index"),
       );
-      store.add(
+      internalStore.add(
         sym("https://pod.example/item3#it"),
         sym("http://www.w3.org/2000/01/rdf-schema#label"),
         lit("Third item"),
@@ -70,7 +68,6 @@ describe("label index", () => {
       const index = new LabelIndex(
         "https://pod.example/label-index",
         store,
-        reactiveStore,
         false,
       );
       const result = index.getIndexedItems();
@@ -91,13 +88,13 @@ describe("label index", () => {
     });
 
     it("ignores labels that do not originate from the index document", () => {
-      store.add(
+      internalStore.add(
         sym("https://pod.example/item#it"),
         sym("https://vovab.example"),
         lit("irrelevant statement"),
         sym("https://pod.example/label-index"),
       );
-      store.add(
+      internalStore.add(
         sym("https://pod.example/item#it"),
         sym("http://www.w3.org/2000/01/rdf-schema#label"),
         lit("Label from other source"),
@@ -106,7 +103,6 @@ describe("label index", () => {
       const index = new LabelIndex(
         "https://pod.example/label-index",
         store,
-        reactiveStore,
         false,
       );
       const result = index.getIndexedItems();
@@ -116,7 +112,7 @@ describe("label index", () => {
 
   describe("contains", () => {
     it("returns true if the store contains a label for the given uri", () => {
-      store.add(
+      internalStore.add(
         sym("https://pod.example/item#it"),
         sym("http://www.w3.org/2000/01/rdf-schema#label"),
         lit("An item"),
@@ -125,7 +121,6 @@ describe("label index", () => {
       const index = new LabelIndex(
         "https://pod.example/label-index",
         store,
-        reactiveStore,
         false,
       );
       const result = index.contains("https://pod.example/item#it");
@@ -136,7 +131,6 @@ describe("label index", () => {
       const index = new LabelIndex(
         "https://pod.example/label-index",
         store,
-        reactiveStore,
         false,
       );
       const result = index.contains("https://pod.example/item#it");
@@ -144,7 +138,7 @@ describe("label index", () => {
     });
 
     it("returns false if the store contains a label for a different uri", () => {
-      store.add(
+      internalStore.add(
         sym("https://pod.example/other-item#it"),
         sym("http://www.w3.org/2000/01/rdf-schema#label"),
         lit("Another item"),
@@ -153,7 +147,6 @@ describe("label index", () => {
       const index = new LabelIndex(
         "https://pod.example/label-index",
         store,
-        reactiveStore,
         false,
       );
       const result = index.contains("https://pod.example/item#it");
@@ -161,7 +154,7 @@ describe("label index", () => {
     });
 
     it("returns false if the store contains a label for the given uri but from a different source", () => {
-      store.add(
+      internalStore.add(
         sym("https://pod.example/item#it"),
         sym("http://www.w3.org/2000/01/rdf-schema#label"),
         lit("Label from other source"),
@@ -170,7 +163,6 @@ describe("label index", () => {
       const index = new LabelIndex(
         "https://pod.example/label-index",
         store,
-        reactiveStore,
         false,
       );
       const result = index.contains("https://pod.example/item#it");

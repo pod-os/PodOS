@@ -5,13 +5,13 @@ import { Store } from "../Store";
 
 describe("Thing", function () {
   describe("label", () => {
-    let store: IndexedFormula;
+    let internalStore: IndexedFormula;
     const mockSession = {} as unknown as PodOsSession;
-    let reactiveStore: Store;
+    let store: Store;
 
     beforeEach(() => {
-      store = graph();
-      reactiveStore = new Store(mockSession, undefined, undefined, store);
+      internalStore = graph();
+      store = new Store(mockSession, undefined, undefined, internalStore);
     });
 
     describe("if nothing is found in the store", () => {
@@ -19,7 +19,7 @@ describe("Thing", function () {
         "https://jane.doe.example/container/file.ttl#fragment",
         "https://jane.doe.example#fragment",
       ])("the fragment is used", (uri) => {
-        const it = new Thing(uri, store, reactiveStore);
+        const it = new Thing(uri, store);
         expect(it.label()).toBe("fragment");
       });
 
@@ -27,17 +27,12 @@ describe("Thing", function () {
         const it = new Thing(
           "https://jane.doe.example/container/file.ttl",
           store,
-          reactiveStore,
         );
         expect(it.label()).toBe("file.ttl");
       });
 
       it("container name is used if no file is present", () => {
-        const it = new Thing(
-          "https://jane.doe.example/container/",
-          store,
-          reactiveStore,
-        );
+        const it = new Thing("https://jane.doe.example/container/", store);
         expect(it.label()).toBe("container");
       });
 
@@ -52,13 +47,13 @@ describe("Thing", function () {
           { uri: "https://jane.doe.example/#i", label: "jane.doe.example/#i" },
           { uri: "https://jane.doe.example/profile/#me", label: "profile/#me" },
         ])("file and fragment are both used", ({ uri, label }) => {
-          const it = new Thing(uri, store, reactiveStore);
+          const it = new Thing(uri, store);
           expect(it.label()).toBe(label);
         });
       });
 
       it("the host name is used, if no path is given", () => {
-        const it = new Thing("https://jane.doe.example/", store, reactiveStore);
+        const it = new Thing("https://jane.doe.example/", store);
         expect(it.label()).toBe("jane.doe.example");
       });
     });
@@ -77,11 +72,10 @@ describe("Thing", function () {
       "https://schema.org/caption",
     ])("returns the literal value of predicate %s", (predicate: string) => {
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      store.add(sym(uri), sym(predicate), "literal value");
+      internalStore.add(sym(uri), sym(predicate), "literal value");
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
-        reactiveStore,
       );
       const result = it.label();
       expect(result).toEqual("literal value");

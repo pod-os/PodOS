@@ -5,37 +5,29 @@ import { Store } from "../Store";
 
 describe("LDP container", () => {
   describe("contains", () => {
-    let store: IndexedFormula;
+    let internalStore: IndexedFormula;
     const mockSession = {} as unknown as PodOsSession;
-    let reactiveStore: Store;
+    let store: Store;
 
     beforeEach(() => {
-      store = graph();
-      reactiveStore = new Store(mockSession, undefined, undefined, store);
+      internalStore = graph();
+      store = new Store(mockSession, undefined, undefined, internalStore);
     });
 
     it("contains nothing if store is empty", () => {
-      const container = new LdpContainer(
-        "https://pod.test/container/",
-        store,
-        reactiveStore,
-      );
+      const container = new LdpContainer("https://pod.test/container/", store);
       const result = container.contains();
       expect(result).toEqual([]);
     });
 
     it("contains a single file without types", () => {
-      store.add(
+      internalStore.add(
         sym("https://pod.test/container/"),
         sym("http://www.w3.org/ns/ldp#contains"),
         sym("https://pod.test/container/file"),
         sym("https://pod.test/container/"),
       );
-      const container = new LdpContainer(
-        "https://pod.test/container/",
-        store,
-        reactiveStore,
-      );
+      const container = new LdpContainer("https://pod.test/container/", store);
       const result = container.contains();
       expect(result).toEqual([
         {
@@ -46,37 +38,33 @@ describe("LDP container", () => {
     });
 
     it("contains multiple files / containers", () => {
-      store.add(
+      internalStore.add(
         sym("https://pod.test/container/"),
         sym("http://www.w3.org/ns/ldp#contains"),
         sym("https://pod.test/container/file"),
         sym("https://pod.test/container/"),
       );
-      store.add(
+      internalStore.add(
         sym("https://pod.test/container/"),
         sym("http://www.w3.org/ns/ldp#contains"),
         sym("https://pod.test/container/a/"),
         sym("https://pod.test/container/"),
       );
 
-      store.add(
+      internalStore.add(
         sym("https://pod.test/container/"),
         sym("http://www.w3.org/ns/ldp#contains"),
         sym("https://pod.test/container/b/"),
         sym("https://pod.test/container/"),
       );
 
-      store.add(
+      internalStore.add(
         sym("https://pod.test/container/"),
         sym("http://www.w3.org/ns/ldp#contains"),
         sym("https://pod.test/container/c/"),
         sym("https://pod.test/container/"),
       );
-      const container = new LdpContainer(
-        "https://pod.test/container/",
-        store,
-        reactiveStore,
-      );
+      const container = new LdpContainer("https://pod.test/container/", store);
       const result = container.contains();
       expect(result).toEqual([
         {

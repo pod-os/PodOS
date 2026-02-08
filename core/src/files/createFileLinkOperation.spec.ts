@@ -8,16 +8,11 @@ import { Store } from "../Store";
 describe("createPictureLinkOperation", () => {
   it("creates an update operation linking a picture to a thing with schema:image", () => {
     // given a thing
-    const store = graph();
+    const internalStore = graph();
     const mockSession = {} as unknown as PodOsSession;
-    const reactiveStore = new Store(mockSession, undefined, undefined, store);
+    const store = new Store(mockSession, undefined, undefined, internalStore);
 
-    const thing = new Thing(
-      "https://pod.test/things/thing1",
-      store,
-      reactiveStore,
-      true,
-    );
+    const thing = new Thing("https://pod.test/things/thing1", store, true);
 
     // and a picture file
     const file: NewFile = {

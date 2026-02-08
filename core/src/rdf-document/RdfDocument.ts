@@ -1,5 +1,5 @@
 import { Thing } from "../thing";
-import { IndexedFormula, isNamedNode, sym } from "rdflib";
+import { isNamedNode, sym } from "rdflib";
 import { Store } from "../Store";
 
 export interface Subject {
@@ -9,15 +9,14 @@ export interface Subject {
 export class RdfDocument extends Thing {
   constructor(
     readonly uri: string,
-    readonly store: IndexedFormula,
-    readonly reactiveStore: Store,
+    readonly store: Store,
     readonly editable: boolean = false,
   ) {
-    super(uri, store, reactiveStore, editable);
+    super(uri, store, editable);
   }
 
   subjects() {
-    const matches = this.reactiveStore.statementsMatching(
+    const matches = this.store.statementsMatching(
       null,
       null,
       null,

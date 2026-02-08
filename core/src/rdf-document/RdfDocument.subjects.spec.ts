@@ -5,38 +5,30 @@ import { Store } from "../Store";
 
 describe("RdfDocument", () => {
   describe("subjects", () => {
-    let store: IndexedFormula;
+    let internalStore: IndexedFormula;
     const mockSession = {} as unknown as PodOsSession;
-    let reactiveStore: Store;
+    let store: Store;
 
     beforeEach(() => {
-      store = graph();
-      reactiveStore = new Store(mockSession, undefined, undefined, store);
+      internalStore = graph();
+      store = new Store(mockSession, undefined, undefined, internalStore);
     });
 
     it("does not find any subjects if store is empty", () => {
-      const document = new RdfDocument(
-        "http://pod.example/document",
-        store,
-        reactiveStore,
-      );
+      const document = new RdfDocument("http://pod.example/document", store);
 
       expect(document.subjects()).toHaveLength(0);
     });
 
     it("returns single subject if available", () => {
-      store.add(
+      internalStore.add(
         sym("http://pod.example/document#it"),
         sym("http://vocab.test/predicate"),
         "literal value",
         sym("http://pod.example/document"),
       );
 
-      const document = new RdfDocument(
-        "http://pod.example/document",
-        store,
-        reactiveStore,
-      );
+      const document = new RdfDocument("http://pod.example/document", store);
 
       expect(document.subjects()).toHaveLength(1);
       expect(document.subjects()).toContainEqual({
@@ -45,23 +37,19 @@ describe("RdfDocument", () => {
     });
 
     it("return all subjects that are found", () => {
-      store.add(
+      internalStore.add(
         sym("http://pod.example/document#thing-1"),
         sym("http://vocab.test/predicate"),
         "literal value",
         sym("http://pod.example/document"),
       );
-      store.add(
+      internalStore.add(
         sym("http://pod.example/document#thing-2"),
         sym("http://vocab.test/predicate"),
         "literal value",
         sym("http://pod.example/document"),
       );
-      const document = new RdfDocument(
-        "http://pod.example/document",
-        store,
-        reactiveStore,
-      );
+      const document = new RdfDocument("http://pod.example/document", store);
 
       expect(document.subjects()).toHaveLength(2);
       expect(document.subjects()).toContainEqual({
@@ -73,23 +61,19 @@ describe("RdfDocument", () => {
     });
 
     it("return only one subject if there are multiple statements for it", () => {
-      store.add(
+      internalStore.add(
         sym("http://pod.example/document#it"),
         sym("http://vocab.test/predicate1"),
         "literal value",
         sym("http://pod.example/document"),
       );
-      store.add(
+      internalStore.add(
         sym("http://pod.example/document#it"),
         sym("http://vocab.test/predicate2"),
         "literal value",
         sym("http://pod.example/document"),
       );
-      const document = new RdfDocument(
-        "http://pod.example/document",
-        store,
-        reactiveStore,
-      );
+      const document = new RdfDocument("http://pod.example/document", store);
 
       expect(document.subjects()).toHaveLength(1);
       expect(document.subjects()).toContainEqual({
@@ -98,52 +82,40 @@ describe("RdfDocument", () => {
     });
 
     it("do not find subjects, that are not in the document", () => {
-      store.add(
+      internalStore.add(
         sym("http://pod.example/document#it"),
         sym("http://vocab.test/predicate"),
         "literal value",
         sym("http://pod.example/other-document"),
       );
 
-      const document = new RdfDocument(
-        "http://pod.example/document",
-        store,
-        reactiveStore,
-      );
+      const document = new RdfDocument("http://pod.example/document", store);
 
       expect(document.subjects()).toHaveLength(0);
     });
 
     it("subjects do not include blank nodes", () => {
-      store.add(
+      internalStore.add(
         blankNode(),
         sym("http://vocab.test/predicate"),
         "literal value",
         sym("http://pod.example/document"),
       );
 
-      const document = new RdfDocument(
-        "http://pod.example/document",
-        store,
-        reactiveStore,
-      );
+      const document = new RdfDocument("http://pod.example/document", store);
 
       expect(document.subjects()).toHaveLength(0);
     });
 
     it("subjects do not include own document uri", () => {
-      store.add(
+      internalStore.add(
         sym("http://pod.example/document"),
         sym("http://vocab.test/title"),
         "document title",
         sym("http://pod.example/document"),
       );
 
-      const document = new RdfDocument(
-        "http://pod.example/document",
-        store,
-        reactiveStore,
-      );
+      const document = new RdfDocument("http://pod.example/document", store);
 
       expect(document.subjects()).toHaveLength(0);
     });
