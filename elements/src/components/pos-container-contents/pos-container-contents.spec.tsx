@@ -8,8 +8,24 @@ import { PosContainerContents } from './pos-container-contents';
 import { Components, LdpContainer } from '../../components';
 import PosCreateNewContainerItem = Components.PosCreateNewContainerItem;
 import { pressKey } from '../../test/pressKey';
+import { Subject } from 'rxjs';
+import { ContainerContent, Thing } from '@pod-os/core';
 
 describe('pos-container-contents', () => {
+  let container: LdpContainer, observed$: Subject<ContainerContent[]>, resource: Thing;
+  beforeEach(() => {
+    // Given a container
+    observed$ = new Subject<ContainerContent[]>();
+    container = {
+      observeContains: () => observed$,
+    } as unknown as LdpContainer;
+
+    // available as a resource
+    resource = {
+      assume: () => container,
+    } as unknown as Thing;
+  });
+
   it('are empty initially', async () => {
     const page = await newSpecPage({
       components: [PosContainerContents],
@@ -28,16 +44,13 @@ describe('pos-container-contents', () => {
       html: `<pos-container-contents />`,
       supportsShadowDom: false,
     });
-    await page.rootInstance.receiveResource({
-      assume: () => ({
-        contains: () => [
-          {
-            uri: 'https://pod.test/container/file',
-            name: 'file',
-          },
-        ],
-      }),
-    });
+    await page.rootInstance.receiveResource(resource);
+    observed$.next([
+      {
+        uri: 'https://pod.test/container/file',
+        name: 'file',
+      },
+    ]);
     await page.waitForChanges();
 
     expect(page.root).toEqualHtml(`
@@ -60,11 +73,8 @@ describe('pos-container-contents', () => {
       components: [PosContainerContents],
       html: `<pos-container-contents />`,
     });
-    await page.rootInstance.receiveResource({
-      assume: () => ({
-        contains: () => [],
-      }),
-    });
+    await page.rootInstance.receiveResource(resource);
+    observed$.next([]);
     await page.waitForChanges();
 
     expect(page.root).toEqualHtml(`<pos-container-contents>
@@ -84,24 +94,21 @@ describe('pos-container-contents', () => {
       html: `<pos-container-contents />`,
       supportsShadowDom: false,
     });
-    await page.rootInstance.receiveResource({
-      assume: () => ({
-        contains: () => [
-          {
-            uri: 'https://pod.test/container/file',
-            name: 'file',
-          },
-          {
-            uri: 'https://pod.test/container/subdir/',
-            name: 'subdir',
-          },
-          {
-            uri: 'https://pod.test/container/a-file-on-top-of-the-list',
-            name: 'a-file-on-top-of-the-list',
-          },
-        ],
-      }),
-    });
+    await page.rootInstance.receiveResource(resource);
+    observed$.next([
+      {
+        uri: 'https://pod.test/container/file',
+        name: 'file',
+      },
+      {
+        uri: 'https://pod.test/container/subdir/',
+        name: 'subdir',
+      },
+      {
+        uri: 'https://pod.test/container/a-file-on-top-of-the-list',
+        name: 'a-file-on-top-of-the-list',
+      },
+    ]);
     await page.waitForChanges();
 
     expect(page.root).toEqualHtml(`
@@ -134,11 +141,64 @@ describe('pos-container-contents', () => {
     `);
   });
 
+  it('re-renders when container contents in store change', async () => {
+    const page = await newSpecPage({
+      components: [PosContainerContents],
+      html: `<pos-container-contents />`,
+      supportsShadowDom: false,
+    });
+
+    await page.rootInstance.receiveResource(resource);
+
+    observed$.next([
+      {
+        uri: 'https://pod.test/container/file',
+        name: 'file',
+      },
+    ]);
+    await page.waitForChanges();
+
+    expect(page.root).toEqualHtml(`
+      <pos-container-contents>
+        <pos-container-toolbar></pos-container-toolbar>
+        <ul aria-label="Container contents">
+          <li>
+            <pos-resource lazy="" uri="https://pod.test/container/file">
+              <pos-container-item>
+                file
+              </pos-container-item>
+            </pos-resource>
+          </li>
+        </ul>
+      </pos-container-contents>`);
+
+    observed$.next([
+      {
+        uri: 'https://pod.test/container/file-1',
+        name: 'file-1',
+      },
+    ]);
+    await page.waitForChanges();
+
+    expect(page.root).toEqualHtml(`
+      <pos-container-contents>
+        <pos-container-toolbar></pos-container-toolbar>
+        <ul aria-label="Container contents">
+          <li>
+            <pos-resource lazy="" uri="https://pod.test/container/file-1">
+              <pos-container-item>
+                file-1
+              </pos-container-item>
+            </pos-resource>
+          </li>
+        </ul>
+      </pos-container-contents>`);
+  });
+
   describe('new files and folders', () => {
-    let page;
-    let container: LdpContainer;
+    let page: any;
     beforeEach(async () => {
-      // Given a page with container contents
+      // and given a page with container contents
       page = await newSpecPage({
         components: [PosContainerContents],
         html: `<pos-container-contents />`,
@@ -146,12 +206,10 @@ describe('pos-container-contents', () => {
       });
 
       // and a container resource is available
-      container = {
-        contains: () => [],
-      } as LdpContainer;
-      await page.rootInstance.receiveResource({
-        assume: () => container,
-      });
+      await page.rootInstance.receiveResource(resource);
+
+      // as well as (empty) container contents
+      observed$.next([]);
       await page.waitForChanges();
     });
 
