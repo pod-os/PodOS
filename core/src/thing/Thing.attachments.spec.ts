@@ -6,13 +6,13 @@ import { Store } from "../Store";
 
 describe("Thing", function () {
   describe("attachments", () => {
-    let store: IndexedFormula;
+    let internalStore: IndexedFormula;
     const mockSession = {} as unknown as PodOsSession;
-    let reactiveStore: Store;
+    let store: Store;
 
     beforeEach(() => {
-      store = graph();
-      reactiveStore = new Store(mockSession, undefined, undefined, store);
+      internalStore = graph();
+      store = new Store(mockSession, undefined, undefined, internalStore);
     });
 
     it("returns empty list if store is empty", () => {
@@ -20,7 +20,6 @@ describe("Thing", function () {
       const thing = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
-        reactiveStore,
       );
 
       // When: we call attachments()
@@ -35,9 +34,9 @@ describe("Thing", function () {
       const thingUri = "https://jane.doe.example/container/file.ttl#fragment";
       const attachmentUri = "https://jane.doe.example/attachments/document.pdf";
 
-      store.add(sym(thingUri), flow("attachment"), sym(attachmentUri));
+      internalStore.add(sym(thingUri), flow("attachment"), sym(attachmentUri));
 
-      const thing = new Thing(thingUri, store, reactiveStore);
+      const thing = new Thing(thingUri, store);
 
       // When: we call attachments()
       const result = thing.attachments();
@@ -54,9 +53,9 @@ describe("Thing", function () {
       // Given: a Thing with a store containing a blank node attachment
       const thingUri = "https://jane.doe.example/container/file.ttl#fragment";
 
-      store.add(sym(thingUri), flow("attachment"), blankNode("blank"));
+      internalStore.add(sym(thingUri), flow("attachment"), blankNode("blank"));
 
-      const thing = new Thing(thingUri, store, reactiveStore);
+      const thing = new Thing(thingUri, store);
 
       // When: we call attachments()
       const result = thing.attachments();
@@ -69,9 +68,9 @@ describe("Thing", function () {
       // Given: a Thing with a store containing a literal attachment
       const thingUri = "https://jane.doe.example/container/file.ttl#fragment";
 
-      store.add(sym(thingUri), flow("attachment"), "literal value");
+      internalStore.add(sym(thingUri), flow("attachment"), "literal value");
 
-      const thing = new Thing(thingUri, store, reactiveStore);
+      const thing = new Thing(thingUri, store);
 
       // When: we call attachments()
       const result = thing.attachments();

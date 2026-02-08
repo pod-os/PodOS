@@ -11,21 +11,17 @@ class SpecificThing extends Thing {
 
 describe("Thing", function () {
   describe("assume", () => {
-    let store: IndexedFormula;
+    let internalStore: IndexedFormula;
     const mockSession = {} as unknown as PodOsSession;
-    let reactiveStore: Store;
+    let store: Store;
 
     beforeEach(() => {
-      store = graph();
-      reactiveStore = new Store(mockSession, undefined, undefined, store);
+      internalStore = graph();
+      store = new Store(mockSession, undefined, undefined, internalStore);
     });
 
     it("returns instance of specified subclass", () => {
-      const thing = new Thing(
-        "https://jane.doe.example/resource#it",
-        store,
-        reactiveStore,
-      );
+      const thing = new Thing("https://jane.doe.example/resource#it", store);
 
       const result = thing.assume(SpecificThing);
 
@@ -37,7 +33,6 @@ describe("Thing", function () {
       const thing = new Thing(
         "https://jane.doe.example/resource#it",
         store,
-        reactiveStore,
         true,
       );
 
@@ -50,7 +45,6 @@ describe("Thing", function () {
       const thing = new Thing(
         "https://jane.doe.example/resource#it",
         store,
-        reactiveStore,
         true,
       );
 
@@ -63,7 +57,6 @@ describe("Thing", function () {
       const thing = new Thing(
         "https://jane.doe.example/resource#it",
         store,
-        reactiveStore,
         true,
       );
 

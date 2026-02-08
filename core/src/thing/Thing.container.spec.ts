@@ -5,22 +5,18 @@ import { Store } from "../Store";
 
 describe("Thing", () => {
   describe("container", () => {
-    let store: IndexedFormula;
+    let internalStore: IndexedFormula;
     const mockSession = {} as unknown as PodOsSession;
-    let reactiveStore: Store;
+    let store: Store;
 
     beforeEach(() => {
-      store = graph();
-      reactiveStore = new Store(mockSession, undefined, undefined, store);
+      internalStore = graph();
+      store = new Store(mockSession, undefined, undefined, internalStore);
     });
 
     it("returns the container for a thing", () => {
       // given a thing in a container
-      const thing = new Thing(
-        "https://pod.test/things/thing1",
-        store,
-        reactiveStore,
-      );
+      const thing = new Thing("https://pod.test/things/thing1", store);
 
       // when getting the container
       const container = thing.container();
@@ -34,7 +30,6 @@ describe("Thing", () => {
       const thing = new Thing(
         "https://pod.test/things/thing1#path/to/fragment",
         store,
-        reactiveStore,
       );
 
       // when getting the container
@@ -46,11 +41,7 @@ describe("Thing", () => {
 
     it("returns the container for a thing that is a document", () => {
       // given a thing with that is a document
-      const thing = new Thing(
-        "https://pod.test/things/thing1",
-        store,
-        reactiveStore,
-      );
+      const thing = new Thing("https://pod.test/things/thing1", store);
 
       // when getting the container
       const container = thing.container();
@@ -61,11 +52,7 @@ describe("Thing", () => {
 
     it("returns the parent container for a thing that is itself a container", () => {
       // given a thing with that is a container
-      const thing = new Thing(
-        "https://pod.test/things/thing1/",
-        store,
-        reactiveStore,
-      );
+      const thing = new Thing("https://pod.test/things/thing1/", store);
 
       // when getting the container
       const container = thing.container();

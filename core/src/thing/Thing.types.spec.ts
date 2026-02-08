@@ -5,31 +5,23 @@ import { Store } from "../Store";
 
 describe("Thing", function () {
   describe("types", () => {
-    let store: IndexedFormula;
+    let internalStore: IndexedFormula;
     const mockSession = {} as unknown as PodOsSession;
-    let reactiveStore: Store;
+    let store: Store;
 
     beforeEach(() => {
-      store = graph();
-      reactiveStore = new Store(mockSession, undefined, undefined, store);
+      internalStore = graph();
+      store = new Store(mockSession, undefined, undefined, internalStore);
     });
 
     it("are empty is nothing is found in store", () => {
-      const it = new Thing(
-        "https://jane.doe.example/resource#it",
-        store,
-        reactiveStore,
-      );
+      const it = new Thing("https://jane.doe.example/resource#it", store);
       expect(it.types()).toEqual([]);
     });
 
     it("contains the single type of a resource", () => {
-      const it = new Thing(
-        "https://jane.doe.example/resource#it",
-        store,
-        reactiveStore,
-      );
-      store.add(
+      const it = new Thing("https://jane.doe.example/resource#it", store);
+      internalStore.add(
         sym("https://jane.doe.example/resource#it"),
         sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
         sym("https://vocab.example#TypeA"),
@@ -43,22 +35,18 @@ describe("Thing", function () {
     });
 
     it("contains all the types of a resource", () => {
-      const it = new Thing(
-        "https://jane.doe.example/resource#it",
-        store,
-        reactiveStore,
-      );
-      store.add(
+      const it = new Thing("https://jane.doe.example/resource#it", store);
+      internalStore.add(
         sym("https://jane.doe.example/resource#it"),
         sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
         sym("https://vocab.example#TypeA"),
       );
-      store.add(
+      internalStore.add(
         sym("https://jane.doe.example/resource#it"),
         sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
         sym("https://vocab.example#TypeB"),
       );
-      store.add(
+      internalStore.add(
         sym("https://jane.doe.example/resource#it"),
         sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
         sym("https://vocab.example#TypeC"),
@@ -80,17 +68,13 @@ describe("Thing", function () {
     });
 
     it("does not contain types of other things or other properties of the thing", () => {
-      const it = new Thing(
-        "https://jane.doe.example/resource#it",
-        store,
-        reactiveStore,
-      );
-      store.add(
+      const it = new Thing("https://jane.doe.example/resource#it", store);
+      internalStore.add(
         sym("https://jane.doe.example/resource#other"),
         sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
         sym("https://vocab.example#TypeA"),
       );
-      store.add(
+      internalStore.add(
         sym("https://jane.doe.example/resource#it"),
         sym("https://vocab.example#notAType"),
         sym("https://vocab.example#TypeB"),

@@ -6,24 +6,19 @@ import { schema } from "../namespaces";
 import { Store } from "../Store";
 
 describe("TypeIndex", () => {
-  let store: IndexedFormula;
+  let internalStore: IndexedFormula;
   const mockSession = {} as unknown as PodOsSession;
-  let reactiveStore: Store;
+  let store: Store;
 
   beforeEach(() => {
-    store = graph();
-    reactiveStore = new Store(mockSession, undefined, undefined, store);
+    internalStore = graph();
+    store = new Store(mockSession, undefined, undefined, internalStore);
   });
 
   describe("listAll", () => {
     it("returns empty list if nothing is in store", () => {
       // Given: a type index with an empty store
-      const emptyStore = store;
-      const typeIndex = new TypeIndex(
-        "https://pod.test/type-index.ttl",
-        emptyStore,
-        reactiveStore,
-      );
+      const typeIndex = new TypeIndex("https://pod.test/type-index.ttl", store);
 
       // When: calling listAll
       const registrations = typeIndex.listAll();
@@ -38,7 +33,7 @@ describe("TypeIndex", () => {
         const typeIndexUri = "https://pod.test/settings/typeIndex.ttl";
         const registrationUri = `${typeIndexUri}#VideoGames`;
 
-        store.add(
+        internalStore.add(
           quad(
             sym(registrationUri),
             solid("forClass"),
@@ -46,7 +41,7 @@ describe("TypeIndex", () => {
             sym(typeIndexUri),
           ),
         );
-        store.add(
+        internalStore.add(
           quad(
             sym(registrationUri),
             solid("instanceContainer"),
@@ -55,7 +50,7 @@ describe("TypeIndex", () => {
           ),
         );
 
-        const typeIndex = new TypeIndex(typeIndexUri, store, reactiveStore);
+        const typeIndex = new TypeIndex(typeIndexUri, store);
 
         // When listing all entries
         const registrations = typeIndex.listAll();
@@ -80,7 +75,7 @@ describe("TypeIndex", () => {
         const typeIndexUri = "https://pod.test/settings/typeIndex.ttl";
         const registrationUri = `${typeIndexUri}#VideoGames`;
 
-        store.add(
+        internalStore.add(
           quad(
             sym(registrationUri),
             solid("forClass"),
@@ -88,7 +83,7 @@ describe("TypeIndex", () => {
             sym(typeIndexUri),
           ),
         );
-        store.add(
+        internalStore.add(
           quad(
             sym(registrationUri),
             solid("instanceContainer"),
@@ -96,7 +91,7 @@ describe("TypeIndex", () => {
             sym(typeIndexUri),
           ),
         );
-        store.add(
+        internalStore.add(
           quad(
             sym(registrationUri),
             solid("instanceContainer"),
@@ -105,7 +100,7 @@ describe("TypeIndex", () => {
           ),
         );
 
-        const typeIndex = new TypeIndex(typeIndexUri, store, reactiveStore);
+        const typeIndex = new TypeIndex(typeIndexUri, store);
 
         // When listing all entries
         const registrations = typeIndex.listAll();
@@ -136,7 +131,7 @@ describe("TypeIndex", () => {
         const typeIndexUri = "https://pod.test/settings/typeIndex.ttl";
         const registrationUri = `${typeIndexUri}#VideoGames`;
 
-        store.add(
+        internalStore.add(
           quad(
             sym(registrationUri),
             solid("forClass"),
@@ -144,7 +139,7 @@ describe("TypeIndex", () => {
             sym(typeIndexUri),
           ),
         );
-        store.add(
+        internalStore.add(
           quad(
             sym(registrationUri),
             solid("instance"),
@@ -153,7 +148,7 @@ describe("TypeIndex", () => {
           ),
         );
 
-        const typeIndex = new TypeIndex(typeIndexUri, store, reactiveStore);
+        const typeIndex = new TypeIndex(typeIndexUri, store);
 
         // When listing all entries
         const registrations = typeIndex.listAll();
@@ -178,7 +173,7 @@ describe("TypeIndex", () => {
         const typeIndexUri = "https://pod.test/settings/typeIndex.ttl";
         const registrationUri = `${typeIndexUri}#VideoGames`;
 
-        store.add(
+        internalStore.add(
           quad(
             sym(registrationUri),
             solid("forClass"),
@@ -186,7 +181,7 @@ describe("TypeIndex", () => {
             sym(typeIndexUri),
           ),
         );
-        store.add(
+        internalStore.add(
           quad(
             sym(registrationUri),
             solid("instance"),
@@ -194,7 +189,7 @@ describe("TypeIndex", () => {
             sym(typeIndexUri),
           ),
         );
-        store.add(
+        internalStore.add(
           quad(
             sym(registrationUri),
             solid("instance"),
@@ -203,7 +198,7 @@ describe("TypeIndex", () => {
           ),
         );
 
-        const typeIndex = new TypeIndex(typeIndexUri, store, reactiveStore);
+        const typeIndex = new TypeIndex(typeIndexUri, store);
 
         // When listing all entries
         const registrations = typeIndex.listAll();
@@ -235,7 +230,7 @@ describe("TypeIndex", () => {
         const firstRegistrationUri = `${typeIndexUri}#FirstRegistration`;
         const secondRegistrationUri = `${typeIndexUri}#SecondRegistration`;
 
-        store.add(
+        internalStore.add(
           quad(
             sym(firstRegistrationUri),
             solid("forClass"),
@@ -243,7 +238,7 @@ describe("TypeIndex", () => {
             sym(typeIndexUri),
           ),
         );
-        store.add(
+        internalStore.add(
           quad(
             sym(firstRegistrationUri),
             solid("instanceContainer"),
@@ -251,7 +246,7 @@ describe("TypeIndex", () => {
             sym(typeIndexUri),
           ),
         );
-        store.add(
+        internalStore.add(
           quad(
             sym(secondRegistrationUri),
             solid("forClass"),
@@ -259,7 +254,7 @@ describe("TypeIndex", () => {
             sym(typeIndexUri),
           ),
         );
-        store.add(
+        internalStore.add(
           quad(
             sym(secondRegistrationUri),
             solid("instanceContainer"),
@@ -268,7 +263,7 @@ describe("TypeIndex", () => {
           ),
         );
 
-        const typeIndex = new TypeIndex(typeIndexUri, store, reactiveStore);
+        const typeIndex = new TypeIndex(typeIndexUri, store);
 
         // When listing all entries
         const registrations = typeIndex.listAll();
@@ -306,7 +301,7 @@ describe("TypeIndex", () => {
         const typeIndexUri = "https://pod.test/settings/typeIndex.ttl";
         const registrationUri = `${typeIndexUri}#VideoGames`;
 
-        store.add(
+        internalStore.add(
           quad(
             sym(registrationUri),
             solid("forClass"),
@@ -314,7 +309,7 @@ describe("TypeIndex", () => {
             sym("https://wrong.dcument"),
           ),
         );
-        store.add(
+        internalStore.add(
           quad(
             sym(registrationUri),
             solid("instanceContainer"),
@@ -323,7 +318,7 @@ describe("TypeIndex", () => {
           ),
         );
 
-        const typeIndex = new TypeIndex(typeIndexUri, store, reactiveStore);
+        const typeIndex = new TypeIndex(typeIndexUri, store);
 
         // When listing all entries
         const registrations = typeIndex.listAll();
@@ -337,7 +332,7 @@ describe("TypeIndex", () => {
         const typeIndexUri = "https://pod.test/settings/typeIndex.ttl";
         const registrationUri = `${typeIndexUri}#VideoGames`;
 
-        store.add(
+        internalStore.add(
           quad(
             sym(registrationUri),
             solid("forClass"),
@@ -345,7 +340,7 @@ describe("TypeIndex", () => {
             sym(typeIndexUri),
           ),
         );
-        store.add(
+        internalStore.add(
           quad(
             sym(registrationUri),
             solid("instanceContainer"),
@@ -354,7 +349,7 @@ describe("TypeIndex", () => {
           ),
         );
 
-        const typeIndex = new TypeIndex(typeIndexUri, store, reactiveStore);
+        const typeIndex = new TypeIndex(typeIndexUri, store);
 
         // When listing all entries
         const registrations = typeIndex.listAll();
@@ -374,7 +369,7 @@ describe("TypeIndex", () => {
         const typeIndexUri = "https://pod.test/settings/typeIndex.ttl";
         const registrationUri = `${typeIndexUri}#VideoGames`;
 
-        store.add(
+        internalStore.add(
           quad(
             sym(registrationUri),
             solid("forClass"),
@@ -382,7 +377,7 @@ describe("TypeIndex", () => {
             sym(typeIndexUri),
           ),
         );
-        store.add(
+        internalStore.add(
           quad(
             sym(registrationUri),
             solid("instance"),
@@ -391,7 +386,7 @@ describe("TypeIndex", () => {
           ),
         );
 
-        const typeIndex = new TypeIndex(typeIndexUri, store, reactiveStore);
+        const typeIndex = new TypeIndex(typeIndexUri, store);
 
         // When listing all entries
         const registrations = typeIndex.listAll();
@@ -414,7 +409,7 @@ describe("TypeIndex", () => {
       const typeIndexUri = "https://pod.test/settings/typeIndex.ttl";
       const registrationUri = `${typeIndexUri}#VideoGames`;
 
-      store.add(
+      internalStore.add(
         quad(
           sym(registrationUri),
           solid("forClass"),
@@ -422,7 +417,7 @@ describe("TypeIndex", () => {
           sym(typeIndexUri),
         ),
       );
-      store.add(
+      internalStore.add(
         quad(
           sym(registrationUri),
           solid("instanceContainer"),
@@ -431,7 +426,7 @@ describe("TypeIndex", () => {
         ),
       );
 
-      const typeIndex = new TypeIndex(typeIndexUri, store, reactiveStore);
+      const typeIndex = new TypeIndex(typeIndexUri, store);
 
       // When: listing all entries
       const registrations = typeIndex.listAll();

@@ -1,4 +1,3 @@
-import { graph } from "rdflib";
 import { err, ok } from "neverthrow";
 import { FileGateway } from "./FileGateway";
 import { Store } from "../Store";
@@ -16,9 +15,7 @@ describe("PictureGateway", () => {
     mockStore = createMockStore();
 
     // and a thing in a container
-    const store = graph();
-
-    thing = new Thing("https://pod.test/things/thing1", store, mockStore, true);
+    thing = new Thing("https://pod.test/things/thing1", mockStore, true);
 
     // and a file fetcher that can create files
     fileFetcher = createMockFileFetcher();
@@ -198,7 +195,6 @@ describe("PictureGateway", () => {
   }
 
   function createMockStore(): Store {
-    const store = graph();
     return {
       fetcher: {
         load: jest.fn(),
@@ -207,7 +203,7 @@ describe("PictureGateway", () => {
         update: jest.fn(),
       },
       get: jest.fn(
-        (uri: string) => new Thing(uri, store, {} as unknown as Store, true),
+        (uri: string) => new Thing(uri, {} as unknown as Store, true),
       ),
       executeUpdate: jest.fn().mockResolvedValue(undefined),
     } as unknown as Store;

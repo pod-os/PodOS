@@ -4,13 +4,13 @@ import { Thing } from "./Thing";
 import { Store } from "../Store";
 
 describe("Thing", function () {
-  let store: IndexedFormula;
+  let internalStore: IndexedFormula;
   const mockSession = {} as unknown as PodOsSession;
-  let reactiveStore: Store;
+  let store: Store;
 
   beforeEach(() => {
-    store = graph();
-    reactiveStore = new Store(mockSession, undefined, undefined, store);
+    internalStore = graph();
+    store = new Store(mockSession, undefined, undefined, internalStore);
   });
 
   describe("description", () => {
@@ -18,7 +18,6 @@ describe("Thing", function () {
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
-        reactiveStore,
       );
       expect(it.description()).toBeUndefined();
     });
@@ -35,11 +34,10 @@ describe("Thing", function () {
       "http://www.w3.org/2006/vcard/ns#note",
     ])("returns the literal value of predicate %s", (predicate: string) => {
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      store.add(sym(uri), sym(predicate), "literal value");
+      internalStore.add(sym(uri), sym(predicate), "literal value");
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
-        reactiveStore,
       );
       const result = it.description();
       expect(result).toEqual("literal value");

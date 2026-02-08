@@ -15,16 +15,11 @@ describe("PictureGateway", () => {
   beforeEach(() => {
     // given a thing in a container
 
-    const store = graph();
+    const internalStore = graph();
     const mockSession = {} as unknown as PodOsSession;
-    const reactiveStore = new Store(mockSession, undefined, undefined, store);
+    const store = new Store(mockSession, undefined, undefined, internalStore);
 
-    thing = new Thing(
-      "https://pod.test/things/thing1",
-      store,
-      reactiveStore,
-      true,
-    );
+    thing = new Thing("https://pod.test/things/thing1", store, true);
 
     // and an attachment gateway
     attachmentGateway = createMockAttachmentGateway();
