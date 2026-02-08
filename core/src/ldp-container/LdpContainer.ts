@@ -1,5 +1,7 @@
-import { IndexedFormula, sym } from "rdflib";
+import { sym } from "rdflib";
 import { labelFromUri, Thing } from "../thing";
+import { Store } from "../Store";
+import { debounceTime, filter, map, merge, Observable, startWith } from "rxjs";
 
 export interface ContainerContent {
   uri: string;
@@ -8,7 +10,7 @@ export interface ContainerContent {
 export class LdpContainer extends Thing {
   constructor(
     readonly uri: string,
-    readonly store: IndexedFormula,
+    readonly store: Store,
     readonly editable: boolean = false,
   ) {
     super(uri, store, editable);
@@ -25,5 +27,18 @@ export class LdpContainer extends Thing {
       uri: content.object.value,
       name: labelFromUri(content.object.value),
     }));
+  }
+
+  observeContains(): Observable<ContainerContent[]> {
+    return merge(this.store.additions$, this.store.removals$).pipe(
+      filter(
+        (quad) =>
+          quad.graph.value == this.uri &&
+          quad.predicate.value == "http://www.w3.org/ns/ldp#contains",
+      ),
+      map(() => this.contains()),
+      startWith(this.contains()),
+      debounceTime(250),
+    );
   }
 }

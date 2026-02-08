@@ -1,10 +1,20 @@
-import { graph, sym } from "rdflib";
+import { graph, IndexedFormula, sym } from "rdflib";
+import { PodOsSession } from "../authentication";
 import { Thing } from "./Thing";
+import { Store } from "../Store";
 
 describe("Thing", function () {
   describe("reverse relations", () => {
+    let internalStore: IndexedFormula;
+    const mockSession = {} as unknown as PodOsSession;
+    let store: Store;
+
+    beforeEach(() => {
+      internalStore = graph();
+      store = new Store(mockSession, undefined, undefined, internalStore);
+    });
+
     it("are empty, if store is empty", () => {
-      const store = graph();
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
@@ -13,9 +23,8 @@ describe("Thing", function () {
     });
 
     it("contains a single relation from store", () => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      store.add(
+      internalStore.add(
         sym("https://pod.example/resource"),
         sym("http://vocab.test/predicate"),
         sym(uri),
@@ -35,14 +44,13 @@ describe("Thing", function () {
     });
 
     it("contains multiple relations from store", () => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      store.add(
+      internalStore.add(
         sym("https://pod.example/first"),
         sym("http://vocab.test/first"),
         sym(uri),
       );
-      store.add(
+      internalStore.add(
         sym("https://pod.example/second"),
         sym("http://vocab.test/second"),
         sym(uri),
@@ -67,14 +75,13 @@ describe("Thing", function () {
     });
 
     it("contains multiple uris for a relation", () => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      store.add(
+      internalStore.add(
         sym("https://pod.example/first"),
         sym("http://vocab.test/predicate"),
         sym(uri),
       );
-      store.add(
+      internalStore.add(
         sym("https://pod.example/second"),
         sym("http://vocab.test/predicate"),
         sym(uri),
@@ -94,24 +101,23 @@ describe("Thing", function () {
     });
 
     it("contains multiple relations and uris", () => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      store.add(
+      internalStore.add(
         sym("https://pod.example/first/1"),
         sym("http://vocab.test/first"),
         sym(uri),
       );
-      store.add(
+      internalStore.add(
         sym("https://pod.example/second/1"),
         sym("http://vocab.test/second"),
         sym(uri),
       );
-      store.add(
+      internalStore.add(
         sym("https://pod.example/second/2"),
         sym("http://vocab.test/second"),
         sym(uri),
       );
-      store.add(
+      internalStore.add(
         sym("https://pod.example/third/1"),
         sym("http://vocab.test/third"),
         sym(uri),
@@ -144,15 +150,14 @@ describe("Thing", function () {
     });
 
     it("only follows the given predicate if provided", () => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      store.add(
+      internalStore.add(
         sym("https://pod.example/first"),
         sym("http://vocab.test/first"),
 
         sym(uri),
       );
-      store.add(
+      internalStore.add(
         sym("https://pod.example/second"),
         sym("http://vocab.test/second"),
         sym(uri),

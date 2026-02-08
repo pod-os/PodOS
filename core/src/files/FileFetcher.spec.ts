@@ -4,7 +4,8 @@ import { BinaryFile } from "./BinaryFile";
 import { BrokenFile } from "./BrokenFile";
 import { FileFetcher } from "./FileFetcher";
 import { LdpContainer } from "../ldp-container";
-import { graph } from "rdflib";
+import { Store } from "../Store";
+import { graph, IndexedFormula } from "rdflib";
 
 describe("FileFetcher", () => {
   describe("fetch file", () => {
@@ -169,9 +170,15 @@ describe("FileFetcher", () => {
     describe("if successful", () => {
       let fileFetcher: FileFetcher;
       let session: PodOsSession;
+      let internalStore: IndexedFormula;
+      let store: Store;
+
       beforeEach(() => {
         // given a session
         session = mockSession();
+        // and a store
+        internalStore = graph();
+        store = new Store(session, undefined, undefined, internalStore);
         // and a file fetcher
         fileFetcher = new FileFetcher(session);
         // and PUT usually works
@@ -187,7 +194,7 @@ describe("FileFetcher", () => {
       it("creates a new container using PUT request and returns it", async () => {
         const parent = new LdpContainer(
           "https://pod.test/parent/",
-          graph(),
+          store,
           true,
         );
         const result = await fileFetcher.createNewFolder(parent, "sub-folder");
@@ -207,7 +214,7 @@ describe("FileFetcher", () => {
       it("encodes name as URI", async () => {
         const parent = new LdpContainer(
           "https://pod.test/parent/",
-          graph(),
+          store,
           true,
         );
         await fileFetcher.createNewFolder(parent, "My (new?) / <folder>!");
@@ -223,9 +230,14 @@ describe("FileFetcher", () => {
     describe("if it fails", () => {
       let fileFetcher: FileFetcher;
       let session: PodOsSession;
+      let internalStore: IndexedFormula;
+      let store: Store;
       beforeEach(() => {
         // given a session
         session = mockSession();
+        // and a store
+        internalStore = graph();
+        store = new Store(session, undefined, undefined, internalStore);
         // and a file fetcher
         fileFetcher = new FileFetcher(session);
       });
@@ -243,7 +255,7 @@ describe("FileFetcher", () => {
         // when a new file is created
         const parent = new LdpContainer(
           "https://pod.test/parent/",
-          graph(),
+          store,
           true,
         );
         const result = await fileFetcher.createNewFolder(parent, "my-folder");
@@ -265,7 +277,7 @@ describe("FileFetcher", () => {
         // when a new file is created
         const parent = new LdpContainer(
           "https://pod.test/parent/",
-          graph(),
+          store,
           true,
         );
         const result = await fileFetcher.createNewFolder(parent, "my-folder");
@@ -284,9 +296,14 @@ describe("FileFetcher", () => {
     describe("if successful", () => {
       let fileFetcher: FileFetcher;
       let session: PodOsSession;
+      let internalStore: IndexedFormula;
+      let store: Store;
       beforeEach(() => {
         // given a session
         session = mockSession();
+        // and a store
+        internalStore = graph();
+        store = new Store(session, undefined, undefined, internalStore);
         // and a file fetcher
         fileFetcher = new FileFetcher(session);
         // and PUT usually works
@@ -302,7 +319,7 @@ describe("FileFetcher", () => {
       it("creates a new turtle file by default and returns it", async () => {
         const parent = new LdpContainer(
           "https://pod.test/parent/",
-          graph(),
+          store,
           true,
         );
         const result = await fileFetcher.createNewFile(parent, "my-file");
@@ -351,7 +368,7 @@ describe("FileFetcher", () => {
         async ({ extension, contentType }) => {
           const parent = new LdpContainer(
             "https://pod.test/parent/",
-            graph(),
+            store,
             true,
           );
           const name = `file${extension}`;
@@ -379,7 +396,7 @@ describe("FileFetcher", () => {
       it("encodes name as URI", async () => {
         const parent = new LdpContainer(
           "https://pod.test/parent/",
-          graph(),
+          store,
           true,
         );
         await fileFetcher.createNewFile(parent, "My (new?) / <file>!");
@@ -399,7 +416,7 @@ describe("FileFetcher", () => {
         // given a parent container
         const parent = new LdpContainer(
           "https://pod.test/parent/",
-          graph(),
+          store,
           true,
         );
 
@@ -438,9 +455,14 @@ describe("FileFetcher", () => {
     describe("if it fails", () => {
       let fileFetcher: FileFetcher;
       let session: PodOsSession;
+      let internalStore: IndexedFormula;
+      let store: Store;
       beforeEach(() => {
         // given a session
         session = mockSession();
+        // and a store
+        internalStore = graph();
+        store = new Store(session, undefined, undefined, internalStore);
         // and a file fetcher
         fileFetcher = new FileFetcher(session);
       });
@@ -458,7 +480,7 @@ describe("FileFetcher", () => {
         // when a new file is created
         const parent = new LdpContainer(
           "https://pod.test/parent/",
-          graph(),
+          store,
           true,
         );
         const result = await fileFetcher.createNewFile(parent, "my-file");
@@ -480,7 +502,7 @@ describe("FileFetcher", () => {
         // when a new file is created
         const parent = new LdpContainer(
           "https://pod.test/parent/",
-          graph(),
+          store,
           true,
         );
         const result = await fileFetcher.createNewFile(parent, "my-file");

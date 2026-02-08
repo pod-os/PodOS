@@ -1,12 +1,17 @@
 import { graph } from "rdflib";
+import { PodOsSession } from "../authentication";
 import { Thing } from "../thing";
 import { NewFile } from "../files";
 import { createFileLinkOperation } from "./createFileLinkOperation";
+import { Store } from "../Store";
 
 describe("createPictureLinkOperation", () => {
   it("creates an update operation linking a picture to a thing with schema:image", () => {
     // given a thing
-    const store = graph();
+    const internalStore = graph();
+    const mockSession = {} as unknown as PodOsSession;
+    const store = new Store(mockSession, undefined, undefined, internalStore);
+
     const thing = new Thing("https://pod.test/things/thing1", store, true);
 
     // and a picture file

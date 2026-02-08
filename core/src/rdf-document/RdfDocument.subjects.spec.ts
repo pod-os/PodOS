@@ -1,18 +1,27 @@
-import { blankNode, graph, sym } from "rdflib";
+import { blankNode, graph, IndexedFormula, sym } from "rdflib";
+import { PodOsSession } from "../authentication";
 import { RdfDocument } from "./RdfDocument";
+import { Store } from "../Store";
 
 describe("RdfDocument", () => {
   describe("subjects", () => {
+    let internalStore: IndexedFormula;
+    const mockSession = {} as unknown as PodOsSession;
+    let store: Store;
+
+    beforeEach(() => {
+      internalStore = graph();
+      store = new Store(mockSession, undefined, undefined, internalStore);
+    });
+
     it("does not find any subjects if store is empty", () => {
-      const store = graph();
       const document = new RdfDocument("http://pod.example/document", store);
 
       expect(document.subjects()).toHaveLength(0);
     });
 
     it("returns single subject if available", () => {
-      const store = graph();
-      store.add(
+      internalStore.add(
         sym("http://pod.example/document#it"),
         sym("http://vocab.test/predicate"),
         "literal value",
@@ -28,14 +37,13 @@ describe("RdfDocument", () => {
     });
 
     it("return all subjects that are found", () => {
-      const store = graph();
-      store.add(
+      internalStore.add(
         sym("http://pod.example/document#thing-1"),
         sym("http://vocab.test/predicate"),
         "literal value",
         sym("http://pod.example/document"),
       );
-      store.add(
+      internalStore.add(
         sym("http://pod.example/document#thing-2"),
         sym("http://vocab.test/predicate"),
         "literal value",
@@ -53,14 +61,13 @@ describe("RdfDocument", () => {
     });
 
     it("return only one subject if there are multiple statements for it", () => {
-      const store = graph();
-      store.add(
+      internalStore.add(
         sym("http://pod.example/document#it"),
         sym("http://vocab.test/predicate1"),
         "literal value",
         sym("http://pod.example/document"),
       );
-      store.add(
+      internalStore.add(
         sym("http://pod.example/document#it"),
         sym("http://vocab.test/predicate2"),
         "literal value",
@@ -75,8 +82,7 @@ describe("RdfDocument", () => {
     });
 
     it("do not find subjects, that are not in the document", () => {
-      const store = graph();
-      store.add(
+      internalStore.add(
         sym("http://pod.example/document#it"),
         sym("http://vocab.test/predicate"),
         "literal value",
@@ -89,8 +95,7 @@ describe("RdfDocument", () => {
     });
 
     it("subjects do not include blank nodes", () => {
-      const store = graph();
-      store.add(
+      internalStore.add(
         blankNode(),
         sym("http://vocab.test/predicate"),
         "literal value",
@@ -103,8 +108,7 @@ describe("RdfDocument", () => {
     });
 
     it("subjects do not include own document uri", () => {
-      const store = graph();
-      store.add(
+      internalStore.add(
         sym("http://pod.example/document"),
         sym("http://vocab.test/title"),
         "document title",

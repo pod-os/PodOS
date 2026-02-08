@@ -1,10 +1,20 @@
-import { blankNode, graph, sym } from "rdflib";
+import { blankNode, IndexedFormula, graph, sym } from "rdflib";
+import { PodOsSession } from "../authentication";
 import { Thing } from "./Thing";
+import { Store } from "../Store";
 
 describe("Thing", function () {
   describe("picture", () => {
+    let internalStore: IndexedFormula;
+    const mockSession = {} as unknown as PodOsSession;
+    let store: Store;
+
+    beforeEach(() => {
+      internalStore = graph();
+      store = new Store(mockSession, undefined, undefined, internalStore);
+    });
+
     it("is null if nothing is found in store", () => {
-      const store = graph();
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
@@ -25,9 +35,8 @@ describe("Thing", function () {
       "http://xmlns.com/foaf/0.1/depiction",
       "http://xmlns.com/foaf/0.1/thumbnail",
     ])("returns the image url from predicate %s", (predicate: string) => {
-      const store = graph();
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      store.add(
+      internalStore.add(
         sym(uri),
         sym(predicate),
         sym("https://jane.doe.example/container/pic.jpg"),
@@ -48,11 +57,10 @@ describe("Thing", function () {
     ])(
       "returns the url of an activity streams image blank node linked via %s",
       (predicate: string) => {
-        const store = graph();
         const subject = "https://jane.doe.example/container/file.ttl#fragment";
         const imageNode = blankNode();
-        store.add(sym(subject), sym(predicate), imageNode);
-        store.add(
+        internalStore.add(sym(subject), sym(predicate), imageNode);
+        internalStore.add(
           imageNode,
           sym("https://www.w3.org/ns/activitystreams#url"),
           sym("https://jane.doe.example/container/pic.jpg"),
@@ -73,13 +81,12 @@ describe("Thing", function () {
     ])(
       "returns the url of an activity streams image named node linked via %s",
       (predicate: string) => {
-        const store = graph();
         const subject = "https://jane.doe.example/container/file.ttl#fragment";
         const imageNode = sym(
           "https://jane.doe.example/container/file.ttl#image",
         );
-        store.add(sym(subject), sym(predicate), imageNode);
-        store.add(
+        internalStore.add(sym(subject), sym(predicate), imageNode);
+        internalStore.add(
           imageNode,
           sym("https://www.w3.org/ns/activitystreams#url"),
           sym("https://jane.doe.example/container/pic.jpg"),
