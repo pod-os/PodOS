@@ -15,6 +15,7 @@ import {
   executeUpdate,
   ModuleConfig,
   PreferencesQuery,
+  ProfileQuery,
   UpdateOperation,
 } from "@solid-data-modules/rdflib-utils";
 import {
@@ -353,6 +354,18 @@ export class Store {
     if (typeof preferencesDoc === "string")
       preferencesDoc = sym(preferencesDoc);
     return new PreferencesQuery(this.internalStore, webId, preferencesDoc);
+  }
+
+  /**
+   * Create a query to fetch information from a user's profile document
+   * 
+   * @param webId 
+   * @returns {ProfileQuery} ProfileQuery instance. See [@solid-data-modules/rdflib-utils
+](https://solid-contrib.github.io/data-modules/rdflib-utils/classes/index.ProfileQuery.html)
+   */
+  profileQuery(webId: string | NamedNode): ProfileQuery {
+    if (typeof webId === "string") webId = sym(webId);
+    return new ProfileQuery(webId, this.internalStore);
   }
 }
 
