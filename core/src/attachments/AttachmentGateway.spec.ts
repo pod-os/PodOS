@@ -18,12 +18,7 @@ describe("AttachmentGateway", () => {
     const store = new Store(mockSession, undefined, undefined, internalStore);
 
     // and a thing in a container
-    thing = new Thing(
-      "https://pod.test/things/thing1",
-      internalStore,
-      store,
-      true,
-    );
+    thing = new Thing("https://pod.test/things/thing1", store, true);
 
     // and a file gateway
     fileGateway = createMockFileGateway();

@@ -194,7 +194,6 @@ describe("FileFetcher", () => {
       it("creates a new container using PUT request and returns it", async () => {
         const parent = new LdpContainer(
           "https://pod.test/parent/",
-          internalStore,
           store,
           true,
         );
@@ -215,7 +214,6 @@ describe("FileFetcher", () => {
       it("encodes name as URI", async () => {
         const parent = new LdpContainer(
           "https://pod.test/parent/",
-          internalStore,
           store,
           true,
         );
@@ -257,7 +255,6 @@ describe("FileFetcher", () => {
         // when a new file is created
         const parent = new LdpContainer(
           "https://pod.test/parent/",
-          internalStore,
           store,
           true,
         );
@@ -280,7 +277,6 @@ describe("FileFetcher", () => {
         // when a new file is created
         const parent = new LdpContainer(
           "https://pod.test/parent/",
-          internalStore,
           store,
           true,
         );
@@ -323,7 +319,6 @@ describe("FileFetcher", () => {
       it("creates a new turtle file by default and returns it", async () => {
         const parent = new LdpContainer(
           "https://pod.test/parent/",
-          internalStore,
           store,
           true,
         );
@@ -373,7 +368,6 @@ describe("FileFetcher", () => {
         async ({ extension, contentType }) => {
           const parent = new LdpContainer(
             "https://pod.test/parent/",
-            internalStore,
             store,
             true,
           );
@@ -402,7 +396,6 @@ describe("FileFetcher", () => {
       it("encodes name as URI", async () => {
         const parent = new LdpContainer(
           "https://pod.test/parent/",
-          internalStore,
           store,
           true,
         );
@@ -423,7 +416,6 @@ describe("FileFetcher", () => {
         // given a parent container
         const parent = new LdpContainer(
           "https://pod.test/parent/",
-          internalStore,
           store,
           true,
         );
@@ -488,7 +480,6 @@ describe("FileFetcher", () => {
         // when a new file is created
         const parent = new LdpContainer(
           "https://pod.test/parent/",
-          internalStore,
           store,
           true,
         );
@@ -511,7 +502,6 @@ describe("FileFetcher", () => {
         // when a new file is created
         const parent = new LdpContainer(
           "https://pod.test/parent/",
-          internalStore,
           store,
           true,
         );

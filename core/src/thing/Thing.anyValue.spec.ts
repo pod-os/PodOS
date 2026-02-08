@@ -5,21 +5,19 @@ import { Store } from "../Store";
 
 describe("Thing", function () {
   describe("any value", () => {
-    let store: IndexedFormula;
+    let internalStore: IndexedFormula;
     const mockSession = {} as unknown as PodOsSession;
-    let reactiveStore: Store;
+    let store: Store;
 
     beforeEach(() => {
-      store = graph();
-      reactiveStore = new Store(mockSession, undefined, undefined, store);
+      internalStore = graph();
+      store = new Store(mockSession, undefined, undefined, internalStore);
     });
 
     it("is undefined if nothing is found in store", () => {
-      const store = graph();
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
-        reactiveStore,
       );
       expect(it.anyValue("https://vocab.test/predicate")).toBeUndefined();
     });
@@ -27,11 +25,10 @@ describe("Thing", function () {
     it("is the only value for the predicate", () => {
       const predicate = "https://vocab.test/predicate";
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      store.add(sym(uri), sym(predicate), "literal value");
+      internalStore.add(sym(uri), sym(predicate), "literal value");
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
-        reactiveStore,
       );
       expect(it.anyValue(predicate)).toBe("literal value");
     });
@@ -39,12 +36,11 @@ describe("Thing", function () {
     it("is the first value to be found for the predicate", () => {
       const predicate = "https://vocab.test/predicate";
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      store.add(sym(uri), sym(predicate), "first value");
-      store.add(sym(uri), sym(predicate), "second value");
+      internalStore.add(sym(uri), sym(predicate), "first value");
+      internalStore.add(sym(uri), sym(predicate), "second value");
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
-        reactiveStore,
       );
       expect(it.anyValue(predicate)).toBe("first value");
     });
@@ -53,12 +49,11 @@ describe("Thing", function () {
       const firstPredicate = "https://vocab.test/first-predicate";
       const secondPredicate = "https://vocab.test/second-predicate";
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      store.add(sym(uri), sym(firstPredicate), "first value");
-      store.add(sym(uri), sym(secondPredicate), "second value");
+      internalStore.add(sym(uri), sym(firstPredicate), "first value");
+      internalStore.add(sym(uri), sym(secondPredicate), "second value");
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
-        reactiveStore,
       );
       expect(it.anyValue(firstPredicate, secondPredicate)).toBe("first value");
     });
@@ -67,19 +62,18 @@ describe("Thing", function () {
       const firstPredicate = "https://vocab.test/first-predicate";
       const secondPredicate = "https://vocab.test/second-predicate";
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      store.add(sym(uri), sym(secondPredicate), "second value");
+      internalStore.add(sym(uri), sym(secondPredicate), "second value");
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
-        reactiveStore,
       );
       expect(it.anyValue(firstPredicate, secondPredicate)).toBe("second value");
     });
 
     it("is undefined when called with no predicates", () => {
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      store.add(sym(uri), sym("https://vocab.test/predicate"), "value");
-      const it = new Thing(uri, store, reactiveStore);
+      internalStore.add(sym(uri), sym("https://vocab.test/predicate"), "value");
+      const it = new Thing(uri, store);
 
       const result = it.anyValue();
 
@@ -89,8 +83,8 @@ describe("Thing", function () {
     it("returns first value when predicates contain duplicates", () => {
       const predicate = "https://vocab.test/predicate";
       const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      store.add(sym(uri), sym(predicate), "test value");
-      const it = new Thing(uri, store, reactiveStore);
+      internalStore.add(sym(uri), sym(predicate), "test value");
+      const it = new Thing(uri, store);
 
       const result = it.anyValue(predicate, predicate, predicate);
 

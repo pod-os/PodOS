@@ -1,4 +1,4 @@
-import { IndexedFormula, sym } from "rdflib";
+import { sym } from "rdflib";
 import { Thing } from "../thing";
 import { Store } from "../Store";
 import { ProfileQuery } from "@solid-data-modules/rdflib-utils";
@@ -10,12 +10,11 @@ export class WebIdProfile extends Thing {
   private profileQuery: ProfileQuery;
   constructor(
     readonly webId: string,
-    readonly store: IndexedFormula,
-    readonly reactiveStore: Store,
+    readonly store: Store,
     readonly editable: boolean = false,
   ) {
-    super(webId, store, reactiveStore, editable);
-    this.profileQuery = this.reactiveStore.profileQuery(this.webId);
+    super(webId, store, editable);
+    this.profileQuery = this.store.profileQuery(this.webId);
   }
 
   /**
@@ -40,7 +39,7 @@ export class WebIdProfile extends Thing {
   getPrivateTypeIndex() {
     const preferences = this.profileQuery.queryPreferencesFile();
     if (!preferences) return undefined;
-    const query = this.reactiveStore.preferencesQuery(this.webId, preferences);
+    const query = this.store.preferencesQuery(this.webId, preferences);
     return query.queryPrivateTypeIndex()?.value;
   }
 
@@ -48,7 +47,7 @@ export class WebIdProfile extends Thing {
    * Returns the URIs of the private label indexes
    */
   getPrivateLabelIndexes(): string[] {
-    const profileNodes = this.reactiveStore.each(
+    const profileNodes = this.store.each(
       sym(this.webId),
       sym("http://www.w3.org/ns/solid/terms#privateLabelIndex"),
       undefined,
@@ -57,7 +56,7 @@ export class WebIdProfile extends Thing {
 
     const preferences = this.getPreferencesFile();
     if (preferences) {
-      const preferencesNodes = this.reactiveStore.each(
+      const preferencesNodes = this.store.each(
         sym(this.webId),
         sym("http://www.w3.org/ns/solid/terms#privateLabelIndex"),
         undefined,
