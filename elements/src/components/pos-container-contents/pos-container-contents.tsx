@@ -1,6 +1,7 @@
 import { ContainerContent, LdpContainer, Thing } from '@pod-os/core';
 import { Component, Event, EventEmitter, h, Host, Listen, State } from '@stencil/core';
 import { ResourceAware, subscribeResource } from '../events/ResourceAware';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   tag: 'pos-container-contents',
@@ -20,6 +21,8 @@ export class PosContainerContents implements ResourceAware {
 
   @State()
   private createNewItem: 'file' | 'folder' | null = null;
+
+  private readonly disconnected$ = new Subject<void>();
 
   onCreateNewFile() {
     this.createNewItem = 'file';
@@ -43,7 +46,10 @@ export class PosContainerContents implements ResourceAware {
   receiveResource = (resource: Thing) => {
     this.container = resource.assume(LdpContainer);
     this.loading = false;
-    this.contents = this.container.contains().sort((a, b) => a.name.localeCompare(b.name));
+    this.container
+      .observeContains()
+      .pipe(takeUntil(this.disconnected$))
+      .subscribe(contains => (this.contents = contains.sort((a, b) => a.name.localeCompare(b.name))));
   };
 
   render() {
@@ -74,5 +80,10 @@ export class PosContainerContents implements ResourceAware {
         {items.length > 0 ? <ul aria-label="Container contents">{items}</ul> : <p>The container is empty</p>}
       </Host>
     );
+  }
+
+  disconnectedCallback() {
+    this.disconnected$.next();
+    this.disconnected$.unsubscribe();
   }
 }
