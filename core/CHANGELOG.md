@@ -6,6 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Breaking changes
+
+- `Thing.store` is now a `Store` instead of an `IndexedFormula`. Internal store is no longer accessible. This change also affects all sub-classes of `Thing`. This change is necessary to allow reactivity to be implemented on `Thing` methods.
+
+### Added
+
+- [`Store.findTypes`]((https://pod-os.org/reference/core/classes/Store/#findTypes)) returns types for a given resource
+- [`Store.holds`]((https://pod-os.org/reference/core/classes/Store/#holds)) determines whether the store includes a certain quad pattern
+- [`Store.statementsMatching`]((https://pod-os.org/reference/core/classes/Store/#statementsMatching)) returns array of statements matching a quad pattern
+- [`Store.each`]((https://pod-os.org/reference/core/classes/Store/#each)) returns array of RDF/JS terms matching the first wild card in a quad pattern
+- [`Store.any`]((https://pod-os.org/reference/core/classes/Store/#any)) returns any one RDF/JS term matching the first wildcard in the provided quad pattern
+- [`Store.anyValue`]((https://pod-os.org/reference/core/classes/Store/#anyValue)) returns the value of any one RDF/JS term matching the first wildcard in the provided quad pattern
+- [`Store.profileQuery`]((https://pod-os.org/reference/core/classes/Store/#profileQuery)) creates a [query](https://solid-contrib.github.io/data-modules/rdflib-utils/classes/index.ProfileQuery.html) to fetch information from a user's profile document
+- [`Store.preferencesQuery`]((https://pod-os.org/reference/core/classes/Store/#preferencesQuery)) creates a [query](https://solid-contrib.github.io/data-modules/rdflib-utils/classes/index.PreferencesQuery.html) to fetch information from a user's preferences file
+
 ## 0.25.0
 
 ### Breaking Changes
