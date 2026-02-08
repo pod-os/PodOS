@@ -568,6 +568,56 @@ describe("Store", () => {
       expect(classes).toEqual(["http://schema.org/Recipe"]);
     });
   });
+
+  describe("preferencesQuery", () => {
+    it("instantiates PreferencesQuery using provided internal store", () => {
+      const internalStore = graph();
+      const store = new Store(
+        {} as PodOsSession,
+        undefined,
+        undefined,
+        internalStore,
+      );
+      const webId = "https://pod.test/alice/profile/card#me";
+      const preferencesDoc = "https://pod.test/alice/settings/prefs.ttl";
+      internalStore.add(
+        sym(webId),
+        sym("http://www.w3.org/ns/solid/terms#privateTypeIndex"),
+        sym("https://pod.test/alice/settings/privateTypeIndex.ttl"),
+        sym(preferencesDoc),
+      );
+      const query = store.preferencesQuery(webId, preferencesDoc);
+      const result = query.queryPrivateTypeIndex();
+      expect(result).toEqual(
+        sym("https://pod.test/alice/settings/privateTypeIndex.ttl"),
+      );
+    });
+
+    it("supports named nodes as arguments", () => {
+      const internalStore = graph();
+      const store = new Store(
+        {} as PodOsSession,
+        undefined,
+        undefined,
+        internalStore,
+      );
+      const webIdNode = sym("https://pod.test/alice/profile/card#me");
+      const preferencesDocNode = sym(
+        "https://pod.test/alice/settings/prefs.ttl",
+      );
+      internalStore.add(
+        webIdNode,
+        sym("http://www.w3.org/ns/solid/terms#privateTypeIndex"),
+        sym("https://pod.test/alice/settings/privateTypeIndex.ttl"),
+        preferencesDocNode,
+      );
+      const query = store.preferencesQuery(webIdNode, preferencesDocNode);
+      const result = query.queryPrivateTypeIndex();
+      expect(result).toEqual(
+        sym("https://pod.test/alice/settings/privateTypeIndex.ttl"),
+      );
+    });
+  });
 });
 
 export function thenSparqlUpdateIsSentToUrl(

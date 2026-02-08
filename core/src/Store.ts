@@ -3,6 +3,7 @@ import {
   graph,
   IndexedFormula,
   lit,
+  NamedNode,
   st,
   Statement,
   sym,
@@ -13,6 +14,7 @@ import { Thing } from "./thing";
 import {
   executeUpdate,
   ModuleConfig,
+  PreferencesQuery,
   UpdateOperation,
 } from "@solid-data-modules/rdflib-utils";
 import {
@@ -33,7 +35,6 @@ import {
 } from "rxjs";
 import {
   BlankNode,
-  NamedNode,
   Quad,
   Quad_Graph,
   Quad_Object,
@@ -334,6 +335,24 @@ export class Store {
     graph?: Quad_Graph | null | undefined,
   ): string | undefined {
     return this.any(subject, predicate, object, graph)?.value;
+  }
+
+  /**
+   * Create a query to fetch information from a user's preferences file
+   * 
+   * @param webId 
+   * @param preferencesDoc 
+   * @returns {PreferencesQuery} PreferencesQuery instance. See [@solid-data-modules/rdflib-utils
+](https://solid-contrib.github.io/data-modules/rdflib-utils/classes/index.PreferencesQuery.html)
+   */
+  preferencesQuery(
+    webId: string | NamedNode,
+    preferencesDoc: string | NamedNode,
+  ): PreferencesQuery {
+    if (typeof webId === "string") webId = sym(webId);
+    if (typeof preferencesDoc === "string")
+      preferencesDoc = sym(preferencesDoc);
+    return new PreferencesQuery(this.internalStore, webId, preferencesDoc);
   }
 }
 
