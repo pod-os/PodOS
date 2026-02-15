@@ -6,6 +6,14 @@ import { isRdfType } from "./isRdfType";
 import { labelForType } from "./labelForType";
 import { labelFromUri } from "./labelFromUri";
 import { Store } from "../Store";
+import {
+  distinctUntilChanged,
+  filter,
+  map,
+  merge,
+  Observable,
+  startWith,
+} from "rxjs";
 
 export interface Literal {
   predicate: string;
@@ -218,6 +226,25 @@ export class Thing {
       uri,
       label: labelForType(uri),
     }));
+  }
+
+  /**
+   * Observe changes to the list of RDF types for this thing
+   */
+  observeTypes(): Observable<RdfType[]> {
+    return merge(this.store.additions$, this.store.removals$).pipe(
+      filter(
+        (quad) =>
+          (quad.subject.value == this.uri &&
+            quad.predicate.value ==
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") ||
+          quad.predicate.value ==
+            "http://www.w3.org/2000/01/rdf-schema#subClassOf",
+      ),
+      map(() => this.types()),
+      startWith(this.types()),
+      distinctUntilChanged((prev, curr) => prev.length == curr.length),
+    );
   }
 
   /**
