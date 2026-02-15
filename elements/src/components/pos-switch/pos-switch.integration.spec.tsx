@@ -39,7 +39,7 @@ describe('pos-switch', () => {
             <pos-case else if-typeof="http://schema.org/Recipe">
               <template>Will not render as else is specified</template>
             </pos-case>
-            <pos-case else if-typeof="http://schema.org/Recipe">
+            <pos-case else>
               <template>Will not render as previous conditions are satisfied</template>
             </pos-case>
           </pos-switch>
