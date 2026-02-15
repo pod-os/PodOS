@@ -39,12 +39,15 @@ export class PosSwitch implements ResourceAware {
 
   test(caseElement): boolean {
     let state = null;
-    if (caseElement.getAttribute('if-typeof') !== null)
+    if (caseElement.getAttribute('if-typeof') !== null) {
       state = this.resource
         .types()
         .map(x => x.uri)
         .includes(caseElement.getAttribute('if-typeof'));
-    if (caseElement.getAttribute('not') != null) state = !state;
+    }
+    if (caseElement.getAttribute('not') != null) {
+      state = !state;
+    }
     return state;
   }
 
@@ -53,8 +56,12 @@ export class PosSwitch implements ResourceAware {
   };
 
   render() {
-    if (this.error) return this.error;
-    if (!this.resource) return null;
+    if (this.error) {
+      return this.error;
+    }
+    if (!this.resource) {
+      return null;
+    }
     let state = null;
     let activeElements: HTMLPosCaseElement[] = [];
     this.caseElements.forEach(el => {
