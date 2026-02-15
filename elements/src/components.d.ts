@@ -64,7 +64,7 @@ export namespace Components {
      */
     interface PosCase {
         /**
-          * The test only evaluates to true if tests for preceding templates have failed
+          * The test only evaluates to true if tests for preceding cases have failed
          */
         "else"?: boolean;
         /**
@@ -274,7 +274,7 @@ export namespace Components {
     /**
      * Selects a child template to render based on properties of the subject resource, usually defined by an ancestor `pos-resource` element.
      * See [storybook](https://pod-os.github.io/PodOS/storybook/?path=/story/basics--pos-switch) for an example.
-     * See [pos-case](https://pod-os.org/reference/elements/components/pos-case/) for available filter conditions.
+     * See [pos-case](https://pod-os.org/reference/elements/components/pos-switch/pos-case/) for available filter conditions.
      */
     interface PosSwitch {
     }
@@ -1132,7 +1132,7 @@ declare global {
     /**
      * Selects a child template to render based on properties of the subject resource, usually defined by an ancestor `pos-resource` element.
      * See [storybook](https://pod-os.github.io/PodOS/storybook/?path=/story/basics--pos-switch) for an example.
-     * See [pos-case](https://pod-os.org/reference/elements/components/pos-case/) for available filter conditions.
+     * See [pos-case](https://pod-os.org/reference/elements/components/pos-switch/pos-case/) for available filter conditions.
      */
     interface HTMLPosSwitchElement extends Components.PosSwitch, HTMLStencilElement {
         addEventListener<K extends keyof HTMLPosSwitchElementEventMap>(type: K, listener: (this: HTMLPosSwitchElement, ev: PosSwitchCustomEvent<HTMLPosSwitchElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -1393,7 +1393,7 @@ declare namespace LocalJSX {
      */
     interface PosCase {
         /**
-          * The test only evaluates to true if tests for preceding templates have failed
+          * The test only evaluates to true if tests for preceding cases have failed
          */
         "else"?: boolean;
         /**
@@ -1659,7 +1659,7 @@ declare namespace LocalJSX {
     /**
      * Selects a child template to render based on properties of the subject resource, usually defined by an ancestor `pos-resource` element.
      * See [storybook](https://pod-os.github.io/PodOS/storybook/?path=/story/basics--pos-switch) for an example.
-     * See [pos-case](https://pod-os.org/reference/elements/components/pos-case/) for available filter conditions.
+     * See [pos-case](https://pod-os.org/reference/elements/components/pos-switch/pos-case/) for available filter conditions.
      */
     interface PosSwitch {
         "onPod-os:resource"?: (event: PosSwitchCustomEvent<any>) => void;
@@ -1857,7 +1857,7 @@ declare module "@stencil/core" {
             /**
              * Selects a child template to render based on properties of the subject resource, usually defined by an ancestor `pos-resource` element.
              * See [storybook](https://pod-os.github.io/PodOS/storybook/?path=/story/basics--pos-switch) for an example.
-             * See [pos-case](https://pod-os.org/reference/elements/components/pos-case/) for available filter conditions.
+             * See [pos-case](https://pod-os.org/reference/elements/components/pos-switch/pos-case/) for available filter conditions.
              */
             "pos-switch": LocalJSX.PosSwitch & JSXBase.HTMLAttributes<HTMLPosSwitchElement>;
             /**
