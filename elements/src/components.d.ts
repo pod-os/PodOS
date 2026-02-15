@@ -63,6 +63,18 @@ export namespace Components {
      * See [storybook](https://pod-os.github.io/PodOS/storybook/?path=/story/basics--pos-switch) for an example.
      */
     interface PosCase {
+        /**
+          * The test only evaluates to true if tests for preceding templates have failed
+         */
+        "else"?: boolean;
+        /**
+          * Test if the resource is of the specified type
+         */
+        "ifTypeof"?: string;
+        /**
+          * Negates the result of the test
+         */
+        "not"?: boolean;
     }
     interface PosContainerContents {
     }
@@ -262,10 +274,7 @@ export namespace Components {
     /**
      * Selects a child template to render based on properties of the subject resource, usually defined by an ancestor `pos-resource` element.
      * See [storybook](https://pod-os.github.io/PodOS/storybook/?path=/story/basics--pos-switch) for an example.
-     * Template elements support the following attributes:
-     * - `if-typeof`: Test if the resource is of the specified type
-     * - `not`: Negates the result of the test
-     * - `else`: The test only evaluates to true if tests for preceding templates have failed
+     * See [pos-case](https://pod-os.org/reference/elements/components/pos-case/) for available filter conditions.
      */
     interface PosSwitch {
     }
@@ -1123,10 +1132,7 @@ declare global {
     /**
      * Selects a child template to render based on properties of the subject resource, usually defined by an ancestor `pos-resource` element.
      * See [storybook](https://pod-os.github.io/PodOS/storybook/?path=/story/basics--pos-switch) for an example.
-     * Template elements support the following attributes:
-     * - `if-typeof`: Test if the resource is of the specified type
-     * - `not`: Negates the result of the test
-     * - `else`: The test only evaluates to true if tests for preceding templates have failed
+     * See [pos-case](https://pod-os.org/reference/elements/components/pos-case/) for available filter conditions.
      */
     interface HTMLPosSwitchElement extends Components.PosSwitch, HTMLStencilElement {
         addEventListener<K extends keyof HTMLPosSwitchElementEventMap>(type: K, listener: (this: HTMLPosSwitchElement, ev: PosSwitchCustomEvent<HTMLPosSwitchElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -1386,6 +1392,18 @@ declare namespace LocalJSX {
      * See [storybook](https://pod-os.github.io/PodOS/storybook/?path=/story/basics--pos-switch) for an example.
      */
     interface PosCase {
+        /**
+          * The test only evaluates to true if tests for preceding templates have failed
+         */
+        "else"?: boolean;
+        /**
+          * Test if the resource is of the specified type
+         */
+        "ifTypeof"?: string;
+        /**
+          * Negates the result of the test
+         */
+        "not"?: boolean;
     }
     interface PosContainerContents {
         "onPod-os:resource"?: (event: PosContainerContentsCustomEvent<any>) => void;
@@ -1641,10 +1659,7 @@ declare namespace LocalJSX {
     /**
      * Selects a child template to render based on properties of the subject resource, usually defined by an ancestor `pos-resource` element.
      * See [storybook](https://pod-os.github.io/PodOS/storybook/?path=/story/basics--pos-switch) for an example.
-     * Template elements support the following attributes:
-     * - `if-typeof`: Test if the resource is of the specified type
-     * - `not`: Negates the result of the test
-     * - `else`: The test only evaluates to true if tests for preceding templates have failed
+     * See [pos-case](https://pod-os.org/reference/elements/components/pos-case/) for available filter conditions.
      */
     interface PosSwitch {
         "onPod-os:resource"?: (event: PosSwitchCustomEvent<any>) => void;
@@ -1842,10 +1857,7 @@ declare module "@stencil/core" {
             /**
              * Selects a child template to render based on properties of the subject resource, usually defined by an ancestor `pos-resource` element.
              * See [storybook](https://pod-os.github.io/PodOS/storybook/?path=/story/basics--pos-switch) for an example.
-             * Template elements support the following attributes:
-             * - `if-typeof`: Test if the resource is of the specified type
-             * - `not`: Negates the result of the test
-             * - `else`: The test only evaluates to true if tests for preceding templates have failed
+             * See [pos-case](https://pod-os.org/reference/elements/components/pos-case/) for available filter conditions.
              */
             "pos-switch": LocalJSX.PosSwitch & JSXBase.HTMLAttributes<HTMLPosSwitchElement>;
             /**
