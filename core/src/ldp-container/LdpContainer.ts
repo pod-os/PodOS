@@ -36,7 +36,7 @@ export class LdpContainer extends Thing {
 
   /**
    * Observe changes to the resources that the LDP Container contains
-   * 
+   *
    * @returns RxJS Observable that pushes a new contains() array when it changes
    */
   observeContains(): Observable<ContainerContent[]> {
@@ -46,9 +46,9 @@ export class LdpContainer extends Thing {
           quad.graph.value == this.uri &&
           quad.predicate.value == "http://www.w3.org/ns/ldp#contains",
       ),
-      map(() => this.contains()),
       startWith(this.contains()),
       debounceTime(250),
+      map(() => this.contains()),
     );
   }
 }
