@@ -26,6 +26,7 @@ and this project adheres to
 - [`Store.anyValue`]((https://pod-os.org/reference/core/classes/Store/#anyValue)) returns the value of any one RDF/JS term matching the first wildcard in the provided quad pattern
 - [`Store.profileQuery`]((https://pod-os.org/reference/core/classes/Store/#profileQuery)) creates a [query](https://solid-contrib.github.io/data-modules/rdflib-utils/classes/index.ProfileQuery.html) to fetch information from a user's profile document
 - [`Store.preferencesQuery`]((https://pod-os.org/reference/core/classes/Store/#preferencesQuery)) creates a [query](https://solid-contrib.github.io/data-modules/rdflib-utils/classes/index.PreferencesQuery.html) to fetch information from a user's preferences file
+- [`LdpContainer.observeContains`](https://pod-os.org/reference/core/classes/ldpcontainer/#observeContains) pushes new array when `LdpContainer.contains` changes.
 
 ## 0.25.0
 
