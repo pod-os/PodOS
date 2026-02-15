@@ -21,7 +21,7 @@ export class PosCase {
    */
   @Prop() not?: boolean;
   /**
-   * The test only evaluates to true if tests for preceding templates have failed
+   * The test only evaluates to true if tests for preceding cases have failed
    */
   @Prop() else?: boolean;
 

@@ -5,7 +5,7 @@ import { ResourceAware, ResourceEventEmitter, subscribeResource } from '../event
 /**
  * Selects a child template to render based on properties of the subject resource, usually defined by an ancestor `pos-resource` element.
  * See [storybook](https://pod-os.github.io/PodOS/storybook/?path=/story/basics--pos-switch) for an example.
- * See [pos-case](https://pod-os.org/reference/elements/components/pos-case/) for available filter conditions.
+ * See [pos-case](https://pod-os.org/reference/elements/components/pos-switch/pos-case/) for available filter conditions.
  */
 @Component({
   tag: 'pos-switch',
