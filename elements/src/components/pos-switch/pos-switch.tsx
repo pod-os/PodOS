@@ -37,7 +37,7 @@ export class PosSwitch implements ResourceAware {
     }
   }
 
-  test(caseElement): Boolean {
+  test(caseElement): boolean {
     let state = null;
     if (caseElement.getAttribute('if-typeof') !== null)
       state = this.resource
