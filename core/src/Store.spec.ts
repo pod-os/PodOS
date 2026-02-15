@@ -553,9 +553,7 @@ describe("Store", () => {
       const recipe2classes = store.findTypes("http://recipe.test/2");
       expect(recipe2classes).toContain("http://schema.org/Recipe");
       expect(recipe2classes).toContain("http://recipe.test/RecipeClass");
-      expect(recipe2classes).toEqual(
-        expect.not.arrayContaining(["http://movie.test/MovieClass"]),
-      );
+      expect(recipe2classes).not.toContain(["http://movie.test/MovieClass"]);
     });
 
     it("supports named nodes as argument", () => {
