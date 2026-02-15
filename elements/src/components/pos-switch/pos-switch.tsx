@@ -40,6 +40,14 @@ export class PosSwitch implements ResourceAware {
         .map(x => x.uri)
         .includes(caseElement.getAttribute('if-typeof'));
     }
+    if (caseElement.getAttribute('if-property') !== null) {
+      const relations = this.resource.relations(caseElement.getAttribute('if-property'));
+      state = relations.length > 0;
+    }
+    if (caseElement.getAttribute('if-rev') !== null) {
+      const reverseRelations = this.resource.reverseRelations(caseElement.getAttribute('if-rev'));
+      state = reverseRelations.length > 0;
+    }
     if (caseElement.getAttribute('not') != null) {
       state = !state;
     }
