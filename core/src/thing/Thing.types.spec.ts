@@ -1,8 +1,7 @@
 import { graph, sym, IndexedFormula, quad } from "rdflib";
 import { PodOsSession } from "../authentication";
-import { RdfType, Thing } from "./Thing";
+import { Thing } from "./Thing";
 import { Store } from "../Store";
-import { Observable, Subscription } from "rxjs";
 
 describe("Thing", function () {
   describe("types", () => {
