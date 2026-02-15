@@ -94,6 +94,7 @@ describe("LDP container", () => {
       store: Store,
       subscriber: jest.Mock,
       subscription: Subscription,
+      container: LdpContainer,
       observable: Observable<ContainerContent[]>;
 
     beforeEach(() => {
@@ -111,7 +112,7 @@ describe("LDP container", () => {
         internalStore,
       );
       subscriber = jest.fn();
-      const container = new LdpContainer("https://pod.test/container/", store);
+      container = new LdpContainer("https://pod.test/container/", store);
       observable = container.observeContains();
       subscription = observable.subscribe(subscriber);
     });
@@ -142,6 +143,7 @@ describe("LDP container", () => {
     });
 
     it("pushes new values once per group of changes until unsubcribe, ignoring irrelevant changes", () => {
+      const containsSpy = jest.spyOn(container, "contains");
       // wait for first push to settle
       jest.advanceTimersByTime(250);
       // then update container contents
@@ -167,6 +169,7 @@ describe("LDP container", () => {
       ]);
       jest.advanceTimersByTime(255);
       expect(subscriber).toHaveBeenCalledTimes(2);
+      expect(containsSpy).toHaveBeenCalledTimes(2);
       expect(subscriber.mock.calls).toEqual([
         [
           [
@@ -199,6 +202,7 @@ describe("LDP container", () => {
         sym("https://pod.test/container/"),
       );
       expect(subscriber).toHaveBeenCalledTimes(2);
+      expect(containsSpy).toHaveBeenCalledTimes(2);
     });
   });
 });
