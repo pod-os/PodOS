@@ -11,7 +11,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - [pos-switch](https://pod-os.org/reference/elements/components/pos-switch/) and [pos-case](https://pod-os.org/reference/elements/components/pos-case/) : New components for conditional rendering
 - [pos-share](https://pod-os.org/reference/elements/components/pos-share/)
   - provides the means to share a resource with other apps or by copying its URI
-^
+
+### Changed
+
+- [pos-container-contents](https://pod-os.org/reference/elements/components/pos-container-contents/): Now reactively updates when changes are pushed by [LdpContainer.observeContains](https://pod-os.org/reference/core/classes/ldpcontainer/#observeContains)
+
 ## 0.36.0
 
 ### Changed
