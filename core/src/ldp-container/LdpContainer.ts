@@ -16,6 +16,11 @@ export class LdpContainer extends Thing {
     super(uri, store, editable);
   }
 
+  /**
+   * Resources that the LDP Container contains
+   *
+   * @returns Array of objects with uri and name
+   */
   contains(): ContainerContent[] {
     const contains = this.store.statementsMatching(
       sym(this.uri),
@@ -29,6 +34,11 @@ export class LdpContainer extends Thing {
     }));
   }
 
+  /**
+   * Observe changes to the resources that the LDP Container contains
+   * 
+   * @returns RxJS Observable that pushes a new contains() array when it changes
+   */
   observeContains(): Observable<ContainerContent[]> {
     return merge(this.store.additions$, this.store.removals$).pipe(
       filter(
