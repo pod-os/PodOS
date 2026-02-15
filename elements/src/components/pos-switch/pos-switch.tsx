@@ -59,7 +59,7 @@ export class PosSwitch implements ResourceAware {
     let activeElements: HTMLPosCaseElement[] = [];
     this.caseElements.forEach(el => {
       const elemState = this.test(el);
-      const includeCondition = !state === true || el.getAttribute('else') === null;
+      const includeCondition = state !== true || el.getAttribute('else') === null;
       if (elemState && includeCondition) {
         state = elemState;
         activeElements.push(el);
