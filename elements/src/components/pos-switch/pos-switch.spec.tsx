@@ -1,6 +1,8 @@
 import { newSpecPage } from '@stencil/core/testing';
 import { PosSwitch } from './pos-switch';
 import { when } from 'jest-when';
+import { RdfType, Thing } from '@pod-os/core';
+import { Subject } from 'rxjs';
 
 describe('pos-switch', () => {
   it('contains only templates initially', async () => {
@@ -35,8 +37,6 @@ describe('pos-switch', () => {
         </pos-case>
       </pos-switch>`,
     });
-    await page.rootInstance.receiveResource({ types: () => [] });
-    await page.waitForChanges();
     expect(page.rootInstance.caseElements.length).toEqual(2);
     expect(page.rootInstance.caseElements[0].getAttribute('if-typeof')).toEqual('http://schema.org/Recipe');
     expect(page.rootInstance.caseElements[1].getAttribute('if-typeof')).toEqual('http://schema.org/Video');
@@ -54,8 +54,6 @@ describe('pos-switch', () => {
         </pos-case>
       </pos-switch>`,
     });
-    await page.rootInstance.receiveResource({ types: () => [] });
-    await page.waitForChanges();
     expect(page.rootInstance.caseElements.length).toEqual(1);
     expect(page.rootInstance.caseElements[0].getAttribute('if-typeof')).toEqual('http://schema.org/Recipe');
   });
@@ -65,15 +63,11 @@ describe('pos-switch', () => {
       components: [PosSwitch],
       html: `<pos-switch></pos-switch>`,
     });
-    await page.rootInstance.receiveResource({});
-    await page.waitForChanges();
-
     const el: HTMLElement = page.root as unknown as HTMLElement;
-
     expect(el.textContent).toEqual('No pos-case elements found');
   });
 
-  it('renders matching condition templates', async () => {
+  it('renders matching condition templates, reactively', async () => {
     const page = await newSpecPage({
       components: [PosSwitch],
       html: `
@@ -95,14 +89,17 @@ describe('pos-switch', () => {
         </pos-case>
       </pos-switch>`,
     });
-    await page.rootInstance.receiveResource({
-      types: () => [
-        {
-          label: 'Recipe',
-          uri: 'http://schema.org/Recipe',
-        },
-      ],
-    });
+    const observedTypes$ = new Subject<RdfType[]>();
+    const thing = {
+      observeTypes: () => observedTypes$,
+    } as unknown as Thing;
+    page.rootInstance.receiveResource(thing);
+    observedTypes$.next([
+      {
+        label: 'Recipe',
+        uri: 'http://schema.org/Recipe',
+      },
+    ]);
     await page.waitForChanges();
     expect(page.root?.innerHTML).toEqualHtml(`
         <div>Recipe 1</div>
@@ -121,14 +118,17 @@ describe('pos-switch', () => {
         <pos-case else><template><div>No matches</div></template></pos-case>
       </pos-switch>`,
     });
-    await page.rootInstance.receiveResource({
-      types: () => [
-        {
-          label: 'Recipe',
-          uri: 'http://schema.org/Recipe',
-        },
-      ],
-    });
+    const observedTypes$ = new Subject<RdfType[]>();
+    const thing = {
+      observeTypes: () => observedTypes$,
+    } as unknown as Thing;
+    page.rootInstance.receiveResource(thing);
+    observedTypes$.next([
+      {
+        label: 'Recipe',
+        uri: 'http://schema.org/Recipe',
+      },
+    ]);
     await page.waitForChanges();
     expect(page.root?.innerHTML).toEqualHtml(`
         <div>Recipe 1</div>
@@ -144,14 +144,17 @@ describe('pos-switch', () => {
         <pos-case else><template><div>No matches</div></template></pos-case>
       </pos-switch>`,
     });
-    await page.rootInstance.receiveResource({
-      types: () => [
-        {
-          label: 'Recipe',
-          uri: 'http://schema.org/Recipe',
-        },
-      ],
-    });
+    const observedTypes$ = new Subject<RdfType[]>();
+    const thing = {
+      observeTypes: () => observedTypes$,
+    } as unknown as Thing;
+    page.rootInstance.receiveResource(thing);
+    observedTypes$.next([
+      {
+        label: 'Recipe',
+        uri: 'http://schema.org/Recipe',
+      },
+    ]);
     await page.waitForChanges();
     expect(page.root?.innerHTML).toEqualHtml(`
         <div>No matches</div>
@@ -166,14 +169,17 @@ describe('pos-switch', () => {
         <pos-case not if-typeof="http://schema.org/Video"><template><div>Not a Video</div></template></pos-case>
       </pos-switch>`,
     });
-    await page.rootInstance.receiveResource({
-      types: () => [
-        {
-          label: 'Recipe',
-          uri: 'http://schema.org/Recipe',
-        },
-      ],
-    });
+    const observedTypes$ = new Subject<RdfType[]>();
+    const thing = {
+      observeTypes: () => observedTypes$,
+    } as unknown as Thing;
+    page.rootInstance.receiveResource(thing);
+    observedTypes$.next([
+      {
+        label: 'Recipe',
+        uri: 'http://schema.org/Recipe',
+      },
+    ]);
     await page.waitForChanges();
     expect(page.root?.innerHTML).toEqualHtml(`
         <div>Not a Video</div>

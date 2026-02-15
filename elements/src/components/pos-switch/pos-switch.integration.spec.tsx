@@ -6,22 +6,19 @@ import { PosLabel } from '../pos-label/pos-label';
 import { PosSwitch } from './pos-switch';
 import { PosResource } from '../pos-resource/pos-resource';
 import { when } from 'jest-when';
-import { Thing } from '@pod-os/core';
+import { RdfType, Thing } from '@pod-os/core';
+import { Subject } from 'rxjs';
 
 describe('pos-switch', () => {
-  it('renders template based on properties of resource', async () => {
+  it('renders template based on properties of resource, reactively', async () => {
     const os = mockPodOS();
+    const observedTypes$ = new Subject<RdfType[]>();
     when(os.store.get)
       .calledWith('https://resource.test')
       .mockReturnValue({
         uri: 'https://resource.test',
         label: () => 'Recipe 1',
-        types: () => [
-          {
-            label: 'Recipe',
-            uri: 'http://schema.org/Recipe',
-          },
-        ],
+        observeTypes: () => observedTypes$,
       } as unknown as Thing);
     const page = await newSpecPage({
       components: [PosApp, PosCase, PosLabel, PosSwitch, PosResource],
@@ -39,6 +36,9 @@ describe('pos-switch', () => {
             <pos-case else if-typeof="http://schema.org/Recipe">
               <template>Will not render as else is specified</template>
             </pos-case>
+            <pos-case if-typeof="http://schema.org/Thing">
+              <template>Also a Thing</template>
+            </pos-case>
             <pos-case else>
               <template>Will not render as previous conditions are satisfied</template>
             </pos-case>
@@ -47,6 +47,26 @@ describe('pos-switch', () => {
       </pos-app>`,
     });
     expect((os.fetch as jest.Mock).mock.calls).toHaveLength(0);
+    expect(page.root?.innerText).toEqualText('');
+    observedTypes$.next([
+      {
+        label: 'Recipe',
+        uri: 'http://schema.org/Recipe',
+      },
+    ]);
+    await page.waitForChanges();
     expect(page.root?.innerText).toEqualText('Recipe 1');
+    observedTypes$.next([
+      {
+        label: 'Recipe',
+        uri: 'http://schema.org/Recipe',
+      },
+      {
+        label: 'Thing',
+        uri: 'http://schema.org/Thing',
+      },
+    ]);
+    await page.waitForChanges();
+    expect(page.root?.innerText).toEqualText('Recipe 1\nAlso a Thing');
   });
 });
