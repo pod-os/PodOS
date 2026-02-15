@@ -17,6 +17,14 @@ export class PosCase {
    */
   @Prop() ifTypeof?: string;
   /**
+   * Test if the resource has the specified property (forward link)
+   */
+  @Prop() ifProperty?: string;
+  /**
+   * Test if the resource is the subject of the specified property (backward link)
+   */
+  @Prop() ifRev?: string;
+  /**
    * Negates the result of the test
    */
   @Prop() not?: boolean;

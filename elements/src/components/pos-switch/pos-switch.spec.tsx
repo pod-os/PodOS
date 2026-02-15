@@ -1,5 +1,6 @@
 import { newSpecPage } from '@stencil/core/testing';
 import { PosSwitch } from './pos-switch';
+import { when } from 'jest-when';
 
 describe('pos-switch', () => {
   it('contains only templates initially', async () => {
@@ -81,14 +82,17 @@ describe('pos-switch', () => {
           <template>
             <div>Recipe 1</div>
           </template>
+        </pos-case>
         <pos-case if-typeof="http://schema.org/Recipe">
           <template>
             <div>Recipe 2</div>
           </template>
+        </pos-case>
         <pos-case if-typeof="http://schema.org/Video">
           <template>
             <div>Video 1</div>
           </template>
+        </pos-case>
       </pos-switch>`,
     });
     await page.rootInstance.receiveResource({
@@ -173,6 +177,72 @@ describe('pos-switch', () => {
     await page.waitForChanges();
     expect(page.root?.innerHTML).toEqualHtml(`
         <div>Not a Video</div>
+        `);
+  });
+
+  it('renders templates if a forward link is present', async () => {
+    const page = await newSpecPage({
+      components: [PosSwitch],
+      html: `
+      <pos-switch>
+        <pos-case if-property="https://schema.org/video">
+          <template>
+            <div>Resource has video</div>
+          </template>
+        </pos-case>
+        <pos-case if-property="https://schema.org/description">
+          <template>
+            <div>Should not render as schema:description is not present</div>
+          </template>
+        </pos-case>
+      </pos-switch>`,
+    });
+    const thing = {
+      uri: 'https://pod.example/resource',
+      relations: jest.fn(),
+    };
+    when(thing.relations)
+      .calledWith('https://schema.org/video')
+      .mockReturnValue([{ predicate: 'https://schema.org/video', uris: ['https://video.test/video-1'] }]);
+    when(thing.relations).calledWith('https://schema.org/description').mockReturnValue([]);
+
+    await page.rootInstance.receiveResource(thing);
+    await page.waitForChanges();
+    expect(page.root?.innerHTML).toEqualHtml(`
+        <div>Resource has video</div>
+        `);
+  });
+
+  it('renders templates if a backward link is present', async () => {
+    const page = await newSpecPage({
+      components: [PosSwitch],
+      html: `
+      <pos-switch>
+        <pos-case if-rev="https://schema.org/video">
+          <template>
+            <div>Resource is video</div>
+          </template>
+        </pos-case>
+        <pos-case if-rev="https://schema.org/subjectOf">
+          <template>
+            <div>Should not render as resource is not object of schema:subjectOf</div>
+          </template>
+        </pos-case>
+      </pos-switch>`,
+    });
+    const thing = {
+      uri: 'https://pod.example/resource',
+      reverseRelations: jest.fn(),
+    };
+    when(thing.reverseRelations)
+      .calledWith('https://schema.org/video')
+      .mockReturnValue([{ predicate: 'https://schema.org/video', uris: ['https://video.test/video-1'] }]);
+    when(thing.reverseRelations).calledWith('https://schema.org/subjectOf').mockReturnValue([]);
+
+    await page.rootInstance.receiveResource(thing);
+    await page.waitForChanges();
+    expect(page.root?.innerHTML).toEqualHtml(`
+        <div>Resource is video</div>
         `);
   });
 });
