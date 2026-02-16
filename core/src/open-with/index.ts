@@ -16,7 +16,11 @@ export interface OpenWithApp {
   uriParam: string;
 }
 
-export function proposeAppsFor(uri: string, webId: string): OpenWithApp[] {
+/**
+ * Returns a list of apps that can be used to open a resource
+ * @param uri - The URI of the resource to open
+ */
+export function proposeAppsFor(uri: string): OpenWithApp[] {
   return [
     {
       name: "Data Browser (SolidOS)",
