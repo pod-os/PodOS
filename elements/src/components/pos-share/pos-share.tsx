@@ -1,9 +1,12 @@
-import { Component, h, Prop } from '@stencil/core';
+import { Component, h, Element, Prop, State } from '@stencil/core';
 
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import '@shoelace-style/shoelace/dist/components/menu/menu.js';
 import '@shoelace-style/shoelace/dist/components/menu-item/menu-item.js';
 import '@shoelace-style/shoelace/dist/components/divider/divider.js';
+import { usePodOS } from '../events/usePodOS';
+import session from '../../store/session';
+import { OpenWithApp } from '@pod-os/core';
 
 /**
  * Allows sharing a resource with other apps, people, etc.
@@ -19,6 +22,15 @@ export class PosShare {
    */
   @Prop() uri!: string;
 
+  @Element() el!: HTMLElement;
+
+  @State() apps: OpenWithApp[] = [];
+
+  async componentWillLoad() {
+    const os = await usePodOS(this.el);
+    this.apps = os.proposeAppsFor(this.uri, session.state.webId);
+  }
+
   render() {
     return (
       <sl-dropdown>
@@ -26,14 +38,20 @@ export class PosShare {
           <sl-icon name="share"></sl-icon>
         </button>
         <sl-menu>
-          <sl-menu-item value="dashboard">
+          <sl-menu-item value="copy-uri">
             <sl-icon slot="prefix" name="copy"></sl-icon>Copy URI
           </sl-menu-item>
-          <sl-divider></sl-divider>
-          <sl-menu-item disabled>Open with...</sl-menu-item>
-          <sl-menu-item value="logout">SolidOS Data Browser</sl-menu-item>
+          {this.apps.length > 0 && <OpenWithApps apps={this.apps}></OpenWithApps>}
         </sl-menu>
       </sl-dropdown>
     );
   }
+}
+
+function OpenWithApps({ apps }: { apps: OpenWithApp[] }) {
+  return [
+    <sl-divider></sl-divider>,
+    <sl-menu-item disabled>Open with...</sl-menu-item>,
+    apps.map(it => <sl-menu-item value={it.name}>{it.name}</sl-menu-item>),
+  ];
 }

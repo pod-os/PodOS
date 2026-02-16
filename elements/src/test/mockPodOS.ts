@@ -47,6 +47,7 @@ export function mockPodOS(): PodOS {
     addNewThing: jest.fn().mockResolvedValue(void null),
     fetchProfile: jest.fn(),
     buildSearchIndex: jest.fn(),
+    proposeAppsFor: jest.fn().mockReturnValue([]),
   };
   when(os.store.get)
     .calledWith(alice.webId)
