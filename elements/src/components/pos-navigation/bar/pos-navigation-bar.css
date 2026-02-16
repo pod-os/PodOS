@@ -1,5 +1,8 @@
 section.current {
   display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 0 var(--size-2);
   height: var(--pos-navigation-bar-height);
   flex-grow: 1;
   gap: 0;
@@ -9,30 +12,47 @@ section.current {
   &:focus-within {
     outline: var(--pos-input-focus-outline);
   }
-}
 
-section.current button {
-  cursor: pointer;
-  font-size: var(--scale-1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-grow: 1;
-  background: none;
-  color: var(--pos-normal-text-color);
-  outline: none;
-  border: none;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  &:focus {
-    text-decoration: underline;
-  }
-  :first-child {
+  button {
+    cursor: pointer;
+    font-size: var(--scale-1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex-grow: 1;
+    background: none;
+    color: var(--pos-normal-text-color);
+    outline: none;
+    border: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    &:focus {
+      text-decoration: underline;
+    }
+    :first-child {
+      flex-grow: 1;
+    }
+    svg {
+      width: var(--size-6);
+      color: var(--pos-subtle-text-color);
+    }
   }
-  svg {
-    width: var(--size-6);
-    color: var(--pos-subtle-text-color);
+  pos-share {
+    height: 80%;
+    &:hover {
+      &::part(button) {
+        color: var(--pos-primary-color);
+        background-color: var(--pos-border-color);
+        border-radius: var(--radius-full);
+      }
+    }
+    &::part(button) {
+      font-size: var(--size-4);
+      background: none;
+      outline: none;
+      border: none;
+      color: var(--pos-subtle-text-color);
+    }
   }
 }

@@ -6,7 +6,7 @@ import '@testing-library/jest-dom';
 import { pressKey } from '../../../test/pressKey';
 
 describe('pos-navigation-bar', () => {
-  it('shows the resource label', async () => {
+  it('shows the resource label and a share feature', async () => {
     const mockThing = {
       uri: 'https://test.pod/resource/1234567890',
       label: () => 'Test Label',
@@ -25,6 +25,7 @@ describe('pos-navigation-bar', () => {
             <div>Test Label</div>
             ${icon}
           </button>
+          <pos-share uri="https://test.pod/resource/1234567890"></pos-share>
         </section>
       </pos-navigation-bar>
     `);
