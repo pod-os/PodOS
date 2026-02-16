@@ -269,6 +269,15 @@ export namespace Components {
     }
     interface PosSettingOfflineCache {
     }
+    /**
+     * Allows sharing a resource with other apps, people, etc.
+     */
+    interface PosShare {
+        /**
+          * URI of the resource to share.
+         */
+        "uri": string;
+    }
     interface PosSubjects {
     }
     /**
@@ -1109,6 +1118,15 @@ declare global {
         prototype: HTMLPosSettingOfflineCacheElement;
         new (): HTMLPosSettingOfflineCacheElement;
     };
+    /**
+     * Allows sharing a resource with other apps, people, etc.
+     */
+    interface HTMLPosShareElement extends Components.PosShare, HTMLStencilElement {
+    }
+    var HTMLPosShareElement: {
+        prototype: HTMLPosShareElement;
+        new (): HTMLPosShareElement;
+    };
     interface HTMLPosSubjectsElementEventMap {
         "pod-os:resource": any;
     }
@@ -1310,6 +1328,7 @@ declare global {
         "pos-router": HTMLPosRouterElement;
         "pos-select-term": HTMLPosSelectTermElement;
         "pos-setting-offline-cache": HTMLPosSettingOfflineCacheElement;
+        "pos-share": HTMLPosShareElement;
         "pos-subjects": HTMLPosSubjectsElement;
         "pos-switch": HTMLPosSwitchElement;
         "pos-tool-attachments": HTMLPosToolAttachmentsElement;
@@ -1323,6 +1342,8 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    type OneOf<K extends string, PropT, AttrT = PropT> = { [P in K]: PropT } & { [P in `attr:${K}` | `prop:${K}`]?: never } | { [P in `attr:${K}`]: AttrT } & { [P in K | `prop:${K}`]?: never } | { [P in `prop:${K}`]: PropT } & { [P in K | `attr:${K}`]?: never };
+
     interface PosAddLiteralValue {
         /**
           * The entered literal value has been added to the resource and successfully stored to the Pod.
@@ -1653,6 +1674,15 @@ declare namespace LocalJSX {
     }
     interface PosSettingOfflineCache {
     }
+    /**
+     * Allows sharing a resource with other apps, people, etc.
+     */
+    interface PosShare {
+        /**
+          * URI of the resource to share.
+         */
+        "uri": string;
+    }
     interface PosSubjects {
         "onPod-os:resource"?: (event: PosSubjectsCustomEvent<any>) => void;
     }
@@ -1720,11 +1750,100 @@ declare namespace LocalJSX {
          */
         "predicate"?: string;
     }
+
+    interface PosAddNewThingAttributes {
+        "referenceUri": string;
+    }
+    interface PosAppAttributes {
+        "restorePreviousSession": boolean;
+    }
+    interface PosAppBrowserAttributes {
+        "restorePreviousSession": boolean;
+        "mode": 'standalone' | 'pod';
+    }
+    interface PosCaseAttributes {
+        "ifTypeof": string;
+        "not": boolean;
+        "else": boolean;
+    }
+    interface PosCreateNewContainerItemAttributes {
+        "type": 'file' | 'folder';
+    }
+    interface PosDocumentAttributes {
+        "src": string;
+        "alt": string;
+    }
+    interface PosImageAttributes {
+        "src": string;
+        "alt": string;
+        "blurredBackground": boolean;
+    }
+    interface PosInternalRouterAttributes {
+        "uri": string;
+    }
+    interface PosListAttributes {
+        "rel": string;
+        "ifTypeof": string;
+        "fetch": boolean;
+    }
+    interface PosMakeFindableAttributes {
+        "uri": string;
+    }
+    interface PosMarkdownDocumentAttributes {
+        "saveStatus": 'idle' | 'saving' | 'failed';
+        "editable": boolean;
+    }
+    interface PosNavigationAttributes {
+        "uri": string;
+    }
+    interface PosNavigationBarAttributes {
+        "searchIndexReady": boolean;
+    }
+    interface PosNewThingFormAttributes {
+        "referenceUri": string;
+    }
+    interface PosPictureAttributes {
+        "blurredBackground": boolean;
+        "noUpload": boolean;
+    }
+    interface PosPredicateAttributes {
+        "uri": string;
+        "label": string;
+    }
+    interface PosResourceAttributes {
+        "uri": string;
+        "lazy": boolean;
+    }
+    interface PosRichLinkAttributes {
+        "uri": string;
+        "rel": string;
+        "rev": string;
+    }
+    interface PosRouterAttributes {
+        "mode": 'standalone' | 'pod';
+    }
+    interface PosSelectTermAttributes {
+        "placeholder": string;
+        "value": string;
+    }
+    interface PosShareAttributes {
+        "uri": string;
+    }
+    interface PosTypeIndexEntriesAttributes {
+        "uri": string;
+    }
+    interface PosUserMenuAttributes {
+        "webId": string;
+    }
+    interface PosValueAttributes {
+        "predicate": string;
+    }
+
     interface IntrinsicElements {
         "pos-add-literal-value": PosAddLiteralValue;
-        "pos-add-new-thing": PosAddNewThing;
-        "pos-app": PosApp;
-        "pos-app-browser": PosAppBrowser;
+        "pos-add-new-thing": Omit<PosAddNewThing, keyof PosAddNewThingAttributes> & { [K in keyof PosAddNewThing & keyof PosAddNewThingAttributes]?: PosAddNewThing[K] } & { [K in keyof PosAddNewThing & keyof PosAddNewThingAttributes as `attr:${K}`]?: PosAddNewThingAttributes[K] } & { [K in keyof PosAddNewThing & keyof PosAddNewThingAttributes as `prop:${K}`]?: PosAddNewThing[K] } & OneOf<"referenceUri", PosAddNewThing["referenceUri"], PosAddNewThingAttributes["referenceUri"]>;
+        "pos-app": Omit<PosApp, keyof PosAppAttributes> & { [K in keyof PosApp & keyof PosAppAttributes]?: PosApp[K] } & { [K in keyof PosApp & keyof PosAppAttributes as `attr:${K}`]?: PosAppAttributes[K] } & { [K in keyof PosApp & keyof PosAppAttributes as `prop:${K}`]?: PosApp[K] };
+        "pos-app-browser": Omit<PosAppBrowser, keyof PosAppBrowserAttributes> & { [K in keyof PosAppBrowser & keyof PosAppBrowserAttributes]?: PosAppBrowser[K] } & { [K in keyof PosAppBrowser & keyof PosAppBrowserAttributes as `attr:${K}`]?: PosAppBrowserAttributes[K] } & { [K in keyof PosAppBrowser & keyof PosAppBrowserAttributes as `prop:${K}`]?: PosAppBrowser[K] };
         "pos-app-dashboard": PosAppDashboard;
         "pos-app-document-viewer": PosAppDocumentViewer;
         "pos-app-generic": PosAppGeneric;
@@ -1733,154 +1852,159 @@ declare namespace LocalJSX {
         "pos-app-rdf-document": PosAppRdfDocument;
         "pos-app-settings": PosAppSettings;
         "pos-attachments": PosAttachments;
-        "pos-case": PosCase;
+        "pos-case": Omit<PosCase, keyof PosCaseAttributes> & { [K in keyof PosCase & keyof PosCaseAttributes]?: PosCase[K] } & { [K in keyof PosCase & keyof PosCaseAttributes as `attr:${K}`]?: PosCaseAttributes[K] } & { [K in keyof PosCase & keyof PosCaseAttributes as `prop:${K}`]?: PosCase[K] };
         "pos-container-contents": PosContainerContents;
         "pos-container-item": PosContainerItem;
         "pos-container-toolbar": PosContainerToolbar;
-        "pos-create-new-container-item": PosCreateNewContainerItem;
+        "pos-create-new-container-item": Omit<PosCreateNewContainerItem, keyof PosCreateNewContainerItemAttributes> & { [K in keyof PosCreateNewContainerItem & keyof PosCreateNewContainerItemAttributes]?: PosCreateNewContainerItem[K] } & { [K in keyof PosCreateNewContainerItem & keyof PosCreateNewContainerItemAttributes as `attr:${K}`]?: PosCreateNewContainerItemAttributes[K] } & { [K in keyof PosCreateNewContainerItem & keyof PosCreateNewContainerItemAttributes as `prop:${K}`]?: PosCreateNewContainerItem[K] } & OneOf<"type", PosCreateNewContainerItem["type"], PosCreateNewContainerItemAttributes["type"]>;
         "pos-description": PosDescription;
         "pos-dialog": PosDialog;
-        "pos-document": PosDocument;
+        "pos-document": Omit<PosDocument, keyof PosDocumentAttributes> & { [K in keyof PosDocument & keyof PosDocumentAttributes]?: PosDocument[K] } & { [K in keyof PosDocument & keyof PosDocumentAttributes as `attr:${K}`]?: PosDocumentAttributes[K] } & { [K in keyof PosDocument & keyof PosDocumentAttributes as `prop:${K}`]?: PosDocument[K] };
         "pos-error-toast": PosErrorToast;
         "pos-example-resources": PosExampleResources;
         "pos-getting-started": PosGettingStarted;
-        "pos-image": PosImage;
-        "pos-internal-router": PosInternalRouter;
+        "pos-image": Omit<PosImage, keyof PosImageAttributes> & { [K in keyof PosImage & keyof PosImageAttributes]?: PosImage[K] } & { [K in keyof PosImage & keyof PosImageAttributes as `attr:${K}`]?: PosImageAttributes[K] } & { [K in keyof PosImage & keyof PosImageAttributes as `prop:${K}`]?: PosImage[K] };
+        "pos-internal-router": Omit<PosInternalRouter, keyof PosInternalRouterAttributes> & { [K in keyof PosInternalRouter & keyof PosInternalRouterAttributes]?: PosInternalRouter[K] } & { [K in keyof PosInternalRouter & keyof PosInternalRouterAttributes as `attr:${K}`]?: PosInternalRouterAttributes[K] } & { [K in keyof PosInternalRouter & keyof PosInternalRouterAttributes as `prop:${K}`]?: PosInternalRouter[K] };
         "pos-label": PosLabel;
-        "pos-list": PosList;
+        "pos-list": Omit<PosList, keyof PosListAttributes> & { [K in keyof PosList & keyof PosListAttributes]?: PosList[K] } & { [K in keyof PosList & keyof PosListAttributes as `attr:${K}`]?: PosListAttributes[K] } & { [K in keyof PosList & keyof PosListAttributes as `prop:${K}`]?: PosList[K] };
         "pos-literals": PosLiterals;
         "pos-login": PosLogin;
         "pos-login-form": PosLoginForm;
-        "pos-make-findable": PosMakeFindable;
-        "pos-markdown-document": PosMarkdownDocument;
-        "pos-navigation": PosNavigation;
-        "pos-navigation-bar": PosNavigationBar;
-        "pos-new-thing-form": PosNewThingForm;
-        "pos-picture": PosPicture;
-        "pos-predicate": PosPredicate;
+        "pos-make-findable": Omit<PosMakeFindable, keyof PosMakeFindableAttributes> & { [K in keyof PosMakeFindable & keyof PosMakeFindableAttributes]?: PosMakeFindable[K] } & { [K in keyof PosMakeFindable & keyof PosMakeFindableAttributes as `attr:${K}`]?: PosMakeFindableAttributes[K] } & { [K in keyof PosMakeFindable & keyof PosMakeFindableAttributes as `prop:${K}`]?: PosMakeFindable[K] } & OneOf<"uri", PosMakeFindable["uri"], PosMakeFindableAttributes["uri"]>;
+        "pos-markdown-document": Omit<PosMarkdownDocument, keyof PosMarkdownDocumentAttributes> & { [K in keyof PosMarkdownDocument & keyof PosMarkdownDocumentAttributes]?: PosMarkdownDocument[K] } & { [K in keyof PosMarkdownDocument & keyof PosMarkdownDocumentAttributes as `attr:${K}`]?: PosMarkdownDocumentAttributes[K] } & { [K in keyof PosMarkdownDocument & keyof PosMarkdownDocumentAttributes as `prop:${K}`]?: PosMarkdownDocument[K] };
+        "pos-navigation": Omit<PosNavigation, keyof PosNavigationAttributes> & { [K in keyof PosNavigation & keyof PosNavigationAttributes]?: PosNavigation[K] } & { [K in keyof PosNavigation & keyof PosNavigationAttributes as `attr:${K}`]?: PosNavigationAttributes[K] } & { [K in keyof PosNavigation & keyof PosNavigationAttributes as `prop:${K}`]?: PosNavigation[K] };
+        "pos-navigation-bar": Omit<PosNavigationBar, keyof PosNavigationBarAttributes> & { [K in keyof PosNavigationBar & keyof PosNavigationBarAttributes]?: PosNavigationBar[K] } & { [K in keyof PosNavigationBar & keyof PosNavigationBarAttributes as `attr:${K}`]?: PosNavigationBarAttributes[K] } & { [K in keyof PosNavigationBar & keyof PosNavigationBarAttributes as `prop:${K}`]?: PosNavigationBar[K] };
+        "pos-new-thing-form": Omit<PosNewThingForm, keyof PosNewThingFormAttributes> & { [K in keyof PosNewThingForm & keyof PosNewThingFormAttributes]?: PosNewThingForm[K] } & { [K in keyof PosNewThingForm & keyof PosNewThingFormAttributes as `attr:${K}`]?: PosNewThingFormAttributes[K] } & { [K in keyof PosNewThingForm & keyof PosNewThingFormAttributes as `prop:${K}`]?: PosNewThingForm[K] } & OneOf<"referenceUri", PosNewThingForm["referenceUri"], PosNewThingFormAttributes["referenceUri"]>;
+        "pos-picture": Omit<PosPicture, keyof PosPictureAttributes> & { [K in keyof PosPicture & keyof PosPictureAttributes]?: PosPicture[K] } & { [K in keyof PosPicture & keyof PosPictureAttributes as `attr:${K}`]?: PosPictureAttributes[K] } & { [K in keyof PosPicture & keyof PosPictureAttributes as `prop:${K}`]?: PosPicture[K] };
+        "pos-predicate": Omit<PosPredicate, keyof PosPredicateAttributes> & { [K in keyof PosPredicate & keyof PosPredicateAttributes]?: PosPredicate[K] } & { [K in keyof PosPredicate & keyof PosPredicateAttributes as `attr:${K}`]?: PosPredicateAttributes[K] } & { [K in keyof PosPredicate & keyof PosPredicateAttributes as `prop:${K}`]?: PosPredicate[K] };
         "pos-relations": PosRelations;
-        "pos-resource": PosResource;
+        "pos-resource": Omit<PosResource, keyof PosResourceAttributes> & { [K in keyof PosResource & keyof PosResourceAttributes]?: PosResource[K] } & { [K in keyof PosResource & keyof PosResourceAttributes as `attr:${K}`]?: PosResourceAttributes[K] } & { [K in keyof PosResource & keyof PosResourceAttributes as `prop:${K}`]?: PosResource[K] };
         "pos-reverse-relations": PosReverseRelations;
-        "pos-rich-link": PosRichLink;
-        "pos-router": PosRouter;
-        "pos-select-term": PosSelectTerm;
+        "pos-rich-link": Omit<PosRichLink, keyof PosRichLinkAttributes> & { [K in keyof PosRichLink & keyof PosRichLinkAttributes]?: PosRichLink[K] } & { [K in keyof PosRichLink & keyof PosRichLinkAttributes as `attr:${K}`]?: PosRichLinkAttributes[K] } & { [K in keyof PosRichLink & keyof PosRichLinkAttributes as `prop:${K}`]?: PosRichLink[K] };
+        "pos-router": Omit<PosRouter, keyof PosRouterAttributes> & { [K in keyof PosRouter & keyof PosRouterAttributes]?: PosRouter[K] } & { [K in keyof PosRouter & keyof PosRouterAttributes as `attr:${K}`]?: PosRouterAttributes[K] } & { [K in keyof PosRouter & keyof PosRouterAttributes as `prop:${K}`]?: PosRouter[K] };
+        "pos-select-term": Omit<PosSelectTerm, keyof PosSelectTermAttributes> & { [K in keyof PosSelectTerm & keyof PosSelectTermAttributes]?: PosSelectTerm[K] } & { [K in keyof PosSelectTerm & keyof PosSelectTermAttributes as `attr:${K}`]?: PosSelectTermAttributes[K] } & { [K in keyof PosSelectTerm & keyof PosSelectTermAttributes as `prop:${K}`]?: PosSelectTerm[K] };
         "pos-setting-offline-cache": PosSettingOfflineCache;
+        "pos-share": Omit<PosShare, keyof PosShareAttributes> & { [K in keyof PosShare & keyof PosShareAttributes]?: PosShare[K] } & { [K in keyof PosShare & keyof PosShareAttributes as `attr:${K}`]?: PosShareAttributes[K] } & { [K in keyof PosShare & keyof PosShareAttributes as `prop:${K}`]?: PosShare[K] } & OneOf<"uri", PosShare["uri"], PosShareAttributes["uri"]>;
         "pos-subjects": PosSubjects;
         "pos-switch": PosSwitch;
         "pos-tool-attachments": PosToolAttachments;
         "pos-tool-select": PosToolSelect;
         "pos-type-badges": PosTypeBadges;
-        "pos-type-index-entries": PosTypeIndexEntries;
+        "pos-type-index-entries": Omit<PosTypeIndexEntries, keyof PosTypeIndexEntriesAttributes> & { [K in keyof PosTypeIndexEntries & keyof PosTypeIndexEntriesAttributes]?: PosTypeIndexEntries[K] } & { [K in keyof PosTypeIndexEntries & keyof PosTypeIndexEntriesAttributes as `attr:${K}`]?: PosTypeIndexEntriesAttributes[K] } & { [K in keyof PosTypeIndexEntries & keyof PosTypeIndexEntriesAttributes as `prop:${K}`]?: PosTypeIndexEntries[K] };
         "pos-type-router": PosTypeRouter;
         "pos-upload": PosUpload;
-        "pos-user-menu": PosUserMenu;
-        "pos-value": PosValue;
+        "pos-user-menu": Omit<PosUserMenu, keyof PosUserMenuAttributes> & { [K in keyof PosUserMenu & keyof PosUserMenuAttributes]?: PosUserMenu[K] } & { [K in keyof PosUserMenu & keyof PosUserMenuAttributes as `attr:${K}`]?: PosUserMenuAttributes[K] } & { [K in keyof PosUserMenu & keyof PosUserMenuAttributes as `prop:${K}`]?: PosUserMenu[K] } & OneOf<"webId", PosUserMenu["webId"], PosUserMenuAttributes["webId"]>;
+        "pos-value": Omit<PosValue, keyof PosValueAttributes> & { [K in keyof PosValue & keyof PosValueAttributes]?: PosValue[K] } & { [K in keyof PosValue & keyof PosValueAttributes as `attr:${K}`]?: PosValueAttributes[K] } & { [K in keyof PosValue & keyof PosValueAttributes as `prop:${K}`]?: PosValue[K] };
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "pos-add-literal-value": LocalJSX.PosAddLiteralValue & JSXBase.HTMLAttributes<HTMLPosAddLiteralValueElement>;
-            "pos-add-new-thing": LocalJSX.PosAddNewThing & JSXBase.HTMLAttributes<HTMLPosAddNewThingElement>;
-            "pos-app": LocalJSX.PosApp & JSXBase.HTMLAttributes<HTMLPosAppElement>;
-            "pos-app-browser": LocalJSX.PosAppBrowser & JSXBase.HTMLAttributes<HTMLPosAppBrowserElement>;
-            "pos-app-dashboard": LocalJSX.PosAppDashboard & JSXBase.HTMLAttributes<HTMLPosAppDashboardElement>;
-            "pos-app-document-viewer": LocalJSX.PosAppDocumentViewer & JSXBase.HTMLAttributes<HTMLPosAppDocumentViewerElement>;
-            "pos-app-generic": LocalJSX.PosAppGeneric & JSXBase.HTMLAttributes<HTMLPosAppGenericElement>;
-            "pos-app-image-viewer": LocalJSX.PosAppImageViewer & JSXBase.HTMLAttributes<HTMLPosAppImageViewerElement>;
-            "pos-app-ldp-container": LocalJSX.PosAppLdpContainer & JSXBase.HTMLAttributes<HTMLPosAppLdpContainerElement>;
-            "pos-app-rdf-document": LocalJSX.PosAppRdfDocument & JSXBase.HTMLAttributes<HTMLPosAppRdfDocumentElement>;
-            "pos-app-settings": LocalJSX.PosAppSettings & JSXBase.HTMLAttributes<HTMLPosAppSettingsElement>;
+            "pos-add-literal-value": LocalJSX.IntrinsicElements["pos-add-literal-value"] & JSXBase.HTMLAttributes<HTMLPosAddLiteralValueElement>;
+            "pos-add-new-thing": LocalJSX.IntrinsicElements["pos-add-new-thing"] & JSXBase.HTMLAttributes<HTMLPosAddNewThingElement>;
+            "pos-app": LocalJSX.IntrinsicElements["pos-app"] & JSXBase.HTMLAttributes<HTMLPosAppElement>;
+            "pos-app-browser": LocalJSX.IntrinsicElements["pos-app-browser"] & JSXBase.HTMLAttributes<HTMLPosAppBrowserElement>;
+            "pos-app-dashboard": LocalJSX.IntrinsicElements["pos-app-dashboard"] & JSXBase.HTMLAttributes<HTMLPosAppDashboardElement>;
+            "pos-app-document-viewer": LocalJSX.IntrinsicElements["pos-app-document-viewer"] & JSXBase.HTMLAttributes<HTMLPosAppDocumentViewerElement>;
+            "pos-app-generic": LocalJSX.IntrinsicElements["pos-app-generic"] & JSXBase.HTMLAttributes<HTMLPosAppGenericElement>;
+            "pos-app-image-viewer": LocalJSX.IntrinsicElements["pos-app-image-viewer"] & JSXBase.HTMLAttributes<HTMLPosAppImageViewerElement>;
+            "pos-app-ldp-container": LocalJSX.IntrinsicElements["pos-app-ldp-container"] & JSXBase.HTMLAttributes<HTMLPosAppLdpContainerElement>;
+            "pos-app-rdf-document": LocalJSX.IntrinsicElements["pos-app-rdf-document"] & JSXBase.HTMLAttributes<HTMLPosAppRdfDocumentElement>;
+            "pos-app-settings": LocalJSX.IntrinsicElements["pos-app-settings"] & JSXBase.HTMLAttributes<HTMLPosAppSettingsElement>;
             /**
              * Lists whatever is attached to the current thing
              */
-            "pos-attachments": LocalJSX.PosAttachments & JSXBase.HTMLAttributes<HTMLPosAttachmentsElement>;
+            "pos-attachments": LocalJSX.IntrinsicElements["pos-attachments"] & JSXBase.HTMLAttributes<HTMLPosAttachmentsElement>;
             /**
              * Defines a template to use if the specified condition is met - to be used with [pos-switch](https://pod-os.org/reference/elements/components/pos-switch/).
              * See [storybook](https://pod-os.github.io/PodOS/storybook/?path=/story/basics--pos-switch) for an example.
              */
-            "pos-case": LocalJSX.PosCase & JSXBase.HTMLAttributes<HTMLPosCaseElement>;
-            "pos-container-contents": LocalJSX.PosContainerContents & JSXBase.HTMLAttributes<HTMLPosContainerContentsElement>;
-            "pos-container-item": LocalJSX.PosContainerItem & JSXBase.HTMLAttributes<HTMLPosContainerItemElement>;
-            "pos-container-toolbar": LocalJSX.PosContainerToolbar & JSXBase.HTMLAttributes<HTMLPosContainerToolbarElement>;
-            "pos-create-new-container-item": LocalJSX.PosCreateNewContainerItem & JSXBase.HTMLAttributes<HTMLPosCreateNewContainerItemElement>;
-            "pos-description": LocalJSX.PosDescription & JSXBase.HTMLAttributes<HTMLPosDescriptionElement>;
+            "pos-case": LocalJSX.IntrinsicElements["pos-case"] & JSXBase.HTMLAttributes<HTMLPosCaseElement>;
+            "pos-container-contents": LocalJSX.IntrinsicElements["pos-container-contents"] & JSXBase.HTMLAttributes<HTMLPosContainerContentsElement>;
+            "pos-container-item": LocalJSX.IntrinsicElements["pos-container-item"] & JSXBase.HTMLAttributes<HTMLPosContainerItemElement>;
+            "pos-container-toolbar": LocalJSX.IntrinsicElements["pos-container-toolbar"] & JSXBase.HTMLAttributes<HTMLPosContainerToolbarElement>;
+            "pos-create-new-container-item": LocalJSX.IntrinsicElements["pos-create-new-container-item"] & JSXBase.HTMLAttributes<HTMLPosCreateNewContainerItemElement>;
+            "pos-description": LocalJSX.IntrinsicElements["pos-description"] & JSXBase.HTMLAttributes<HTMLPosDescriptionElement>;
             /**
              * Styled wrapper around native dialog element, with slots `title` and `content`
              */
-            "pos-dialog": LocalJSX.PosDialog & JSXBase.HTMLAttributes<HTMLPosDialogElement>;
-            "pos-document": LocalJSX.PosDocument & JSXBase.HTMLAttributes<HTMLPosDocumentElement>;
-            "pos-error-toast": LocalJSX.PosErrorToast & JSXBase.HTMLAttributes<HTMLPosErrorToastElement>;
-            "pos-example-resources": LocalJSX.PosExampleResources & JSXBase.HTMLAttributes<HTMLPosExampleResourcesElement>;
-            "pos-getting-started": LocalJSX.PosGettingStarted & JSXBase.HTMLAttributes<HTMLPosGettingStartedElement>;
+            "pos-dialog": LocalJSX.IntrinsicElements["pos-dialog"] & JSXBase.HTMLAttributes<HTMLPosDialogElement>;
+            "pos-document": LocalJSX.IntrinsicElements["pos-document"] & JSXBase.HTMLAttributes<HTMLPosDocumentElement>;
+            "pos-error-toast": LocalJSX.IntrinsicElements["pos-error-toast"] & JSXBase.HTMLAttributes<HTMLPosErrorToastElement>;
+            "pos-example-resources": LocalJSX.IntrinsicElements["pos-example-resources"] & JSXBase.HTMLAttributes<HTMLPosExampleResourcesElement>;
+            "pos-getting-started": LocalJSX.IntrinsicElements["pos-getting-started"] & JSXBase.HTMLAttributes<HTMLPosGettingStartedElement>;
             /**
              * Tries fetch an image with the solid authentication, and can visualize http errors like 403 or 404 if this fails.
              * Falls back to classic `<img src="...">` on network errors like CORS.
              * Renders a normal link if even this fails.
              */
-            "pos-image": LocalJSX.PosImage & JSXBase.HTMLAttributes<HTMLPosImageElement>;
-            "pos-internal-router": LocalJSX.PosInternalRouter & JSXBase.HTMLAttributes<HTMLPosInternalRouterElement>;
+            "pos-image": LocalJSX.IntrinsicElements["pos-image"] & JSXBase.HTMLAttributes<HTMLPosImageElement>;
+            "pos-internal-router": LocalJSX.IntrinsicElements["pos-internal-router"] & JSXBase.HTMLAttributes<HTMLPosInternalRouterElement>;
             /**
              * Displays a human-readable label of the resource, provided by [Thing.label()](https://pod-os.org/reference/core/classes/thing/#label)
              */
-            "pos-label": LocalJSX.PosLabel & JSXBase.HTMLAttributes<HTMLPosLabelElement>;
-            "pos-list": LocalJSX.PosList & JSXBase.HTMLAttributes<HTMLPosListElement>;
-            "pos-literals": LocalJSX.PosLiterals & JSXBase.HTMLAttributes<HTMLPosLiteralsElement>;
-            "pos-login": LocalJSX.PosLogin & JSXBase.HTMLAttributes<HTMLPosLoginElement>;
-            "pos-login-form": LocalJSX.PosLoginForm & JSXBase.HTMLAttributes<HTMLPosLoginFormElement>;
-            "pos-make-findable": LocalJSX.PosMakeFindable & JSXBase.HTMLAttributes<HTMLPosMakeFindableElement>;
-            "pos-markdown-document": LocalJSX.PosMarkdownDocument & JSXBase.HTMLAttributes<HTMLPosMarkdownDocumentElement>;
-            "pos-navigation": LocalJSX.PosNavigation & JSXBase.HTMLAttributes<HTMLPosNavigationElement>;
-            "pos-navigation-bar": LocalJSX.PosNavigationBar & JSXBase.HTMLAttributes<HTMLPosNavigationBarElement>;
-            "pos-new-thing-form": LocalJSX.PosNewThingForm & JSXBase.HTMLAttributes<HTMLPosNewThingFormElement>;
-            "pos-picture": LocalJSX.PosPicture & JSXBase.HTMLAttributes<HTMLPosPictureElement>;
+            "pos-label": LocalJSX.IntrinsicElements["pos-label"] & JSXBase.HTMLAttributes<HTMLPosLabelElement>;
+            "pos-list": LocalJSX.IntrinsicElements["pos-list"] & JSXBase.HTMLAttributes<HTMLPosListElement>;
+            "pos-literals": LocalJSX.IntrinsicElements["pos-literals"] & JSXBase.HTMLAttributes<HTMLPosLiteralsElement>;
+            "pos-login": LocalJSX.IntrinsicElements["pos-login"] & JSXBase.HTMLAttributes<HTMLPosLoginElement>;
+            "pos-login-form": LocalJSX.IntrinsicElements["pos-login-form"] & JSXBase.HTMLAttributes<HTMLPosLoginFormElement>;
+            "pos-make-findable": LocalJSX.IntrinsicElements["pos-make-findable"] & JSXBase.HTMLAttributes<HTMLPosMakeFindableElement>;
+            "pos-markdown-document": LocalJSX.IntrinsicElements["pos-markdown-document"] & JSXBase.HTMLAttributes<HTMLPosMarkdownDocumentElement>;
+            "pos-navigation": LocalJSX.IntrinsicElements["pos-navigation"] & JSXBase.HTMLAttributes<HTMLPosNavigationElement>;
+            "pos-navigation-bar": LocalJSX.IntrinsicElements["pos-navigation-bar"] & JSXBase.HTMLAttributes<HTMLPosNavigationBarElement>;
+            "pos-new-thing-form": LocalJSX.IntrinsicElements["pos-new-thing-form"] & JSXBase.HTMLAttributes<HTMLPosNewThingFormElement>;
+            "pos-picture": LocalJSX.IntrinsicElements["pos-picture"] & JSXBase.HTMLAttributes<HTMLPosPictureElement>;
             /**
              * Displays an RDF term (predicate) in a human-friendly way, using a provided label. The user can still expand the label
              * to the full URI to see the actual predicate.
              * This will only show the predicate itself, not any value. If you want to display a value, use [pos-value](../pos-value) instead.
              */
-            "pos-predicate": LocalJSX.PosPredicate & JSXBase.HTMLAttributes<HTMLPosPredicateElement>;
-            "pos-relations": LocalJSX.PosRelations & JSXBase.HTMLAttributes<HTMLPosRelationsElement>;
-            "pos-resource": LocalJSX.PosResource & JSXBase.HTMLAttributes<HTMLPosResourceElement>;
-            "pos-reverse-relations": LocalJSX.PosReverseRelations & JSXBase.HTMLAttributes<HTMLPosReverseRelationsElement>;
-            "pos-rich-link": LocalJSX.PosRichLink & JSXBase.HTMLAttributes<HTMLPosRichLinkElement>;
+            "pos-predicate": LocalJSX.IntrinsicElements["pos-predicate"] & JSXBase.HTMLAttributes<HTMLPosPredicateElement>;
+            "pos-relations": LocalJSX.IntrinsicElements["pos-relations"] & JSXBase.HTMLAttributes<HTMLPosRelationsElement>;
+            "pos-resource": LocalJSX.IntrinsicElements["pos-resource"] & JSXBase.HTMLAttributes<HTMLPosResourceElement>;
+            "pos-reverse-relations": LocalJSX.IntrinsicElements["pos-reverse-relations"] & JSXBase.HTMLAttributes<HTMLPosReverseRelationsElement>;
+            "pos-rich-link": LocalJSX.IntrinsicElements["pos-rich-link"] & JSXBase.HTMLAttributes<HTMLPosRichLinkElement>;
             /**
              * The responsibility of pos-router is to handle the `uri` query param, that specifies the URI of the resource that is currently opened.
              * It reads this query param and informs other components about changes via the `pod-os:route-changed` event.
              * It also intercepts the URLs from `pod-os:link` events and pushes them as a new `uri` parameter.
              */
-            "pos-router": LocalJSX.PosRouter & JSXBase.HTMLAttributes<HTMLPosRouterElement>;
-            "pos-select-term": LocalJSX.PosSelectTerm & JSXBase.HTMLAttributes<HTMLPosSelectTermElement>;
-            "pos-setting-offline-cache": LocalJSX.PosSettingOfflineCache & JSXBase.HTMLAttributes<HTMLPosSettingOfflineCacheElement>;
-            "pos-subjects": LocalJSX.PosSubjects & JSXBase.HTMLAttributes<HTMLPosSubjectsElement>;
+            "pos-router": LocalJSX.IntrinsicElements["pos-router"] & JSXBase.HTMLAttributes<HTMLPosRouterElement>;
+            "pos-select-term": LocalJSX.IntrinsicElements["pos-select-term"] & JSXBase.HTMLAttributes<HTMLPosSelectTermElement>;
+            "pos-setting-offline-cache": LocalJSX.IntrinsicElements["pos-setting-offline-cache"] & JSXBase.HTMLAttributes<HTMLPosSettingOfflineCacheElement>;
+            /**
+             * Allows sharing a resource with other apps, people, etc.
+             */
+            "pos-share": LocalJSX.IntrinsicElements["pos-share"] & JSXBase.HTMLAttributes<HTMLPosShareElement>;
+            "pos-subjects": LocalJSX.IntrinsicElements["pos-subjects"] & JSXBase.HTMLAttributes<HTMLPosSubjectsElement>;
             /**
              * Selects a child template to render based on properties of the subject resource, usually defined by an ancestor `pos-resource` element.
              * See [storybook](https://pod-os.github.io/PodOS/storybook/?path=/story/basics--pos-switch) for an example.
              * See [pos-case](https://pod-os.org/reference/elements/components/pos-switch/pos-case/) for available filter conditions.
              */
-            "pos-switch": LocalJSX.PosSwitch & JSXBase.HTMLAttributes<HTMLPosSwitchElement>;
+            "pos-switch": LocalJSX.IntrinsicElements["pos-switch"] & JSXBase.HTMLAttributes<HTMLPosSwitchElement>;
             /**
              * A tool to manage attachments of a thing.
              */
-            "pos-tool-attachments": LocalJSX.PosToolAttachments & JSXBase.HTMLAttributes<HTMLPosToolAttachmentsElement>;
+            "pos-tool-attachments": LocalJSX.IntrinsicElements["pos-tool-attachments"] & JSXBase.HTMLAttributes<HTMLPosToolAttachmentsElement>;
             /**
              * Allows selecting a tool from within a set of available tools
              */
-            "pos-tool-select": LocalJSX.PosToolSelect & JSXBase.HTMLAttributes<HTMLPosToolSelectElement>;
-            "pos-type-badges": LocalJSX.PosTypeBadges & JSXBase.HTMLAttributes<HTMLPosTypeBadgesElement>;
-            "pos-type-index-entries": LocalJSX.PosTypeIndexEntries & JSXBase.HTMLAttributes<HTMLPosTypeIndexEntriesElement>;
+            "pos-tool-select": LocalJSX.IntrinsicElements["pos-tool-select"] & JSXBase.HTMLAttributes<HTMLPosToolSelectElement>;
+            "pos-type-badges": LocalJSX.IntrinsicElements["pos-type-badges"] & JSXBase.HTMLAttributes<HTMLPosTypeBadgesElement>;
+            "pos-type-index-entries": LocalJSX.IntrinsicElements["pos-type-index-entries"] & JSXBase.HTMLAttributes<HTMLPosTypeIndexEntriesElement>;
             /**
              * This component is responsible for rendering tools that are useful to interact with the current resource.
              */
-            "pos-type-router": LocalJSX.PosTypeRouter & JSXBase.HTMLAttributes<HTMLPosTypeRouterElement>;
-            "pos-upload": LocalJSX.PosUpload & JSXBase.HTMLAttributes<HTMLPosUploadElement>;
-            "pos-user-menu": LocalJSX.PosUserMenu & JSXBase.HTMLAttributes<HTMLPosUserMenuElement>;
+            "pos-type-router": LocalJSX.IntrinsicElements["pos-type-router"] & JSXBase.HTMLAttributes<HTMLPosTypeRouterElement>;
+            "pos-upload": LocalJSX.IntrinsicElements["pos-upload"] & JSXBase.HTMLAttributes<HTMLPosUploadElement>;
+            "pos-user-menu": LocalJSX.IntrinsicElements["pos-user-menu"] & JSXBase.HTMLAttributes<HTMLPosUserMenuElement>;
             /**
              * Shows a single value linked to the resource using the given predicate.
              * The value is determined by [Thing.anyValue()](https://pod-os.org/reference/core/classes/thing/#anyvalue)
              */
-            "pos-value": LocalJSX.PosValue & JSXBase.HTMLAttributes<HTMLPosValueElement>;
+            "pos-value": LocalJSX.IntrinsicElements["pos-value"] & JSXBase.HTMLAttributes<HTMLPosValueElement>;
         }
     }
 }

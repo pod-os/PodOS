@@ -34,6 +34,7 @@ export class PosNavigationBar {
           <div>{this.current ? this.current.label() : 'Search or enter URI'}</div>
           {this.icon()}
         </button>
+        {this.current && <pos-share uri={this.current.uri}></pos-share>}
       </section>
     );
   }
