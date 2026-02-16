@@ -7,6 +7,7 @@ import { labelForType } from "./labelForType";
 import { labelFromUri } from "./labelFromUri";
 import { Store } from "../Store";
 import {
+  debounceTime,
   distinctUntilChanged,
   filter,
   map,
@@ -108,6 +109,27 @@ export class Thing {
       label: labelFromUri(predicate),
       uris: values[predicate],
     }));
+  }
+
+  /**
+   * Observe changes in links from this thing to other resources
+   */
+  observeRelations(predicate?: string): Observable<Relation[]> {
+    return merge(this.store.additions$, this.store.removals$).pipe(
+      // Note: we assume that cost of filtering by the optional predicate is not worthwhile
+      filter((quad) => quad.subject.value == this.uri),
+      debounceTime(250),
+      map(() => this.relations(predicate)),
+      // Note: will not trigger an update if label changes, as label is currently constructed from predicate
+      distinctUntilChanged((prev, curr) =>
+        prev.every(
+          (rel, i) =>
+            rel.predicate == curr[i].predicate &&
+            rel.uris.length == curr[i].uris.length,
+        ),
+      ),
+      startWith(this.relations(predicate)),
+    );
   }
 
   /**
