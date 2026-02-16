@@ -32,7 +32,7 @@ export class PosUserMenu {
   }
 
   render() {
-    if (!this.webId) return null; //?
+    if (!this.webId) return null;
     return (
       <pos-resource uri={this.webId}>
         <sl-dropdown>
