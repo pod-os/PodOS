@@ -44,6 +44,8 @@ describe('pos-share', () => {
       .mockReturnValue([
         {
           name: 'SolidOS Data Browser',
+          appUrl: 'https://solidos.github.io/mashlib/dist/browse.html',
+          uriParam: 'uri',
         },
       ]);
 
@@ -63,7 +65,7 @@ describe('pos-share', () => {
           <sl-menu-item disabled="">
             Open with...
           </sl-menu-item>
-          <sl-menu-item value="SolidOS Data Browser">
+          <sl-menu-item>
             SolidOS Data Browser
           </sl-menu-item>
         </sl-menu>
@@ -77,9 +79,13 @@ describe('pos-share', () => {
       .mockReturnValue([
         {
           name: 'SolidOS Data Browser',
+          appUrl: 'https://solidos.github.io/mashlib/dist/browse.html',
+          uriParam: 'uri',
         },
         {
-          name: 'Umai',
+          name: 'Penny',
+          appUrl: 'https://penny.vincenttunru.com/explore/',
+          uriParam: 'url',
         },
       ]);
 
@@ -99,11 +105,11 @@ describe('pos-share', () => {
           <sl-menu-item disabled="">
             Open with...
           </sl-menu-item>
-          <sl-menu-item value="SolidOS Data Browser">
+          <sl-menu-item>
             SolidOS Data Browser
           </sl-menu-item>
-          <sl-menu-item value="Umai">
-            Umai
+          <sl-menu-item>
+            Penny
           </sl-menu-item>
         </sl-menu>
     `);
