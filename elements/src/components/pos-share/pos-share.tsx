@@ -1,4 +1,4 @@
-import { Component, h, Element, Prop, State } from '@stencil/core';
+import { Component, h, Element, Prop, State, Listen } from '@stencil/core';
 
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import '@shoelace-style/shoelace/dist/components/menu/menu.js';
@@ -29,6 +29,14 @@ export class PosShare {
   async componentWillLoad() {
     const os = await usePodOS(this.el);
     this.apps = os.proposeAppsFor(this.uri, session.state.webId);
+  }
+
+  @Listen('sl-select')
+  onSelect(e: CustomEvent<{ item: { value: string } }>) {
+    const { value } = e.detail.item;
+    if (value === 'copy-uri') {
+      navigator.clipboard.writeText(this.uri);
+    }
   }
 
   render() {
