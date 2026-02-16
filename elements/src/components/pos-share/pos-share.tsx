@@ -5,7 +5,6 @@ import '@shoelace-style/shoelace/dist/components/menu/menu.js';
 import '@shoelace-style/shoelace/dist/components/menu-item/menu-item.js';
 import '@shoelace-style/shoelace/dist/components/divider/divider.js';
 import { usePodOS } from '../events/usePodOS';
-import session from '../../store/session';
 import { OpenWithApp } from '@pod-os/core';
 
 /**
@@ -28,7 +27,7 @@ export class PosShare {
 
   async componentWillLoad() {
     const os = await usePodOS(this.el);
-    this.apps = os.proposeAppsFor(this.uri, session.state.webId);
+    this.apps = os.proposeAppsFor(this.uri);
   }
 
   @Listen('sl-select')

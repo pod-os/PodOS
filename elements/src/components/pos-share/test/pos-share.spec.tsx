@@ -9,7 +9,6 @@ describe('pos-share', () => {
   let os;
   beforeEach(() => {
     os = mockPodOS();
-    session.state.webId = 'https://pod.example/alice#me';
     when(os.proposeAppsFor).mockReturnValue([]);
   });
 
@@ -40,7 +39,7 @@ describe('pos-share', () => {
   it('renders a proposed app', async () => {
     const os = mockPodOS();
     when(os.proposeAppsFor)
-      .calledWith('https://resource.example#it', 'https://pod.example/alice#me')
+      .calledWith('https://resource.example#it')
       .mockReturnValue([
         {
           name: 'SolidOS Data Browser',
@@ -75,7 +74,7 @@ describe('pos-share', () => {
   it('renders multiple proposed apps', async () => {
     const os = mockPodOS();
     when(os.proposeAppsFor)
-      .calledWith('https://resource.example#it', 'https://pod.example/alice#me')
+      .calledWith('https://resource.example#it')
       .mockReturnValue([
         {
           name: 'SolidOS Data Browser',

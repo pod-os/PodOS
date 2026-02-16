@@ -227,7 +227,7 @@ export class PodOS {
     return this.attachmentGateway;
   }
 
-  proposeAppsFor(resourceUri: string, webId: string): OpenWithApp[] {
-    return proposeAppsFor(resourceUri, webId);
+  proposeAppsFor(resourceUri: string): OpenWithApp[] {
+    return proposeAppsFor(resourceUri);
   }
 }
