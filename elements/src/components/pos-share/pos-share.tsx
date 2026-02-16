@@ -32,10 +32,12 @@ export class PosShare {
   }
 
   @Listen('sl-select')
-  onSelect(e: CustomEvent<{ item: { value: string } }>) {
+  onSelect(e: CustomEvent<{ item: { value: 'copy-uri' | OpenWithApp } }>) {
     const { value } = e.detail.item;
     if (value === 'copy-uri') {
       navigator.clipboard.writeText(this.uri);
+    } else {
+      console.log(`Opening ${value.name}`);
     }
   }
 
@@ -60,6 +62,6 @@ function OpenWithApps({ apps }: { apps: OpenWithApp[] }) {
   return [
     <sl-divider></sl-divider>,
     <sl-menu-item disabled>Open with...</sl-menu-item>,
-    apps.map(it => <sl-menu-item value={it.name}>{it.name}</sl-menu-item>),
+    apps.map(it => <sl-menu-item value={it}>{it.name}</sl-menu-item>),
   ];
 }
