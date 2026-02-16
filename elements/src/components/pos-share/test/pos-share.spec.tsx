@@ -1,21 +1,19 @@
 import { mockPodOS } from '../../../test/mockPodOS';
-import { newSpecPage } from '@stencil/core/testing';
+import { newSpecPage, SpecPage } from '@stencil/core/testing';
 import { PosShare } from '../pos-share';
 import { when } from 'jest-when';
 
 import session from '../../../store/session';
 
 describe('pos-share', () => {
+  let os;
   beforeEach(() => {
+    os = mockPodOS();
     session.state.webId = 'https://pod.example/alice#me';
+    when(os.proposeAppsFor).mockReturnValue([]);
   });
 
   it('renders share button with menu to copy uri', async () => {
-    const os = mockPodOS();
-    when(os.proposeAppsFor)
-      .calledWith('https://resource.example#it', 'https://pod.example/alice#me')
-      .mockReturnValue([]);
-
     const page = await newSpecPage({
       components: [PosShare],
       html: `<pos-share uri="https://resource.example#it"/>`,
@@ -110,4 +108,23 @@ describe('pos-share', () => {
         </sl-menu>
     `);
   });
+
+  it('copies URI to clipboard when copy entry is clicked', async () => {
+    (navigator as any).clipboard = {
+      writeText: jest.fn(),
+    } as unknown as Clipboard;
+    const page = await newSpecPage({
+      components: [PosShare],
+      html: `<pos-share uri="https://resource.example#it"/>`,
+      supportsShadowDom: false,
+    });
+    const link = jest.fn();
+    page.root.addEventListener('pod-os:link', link);
+    select(page, 'copy-uri');
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith('https://resource.example#it');
+  });
+
+  function select(page: SpecPage, value: string) {
+    page.root.dispatchEvent(new CustomEvent('sl-select', { detail: { item: { value } } }));
+  }
 });
