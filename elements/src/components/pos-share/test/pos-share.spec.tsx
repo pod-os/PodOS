@@ -1,14 +1,21 @@
+jest.mock('../openNewTab');
+
 import { mockPodOS } from '../../../test/mockPodOS';
 import { newSpecPage, SpecPage } from '@stencil/core/testing';
 import { PosShare } from '../pos-share';
-import { when } from 'jest-when';
 
+import { when } from 'jest-when';
 import session from '../../../store/session';
+import { OpenWithApp } from '@pod-os/core';
+
+import { openNewTab } from '../openNewTab';
 
 describe('pos-share', () => {
   let os;
   beforeEach(() => {
+    jest.resetAllMocks();
     os = mockPodOS();
+    global.open = jest.fn();
     when(os.proposeAppsFor).mockReturnValue([]);
   });
 
@@ -129,7 +136,24 @@ describe('pos-share', () => {
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith('https://resource.example#it');
   });
 
-  function select(page: SpecPage, value: string) {
+  describe('open with app', () => {
+    it('opens the resource in the selected app', async () => {
+      const page = await newSpecPage({
+        components: [PosShare],
+        html: `<pos-share uri="https://resource.example#it"/>`,
+        supportsShadowDom: false,
+      });
+      const selectedApp: OpenWithApp = {
+        name: 'Some app',
+        appUrl: 'https://app.example/',
+        uriParam: 'uri',
+      };
+      select(page, selectedApp);
+      expect(openNewTab).toHaveBeenCalledWith('https://app.example/?uri=https%3A%2F%2Fresource.example%23it');
+    });
+  });
+
+  function select(page: SpecPage, value: 'copy-uri' | OpenWithApp): void {
     page.root.dispatchEvent(new CustomEvent('sl-select', { detail: { item: { value } } }));
   }
 });

@@ -6,6 +6,7 @@ import '@shoelace-style/shoelace/dist/components/menu-item/menu-item.js';
 import '@shoelace-style/shoelace/dist/components/divider/divider.js';
 import { usePodOS } from '../events/usePodOS';
 import { OpenWithApp } from '@pod-os/core';
+import { openNewTab } from './openNewTab';
 
 /**
  * Allows sharing a resource with other apps, people, etc.
@@ -36,7 +37,9 @@ export class PosShare {
     if (value === 'copy-uri') {
       navigator.clipboard.writeText(this.uri);
     } else {
-      console.log(`Opening ${value.name}`);
+      const url = new URL(value.appUrl);
+      url.searchParams.set(value.uriParam, this.uri);
+      openNewTab(url.toString());
     }
   }
 
