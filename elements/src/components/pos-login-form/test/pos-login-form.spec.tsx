@@ -13,7 +13,7 @@ describe('pos-login-form', () => {
     expect(page.root).toEqualHtml(`
       <pos-login-form>
   <form method="dialog">
-    <label htmlfor="idpUrl">
+    <label for="idpUrl">
       Please enter your Identity Provider
     </label>
     <input id="idpUrl" list="suggestedIssuers" placeholder="Type to search..." type="url" required value="">

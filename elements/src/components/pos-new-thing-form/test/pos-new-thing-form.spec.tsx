@@ -17,11 +17,11 @@ describe('pos-new-thing-form', () => {
       `
         <pos-new-thing-form reference-uri="https://pod.test/container/">
           <form method="dialog">
-            <label htmlFor="type">
+            <label for="type">
               Type
             </label>
             <pos-select-term id="type" placeholder=""></pos-select-term>
-            <label htmlFor="name">
+            <label for="name">
               Name
             </label>
             <input id="name" type="text">
@@ -163,11 +163,11 @@ describe('pos-new-thing-form', () => {
       `
         <pos-new-thing-form reference-uri="https://pod.test/container/">
           <form method="dialog">
-            <label htmlFor="type">
+            <label for="type">
               Type
             </label>
             <pos-select-term id="type" placeholder=""></pos-select-term>
-            <label htmlFor="name">
+            <label for="name">
               Name
             </label>
             <input id="name" type="text" value="New Thing">

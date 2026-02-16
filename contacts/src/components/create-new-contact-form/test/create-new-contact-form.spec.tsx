@@ -17,15 +17,15 @@ describe('create new contact form', () => {
   it('shows a form to enter contact data', () => {
     expect(page.root).toEqualHtml(`<pos-contacts-create-new-contact-form>
   <form method='dialog'>
-    <label htmlfor='name'>
+    <label for='name'>
       Name
     </label>
     <input id='name' name='name' required='' type='text'>
-    <label htmlfor='phoneNumber'>
+    <label for='phoneNumber'>
       Phone
     </label>
     <input id='phoneNumber' name='phoneNumber' type='tel'>
-    <label htmlfor='emailAddress'>
+    <label for='emailAddress'>
       Email
     </label>
     <input id='emailAddress' name='emailAddress' type='email'>
