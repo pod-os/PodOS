@@ -46,9 +46,9 @@ export class LdpContainer extends Thing {
           quad.graph.value == this.uri &&
           quad.predicate.value == "http://www.w3.org/ns/ldp#contains",
       ),
-      startWith(this.contains()),
       debounceTime(250),
       map(() => this.contains()),
+      startWith(this.contains()),
     );
   }
 }

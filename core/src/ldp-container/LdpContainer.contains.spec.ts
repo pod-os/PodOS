@@ -122,13 +122,7 @@ describe("LDP container", () => {
       subscription.unsubscribe();
     });
 
-    it("pushes existing values immediately after debounce time", () => {
-      // before debounce time is complete
-      jest.advanceTimersByTime(100);
-      expect(subscriber).toHaveBeenCalledTimes(0);
-
-      // after debounce time
-      jest.advanceTimersByTime(150);
+    it("pushes existing values immediately", () => {
       expect(subscriber).toHaveBeenCalledTimes(1);
       expect(subscriber.mock.calls).toEqual([
         [
@@ -144,9 +138,6 @@ describe("LDP container", () => {
 
     it("pushes new values once per group of changes until unsubcribe, ignoring irrelevant changes", () => {
       const containsSpy = jest.spyOn(container, "contains");
-      // wait for first push to settle
-      jest.advanceTimersByTime(250);
-      // then update container contents
       internalStore.removeDocument(sym("https://pod.test/container/"));
       internalStore.addAll([
         quad(
@@ -168,8 +159,9 @@ describe("LDP container", () => {
         ),
       ]);
       jest.advanceTimersByTime(255);
+      // Note: subscriber counted initial push but containsSpy didn't
       expect(subscriber).toHaveBeenCalledTimes(2);
-      expect(containsSpy).toHaveBeenCalledTimes(2);
+      expect(containsSpy).toHaveBeenCalledTimes(1);
       expect(subscriber.mock.calls).toEqual([
         [
           [
@@ -202,7 +194,7 @@ describe("LDP container", () => {
         sym("https://pod.test/container/"),
       );
       expect(subscriber).toHaveBeenCalledTimes(2);
-      expect(containsSpy).toHaveBeenCalledTimes(2);
+      expect(containsSpy).toHaveBeenCalledTimes(1);
     });
   });
 });
