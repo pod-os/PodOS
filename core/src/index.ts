@@ -19,6 +19,7 @@ import { IndexedFormula } from "rdflib";
 import { ResultAsync } from "neverthrow";
 import { HttpProblem, NetworkProblem } from "./problems";
 import { loadModule } from "./modules";
+import { OpenWithApp, proposeAppsFor } from "./open-with";
 
 export * from "./authentication";
 export * from "./files";
@@ -35,6 +36,7 @@ export * from "./Store";
 export * from "./uri";
 export * from "./problems";
 export * from "./type-index";
+export * from "./open-with";
 
 export interface PodOsConfiguration {
   offlineCache?: OfflineCache;
@@ -223,5 +225,9 @@ export class PodOS {
    */
   attachments(): AttachmentGateway {
     return this.attachmentGateway;
+  }
+
+  proposeAppsFor(resourceUri: string, webId: string): OpenWithApp[] {
+    return proposeAppsFor(resourceUri, webId);
   }
 }
