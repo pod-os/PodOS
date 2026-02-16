@@ -11,9 +11,24 @@ describe('pos-share', () => {
 
     expect(page.root).toEqualHtml(`
       <pos-share>
-        <button part="button">
-          <sl-icon name="share"></sl-icon>
-        </button>
+        <sl-dropdown>
+          <button aria-label="Share" part="button" slot="trigger">
+            <sl-icon name="share"></sl-icon>
+          </button>
+          <sl-menu>
+            <sl-menu-item value="dashboard">
+              <sl-icon name="copy" slot="prefix"></sl-icon>
+              Copy URI
+            </sl-menu-item>
+            <sl-divider></sl-divider>
+            <sl-menu-item disabled="">
+              Open with...
+            </sl-menu-item>
+            <sl-menu-item value="logout">
+              SolidOS Data Browser
+            </sl-menu-item>
+          </sl-menu>
+        </sl-dropdown>
       </pos-share>
     `);
   });

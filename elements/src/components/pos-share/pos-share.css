@@ -5,13 +5,31 @@
   justify-content: center;
 }
 
-button {
+sl-dropdown {
+  height: 100%;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
-  width: 100%;
-  cursor: pointer;
-  padding: 0;
-  margin: 0;
+  &::part(trigger) {
+    height: 100%;
+    width: 100%;
+  }
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+  }
+}
+
+sl-menu-item[disabled] {
+  &::part(base) {
+    cursor: default;
+    opacity: 1;
+  }
 }
