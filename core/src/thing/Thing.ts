@@ -152,6 +152,27 @@ export class Thing {
   }
 
   /**
+   * Observe changes in links from other resources to this thing
+   */
+  observeReverseRelations(predicate?: string): Observable<Relation[]> {
+    return merge(this.store.additions$, this.store.removals$).pipe(
+      // Note: we assume that cost of filtering by the optional predicate is not worthwhile
+      filter((quad) => quad.object.value == this.uri),
+      debounceTime(250),
+      map(() => this.reverseRelations(predicate)),
+      // Note: will not trigger an update if label changes, as label is currently constructed from predicate
+      distinctUntilChanged((prev, curr) =>
+        prev.every(
+          (rel, i) =>
+            rel.predicate == curr[i].predicate &&
+            rel.uris.length == curr[i].uris.length,
+        ),
+      ),
+      startWith(this.reverseRelations(predicate)),
+    );
+  }
+
+  /**
    * Returns any value linked from this thing via one of the given predicates
    * @param predicateUris
    */
