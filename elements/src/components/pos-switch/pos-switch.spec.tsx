@@ -1,7 +1,7 @@
 import { newSpecPage } from '@stencil/core/testing';
 import { PosSwitch } from './pos-switch';
 import { when } from 'jest-when';
-import { RdfType, Thing } from '@pod-os/core';
+import { RdfType, Relation, Thing } from '@pod-os/core';
 import { Subject } from 'rxjs';
 
 describe('pos-switch', () => {
@@ -203,16 +203,15 @@ describe('pos-switch', () => {
         </pos-case>
       </pos-switch>`,
     });
+    const observedRelations$ = new Subject<Relation[]>();
     const thing = {
       uri: 'https://pod.example/resource',
-      relations: jest.fn(),
+      observeRelations: () => observedRelations$,
     };
-    when(thing.relations)
-      .calledWith('https://schema.org/video')
-      .mockReturnValue([{ predicate: 'https://schema.org/video', uris: ['https://video.test/video-1'] }]);
-    when(thing.relations).calledWith('https://schema.org/description').mockReturnValue([]);
-
-    await page.rootInstance.receiveResource(thing);
+    page.rootInstance.receiveResource(thing);
+    observedRelations$.next([
+      { predicate: 'https://schema.org/video', label: 'video', uris: ['https://video.test/video-1'] },
+    ]);
     await page.waitForChanges();
     expect(page.root?.innerHTML).toEqualHtml(`
         <div>Resource has video</div>
@@ -236,16 +235,15 @@ describe('pos-switch', () => {
         </pos-case>
       </pos-switch>`,
     });
+    const observedReverseRelations$ = new Subject<Relation[]>();
     const thing = {
       uri: 'https://pod.example/resource',
-      reverseRelations: jest.fn(),
+      observeReverseRelations: () => observedReverseRelations$,
     };
-    when(thing.reverseRelations)
-      .calledWith('https://schema.org/video')
-      .mockReturnValue([{ predicate: 'https://schema.org/video', uris: ['https://video.test/video-1'] }]);
-    when(thing.reverseRelations).calledWith('https://schema.org/subjectOf').mockReturnValue([]);
-
-    await page.rootInstance.receiveResource(thing);
+    page.rootInstance.receiveResource(thing);
+    observedReverseRelations$.next([
+      { predicate: 'https://schema.org/video', label: 'video', uris: ['https://video.test/video-1'] },
+    ]);
     await page.waitForChanges();
     expect(page.root?.innerHTML).toEqualHtml(`
         <div>Resource is video</div>
