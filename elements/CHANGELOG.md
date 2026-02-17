@@ -4,12 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 0.37.0
 
 ### Added
 
 - [pos-switch](https://pod-os.org/reference/elements/components/pos-switch/) and [pos-case](https://pod-os.org/reference/elements/components/pos-case/) : New components for conditional rendering
-
+- [pos-share](https://pod-os.org/reference/elements/components/pos-share/)
+  - provides the means to share a resource with other apps or by copying its URI
+^
 ## 0.36.0
 
 ### Changed
