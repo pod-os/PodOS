@@ -1,4 +1,4 @@
-import { RdfType, Thing } from '@pod-os/core';
+import { RdfType, Relation, Thing } from '@pod-os/core';
 import { Component, Element, Event, h, Host, State } from '@stencil/core';
 import { ResourceAware, ResourceEventEmitter, subscribeResource } from '../events/ResourceAware';
 import { firstValueFrom, Subject, takeUntil } from 'rxjs';
@@ -18,6 +18,8 @@ export class PosSwitch implements ResourceAware {
   @State() resource: Thing;
   @State() caseElements: HTMLPosCaseElement[];
   @State() types: RdfType[];
+  @State() relations: Relation[];
+  @State() reverseRelations: Relation[];
 
   private readonly disconnected$ = new Subject<void>();
 
@@ -40,12 +42,10 @@ export class PosSwitch implements ResourceAware {
       state = this.types.map(x => x.uri).includes(caseElement.getAttribute('if-typeof'));
     }
     if (caseElement.getAttribute('if-property') !== null) {
-      const relations = this.resource.relations(caseElement.getAttribute('if-property'));
-      state = relations.length > 0;
+      state = this.relations.map(x => x.predicate).includes(caseElement.getAttribute('if-property'));
     }
     if (caseElement.getAttribute('if-rev') !== null) {
-      const reverseRelations = this.resource.reverseRelations(caseElement.getAttribute('if-rev'));
-      state = reverseRelations.length > 0;
+      state = this.reverseRelations.map(x => x.predicate).includes(caseElement.getAttribute('if-rev'));
     }
     if (caseElement.getAttribute('not') != null) {
       state = !state;
@@ -60,6 +60,20 @@ export class PosSwitch implements ResourceAware {
         this.types = types;
       });
       await firstValueFrom(observeTypes);
+    }
+    if (this.caseElements.some(caseElement => caseElement.hasAttribute('if-property'))) {
+      const observeRelations = resource.observeRelations().pipe(takeUntil(this.disconnected$));
+      observeRelations.subscribe(relations => {
+        this.relations = relations;
+      });
+      await firstValueFrom(observeRelations);
+    }
+    if (this.caseElements.some(caseElement => caseElement.hasAttribute('if-rev'))) {
+      const observeReverseRelations = resource.observeReverseRelations().pipe(takeUntil(this.disconnected$));
+      observeReverseRelations.subscribe(reverseRelations => {
+        this.reverseRelations = reverseRelations;
+      });
+      await firstValueFrom(observeReverseRelations);
     }
     this.resource = resource;
   };
