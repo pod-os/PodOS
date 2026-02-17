@@ -35,6 +35,7 @@ graph TD;
   pos-navigation --> pos-navigation-bar
   pos-navigation --> pos-rich-link
   pos-navigation-bar --> pos-make-findable
+  pos-navigation-bar --> pos-share
   pos-make-findable --> pos-resource
   pos-make-findable --> pos-label
   pos-rich-link --> pos-label

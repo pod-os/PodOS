@@ -6,11 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 0.26.0
 
 ### Breaking changes
 
 - `Thing.store` is now a `Store` instead of an `IndexedFormula`. Internal store is no longer accessible. This change also affects all sub-classes of `Thing`. This change is necessary to allow reactivity to be implemented on `Thing` methods.
+
+### Added
+
+- [`PodOS.proposeAppsFor`](https://pod-os.org/reference/core/classes/PodOS/#proposeAppsFor) proposes apps that can open a given resource
 
 ### Added
 

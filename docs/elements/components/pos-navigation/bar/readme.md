@@ -27,11 +27,13 @@
 ### Depends on
 
 - [pos-make-findable](../../pos-make-findable)
+- [pos-share](../../pos-share)
 
 ### Graph
 ```mermaid
 graph TD;
   pos-navigation-bar --> pos-make-findable
+  pos-navigation-bar --> pos-share
   pos-make-findable --> pos-resource
   pos-make-findable --> pos-label
   pos-navigation --> pos-navigation-bar
