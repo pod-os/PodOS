@@ -1,7 +1,7 @@
 import { RdfType, Relation, Thing } from '@pod-os/core';
 import { Component, Element, Event, h, Host, State } from '@stencil/core';
 import { ResourceAware, ResourceEventEmitter, subscribeResource } from '../events/ResourceAware';
-import { firstValueFrom, Subject, takeUntil } from 'rxjs';
+import { combineLatest, firstValueFrom, Observable, Subject, takeUntil } from 'rxjs';
 
 /**
  * Selects a child template to render based on properties of the subject resource, usually defined by an ancestor `pos-resource` element.
@@ -54,27 +54,29 @@ export class PosSwitch implements ResourceAware {
   }
 
   receiveResource = async (resource: Thing) => {
+    let observables: Observable<any>[] = [];
     if (this.caseElements.some(caseElement => caseElement.hasAttribute('if-typeof'))) {
       const observeTypes = resource.observeTypes().pipe(takeUntil(this.disconnected$));
       observeTypes.subscribe(types => {
         this.types = types;
       });
-      await firstValueFrom(observeTypes);
+      observables.push(observeTypes);
     }
     if (this.caseElements.some(caseElement => caseElement.hasAttribute('if-property'))) {
       const observeRelations = resource.observeRelations().pipe(takeUntil(this.disconnected$));
       observeRelations.subscribe(relations => {
         this.relations = relations;
       });
-      await firstValueFrom(observeRelations);
+      observables.push(observeRelations);
     }
     if (this.caseElements.some(caseElement => caseElement.hasAttribute('if-rev'))) {
       const observeReverseRelations = resource.observeReverseRelations().pipe(takeUntil(this.disconnected$));
       observeReverseRelations.subscribe(reverseRelations => {
         this.reverseRelations = reverseRelations;
       });
-      await firstValueFrom(observeReverseRelations);
+      observables.push(observeReverseRelations);
     }
+    await firstValueFrom(combineLatest(observables));
     this.resource = resource;
   };
 
