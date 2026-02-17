@@ -5,17 +5,19 @@ import { newSpecPage, SpecPage } from '@stencil/core/testing';
 import { PosShare } from '../pos-share';
 
 import { when } from 'jest-when';
-import session from '../../../store/session';
-import { OpenWithApp } from '@pod-os/core';
+import { OpenWithApp, Thing } from '@pod-os/core';
 
 import { openNewTab } from '../openNewTab';
 
 describe('pos-share', () => {
   let os;
+  let thing;
   beforeEach(() => {
     jest.resetAllMocks();
     os = mockPodOS();
     global.open = jest.fn();
+    const thing = { fake: 'Thing' } as unknown as Thing;
+    when(os.store.get).calledWith(thing).mockReturnValue(thing);
     when(os.proposeAppsFor).mockReturnValue([]);
   });
 
@@ -46,7 +48,7 @@ describe('pos-share', () => {
   it('renders a proposed app', async () => {
     const os = mockPodOS();
     when(os.proposeAppsFor)
-      .calledWith('https://resource.example#it')
+      .calledWith(thing)
       .mockReturnValue([
         {
           name: 'SolidOS Data Browser',
@@ -81,7 +83,7 @@ describe('pos-share', () => {
   it('renders multiple proposed apps', async () => {
     const os = mockPodOS();
     when(os.proposeAppsFor)
-      .calledWith('https://resource.example#it')
+      .calledWith(thing)
       .mockReturnValue([
         {
           name: 'SolidOS Data Browser',

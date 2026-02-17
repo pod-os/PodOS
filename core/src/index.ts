@@ -227,7 +227,12 @@ export class PodOS {
     return this.attachmentGateway;
   }
 
-  proposeAppsFor(resourceUri: string): OpenWithApp[] {
-    return proposeAppsFor(resourceUri);
+  /**
+   * Propose matching apps to open a thing
+   * @param thing - The thing to open
+   * @returns An array of apps that can open the thing. The array is empty if no apps are found.
+   */
+  proposeAppsFor(thing: Thing): OpenWithApp[] {
+    return proposeAppsFor(thing);
   }
 }

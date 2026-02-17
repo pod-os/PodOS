@@ -1,3 +1,5 @@
+import { Thing } from "../thing";
+
 /**
  * An app that can be used to open a resource
  */
@@ -20,7 +22,7 @@ export interface OpenWithApp {
  * Returns a list of apps that can be used to open a resource
  * @param uri - The URI of the resource to open
  */
-export function proposeAppsFor(uri: string): OpenWithApp[] {
+export function proposeAppsFor(thing: Thing): OpenWithApp[] {
   return [
     {
       name: "Data Browser (SolidOS)",
