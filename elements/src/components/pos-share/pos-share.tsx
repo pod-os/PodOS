@@ -1,11 +1,11 @@
-import { Component, h, Element, Prop, State, Listen } from '@stencil/core';
+import { Component, h, Element, Prop, State, Listen, Watch } from '@stencil/core';
 
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import '@shoelace-style/shoelace/dist/components/menu/menu.js';
 import '@shoelace-style/shoelace/dist/components/menu-item/menu-item.js';
 import '@shoelace-style/shoelace/dist/components/divider/divider.js';
 import { usePodOS } from '../events/usePodOS';
-import { OpenWithApp } from '@pod-os/core';
+import { OpenWithApp, PodOS } from '@pod-os/core';
 import { openNewTab } from './openNewTab';
 
 /**
@@ -26,10 +26,17 @@ export class PosShare {
 
   @State() apps: OpenWithApp[] = [];
 
+  @State() os: PodOS;
+
   async componentWillLoad() {
-    const os = await usePodOS(this.el);
-    const thing = os.store.get(this.uri);
-    this.apps = os.proposeAppsFor(thing);
+    this.os = await usePodOS(this.el);
+    await this.updateApps();
+  }
+
+  @Watch('uri')
+  async updateApps() {
+    const thing = this.os.store.get(this.uri);
+    this.apps = this.os.proposeAppsFor(thing);
   }
 
   @Listen('sl-select')

@@ -17,7 +17,7 @@ describe('pos-share', () => {
     os = mockPodOS();
     global.open = jest.fn();
     const thing = { fake: 'Thing' } as unknown as Thing;
-    when(os.store.get).calledWith(thing).mockReturnValue(thing);
+    when(os.store.get).calledWith('https://resource.example#it').mockReturnValue(thing);
     when(os.proposeAppsFor).mockReturnValue([]);
   });
 
@@ -45,25 +45,26 @@ describe('pos-share', () => {
     `);
   });
 
-  it('renders a proposed app', async () => {
-    const os = mockPodOS();
-    when(os.proposeAppsFor)
-      .calledWith(thing)
-      .mockReturnValue([
-        {
-          name: 'SolidOS Data Browser',
-          appUrl: 'https://solidos.github.io/mashlib/dist/browse.html',
-          uriParam: 'uri',
-        },
-      ]);
+  describe('proposed apps', () => {
+    it('renders a proposed app', async () => {
+      const os = mockPodOS();
+      when(os.proposeAppsFor)
+        .calledWith(thing)
+        .mockReturnValue([
+          {
+            name: 'SolidOS Data Browser',
+            appUrl: 'https://solidos.github.io/mashlib/dist/browse.html',
+            uriParam: 'uri',
+          },
+        ]);
 
-    const page = await newSpecPage({
-      components: [PosShare],
-      html: `<pos-share uri="https://resource.example#it"/>`,
-      supportsShadowDom: false,
-    });
+      const page = await newSpecPage({
+        components: [PosShare],
+        html: `<pos-share uri="https://resource.example#it"/>`,
+        supportsShadowDom: false,
+      });
 
-    expect(page.root.querySelector('sl-menu')).toEqualHtml(`
+      expect(page.root.querySelector('sl-menu')).toEqualHtml(`
         <sl-menu>
           <sl-menu-item value="copy-uri">
             <sl-icon name="copy" slot="prefix"></sl-icon>
@@ -78,32 +79,32 @@ describe('pos-share', () => {
           </sl-menu-item>
         </sl-menu>
     `);
-  });
-
-  it('renders multiple proposed apps', async () => {
-    const os = mockPodOS();
-    when(os.proposeAppsFor)
-      .calledWith(thing)
-      .mockReturnValue([
-        {
-          name: 'SolidOS Data Browser',
-          appUrl: 'https://solidos.github.io/mashlib/dist/browse.html',
-          uriParam: 'uri',
-        },
-        {
-          name: 'Penny',
-          appUrl: 'https://penny.vincenttunru.com/explore/',
-          uriParam: 'url',
-        },
-      ]);
-
-    const page = await newSpecPage({
-      components: [PosShare],
-      html: `<pos-share uri="https://resource.example#it"/>`,
-      supportsShadowDom: false,
     });
 
-    expect(page.root.querySelector('sl-menu')).toEqualHtml(`
+    it('renders multiple proposed apps', async () => {
+      const os = mockPodOS();
+      when(os.proposeAppsFor)
+        .calledWith(thing)
+        .mockReturnValue([
+          {
+            name: 'SolidOS Data Browser',
+            appUrl: 'https://solidos.github.io/mashlib/dist/browse.html',
+            uriParam: 'uri',
+          },
+          {
+            name: 'Penny',
+            appUrl: 'https://penny.vincenttunru.com/explore/',
+            uriParam: 'url',
+          },
+        ]);
+
+      const page = await newSpecPage({
+        components: [PosShare],
+        html: `<pos-share uri="https://resource.example#it"/>`,
+        supportsShadowDom: false,
+      });
+
+      expect(page.root.querySelector('sl-menu')).toEqualHtml(`
         <sl-menu>
           <sl-menu-item value="copy-uri">
             <sl-icon name="copy" slot="prefix"></sl-icon>
@@ -121,6 +122,49 @@ describe('pos-share', () => {
           </sl-menu-item>
         </sl-menu>
     `);
+    });
+
+    it('updates the proposed apps when uri changes', async () => {
+      const os = mockPodOS();
+
+      const newThing = { new: 'Thing' } as unknown as Thing;
+      when(os.store.get).calledWith('https://new.example').mockReturnValue(newThing);
+
+      when(os.proposeAppsFor)
+        .calledWith(newThing)
+        .mockReturnValue([
+          {
+            name: 'New app',
+            appUrl: 'https://new.example',
+            uriParam: 'uri',
+          },
+        ]);
+
+      const page = await newSpecPage({
+        components: [PosShare],
+        html: `<pos-share uri="https://resource.example#it"/>`,
+        supportsShadowDom: false,
+      });
+
+      page.rootInstance.uri = 'https://new.example';
+      await page.waitForChanges();
+
+      expect(page.root.querySelector('sl-menu')).toEqualHtml(`
+        <sl-menu>
+          <sl-menu-item value="copy-uri">
+            <sl-icon name="copy" slot="prefix"></sl-icon>
+            Copy URI
+          </sl-menu-item>
+          <sl-divider></sl-divider>
+          <sl-menu-item disabled="">
+            Open with...
+          </sl-menu-item>
+          <sl-menu-item>
+            New app
+          </sl-menu-item>
+        </sl-menu>
+    `);
+    });
   });
 
   it('copies URI to clipboard when copy entry is clicked', async () => {
