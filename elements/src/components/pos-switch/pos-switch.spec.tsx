@@ -249,4 +249,61 @@ describe('pos-switch', () => {
         <div>Resource is video</div>
         `);
   });
+
+  it('supports mixed test conditions', async () => {
+    const page = await newSpecPage({
+      components: [PosSwitch],
+      html: `
+      <pos-switch>
+        <pos-case if-typeof="http://schema.org/Recipe">
+          <template>
+            <div>Recipe.</div>
+          </template>
+        </pos-case>
+        <pos-case if-property="http://schema.org/image">
+          <template>
+            <div>Image.</div>
+          </template>
+        </pos-case>
+        <pos-case if-rev="http://schema.org/itemListElement">
+          <template>
+            <div>Recipe list.</div>
+          </template>
+        </pos-case>
+      </pos-switch>`,
+    });
+    const observedTypes$ = new Subject<RdfType[]>();
+    const observedRelations$ = new Subject<Relation[]>();
+    const observedReverseRelations$ = new Subject<Relation[]>();
+    const thing = {
+      uri: 'https://pod.example/recipe1',
+      observeTypes: () => observedTypes$,
+      observeRelations: () => observedRelations$,
+      observeReverseRelations: () => observedReverseRelations$,
+    };
+    page.rootInstance.receiveResource(thing);
+    observedTypes$.next([
+      {
+        label: 'Recipe',
+        uri: 'http://schema.org/Recipe',
+      },
+    ]);
+    observedRelations$.next([
+      { predicate: 'http://schema.org/image', label: 'image', uris: ['https://resource.test/recipe-photo.jpg'] },
+    ]);
+    observedReverseRelations$.next([
+      {
+        predicate: 'http://schema.org/itemListElement',
+        label: 'itemListElement',
+        uris: ['https://pod.example/recipe-list'],
+      },
+    ]);
+    await page.waitForChanges();
+    console.log(page.root?.innerHTML);
+    expect(page.root?.innerHTML).toEqualHtml(`
+        <div>Recipe.</div>
+        <div>Image.</div>
+        <div>Recipe list.</div>
+        `);
+  });
 });
