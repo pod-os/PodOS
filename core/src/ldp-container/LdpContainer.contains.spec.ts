@@ -162,6 +162,23 @@ describe("LDP container", () => {
       // Note: subscriber counted initial push but containsSpy didn't
       expect(subscriber).toHaveBeenCalledTimes(2);
       expect(containsSpy).toHaveBeenCalledTimes(1);
+      // Irrelevant as in another document
+      internalStore.add(
+        sym("https://pod.test/container/"),
+        sym("http://www.w3.org/ns/ldp#contains"),
+        sym("https://pod.test/container/injected-file"),
+        sym("https://pod.test/other-container/"),
+      );
+      // Irrelevant with different predicate
+      internalStore.add(
+        sym("https://pod.test/container/"),
+        sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        sym("http://www.w3.org/ns/ldp#Container"),
+        sym("https://pod.test/container/"),
+      );
+      jest.advanceTimersByTime(255);
+      expect(subscriber).toHaveBeenCalledTimes(2);
+      expect(containsSpy).toHaveBeenCalledTimes(1);
       expect(subscriber.mock.calls).toEqual([
         [
           [
