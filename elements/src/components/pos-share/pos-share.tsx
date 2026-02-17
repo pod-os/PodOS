@@ -28,7 +28,8 @@ export class PosShare {
 
   async componentWillLoad() {
     const os = await usePodOS(this.el);
-    this.apps = os.proposeAppsFor(this.uri);
+    const thing = os.store.get(this.uri);
+    this.apps = os.proposeAppsFor(thing);
   }
 
   @Listen('sl-select')
