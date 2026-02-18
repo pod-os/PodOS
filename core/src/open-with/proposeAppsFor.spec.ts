@@ -1,6 +1,5 @@
 import { proposeAppsFor } from "./proposeAppsFor";
 import { Thing } from "../thing";
-import { ldp } from "@solid-data-modules/rdflib-utils";
 
 describe("proposeAppsFor", () => {
   it("proposes generic data browsers for any type", () => {
