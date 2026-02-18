@@ -40,4 +40,17 @@ describe("proposeAppsFor", () => {
       expect(apps).toContainEqual(APPS.UMAI);
     },
   );
+
+  it("proposes dokilie graph for rdf documents", () => {
+    const thing = {
+      types: () => [
+        {
+          label: "RDF document",
+          uri: "http://www.w3.org/2007/ont/link#RDFDocument",
+        },
+      ],
+    } as unknown as Thing;
+    const apps = proposeAppsFor(thing);
+    expect(apps).toContainEqual(APPS.DOKIELI_GRAPH);
+  });
 });

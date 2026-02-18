@@ -25,4 +25,10 @@ describe("well known solid apps", () => {
       "https://umai.noeldemartin.com/viewer?url=https%3A%2F%2Fresource.test%2F",
     );
   });
+  it("Dokieli graph uses graph fragment parameter", () => {
+    const app = APPS.DOKIELI_GRAPH;
+    expect(app.urlTemplate.expand({ uri: "https://resource.test/" })).toEqual(
+      "https://dokie.li/#graph=https%3A%2F%2Fresource.test%2F",
+    );
+  });
 });
