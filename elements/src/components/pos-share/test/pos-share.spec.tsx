@@ -1,3 +1,5 @@
+import { parseTemplate } from 'url-template';
+
 jest.mock('../openNewTab');
 
 import { mockPodOS } from '../../../test/mockPodOS';
@@ -53,8 +55,7 @@ describe('pos-share', () => {
         .mockReturnValue([
           {
             name: 'SolidOS Data Browser',
-            appUrl: 'https://solidos.github.io/mashlib/dist/browse.html',
-            uriParam: 'uri',
+            urlTemplate: parseTemplate('https://solidos.github.io/mashlib/dist/browse.html?{uri}'),
           },
         ]);
 
@@ -88,13 +89,11 @@ describe('pos-share', () => {
         .mockReturnValue([
           {
             name: 'SolidOS Data Browser',
-            appUrl: 'https://solidos.github.io/mashlib/dist/browse.html',
-            uriParam: 'uri',
+            urlTemplate: parseTemplate('https://irrelevant.example'),
           },
           {
             name: 'Penny',
-            appUrl: 'https://penny.vincenttunru.com/explore/',
-            uriParam: 'url',
+            urlTemplate: parseTemplate('https://irrelevant-for.test'),
           },
         ]);
 
@@ -135,8 +134,7 @@ describe('pos-share', () => {
         .mockReturnValue([
           {
             name: 'New app',
-            appUrl: 'https://new.example',
-            uriParam: 'uri',
+            urlTemplate: parseTemplate('https://irrelevant.example'),
           },
         ]);
 
@@ -191,8 +189,7 @@ describe('pos-share', () => {
       });
       const selectedApp: OpenWithApp = {
         name: 'Some app',
-        appUrl: 'https://app.example/',
-        uriParam: 'uri',
+        urlTemplate: parseTemplate('https://app.example/{?uri}'),
       };
       select(page, selectedApp);
       expect(openNewTab).toHaveBeenCalledWith('https://app.example/?uri=https%3A%2F%2Fresource.example%23it');

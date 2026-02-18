@@ -1,3 +1,5 @@
+import { Template } from "url-template";
+
 /**
  * An app that can be used to open a resource
  */
@@ -7,11 +9,7 @@ export interface OpenWithApp {
    */
   name: string;
   /**
-   * Base URL of the app
+   * RFC 6570 template for the URL to open the resource with the app
    */
-  appUrl: string;
-  /**
-   * Query parameter used to identify the URI in the target application
-   */
-  uriParam: string;
+  urlTemplate: Template;
 }
