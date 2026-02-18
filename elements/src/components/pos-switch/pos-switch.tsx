@@ -54,6 +54,9 @@ export class PosSwitch implements ResourceAware {
   }
 
   receiveResource = async (resource: Thing) => {
+    // reset any existing resource
+    this.disconnected$.next();
+    this.resource = undefined;
     let observables: Observable<any>[] = [];
     if (this.caseElements.some(caseElement => caseElement.hasAttribute('if-typeof'))) {
       const observeTypes = resource.observeTypes().pipe(takeUntil(this.disconnected$));
