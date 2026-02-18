@@ -41,6 +41,19 @@ describe("proposeAppsFor", () => {
     },
   );
 
+  it("proposes dokilie for html documents", () => {
+    const thing = {
+      types: () => [
+        {
+          label: "HTML document",
+          uri: "http://www.w3.org/ns/iana/media-types/text/html#Resource",
+        },
+      ],
+    } as unknown as Thing;
+    const apps = proposeAppsFor(thing);
+    expect(apps).toContainEqual(APPS.DOKIELI);
+  });
+
   it("proposes dokilie graph for rdf documents", () => {
     const thing = {
       types: () => [

@@ -26,6 +26,10 @@ export const APPS: { [key: string]: OpenWithApp } = {
       "https://umai.noeldemartin.com/viewer?url={uri}",
     ),
   },
+  DOKIELI: {
+    name: "dokieli",
+    urlTemplate: parseTemplate("https://dokie.li/#open={uri}"),
+  },
   DOKIELI_GRAPH: {
     name: "dokieli Graph",
     urlTemplate: parseTemplate("https://dokie.li/#graph={uri}"),
