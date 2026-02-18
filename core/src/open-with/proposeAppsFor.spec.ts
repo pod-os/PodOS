@@ -1,5 +1,6 @@
 import { proposeAppsFor } from "./proposeAppsFor";
 import { Thing } from "../thing";
+import { APPS } from "./apps";
 
 describe("proposeAppsFor", () => {
   it("proposes generic data browsers for any type", () => {
@@ -7,16 +8,8 @@ describe("proposeAppsFor", () => {
       types: () => ["http://vocab.example#Whatever"],
     } as unknown as Thing;
     const apps = proposeAppsFor(thing);
-    expect(apps).toContainEqual({
-      name: "Data Browser (SolidOS)",
-      appUrl: "https://solidos.github.io/mashlib/dist/browse.html",
-      uriParam: "uri",
-    });
-    expect(apps).toContainEqual({
-      name: "Penny",
-      appUrl: "https://penny.vincenttunru.com/explore/",
-      uriParam: "url",
-    });
+    expect(apps).toContainEqual(APPS.DATA_BROWSER);
+    expect(apps).toContainEqual(APPS.PENNY);
     expect(apps).toHaveLength(2);
   });
   it("proposes Solid File Manager for LDP containers", () => {
@@ -29,10 +22,6 @@ describe("proposeAppsFor", () => {
       ],
     } as unknown as Thing;
     const apps = proposeAppsFor(thing);
-    expect(apps).toContainEqual({
-      name: "Solid File Manager",
-      appUrl: "https://otto-aa.github.io/solid-filemanager/",
-      uriParam: "url",
-    });
+    expect(apps).toContainEqual(APPS.SOLID_FILE_MANAGER);
   });
 });

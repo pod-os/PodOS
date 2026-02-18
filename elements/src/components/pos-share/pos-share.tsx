@@ -45,9 +45,7 @@ export class PosShare {
     if (value === 'copy-uri') {
       navigator.clipboard.writeText(this.uri);
     } else {
-      const url = new URL(value.appUrl);
-      url.searchParams.set(value.uriParam, this.uri);
-      openNewTab(url.toString());
+      openNewTab(value.urlTemplate.expand({ uri: this.uri }));
     }
   }
 

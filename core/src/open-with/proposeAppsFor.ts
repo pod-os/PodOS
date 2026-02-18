@@ -1,24 +1,7 @@
 import { Thing } from "../thing";
 
 import { OpenWithApp } from "./types";
-
-const APPS: { [key: string]: OpenWithApp } = {
-  DATA_BROWSER: {
-    name: "Data Browser (SolidOS)",
-    appUrl: "https://solidos.github.io/mashlib/dist/browse.html",
-    uriParam: "uri",
-  },
-  PENNY: {
-    name: "Penny",
-    appUrl: "https://penny.vincenttunru.com/explore/",
-    uriParam: "url",
-  },
-  SOLID_FILE_MANAGER: {
-    name: "Solid File Manager",
-    appUrl: "https://otto-aa.github.io/solid-filemanager/",
-    uriParam: "url",
-  },
-};
+import { APPS } from "./apps";
 
 // TODO more apps
 const appRegistrations: { [key: string]: OpenWithApp[] } = {
