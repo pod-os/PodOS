@@ -31,4 +31,10 @@ describe("well known solid apps", () => {
       "https://dokie.li/#graph=https%3A%2F%2Fresource.test%2F",
     );
   });
+  it("Dokieli graph uses open fragment parameter", () => {
+    const app = APPS.DOKIELI;
+    expect(app.urlTemplate.expand({ uri: "https://resource.test/" })).toEqual(
+      "https://dokie.li/#open=https%3A%2F%2Fresource.test%2F",
+    );
+  });
 });
