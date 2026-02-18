@@ -1,0 +1,56 @@
+import {html} from "lit-html";
+
+import {
+  Canvas,
+  Meta,
+  Story
+} from '@storybook/addon-docs/blocks';
+
+<Meta
+  title="Composition"
+  args={{ uri: "https://pod-os.solidcommunity.net/profile/" }}
+/>
+
+## pos-switch composition
+
+`pos-switch` reactively updates when data changes. This can be used in combination with components like `pos-list`, which can fetch additional documents. 
+`pos-switch` can be used to render different content for different things in a list, or only render selected things.
+
+<Canvas
+  withSource="open">
+  <Story
+    name="pos-switch composition"
+  >
+    {({uri}) => html`
+    <pos-resource uri="${uri}">
+      <p>If fetch is set on pos-list, this container will load its contained resources.</p>
+      <pos-list rel="http://www.w3.org/ns/ldp#contains" fetch>
+        <template>
+          <pos-switch>
+            <pos-case if-typeof="http://xmlns.com/foaf/0.1/PersonalProfileDocument">
+              <template>
+                <pos-list rel="http://xmlns.com/foaf/0.1/primaryTopic">
+                  <template>
+                    <p>After loading, the primary topic of the profile document is: <pos-value predicate="http://www.w3.org/2006/vcard/ns#fn"/></p>
+                  </template>
+                </pos-list>
+              </template>
+            </pos-case>
+            <pos-case if-typeof="http://www.w3.org/ns/iana/media-types/text/turtle#Resource">
+              <template>
+                <p>The type of the resource is that defined in the container, updated after loading to also include those defined by the profile document.</p>
+                <p><pos-type-badges/></p>
+                </template>
+            </pos-case>
+            <pos-case else>
+              <template>
+                <p><small>Here is another contained resource.</small></p>
+              </template>
+            </pos-case>
+          </pos-switch>
+        </template>
+      </pos-list>
+</pos-resource>
+    `}
+  </Story>
+</Canvas>
