@@ -19,4 +19,10 @@ describe("well known solid apps", () => {
       "https://otto-aa.github.io/solid-filemanager/?url=https%3A%2F%2Fresource.test%2F",
     );
   });
+  it("Umai uses url query parameter", () => {
+    const app = APPS.UMAI;
+    expect(app.urlTemplate.expand({ uri: "https://resource.test/" })).toEqual(
+      "https://umai.noeldemartin.com/viewer?url=https%3A%2F%2Fresource.test%2F",
+    );
+  });
 });

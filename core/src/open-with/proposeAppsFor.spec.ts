@@ -24,4 +24,20 @@ describe("proposeAppsFor", () => {
     const apps = proposeAppsFor(thing);
     expect(apps).toContainEqual(APPS.SOLID_FILE_MANAGER);
   });
+
+  it.each(["http://schema.org/Recipe", "https://schema.org/Recipe"])(
+    "proposes Umai for recipes",
+    (uri) => {
+      const thing = {
+        types: () => [
+          {
+            label: "Recipe",
+            uri,
+          },
+        ],
+      } as unknown as Thing;
+      const apps = proposeAppsFor(thing);
+      expect(apps).toContainEqual(APPS.UMAI);
+    },
+  );
 });
