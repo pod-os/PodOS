@@ -20,4 +20,10 @@ export const APPS: { [key: string]: OpenWithApp } = {
       "https://otto-aa.github.io/solid-filemanager/?url={uri}",
     ),
   },
+  UMAI: {
+    name: "Umai",
+    urlTemplate: parseTemplate(
+      "https://umai.noeldemartin.com/viewer?url={uri}",
+    ),
+  },
 };
