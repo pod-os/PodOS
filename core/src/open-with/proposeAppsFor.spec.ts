@@ -66,4 +66,17 @@ describe("proposeAppsFor", () => {
     const apps = proposeAppsFor(thing);
     expect(apps).toContainEqual(APPS.DOKIELI_GRAPH);
   });
+
+  it("proposes dokilie graph for rdf documents", () => {
+    const thing = {
+      types: () => [
+        {
+          label: "Adress book",
+          uri: "http://www.w3.org/2006/vcard/ns#AddressBook",
+        },
+      ],
+    } as unknown as Thing;
+    const apps = proposeAppsFor(thing);
+    expect(apps).toContainEqual(APPS.POD_OS_CONTACTS);
+  });
 });

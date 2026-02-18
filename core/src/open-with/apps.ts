@@ -34,4 +34,10 @@ export const APPS: { [key: string]: OpenWithApp } = {
     name: "dokieli Graph",
     urlTemplate: parseTemplate("https://dokie.li/#graph={uri}"),
   },
+  POD_OS_CONTACTS: {
+    name: "PodOS Contacts",
+    urlTemplate: parseTemplate(
+      "https://contacts.pod-os.org/address-book{?uri}",
+    ),
+  },
 };

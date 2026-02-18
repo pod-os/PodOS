@@ -9,6 +9,7 @@ const appRegistrations: { [key: string]: OpenWithApp[] } = {
   "https://schema.org/Recipe": [APPS.UMAI],
   "http://www.w3.org/2007/ont/link#RDFDocument": [APPS.DOKIELI_GRAPH],
   "http://www.w3.org/ns/iana/media-types/text/html#Resource": [APPS.DOKIELI],
+  "http://www.w3.org/2006/vcard/ns#AddressBook": [APPS.POD_OS_CONTACTS],
 };
 
 /**

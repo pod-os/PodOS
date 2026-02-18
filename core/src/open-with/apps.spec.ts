@@ -37,4 +37,10 @@ describe("well known solid apps", () => {
       "https://dokie.li/#open=https%3A%2F%2Fresource.test%2F",
     );
   });
+  it("PodOS Contacts uses uri query parameter", () => {
+    const app = APPS.POD_OS_CONTACTS;
+    expect(app.urlTemplate.expand({ uri: "https://resource.test/" })).toEqual(
+      "https://contacts.pod-os.org/address-book?uri=https%3A%2F%2Fresource.test%2F",
+    );
+  });
 });
