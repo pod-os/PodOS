@@ -2,6 +2,7 @@ import { Component, h, Element, Prop, State, Listen, Watch } from '@stencil/core
 
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import '@shoelace-style/shoelace/dist/components/menu/menu.js';
+import '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
 import '@shoelace-style/shoelace/dist/components/menu-item/menu-item.js';
 import '@shoelace-style/shoelace/dist/components/divider/divider.js';
 import { usePodOS } from '../events/usePodOS';
