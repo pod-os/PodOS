@@ -1,0 +1,61 @@
+import {
+  html
+} from "lit-html";
+
+import {
+  Canvas,
+  Meta,
+  Story
+} from '@storybook/addon-docs/blocks';
+
+<Meta
+  title="Navigation"
+  args={{uri: "https://solidproject.solidcommunity.net/profile/card#me"}}
+/>
+
+## pos-share
+
+Allows sharing a resource with other apps, people, etc.
+
+The apps shown to open a resource depend on the type of the resource, but note
+that `pos-share` does not load the resource itself, it only considers the resource
+types that are already present in the local store.
+
+<Canvas
+  withSource="open">
+  <Story
+    name="pos-share"
+  >
+    {({uri}) => html`
+      <main style="height: var(--size-48)">
+        <pos-share uri=${uri} />
+      </main>
+    `}
+  </Story>
+</Canvas>
+
+## Custom style
+
+The button can be styled using css shadow part `button`
+
+<Canvas
+  withSource="open">
+  <Story
+    name="pos-share (custom style)"
+  >
+    {({uri}) => html`
+      <main style="height: var(--size-48)">
+        <style>
+          pos-share.custom::part(button) {
+            background-color: var(--pos-primary-color);
+            outline: none;
+            border: none;
+            border-radius: 50%;
+          }
+        </style>
+        <pos-share class="custom" uri=${uri} />
+      </main>
+    `}
+  </Story>
+</Canvas>
+
