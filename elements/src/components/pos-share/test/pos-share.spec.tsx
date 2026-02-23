@@ -10,6 +10,7 @@ import { when } from 'jest-when';
 import { OpenWithApp, Thing } from '@pod-os/core';
 
 import { openNewTab } from '../openNewTab';
+import { fireEvent } from '@testing-library/dom';
 
 describe('pos-share', () => {
   let os;
@@ -159,6 +160,64 @@ describe('pos-share', () => {
           </sl-menu-item>
           <sl-menu-item>
             New app
+          </sl-menu-item>
+        </sl-menu>
+    `);
+    });
+
+    it('updates the proposed apps after resources has been loaded', async () => {
+      const os = mockPodOS();
+
+      // given a thing
+      const something = { new: 'Thing' } as unknown as Thing;
+      when(os.store.get).calledWith('https://resource.example#it').mockReturnValue(something);
+
+      // and when first asked for apps to propose there are none
+      when(os.proposeAppsFor)
+        .calledWith(something)
+        .mockReturnValueOnce([])
+        // but when called again later there is one
+        .mockReturnValueOnce([
+          {
+            name: 'Some app',
+            urlTemplate: parseTemplate('https://irrelevant.example'),
+          },
+        ]);
+
+      // and a page with a pos-share for the resource
+      const page = await newSpecPage({
+        components: [PosShare],
+        html: `<pos-share uri="https://resource.example#it"/>`,
+        supportsShadowDom: false,
+      });
+
+      // and at first no apps are show, because non have been proposed yet
+      expect(page.root.querySelector('sl-menu')).toEqualHtml(`
+        <sl-menu>
+          <sl-menu-item value="copy-uri">
+            <sl-icon name="copy" slot="prefix"></sl-icon>
+            Copy URI
+          </sl-menu-item>
+        </sl-menu>
+    `);
+
+      // when the resource-loaded event occurs on the page for the resource in question
+      fireEvent(page.doc, new CustomEvent('pod-os:resource-loaded', { detail: 'https://resource.example#it' }));
+      await page.waitForChanges();
+
+      // then the newly proposed apps are available
+      expect(page.root.querySelector('sl-menu')).toEqualHtml(`
+        <sl-menu>
+          <sl-menu-item value="copy-uri">
+            <sl-icon name="copy" slot="prefix"></sl-icon>
+            Copy URI
+          </sl-menu-item>
+          <sl-divider></sl-divider>
+          <sl-menu-item disabled="">
+            Open with...
+          </sl-menu-item>
+          <sl-menu-item>
+            Some app
           </sl-menu-item>
         </sl-menu>
     `);

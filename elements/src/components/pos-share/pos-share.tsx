@@ -8,6 +8,7 @@ import '@shoelace-style/shoelace/dist/components/divider/divider.js';
 import { usePodOS } from '../events/usePodOS';
 import { OpenWithApp, PodOS } from '@pod-os/core';
 import { openNewTab } from './openNewTab';
+import { PosResourceCustomEvent } from '../../components';
 
 /**
  * Allows sharing a resource with other apps, people, etc.
@@ -28,6 +29,13 @@ export class PosShare {
   @State() apps: OpenWithApp[] = [];
 
   @State() os: PodOS;
+
+  @Listen('pod-os:resource-loaded', { target: 'document' })
+  async resourceLoaded(e: PosResourceCustomEvent<string>) {
+    if (e.detail === this.uri) {
+      await this.updateApps();
+    }
+  }
 
   async componentWillLoad() {
     this.os = await usePodOS(this.el);
