@@ -1,0 +1,37 @@
+<#it> a <https://schema.org/Recipe>;
+    <https://schema.org/description> "A simple but delicious recipe.";
+    <https://schema.org/name> "Cacio e Pepe";
+    <https://schema.org/recipeIngredient> "Pasta", "Pecorino Romano cheese", "Black pepper";
+    <https://schema.org/recipeInstructions> <#e6b8b5ab-a2f8-45df-bccf-8fe1e662be49>, <#48ec88cd-e819-43d7-bf99-74a765c01650>, <#b630c994-6734-419a-bea2-d10aa6d006ad>, <#87dc4505-3854-40aa-8dd3-b3d1f9aab6c0>.
+<#e6b8b5ab-a2f8-45df-bccf-8fe1e662be49> a <https://schema.org/HowToStep>;
+    <https://schema.org/position> 1;
+    <https://schema.org/text> "Cook pasta in a pot of boiling salted water.".
+<#48ec88cd-e819-43d7-bf99-74a765c01650> a <https://schema.org/HowToStep>;
+    <https://schema.org/position> 2;
+    <https://schema.org/text> "While pasta cooks, toast freshly ground black pepper in a dry pan for 1 minute.".
+<#b630c994-6734-419a-bea2-d10aa6d006ad> a <https://schema.org/HowToStep>;
+    <https://schema.org/position> 3;
+    <https://schema.org/text> "Add a ladle of pasta water to the pepper pan.".
+<#87dc4505-3854-40aa-8dd3-b3d1f9aab6c0> a <https://schema.org/HowToStep>;
+    <https://schema.org/position> 4;
+    <https://schema.org/text> "Transfer cooked pasta directly to the pan. Turn off heat. Add grated cheese and toss vigorously, adding more pasta water as needed to create a creamy, smooth sauce.".
+<#e6b8b5ab-a2f8-45df-bccf-8fe1e662be49-metadata> a <https://vocab.noeldemartin.com/crdt/Metadata>;
+    <https://vocab.noeldemartin.com/crdt/createdAt> "2026-02-23T20:55:20.104Z"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
+    <https://vocab.noeldemartin.com/crdt/resource> <#e6b8b5ab-a2f8-45df-bccf-8fe1e662be49>;
+    <https://vocab.noeldemartin.com/crdt/updatedAt> "2026-02-23T20:55:20.104Z"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<#48ec88cd-e819-43d7-bf99-74a765c01650-metadata> a <https://vocab.noeldemartin.com/crdt/Metadata>;
+    <https://vocab.noeldemartin.com/crdt/createdAt> "2026-02-23T20:55:20.104Z"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
+    <https://vocab.noeldemartin.com/crdt/resource> <#48ec88cd-e819-43d7-bf99-74a765c01650>;
+    <https://vocab.noeldemartin.com/crdt/updatedAt> "2026-02-23T20:55:20.104Z"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<#b630c994-6734-419a-bea2-d10aa6d006ad-metadata> a <https://vocab.noeldemartin.com/crdt/Metadata>;
+    <https://vocab.noeldemartin.com/crdt/createdAt> "2026-02-23T20:55:20.105Z"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
+    <https://vocab.noeldemartin.com/crdt/resource> <#b630c994-6734-419a-bea2-d10aa6d006ad>;
+    <https://vocab.noeldemartin.com/crdt/updatedAt> "2026-02-23T20:55:20.105Z"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<#87dc4505-3854-40aa-8dd3-b3d1f9aab6c0-metadata> a <https://vocab.noeldemartin.com/crdt/Metadata>;
+    <https://vocab.noeldemartin.com/crdt/createdAt> "2026-02-23T20:55:20.105Z"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
+    <https://vocab.noeldemartin.com/crdt/resource> <#87dc4505-3854-40aa-8dd3-b3d1f9aab6c0>;
+    <https://vocab.noeldemartin.com/crdt/updatedAt> "2026-02-23T20:55:20.105Z"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+<#it-metadata> a <https://vocab.noeldemartin.com/crdt/Metadata>;
+    <https://vocab.noeldemartin.com/crdt/createdAt> "2026-02-23T20:55:20.102Z"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
+    <https://vocab.noeldemartin.com/crdt/resource> <#it>;
+    <https://vocab.noeldemartin.com/crdt/updatedAt> "2026-02-23T20:55:20.102Z"^^<http://www.w3.org/2001/XMLSchema#dateTime>.

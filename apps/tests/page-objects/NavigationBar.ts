@@ -34,4 +34,9 @@ export class NavigationBar {
     await this.close();
     return value;
   }
+
+  async openWith(appName: string) {
+    await this.nav.getByRole("button", { name: "Share" }).click();
+    await this.nav.getByRole("menuitem", { name: appName }).click();
+  }
 }
