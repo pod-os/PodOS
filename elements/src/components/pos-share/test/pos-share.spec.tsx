@@ -222,6 +222,60 @@ describe('pos-share', () => {
         </sl-menu>
     `);
     });
+
+    it('does not update the proposed apps after irrelevant resource has been loaded', async () => {
+      const os = mockPodOS();
+
+      // given a thing
+      const something = { new: 'Thing' } as unknown as Thing;
+      when(os.store.get).calledWith('https://resource.example#it').mockReturnValue(something);
+
+      // and when first asked for apps to propose there are none
+      when(os.proposeAppsFor)
+        .calledWith(something)
+        .mockReturnValueOnce([])
+        // but when called again later there is one
+        .mockReturnValueOnce([
+          {
+            name: 'Some app',
+            urlTemplate: parseTemplate('https://irrelevant.example'),
+          },
+        ]);
+
+      // and a page with a pos-share for the resource
+      const page = await newSpecPage({
+        components: [PosShare],
+        html: `<pos-share uri="https://resource.example#it"/>`,
+        supportsShadowDom: false,
+      });
+
+      // and at first no apps are show, because non have been proposed yet
+      expect(page.root.querySelector('sl-menu')).toEqualHtml(`
+        <sl-menu>
+          <sl-menu-item value="copy-uri">
+            <sl-icon name="copy" slot="prefix"></sl-icon>
+            Copy URI
+          </sl-menu-item>
+        </sl-menu>
+    `);
+
+      // when the resource-loaded event occurs on the page for a different resource
+      fireEvent(
+        page.doc,
+        new CustomEvent('pod-os:resource-loaded', { detail: 'https://different-resource.example#it' }),
+      );
+      await page.waitForChanges();
+
+      // then nothing is updated
+      expect(page.root.querySelector('sl-menu')).toEqualHtml(`
+        <sl-menu>
+          <sl-menu-item value="copy-uri">
+            <sl-icon name="copy" slot="prefix"></sl-icon>
+            Copy URI
+          </sl-menu-item>
+        </sl-menu>
+    `);
+    });
   });
 
   it('copies URI to clipboard when copy entry is clicked', async () => {
