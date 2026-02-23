@@ -23,7 +23,7 @@
   "dependencies": {
     "@pod-os/core": "0.26.0-next.0",
     "@shoelace-style/shoelace": "^2.20.1",
-    "@stencil/core": "^4.43.0",
+    "@stencil/core": "^4.43.1",
     "@stencil/store": "^2.2.2",
     "@testing-library/user-event": "^14.6.1",
     "@tiptap/core": "^3.14.0",
