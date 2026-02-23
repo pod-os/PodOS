@@ -2,7 +2,7 @@ section.current {
   display: flex;
   align-items: center;
   box-sizing: border-box;
-  padding: 0 var(--size-2);
+  padding: 0 var(--size-2) 0 0;
   height: var(--pos-navigation-bar-height);
   flex-grow: 1;
   gap: 0;
