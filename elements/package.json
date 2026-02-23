@@ -43,7 +43,7 @@
     "stencil-router-v2": "^0.6.0"
   },
   "devDependencies": {
-    "@happy-dom/jest-environment": "^20.0.11",
+    "@happy-dom/jest-environment": "^20.7.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@types/jest": "^30.0.0",
