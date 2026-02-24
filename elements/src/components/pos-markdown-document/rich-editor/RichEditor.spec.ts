@@ -118,7 +118,7 @@ describe('RichEditor', () => {
         jest.advanceTimersByTime(1);
         expect(save).toHaveBeenCalledTimes(1);
         expect(save).toHaveBeenLastCalledWith({
-          content: '# Modified Hello World\n\n',
+          content: '# Modified Hello World\n\n&nbsp;',
         });
       });
 
@@ -149,7 +149,7 @@ describe('RichEditor', () => {
         jest.advanceTimersByTime(1000);
         expect(save).toHaveBeenCalledTimes(1);
         expect(save).toHaveBeenLastCalledWith({
-          content: '# edit 1 edit 2 edit 3 Hello World\n\n',
+          content: '# edit 1 edit 2 edit 3 Hello World\n\n&nbsp;',
         });
       });
     });
