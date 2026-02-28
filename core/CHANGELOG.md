@@ -31,6 +31,10 @@ and this project adheres to
 - [`Thing.observeRelations`](https://pod-os.org/reference/core/classes/Thing/#observeRelations) pushes changes to relations
 - [`Thing.observeReverseRelations`](https://pod-os.org/reference/core/classes/Thing/#observeReverseRelations) pushes changes to reverse relations
 
+### Fixed
+
+- [`Thing.relations`](https://pod-os.org/reference/core/classes/Thing/#reverseRelations) and [`Thing.reverseRelations`](https://pod-os.org/reference/core/classes/Thing/#reverseRelations) remove duplicate values
+
 ## 0.25.0
 
 ### Breaking Changes
