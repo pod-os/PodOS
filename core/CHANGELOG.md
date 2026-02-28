@@ -33,7 +33,7 @@ and this project adheres to
 
 ### Fixed
 
-- [`Thing.relations`](https://pod-os.org/reference/core/classes/Thing/#reverseRelations) and [`Thing.reverseRelations`](https://pod-os.org/reference/core/classes/Thing/#reverseRelations) remove duplicate values
+- [`Thing.relations`](https://pod-os.org/reference/core/classes/Thing/#relations) and [`Thing.reverseRelations`](https://pod-os.org/reference/core/classes/Thing/#reverseRelations) remove duplicate values
 
 ## 0.25.0
 
