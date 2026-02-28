@@ -382,6 +382,19 @@ describe("Thing", function () {
       ]);
     });
 
+    it("does not push if relations haven't changed", () => {
+      internalStore.add(
+        quad(
+          sym(uri),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("https://example.com/type"),
+        ),
+      );
+      jest.advanceTimersByTime(250);
+      expect(relationsSpy).toHaveBeenCalledTimes(2);
+      expect(subscriber).toHaveBeenCalledTimes(1);
+    });
+
     it("stops pushing after unsubscribe", () => {
       subscription.unsubscribe();
       internalStore.add(
