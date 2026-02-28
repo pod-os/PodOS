@@ -53,7 +53,7 @@ export class PosSwitch implements ResourceAware {
     return state;
   }
 
-  receiveResource = async (resource: Thing) => {
+  receiveResource = (resource: Thing) => {
     // reset any existing resource
     this.disconnected$.next();
     this.resource = undefined;
@@ -79,8 +79,7 @@ export class PosSwitch implements ResourceAware {
       });
       observables.push(observeReverseRelations);
     }
-    await firstValueFrom(combineLatest(observables));
-    this.resource = resource;
+    firstValueFrom(combineLatest(observables)).then(() => (this.resource = resource));
   };
 
   render() {
