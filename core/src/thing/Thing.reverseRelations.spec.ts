@@ -155,13 +155,37 @@ describe("Thing", function () {
       internalStore.add(
         sym("https://pod.example/first"),
         sym("http://vocab.test/first"),
-
         sym(uri),
       );
       internalStore.add(
         sym("https://pod.example/second"),
         sym("http://vocab.test/second"),
         sym(uri),
+      );
+      const it = new Thing(uri, store);
+      const result = it.reverseRelations("http://vocab.test/first");
+      expect(result).toEqual([
+        {
+          predicate: "http://vocab.test/first",
+          label: "first",
+          uris: ["https://pod.example/first"],
+        },
+      ]);
+    });
+
+    it("only contains a uri once even if present in multiple graphs", () => {
+      const uri = "https://jane.doe.example/container/file.ttl#fragment";
+      internalStore.add(
+        sym("https://pod.example/first"),
+        sym("http://vocab.test/first"),
+        sym(uri),
+        sym("https://pod.example/document-1"),
+      );
+      internalStore.add(
+        sym("https://pod.example/first"),
+        sym("http://vocab.test/first"),
+        sym(uri),
+        sym("https://pod.example/document-2"),
       );
       const it = new Thing(uri, store);
       const result = it.reverseRelations("http://vocab.test/first");
