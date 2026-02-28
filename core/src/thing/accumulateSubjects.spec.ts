@@ -62,4 +62,26 @@ describe("accumulate subjects", () => {
       ],
     });
   });
+
+  it("only contains a subject once", () => {
+    const firstStatement: Statement = new Statement(
+      sym("https://subject1.test"),
+      sym("https://predicate.test"),
+      sym("https://object.test"),
+      sym("https://graph.test/1"),
+    );
+    const secondStatement: Statement = new Statement(
+      sym("https://subject1.test"),
+      sym("https://predicate.test"),
+      sym("https://object.test"),
+      sym("https://graph.test/2"),
+    );
+    const result = [firstStatement, secondStatement].reduce(
+      accumulateSubjects,
+      {},
+    );
+    expect(result).toEqual({
+      "https://predicate.test": ["https://subject1.test"],
+    });
+  });
 });
