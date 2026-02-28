@@ -92,7 +92,7 @@ export class Thing {
   }
 
   /**
-   * Returns all the links from this thing to other resources
+   * Returns all the unique links from this thing to other resources. This only includes named nodes and excludes rdf:type relations.
    */
   relations(predicate?: string): Relation[] {
     const statements = this.store.statementsMatching(
@@ -135,7 +135,7 @@ export class Thing {
   }
 
   /**
-   * Returns all the links from other resources to this thing
+   * Returns all the unique links from other resources to this thing
    */
   reverseRelations(predicate?: string): Relation[] {
     const statements = this.store.statementsMatching(
