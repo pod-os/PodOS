@@ -359,6 +359,21 @@ describe("Thing", function () {
       ]);
     });
 
+    it("does not push if relations haven't changed", () => {
+      // Identical statement in another document
+      internalStore.add(
+        quad(
+          sym("https://pod.example/first"),
+          sym("http://vocab.test/first"),
+          sym(uri),
+          sym("https://pod.example/another-document"),
+        ),
+      );
+      jest.advanceTimersByTime(250);
+      expect(reverseRelationsSpy).toHaveBeenCalledTimes(2);
+      expect(subscriber).toHaveBeenCalledTimes(1);
+    });
+
     it("stops pushing after unsubscribe", () => {
       subscription.unsubscribe();
       internalStore.add(
