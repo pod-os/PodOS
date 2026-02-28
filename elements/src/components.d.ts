@@ -68,6 +68,14 @@ export namespace Components {
          */
         "else"?: boolean;
         /**
+          * Test if the resource has the specified property (forward link)
+         */
+        "ifProperty"?: string;
+        /**
+          * Test if the resource is the subject of the specified property (backward link)
+         */
+        "ifRev"?: string;
+        /**
           * Test if the resource is of the specified type
          */
         "ifTypeof"?: string;
@@ -1418,6 +1426,14 @@ declare namespace LocalJSX {
          */
         "else"?: boolean;
         /**
+          * Test if the resource has the specified property (forward link)
+         */
+        "ifProperty"?: string;
+        /**
+          * Test if the resource is the subject of the specified property (backward link)
+         */
+        "ifRev"?: string;
+        /**
           * Test if the resource is of the specified type
          */
         "ifTypeof"?: string;
@@ -1763,6 +1779,8 @@ declare namespace LocalJSX {
     }
     interface PosCaseAttributes {
         "ifTypeof": string;
+        "ifProperty": string;
+        "ifRev": string;
         "not": boolean;
         "else": boolean;
     }

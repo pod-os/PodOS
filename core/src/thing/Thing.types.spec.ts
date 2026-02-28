@@ -1,7 +1,8 @@
-import { graph, sym, IndexedFormula } from "rdflib";
+import { graph, sym, IndexedFormula, quad } from "rdflib";
 import { PodOsSession } from "../authentication";
 import { Thing } from "./Thing";
 import { Store } from "../Store";
+import { Subscription } from "rxjs";
 
 describe("Thing", function () {
   describe("types", () => {
@@ -14,7 +15,7 @@ describe("Thing", function () {
       store = new Store(mockSession, undefined, undefined, internalStore);
     });
 
-    it("are empty is nothing is found in store", () => {
+    it("are empty if nothing is found in store", () => {
       const it = new Thing("https://jane.doe.example/resource#it", store);
       expect(it.types()).toEqual([]);
     });
@@ -80,6 +81,142 @@ describe("Thing", function () {
         sym("https://vocab.example#TypeB"),
       );
       expect(it.types()).toEqual([]);
+    });
+  });
+
+  describe("observeTypes", () => {
+    let internalStore: IndexedFormula,
+      uri: string,
+      subscriber: jest.Mock,
+      subscription: Subscription;
+
+    beforeEach(() => {
+      // Given a store with a type statement about a URI
+      internalStore = graph();
+      const mockSession = {} as unknown as PodOsSession;
+      const store = new Store(mockSession, undefined, undefined, internalStore);
+      uri = "http://recipe.test/0";
+      internalStore.add(
+        quad(
+          sym(uri),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://schema.org/Recipe"),
+        ),
+      );
+
+      // and a Thing
+      const thing = new Thing(uri, store);
+
+      // and a subscription to changes in types
+      subscriber = jest.fn();
+      const observable = thing.observeTypes();
+      subscription = observable.subscribe(subscriber);
+    });
+
+    it("pushes existing value immediately", () => {
+      expect(subscriber).toHaveBeenCalledTimes(1);
+      expect(subscriber.mock.calls).toEqual([
+        [
+          [
+            {
+              uri: "http://schema.org/Recipe",
+              label: "Recipe",
+            },
+          ],
+        ],
+      ]);
+    });
+
+    it("ignores irrelevant statements about another resource", () => {
+      internalStore.add(
+        quad(
+          sym("http://recipe.test/a-different-recipe"),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://schema.org/Recipe"),
+        ),
+      );
+      expect(subscriber).toHaveBeenCalledTimes(1);
+    });
+
+    it("updates value when added", () => {
+      internalStore.add(
+        quad(
+          sym(uri),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://example.com/Recipe2"),
+        ),
+      );
+      expect(subscriber).toHaveBeenCalledTimes(2);
+      expect(subscriber.mock.lastCall).toEqual([
+        [
+          {
+            uri: "http://schema.org/Recipe",
+            label: "Recipe",
+          },
+          {
+            uri: "http://example.com/Recipe2",
+            label: "Recipe2",
+          },
+        ],
+      ]);
+    });
+
+    it("updates value when removed", () => {
+      internalStore.removeStatement(
+        quad(
+          sym(uri),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://schema.org/Recipe"),
+        ),
+      );
+      expect(subscriber).toHaveBeenCalledTimes(2);
+      expect(subscriber.mock.lastCall).toEqual([[]]);
+    });
+
+    it("updates when a subclass is added", () => {
+      internalStore.add(
+        quad(
+          sym("http://schema.org/Recipe"),
+          sym("http://www.w3.org/2000/01/rdf-schema#subClassOf"),
+          sym("http://schema.org/Thing"),
+        ),
+      );
+      expect(subscriber).toHaveBeenCalledTimes(2);
+      expect(subscriber.mock.lastCall).toEqual([
+        [
+          {
+            uri: "http://schema.org/Recipe",
+            label: "Recipe",
+          },
+          {
+            uri: "http://schema.org/Thing",
+            label: "Thing",
+          },
+        ],
+      ]);
+    });
+
+    it("does not update if a new subclass is irrelevant", () => {
+      internalStore.add(
+        quad(
+          sym("http://schema.org/Video"),
+          sym("http://www.w3.org/2000/01/rdf-schema#subClassOf"),
+          sym("http://schema.org/Thing"),
+        ),
+      );
+      expect(subscriber).toHaveBeenCalledTimes(1);
+    });
+
+    it("does not update after unsubscribe", () => {
+      subscription.unsubscribe();
+      internalStore.removeStatement(
+        quad(
+          sym(uri),
+          sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          sym("http://schema.org/Recipe"),
+        ),
+      );
+      expect(subscriber).toHaveBeenCalledTimes(1);
     });
   });
 });

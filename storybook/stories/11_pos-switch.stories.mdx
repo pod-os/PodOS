@@ -13,7 +13,7 @@ import {
 
 ## pos-switch
 
-Selects a template to render based on properties of the subject uri
+Selects templates to render based on properties of the subject uri
 
 <Canvas
   withSource="open">
@@ -29,6 +29,16 @@ Selects a template to render based on properties of the subject uri
         <pos-case else><template>Not a resource or container.</template></pos-case>
         <pos-case if-typeof="http://schema.org/Project"><template>A project.</template></pos-case>
         <pos-case if-typeof="http://www.w3.org/2006/vcard/ns#Organization"><template>An organization.</template></pos-case>
+        <pos-case if-property="http://www.w3.org/2006/vcard/ns#hasPhoto">
+          <template>
+            <div><pos-picture></pos-picture></div>
+          </template>
+        </pos-case>
+        <pos-case if-rev="http://xmlns.com/foaf/0.1/primaryTopic">
+          <template>
+            Primary topic of: <pos-rich-link rev="http://xmlns.com/foaf/0.1/primaryTopic">
+          </template>
+        </pos-case>
       </pos-switch>
 </pos-resource>
     `}

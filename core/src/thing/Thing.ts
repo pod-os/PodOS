@@ -6,6 +6,15 @@ import { isRdfType } from "./isRdfType";
 import { labelForType } from "./labelForType";
 import { labelFromUri } from "./labelFromUri";
 import { Store } from "../Store";
+import {
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  map,
+  merge,
+  Observable,
+  startWith,
+} from "rxjs";
 
 export interface Literal {
   predicate: string;
@@ -83,7 +92,7 @@ export class Thing {
   }
 
   /**
-   * Returns all the links from this thing to other resources
+   * Returns all the unique links from this thing to other resources. This only includes named nodes and excludes rdf:type relations.
    */
   relations(predicate?: string): Relation[] {
     const statements = this.store.statementsMatching(
@@ -103,7 +112,30 @@ export class Thing {
   }
 
   /**
-   * Returns all the links from other resources to this thing
+   * Observe changes in links from this thing to other resources
+   */
+  observeRelations(predicate?: string): Observable<Relation[]> {
+    return merge(this.store.additions$, this.store.removals$).pipe(
+      // Note: we assume that cost of filtering by the optional predicate is not worthwhile
+      filter((quad) => quad.subject.value == this.uri),
+      debounceTime(250),
+      map(() => this.relations(predicate)),
+      startWith(this.relations(predicate)),
+      // Note: label is constructed from predicate and is therefore irrelevant to the comparison
+      distinctUntilChanged(
+        (prev, curr) =>
+          prev.length == curr.length &&
+          prev.every(
+            (rel, i) =>
+              rel.predicate == curr[i].predicate &&
+              rel.uris.length == curr[i].uris.length,
+          ),
+      ),
+    );
+  }
+
+  /**
+   * Returns all the unique links from other resources to this thing
    */
   reverseRelations(predicate?: string): Relation[] {
     const statements = this.store.statementsMatching(
@@ -119,6 +151,29 @@ export class Thing {
       label: labelFromUri(predicate),
       uris: values[predicate],
     }));
+  }
+
+  /**
+   * Observe changes in links from other resources to this thing
+   */
+  observeReverseRelations(predicate?: string): Observable<Relation[]> {
+    return merge(this.store.additions$, this.store.removals$).pipe(
+      // Note: we assume that cost of filtering by the optional predicate is not worthwhile
+      filter((quad) => quad.object.value == this.uri),
+      debounceTime(250),
+      map(() => this.reverseRelations(predicate)),
+      startWith(this.reverseRelations(predicate)),
+      // Note: label is constructed from predicate and is therefore irrelevant to the comparison
+      distinctUntilChanged(
+        (prev, curr) =>
+          prev.length == curr.length &&
+          prev.every(
+            (rel, i) =>
+              rel.predicate == curr[i].predicate &&
+              rel.uris.length == curr[i].uris.length,
+          ),
+      ),
+    );
   }
 
   /**
@@ -218,6 +273,25 @@ export class Thing {
       uri,
       label: labelForType(uri),
     }));
+  }
+
+  /**
+   * Observe changes to the list of RDF types for this thing
+   */
+  observeTypes(): Observable<RdfType[]> {
+    return merge(this.store.additions$, this.store.removals$).pipe(
+      filter(
+        (quad) =>
+          (quad.subject.value == this.uri &&
+            quad.predicate.value ==
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") ||
+          quad.predicate.value ==
+            "http://www.w3.org/2000/01/rdf-schema#subClassOf",
+      ),
+      map(() => this.types()),
+      startWith(this.types()),
+      distinctUntilChanged((prev, curr) => prev.length == curr.length),
+    );
   }
 
   /**
