@@ -226,6 +226,31 @@ describe("Thing", function () {
         },
       ]);
     });
+
+    it("only contains a uri once even if present in multiple graphs", () => {
+      const uri = "https://jane.doe.example/container/file.ttl#fragment";
+      internalStore.add(
+        sym(uri),
+        sym("http://vocab.test/first"),
+        sym("https://pod.example/first"),
+        sym("https://pod.example/document-1"),
+      );
+      internalStore.add(
+        sym(uri),
+        sym("http://vocab.test/first"),
+        sym("https://pod.example/first"),
+        sym("https://pod.example/document-2"),
+      );
+      const it = new Thing(uri, store);
+      const result = it.relations("http://vocab.test/first");
+      expect(result).toEqual([
+        {
+          predicate: "http://vocab.test/first",
+          label: "first",
+          uris: ["https://pod.example/first"],
+        },
+      ]);
+    });
   });
 
   describe("observeRelations", () => {
