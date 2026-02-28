@@ -59,4 +59,26 @@ describe("accumulate values", () => {
       "https://predicate.test": ["https://value1.test", "https://value2.test"],
     });
   });
+
+  it("only includes a value once for a given predicate", () => {
+    const firstStatement: Statement = new Statement(
+      sym("https://subject.test"),
+      sym("https://predicate.test"),
+      sym("https://value1.test"),
+      sym("https://graph.test/1"),
+    );
+    const secondStatement: Statement = new Statement(
+      sym("https://subject.test"),
+      sym("https://predicate.test"),
+      sym("https://value1.test"),
+      sym("https://graph.test/2"),
+    );
+    const result = [firstStatement, secondStatement].reduce(
+      accumulateValues,
+      {},
+    );
+    expect(result).toEqual({
+      "https://predicate.test": ["https://value1.test"],
+    });
+  });
 });

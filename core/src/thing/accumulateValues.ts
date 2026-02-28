@@ -14,6 +14,7 @@ export const accumulateValues = (
   current: Statement,
 ) => {
   const existing = accumulator[current.predicate.uri];
+  if (existing && existing.includes(current.object.value)) return accumulator;
   return {
     ...accumulator,
     [current.predicate.uri]: existing
