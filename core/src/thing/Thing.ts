@@ -162,15 +162,17 @@ export class Thing {
       filter((quad) => quad.object.value == this.uri),
       debounceTime(250),
       map(() => this.reverseRelations(predicate)),
-      // Note: will not trigger an update if label changes, as label is currently constructed from predicate
-      distinctUntilChanged((prev, curr) =>
-        prev.every(
-          (rel, i) =>
-            rel.predicate == curr[i].predicate &&
-            rel.uris.length == curr[i].uris.length,
-        ),
-      ),
       startWith(this.reverseRelations(predicate)),
+      // Note: label is constructed from predicate and is therefore irrelevant to the comparison
+      distinctUntilChanged(
+        (prev, curr) =>
+          prev.length == curr.length &&
+          prev.every(
+            (rel, i) =>
+              rel.predicate == curr[i].predicate &&
+              rel.uris.length == curr[i].uris.length,
+          ),
+      ),
     );
   }
 
