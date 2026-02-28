@@ -1,7 +1,8 @@
 import { blankNode, graph, sym, IndexedFormula, quad } from "rdflib";
 import { PodOsSession } from "../authentication";
-import { Thing } from "./Thing";
+import { Relation, Thing } from "./Thing";
 import { Store } from "../Store";
+import { Observable, Subscription } from "rxjs";
 
 describe("Thing", function () {
   let internalStore: IndexedFormula;
@@ -229,9 +230,16 @@ describe("Thing", function () {
 
   describe("observeRelations", () => {
     jest.useFakeTimers();
-    it("pushes existing relations immediately and changed relations in groups, until unsubscribe, unless irrelevant", () => {
-      const internalStore = graph();
-      const uri = "https://jane.doe.example/container/file.ttl#fragment";
+    let uri: string,
+      subscriber: jest.Mock,
+      thing: Thing,
+      relationsSpy: jest.SpyInstance,
+      observable: Observable<Relation[]>,
+      subscription: Subscription;
+
+    beforeEach(() => {
+      // Given a store with statements about a URI
+      uri = "https://jane.doe.example/container/file.ttl#fragment";
       internalStore.addAll([
         quad(
           sym(uri),
@@ -244,93 +252,20 @@ describe("Thing", function () {
           sym("https://pod.example/second"),
         ),
       ]);
-      const store = new Store(
-        {} as PodOsSession,
-        undefined,
-        undefined,
-        internalStore,
-      );
-      const subscriber = jest.fn();
-      const thing = new Thing(uri, store);
-      const relationsSpy = jest.spyOn(thing, "relations");
 
-      const observable = thing.observeRelations();
-      const subscription = observable.subscribe(subscriber);
+      // and a Thing with a relations method
+      subscriber = jest.fn();
+      thing = new Thing(uri, store);
+      relationsSpy = jest.spyOn(thing, "relations");
 
-      // Existing value
+      // and a subscription to changes in relations
+      observable = thing.observeRelations();
+      subscription = observable.subscribe(subscriber);
+    });
+
+    it("pushes existing relations immediately", () => {
       expect(subscriber).toHaveBeenCalledTimes(1);
       expect(relationsSpy).toHaveBeenCalledTimes(1);
-      // Irrelevant statement about another resource
-      internalStore.add(
-        sym("http://example.com/other-resource"),
-        sym("http://vocab.test/first"),
-        sym("https://pod.example/first"),
-      );
-      jest.advanceTimersByTime(250);
-      expect(subscriber).toHaveBeenCalledTimes(1);
-      expect(relationsSpy).toHaveBeenCalledTimes(1);
-      // Changed by removal
-      internalStore.removeStatement(
-        quad(
-          sym(uri),
-          sym("http://vocab.test/second"),
-          sym("https://pod.example/second"),
-        ),
-      );
-      jest.advanceTimersByTime(250);
-      expect(subscriber).toHaveBeenCalledTimes(2);
-      expect(relationsSpy).toHaveBeenCalledTimes(2);
-      // Changed by added object
-      internalStore.add(
-        quad(
-          sym(uri),
-          sym("http://vocab.test/first"),
-          sym("https://pod.example/first-2"),
-        ),
-      );
-      jest.advanceTimersByTime(250);
-      expect(subscriber).toHaveBeenCalledTimes(3);
-      expect(relationsSpy).toHaveBeenCalledTimes(3);
-      // Changed by removing and adding group of statements
-      internalStore.removeStatement(
-        quad(
-          sym(uri),
-          sym("http://vocab.test/first"),
-          sym("https://pod.example/first-2"),
-        ),
-      );
-      internalStore.removeStatement(
-        quad(
-          sym(uri),
-          sym("http://vocab.test/first"),
-          sym("https://pod.example/first"),
-        ),
-      );
-      internalStore.addAll([
-        quad(
-          sym(uri),
-          sym("http://vocab.test/second"),
-          sym("https://pod.example/second"),
-        ),
-        quad(
-          sym(uri),
-          sym("http://vocab.test/second"),
-          sym("https://pod.example/second-1"),
-        ),
-      ]);
-      jest.advanceTimersByTime(250);
-      expect(subscriber).toHaveBeenCalledTimes(4);
-      expect(relationsSpy).toHaveBeenCalledTimes(4);
-      // Stop listening to ignore future changes
-      subscription.unsubscribe();
-      internalStore.add(
-        sym(uri),
-        sym("http://vocab.test/third"),
-        sym("https://pod.example/third"),
-      );
-      jest.advanceTimersByTime(250);
-      expect(subscriber).toHaveBeenCalledTimes(4);
-      expect(relationsSpy).toHaveBeenCalledTimes(4);
       expect(subscriber.mock.calls).toEqual([
         [
           [
@@ -346,40 +281,117 @@ describe("Thing", function () {
             },
           ],
         ],
+      ]);
+    });
+
+    it("ignores irrelevant statements about other resources", () => {
+      internalStore.add(
+        sym("http://example.com/other-resource"),
+        sym("http://vocab.test/first"),
+        sym("https://pod.example/first"),
+      );
+      jest.advanceTimersByTime(250);
+      expect(subscriber).toHaveBeenCalledTimes(1);
+      expect(relationsSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("updates after removals", () => {
+      internalStore.removeStatement(
+        quad(
+          sym(uri),
+          sym("http://vocab.test/second"),
+          sym("https://pod.example/second"),
+        ),
+      );
+      jest.advanceTimersByTime(250);
+      expect(subscriber).toHaveBeenCalledTimes(2);
+      expect(relationsSpy).toHaveBeenCalledTimes(2);
+      expect(subscriber.mock.lastCall).toEqual([
         [
-          [
-            {
-              predicate: "http://vocab.test/first",
-              label: "first",
-              uris: ["https://pod.example/first"],
-            },
-          ],
-        ],
-        [
-          [
-            {
-              predicate: "http://vocab.test/first",
-              label: "first",
-              uris: [
-                "https://pod.example/first",
-                "https://pod.example/first-2",
-              ],
-            },
-          ],
-        ],
-        [
-          [
-            {
-              predicate: "http://vocab.test/second",
-              label: "second",
-              uris: [
-                "https://pod.example/second",
-                "https://pod.example/second-1",
-              ],
-            },
-          ],
+          {
+            predicate: "http://vocab.test/first",
+            label: "first",
+            uris: ["https://pod.example/first"],
+          },
         ],
       ]);
+    });
+
+    it("updates after added object", () => {
+      internalStore.add(
+        quad(
+          sym(uri),
+          sym("http://vocab.test/first"),
+          sym("https://pod.example/first-2"),
+        ),
+      );
+      jest.advanceTimersByTime(250);
+      expect(subscriber).toHaveBeenCalledTimes(2);
+      expect(relationsSpy).toHaveBeenCalledTimes(2);
+      expect(subscriber.mock.lastCall).toEqual([
+        [
+          {
+            predicate: "http://vocab.test/first",
+            label: "first",
+            uris: ["https://pod.example/first", "https://pod.example/first-2"],
+          },
+          {
+            predicate: "http://vocab.test/second",
+            label: "second",
+            uris: ["https://pod.example/second"],
+          },
+        ],
+      ]);
+    });
+
+    it("pushes changed relations in groups", () => {
+      internalStore.removeStatement(
+        quad(
+          sym(uri),
+          sym("http://vocab.test/first"),
+          sym("https://pod.example/first"),
+        ),
+      );
+      internalStore.addAll([
+        quad(
+          sym(uri),
+          sym("http://vocab.test/second"),
+          sym("https://pod.example/second-1"),
+        ),
+        quad(
+          sym(uri),
+          sym("http://vocab.test/second"),
+          sym("https://pod.example/second-2"),
+        ),
+      ]);
+      jest.advanceTimersByTime(250);
+      expect(subscriber).toHaveBeenCalledTimes(2);
+      expect(relationsSpy).toHaveBeenCalledTimes(2);
+      expect(subscriber.mock.lastCall).toEqual([
+        [
+          {
+            predicate: "http://vocab.test/second",
+            label: "second",
+            uris: [
+              "https://pod.example/second",
+              "https://pod.example/second-1",
+              "https://pod.example/second-2",
+            ],
+          },
+        ],
+      ]);
+    });
+
+    it("stops pushing after unsubscribe", () => {
+      subscription.unsubscribe();
+      internalStore.add(
+        sym(uri),
+        sym("http://vocab.test/third"),
+        sym("https://pod.example/third"),
+      );
+      jest.advanceTimersByTime(250);
+      expect(subscriber).toHaveBeenCalledTimes(1);
+      expect(relationsSpy).toHaveBeenCalledTimes(1);
     });
   });
 });
