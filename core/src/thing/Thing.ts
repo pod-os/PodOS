@@ -215,6 +215,23 @@ export class Thing {
   }
 
   /**
+   * Observe changes in literal values that describe this thing. See `description`
+   */
+  observeDescription() {
+    return this.observeAnyValue(
+      "http://purl.org/dc/terms/description",
+      "http://purl.org/dc/elements/1.1/description",
+      "http://schema.org/description",
+      "https://schema.org/description",
+      "https://schema.org/text",
+      "http://www.w3.org/2000/01/rdf-schema#comment",
+      "https://www.w3.org/ns/activitystreams#summary",
+      "https://www.w3.org/ns/activitystreams#content",
+      "http://www.w3.org/2006/vcard/ns#note",
+    );
+  }
+
+  /**
    * Returns the url of a picture or logo associated with this thing
    * Tries to match common RDF terms used for pictures like `schema:image`,
    * `vcard:photo` or `foaf:img`
