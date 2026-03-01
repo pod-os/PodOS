@@ -75,6 +75,25 @@ export class Thing {
   }
 
   /**
+   * Observe changes in human-readable label for this thing. See `label`.
+   */
+  observeLabel() {
+    return this.observeAnyValue(
+      "http://www.w3.org/2006/vcard/ns#fn",
+      "http://xmlns.com/foaf/0.1/name",
+      "http://xmlns.com/foaf/0.1/nick",
+      "https://schema.org/name",
+      "http://schema.org/name",
+      "http://purl.org/dc/terms/title",
+      "http://purl.org/dc/elements/1.1/title",
+      "http://www.w3.org/2000/01/rdf-schema#label",
+      "https://www.w3.org/ns/activitystreams#name",
+      "http://schema.org/caption",
+      "https://schema.org/caption",
+    ).pipe(map((value) => value ?? labelFromUri(this.uri)));
+  }
+
+  /**
    * Returns all the literal values that are linked to this thing
    */
   literals(): Literal[] {

@@ -81,4 +81,48 @@ describe("Thing", function () {
       expect(result).toEqual("literal value");
     });
   });
+
+  describe("observeLabel", () => {
+    const uri = "https://jane.doe.example/container/file.ttl#fragment";
+
+    it("pushes existing value immediately", () => {
+      // Given a store with statements about a URI
+      const internalStore = graph();
+      internalStore.add(
+        sym(uri),
+        sym("http://www.w3.org/2000/01/rdf-schema#label"),
+        "literal value",
+      );
+
+      const mockSession = {} as unknown as PodOsSession;
+      const store = new Store(mockSession, undefined, undefined, internalStore);
+
+      // and a Thing
+      const subscriber = jest.fn();
+      const thing = new Thing(uri, store);
+
+      // and a subscription to changes of label
+      const observable = thing.observeLabel();
+      observable.subscribe(subscriber);
+
+      expect(subscriber).toHaveBeenCalledTimes(1);
+      expect(subscriber.mock.calls).toEqual([["literal value"]]);
+    });
+
+    it("uses same value as label() when nothing is present in store", () => {
+      // Given an empty store
+      const mockSession = {} as unknown as PodOsSession;
+      const store = new Store(mockSession);
+
+      // and a Thing
+      const subscriber = jest.fn();
+      const thing = new Thing(uri, store);
+
+      // and a subscription to changes of label
+      const observable = thing.observeLabel();
+      observable.subscribe(subscriber);
+
+      expect(subscriber.mock.lastCall).toEqual([thing.label()]);
+    });
+  });
 });
