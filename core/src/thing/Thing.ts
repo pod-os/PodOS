@@ -14,6 +14,8 @@ import {
   merge,
   Observable,
   startWith,
+  skipUntil,
+  take,
 } from "rxjs";
 
 export interface Literal {
@@ -191,6 +193,40 @@ export class Thing {
       return Boolean(value);
     });
     return value;
+  }
+
+  /**
+   * Observe changes in a value linked from this thing via one of the given predicates
+   *
+   * Note that return value may differ from that from `anyValue` when more than one value is present.
+   *
+   * @param predicateUris
+   */
+  observeAnyValue(...predicateUris: string[]) {
+    const removal$ = this.store.removals$.pipe(
+      filter(
+        (quad) =>
+          quad.subject.value == this.uri &&
+          predicateUris.includes(quad.predicate.value),
+      ),
+    );
+    const addition$ = this.store.additions$.pipe(
+      skipUntil(removal$),
+      filter(
+        (quad) =>
+          quad.subject.value == this.uri &&
+          predicateUris.includes(quad.predicate.value),
+      ),
+      take(1),
+      map((quad) => quad.object.value),
+    );
+    return merge(removal$, addition$).pipe(
+      debounceTime(250),
+      map((value) =>
+        typeof value === "string" ? value : this.anyValue(...predicateUris),
+      ),
+      startWith(this.anyValue(...predicateUris)),
+    );
   }
 
   /**
