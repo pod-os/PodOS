@@ -4,16 +4,20 @@ import { PosApp } from '../pos-app/pos-app';
 import { PosResource } from '../pos-resource/pos-resource';
 import { PosLabel } from './pos-label';
 import { when } from 'jest-when';
+import { Subject } from 'rxjs';
+import { Thing } from '@pod-os/core';
 
 describe('pos-label', () => {
   it('renders label for successfully loaded resource', async () => {
     const os = mockPodOS();
-    when(os.fetch).calledWith('https://resource.test').mockReturnValue(Promise.resolve());
-    when(os.store.get)
+    when(os.fetch)
       .calledWith('https://resource.test')
-      .mockReturnValue({
-        label: () => 'Test Resource',
-      });
+      .mockReturnValue(Promise.resolve() as unknown as Promise<Response>);
+    const observedLabel$ = new Subject<string>();
+    const resource = {
+      observeLabel: () => observedLabel$,
+    } as unknown as Thing;
+    when(os.store.get).calledWith('https://resource.test').mockReturnValue(resource);
     const page = await newSpecPage({
       components: [PosApp, PosResource, PosLabel],
       html: `<pos-app>
@@ -22,7 +26,9 @@ describe('pos-label', () => {
             </pos-resource>
         </pos-app>`,
     });
-    const label = page.root.querySelector('pos-label');
+    observedLabel$.next('Test Resource');
+    await page.waitForChanges();
+    const label = page.root?.querySelector('pos-label');
     expect(label).toEqualHtml(`
       <pos-label>
         <mock:shadow-root>
@@ -35,12 +41,14 @@ describe('pos-label', () => {
   it('renders label after successfully loading resource', async () => {
     const os = mockPodOS();
     const loadingPromise = new Promise(resolve => setTimeout(resolve, 1));
-    when(os.fetch).calledWith('https://resource.test').mockReturnValue(loadingPromise);
-    when(os.store.get)
+    when(os.fetch)
       .calledWith('https://resource.test')
-      .mockReturnValue({
-        label: () => 'Test Resource',
-      });
+      .mockReturnValue(loadingPromise as unknown as Promise<Response>);
+    const observedLabel$ = new Subject<string>();
+    const resource = {
+      observeLabel: () => observedLabel$,
+    } as unknown as Thing;
+    when(os.store.get).calledWith('https://resource.test').mockReturnValue(resource);
     const page = await newSpecPage({
       components: [PosApp, PosResource, PosLabel],
       html: `<pos-app>
@@ -50,8 +58,9 @@ describe('pos-label', () => {
         </pos-app>`,
     });
     await loadingPromise;
+    observedLabel$.next('Test Resource');
     await page.waitForChanges();
-    const label = page.root.querySelector('pos-label');
+    const label = page.root?.querySelector('pos-label');
     expect(label).toEqualHtml(`
       <pos-label>
         <mock:shadow-root>
@@ -64,7 +73,9 @@ describe('pos-label', () => {
   it('renders nothing while loading resource', async () => {
     const os = mockPodOS();
     const loadingPromise = new Promise(resolve => setTimeout(resolve, 1));
-    when(os.fetch).calledWith('https://resource.test').mockReturnValue(loadingPromise);
+    when(os.fetch)
+      .calledWith('https://resource.test')
+      .mockReturnValue(loadingPromise as unknown as Promise<Response>);
     const page = await newSpecPage({
       components: [PosApp, PosResource, PosLabel],
       html: `<pos-app>
@@ -73,7 +84,7 @@ describe('pos-label', () => {
             </pos-resource>
         </pos-app>`,
     });
-    const label = page.root.querySelector('pos-label');
+    const label = page.root?.querySelector('pos-label');
     expect(label).toEqualHtml(`
       <pos-label>
       <mock:shadow-root></mock:shadow-root>
@@ -94,7 +105,7 @@ describe('pos-label', () => {
             </pos-resource>
         </pos-app>`,
     });
-    const label = page.root.querySelector('pos-label');
+    const label = page.root?.querySelector('pos-label');
     expect(label).toEqualHtml(`
       <pos-label>
       <mock:shadow-root></mock:shadow-root>
