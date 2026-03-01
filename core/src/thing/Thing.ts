@@ -6,6 +6,15 @@ import { isRdfType } from "./isRdfType";
 import { labelForType } from "./labelForType";
 import { labelFromUri } from "./labelFromUri";
 import { Store } from "../Store";
+import {
+  debounceTime,
+  filter,
+  map,
+  merge,
+  skipUntil,
+  startWith,
+  take,
+} from "rxjs";
 
 export interface Literal {
   predicate: string;
@@ -63,6 +72,25 @@ export class Thing {
       return value;
     }
     return labelFromUri(this.uri);
+  }
+
+  /**
+   * Observe changes in human-readable label for this thing. See `label`.
+   */
+  observeLabel() {
+    return this.observeAnyValue(
+      "http://www.w3.org/2006/vcard/ns#fn",
+      "http://xmlns.com/foaf/0.1/name",
+      "http://xmlns.com/foaf/0.1/nick",
+      "https://schema.org/name",
+      "http://schema.org/name",
+      "http://purl.org/dc/terms/title",
+      "http://purl.org/dc/elements/1.1/title",
+      "http://www.w3.org/2000/01/rdf-schema#label",
+      "https://www.w3.org/ns/activitystreams#name",
+      "http://schema.org/caption",
+      "https://schema.org/caption",
+    ).pipe(map((value) => value ?? labelFromUri(this.uri)));
   }
 
   /**
@@ -135,11 +163,62 @@ export class Thing {
   }
 
   /**
+   * Observe changes in a value linked from this thing via one of the given predicates
+   *
+   * Note that return value may differ from that from `anyValue` when more than one value is present.
+   *
+   * @param predicateUris
+   */
+  observeAnyValue(...predicateUris: string[]) {
+    const removal$ = this.store.removals$.pipe(
+      filter(
+        (quad) =>
+          quad.subject.value == this.uri &&
+          predicateUris.includes(quad.predicate.value),
+      ),
+    );
+    const addition$ = this.store.additions$.pipe(
+      skipUntil(removal$),
+      filter(
+        (quad) =>
+          quad.subject.value == this.uri &&
+          predicateUris.includes(quad.predicate.value),
+      ),
+      take(1),
+      map((quad) => quad.object.value),
+    );
+    return merge(removal$, addition$).pipe(
+      debounceTime(250),
+      map((value) =>
+        typeof value === "string" ? value : this.anyValue(...predicateUris),
+      ),
+      startWith(this.anyValue(...predicateUris)),
+    );
+  }
+
+  /**
    * Returns a literal value that describes this thing. Tries to match common RDF terms
    * used for descriptions, like `dct:description`, `schema:description` or `rdfs:comment`
    */
   description() {
     return this.anyValue(
+      "http://purl.org/dc/terms/description",
+      "http://purl.org/dc/elements/1.1/description",
+      "http://schema.org/description",
+      "https://schema.org/description",
+      "https://schema.org/text",
+      "http://www.w3.org/2000/01/rdf-schema#comment",
+      "https://www.w3.org/ns/activitystreams#summary",
+      "https://www.w3.org/ns/activitystreams#content",
+      "http://www.w3.org/2006/vcard/ns#note",
+    );
+  }
+
+  /**
+   * Observe changes in literal values that describe this thing. See `description`
+   */
+  observeDescription() {
+    return this.observeAnyValue(
       "http://purl.org/dc/terms/description",
       "http://purl.org/dc/elements/1.1/description",
       "http://schema.org/description",
