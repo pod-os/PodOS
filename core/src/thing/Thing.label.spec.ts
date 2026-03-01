@@ -124,5 +124,36 @@ describe("Thing", function () {
 
       expect(subscriber.mock.lastCall).toEqual([thing.label()]);
     });
+
+    it.each([
+      "http://xmlns.com/foaf/0.1/nick",
+      "http://purl.org/dc/terms/title",
+      "http://purl.org/dc/elements/1.1/title",
+      "http://xmlns.com/foaf/0.1/name",
+      "http://schema.org/name",
+      "https://schema.org/name",
+      "http://www.w3.org/2000/01/rdf-schema#label",
+      "https://www.w3.org/ns/activitystreams#name",
+      "http://www.w3.org/2006/vcard/ns#fn",
+      "http://schema.org/caption",
+      "https://schema.org/caption",
+    ])("returns the literal value of predicate %s", (predicate: string) => {
+      // Given a store with label for a URI using this predicate
+      const internalStore = graph();
+      internalStore.add(sym(uri), sym(predicate), "literal value");
+      const mockSession = {} as unknown as PodOsSession;
+      const store = new Store(mockSession, undefined, undefined, internalStore);
+
+      // and a Thing
+      const subscriber = jest.fn();
+      const thing = new Thing(uri, store);
+
+      // and a subscription to changes of label
+      const observable = thing.observeLabel();
+      observable.subscribe(subscriber);
+
+      expect(subscriber).toHaveBeenCalledTimes(1);
+      expect(subscriber.mock.calls).toEqual([["literal value"]]);
+    });
   });
 });
