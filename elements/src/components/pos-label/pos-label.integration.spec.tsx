@@ -112,4 +112,48 @@ describe('pos-label', () => {
       </pos-label>
     `);
   });
+
+  it('updates label when value changes', async () => {
+    const os = mockPodOS();
+    const loadingPromise = new Promise(resolve => setTimeout(resolve, 1));
+    when(os.fetch)
+      .calledWith('https://resource.test')
+      .mockReturnValue(loadingPromise as unknown as Promise<Response>);
+    const observedLabel$ = new Subject<string>();
+    const resource = {
+      observeLabel: () => observedLabel$,
+    } as unknown as Thing;
+    when(os.store.get).calledWith('https://resource.test').mockReturnValue(resource);
+    const page = await newSpecPage({
+      components: [PosApp, PosResource, PosLabel],
+      html: `<pos-app>
+            <pos-resource uri="https://resource.test">
+              <pos-label />
+            </pos-resource>
+        </pos-app>`,
+    });
+    await loadingPromise;
+    const label = page.root?.querySelector('pos-label');
+
+    observedLabel$.next('Test Resource');
+    await page.waitForChanges();
+
+    expect(label).toEqualHtml(`
+      <pos-label>
+        <mock:shadow-root>
+          Test Resource
+        </mock:shadow-root>
+      </pos-label>
+    `);
+
+    observedLabel$.next('Test Resource 2');
+    await page.waitForChanges();
+    expect(label).toEqualHtml(`
+      <pos-label>
+        <mock:shadow-root>
+          Test Resource 2
+        </mock:shadow-root>
+      </pos-label>
+    `);
+  });
 });
