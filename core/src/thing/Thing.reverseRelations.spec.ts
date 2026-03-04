@@ -200,7 +200,13 @@ describe("Thing", function () {
   });
 
   describe("observeReverseRelations", () => {
-    jest.useFakeTimers();
+    beforeEach(() => {
+      jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
 
     const mockSession = {} as unknown as PodOsSession;
     let store: Store,

@@ -254,7 +254,14 @@ describe("Thing", function () {
   });
 
   describe("observeRelations", () => {
-    jest.useFakeTimers();
+    beforeEach(() => {
+      jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
     let uri: string,
       subscriber: jest.Mock,
       thing: Thing,

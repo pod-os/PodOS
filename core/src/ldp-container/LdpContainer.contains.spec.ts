@@ -89,7 +89,13 @@ describe("LDP container", () => {
   });
 
   describe("observeContains", () => {
-    jest.useFakeTimers();
+    beforeEach(() => {
+      jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
     let internalStore: IndexedFormula,
       store: Store,
       subscriber: jest.Mock,
