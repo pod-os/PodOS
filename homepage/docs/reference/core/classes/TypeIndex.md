@@ -6,7 +6,7 @@
 
 # Class: TypeIndex
 
-Defined in: [type-index/TypeIndex.ts:11](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/type-index/TypeIndex.ts#L11)
+Defined in: [type-index/TypeIndex.ts:12](https://github.com/pod-os/PodOS/blob/main/core/src/type-index/TypeIndex.ts#L12)
 
 Represents a private or public type index document
 
@@ -22,9 +22,9 @@ Represents a private or public type index document
 
 ### Constructor
 
-> **new TypeIndex**(`uri`, `store`, `editable`): `TypeIndex`
+> **new TypeIndex**(`uri`, `store`, `editable?`): `TypeIndex`
 
-Defined in: [type-index/TypeIndex.ts:12](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/type-index/TypeIndex.ts#L12)
+Defined in: [type-index/TypeIndex.ts:13](https://github.com/pod-os/PodOS/blob/main/core/src/type-index/TypeIndex.ts#L13)
 
 #### Parameters
 
@@ -34,9 +34,9 @@ Defined in: [type-index/TypeIndex.ts:12](https://github.com/pod-os/PodOS/blob/e8
 
 ##### store
 
-`IndexedFormula`
+[`Store`](Store.md)
 
-##### editable
+##### editable?
 
 `boolean` = `false`
 
@@ -54,7 +54,7 @@ Defined in: [type-index/TypeIndex.ts:12](https://github.com/pod-os/PodOS/blob/e8
 
 > `readonly` **editable**: `boolean` = `false`
 
-Defined in: [type-index/TypeIndex.ts:15](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/type-index/TypeIndex.ts#L15)
+Defined in: [type-index/TypeIndex.ts:16](https://github.com/pod-os/PodOS/blob/main/core/src/type-index/TypeIndex.ts#L16)
 
 Whether the Thing can be edited according to its access control settings
 
@@ -66,9 +66,9 @@ Whether the Thing can be edited according to its access control settings
 
 ### store
 
-> `readonly` **store**: `IndexedFormula`
+> `readonly` **store**: [`Store`](Store.md)
 
-Defined in: [type-index/TypeIndex.ts:14](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/type-index/TypeIndex.ts#L14)
+Defined in: [type-index/TypeIndex.ts:15](https://github.com/pod-os/PodOS/blob/main/core/src/type-index/TypeIndex.ts#L15)
 
 #### Inherited from
 
@@ -80,7 +80,7 @@ Defined in: [type-index/TypeIndex.ts:14](https://github.com/pod-os/PodOS/blob/e8
 
 > `readonly` **uri**: `string`
 
-Defined in: [type-index/TypeIndex.ts:13](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/type-index/TypeIndex.ts#L13)
+Defined in: [type-index/TypeIndex.ts:14](https://github.com/pod-os/PodOS/blob/main/core/src/type-index/TypeIndex.ts#L14)
 
 #### Inherited from
 
@@ -92,7 +92,7 @@ Defined in: [type-index/TypeIndex.ts:13](https://github.com/pod-os/PodOS/blob/e8
 
 > **anyValue**(...`predicateUris`): `undefined`
 
-Defined in: [thing/Thing.ts:133](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/thing/Thing.ts#L133)
+Defined in: [thing/Thing.ts:128](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L128)
 
 Returns any value linked from this thing via one of the given predicates
 
@@ -116,7 +116,7 @@ Returns any value linked from this thing via one of the given predicates
 
 > **assume**\<`T`\>(`SpecificThing`): `T`
 
-Defined in: [thing/Thing.ts:250](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/thing/Thing.ts#L250)
+Defined in: [thing/Thing.ts:245](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L245)
 
 Call this method to switch to a more specific subclass of Thing.
 
@@ -148,7 +148,7 @@ a subclass of Thing to assume
 
 > **attachments**(): [`Attachment`](../interfaces/Attachment.md)[]
 
-Defined in: [thing/Thing.ts:231](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/thing/Thing.ts#L231)
+Defined in: [thing/Thing.ts:226](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L226)
 
 Returns all attachments linked to this thing
 
@@ -166,7 +166,7 @@ Returns all attachments linked to this thing
 
 > **container**(): `object`
 
-Defined in: [thing/Thing.ts:264](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/thing/Thing.ts#L264)
+Defined in: [thing/Thing.ts:255](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L255)
 
 Returns the container that contains this thing's document
 The container URI is derived from the thing's URI.
@@ -189,7 +189,7 @@ The container URI is derived from the thing's URI.
 
 > **description**(): `undefined`
 
-Defined in: [thing/Thing.ts:146](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/thing/Thing.ts#L146)
+Defined in: [thing/Thing.ts:141](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L141)
 
 Returns a literal value that describes this thing. Tries to match common RDF terms
 used for descriptions, like `dct:description`, `schema:description` or `rdfs:comment`
@@ -208,7 +208,7 @@ used for descriptions, like `dct:description`, `schema:description` or `rdfs:com
 
 > **label**(): `string`
 
-Defined in: [thing/Thing.ts:53](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/thing/Thing.ts#L53)
+Defined in: [thing/Thing.ts:48](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L48)
 
 Returns a human-readable label for this thing. Tries to match common RDF terms
 used for labels, such as `rdfs:label`, `schema:name` and others.
@@ -229,7 +229,7 @@ If no such term is present, it will derive a label from the URI.
 
 > **listAll**(): [`TypeRegistration`](../interfaces/TypeRegistration.md)[]
 
-Defined in: [type-index/TypeIndex.ts:20](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/type-index/TypeIndex.ts#L20)
+Defined in: [type-index/TypeIndex.ts:21](https://github.com/pod-os/PodOS/blob/main/core/src/type-index/TypeIndex.ts#L21)
 
 #### Returns
 
@@ -241,7 +241,7 @@ Defined in: [type-index/TypeIndex.ts:20](https://github.com/pod-os/PodOS/blob/e8
 
 > **literals**(): [`Literal`](../interfaces/Literal.md)[]
 
-Defined in: [thing/Thing.ts:76](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/thing/Thing.ts#L76)
+Defined in: [thing/Thing.ts:71](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L71)
 
 Returns all the literal values that are linked to this thing
 
@@ -259,7 +259,7 @@ Returns all the literal values that are linked to this thing
 
 > **picture**(): \{ `url`: `string`; \} \| `null`
 
-Defined in: [thing/Thing.ts:167](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/thing/Thing.ts#L167)
+Defined in: [thing/Thing.ts:162](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L162)
 
 Returns the url of a picture or logo associated with this thing
 Tries to match common RDF terms used for pictures like `schema:image`,
@@ -281,7 +281,7 @@ An object containing the `url` of the picture
 
 > **relations**(`predicate?`): [`Relation`](../interfaces/Relation.md)[]
 
-Defined in: [thing/Thing.ts:93](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/thing/Thing.ts#L93)
+Defined in: [thing/Thing.ts:88](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L88)
 
 Returns all the links from this thing to other resources
 
@@ -305,7 +305,7 @@ Returns all the links from this thing to other resources
 
 > **reverseRelations**(`predicate?`): [`Relation`](../interfaces/Relation.md)[]
 
-Defined in: [thing/Thing.ts:113](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/thing/Thing.ts#L113)
+Defined in: [thing/Thing.ts:108](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L108)
 
 Returns all the links from other resources to this thing
 
@@ -329,7 +329,7 @@ Returns all the links from other resources to this thing
 
 > **types**(): [`RdfType`](../interfaces/RdfType.md)[]
 
-Defined in: [thing/Thing.ts:220](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/thing/Thing.ts#L220)
+Defined in: [thing/Thing.ts:215](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L215)
 
 Retrieves a list of RDF types for this thing.
 

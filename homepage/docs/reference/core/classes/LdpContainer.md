@@ -6,7 +6,7 @@
 
 # Class: LdpContainer
 
-Defined in: [ldp-container/LdpContainer.ts:8](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/ldp-container/LdpContainer.ts#L8)
+Defined in: [ldp-container/LdpContainer.ts:10](https://github.com/pod-os/PodOS/blob/main/core/src/ldp-container/LdpContainer.ts#L10)
 
 ## Extends
 
@@ -16,9 +16,9 @@ Defined in: [ldp-container/LdpContainer.ts:8](https://github.com/pod-os/PodOS/bl
 
 ### Constructor
 
-> **new LdpContainer**(`uri`, `store`, `editable`): `LdpContainer`
+> **new LdpContainer**(`uri`, `store`, `editable?`): `LdpContainer`
 
-Defined in: [ldp-container/LdpContainer.ts:9](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/ldp-container/LdpContainer.ts#L9)
+Defined in: [ldp-container/LdpContainer.ts:11](https://github.com/pod-os/PodOS/blob/main/core/src/ldp-container/LdpContainer.ts#L11)
 
 #### Parameters
 
@@ -28,9 +28,9 @@ Defined in: [ldp-container/LdpContainer.ts:9](https://github.com/pod-os/PodOS/bl
 
 ##### store
 
-`IndexedFormula`
+[`Store`](Store.md)
 
-##### editable
+##### editable?
 
 `boolean` = `false`
 
@@ -48,7 +48,7 @@ Defined in: [ldp-container/LdpContainer.ts:9](https://github.com/pod-os/PodOS/bl
 
 > `readonly` **editable**: `boolean` = `false`
 
-Defined in: [ldp-container/LdpContainer.ts:12](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/ldp-container/LdpContainer.ts#L12)
+Defined in: [ldp-container/LdpContainer.ts:14](https://github.com/pod-os/PodOS/blob/main/core/src/ldp-container/LdpContainer.ts#L14)
 
 Whether the Thing can be edited according to its access control settings
 
@@ -60,9 +60,9 @@ Whether the Thing can be edited according to its access control settings
 
 ### store
 
-> `readonly` **store**: `IndexedFormula`
+> `readonly` **store**: [`Store`](Store.md)
 
-Defined in: [ldp-container/LdpContainer.ts:11](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/ldp-container/LdpContainer.ts#L11)
+Defined in: [ldp-container/LdpContainer.ts:13](https://github.com/pod-os/PodOS/blob/main/core/src/ldp-container/LdpContainer.ts#L13)
 
 #### Inherited from
 
@@ -74,7 +74,7 @@ Defined in: [ldp-container/LdpContainer.ts:11](https://github.com/pod-os/PodOS/b
 
 > `readonly` **uri**: `string`
 
-Defined in: [ldp-container/LdpContainer.ts:10](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/ldp-container/LdpContainer.ts#L10)
+Defined in: [ldp-container/LdpContainer.ts:12](https://github.com/pod-os/PodOS/blob/main/core/src/ldp-container/LdpContainer.ts#L12)
 
 #### Inherited from
 
@@ -86,7 +86,7 @@ Defined in: [ldp-container/LdpContainer.ts:10](https://github.com/pod-os/PodOS/b
 
 > **anyValue**(...`predicateUris`): `undefined`
 
-Defined in: [thing/Thing.ts:133](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/thing/Thing.ts#L133)
+Defined in: [thing/Thing.ts:128](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L128)
 
 Returns any value linked from this thing via one of the given predicates
 
@@ -110,7 +110,7 @@ Returns any value linked from this thing via one of the given predicates
 
 > **assume**\<`T`\>(`SpecificThing`): `T`
 
-Defined in: [thing/Thing.ts:250](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/thing/Thing.ts#L250)
+Defined in: [thing/Thing.ts:245](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L245)
 
 Call this method to switch to a more specific subclass of Thing.
 
@@ -142,7 +142,7 @@ a subclass of Thing to assume
 
 > **attachments**(): [`Attachment`](../interfaces/Attachment.md)[]
 
-Defined in: [thing/Thing.ts:231](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/thing/Thing.ts#L231)
+Defined in: [thing/Thing.ts:226](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L226)
 
 Returns all attachments linked to this thing
 
@@ -160,7 +160,7 @@ Returns all attachments linked to this thing
 
 > **container**(): `object`
 
-Defined in: [thing/Thing.ts:264](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/thing/Thing.ts#L264)
+Defined in: [thing/Thing.ts:255](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L255)
 
 Returns the container that contains this thing's document
 The container URI is derived from the thing's URI.
@@ -183,11 +183,15 @@ The container URI is derived from the thing's URI.
 
 > **contains**(): [`ContainerContent`](../interfaces/ContainerContent.md)[]
 
-Defined in: [ldp-container/LdpContainer.ts:17](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/ldp-container/LdpContainer.ts#L17)
+Defined in: [ldp-container/LdpContainer.ts:24](https://github.com/pod-os/PodOS/blob/main/core/src/ldp-container/LdpContainer.ts#L24)
+
+Resources that the LDP Container contains
 
 #### Returns
 
 [`ContainerContent`](../interfaces/ContainerContent.md)[]
+
+Array of objects with uri and name
 
 ***
 
@@ -195,7 +199,7 @@ Defined in: [ldp-container/LdpContainer.ts:17](https://github.com/pod-os/PodOS/b
 
 > **description**(): `undefined`
 
-Defined in: [thing/Thing.ts:146](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/thing/Thing.ts#L146)
+Defined in: [thing/Thing.ts:141](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L141)
 
 Returns a literal value that describes this thing. Tries to match common RDF terms
 used for descriptions, like `dct:description`, `schema:description` or `rdfs:comment`
@@ -214,7 +218,7 @@ used for descriptions, like `dct:description`, `schema:description` or `rdfs:com
 
 > **label**(): `string`
 
-Defined in: [thing/Thing.ts:53](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/thing/Thing.ts#L53)
+Defined in: [thing/Thing.ts:48](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L48)
 
 Returns a human-readable label for this thing. Tries to match common RDF terms
 used for labels, such as `rdfs:label`, `schema:name` and others.
@@ -235,7 +239,7 @@ If no such term is present, it will derive a label from the URI.
 
 > **literals**(): [`Literal`](../interfaces/Literal.md)[]
 
-Defined in: [thing/Thing.ts:76](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/thing/Thing.ts#L76)
+Defined in: [thing/Thing.ts:71](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L71)
 
 Returns all the literal values that are linked to this thing
 
@@ -249,11 +253,27 @@ Returns all the literal values that are linked to this thing
 
 ***
 
+### observeContains()
+
+> **observeContains**(): `Observable`\<[`ContainerContent`](../interfaces/ContainerContent.md)[]\>
+
+Defined in: [ldp-container/LdpContainer.ts:42](https://github.com/pod-os/PodOS/blob/main/core/src/ldp-container/LdpContainer.ts#L42)
+
+Observe changes to the resources that the LDP Container contains
+
+#### Returns
+
+`Observable`\<[`ContainerContent`](../interfaces/ContainerContent.md)[]\>
+
+RxJS Observable that pushes a new contains() array when it changes
+
+***
+
 ### picture()
 
 > **picture**(): \{ `url`: `string`; \} \| `null`
 
-Defined in: [thing/Thing.ts:167](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/thing/Thing.ts#L167)
+Defined in: [thing/Thing.ts:162](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L162)
 
 Returns the url of a picture or logo associated with this thing
 Tries to match common RDF terms used for pictures like `schema:image`,
@@ -275,7 +295,7 @@ An object containing the `url` of the picture
 
 > **relations**(`predicate?`): [`Relation`](../interfaces/Relation.md)[]
 
-Defined in: [thing/Thing.ts:93](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/thing/Thing.ts#L93)
+Defined in: [thing/Thing.ts:88](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L88)
 
 Returns all the links from this thing to other resources
 
@@ -299,7 +319,7 @@ Returns all the links from this thing to other resources
 
 > **reverseRelations**(`predicate?`): [`Relation`](../interfaces/Relation.md)[]
 
-Defined in: [thing/Thing.ts:113](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/thing/Thing.ts#L113)
+Defined in: [thing/Thing.ts:108](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L108)
 
 Returns all the links from other resources to this thing
 
@@ -323,7 +343,7 @@ Returns all the links from other resources to this thing
 
 > **types**(): [`RdfType`](../interfaces/RdfType.md)[]
 
-Defined in: [thing/Thing.ts:220](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/thing/Thing.ts#L220)
+Defined in: [thing/Thing.ts:215](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L215)
 
 Retrieves a list of RDF types for this thing.
 

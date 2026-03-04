@@ -6,7 +6,7 @@
 
 # Interface: RdfType
 
-Defined in: [thing/Thing.ts:27](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/thing/Thing.ts#L27)
+Defined in: [thing/Thing.ts:22](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L22)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [thing/Thing.ts:27](https://github.com/pod-os/PodOS/blob/e80e47e090e
 
 > **label**: `string`
 
-Defined in: [thing/Thing.ts:29](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/thing/Thing.ts#L29)
+Defined in: [thing/Thing.ts:24](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L24)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [thing/Thing.ts:29](https://github.com/pod-os/PodOS/blob/e80e47e090e
 
 > **uri**: `string`
 
-Defined in: [thing/Thing.ts:28](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/thing/Thing.ts#L28)
+Defined in: [thing/Thing.ts:23](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L23)

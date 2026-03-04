@@ -43,6 +43,7 @@
 - [OfflineCache](interfaces/OfflineCache.md)
 - [OfflineCapableFetcherOptions](interfaces/OfflineCapableFetcherOptions.md)
 - [OnlineStatus](interfaces/OnlineStatus.md)
+- [OpenWithApp](interfaces/OpenWithApp.md)
 - [PodOsConfiguration](interfaces/PodOsConfiguration.md)
 - [PodOsModule](interfaces/PodOsModule.md)
 - [PodOsSession](interfaces/PodOsSession.md)
@@ -65,3 +66,4 @@
 - [labelFromUri](functions/labelFromUri.md)
 - [listKnownTerms](functions/listKnownTerms.md)
 - [networkProblem](functions/networkProblem.md)
+- [proposeAppsFor](functions/proposeAppsFor.md)

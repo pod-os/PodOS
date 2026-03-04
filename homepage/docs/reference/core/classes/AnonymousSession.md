@@ -6,7 +6,7 @@
 
 # Class: AnonymousSession
 
-Defined in: [authentication/index.ts:20](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/authentication/index.ts#L20)
+Defined in: [authentication/index.ts:20](https://github.com/pod-os/PodOS/blob/main/core/src/authentication/index.ts#L20)
 
 ## Implements
 
@@ -30,7 +30,7 @@ Defined in: [authentication/index.ts:20](https://github.com/pod-os/PodOS/blob/e8
 
 > **get** **authenticatedFetch**(): (`url`, `init?`) => `Promise`\<`Response`\>
 
-Defined in: [authentication/index.ts:27](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/authentication/index.ts#L27)
+Defined in: [authentication/index.ts:27](https://github.com/pod-os/PodOS/blob/main/core/src/authentication/index.ts#L27)
 
 ##### Returns
 
@@ -60,7 +60,7 @@ Defined in: [authentication/index.ts:27](https://github.com/pod-os/PodOS/blob/e8
 
 > **login**(): `Promise`\<`void`\>
 
-Defined in: [authentication/index.ts:38](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/authentication/index.ts#L38)
+Defined in: [authentication/index.ts:38](https://github.com/pod-os/PodOS/blob/main/core/src/authentication/index.ts#L38)
 
 #### Returns
 
@@ -76,7 +76,7 @@ Defined in: [authentication/index.ts:38](https://github.com/pod-os/PodOS/blob/e8
 
 > **logout**(): `Promise`\<`void`\>
 
-Defined in: [authentication/index.ts:42](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/authentication/index.ts#L42)
+Defined in: [authentication/index.ts:42](https://github.com/pod-os/PodOS/blob/main/core/src/authentication/index.ts#L42)
 
 #### Returns
 
@@ -92,7 +92,7 @@ Defined in: [authentication/index.ts:42](https://github.com/pod-os/PodOS/blob/e8
 
 > **observeSession**(): `BehaviorSubject`\<[`SessionInfo`](../type-aliases/SessionInfo.md)\>
 
-Defined in: [authentication/index.ts:34](https://github.com/pod-os/PodOS/blob/e80e47e090ea2a3c5a790a9e1634789ca61341b8/core/src/authentication/index.ts#L34)
+Defined in: [authentication/index.ts:34](https://github.com/pod-os/PodOS/blob/main/core/src/authentication/index.ts#L34)
 
 #### Returns
 
