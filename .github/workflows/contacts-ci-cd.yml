@@ -75,15 +75,19 @@ jobs:
     if: github.ref == 'refs/heads/main'
     needs: npm-publish-contacts-snapshot
     runs-on: ubuntu-latest
+    continue-on-error: true
     environment: release-approval
+    outputs:
+      approved: ${{ steps.approval.outputs.approved }}
     steps:
       - name: Approve release
-        run:
-          echo "Release approved, proceeding with npm publish and production
-          deployment"
+        id: approval
+        run: |
+          echo "approved=true" >> $GITHUB_OUTPUT
+          echo "Release approved, proceeding"
 
   npm-release-contacts:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && needs.approve-release.outputs.approved == 'true'
     needs: [ build, npm-publish-contacts-snapshot, approve-release ]
     runs-on: ubuntu-latest
     outputs:
