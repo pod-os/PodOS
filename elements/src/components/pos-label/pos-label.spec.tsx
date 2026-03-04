@@ -1,5 +1,6 @@
 import { newSpecPage } from '@stencil/core/testing';
 import { PosLabel } from './pos-label';
+import { Subject } from 'rxjs';
 
 describe('pos-label', () => {
   it('is empty initially', async () => {
@@ -19,13 +20,44 @@ describe('pos-label', () => {
       components: [PosLabel],
       html: `<pos-label />`,
     });
-    await page.rootInstance.receiveResource({
-      label: () => 'Test Resource',
-    });
+    const observedLabel$ = new Subject<string>();
+    const resource = {
+      observeLabel: () => observedLabel$,
+    };
+    await page.rootInstance.receiveResource(resource);
+    observedLabel$.next('Test Resource');
     await page.waitForChanges();
     expect(page.root).toEqualHtml(`
       <pos-label>
         <mock:shadow-root>Test Resource</mock:shadow-root>
+      </pos-label>
+  `);
+  });
+
+  it('updates label when changed', async () => {
+    const page = await newSpecPage({
+      components: [PosLabel],
+      html: `<pos-label />`,
+    });
+    const observedLabel$ = new Subject<string>();
+    const resource = {
+      observeLabel: () => observedLabel$,
+    };
+    await page.rootInstance.receiveResource(resource);
+
+    observedLabel$.next('Test Resource');
+    await page.waitForChanges();
+    expect(page.root).toEqualHtml(`
+      <pos-label>
+        <mock:shadow-root>Test Resource</mock:shadow-root>
+      </pos-label>
+  `);
+
+    observedLabel$.next('Test Resource 2');
+    await page.waitForChanges();
+    expect(page.root).toEqualHtml(`
+      <pos-label>
+        <mock:shadow-root>Test Resource 2</mock:shadow-root>
       </pos-label>
   `);
   });
