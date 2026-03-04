@@ -23,7 +23,7 @@
   "dependencies": {
     "@pod-os/core": "0.26.0-next.0",
     "@shoelace-style/shoelace": "^2.20.1",
-    "@stencil/core": "^4.43.1",
+    "@stencil/core": "^4.43.2",
     "@stencil/store": "^2.2.2",
     "@testing-library/user-event": "^14.6.1",
     "@tiptap/core": "^3.20.0",
@@ -43,7 +43,7 @@
     "stencil-router-v2": "^0.6.0"
   },
   "devDependencies": {
-    "@happy-dom/jest-environment": "^20.7.0",
+    "@happy-dom/jest-environment": "^20.8.3",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@types/jest": "^30.0.0",
