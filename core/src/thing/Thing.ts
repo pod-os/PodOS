@@ -117,18 +117,18 @@ export class Thing {
   observeRelations(predicate?: string): Observable<Relation[]> {
     return merge(this.store.additions$, this.store.removals$).pipe(
       // Note: we assume that cost of filtering by the optional predicate is not worthwhile
-      filter((quad) => quad.subject.value == this.uri),
+      filter((quad) => quad.subject.value === this.uri),
       debounceTime(250),
       map(() => this.relations(predicate)),
       startWith(this.relations(predicate)),
       // Note: label is constructed from predicate and is therefore irrelevant to the comparison
       distinctUntilChanged(
         (prev, curr) =>
-          prev.length == curr.length &&
+          prev.length === curr.length &&
           prev.every(
             (rel, i) =>
-              rel.predicate == curr[i].predicate &&
-              rel.uris.length == curr[i].uris.length,
+              rel.predicate === curr[i].predicate &&
+              rel.uris.length === curr[i].uris.length,
           ),
       ),
     );
@@ -159,18 +159,18 @@ export class Thing {
   observeReverseRelations(predicate?: string): Observable<Relation[]> {
     return merge(this.store.additions$, this.store.removals$).pipe(
       // Note: we assume that cost of filtering by the optional predicate is not worthwhile
-      filter((quad) => quad.object.value == this.uri),
+      filter((quad) => quad.object.value === this.uri),
       debounceTime(250),
       map(() => this.reverseRelations(predicate)),
       startWith(this.reverseRelations(predicate)),
       // Note: label is constructed from predicate and is therefore irrelevant to the comparison
       distinctUntilChanged(
         (prev, curr) =>
-          prev.length == curr.length &&
+          prev.length === curr.length &&
           prev.every(
             (rel, i) =>
-              rel.predicate == curr[i].predicate &&
-              rel.uris.length == curr[i].uris.length,
+              rel.predicate === curr[i].predicate &&
+              rel.uris.length === curr[i].uris.length,
           ),
       ),
     );
@@ -282,15 +282,15 @@ export class Thing {
     return merge(this.store.additions$, this.store.removals$).pipe(
       filter(
         (quad) =>
-          (quad.subject.value == this.uri &&
-            quad.predicate.value ==
+          (quad.subject.value === this.uri &&
+            quad.predicate.value ===
               "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") ||
-          quad.predicate.value ==
+          quad.predicate.value ===
             "http://www.w3.org/2000/01/rdf-schema#subClassOf",
       ),
       map(() => this.types()),
       startWith(this.types()),
-      distinctUntilChanged((prev, curr) => prev.length == curr.length),
+      distinctUntilChanged((prev, curr) => prev.length === curr.length),
     );
   }
 
