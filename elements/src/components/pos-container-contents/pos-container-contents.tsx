@@ -49,7 +49,7 @@ export class PosContainerContents implements ResourceAware {
     this.container
       .observeContains()
       .pipe(takeUntil(this.disconnected$))
-      .subscribe(contains => (this.contents = contains.sort((a, b) => a.name.localeCompare(b.name))));
+      .subscribe(contains => (this.contents = contains.toSorted((a, b) => a.name.localeCompare(b.name))));
   };
 
   render() {
