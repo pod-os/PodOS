@@ -83,7 +83,7 @@ export class PosMarkdownDocument {
 
   disconnectedCallback() {
     this.disconnected$.next();
-    this.disconnected$.unsubscribe();
+    this.disconnected$.complete();
   }
 
   /**

@@ -84,6 +84,6 @@ export class PosContainerContents implements ResourceAware {
 
   disconnectedCallback() {
     this.disconnected$.next();
-    this.disconnected$.unsubscribe();
+    this.disconnected$.complete();
   }
 }

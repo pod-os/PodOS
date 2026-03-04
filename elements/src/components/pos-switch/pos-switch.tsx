@@ -108,6 +108,6 @@ export class PosSwitch implements ResourceAware {
 
   disconnectedCallback() {
     this.disconnected$.next();
-    this.disconnected$.unsubscribe();
+    this.disconnected$.complete();
   }
 }

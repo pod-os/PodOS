@@ -31,7 +31,7 @@ export class OpenAddressBook {
 
   disconnectedCallback() {
     this.disconnected$.next();
-    this.disconnected$.unsubscribe();
+    this.disconnected$.complete();
   }
 
   @Listen('pod-os:link')
