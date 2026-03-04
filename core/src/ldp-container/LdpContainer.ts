@@ -43,8 +43,8 @@ export class LdpContainer extends Thing {
     return merge(this.store.additions$, this.store.removals$).pipe(
       filter(
         (quad) =>
-          quad.graph.value == this.uri &&
-          quad.predicate.value == "http://www.w3.org/ns/ldp#contains",
+          quad.graph.value === this.uri &&
+          quad.predicate.value === "http://www.w3.org/ns/ldp#contains",
       ),
       debounceTime(250),
       map(() => this.contains()),

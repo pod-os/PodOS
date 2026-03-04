@@ -201,7 +201,7 @@ export class Store {
       ),
       map(() => this.findMembers(classUri)),
       startWith(this.findMembers(classUri)),
-      distinctUntilChanged((prev, curr) => prev.length == curr.length),
+      distinctUntilChanged((prev, curr) => prev.length === curr.length),
     );
   }
 
@@ -313,7 +313,7 @@ export class Store {
       graph,
       justOne,
     );
-    if (statements.length == 0) return null;
+    if (statements.length === 0) return null;
     if (!subject) {
       return statements[0].subject;
     } else if (!predicate) {
