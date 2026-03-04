@@ -27,8 +27,7 @@ All contributions have to be made under the same [license](./LICENSE) as PodOS.
 
 When updating changelogs in `CHANGELOG.md`:
 
-- **Add entries under `## Unreleased`** at the top of the file, not under
-  version numbers
+- **Add entries under next release version e.g. `## 0.23.5`** at the top of the file
 - **Keep descriptions user-centric and concise** - focus on what changed from
   the user's perspective
 - **Use single-line descriptions** - avoid listing implementation details or
