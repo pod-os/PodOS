@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.27.0
+
+### Added
+
+- [`Thing.observeTypes`](https://pod-os.org/reference/core/classes/Thing/#observeTypes) pushes changes to types
+- [`Thing.observeRelations`](https://pod-os.org/reference/core/classes/Thing/#observeRelations) pushes changes to relations
+- [`Thing.observeReverseRelations`](https://pod-os.org/reference/core/classes/Thing/#observeReverseRelations) pushes changes to reverse relations
+
+### Fixed
+
+- [`Thing.relations`](https://pod-os.org/reference/core/classes/Thing/#relations) and [`Thing.reverseRelations`](https://pod-os.org/reference/core/classes/Thing/#reverseRelations) remove duplicate values
+
 ## 0.26.0
 
 ### Breaking changes
@@ -27,13 +39,6 @@ and this project adheres to
 - [`Store.profileQuery`]((https://pod-os.org/reference/core/classes/Store/#profileQuery)) creates a [query](https://solid-contrib.github.io/data-modules/rdflib-utils/classes/index.ProfileQuery.html) to fetch information from a user's profile document
 - [`Store.preferencesQuery`]((https://pod-os.org/reference/core/classes/Store/#preferencesQuery)) creates a [query](https://solid-contrib.github.io/data-modules/rdflib-utils/classes/index.PreferencesQuery.html) to fetch information from a user's preferences file
 - [`LdpContainer.observeContains`](https://pod-os.org/reference/core/classes/ldpcontainer/#observeContains) pushes new array when `LdpContainer.contains` changes.
-- [`Thing.observeTypes`](https://pod-os.org/reference/core/classes/Thing/#observeTypes) pushes changes to types
-- [`Thing.observeRelations`](https://pod-os.org/reference/core/classes/Thing/#observeRelations) pushes changes to relations
-- [`Thing.observeReverseRelations`](https://pod-os.org/reference/core/classes/Thing/#observeReverseRelations) pushes changes to reverse relations
-
-### Fixed
-
-- [`Thing.relations`](https://pod-os.org/reference/core/classes/Thing/#relations) and [`Thing.reverseRelations`](https://pod-os.org/reference/core/classes/Thing/#reverseRelations) remove duplicate values
 
 ## 0.25.0
 
