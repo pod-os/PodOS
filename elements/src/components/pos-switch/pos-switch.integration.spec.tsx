@@ -48,6 +48,7 @@ describe('pos-switch', () => {
             </pos-case>
             <pos-case else if-typeof="http://schema.org/Recipe">
               <template>Will not render as else is specified</template>
+            </pos-case>
             <pos-case if-property="http://schema.org/image">
               <template><pos-picture /></template>
             </pos-case>
