@@ -70,6 +70,6 @@ export class PosList implements PodOsAware, ResourceAware {
 
   disconnectedCallback() {
     this.disconnected$.next();
-    this.disconnected$.unsubscribe();
+    this.disconnected$.complete();
   }
 }

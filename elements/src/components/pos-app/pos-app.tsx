@@ -84,7 +84,7 @@ export class PosApp {
   disconnectedCallback() {
     this.unsubscribeSettings();
     this.disconnected$.next();
-    this.disconnected$.unsubscribe();
+    this.disconnected$.complete();
   }
 
   @Listen('pod-os:init')
