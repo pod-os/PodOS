@@ -124,12 +124,16 @@ jobs:
     if: github.ref == 'refs/heads/main'
     needs: npm-publish-elements-snapshot
     runs-on: ubuntu-latest
+    continue-on-error: true
     environment: release-approval
+    outputs:
+      approved: ${{ steps.approval.outputs.approved }}
     steps:
       - name: Approve release
-        run:
-          echo "Release approved, proceeding with npm publish and production
-          deployment"
+        id: approval
+        run: |
+          echo "approved=true" >> $GITHUB_OUTPUT
+          echo "Release approved, proceeding"
 
   build-pages:
     if: github.ref == 'refs/heads/main'
@@ -181,7 +185,8 @@ jobs:
         uses: actions/deploy-pages@v4
 
   npm-release-core:
-    if: github.ref == 'refs/heads/main'
+    if:
+      github.ref == 'refs/heads/main' && needs.approve-release.outputs.approved == 'true'
     needs: [build, npm-publish-core-snapshot, approve-release]
     runs-on: ubuntu-latest
     outputs:
@@ -203,7 +208,6 @@ jobs:
           tag: latest
 
   npm-release-elements:
-    if: github.ref == 'refs/heads/main'
     needs: [build, npm-publish-elements-snapshot, npm-release-core]
     runs-on: ubuntu-latest
     outputs:
