@@ -5,6 +5,20 @@
 <!-- Auto Generated Below -->
 
 
+## Overview
+
+Renders a link to a resource. The resource is either identified by the given `uri` property, by the resource in
+context (given by a surrounding `pos-resource` element), or by following a relation from or to the resource in
+context (`rel` / `rev` attributes).
+
+By default, it renders a label and description of the resource. You can override this by providing custom content as
+child elements.
+
+**Important:** This component will fire a `pod-os:link` event when clicked instead of doing a normal browser navigation.
+To actually navigate to the link target, you have to listen to the event and then perform the navigation
+programmatically. Other link-related behaviours (like open in a new tab and copy link target) are working normally.
+This is to support client-side navigation.
+
 ## Properties
 
 | Property | Attribute | Description                                                                               | Type     | Default     |

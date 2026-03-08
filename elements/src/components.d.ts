@@ -246,6 +246,17 @@ export namespace Components {
     }
     interface PosReverseRelations {
     }
+    /**
+     * Renders a link to a resource. The resource is either identified by the given `uri` property, by the resource in
+     * context (given by a surrounding `pos-resource` element), or by following a relation from or to the resource in
+     * context (`rel` / `rev` attributes).
+     * By default, it renders a label and description of the resource. You can override this by providing custom content as
+     * child elements.
+     * **Important:** This component will fire a `pod-os:link` event when clicked instead of doing a normal browser navigation.
+     * To actually navigate to the link target, you have to listen to the event and then perform the navigation
+     * programmatically. Other link-related behaviours (like open in a new tab and copy link target) are working normally.
+     * This is to support client-side navigation.
+     */
     interface PosRichLink {
         /**
           * Link will be obtained by following the predicate with this URI forward from a resource
@@ -1080,6 +1091,17 @@ declare global {
         "pod-os:resource": any;
         "pod-os:error": any;
     }
+    /**
+     * Renders a link to a resource. The resource is either identified by the given `uri` property, by the resource in
+     * context (given by a surrounding `pos-resource` element), or by following a relation from or to the resource in
+     * context (`rel` / `rev` attributes).
+     * By default, it renders a label and description of the resource. You can override this by providing custom content as
+     * child elements.
+     * **Important:** This component will fire a `pod-os:link` event when clicked instead of doing a normal browser navigation.
+     * To actually navigate to the link target, you have to listen to the event and then perform the navigation
+     * programmatically. Other link-related behaviours (like open in a new tab and copy link target) are working normally.
+     * This is to support client-side navigation.
+     */
     interface HTMLPosRichLinkElement extends Components.PosRichLink, HTMLStencilElement {
         addEventListener<K extends keyof HTMLPosRichLinkElementEventMap>(type: K, listener: (this: HTMLPosRichLinkElement, ev: PosRichLinkCustomEvent<HTMLPosRichLinkElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
@@ -1661,6 +1683,17 @@ declare namespace LocalJSX {
     interface PosReverseRelations {
         "onPod-os:resource"?: (event: PosReverseRelationsCustomEvent<any>) => void;
     }
+    /**
+     * Renders a link to a resource. The resource is either identified by the given `uri` property, by the resource in
+     * context (given by a surrounding `pos-resource` element), or by following a relation from or to the resource in
+     * context (`rel` / `rev` attributes).
+     * By default, it renders a label and description of the resource. You can override this by providing custom content as
+     * child elements.
+     * **Important:** This component will fire a `pod-os:link` event when clicked instead of doing a normal browser navigation.
+     * To actually navigate to the link target, you have to listen to the event and then perform the navigation
+     * programmatically. Other link-related behaviours (like open in a new tab and copy link target) are working normally.
+     * This is to support client-side navigation.
+     */
     interface PosRichLink {
         "onPod-os:error"?: (event: PosRichLinkCustomEvent<any>) => void;
         "onPod-os:link"?: (event: PosRichLinkCustomEvent<any>) => void;
@@ -2010,6 +2043,17 @@ declare module "@stencil/core" {
             "pos-relations": LocalJSX.IntrinsicElements["pos-relations"] & JSXBase.HTMLAttributes<HTMLPosRelationsElement>;
             "pos-resource": LocalJSX.IntrinsicElements["pos-resource"] & JSXBase.HTMLAttributes<HTMLPosResourceElement>;
             "pos-reverse-relations": LocalJSX.IntrinsicElements["pos-reverse-relations"] & JSXBase.HTMLAttributes<HTMLPosReverseRelationsElement>;
+            /**
+             * Renders a link to a resource. The resource is either identified by the given `uri` property, by the resource in
+             * context (given by a surrounding `pos-resource` element), or by following a relation from or to the resource in
+             * context (`rel` / `rev` attributes).
+             * By default, it renders a label and description of the resource. You can override this by providing custom content as
+             * child elements.
+             * **Important:** This component will fire a `pod-os:link` event when clicked instead of doing a normal browser navigation.
+             * To actually navigate to the link target, you have to listen to the event and then perform the navigation
+             * programmatically. Other link-related behaviours (like open in a new tab and copy link target) are working normally.
+             * This is to support client-side navigation.
+             */
             "pos-rich-link": LocalJSX.IntrinsicElements["pos-rich-link"] & JSXBase.HTMLAttributes<HTMLPosRichLinkElement>;
             /**
              * The responsibility of pos-router is to handle the `uri` query param, that specifies the URI of the resource that is currently opened.
