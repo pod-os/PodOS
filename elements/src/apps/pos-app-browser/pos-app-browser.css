@@ -1,3 +1,7 @@
+body {
+  height: 100dvh;
+}
+
 pos-router {
   margin: 0;
   padding: 0;

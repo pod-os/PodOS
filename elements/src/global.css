@@ -4,7 +4,6 @@
 @import '~@shoelace-style/shoelace/dist/themes/dark.css';
 
 body {
-  height: 100dvh;
   margin: 0;
   padding: 0;
   font-family: sans-serif;
