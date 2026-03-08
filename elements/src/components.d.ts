@@ -138,6 +138,13 @@ export namespace Components {
      */
     interface PosLabel {
     }
+    /**
+     * Renders a template for each resource in a list. The list is either defined by a relation from the parent resource
+     * or by a class for which instances will be listed.
+     * `pos-list` must contain a `<template>` as a single child component. This template will be used to render each resource
+     * in the list. All PodOS elements within this template will receive the listed resource as their context, e.g. a `pos-label`
+     * will then render the label of each list item.
+     */
     interface PosList {
         /**
           * Whether listed resources should be fetched before being displayed
@@ -825,6 +832,13 @@ declare global {
         "pod-os:resource": any;
         "pod-os:init": any;
     }
+    /**
+     * Renders a template for each resource in a list. The list is either defined by a relation from the parent resource
+     * or by a class for which instances will be listed.
+     * `pos-list` must contain a `<template>` as a single child component. This template will be used to render each resource
+     * in the list. All PodOS elements within this template will receive the listed resource as their context, e.g. a `pos-label`
+     * will then render the label of each list item.
+     */
     interface HTMLPosListElement extends Components.PosList, HTMLStencilElement {
         addEventListener<K extends keyof HTMLPosListElementEventMap>(type: K, listener: (this: HTMLPosListElement, ev: PosListCustomEvent<HTMLPosListElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
@@ -1518,6 +1532,13 @@ declare namespace LocalJSX {
     interface PosLabel {
         "onPod-os:resource"?: (event: PosLabelCustomEvent<any>) => void;
     }
+    /**
+     * Renders a template for each resource in a list. The list is either defined by a relation from the parent resource
+     * or by a class for which instances will be listed.
+     * `pos-list` must contain a `<template>` as a single child component. This template will be used to render each resource
+     * in the list. All PodOS elements within this template will receive the listed resource as their context, e.g. a `pos-label`
+     * will then render the label of each list item.
+     */
     interface PosList {
         /**
           * Whether listed resources should be fetched before being displayed
@@ -1963,6 +1984,13 @@ declare module "@stencil/core" {
              * Displays a human-readable label of the resource, provided by [Thing.label()](https://pod-os.org/reference/core/classes/thing/#label)
              */
             "pos-label": LocalJSX.IntrinsicElements["pos-label"] & JSXBase.HTMLAttributes<HTMLPosLabelElement>;
+            /**
+             * Renders a template for each resource in a list. The list is either defined by a relation from the parent resource
+             * or by a class for which instances will be listed.
+             * `pos-list` must contain a `<template>` as a single child component. This template will be used to render each resource
+             * in the list. All PodOS elements within this template will receive the listed resource as their context, e.g. a `pos-label`
+             * will then render the label of each list item.
+             */
             "pos-list": LocalJSX.IntrinsicElements["pos-list"] & JSXBase.HTMLAttributes<HTMLPosListElement>;
             "pos-literals": LocalJSX.IntrinsicElements["pos-literals"] & JSXBase.HTMLAttributes<HTMLPosLiteralsElement>;
             "pos-login": LocalJSX.IntrinsicElements["pos-login"] & JSXBase.HTMLAttributes<HTMLPosLoginElement>;

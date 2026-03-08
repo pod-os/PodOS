@@ -3,6 +3,15 @@
 <!-- Auto Generated Below -->
 
 
+## Overview
+
+Renders a template for each resource in a list. The list is either defined by a relation from the parent resource
+or by a class for which instances will be listed.
+
+`pos-list` must contain a `<template>` as a single child component. This template will be used to render each resource
+in the list. All PodOS elements within this template will receive the listed resource as their context, e.g. a `pos-label`
+will then render the label of each list item.
+
 ## Properties
 
 | Property   | Attribute   | Description                                                       | Type      | Default     |

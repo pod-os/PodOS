@@ -4,6 +4,14 @@ import { ResourceAware, ResourceEventEmitter, subscribeResource } from '../event
 import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../events/PodOsAware';
 import { Subject, takeUntil } from 'rxjs';
 
+/**
+ * Renders a template for each resource in a list. The list is either defined by a relation from the parent resource
+ * or by a class for which instances will be listed.
+ *
+ * `pos-list` must contain a `<template>` as a single child component. This template will be used to render each resource
+ * in the list. All PodOS elements within this template will receive the listed resource as their context, e.g. a `pos-label`
+ * will then render the label of each list item.
+ */
 @Component({
   tag: 'pos-list',
   shadow: false,
