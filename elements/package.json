@@ -14,6 +14,7 @@
     "dist/",
     "loader/"
   ],
+  "customElements": "dist/custom-elements.json",
   "scripts": {
     "build": "stencil build --docs",
     "start": "stencil build --dev --watch --serve",

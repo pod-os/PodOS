@@ -25,6 +25,10 @@ export const config: Config = {
       dir: '../docs/elements',
     },
     {
+      type: 'docs-custom-elements-manifest',
+      file: 'dist/custom-elements.json',
+    },
+    {
       type: 'www',
       copy: [
         { src: 'pod-index.html' },

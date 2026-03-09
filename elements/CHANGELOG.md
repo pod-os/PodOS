@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## 0.39.0
 
+### Added
+
+- `@pod-os/elements` now includes a [Custom Elements Manifest](https://github.com/webcomponents/custom-elements-manifest) at `dist/custom-elements.json` that can be used in IDEs to
+  enable auto-completion for web components.
+
 ### Fixed
 
 - `elements.css` does not set a height for the body element any more. This led to scrolling bugs in custom dashboards. The setting moved to `pos-app-browser` who original needs it for its own layout.
