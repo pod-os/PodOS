@@ -17,6 +17,11 @@ export namespace Components {
     interface PosAddNewThing {
         "referenceUri": string;
     }
+    /**
+     * Add a new relation from the current resource to another one
+     */
+    interface PosAddRelation {
+    }
     interface PosApp {
         /**
           * @default false
@@ -534,6 +539,15 @@ declare global {
     var HTMLPosAddNewThingElement: {
         prototype: HTMLPosAddNewThingElement;
         new (): HTMLPosAddNewThingElement;
+    };
+    /**
+     * Add a new relation from the current resource to another one
+     */
+    interface HTMLPosAddRelationElement extends Components.PosAddRelation, HTMLStencilElement {
+    }
+    var HTMLPosAddRelationElement: {
+        prototype: HTMLPosAddRelationElement;
+        new (): HTMLPosAddRelationElement;
     };
     interface HTMLPosAppElementEventMap {
         "pod-os:session-restored": { url: string };
@@ -1140,7 +1154,7 @@ declare global {
     };
     interface HTMLPosSelectTermElementEventMap {
         "pod-os:init": any;
-        "pod-os:term-selected": any;
+        "pod-os:term-selected": { uri: string };
     }
     interface HTMLPosSelectTermElement extends Components.PosSelectTerm, HTMLStencilElement {
         addEventListener<K extends keyof HTMLPosSelectTermElementEventMap>(type: K, listener: (this: HTMLPosSelectTermElement, ev: PosSelectTermCustomEvent<HTMLPosSelectTermElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -1330,6 +1344,7 @@ declare global {
     interface HTMLElementTagNameMap {
         "pos-add-literal-value": HTMLPosAddLiteralValueElement;
         "pos-add-new-thing": HTMLPosAddNewThingElement;
+        "pos-add-relation": HTMLPosAddRelationElement;
         "pos-app": HTMLPosAppElement;
         "pos-app-browser": HTMLPosAppBrowserElement;
         "pos-app-dashboard": HTMLPosAppDashboardElement;
@@ -1402,6 +1417,11 @@ declare namespace LocalJSX {
     }
     interface PosAddNewThing {
         "referenceUri": string;
+    }
+    /**
+     * Add a new relation from the current resource to another one
+     */
+    interface PosAddRelation {
     }
     interface PosApp {
         /**
@@ -1732,7 +1752,7 @@ declare namespace LocalJSX {
         /**
           * Fires when a term is entered or selected
          */
-        "onPod-os:term-selected"?: (event: PosSelectTermCustomEvent<any>) => void;
+        "onPod-os:term-selected"?: (event: PosSelectTermCustomEvent<{ uri: string }>) => void;
         /**
           * @default 'Type to search...'
          */
@@ -1914,6 +1934,7 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "pos-add-literal-value": PosAddLiteralValue;
         "pos-add-new-thing": Omit<PosAddNewThing, keyof PosAddNewThingAttributes> & { [K in keyof PosAddNewThing & keyof PosAddNewThingAttributes]?: PosAddNewThing[K] } & { [K in keyof PosAddNewThing & keyof PosAddNewThingAttributes as `attr:${K}`]?: PosAddNewThingAttributes[K] } & { [K in keyof PosAddNewThing & keyof PosAddNewThingAttributes as `prop:${K}`]?: PosAddNewThing[K] } & OneOf<"referenceUri", PosAddNewThing["referenceUri"], PosAddNewThingAttributes["referenceUri"]>;
+        "pos-add-relation": PosAddRelation;
         "pos-app": Omit<PosApp, keyof PosAppAttributes> & { [K in keyof PosApp & keyof PosAppAttributes]?: PosApp[K] } & { [K in keyof PosApp & keyof PosAppAttributes as `attr:${K}`]?: PosAppAttributes[K] } & { [K in keyof PosApp & keyof PosAppAttributes as `prop:${K}`]?: PosApp[K] };
         "pos-app-browser": Omit<PosAppBrowser, keyof PosAppBrowserAttributes> & { [K in keyof PosAppBrowser & keyof PosAppBrowserAttributes]?: PosAppBrowser[K] } & { [K in keyof PosAppBrowser & keyof PosAppBrowserAttributes as `attr:${K}`]?: PosAppBrowserAttributes[K] } & { [K in keyof PosAppBrowser & keyof PosAppBrowserAttributes as `prop:${K}`]?: PosAppBrowser[K] };
         "pos-app-dashboard": PosAppDashboard;
@@ -1975,6 +1996,10 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "pos-add-literal-value": LocalJSX.IntrinsicElements["pos-add-literal-value"] & JSXBase.HTMLAttributes<HTMLPosAddLiteralValueElement>;
             "pos-add-new-thing": LocalJSX.IntrinsicElements["pos-add-new-thing"] & JSXBase.HTMLAttributes<HTMLPosAddNewThingElement>;
+            /**
+             * Add a new relation from the current resource to another one
+             */
+            "pos-add-relation": LocalJSX.IntrinsicElements["pos-add-relation"] & JSXBase.HTMLAttributes<HTMLPosAddRelationElement>;
             "pos-app": LocalJSX.IntrinsicElements["pos-app"] & JSXBase.HTMLAttributes<HTMLPosAppElement>;
             "pos-app-browser": LocalJSX.IntrinsicElements["pos-app-browser"] & JSXBase.HTMLAttributes<HTMLPosAppBrowserElement>;
             "pos-app-dashboard": LocalJSX.IntrinsicElements["pos-app-dashboard"] & JSXBase.HTMLAttributes<HTMLPosAppDashboardElement>;

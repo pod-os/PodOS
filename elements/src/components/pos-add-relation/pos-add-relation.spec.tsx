@@ -6,7 +6,7 @@ import { PosAddRelation } from './pos-add-relation';
 import { useResource } from '../events/useResource';
 import { when } from 'jest-when';
 
-import { Thing } from '@pod-os/core';
+import { PodOS, Thing } from '@pod-os/core';
 import { fireEvent } from '@testing-library/dom';
 
 function mockResource(thing: Partial<Thing> = {}) {
@@ -14,18 +14,26 @@ function mockResource(thing: Partial<Thing> = {}) {
 }
 
 describe('pos-add-relation', () => {
+  let os: PodOS;
   beforeEach(() => {
-    mockPodOS();
+    os = mockPodOS();
     mockResource();
   });
 
-  it('renders inputs if resource is editable', async () => {
-    mockResource({ editable: true } as unknown as Thing);
+  async function render() {
     const page = await newSpecPage({
       components: [PosAddRelation],
       html: `<pos-add-relation />`,
       supportsShadowDom: false,
     });
+    const input = page.root.querySelector('input');
+    input.focus = jest.fn();
+    return page;
+  }
+
+  it('renders inputs if resource is editable', async () => {
+    mockResource({ editable: true } as unknown as Thing);
+    const page = await render();
 
     expect(page.root).toEqualHtml(`
       <pos-add-relation>
@@ -44,7 +52,6 @@ describe('pos-add-relation', () => {
       components: [PosAddRelation],
       html: `<pos-add-relation></pos-add-relation>`,
     });
-    await page.waitForChanges();
     expect(page.root).toEqualHtml(`
       <pos-add-relation>
         <mock:shadow-root>
@@ -58,15 +65,7 @@ describe('pos-add-relation', () => {
     mockResource({ editable: true });
 
     // and a page with a pos-add-relation component
-    const page = await newSpecPage({
-      supportsShadowDom: false,
-      components: [PosAddRelation],
-      html: `<pos-add-relation></pos-add-relation>`,
-    });
-
-    // and the input can be focused
-    const input = page.root.querySelector('input');
-    input.focus = jest.fn();
+    const page = await render();
 
     // when the user selects a term
     const termSelect = page.root.querySelector('pos-select-term');
@@ -76,6 +75,33 @@ describe('pos-add-relation', () => {
     );
 
     // then the input is focussed
-    expect(input.focus).toHaveBeenCalled();
+    expect(page.root.querySelector('input').focus).toHaveBeenCalled();
+  });
+
+  it('adds the relation after URI has been entered', async () => {
+    // given the resource in context is editable
+    const thing = { editable: true, fake: 'thing' };
+    mockResource(thing);
+
+    // and a page with a pos-add-relation component
+    const page = await render();
+
+    // and the user selected a term
+    const termSelect = page.root.querySelector('pos-select-term');
+    fireEvent(
+      termSelect,
+      new CustomEvent('pod-os:term-selected', { detail: { uri: 'http://xmlns.com/foaf/0.1/knows' } }),
+    );
+
+    // when the user enters a URI
+    const input = page.root.querySelector('input');
+    fireEvent.change(input, { target: { value: 'https://alice.test/profile/card#me' } });
+
+    // then the relation is added
+    expect(os.addRelation).toHaveBeenCalledWith(
+      thing,
+      'http://xmlns.com/foaf/0.1/knows',
+      'https://alice.test/profile/card#me',
+    );
   });
 });

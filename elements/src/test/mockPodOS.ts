@@ -48,6 +48,7 @@ export function mockPodOS(): PodOS {
     fetchProfile: jest.fn(),
     buildSearchIndex: jest.fn(),
     proposeAppsFor: jest.fn().mockReturnValue([]),
+    addRelation: jest.fn(),
   };
   when(os.store.get)
     .calledWith(alice.webId)

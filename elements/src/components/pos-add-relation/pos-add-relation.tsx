@@ -2,7 +2,8 @@ import { Component, h, Host, Element, State } from '@stencil/core';
 import { useResource } from '../events/useResource';
 
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
-import { Thing } from '@pod-os/core';
+import { PodOS, Thing } from '@pod-os/core';
+import { usePodOS } from '../events/usePodOS';
 
 /**
  * Add a new relation from the current resource to another one
@@ -17,16 +18,28 @@ export class PosAddRelation {
   el: HTMLElement;
 
   @State()
+  os: PodOS;
+
+  @State()
   resource: Thing;
+
+  @State()
+  selectedTermUri: string;
 
   private valueInput: HTMLInputElement;
 
   async componentWillLoad() {
+    this.os = await usePodOS(this.el);
     this.resource = await useResource(this.el);
   }
 
-  onTermSelected(_event: CustomEvent<{ uri: string }>) {
+  onTermSelected(event: CustomEvent<{ uri: string }>) {
     this.valueInput.focus();
+    this.selectedTermUri = event.detail.uri;
+  }
+
+  async save(event) {
+    await this.os.addRelation(this.resource, this.selectedTermUri, event.target.value);
   }
 
   render() {
@@ -37,7 +50,13 @@ export class PosAddRelation {
       <Host>
         <sl-icon name="plus-circle"></sl-icon>
         <pos-select-term placeholder="Add relation" onPod-os:term-selected={ev => this.onTermSelected(ev)} />
-        <input ref={el => (this.valueInput = el)} type="url" aria-label="URI" placeholder=""></input>
+        <input
+          ref={el => (this.valueInput = el)}
+          type="url"
+          aria-label="URI"
+          placeholder=""
+          onChange={ev => this.save(ev)}
+        ></input>
       </Host>
     );
   }
