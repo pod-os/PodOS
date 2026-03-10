@@ -23,6 +23,7 @@
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
+    "typecheck": "tsc --noEmit",
     "lint": "eslint ./src",
     "build:bundle": "rimraf lib && node esbuild/build-bundle.mjs",
     "build:esm": "rimraf dist && node esbuild/build-esm.mjs",

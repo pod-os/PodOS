@@ -2,16 +2,16 @@ name: CI/CD
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [ lts/* ]
+        node-version: [lts/*]
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
@@ -21,6 +21,7 @@ jobs:
 
       - run: npm ci
       - run: npm run lint --workspace=core --workspace elements --if-present
+      - run: npm run typecheck --workspace=core
       - run: npm run build --workspace=core
       - run: npm run build --workspace=elements
       - run: npm test --workspace=core --workspace elements
@@ -143,9 +144,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run:
-          echo elements version is ${{ needs.npm-publish-elements-snapshot.outputs.prereleaseVersion }}
+          echo elements version is ${{
+          needs.npm-publish-elements-snapshot.outputs.prereleaseVersion }}
       - run:
-          echo core version is ${{ needs.npm-publish-core-snapshot.outputs.prereleaseVersion }}
+          echo core version is ${{
+          needs.npm-publish-core-snapshot.outputs.prereleaseVersion }}
       - uses: actions/checkout@v3
       - name: Setup Pages
         uses: actions/configure-pages@v2
@@ -160,13 +163,16 @@ jobs:
       - name: Build storybook
         working-directory: ./storybook
         env:
-          STORYBOOK_POD_OS_ELEMENTS_DIST_URL: https://cdn.jsdelivr.net/npm/@pod-os/elements@${{ needs.npm-publish-elements-snapshot.outputs.prereleaseVersion }}/dist/elements
+          STORYBOOK_POD_OS_ELEMENTS_DIST_URL:
+            https://cdn.jsdelivr.net/npm/@pod-os/elements@${{
+            needs.npm-publish-elements-snapshot.outputs.prereleaseVersion
+            }}/dist/elements
         run: npm run build
 
       - name: Upload pages
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'gh-pages'
+          path: "gh-pages"
 
   deploy-pages:
     if: github.ref == 'refs/heads/main'
@@ -240,7 +246,8 @@ jobs:
       name: production
       url: ${{ steps.deploy.outputs.deploy_url }}
     env:
-      POD_OS_ELEMENTS_VERSION: ${{ needs.npm-release-elements.outputs.releaseVersion }}
+      POD_OS_ELEMENTS_VERSION:
+        ${{ needs.npm-release-elements.outputs.releaseVersion }}
     steps:
       - uses: actions/checkout@v3
       - name: Deploy to Netlify (Production)
@@ -248,7 +255,7 @@ jobs:
         uses: ./.github/actions/deploy-pod-os-app
         with:
           app-name: pos-app-browser
-          netlify-flags: '--prod'
+          netlify-flags: "--prod"
           netlify-site-id: ${{ secrets.NETLIFY_POD_OS_BROWSER_SITE_ID }}
           netlify-auth-token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
 
