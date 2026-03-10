@@ -23,7 +23,7 @@ export class PosSelectTerm implements PodOsAware {
   /**
    * Fires when a term is entered or selected
    */
-  @Event({ eventName: 'pod-os:term-selected' }) termSelected: EventEmitter;
+  @Event({ eventName: 'pod-os:term-selected' }) termSelected: EventEmitter<{ uri: string }>;
 
   componentWillLoad() {
     subscribePodOs(this);

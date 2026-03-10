@@ -19,8 +19,14 @@ export class PosAddRelation {
   @State()
   resource: Thing;
 
+  private valueInput: HTMLInputElement;
+
   async componentWillLoad() {
     this.resource = await useResource(this.el);
+  }
+
+  onTermSelected(_event: CustomEvent<{ uri: string }>) {
+    this.valueInput.focus();
   }
 
   render() {
@@ -30,8 +36,8 @@ export class PosAddRelation {
     return (
       <Host>
         <sl-icon name="plus-circle"></sl-icon>
-        <pos-select-term placeholder="Add relation" />
-        <input type="url" aria-label="URI" placeholder=""></input>
+        <pos-select-term placeholder="Add relation" onPod-os:term-selected={ev => this.onTermSelected(ev)} />
+        <input ref={el => (this.valueInput = el)} type="url" aria-label="URI" placeholder=""></input>
       </Host>
     );
   }
