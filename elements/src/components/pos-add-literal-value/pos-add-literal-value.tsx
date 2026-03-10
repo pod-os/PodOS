@@ -3,6 +3,8 @@ import { Component, Host, h, State, Event, Watch, EventEmitter } from '@stencil/
 import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../events/PodOsAware';
 import { ResourceAware, ResourceEventEmitter, subscribeResource } from '../events/ResourceAware';
 
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+
 @Component({
   tag: 'pos-add-literal-value',
   styleUrl: 'pos-add-literal-value.css',
