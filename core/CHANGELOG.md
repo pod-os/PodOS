@@ -6,17 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.28.0
+
+- [`addRelation`](https://pod-os.org/reference/core/classes/podos/#addrelation: A method to add a relation (link) between things
+
 ## 0.27.0
 
 ### Added
 
-- [`Thing.observeTypes`](https://pod-os.org/reference/core/classes/Thing/#observeTypes) pushes changes to types
-- [`Thing.observeRelations`](https://pod-os.org/reference/core/classes/Thing/#observeRelations) pushes changes to relations
-- [`Thing.observeReverseRelations`](https://pod-os.org/reference/core/classes/Thing/#observeReverseRelations) pushes changes to reverse relations
+- [`Thing.observeTypes`](https://pod-os.org/reference/core/classes/thing/#observetypes) pushes changes to types
+- [`Thing.observeRelations`](https://pod-os.org/reference/core/classes/thing/#observerelations) pushes changes to relations
+- [`Thing.observeReverseRelations`](https://pod-os.org/reference/core/classes/thing/#observereverserelations) pushes changes to reverse relations
 
 ### Fixed
 
-- [`Thing.relations`](https://pod-os.org/reference/core/classes/Thing/#relations) and [`Thing.reverseRelations`](https://pod-os.org/reference/core/classes/Thing/#reverseRelations) remove duplicate values
+- [`Thing.relations`](https://pod-os.org/reference/core/classes/Thing/#relations) and [`Thing.reverseRelations`](https://pod-os.org/reference/core/classes/thing/#reverserelations) remove duplicate values
 
 ## 0.26.0
 
@@ -26,26 +30,26 @@ and this project adheres to
 
 ### Added
 
-- [`PodOS.proposeAppsFor`](https://pod-os.org/reference/core/classes/PodOS/#proposeAppsFor) proposes apps that can open a given resource
+- [`PodOS.proposeAppsFor`](https://pod-os.org/reference/core/classes/podos/#proposeappsfor) proposes apps that can open a given resource
 
 ### Added
 
-- [`Store.findTypes`]((https://pod-os.org/reference/core/classes/Store/#findTypes)) returns types for a given resource
-- [`Store.holds`]((https://pod-os.org/reference/core/classes/Store/#holds)) determines whether the store includes a certain quad pattern
-- [`Store.statementsMatching`]((https://pod-os.org/reference/core/classes/Store/#statementsMatching)) returns array of statements matching a quad pattern
-- [`Store.each`]((https://pod-os.org/reference/core/classes/Store/#each)) returns array of RDF/JS terms matching the first wild card in a quad pattern
-- [`Store.any`]((https://pod-os.org/reference/core/classes/Store/#any)) returns any one RDF/JS term matching the first wildcard in the provided quad pattern
-- [`Store.anyValue`]((https://pod-os.org/reference/core/classes/Store/#anyValue)) returns the value of any one RDF/JS term matching the first wildcard in the provided quad pattern
-- [`Store.profileQuery`]((https://pod-os.org/reference/core/classes/Store/#profileQuery)) creates a [query](https://solid-contrib.github.io/data-modules/rdflib-utils/classes/index.ProfileQuery.html) to fetch information from a user's profile document
-- [`Store.preferencesQuery`]((https://pod-os.org/reference/core/classes/Store/#preferencesQuery)) creates a [query](https://solid-contrib.github.io/data-modules/rdflib-utils/classes/index.PreferencesQuery.html) to fetch information from a user's preferences file
+- [`Store.findTypes`]((https://pod-os.org/reference/core/classes/store/#findTypes)) returns types for a given resource
+- [`Store.holds`]((https://pod-os.org/reference/core/classes/store/#holds)) determines whether the store includes a certain quad pattern
+- [`Store.statementsMatching`]((https://pod-os.org/reference/core/classes/store/#statementsMatching)) returns array of statements matching a quad pattern
+- [`Store.each`]((https://pod-os.org/reference/core/classes/store/#each)) returns array of RDF/JS terms matching the first wild card in a quad pattern
+- [`Store.any`]((https://pod-os.org/reference/core/classes/store/#any)) returns any one RDF/JS term matching the first wildcard in the provided quad pattern
+- [`Store.anyValue`]((https://pod-os.org/reference/core/classes/store/#anyValue)) returns the value of any one RDF/JS term matching the first wildcard in the provided quad pattern
+- [`Store.profileQuery`]((https://pod-os.org/reference/core/classes/store/#profileQuery)) creates a [query](https://solid-contrib.github.io/data-modules/rdflib-utils/classes/index.ProfileQuery.html) to fetch information from a user's profile document
+- [`Store.preferencesQuery`]((https://pod-os.org/reference/core/classes/store/#preferencesQuery)) creates a [query](https://solid-contrib.github.io/data-modules/rdflib-utils/classes/index.PreferencesQuery.html) to fetch information from a user's preferences file
 - [`LdpContainer.observeContains`](https://pod-os.org/reference/core/classes/ldpcontainer/#observeContains) pushes new array when `LdpContainer.contains` changes.
 
 ## 0.25.0
 
 ### Breaking Changes
 
-- `PodOS.loadContactsModule` got removed, use [`PodOS.loadModule`](https://pod-os.org/reference/core/classes/PodOS/#loadmodule) instead
-- `@solid-data-modules/contacts-rdflib` is no longer part of core. If you need it, you must install it yourself and load it using [`PodOS.loadModule`](https://pod-os.org/reference/core/classes/PodOS/#loadmodule)
+- `PodOS.loadContactsModule` got removed, use [`PodOS.loadModule`](https://pod-os.org/reference/core/classes/podos/#loadmodule) instead
+- `@solid-data-modules/contacts-rdflib` is no longer part of core. If you need it, you must install it yourself and load it using [`PodOS.loadModule`](https://pod-os.org/reference/core/classes/podos/#loadmodule)
 
 ### Added
 
@@ -55,21 +59,21 @@ and this project adheres to
 
 ### Added
 
-- [`AttachmentGateway`](https://pod-os.org/reference/core/classes/AttachmentGateway/):
+- [`AttachmentGateway`](https://pod-os.org/reference/core/classes/attachmentgateway/):
   New gateway class to handle attachment upload and linking operations
-- [`PodOS.attachments()`](https://pod-os.org/reference/core/classes/PodOS/#attachments):
+- [`PodOS.attachments()`](https://pod-os.org/reference/core/classes/podos/#attachments):
   Access to the attachment gateway
-- [`TypeIndex`](https://pod-os.org/reference/core/classes/TypeIndex/): New class
+- [`TypeIndex`](https://pod-os.org/reference/core/classes/typeindex/): New class
   to represent and work with Solid type index documents
-- [`WebIdProfile.getPublicTypeIndex()`](https://pod-os.org/reference/core/classes/WebIdProfile/#getPublicTypeIndex):
+- [`WebIdProfile.getPublicTypeIndex()`](https://pod-os.org/reference/core/classes/webidprofile/#getpublictypeindex):
   Get the public type index URI for a user
-- [`WebIdProfile.getPrivateTypeIndex()`](https://pod-os.org/reference/core/classes/WebIdProfile/#getPrivateTypeIndex):
+- [`WebIdProfile.getPrivateTypeIndex()`](https://pod-os.org/reference/core/classes/webidprofile/#getprivatetypeindex):
   Get the private type index URI for a user
-- [`ProfileGateway`](https://pod-os.org/reference/core/classes/ProfileGateway/)
+- [`ProfileGateway`](https://pod-os.org/reference/core/classes/profilegateway/)
   Gateway for profile-related operations on Solid Pods and the store.
-- [`FileGateway`](https://pod-os.org/reference/core/classes/FileGateway/)
+- [`FileGateway`](https://pod-os.org/reference/core/classes/filegateway/)
   Gateway for file-related operations on Solid Pods and the store.
-- [`AttachmentGateway`](https://pod-os.org/reference/core/classes/AttachmentGateway/)
+- [`AttachmentGateway`](https://pod-os.org/reference/core/classes/attachmentgateway/)
   Gateway for attachment-related operations on Solid Pods and the store.
 
 ### Fixed
@@ -80,24 +84,24 @@ and this project adheres to
 
 ### Added
 
-- [`Store.findMembers`](https://pod-os.org/reference/core/classes/Store/#findMembers) returns instances of classes and subclasses
-- [`Store.observeFindMembers`](https://pod-os.org/reference/core/classes/Store/#observeFindMembers) returns an `Observable` and pushes new values when graph is updated
+- [`Store.findMembers`](https://pod-os.org/reference/core/classes/store/#findmembers) returns instances of classes and subclasses
+- [`Store.observeFindMembers`](https://pod-os.org/reference/core/classes/store/#observefindmembers) returns an `Observable` and pushes new values when graph is updated
 
 ## 0.22.0
 
 ### Added
 
-- [`PictureGateway`](https://pod-os.org/reference/core/classes/PictureGateway/): New gateway class to handle picture upload and linking
+- [`PictureGateway`](https://pod-os.org/reference/core/classes/picturegateway/): New gateway class to handle picture upload and linking
   operations
-- [`PodOS.uploadAndAddPicture()`](https://pod-os.org/reference/core/classes/PictureGateway/#uploadandaddpicture): Upload a picture file and associate it with a
+- [`PodOS.uploadAndAddPicture()`](https://pod-os.org/reference/core/classes/picturegateway/#uploadandaddpicture): Upload a picture file and associate it with a
   thing using schema:image predicate
-- [`Thing.container()`](https://pod-os.org/reference/core/classes/Thing/#container): Get the LDP container URI for a thing
-- [`Store.additions$`](https://pod-os.org/reference/core/classes/Store/#additions) and [`Store.removals$`](https://pod-os.org/reference/core/classes/Store/#removals) are `rxjs` `Subject`s for listening
+- [`Thing.container()`](https://pod-os.org/reference/core/classes/thing/#container): Get the LDP container URI for a thing
+- [`Store.additions$`](https://pod-os.org/reference/core/classes/store/#additions) and [`Store.removals$`](https://pod-os.org/reference/core/classes/store/#removals) are `rxjs` `Subject`s for listening
   to changes to the store
 
 ### Changed
 
-- [`PodOS.files().createNewFile()`](https://pod-os.org/reference/core/classes/FileFetcher/#createNewFile):
+- [`PodOS.files().createNewFile()`](https://pod-os.org/reference/core/classes/filefetcher/#createnewfile):
   Now accepts `File` instances in addition to `Blob` objects, automatically
   using the file's name and type
 
@@ -105,9 +109,9 @@ and this project adheres to
 
 ### Added
 
-- [`PodOS.files().createNewFile()`](https://pod-os.org/reference/core/classes/FileFetcher/#createNewFile):
+- [`PodOS.files().createNewFile()`](https://pod-os.org/reference/core/classes/filefetcher/#createnewfile):
   New method to create new files within a container
-- [`PodOS.files().createNewFolder()`](https://pod-os.org/reference/core/classes/FileFetcher/#createNewFolder):
+- [`PodOS.files().createNewFolder()`](https://pod-os.org/reference/core/classes/filefetcher/#createnewfolder):
   New method to create new folders within a container
 - [`Problem`](https://pod-os.org/reference/core/interfaces/problem/): A new type
   to describe domain errors in PodOS
@@ -124,9 +128,9 @@ and this project adheres to
 
 ### Added
 
-- [`PodOS.files()`](https://pod-os.org/reference/core/classes/PodOS/#files): New
+- [`PodOS.files()`](https://pod-os.org/reference/core/classes/podos/#files): New
   method to access file operations (fetchFile, etc.)
-- [`PodOS.files().putFile()`](https://pod-os.org/reference/core/classes/FileFetcher/#putfile):
+- [`PodOS.files().putFile()`](https://pod-os.org/reference/core/classes/filefetcher/#putfile):
   New method to update files
 
 ### Changed

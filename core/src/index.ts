@@ -124,12 +124,28 @@ export class PodOS {
     return this.fileFetcher;
   }
 
+  /**
+   * Adds a new value to the property of the given thing
+   * @param thing
+   * @param property
+   * @param value
+   */
   addPropertyValue(
     thing: Thing,
     property: string,
     value: string,
   ): Promise<void> {
     return this.store.addPropertyValue(thing, property, value);
+  }
+
+  /**
+   * Adds a new relation (link) from the thing to the given uri using the property
+   * @param thing
+   * @param property
+   * @param uri
+   */
+  addRelation(thing: Thing, property: string, value: string): Promise<void> {
+    return this.store.addRelation(thing, property, value);
   }
 
   listKnownTerms(): Term[] {

@@ -133,6 +133,26 @@ export class Store {
     ) as Promise<void>; // without passing callback updater returns a Promise;
   }
 
+  /**
+   * Adds a new relation (link) from the thing to the given uri using the property
+   * @param thing
+   * @param property
+   * @param uri
+   */
+  addRelation(thing: Thing, property: string, uri: string): Promise<void> {
+    return this.updater.update(
+      [],
+      [st(sym(thing.uri), sym(property), sym(uri), sym(thing.uri).doc())],
+      undefined,
+      false,
+      {
+        // explicitly omit credentials due to
+        // https://github.com/pod-os/PodOS/issues/17
+        credentials: "omit",
+      },
+    ) as Promise<void>; // without passing callback updater returns a Promise;
+  }
+
   async addNewThing(uri: string, name: string, type: string): Promise<void> {
     await this.updater.update(
       [],

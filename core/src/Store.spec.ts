@@ -467,6 +467,48 @@ describe("Store", () => {
     });
   });
 
+  describe("add relation", () => {
+    it("sends sparql insert via updater", async () => {
+      const fetchMock = jest.fn();
+      const mockSession = {
+        authenticatedFetch: fetchMock,
+      } as unknown as PodOsSession;
+      when(fetchMock)
+        .calledWith("https://pod.test/resource", expect.anything())
+        .mockResolvedValue({
+          ok: true,
+          status: 200,
+          statusText: "OK",
+          headers: new Headers({
+            "Content-Type": "text/turtle",
+            "wac-allow": 'user="read write append control",public="read"',
+            "accept-patch": "application/sparql-update",
+          }),
+          text: () =>
+            Promise.resolve(
+              '<https://pod.test/resource#it> <https://pod.test/vocab/predicate> "literal value" .',
+            ),
+        } as Response);
+      const store = new Store(mockSession);
+      await store.fetch("https://pod.test/resource");
+      const thing = store.get("https://pod.test/resource");
+      await store.addRelation(
+        thing,
+        "https://vocab.example#property",
+        "https://pod.test/other-resource",
+      );
+      thenSparqlUpdateIsSentToUrl(
+        fetchMock,
+        "https://pod.test/resource",
+        `
+      INSERT DATA {
+        <https://pod.test/resource>
+          <https://vocab.example#property> <https://pod.test/other-resource> .
+      }`,
+      );
+    });
+  });
+
   describe("add new thing", () => {
     it("sends sparql insert via updater", async () => {
       const fetchMock = jest.fn();
