@@ -103,5 +103,10 @@ describe('pos-add-relation', () => {
       'http://xmlns.com/foaf/0.1/knows',
       'https://alice.test/profile/card#me',
     );
+    await page.waitForChanges();
+
+    // and the value input is cleared
+    expect(input.value).toEqual('');
+    expect(page.rootInstance.currentValue).toBe('');
   });
 });

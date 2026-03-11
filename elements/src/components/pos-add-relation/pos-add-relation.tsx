@@ -26,6 +26,8 @@ export class PosAddRelation {
   @State()
   selectedTermUri: string;
 
+  @State() currentValue: string;
+
   private valueInput: HTMLInputElement;
 
   async componentWillLoad() {
@@ -40,6 +42,7 @@ export class PosAddRelation {
 
   async save(event) {
     await this.os.addRelation(this.resource, this.selectedTermUri, event.target.value);
+    this.currentValue = '';
   }
 
   render() {
@@ -52,6 +55,7 @@ export class PosAddRelation {
         <pos-select-term placeholder="Add relation" onPod-os:term-selected={ev => this.onTermSelected(ev)} />
         <input
           ref={el => (this.valueInput = el)}
+          value={this.currentValue}
           type="url"
           aria-label="URI"
           placeholder=""
