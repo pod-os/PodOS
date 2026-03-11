@@ -146,4 +146,41 @@ describe('pos-add-relation', () => {
       }),
     );
   });
+
+  it('fires error event and keeps inputs when save failed', async () => {
+    // given the resource in context is editable
+    const thing = { editable: true, fake: 'thing' };
+    mockResource(thing);
+
+    // and a page with a pos-add-relation component
+    const page = await newSpecPage({
+      supportsShadowDom: false,
+      components: [PosAddRelation],
+      html: `<pos-add-relation></pos-add-relation>`,
+    });
+
+    // and the page listens for pod-os:error event
+    const eventListener = jest.fn();
+    page.root.addEventListener('pod-os:error', eventListener);
+
+    // and saving will cause an error
+    const error = new Error('fake error in addPropertyValue');
+    when(os.addRelation).mockRejectedValue(error);
+
+    // when save is called
+    page.rootInstance.selectedTermUri = 'http://xmlns.com/foaf/0.1/knows';
+    page.rootInstance.currentValue = 'https://alice.test/profile/card#me';
+    await page.rootInstance.save();
+
+    // then a pod-os:error event with the error is received in the listener
+    expect(eventListener).toHaveBeenCalledWith(
+      expect.objectContaining({
+        detail: error,
+      }),
+    );
+
+    // and the value input is not cleared
+    expect(page.rootInstance.selectedTermUri).toBe('http://xmlns.com/foaf/0.1/knows');
+    expect(page.rootInstance.currentValue).toBe('https://alice.test/profile/card#me');
+  });
 });

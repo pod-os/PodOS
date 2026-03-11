@@ -33,6 +33,11 @@ export class PosAddRelation {
    */
   @Event({ eventName: 'pod-os:added-relation' }) addedRelation: EventEmitter<Relation>;
 
+  /**
+   * Something went wrong while adding the relation.
+   */
+  @Event({ eventName: 'pod-os:error' }) error: EventEmitter;
+
   private valueInput: HTMLInputElement;
 
   async componentWillLoad() {
@@ -46,14 +51,18 @@ export class PosAddRelation {
   }
 
   async save() {
-    await this.os.addRelation(this.resource, this.selectedTermUri, this.currentValue);
-    const relation = {
-      predicate: this.selectedTermUri,
-      label: labelFromUri(this.selectedTermUri),
-      uris: [this.currentValue],
-    };
+    try {
+      await this.os.addRelation(this.resource, this.selectedTermUri, this.currentValue);
+      const relation = {
+        predicate: this.selectedTermUri,
+        label: labelFromUri(this.selectedTermUri),
+        uris: [this.currentValue],
+      };
       this.addedRelation.emit(relation);
-    this.currentValue = '';
+      this.currentValue = '';
+    } catch (e) {
+      this.error.emit(e);
+    }
   }
 
   render() {
