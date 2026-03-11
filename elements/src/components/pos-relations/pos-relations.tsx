@@ -1,5 +1,5 @@
 import { Relation, Thing } from '@pod-os/core';
-import { Component, Event, EventEmitter, h, State } from '@stencil/core';
+import { Component, Event, EventEmitter, h, Host, State } from '@stencil/core';
 import { ResourceAware, subscribeResource } from '../events/ResourceAware';
 
 @Component({
@@ -21,6 +21,24 @@ export class PosRelations implements ResourceAware {
     this.data = resource.relations();
   };
 
+  relationAdded(newRelation: Relation) {
+    const existing = this.data.find(it => it.predicate === newRelation.predicate);
+
+    if (!existing) {
+      this.data = [...this.data, newRelation];
+    } else {
+      this.data = this.data.map(it => {
+        return it.predicate === existing.predicate
+          ? {
+              predicate: existing.predicate,
+              label: existing.label,
+              uris: [...existing.uris, ...newRelation.uris],
+            }
+          : it;
+      });
+    }
+  }
+
   render() {
     const items = this.data.map(it => (
       <div class="predicate-values">
@@ -36,6 +54,11 @@ export class PosRelations implements ResourceAware {
         </div>
       </div>
     ));
-    return this.data.length > 0 ? <dl>{items}</dl> : null;
+    return (
+      <Host>
+        {this.data.length > 0 ? <dl>{items}</dl> : null}
+        <pos-add-relation onPod-os:added-relation={ev => this.relationAdded(ev.detail)}></pos-add-relation>
+      </Host>
+    );
   }
 }

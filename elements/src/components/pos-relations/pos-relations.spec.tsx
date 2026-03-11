@@ -1,8 +1,9 @@
 import { newSpecPage } from '@stencil/core/testing';
 
-import { getByText } from '@testing-library/dom';
+import { fireEvent } from '@testing-library/dom';
 
 import { PosRelations } from './pos-relations';
+import { Relation } from '@pod-os/core';
 
 describe('pos-relations', () => {
   it('are empty initially', async () => {
@@ -12,7 +13,9 @@ describe('pos-relations', () => {
     });
     expect(page.root).toEqualHtml(`
       <pos-relations>
-        <mock:shadow-root></mock:shadow-root>
+        <mock:shadow-root>
+          <pos-add-relation></pos-add-relation>
+        </mock:shadow-root>
       </pos-relations>
   `);
   });
@@ -77,5 +80,83 @@ describe('pos-relations', () => {
       'pos-rich-link[uri="https://resource.test/attachment"]',
     );
     expect(linkToAttachment).not.toBeNull();
+  });
+
+  it('adds newly added relation to the list', async () => {
+    // given
+    const page = await newSpecPage({
+      components: [PosRelations],
+      html: `<pos-relations />`,
+      supportsShadowDom: false,
+    });
+    await page.rootInstance.receiveResource({
+      relations: () => [],
+    });
+    await page.waitForChanges();
+
+    // when
+    const input = page.root.querySelector('pos-add-relation');
+    const relation: Relation = {
+      predicate: 'http://xmlns.com/foaf/0.1/knows',
+      label: 'knows',
+      uris: ['https://alice.test/profile/card#me'],
+    };
+    fireEvent(
+      input,
+      new CustomEvent('pod-os:added-relation', {
+        detail: relation,
+      }),
+    );
+
+    await page.waitForChanges();
+
+    const url = page.root.querySelector('pos-predicate[uri="http://xmlns.com/foaf/0.1/knows"]');
+    expect(url).toEqualAttribute('label', 'knows');
+    const linkToAlice = page.root.querySelector('pos-rich-link[uri="https://alice.test/profile/card#me"]');
+    expect(linkToAlice).not.toBeNull();
+  });
+
+  it('adds newly added relation to the existing list without duplicating the predicate', async () => {
+    // given
+    const page = await newSpecPage({
+      components: [PosRelations],
+      html: `<pos-relations />`,
+      supportsShadowDom: false,
+    });
+    await page.rootInstance.receiveResource({
+      relations: () => [
+        {
+          predicate: 'http://xmlns.com/foaf/0.1/knows',
+          label: 'knows',
+          uris: ['https://alice.test/profile/card#me'],
+        },
+      ],
+    });
+    await page.waitForChanges();
+
+    // when
+    const input = page.root.querySelector('pos-add-relation');
+    const relation: Relation = {
+      predicate: 'http://xmlns.com/foaf/0.1/knows',
+      label: 'knows',
+      uris: ['https://bernadette.test/profile/card#me'],
+    };
+    fireEvent(
+      input,
+      new CustomEvent('pod-os:added-relation', {
+        detail: relation,
+      }),
+    );
+
+    await page.waitForChanges();
+
+    // then
+    const knows = page.root.querySelectorAll('pos-predicate[uri="http://xmlns.com/foaf/0.1/knows"]');
+    expect(knows).toHaveLength(1);
+    expect(knows[0]).toEqualAttribute('label', 'knows');
+    const linkToAlice = page.root.querySelector('pos-rich-link[uri="https://alice.test/profile/card#me"]');
+    expect(linkToAlice).not.toBeNull();
+    const linkToBernadette = page.root.querySelector('pos-rich-link[uri="https://bernadette.test/profile/card#me"]');
+    expect(linkToBernadette).not.toBeNull();
   });
 });

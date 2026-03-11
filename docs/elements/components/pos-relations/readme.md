@@ -22,15 +22,18 @@
 
 - [pos-predicate](../pos-predicate)
 - [pos-rich-link](../pos-rich-link)
+- [pos-add-relation](../pos-add-relation)
 
 ### Graph
 ```mermaid
 graph TD;
   pos-relations --> pos-predicate
   pos-relations --> pos-rich-link
+  pos-relations --> pos-add-relation
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
   pos-rich-link --> pos-resource
+  pos-add-relation --> pos-select-term
   pos-app-generic --> pos-relations
   style pos-relations fill:#f9f,stroke:#333,stroke-width:4px
 ```

@@ -34,9 +34,11 @@ graph TD;
   pos-add-literal-value --> pos-select-term
   pos-relations --> pos-predicate
   pos-relations --> pos-rich-link
+  pos-relations --> pos-add-relation
   pos-rich-link --> pos-label
   pos-rich-link --> pos-description
   pos-rich-link --> pos-resource
+  pos-add-relation --> pos-select-term
   pos-reverse-relations --> pos-predicate
   pos-reverse-relations --> pos-rich-link
   style pos-app-generic fill:#f9f,stroke:#333,stroke-width:4px

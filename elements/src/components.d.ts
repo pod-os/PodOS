@@ -5,10 +5,10 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { Attachment, HttpProblem, LdpContainer, NetworkProblem, PodOS, Problem, SolidFile, Thing } from "@pod-os/core";
+import { Attachment, HttpProblem, LdpContainer, Literal, NetworkProblem, PodOS, Problem, Relation, SolidFile, Thing } from "@pod-os/core";
 import { ToolConfig } from "./components/pos-type-router/selectToolsForTypes";
 import { ResultAsync } from "neverthrow";
-export { Attachment, HttpProblem, LdpContainer, NetworkProblem, PodOS, Problem, SolidFile, Thing } from "@pod-os/core";
+export { Attachment, HttpProblem, LdpContainer, Literal, NetworkProblem, PodOS, Problem, Relation, SolidFile, Thing } from "@pod-os/core";
 export { ToolConfig } from "./components/pos-type-router/selectToolsForTypes";
 export { ResultAsync } from "neverthrow";
 export namespace Components {
@@ -373,6 +373,10 @@ export interface PosAddLiteralValueCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosAddLiteralValueElement;
 }
+export interface PosAddRelationCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosAddRelationElement;
+}
 export interface PosAppCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosAppElement;
@@ -517,7 +521,7 @@ declare global {
     interface HTMLPosAddLiteralValueElementEventMap {
         "pod-os:init": any;
         "pod-os:resource": any;
-        "pod-os:added-literal-value": any;
+        "pod-os:added-literal-value": Literal;
         "pod-os:error": any;
     }
     interface HTMLPosAddLiteralValueElement extends Components.PosAddLiteralValue, HTMLStencilElement {
@@ -540,10 +544,22 @@ declare global {
         prototype: HTMLPosAddNewThingElement;
         new (): HTMLPosAddNewThingElement;
     };
+    interface HTMLPosAddRelationElementEventMap {
+        "pod-os:added-relation": Relation;
+        "pod-os:error": any;
+    }
     /**
      * Add a new relation from the current resource to another one
      */
     interface HTMLPosAddRelationElement extends Components.PosAddRelation, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosAddRelationElementEventMap>(type: K, listener: (this: HTMLPosAddRelationElement, ev: PosAddRelationCustomEvent<HTMLPosAddRelationElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosAddRelationElementEventMap>(type: K, listener: (this: HTMLPosAddRelationElement, ev: PosAddRelationCustomEvent<HTMLPosAddRelationElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosAddRelationElement: {
         prototype: HTMLPosAddRelationElement;
@@ -1407,7 +1423,7 @@ declare namespace LocalJSX {
         /**
           * The entered literal value has been added to the resource and successfully stored to the Pod.
          */
-        "onPod-os:added-literal-value"?: (event: PosAddLiteralValueCustomEvent<any>) => void;
+        "onPod-os:added-literal-value"?: (event: PosAddLiteralValueCustomEvent<Literal>) => void;
         /**
           * Something went wrong while adding the literal value.
          */
@@ -1422,6 +1438,14 @@ declare namespace LocalJSX {
      * Add a new relation from the current resource to another one
      */
     interface PosAddRelation {
+        /**
+          * The relation has been added to the resource and successfully stored to the Pod.
+         */
+        "onPod-os:added-relation"?: (event: PosAddRelationCustomEvent<Relation>) => void;
+        /**
+          * Something went wrong while adding the relation.
+         */
+        "onPod-os:error"?: (event: PosAddRelationCustomEvent<any>) => void;
     }
     interface PosApp {
         /**
