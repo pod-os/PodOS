@@ -1,8 +1,8 @@
-import { Component, h, Host, Element, State } from '@stencil/core';
+import { Component, h, Host, Element, State, Event, EventEmitter } from '@stencil/core';
 import { useResource } from '../events/useResource';
 
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
-import { PodOS, Thing } from '@pod-os/core';
+import { labelFromUri, PodOS, Relation, Thing } from '@pod-os/core';
 import { usePodOS } from '../events/usePodOS';
 
 /**
@@ -28,6 +28,11 @@ export class PosAddRelation {
 
   @State() currentValue: string;
 
+  /**
+   * The relation has been added to the resource and successfully stored to the Pod.
+   */
+  @Event({ eventName: 'pod-os:added-relation' }) addedRelation: EventEmitter<Relation>;
+
   private valueInput: HTMLInputElement;
 
   async componentWillLoad() {
@@ -42,6 +47,12 @@ export class PosAddRelation {
 
   async save() {
     await this.os.addRelation(this.resource, this.selectedTermUri, this.currentValue);
+    const relation = {
+      predicate: this.selectedTermUri,
+      label: labelFromUri(this.selectedTermUri),
+      uris: [this.currentValue],
+    };
+      this.addedRelation.emit(relation);
     this.currentValue = '';
   }
 
@@ -55,11 +66,11 @@ export class PosAddRelation {
         <pos-select-term placeholder="Add relation" onPod-os:term-selected={ev => this.onTermSelected(ev)} />
         <input
           ref={el => (this.valueInput = el)}
-          value={this.currentValue}
-          onInput={ev => (this.currentValue = (ev.target as HTMLInputElement).value)}
           type="url"
           aria-label="URI"
           placeholder=""
+          value={this.currentValue}
+          onInput={ev => (this.currentValue = (ev.target as HTMLInputElement).value)}
           onChange={() => this.save()}
         ></input>
       </Host>

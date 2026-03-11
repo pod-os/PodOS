@@ -1,12 +1,14 @@
 jest.mock('../events/useResource');
+jest.mock('@pod-os/core', () => ({
+  labelFromUri: uri => `fake label for ${uri}`,
+}));
 import { mockPodOS } from '../../test/mockPodOS';
-
 import { newSpecPage } from '@stencil/core/testing';
 import { PosAddRelation } from './pos-add-relation';
 import { useResource } from '../events/useResource';
 import { when } from 'jest-when';
 
-import { PodOS, Thing } from '@pod-os/core';
+import { PodOS, Relation, Thing } from '@pod-os/core';
 import { fireEvent } from '@testing-library/dom';
 
 function mockResource(thing: Partial<Thing> = {}) {
@@ -109,5 +111,39 @@ describe('pos-add-relation', () => {
     // and the value input is cleared
     expect(input.value).toEqual('');
     expect(page.rootInstance.currentValue).toBe('');
+  });
+
+  it('fires event after save', async () => {
+    // given the resource in context is editable
+    const thing = { editable: true, fake: 'thing' };
+    mockResource(thing);
+
+    // and a page with a pos-add-relation component
+    const page = await newSpecPage({
+      supportsShadowDom: false,
+      components: [PosAddRelation],
+      html: `<pos-add-relation></pos-add-relation>`,
+    });
+
+    // and the page listens for pod-os:added-relation events
+    const eventListener = jest.fn();
+    page.root.addEventListener('pod-os:added-relation', eventListener);
+
+    // when save is called
+    page.rootInstance.selectedTermUri = 'http://xmlns.com/foaf/0.1/knows';
+    page.rootInstance.currentValue = 'https://alice.test/profile/card#me';
+    await page.rootInstance.save();
+
+    // then a pod-os:added-relation event with the added relation is received in the listener
+    const relation: Relation = {
+      predicate: 'http://xmlns.com/foaf/0.1/knows',
+      label: 'fake label for http://xmlns.com/foaf/0.1/knows',
+      uris: ['https://alice.test/profile/card#me'],
+    };
+    expect(eventListener).toHaveBeenCalledWith(
+      expect.objectContaining({
+        detail: relation,
+      }),
+    );
   });
 });
