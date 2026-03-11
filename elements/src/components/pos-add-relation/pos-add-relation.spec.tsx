@@ -95,6 +95,7 @@ describe('pos-add-relation', () => {
 
     // when the user enters a URI
     const input = page.root.querySelector('input');
+    fireEvent.input(input, { target: { value: 'https://alice.test/profile/card#me' } });
     fireEvent.change(input, { target: { value: 'https://alice.test/profile/card#me' } });
 
     // then the relation is added

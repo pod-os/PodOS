@@ -40,8 +40,8 @@ export class PosAddRelation {
     this.selectedTermUri = event.detail.uri;
   }
 
-  async save(event) {
-    await this.os.addRelation(this.resource, this.selectedTermUri, event.target.value);
+  async save() {
+    await this.os.addRelation(this.resource, this.selectedTermUri, this.currentValue);
     this.currentValue = '';
   }
 
@@ -56,10 +56,11 @@ export class PosAddRelation {
         <input
           ref={el => (this.valueInput = el)}
           value={this.currentValue}
+          onInput={ev => (this.currentValue = (ev.target as HTMLInputElement).value)}
           type="url"
           aria-label="URI"
           placeholder=""
-          onChange={ev => this.save(ev)}
+          onChange={() => this.save()}
         ></input>
       </Host>
     );
