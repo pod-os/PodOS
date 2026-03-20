@@ -5,7 +5,7 @@ import { PosLabel } from '../pos-label/pos-label';
 import { PosList } from './pos-list';
 import { PosResource } from '../pos-resource/pos-resource';
 import { when } from 'jest-when';
-import { Subject } from 'rxjs';
+import { ReplaySubject, Subject } from 'rxjs';
 import { Relation, Thing } from '@pod-os/core';
 
 describe('pos-list', () => {
@@ -21,12 +21,16 @@ describe('pos-list', () => {
           } as unknown as Relation,
         ],
       } as unknown as Thing);
+    const observedLabel1$ = new ReplaySubject<string>();
+    observedLabel1$.next('Video 1');
     when(os.store.get)
       .calledWith('https://video.test/video-1')
-      .mockReturnValue({ uri: 'https://video.test/video-1', label: () => 'Video 1' } as unknown as Thing);
+      .mockReturnValue({ uri: 'https://video.test/video-1', observeLabel: () => observedLabel1$ } as unknown as Thing);
+    const observedLabel2$ = new ReplaySubject<string>();
+    observedLabel2$.next('Video 2');
     when(os.store.get)
       .calledWith('https://video.test/video-2')
-      .mockReturnValue({ uri: 'https://video.test/video-2', label: () => 'Video 2' } as unknown as Thing);
+      .mockReturnValue({ uri: 'https://video.test/video-2', observeLabel: () => observedLabel2$ } as unknown as Thing);
     const page = await newSpecPage({
       components: [PosApp, PosLabel, PosList, PosResource],
       supportsShadowDom: false,
@@ -70,15 +74,18 @@ describe('pos-list', () => {
 
   it('children render label for all things of the given type, reactively', async () => {
     const os = mockPodOS();
-    const observed$ = new Subject<string[]>();
-    when(os.store.observeFindMembers).calledWith('http://schema.org/Video').mockReturnValue(observed$);
+    const observedMembers$ = new Subject<string[]>();
+    when(os.store.observeFindMembers).calledWith('http://schema.org/Video').mockReturnValue(observedMembers$);
+    const observedLabel1$ = new ReplaySubject<string>();
+    observedLabel1$.next('Video 1');
     when(os.store.get)
       .calledWith('https://video.test/video-1')
-      .mockReturnValue({ uri: 'https://video.test/video-1', label: () => 'Video 1' } as unknown as Thing);
+      .mockReturnValue({ uri: 'https://video.test/video-1', observeLabel: () => observedLabel1$ } as unknown as Thing);
+    const observedLabel2$ = new ReplaySubject<string>();
+    observedLabel2$.next('Video 2');
     when(os.store.get)
       .calledWith('https://video.test/video-2')
-      .mockReturnValue({ uri: 'https://video.test/video-2', label: () => 'Video 2' } as unknown as Thing);
-
+      .mockReturnValue({ uri: 'https://video.test/video-2', observeLabel: () => observedLabel2$ } as unknown as Thing);
     const page = await newSpecPage({
       components: [PosApp, PosLabel, PosList, PosResource],
       supportsShadowDom: false,
@@ -95,14 +102,14 @@ describe('pos-list', () => {
     let resources = page.root ? page.root.querySelectorAll('pos-list pos-resource') : [];
     expect(resources).toHaveLength(0);
 
-    observed$.next(['https://video.test/video-1']);
+    observedMembers$.next(['https://video.test/video-1']);
     await page.waitForChanges();
     resources = page.root ? page.root.querySelectorAll('pos-list pos-resource') : [];
     expect(resources).toHaveLength(1);
     expect(resources[0].getAttribute('about')).toEqual('https://video.test/video-1');
     expect(resources[0].textContent).toEqual('Video 1');
 
-    observed$.next(['https://video.test/video-1', 'https://video.test/video-2']);
+    observedMembers$.next(['https://video.test/video-1', 'https://video.test/video-2']);
     await page.waitForChanges();
     resources = page.root ? page.root.querySelectorAll('pos-list pos-resource') : [];
     expect(resources).toHaveLength(2);
@@ -111,7 +118,7 @@ describe('pos-list', () => {
     expect(resources[1].getAttribute('about')).toEqual('https://video.test/video-2');
     expect(resources[1].textContent).toEqual('Video 2');
 
-    observed$.next(['https://video.test/video-2']);
+    observedMembers$.next(['https://video.test/video-2']);
     await page.waitForChanges();
     resources = page.root ? page.root.querySelectorAll('pos-list pos-resource') : [];
     expect(resources).toHaveLength(1);
