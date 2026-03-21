@@ -99,6 +99,10 @@ export namespace Components {
         "container": LdpContainer;
         "type": 'file' | 'folder';
     }
+    /**
+     * Displays a description of the resource, as provided by [Thing.description()](https://pod-os.org/reference/core/classes/thing/#description).
+     * Re-renders when data in the store changes using [Thing.observeDescription()](https://pod-os.org/reference/core/classes/thing/#observeDescription).
+     */
     interface PosDescription {
     }
     /**
@@ -139,7 +143,8 @@ export namespace Components {
         "uri": string;
     }
     /**
-     * Displays a human-readable label of the resource, provided by [Thing.label()](https://pod-os.org/reference/core/classes/thing/#label)
+     * Displays a human-readable label of the resource, as provided by [Thing.label()](https://pod-os.org/reference/core/classes/thing/#label).
+     * Re-renders when data in the store changes using [Thing.observeLabel()](https://pod-os.org/reference/core/classes/thing/#observeLabel).
      */
     interface PosLabel {
     }
@@ -360,7 +365,8 @@ export namespace Components {
     }
     /**
      * Shows a single value linked to the resource using the given predicate.
-     * The value is determined by [Thing.anyValue()](https://pod-os.org/reference/core/classes/thing/#anyvalue)
+     * The value is determined by [Thing.observeAnyValue()](https://pod-os.org/reference/core/classes/thing/#observeanyvalue)
+     * and re-renders when data in the store changes
      */
     interface PosValue {
         /**
@@ -749,6 +755,10 @@ declare global {
     interface HTMLPosDescriptionElementEventMap {
         "pod-os:resource": any;
     }
+    /**
+     * Displays a description of the resource, as provided by [Thing.description()](https://pod-os.org/reference/core/classes/thing/#description).
+     * Re-renders when data in the store changes using [Thing.observeDescription()](https://pod-os.org/reference/core/classes/thing/#observeDescription).
+     */
     interface HTMLPosDescriptionElement extends Components.PosDescription, HTMLStencilElement {
         addEventListener<K extends keyof HTMLPosDescriptionElementEventMap>(type: K, listener: (this: HTMLPosDescriptionElement, ev: PosDescriptionCustomEvent<HTMLPosDescriptionElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
@@ -853,7 +863,8 @@ declare global {
         "pod-os:resource": any;
     }
     /**
-     * Displays a human-readable label of the resource, provided by [Thing.label()](https://pod-os.org/reference/core/classes/thing/#label)
+     * Displays a human-readable label of the resource, as provided by [Thing.label()](https://pod-os.org/reference/core/classes/thing/#label).
+     * Re-renders when data in the store changes using [Thing.observeLabel()](https://pod-os.org/reference/core/classes/thing/#observeLabel).
      */
     interface HTMLPosLabelElement extends Components.PosLabel, HTMLStencilElement {
         addEventListener<K extends keyof HTMLPosLabelElementEventMap>(type: K, listener: (this: HTMLPosLabelElement, ev: PosLabelCustomEvent<HTMLPosLabelElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -1341,7 +1352,8 @@ declare global {
     }
     /**
      * Shows a single value linked to the resource using the given predicate.
-     * The value is determined by [Thing.anyValue()](https://pod-os.org/reference/core/classes/thing/#anyvalue)
+     * The value is determined by [Thing.observeAnyValue()](https://pod-os.org/reference/core/classes/thing/#observeanyvalue)
+     * and re-renders when data in the store changes
      */
     interface HTMLPosValueElement extends Components.PosValue, HTMLStencilElement {
         addEventListener<K extends keyof HTMLPosValueElementEventMap>(type: K, listener: (this: HTMLPosValueElement, ev: PosValueCustomEvent<HTMLPosValueElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -1539,6 +1551,10 @@ declare namespace LocalJSX {
         "onPod-os:link"?: (event: PosCreateNewContainerItemCustomEvent<string>) => void;
         "type": 'file' | 'folder';
     }
+    /**
+     * Displays a description of the resource, as provided by [Thing.description()](https://pod-os.org/reference/core/classes/thing/#description).
+     * Re-renders when data in the store changes using [Thing.observeDescription()](https://pod-os.org/reference/core/classes/thing/#observeDescription).
+     */
     interface PosDescription {
         "onPod-os:resource"?: (event: PosDescriptionCustomEvent<any>) => void;
     }
@@ -1593,7 +1609,8 @@ declare namespace LocalJSX {
         "uri"?: string;
     }
     /**
-     * Displays a human-readable label of the resource, provided by [Thing.label()](https://pod-os.org/reference/core/classes/thing/#label)
+     * Displays a human-readable label of the resource, as provided by [Thing.label()](https://pod-os.org/reference/core/classes/thing/#label).
+     * Re-renders when data in the store changes using [Thing.observeLabel()](https://pod-os.org/reference/core/classes/thing/#observeLabel).
      */
     interface PosLabel {
         "onPod-os:resource"?: (event: PosLabelCustomEvent<any>) => void;
@@ -1855,7 +1872,8 @@ declare namespace LocalJSX {
     }
     /**
      * Shows a single value linked to the resource using the given predicate.
-     * The value is determined by [Thing.anyValue()](https://pod-os.org/reference/core/classes/thing/#anyvalue)
+     * The value is determined by [Thing.observeAnyValue()](https://pod-os.org/reference/core/classes/thing/#observeanyvalue)
+     * and re-renders when data in the store changes
      */
     interface PosValue {
         "onPod-os:resource"?: (event: PosValueCustomEvent<any>) => void;
@@ -2046,6 +2064,10 @@ declare module "@stencil/core" {
             "pos-container-item": LocalJSX.IntrinsicElements["pos-container-item"] & JSXBase.HTMLAttributes<HTMLPosContainerItemElement>;
             "pos-container-toolbar": LocalJSX.IntrinsicElements["pos-container-toolbar"] & JSXBase.HTMLAttributes<HTMLPosContainerToolbarElement>;
             "pos-create-new-container-item": LocalJSX.IntrinsicElements["pos-create-new-container-item"] & JSXBase.HTMLAttributes<HTMLPosCreateNewContainerItemElement>;
+            /**
+             * Displays a description of the resource, as provided by [Thing.description()](https://pod-os.org/reference/core/classes/thing/#description).
+             * Re-renders when data in the store changes using [Thing.observeDescription()](https://pod-os.org/reference/core/classes/thing/#observeDescription).
+             */
             "pos-description": LocalJSX.IntrinsicElements["pos-description"] & JSXBase.HTMLAttributes<HTMLPosDescriptionElement>;
             /**
              * Styled wrapper around native dialog element, with slots `title` and `content`
@@ -2063,7 +2085,8 @@ declare module "@stencil/core" {
             "pos-image": LocalJSX.IntrinsicElements["pos-image"] & JSXBase.HTMLAttributes<HTMLPosImageElement>;
             "pos-internal-router": LocalJSX.IntrinsicElements["pos-internal-router"] & JSXBase.HTMLAttributes<HTMLPosInternalRouterElement>;
             /**
-             * Displays a human-readable label of the resource, provided by [Thing.label()](https://pod-os.org/reference/core/classes/thing/#label)
+             * Displays a human-readable label of the resource, as provided by [Thing.label()](https://pod-os.org/reference/core/classes/thing/#label).
+             * Re-renders when data in the store changes using [Thing.observeLabel()](https://pod-os.org/reference/core/classes/thing/#observeLabel).
              */
             "pos-label": LocalJSX.IntrinsicElements["pos-label"] & JSXBase.HTMLAttributes<HTMLPosLabelElement>;
             /**
@@ -2141,7 +2164,8 @@ declare module "@stencil/core" {
             "pos-user-menu": LocalJSX.IntrinsicElements["pos-user-menu"] & JSXBase.HTMLAttributes<HTMLPosUserMenuElement>;
             /**
              * Shows a single value linked to the resource using the given predicate.
-             * The value is determined by [Thing.anyValue()](https://pod-os.org/reference/core/classes/thing/#anyvalue)
+             * The value is determined by [Thing.observeAnyValue()](https://pod-os.org/reference/core/classes/thing/#observeanyvalue)
+             * and re-renders when data in the store changes
              */
             "pos-value": LocalJSX.IntrinsicElements["pos-value"] & JSXBase.HTMLAttributes<HTMLPosValueElement>;
         }

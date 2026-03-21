@@ -15,10 +15,10 @@
 
 ## Events
 
-| Event                  | Description                              | Type               |
-| ---------------------- | ---------------------------------------- | ------------------ |
-| `pod-os:init`          |                                          | `CustomEvent<any>` |
-| `pod-os:term-selected` | Fires when a term is entered or selected | `CustomEvent<any>` |
+| Event                  | Description                              | Type                            |
+| ---------------------- | ---------------------------------------- | ------------------------------- |
+| `pod-os:init`          |                                          | `CustomEvent<any>`              |
+| `pod-os:term-selected` | Fires when a term is entered or selected | `CustomEvent<{ uri: string; }>` |
 
 
 ## Shadow Parts

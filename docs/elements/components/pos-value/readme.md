@@ -8,7 +8,8 @@
 ## Overview
 
 Shows a single value linked to the resource using the given predicate.
-The value is determined by [Thing.anyValue()](https://pod-os.org/reference/core/classes/thing/#anyvalue)
+The value is determined by [Thing.observeAnyValue()](https://pod-os.org/reference/core/classes/thing/#observeanyvalue)
+and re-renders when data in the store changes
 
 ## Properties
 
