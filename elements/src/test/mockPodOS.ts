@@ -14,7 +14,7 @@ jest.mock('../authentication', () => ({
 jest.mock('../components/events/usePodOS');
 
 import { when } from 'jest-when';
-import { BehaviorSubject, EMPTY } from 'rxjs';
+import { BehaviorSubject, EMPTY, ReplaySubject } from 'rxjs';
 import { createPodOS } from '../pod-os';
 import { usePodOS } from '../components/events/usePodOS';
 
@@ -50,10 +50,13 @@ export function mockPodOS(): PodOS {
     proposeAppsFor: jest.fn().mockReturnValue([]),
     addRelation: jest.fn(),
   };
+  const observedLabel$ = new ReplaySubject<string>();
+  observedLabel$.next(alice.name);
   when(os.store.get)
     .calledWith(alice.webId)
     .mockReturnValue({
       label: () => alice.name,
+      observeLabel: () => observedLabel$,
       picture: () => ({
         url: alice.picture,
       }),
