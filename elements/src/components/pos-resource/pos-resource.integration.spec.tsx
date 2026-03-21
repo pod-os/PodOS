@@ -5,15 +5,18 @@ import { PosApp } from '../pos-app/pos-app';
 import { PosResource } from './pos-resource';
 import { PosLabel } from '../pos-label/pos-label';
 import { when } from 'jest-when';
+import { ReplaySubject } from 'rxjs';
 
 describe('pos-resource with a pos-label child', () => {
   it('renders label for successfully loaded resource', async () => {
     const os = mockPodOS();
     when(os.fetch).calledWith('https://resource.test').mockReturnValue(Promise.resolve());
+    const observedLabel$ = new ReplaySubject<string>();
+    observedLabel$.next('Test Resource');
     when(os.store.get)
       .calledWith('https://resource.test')
       .mockReturnValue({
-        label: () => 'Test Resource',
+        observeLabel: () => observedLabel$,
       });
     const page = await newSpecPage({
       components: [PosApp, PosResource, PosLabel],
@@ -46,10 +49,12 @@ describe('pos-resource with a pos-label child', () => {
     const loadingPromise = new Promise(resolve => setTimeout(resolve, 1));
     const os = mockPodOS();
     when(os.fetch).calledWith('https://resource.test').mockReturnValue(loadingPromise);
+    const observedLabel$ = new ReplaySubject<string>();
+    observedLabel$.next('Test Resource');
     when(os.store.get)
       .calledWith('https://resource.test')
       .mockReturnValue({
-        label: () => 'Test Resource',
+        observeLabel: () => observedLabel$,
       });
     const page = await newSpecPage({
       components: [PosApp, PosResource, PosLabel],
@@ -159,10 +164,12 @@ describe('pos-resource with a pos-label child', () => {
   it('renders multiple labels for successfully loaded resource', async () => {
     const os = mockPodOS();
     when(os.fetch).calledWith('https://resource.test').mockReturnValue(Promise.resolve());
+    const observedLabel$ = new ReplaySubject<string>();
+    observedLabel$.next('Test Resource');
     when(os.store.get)
       .calledWith('https://resource.test')
       .mockReturnValue({
-        label: () => 'Test Resource',
+        observeLabel: () => observedLabel$,
       });
     const page = await newSpecPage({
       components: [PosApp, PosResource, PosLabel],
@@ -207,10 +214,12 @@ describe('pos-resource with a pos-label child', () => {
     const loadingPromise = new Promise(resolve => setTimeout(resolve, 1));
     const os = mockPodOS();
     when(os.fetch).calledWith('https://resource.test').mockReturnValue(loadingPromise);
+    const observedLabel$ = new ReplaySubject<string>();
+    observedLabel$.next('Test Resource');
     when(os.store.get)
       .calledWith('https://resource.test')
       .mockReturnValue({
-        label: () => 'Test Resource',
+        observeLabel: () => observedLabel$,
       });
     const page = await newSpecPage({
       components: [PosApp, PosResource, PosLabel],
@@ -256,10 +265,12 @@ describe('pos-resource with a pos-label child', () => {
   it('renders label for lazy resource that would fetch to fail', async () => {
     const os = mockPodOS();
     when(os.fetch).calledWith('https://resource.test').mockRejectedValue(new Error('not found'));
+    const observedLabel$ = new ReplaySubject<string>();
+    observedLabel$.next('Test Resource');
     when(os.store.get)
       .calledWith('https://resource.test')
       .mockReturnValue({
-        label: () => 'Test Resource',
+        observeLabel: () => observedLabel$,
       });
     const page = await newSpecPage({
       components: [PosApp, PosResource, PosLabel],
@@ -291,10 +302,12 @@ describe('pos-resource with a pos-label child', () => {
   it('renders error for lazy resource fails when fetched', async () => {
     const os = mockPodOS();
     when(os.fetch).calledWith('https://resource.test').mockRejectedValue(new Error('not found'));
+    const observedLabel$ = new ReplaySubject<string>();
+    observedLabel$.next('Test Resource');
     when(os.store.get)
       .calledWith('https://resource.test')
       .mockReturnValueOnce({
-        label: () => 'Test Resource',
+        observeLabel: () => observedLabel$,
       });
     const page = await newSpecPage({
       components: [PosApp, PosResource, PosLabel],
@@ -344,13 +357,17 @@ describe('pos-resource with a pos-label child', () => {
   it('rerenders child after lazy resource was fetched', async () => {
     const os = mockPodOS();
     when(os.fetch).calledWith('https://resource.test').mockResolvedValue(null);
+    const observedLabel1$ = new ReplaySubject<string>();
+    observedLabel1$.next('Test Resource');
+    const observedLabel2$ = new ReplaySubject<string>();
+    observedLabel2$.next('Updated Test Resource');
     when(os.store.get)
       .calledWith('https://resource.test')
       .mockReturnValueOnce({
-        label: () => 'Test Resource',
+        observeLabel: () => observedLabel1$,
       })
       .mockReturnValueOnce({
-        label: () => 'Updated Test Resource',
+        observeLabel: () => observedLabel2$,
       });
     const page = await newSpecPage({
       components: [PosApp, PosResource, PosLabel],
