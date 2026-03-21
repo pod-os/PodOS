@@ -1,5 +1,5 @@
 import { Thing } from '@pod-os/core';
-import { Component, Event, Prop, State } from '@stencil/core';
+import { Component, Event, Prop, State, Watch } from '@stencil/core';
 import { ResourceAware, ResourceEventEmitter, subscribeResource } from '../events/ResourceAware';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -16,7 +16,8 @@ export class PosValue implements ResourceAware {
   /**
    * URI of the predicate to get the value from
    */
-  @Prop() predicate: string;
+  @Prop({ reflect: true }) predicate: string;
+  @State() resource: Thing;
   @State() value: string;
 
   @Event({ eventName: 'pod-os:resource' })
@@ -29,11 +30,18 @@ export class PosValue implements ResourceAware {
   }
 
   receiveResource = (resource: Thing) => {
-    resource
+    this.resource = resource;
+    this.observeAnyValue();
+  };
+
+  @Watch('predicate')
+  observeAnyValue() {
+    this.disconnected$.next();
+    this.resource
       .observeAnyValue(this.predicate)
       .pipe(takeUntil(this.disconnected$))
       .subscribe(value => (this.value = value));
-  };
+  }
 
   render() {
     return this.value ?? null;
