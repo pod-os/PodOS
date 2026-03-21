@@ -6,25 +6,34 @@ import { PosLabel } from '../pos-label/pos-label';
 import { PosResource } from '../pos-resource/pos-resource';
 import { PosRichLink } from './pos-rich-link';
 import { when } from 'jest-when';
+import { ReplaySubject } from 'rxjs';
 
 describe('pos-rich-link', () => {
   let os;
   beforeEach(async () => {
     os = mockPodOS();
+    const observedLabel1$ = new ReplaySubject<string>();
+    observedLabel1$.next('Test label');
+    const observedDescription1$ = new ReplaySubject<string>();
+    observedDescription1$.next('Test description');
     when(os.store.get)
       .calledWith('https://resource.test')
       .mockReturnValue({
         uri: 'https://resource.test',
-        label: () => 'Test label',
-        description: () => 'Test description',
+        observeLabel: () => observedLabel1$,
+        observeDescription: () => observedDescription1$,
         relations: () => [{ predicate: 'https://schema.org/video', uris: ['https://video.test/video-1'] }],
       });
+    const observedLabel2$ = new ReplaySubject<string>();
+    observedLabel2$.next('Video 1');
+    const observedDescription2$ = new ReplaySubject<string>();
+    observedDescription2$.next('Description of Video 1');
     when(os.store.get)
       .calledWith('https://video.test/video-1')
       .mockReturnValue({
         uri: 'https://video.test/video-1',
-        label: () => 'Video 1',
-        description: () => 'Description of Video 1',
+        observeLabel: () => observedLabel2$,
+        observeDescription: () => observedDescription2$,
         reverseRelations: () => [{ predicate: 'https://schema.org/video', uris: ['https://resource.test'] }],
       });
   });
