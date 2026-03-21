@@ -229,8 +229,15 @@ export class Thing {
           predicateUris.includes(quad.predicate.value),
       ),
     );
+
+    const currentValue = this.anyValue(...predicateUris);
+    const dirty$ =
+      typeof currentValue === "undefined"
+        ? removal$.pipe(startWith(undefined))
+        : removal$;
+
     const addition$ = this.store.additions$.pipe(
-      skipUntil(removal$),
+      skipUntil(dirty$),
       filter(
         (quad) =>
           quad.subject.value == this.uri &&
@@ -239,12 +246,12 @@ export class Thing {
       take(1),
       map((quad) => quad.object.value),
     );
-    return merge(removal$, addition$).pipe(
+    return merge(dirty$, addition$).pipe(
       debounceTime(250),
       map((value) =>
         typeof value === "string" ? value : this.anyValue(...predicateUris),
       ),
-      startWith(this.anyValue(...predicateUris)),
+      startWith(currentValue),
     );
   }
 
