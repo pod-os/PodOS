@@ -8,11 +8,13 @@ import { PosSwitch } from './pos-switch';
 import { PosResource } from '../pos-resource/pos-resource';
 import { when } from 'jest-when';
 import { RdfType, Relation, Thing } from '@pod-os/core';
-import { Subject } from 'rxjs';
+import { ReplaySubject, Subject } from 'rxjs';
 
 describe('pos-switch', () => {
   it('renders template based on properties of resource, reactively', async () => {
     const os = mockPodOS();
+    const observedLabel$ = new ReplaySubject<string>();
+    observedLabel$.next('Recipe 1');
     const observedTypes$ = new Subject<RdfType[]>();
     const observedRelations$ = new Subject<Relation[]>();
     const observedReverseRelations$ = new Subject<Relation[]>();
@@ -20,7 +22,9 @@ describe('pos-switch', () => {
       .calledWith('https://resource.test')
       .mockReturnValue({
         uri: 'https://resource.test',
+        // Label is used by pos-picture, and observeLabel by pos-label
         label: () => 'Recipe 1',
+        observeLabel: () => observedLabel$,
         observeTypes: () => observedTypes$,
         observeRelations: () => observedRelations$,
         observeReverseRelations: () => observedReverseRelations$,
