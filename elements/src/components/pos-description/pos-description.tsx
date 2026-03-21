@@ -36,6 +36,6 @@ export class PosDescription implements ResourceAware {
 
   disconnectedCallback() {
     this.disconnected$.next();
-    this.disconnected$.unsubscribe();
+    this.disconnected$.complete();
   }
 }
