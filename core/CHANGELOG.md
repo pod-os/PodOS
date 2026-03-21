@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- [`Thing.observeAnyValue`](https://pod-os.org/reference/core/classes/thing/#observeanyvalue) pushes changes to the value of predicates
+- [`Thing.observeLabel`](https://pod-os.org/reference/core/classes/thing/#observelabel) pushes changes to labels
+- [`Thing.observeDescription`](https://pod-os.org/reference/core/classes/thing/#observedescription) pushes changes to descriptions
+
 ## 0.28.0
 
 - [`addRelation`](https://pod-os.org/reference/core/classes/podos/#addrelation: A method to add a relation (link) between things
