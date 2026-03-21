@@ -5,7 +5,7 @@ import { Subject, takeUntil } from 'rxjs';
 
 /**
  * Displays a human-readable label of the resource, as provided by [Thing.label()](https://pod-os.org/reference/core/classes/thing/#label).
- * 
+ *
  * Re-renders when data in the store changes using [Thing.observeLabel()](https://pod-os.org/reference/core/classes/thing/#observeLabel).
  */
 @Component({
@@ -37,6 +37,6 @@ export class PosLabel implements ResourceAware {
 
   disconnectedCallback() {
     this.disconnected$.next();
-    this.disconnected$.unsubscribe();
+    this.disconnected$.complete();
   }
 }
