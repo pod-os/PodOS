@@ -184,13 +184,26 @@ describe("Thing", function () {
     });
 
     it("pushes a value if none was present, without calling anyValue again", () => {
-      internalStore.removeStatement(
-        quad(sym(uri), sym(predicate), literal("literal value")),
-      );
+      // Given an empty store
+      const internalStore = graph();
+      const mockSession = {} as unknown as PodOsSession;
+      const store = new Store(mockSession, undefined, undefined, internalStore);
+      // and a thing
+      const thing = new Thing(uri, store);
+      const anyValueSpy = jest.spyOn(thing, "anyValue");
+
+      const observable = thing.observeAnyValue(predicate);
+      const subscriber = jest.fn();
+      observable.subscribe(subscriber);
+
       internalStore.add(sym(uri), sym(predicate), "new literal value");
       jest.advanceTimersByTime(250);
       expect(anyValueSpy).toHaveBeenCalledTimes(1);
-      expect(subscriber.mock.lastCall).toEqual(["new literal value"]);
+      expect(subscriber).toHaveBeenCalledTimes(2);
+      expect(subscriber.mock.calls).toEqual([
+        [undefined],
+        ["new literal value"],
+      ]);
     });
 
     it("pushes a different value when one is removed if multiple are present", () => {
