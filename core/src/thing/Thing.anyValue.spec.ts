@@ -261,5 +261,40 @@ describe("Thing", function () {
       jest.advanceTimersByTime(250);
       expect(subscriber.mock.lastCall).toEqual(["right literal value"]);
     });
+
+    // TODO make this green
+    it.skip("emits new value after add-remove-add cycle", () => {
+      // Given an empty store
+      const internalStore = graph();
+      const mockSession = {} as unknown as PodOsSession;
+      const store = new Store(mockSession, undefined, undefined, internalStore);
+      const uri = "https://jane.doe.example/container/file.ttl#fragment";
+      const predicateA = "https://vocab.test/predicate-a";
+      const predicateB = "https://vocab.test/predicate-b";
+
+      // and a thing observing multiple predicates
+      const thing = new Thing(uri, store);
+      const subscriber = jest.fn();
+      const observable = thing.observeAnyValue(predicateA, predicateB);
+      observable.subscribe(subscriber);
+
+      // When: undefined → +a → -a → +b
+      expect(subscriber).toHaveBeenCalledWith(undefined);
+
+      const valueAQuad = quad(sym(uri), sym(predicateA), literal("value A"));
+      internalStore.add(valueAQuad);
+      jest.advanceTimersByTime(250);
+      expect(subscriber).toHaveBeenCalledWith("value A");
+
+      internalStore.removeStatement(valueAQuad);
+      jest.advanceTimersByTime(250);
+      expect(subscriber).toHaveBeenCalledWith(undefined);
+
+      internalStore.add(sym(uri), sym(predicateB), "value B");
+      jest.advanceTimersByTime(250);
+
+      // Then: should emit "value B"
+      expect(subscriber).toHaveBeenCalledWith("value B");
+    });
   });
 });
