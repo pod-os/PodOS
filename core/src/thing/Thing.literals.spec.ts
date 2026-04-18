@@ -2,7 +2,7 @@ import { blankNode, graph, IndexedFormula, literal, quad, sym } from "rdflib";
 import { PodOsSession } from "../authentication";
 import { Literal, Thing } from "./Thing";
 import { Store } from "../Store";
-import { Observable, Subscription } from "rxjs";
+import { Observable } from "rxjs";
 
 describe("Thing", function () {
   let internalStore: IndexedFormula;
@@ -176,8 +176,7 @@ describe("Thing", function () {
       subscriber: jest.Mock,
       thing: Thing,
       literalsSpy: jest.SpyInstance,
-      observable: Observable<Literal[]>,
-      subscription: Subscription;
+      observable: Observable<Literal[]>;
 
     beforeEach(() => {
       // Given a store with statements about a URI
@@ -214,7 +213,7 @@ describe("Thing", function () {
 
       // and a subscription to changes in relations
       observable = thing.observeLiterals();
-      subscription = observable.subscribe(subscriber);
+      observable.subscribe(subscriber);
     });
 
     it("pushes existing literals immediately", () => {
