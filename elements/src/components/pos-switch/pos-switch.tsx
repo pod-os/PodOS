@@ -56,7 +56,11 @@ export class PosSwitch implements ResourceAware {
       state = matchingRelations.length > 0;
     }
     if (caseElement.getAttribute('if-rev') !== null) {
-      state = this.reverseRelations.map(x => x.predicate).includes(caseElement.getAttribute('if-rev'));
+      const matchingRelations = this.reverseRelations.filter(x => x.predicate == caseElement.getAttribute('if-rev'));
+      if (matchingRelations.length > 0) {
+        values = matchingRelations[0].uris;
+      }
+      state = matchingRelations.length > 0;
     }
     if (caseElement.getAttribute('not') != null) {
       state = !state;
