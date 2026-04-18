@@ -129,6 +129,7 @@ export class Thing {
 
   observeLiterals(): Observable<Literal[]> {
     return merge(this.store.additions$, this.store.removals$).pipe(
+      debounceTime(250),
       map(() => this.literals()),
       startWith(this.literals()),
     );
