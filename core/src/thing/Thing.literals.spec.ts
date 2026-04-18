@@ -3,7 +3,7 @@ import { blankNode, graph, IndexedFormula, literal, quad, sym } from "rdflib";
 import { PodOsSession } from "../authentication";
 import { Literal, Thing } from "./Thing";
 import { Store } from "../Store";
-import { Observable, Subscription } from "rxjs";
+import { Observable } from "rxjs";
 
 describe("Thing", function () {
   let internalStore: IndexedFormula;
@@ -177,8 +177,7 @@ describe("Thing", function () {
       subscriber: Mock,
       thing: Thing,
       literalsSpy: Mock,
-      observable: Observable<Literal[]>,
-      subscription: Subscription;
+      observable: Observable<Literal[]>;
 
     beforeEach(() => {
       // Given a store with statements about a URI
@@ -215,7 +214,7 @@ describe("Thing", function () {
 
       // and a subscription to changes in relations
       observable = thing.observeLiterals();
-      subscription = observable.subscribe(subscriber);
+      observable.subscribe(subscriber);
     });
 
     it("pushes existing literals immediately", () => {
@@ -274,7 +273,7 @@ describe("Thing", function () {
 
     it("updates after additions", () => {
       internalStore.add(sym(uri), sym("http://vocab.test/first"), "value 1-2");
-      jest.advanceTimersByTime(250);
+      vi.advanceTimersByTime(250);
       expect(subscriber).toHaveBeenCalledTimes(2);
       expect(literalsSpy).toHaveBeenCalledTimes(2);
       expect(subscriber.mock.lastCall).toEqual([
@@ -309,7 +308,7 @@ describe("Thing", function () {
       );
       internalStore.add(sym(uri), sym("http://vocab.test/first"), "value 1-2");
       internalStore.add(sym(uri), sym("http://vocab.test/third"), "value 3-2");
-      jest.advanceTimersByTime(250);
+      vi.advanceTimersByTime(250);
       expect(subscriber).toHaveBeenCalledTimes(2);
       expect(literalsSpy).toHaveBeenCalledTimes(2);
       expect(subscriber.mock.lastCall).toEqual([
@@ -339,7 +338,7 @@ describe("Thing", function () {
         sym("http://vocab.test/first"),
         "value",
       );
-      jest.advanceTimersByTime(250);
+      vi.advanceTimersByTime(250);
       expect(subscriber).toHaveBeenCalledTimes(1);
       expect(literalsSpy).toHaveBeenCalledTimes(1);
     });
@@ -350,7 +349,7 @@ describe("Thing", function () {
         sym("http://vocab.test/first"),
         sym("http://not.a.literal/"),
       );
-      jest.advanceTimersByTime(250);
+      vi.advanceTimersByTime(250);
       expect(literalsSpy).toHaveBeenCalledTimes(2);
       expect(subscriber).toHaveBeenCalledTimes(1);
     });
