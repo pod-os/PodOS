@@ -369,6 +369,47 @@ describe('pos-switch', () => {
         `);
   });
 
+  it('does not render templates when compareValue indicates that (some|every)-value-eq is not met', async () => {
+    const page = await newSpecPage({
+      components: [PosSwitch],
+      html: `
+      <pos-switch>
+        <pos-case if-property="https://schema.org/video" some-value-eq="https://video.test/video-missing">
+          <template>
+            <div>some-value-eq not https://video.test/video-missing</div>
+          </template>
+        </pos-case>
+        <pos-case if-property="https://schema.org/video" every-value-eq="https://video.test/video-1">
+          <template>
+            <div>every-value-eq not https://video.test/video-1</div>
+          </template>
+        </pos-case>
+        <pos-case else>
+          <template>
+            <div>No conditions match</div>
+          </template>
+        </pos-case>
+      </pos-switch>`,
+    });
+    const observedRelations$ = new Subject<Relation[]>();
+    const thing = {
+      uri: 'https://pod.example/resource',
+      observeRelations: () => observedRelations$,
+    };
+    page.rootInstance.receiveResource(thing);
+    observedRelations$.next([
+      {
+        predicate: 'https://schema.org/video',
+        label: 'video',
+        uris: ['https://video.test/video-1', 'https://video.test/video-2'],
+      },
+    ]);
+    await page.waitForChanges();
+    expect(page.root?.innerHTML).toEqualHtml(`
+        <div>No conditions match</div>
+        `);
+  });
+
   it('resets and updates when resource is changed', async () => {
     const page = await newSpecPage({
       components: [PosSwitch],
