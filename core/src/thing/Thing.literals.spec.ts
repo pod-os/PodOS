@@ -296,5 +296,40 @@ describe("Thing", function () {
         ],
       ]);
     });
+
+    it("pushes update in groups", () => {
+      internalStore.removeStatement(
+        quad(
+          sym(uri),
+          sym("http://vocab.test/first"),
+          literal("value 1-1"),
+          sym(uri),
+        ),
+      );
+      internalStore.add(sym(uri), sym("http://vocab.test/first"), "value 1-2");
+      internalStore.add(sym(uri), sym("http://vocab.test/third"), "value 3-2");
+      jest.advanceTimersByTime(250);
+      expect(subscriber).toHaveBeenCalledTimes(2);
+      expect(literalsSpy).toHaveBeenCalledTimes(2);
+      expect(subscriber.mock.lastCall).toEqual([
+        [
+          {
+            predicate: "http://vocab.test/second",
+            label: "second",
+            values: ["value 2-1", "value 2-2"],
+          },
+          {
+            predicate: "http://vocab.test/third",
+            label: "third",
+            values: ["value 3-1", "value 3-2"],
+          },
+          {
+            predicate: "http://vocab.test/first",
+            label: "first",
+            values: ["value 1-2"],
+          },
+        ],
+      ]);
+    });
   });
 });
