@@ -343,5 +343,16 @@ describe("Thing", function () {
       expect(subscriber).toHaveBeenCalledTimes(1);
       expect(literalsSpy).toHaveBeenCalledTimes(1);
     });
+
+    it("does not push if literals have not changed", () => {
+      internalStore.add(
+        sym(uri),
+        sym("http://vocab.test/first"),
+        sym("http://not.a.literal/"),
+      );
+      jest.advanceTimersByTime(250);
+      expect(literalsSpy).toHaveBeenCalledTimes(2);
+      expect(subscriber).toHaveBeenCalledTimes(1);
+    });
   });
 });
