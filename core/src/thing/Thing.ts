@@ -133,6 +133,16 @@ export class Thing {
       debounceTime(250),
       map(() => this.literals()),
       startWith(this.literals()),
+      distinctUntilChanged(
+        (prev, curr) =>
+          prev.length === curr.length &&
+          prev.every(
+            (rel, i) =>
+              rel.predicate === curr[i].predicate &&
+              rel.values.length === curr[i].values.length &&
+              rel.values.every((val, j) => val === curr[i].values[j]),
+          ),
+      ),
     );
   }
 
