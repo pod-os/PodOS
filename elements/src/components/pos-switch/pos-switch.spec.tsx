@@ -337,6 +337,38 @@ describe('pos-switch', () => {
         `);
   });
 
+  it('renders templates if backward link value condition is met', async () => {
+    const page = await newSpecPage({
+      components: [PosSwitch],
+      html: `
+      <pos-switch>
+        <pos-case if-rev="https://schema.org/video" some-value-eq="https://video.test/video-1">
+          <template>
+            <div>Resource is video</div>
+          </template>
+        </pos-case>
+        <pos-case if-rev="https://schema.org/video" some-value-eq="https://video.test/video-missing">
+          <template>
+            <div>Should not render as condition is not met</div>
+          </template>
+        </pos-case>
+      </pos-switch>`,
+    });
+    const observedReverseRelations$ = new Subject<Relation[]>();
+    const thing = {
+      uri: 'https://pod.example/resource',
+      observeReverseRelations: () => observedReverseRelations$,
+    };
+    page.rootInstance.receiveResource(thing);
+    observedReverseRelations$.next([
+      { predicate: 'https://schema.org/video', label: 'video', uris: ['https://video.test/video-1'] },
+    ]);
+    await page.waitForChanges();
+    expect(page.root?.innerHTML).toEqualHtml(`
+        <div>Resource is video</div>
+        `);
+  });
+
   it('resets and updates when resource is changed', async () => {
     const page = await newSpecPage({
       components: [PosSwitch],
