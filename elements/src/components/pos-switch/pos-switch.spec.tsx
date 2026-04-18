@@ -1,6 +1,6 @@
 import { newSpecPage } from '@stencil/core/testing';
 import { PosSwitch } from './pos-switch';
-import { RdfType, Relation, Thing } from '@pod-os/core';
+import { Literal, RdfType, Relation, Thing } from '@pod-os/core';
 import { Subject } from 'rxjs';
 
 describe('pos-switch', () => {
@@ -185,7 +185,7 @@ describe('pos-switch', () => {
         `);
   });
 
-  it('renders templates if a forward link is present', async () => {
+  it('renders templates if a forward link is present (relation)', async () => {
     const page = await newSpecPage({
       components: [PosSwitch],
       html: `
@@ -203,17 +203,49 @@ describe('pos-switch', () => {
       </pos-switch>`,
     });
     const observedRelations$ = new Subject<Relation[]>();
+    const observedLiterals$ = new Subject<Literal[]>();
+
     const thing = {
       uri: 'https://pod.example/resource',
       observeRelations: () => observedRelations$,
+      observeLiterals: () => observedLiterals$,
     };
     page.rootInstance.receiveResource(thing);
+    observedLiterals$.next([]);
     observedRelations$.next([
       { predicate: 'https://schema.org/video', label: 'video', uris: ['https://video.test/video-1'] },
     ]);
     await page.waitForChanges();
     expect(page.root?.innerHTML).toEqualHtml(`
         <div>Resource has video</div>
+        `);
+  });
+
+  it('renders templates if a forward link is present (literal)', async () => {
+    const page = await newSpecPage({
+      components: [PosSwitch],
+      html: `
+      <pos-switch>
+        <pos-case if-property="https://schema.org/name">
+          <template>
+            <div>Resource has a name</div>
+          </template>
+        </pos-case>
+      </pos-switch>`,
+    });
+    const observedRelations$ = new Subject<Relation[]>();
+    const observedLiterals$ = new Subject<Literal[]>();
+    const thing = {
+      uri: 'https://pod.example/resource',
+      observeRelations: () => observedRelations$,
+      observeLiterals: () => observedLiterals$,
+    };
+    page.rootInstance.receiveResource(thing);
+    observedRelations$.next([]);
+    observedLiterals$.next([{ predicate: 'https://schema.org/name', label: 'name', values: ['name'] }]);
+    await page.waitForChanges();
+    expect(page.root?.innerHTML).toEqualHtml(`
+        <div>Resource has a name</div>
         `);
   });
 
@@ -274,13 +306,16 @@ describe('pos-switch', () => {
     const observedTypes$ = new Subject<RdfType[]>();
     const observedRelations$ = new Subject<Relation[]>();
     const observedReverseRelations$ = new Subject<Relation[]>();
+    const observedLiterals$ = new Subject<Literal[]>();
     const thing = {
       uri: 'https://pod.example/recipe1',
+      observeLiterals: () => observedLiterals$,
       observeTypes: () => observedTypes$,
       observeRelations: () => observedRelations$,
       observeReverseRelations: () => observedReverseRelations$,
     };
     page.rootInstance.receiveResource(thing);
+    observedLiterals$.next([]);
     observedTypes$.next([
       {
         label: 'Recipe',
@@ -305,7 +340,7 @@ describe('pos-switch', () => {
         `);
   });
 
-  it('renders templates if forward link value condition is met', async () => {
+  it('renders templates if forward link value condition is met (relation)', async () => {
     const page = await newSpecPage({
       components: [PosSwitch],
       html: `
@@ -323,17 +358,50 @@ describe('pos-switch', () => {
       </pos-switch>`,
     });
     const observedRelations$ = new Subject<Relation[]>();
+    const observedLiterals$ = new Subject<Literal[]>();
     const thing = {
       uri: 'https://pod.example/resource',
       observeRelations: () => observedRelations$,
+      observeLiterals: () => observedLiterals$,
     };
     page.rootInstance.receiveResource(thing);
+    observedLiterals$.next([]);
     observedRelations$.next([
       { predicate: 'https://schema.org/video', label: 'video', uris: ['https://video.test/video-1'] },
     ]);
     await page.waitForChanges();
     expect(page.root?.innerHTML).toEqualHtml(`
         <div>Resource has video</div>
+        `);
+  });
+
+  it('renders templates if forward link value condition is met (literal)', async () => {
+    const page = await newSpecPage({
+      components: [PosSwitch],
+      html: `
+      <pos-switch>
+        <pos-case if-property="https://schema.org/name" some-value-eq="Video 1">
+          <template>
+            <div>Resource has name</div>
+          </template>
+        </pos-case>
+      </pos-switch>`,
+    });
+    const observedRelations$ = new Subject<Relation[]>();
+    const observedLiterals$ = new Subject<Literal[]>();
+    const thing = {
+      uri: 'https://pod.example/resource',
+      observeRelations: () => observedRelations$,
+      observeLiterals: () => observedLiterals$,
+    };
+    page.rootInstance.receiveResource(thing);
+    observedRelations$.next([
+      { predicate: 'https://schema.org/video', label: 'video', uris: ['https://video.test/video-1'] },
+    ]);
+    observedLiterals$.next([{ predicate: 'https://schema.org/name', label: 'name', values: ['Video 1'] }]);
+    await page.waitForChanges();
+    expect(page.root?.innerHTML).toEqualHtml(`
+        <div>Resource has name</div>
         `);
   });
 
@@ -392,11 +460,14 @@ describe('pos-switch', () => {
       </pos-switch>`,
     });
     const observedRelations$ = new Subject<Relation[]>();
+    const observedLiterals$ = new Subject<Literal[]>();
     const thing = {
       uri: 'https://pod.example/resource',
+      observeLiterals: () => observedLiterals$,
       observeRelations: () => observedRelations$,
     };
     page.rootInstance.receiveResource(thing);
+    observedLiterals$.next([]);
     observedRelations$.next([
       {
         predicate: 'https://schema.org/video',
