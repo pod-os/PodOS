@@ -1,6 +1,5 @@
 import { newSpecPage } from '@stencil/core/testing';
 import { PosSwitch } from './pos-switch';
-import { when } from 'jest-when';
 import { RdfType, Relation, Thing } from '@pod-os/core';
 import { Subject } from 'rxjs';
 
@@ -303,6 +302,38 @@ describe('pos-switch', () => {
         <div>Recipe.</div>
         <div>Image.</div>
         <div>Recipe list.</div>
+        `);
+  });
+
+  it('renders templates if forward link value condition is met', async () => {
+    const page = await newSpecPage({
+      components: [PosSwitch],
+      html: `
+      <pos-switch>
+        <pos-case if-property="https://schema.org/video" some-value-eq="https://video.test/video-1">
+          <template>
+            <div>Resource has video</div>
+          </template>
+        </pos-case>
+        <pos-case if-property="https://schema.org/video" some-value-eq="https://video.test/video-missing">
+          <template>
+            <div>Should not render as value condition is not met</div>
+          </template>
+        </pos-case>
+      </pos-switch>`,
+    });
+    const observedRelations$ = new Subject<Relation[]>();
+    const thing = {
+      uri: 'https://pod.example/resource',
+      observeRelations: () => observedRelations$,
+    };
+    page.rootInstance.receiveResource(thing);
+    observedRelations$.next([
+      { predicate: 'https://schema.org/video', label: 'video', uris: ['https://video.test/video-1'] },
+    ]);
+    await page.waitForChanges();
+    expect(page.root?.innerHTML).toEqualHtml(`
+        <div>Resource has video</div>
         `);
   });
 

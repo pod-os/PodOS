@@ -38,17 +38,31 @@ export class PosSwitch implements ResourceAware {
 
   test(caseElement): boolean {
     let state = null;
+    let values = null;
+
+    const compareValue = function (values: string[]): boolean {
+      if (!caseElement.hasAttribute('some-value-eq')) return true;
+      return values.some(val => val === caseElement.getAttribute('some-value-eq'));
+    };
+
     if (caseElement.getAttribute('if-typeof') !== null) {
       state = this.types.map(x => x.uri).includes(caseElement.getAttribute('if-typeof'));
     }
     if (caseElement.getAttribute('if-property') !== null) {
-      state = this.relations.map(x => x.predicate).includes(caseElement.getAttribute('if-property'));
+      const matchingRelations = this.relations.filter(x => x.predicate == caseElement.getAttribute('if-property'));
+      if (matchingRelations.length > 0) {
+        values = matchingRelations[0].uris;
+      }
+      state = matchingRelations.length > 0;
     }
     if (caseElement.getAttribute('if-rev') !== null) {
       state = this.reverseRelations.map(x => x.predicate).includes(caseElement.getAttribute('if-rev'));
     }
     if (caseElement.getAttribute('not') != null) {
       state = !state;
+    }
+    if (values) {
+      state = state && compareValue(values);
     }
     return state;
   }
