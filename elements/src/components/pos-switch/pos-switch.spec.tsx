@@ -551,7 +551,7 @@ describe('pos-switch', () => {
         </pos-case>
         <pos-case if-property="https://schema.org/name" every-value-gt="charlie">
           <template>
-            <div>Not shown: ! bravo and charlie >  charlie</div>
+            <div>Not shown: ! bravo and charlie > charlie</div>
           </template>
         </pos-case>
         <pos-case else>
@@ -570,6 +570,102 @@ describe('pos-switch', () => {
     };
     page.rootInstance.receiveResource(thing);
     observedLiterals$.next([{ predicate: 'https://schema.org/name', label: 'name', values: ['bravo', 'charlie'] }]);
+    observedRelations$.next([]);
+    await page.waitForChanges();
+    expect(page.root?.innerHTML).toEqualHtml(`
+        <div>No conditions match</div>
+        `);
+  });
+
+  it('does not render templates when compareValue indicates that some-value-(lt|lte|gt|gte) is not met (numeric)', async () => {
+    const page = await newSpecPage({
+      components: [PosSwitch],
+      html: `
+      <pos-switch>
+        <pos-case if-property="https://schema.org/name" some-value-lt="3">
+          <template>
+            <div>Not shown: ! 20 < 3</div>
+          </template>
+        </pos-case>
+        <pos-case if-property="https://schema.org/name" some-value-lte="3">
+          <template>
+            <div>Not shown: ! 20 <= 3</div>
+          </template>
+        </pos-case>
+        <pos-case if-property="https://schema.org/name" some-value-gte="100">
+          <template>
+            <div>Not shown: ! 20 >= 100</div>
+          </template>
+        </pos-case>
+        <pos-case if-property="https://schema.org/name" some-value-gt="100">
+          <template>
+            <div>Not shown: ! 20 > 100</div>
+          </template>
+        </pos-case>
+        <pos-case else>
+          <template>
+            <div>No conditions match</div>
+          </template>
+        </pos-case>
+      </pos-switch>`,
+    });
+    const observedRelations$ = new Subject<Relation[]>();
+    const observedLiterals$ = new Subject<Literal[]>();
+    const thing = {
+      uri: 'https://pod.example/resource',
+      observeLiterals: () => observedLiterals$,
+      observeRelations: () => observedRelations$,
+    };
+    page.rootInstance.receiveResource(thing);
+    observedLiterals$.next([{ predicate: 'https://schema.org/name', label: 'name', values: ['20'] }]);
+    observedRelations$.next([]);
+    await page.waitForChanges();
+    expect(page.root?.innerHTML).toEqualHtml(`
+        <div>No conditions match</div>
+        `);
+  });
+
+  it('does not render templates when compareValue indicates that every-value-(lt|lte|gt|gte) is not met (numeric)', async () => {
+    const page = await newSpecPage({
+      components: [PosSwitch],
+      html: `
+      <pos-switch>
+        <pos-case if-property="https://schema.org/name" every-value-lt="4">
+          <template>
+            <div>Not shown: ! 20 and 30 < 4</div>
+          </template>
+        </pos-case>
+        <pos-case if-property="https://schema.org/name" every-value-lte="4">
+          <template>
+            <div>Not shown: ! 20 and 30 <= 4</div>
+          </template>
+        </pos-case>
+        <pos-case if-property="https://schema.org/name" every-value-gte="100">
+          <template>
+            <div>Not shown: ! 20 and 30 >= 100</div>
+          </template>
+        </pos-case>
+        <pos-case if-property="https://schema.org/name" every-value-gt="100">
+          <template>
+            <div>Not shown: ! 20 and 30 > 100</div>
+          </template>
+        </pos-case>
+        <pos-case else>
+          <template>
+            <div>No conditions match</div>
+          </template>
+        </pos-case>
+      </pos-switch>`,
+    });
+    const observedRelations$ = new Subject<Relation[]>();
+    const observedLiterals$ = new Subject<Literal[]>();
+    const thing = {
+      uri: 'https://pod.example/resource',
+      observeLiterals: () => observedLiterals$,
+      observeRelations: () => observedRelations$,
+    };
+    page.rootInstance.receiveResource(thing);
+    observedLiterals$.next([{ predicate: 'https://schema.org/name', label: 'name', values: ['20', '30'] }]);
     observedRelations$.next([]);
     await page.waitForChanges();
     expect(page.root?.innerHTML).toEqualHtml(`
