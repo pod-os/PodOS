@@ -1,4 +1,4 @@
-import { RdfType, Relation, Thing } from '@pod-os/core';
+import { Literal, RdfType, Relation, Thing } from '@pod-os/core';
 import { Component, Element, Event, h, Host, State } from '@stencil/core';
 import { ResourceAware, ResourceEventEmitter, subscribeResource } from '../events/ResourceAware';
 import { combineLatest, firstValueFrom, Observable, Subject, takeUntil } from 'rxjs';
@@ -20,6 +20,7 @@ export class PosSwitch implements ResourceAware {
   @State() types: RdfType[];
   @State() relations: Relation[];
   @State() reverseRelations: Relation[];
+  @State() literals: Literal[];
 
   private readonly disconnected$ = new Subject<void>();
 
@@ -55,10 +56,15 @@ export class PosSwitch implements ResourceAware {
     }
     if (caseElement.getAttribute('if-property') !== null) {
       const matchingRelations = this.relations.filter(x => x.predicate == caseElement.getAttribute('if-property'));
+      const matchingLiterals = this.literals.filter(x => x.predicate == caseElement.getAttribute('if-property'));
+      values = [];
       if (matchingRelations.length > 0) {
-        values = matchingRelations[0].uris;
+        values.push(...matchingRelations[0].uris);
       }
-      state = matchingRelations.length > 0;
+      if (matchingLiterals.length > 0) {
+        values.push(...matchingLiterals[0].values);
+      }
+      state = matchingRelations.length > 0 || matchingLiterals.length > 0;
     }
     if (caseElement.getAttribute('if-rev') !== null) {
       const matchingRelations = this.reverseRelations.filter(x => x.predicate == caseElement.getAttribute('if-rev'));
@@ -94,6 +100,11 @@ export class PosSwitch implements ResourceAware {
         this.relations = relations;
       });
       observables.push(observeRelations);
+      const observeLiterals = resource.observeLiterals().pipe(takeUntil(this.disconnected$));
+      observeLiterals.subscribe(literals => {
+        this.literals = literals;
+      });
+      observables.push(observeLiterals);
     }
     if (this.caseElements.some(caseElement => caseElement.hasAttribute('if-rev'))) {
       const observeReverseRelations = resource.observeReverseRelations().pipe(takeUntil(this.disconnected$));
