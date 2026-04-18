@@ -481,6 +481,102 @@ describe('pos-switch', () => {
         `);
   });
 
+  it('does not render templates when compareValue indicates that some-value-(lt|lte|gt|gte) is not met (string)', async () => {
+    const page = await newSpecPage({
+      components: [PosSwitch],
+      html: `
+      <pos-switch>
+        <pos-case if-property="https://schema.org/name" some-value-lt="bravo">
+          <template>
+            <div>Not shown: ! bravo < bravo </div>
+          </template>
+        </pos-case>
+        <pos-case if-property="https://schema.org/name" some-value-lte="alpha">
+          <template>
+            <div>Not shown: ! bravo <= alpha</div>
+          </template>
+        </pos-case>
+        <pos-case if-property="https://schema.org/name" some-value-gte="charlie">
+          <template>
+            <div>Not shown: ! bravo >= charlie</div>
+          </template>
+        </pos-case>
+        <pos-case if-property="https://schema.org/name" some-value-gt="bravo">
+          <template>
+            <div>Not shown: ! bravo > bravo</div>
+          </template>
+        </pos-case>
+        <pos-case else>
+          <template>
+            <div>No conditions match</div>
+          </template>
+        </pos-case>
+      </pos-switch>`,
+    });
+    const observedRelations$ = new Subject<Relation[]>();
+    const observedLiterals$ = new Subject<Literal[]>();
+    const thing = {
+      uri: 'https://pod.example/resource',
+      observeLiterals: () => observedLiterals$,
+      observeRelations: () => observedRelations$,
+    };
+    page.rootInstance.receiveResource(thing);
+    observedLiterals$.next([{ predicate: 'https://schema.org/name', label: 'name', values: ['bravo'] }]);
+    observedRelations$.next([]);
+    await page.waitForChanges();
+    expect(page.root?.innerHTML).toEqualHtml(`
+        <div>No conditions match</div>
+        `);
+  });
+
+  it('does not render templates when compareValue indicates that every-value-(lt|lte|gt|gte) is not met (string)', async () => {
+    const page = await newSpecPage({
+      components: [PosSwitch],
+      html: `
+      <pos-switch>
+        <pos-case if-property="https://schema.org/name" every-value-lt="bravo">
+          <template>
+            <div>Not shown: ! bravo and charlie < bravo </div>
+          </template>
+        </pos-case>
+        <pos-case if-property="https://schema.org/name" every-value-lte="bravo">
+          <template>
+            <div>Not shown: ! bravo and charlie <= bravo</div>
+          </template>
+        </pos-case>
+        <pos-case if-property="https://schema.org/name" every-value-gte="charlie">
+          <template>
+            <div>Not shown: ! bravo and charlie >=  charlie</div>
+          </template>
+        </pos-case>
+        <pos-case if-property="https://schema.org/name" every-value-gt="charlie">
+          <template>
+            <div>Not shown: ! bravo and charlie >  charlie</div>
+          </template>
+        </pos-case>
+        <pos-case else>
+          <template>
+            <div>No conditions match</div>
+          </template>
+        </pos-case>
+      </pos-switch>`,
+    });
+    const observedRelations$ = new Subject<Relation[]>();
+    const observedLiterals$ = new Subject<Literal[]>();
+    const thing = {
+      uri: 'https://pod.example/resource',
+      observeLiterals: () => observedLiterals$,
+      observeRelations: () => observedRelations$,
+    };
+    page.rootInstance.receiveResource(thing);
+    observedLiterals$.next([{ predicate: 'https://schema.org/name', label: 'name', values: ['bravo', 'charlie'] }]);
+    observedRelations$.next([]);
+    await page.waitForChanges();
+    expect(page.root?.innerHTML).toEqualHtml(`
+        <div>No conditions match</div>
+        `);
+  });
+
   it('resets and updates when resource is changed', async () => {
     const page = await newSpecPage({
       components: [PosSwitch],

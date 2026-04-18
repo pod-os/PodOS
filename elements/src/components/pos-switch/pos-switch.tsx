@@ -42,13 +42,36 @@ export class PosSwitch implements ResourceAware {
     let values = null;
 
     const compareValue = function (values: string[]): boolean {
-      if (caseElement.hasAttribute('some-value-eq')) {
-        return values.some(val => val === caseElement.getAttribute('some-value-eq'));
+      let state = true;
+      for (let semantics of ['some', 'every']) {
+        for (let operator of ['eq', 'gt', 'gte', 'lt', 'lte']) {
+          const attr = `${semantics}-value-${operator}`;
+          if (caseElement.hasAttribute(attr)) {
+            const target = caseElement.getAttribute(attr);
+            const matches = values.map(val => {
+              const cmp = String(val).localeCompare(String(target));
+              switch (operator) {
+                case 'eq':
+                  return cmp === 0;
+                case 'gt':
+                  return cmp > 0;
+                case 'gte':
+                  return cmp >= 0;
+                case 'lt':
+                  return cmp < 0;
+                case 'lte':
+                  return cmp <= 0;
+              }
+            });
+            if (semantics == 'some') {
+              state = state && matches.some(val => val);
+            } else if (semantics == 'every') {
+              state = state && matches.every(val => val);
+            }
+          }
+        }
       }
-      if (caseElement.hasAttribute('every-value-eq')) {
-        return values.every(val => val === caseElement.getAttribute('every-value-eq'));
-      }
-      return true;
+      return state;
     };
 
     if (caseElement.getAttribute('if-typeof') !== null) {
