@@ -127,6 +127,13 @@ export class Thing {
     }));
   }
 
+  observeLiterals(): Observable<Literal[]> {
+    return this.store.removals$.pipe(
+      map(() => this.literals()),
+      startWith(this.literals()),
+    );
+  }
+
   /**
    * Returns all the unique links from this thing to other resources. This only includes named nodes and excludes rdf:type relations.
    */
