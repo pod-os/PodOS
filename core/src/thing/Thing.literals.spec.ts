@@ -331,5 +331,16 @@ describe("Thing", function () {
         ],
       ]);
     });
+
+    it("ignores irrelevant statements about other resources", () => {
+      internalStore.add(
+        sym("https://other.uri/"),
+        sym("http://vocab.test/first"),
+        "value",
+      );
+      jest.advanceTimersByTime(250);
+      expect(subscriber).toHaveBeenCalledTimes(1);
+      expect(literalsSpy).toHaveBeenCalledTimes(1);
+    });
   });
 });
