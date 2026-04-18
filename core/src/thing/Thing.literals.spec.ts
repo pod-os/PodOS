@@ -1,19 +1,20 @@
-import { blankNode, graph, IndexedFormula, sym } from "rdflib";
+import { blankNode, graph, IndexedFormula, literal, quad, sym } from "rdflib";
 import { PodOsSession } from "../authentication";
-import { Thing } from "./Thing";
+import { Literal, Thing } from "./Thing";
 import { Store } from "../Store";
+import { Observable, Subscription } from "rxjs";
 
 describe("Thing", function () {
+  let internalStore: IndexedFormula;
+  const mockSession = {} as unknown as PodOsSession;
+  let store: Store;
+
+  beforeEach(() => {
+    internalStore = graph();
+    store = new Store(mockSession, undefined, undefined, internalStore);
+  });
+
   describe("literals", () => {
-    let internalStore: IndexedFormula;
-    const mockSession = {} as unknown as PodOsSession;
-    let store: Store;
-
-    beforeEach(() => {
-      internalStore = graph();
-      store = new Store(mockSession, undefined, undefined, internalStore);
-    });
-
     it("are empty, if store is empty", () => {
       const it = new Thing(
         "https://jane.doe.example/container/file.ttl#fragment",
@@ -158,6 +159,115 @@ describe("Thing", function () {
           label: "literal",
           values: ["literal value"],
         },
+      ]);
+    });
+  });
+
+  describe("observeLiterals", () => {
+    beforeEach(() => {
+      jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    let uri: string,
+      subscriber: jest.Mock,
+      thing: Thing,
+      literalsSpy: jest.SpyInstance,
+      observable: Observable<Literal[]>,
+      subscription: Subscription;
+
+    beforeEach(() => {
+      // Given a store with statements about a URI
+      uri = "https://jane.doe.example/container/file.ttl#fragment";
+      internalStore.add(
+        sym(uri),
+        sym("http://vocab.test/first"),
+        "value 1-1",
+        sym(uri),
+      );
+      internalStore.add(
+        sym(uri),
+        sym("http://vocab.test/second"),
+        "value 2-1",
+        sym(uri),
+      );
+      internalStore.add(
+        sym(uri),
+        sym("http://vocab.test/second"),
+        "value 2-2",
+        sym(uri),
+      );
+      internalStore.add(
+        sym(uri),
+        sym("http://vocab.test/third"),
+        "value 3-1",
+        sym(uri),
+      );
+
+      // and a Thing with a literals method
+      subscriber = jest.fn();
+      thing = new Thing(uri, store);
+      literalsSpy = jest.spyOn(thing, "literals");
+
+      // and a subscription to changes in relations
+      observable = thing.observeLiterals();
+      subscription = observable.subscribe(subscriber);
+    });
+
+    it("pushes existing literals immediately", () => {
+      expect(subscriber).toHaveBeenCalledTimes(1);
+      expect(literalsSpy).toHaveBeenCalledTimes(1);
+      expect(subscriber.mock.calls).toEqual([
+        [
+          [
+            {
+              predicate: "http://vocab.test/first",
+              label: "first",
+              values: ["value 1-1"],
+            },
+            {
+              predicate: "http://vocab.test/second",
+              label: "second",
+              values: ["value 2-1", "value 2-2"],
+            },
+            {
+              predicate: "http://vocab.test/third",
+              label: "third",
+              values: ["value 3-1"],
+            },
+          ],
+        ],
+      ]);
+    });
+
+    it("updates after removals", () => {
+      internalStore.removeStatement(
+        quad(
+          sym(uri),
+          sym("http://vocab.test/first"),
+          literal("value 1-1"),
+          sym(uri),
+        ),
+      );
+      jest.advanceTimersByTime(250);
+      expect(subscriber).toHaveBeenCalledTimes(2);
+      expect(literalsSpy).toHaveBeenCalledTimes(2);
+      expect(subscriber.mock.lastCall).toEqual([
+        [
+          {
+            predicate: "http://vocab.test/second",
+            label: "second",
+            values: ["value 2-1", "value 2-2"],
+          },
+          {
+            predicate: "http://vocab.test/third",
+            label: "third",
+            values: ["value 3-1"],
+          },
+        ],
       ]);
     });
   });
