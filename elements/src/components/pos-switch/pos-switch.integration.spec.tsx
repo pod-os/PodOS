@@ -7,12 +7,13 @@ import { PosPicture } from '../pos-picture/pos-picture';
 import { PosSwitch } from './pos-switch';
 import { PosResource } from '../pos-resource/pos-resource';
 import { when } from 'jest-when';
-import { RdfType, Relation, Thing } from '@pod-os/core';
+import { Literal, RdfType, Relation, Thing } from '@pod-os/core';
 import { ReplaySubject, Subject } from 'rxjs';
 
 describe('pos-switch', () => {
   it('renders template based on properties of resource, reactively', async () => {
     const os = mockPodOS();
+    const observedLiterals$ = new Subject<Literal[]>();
     const observedLabel$ = new ReplaySubject<string>();
     observedLabel$.next('Recipe 1');
     const observedTypes$ = new Subject<RdfType[]>();
@@ -25,6 +26,7 @@ describe('pos-switch', () => {
         // Label is used by pos-picture, and observeLabel by pos-label
         label: () => 'Recipe 1',
         observeLabel: () => observedLabel$,
+        observeLiterals: () => observedLiterals$,
         observeTypes: () => observedTypes$,
         observeRelations: () => observedRelations$,
         observeReverseRelations: () => observedReverseRelations$,
@@ -68,6 +70,7 @@ describe('pos-switch', () => {
     });
     expect((os.fetch as jest.Mock).mock.calls).toHaveLength(0);
     expect(page.root?.innerText).toEqualText('');
+    observedLiterals$.next([]);
     observedTypes$.next([
       {
         label: 'Recipe',
