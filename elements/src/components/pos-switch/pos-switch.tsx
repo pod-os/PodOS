@@ -49,7 +49,14 @@ export class PosSwitch implements ResourceAware {
           if (caseElement.hasAttribute(attr)) {
             const target = caseElement.getAttribute(attr);
             const matches = values.map(val => {
-              const cmp = String(val).localeCompare(String(target));
+              let cmp;
+              const numVal = Number(val);
+              const numTarget = Number(target);
+              if (!isNaN(numVal) && !isNaN(numTarget)) {
+                cmp = numVal - numTarget;
+              } else {
+                cmp = String(val).localeCompare(String(target));
+              }
               switch (operator) {
                 case 'eq':
                   return cmp === 0;
