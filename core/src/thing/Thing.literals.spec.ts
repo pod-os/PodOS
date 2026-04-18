@@ -271,5 +271,31 @@ describe("Thing", function () {
         ],
       ]);
     });
+
+    it("updates after additions", () => {
+      internalStore.add(sym(uri), sym("http://vocab.test/first"), "value 1-2");
+      jest.advanceTimersByTime(250);
+      expect(subscriber).toHaveBeenCalledTimes(2);
+      expect(literalsSpy).toHaveBeenCalledTimes(2);
+      expect(subscriber.mock.lastCall).toEqual([
+        [
+          {
+            predicate: "http://vocab.test/first",
+            label: "first",
+            values: ["value 1-1", "value 1-2"],
+          },
+          {
+            predicate: "http://vocab.test/second",
+            label: "second",
+            values: ["value 2-1", "value 2-2"],
+          },
+          {
+            predicate: "http://vocab.test/third",
+            label: "third",
+            values: ["value 3-1"],
+          },
+        ],
+      ]);
+    });
   });
 });
