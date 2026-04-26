@@ -61,6 +61,9 @@ describe('pos-switch', () => {
             <pos-case if-typeof="http://schema.org/Thing">
               <template><div>Also a Thing</div></template>
             </pos-case>
+            <pos-case if-property="http://schema.org/name" some-value-eq="Recipe 1">
+              <template><div>This is Recipe 1</div></template>
+            </pos-case>
             <pos-case else>
               <template>Will not render as previous conditions are satisfied</template>
             </pos-case>
@@ -126,6 +129,27 @@ describe('pos-switch', () => {
         <pos-image src="https://resource.test/recipe-photo.jpg" alt="Recipe 1"></pos-image>
       </pos-picture>
       <div>Also a Thing</div>
+      `);
+    observedLiterals$.next([
+      {
+        predicate: 'http://schema.org/name',
+        label: 'name',
+        values: ['Recipe 1', 'Another recipe name'],
+      },
+    ]);
+    await page.waitForChanges();
+    expect(switchElement?.innerHTML).toEqualHtml(`
+      <div>Part of list</div>
+      <pos-label>
+        <!---->
+        Recipe 1
+      </pos-label>
+      <pos-picture>
+        <!---->
+        <pos-image src="https://resource.test/recipe-photo.jpg" alt="Recipe 1"></pos-image>
+      </pos-picture>
+      <div>Also a Thing</div>
+      <div>This is Recipe 1</div>
       `);
   });
 });
