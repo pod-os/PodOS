@@ -10,6 +10,7 @@ import {
   debounceTime,
   distinctUntilChanged,
   filter,
+  identity,
   map,
   merge,
   Observable,
@@ -223,35 +224,42 @@ export class Thing {
    * @param predicateUris
    */
   observeAnyValue(...predicateUris: string[]) {
-    const removal$ = this.store.removals$.pipe(
-      filter(
-        (quad) =>
-          quad.subject.value == this.uri &&
-          predicateUris.includes(quad.predicate.value),
-      ),
+    const currentValue = this.anyValue(...predicateUris);
+
+    const relevantChanges$ = (
+      observable: typeof this.store.removals$ | typeof this.store.additions$,
+    ) =>
+      observable.pipe(
+        filter(
+          (quad) =>
+            quad.subject.value === this.uri &&
+            predicateUris.includes(quad.predicate.value),
+        ),
+      );
+
+    // All removals + initial signal if no value exists
+    const removalOrInitial$ = relevantChanges$(this.store.removals$).pipe(
+      map(() => ({ type: "removal" as const })),
+      currentValue === undefined
+        ? startWith({ type: "removal" as const })
+        : identity,
     );
 
-    const currentValue = this.anyValue(...predicateUris);
-    const dirty$ =
-      typeof currentValue === "undefined"
-        ? removal$.pipe(startWith(undefined))
-        : removal$;
-
-    const addition$ = this.store.additions$.pipe(
-      skipUntil(dirty$),
-      filter(
-        (quad) =>
-          quad.subject.value == this.uri &&
-          predicateUris.includes(quad.predicate.value),
-      ),
+    // Watch for additions, but only after a removal (optimization: ignore additions when value exists)
+    const addition$ = relevantChanges$(this.store.additions$).pipe(
+      skipUntil(removalOrInitial$),
       take(1),
-      map((quad) => quad.object.value),
+      map((quad) => ({ type: "addition" as const, value: quad.object.value })),
       repeat(),
     );
-    return merge(dirty$, addition$).pipe(
+
+    return merge(removalOrInitial$, addition$).pipe(
       debounceTime(250),
-      map((value) =>
-        typeof value === "string" ? value : this.anyValue(...predicateUris),
+      map(
+        (event) =>
+          event.type === "addition"
+            ? event.value // use the value that was added
+            : this.anyValue(...predicateUris), // determine a new value after a removal
       ),
       startWith(currentValue),
     );
