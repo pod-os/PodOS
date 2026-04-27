@@ -36,6 +36,11 @@ import {
                 </pos-list>
               </template>
             </pos-case>
+            <pos-case if-property="http://xmlns.com/foaf/0.1/primaryTopic" every-value-eq="https://pod-os.solidcommunity.net/profile/card#me">
+              <template>
+                <p>This is the profile document for the PodOS project.</p>
+              </template>
+            </pos-case>
             <pos-case if-typeof="http://www.w3.org/ns/iana/media-types/text/turtle#Resource">
               <template>
                 <p>The type of the resource is that defined in the container, updated after loading to also include those defined by the profile document.</p>
