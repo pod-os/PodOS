@@ -16,6 +16,7 @@ import {
   startWith,
   skipUntil,
   take,
+  repeat,
 } from "rxjs";
 
 export interface Literal {
@@ -245,6 +246,7 @@ export class Thing {
       ),
       take(1),
       map((quad) => quad.object.value),
+      repeat(),
     );
     return merge(dirty$, addition$).pipe(
       debounceTime(250),

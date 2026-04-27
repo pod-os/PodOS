@@ -263,7 +263,7 @@ describe("Thing", function () {
     });
 
     // TODO make this green
-    it.skip("emits new value after add-remove-add cycle", () => {
+    it("emits new value after add-remove-add cycle", () => {
       // Given an empty store
       const internalStore = graph();
       const mockSession = {} as unknown as PodOsSession;
