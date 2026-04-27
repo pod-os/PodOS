@@ -127,6 +127,9 @@ export class Thing {
     }));
   }
 
+  /**
+   * Observe changes in literal values linked to this thing
+   */
   observeLiterals(): Observable<Literal[]> {
     return merge(this.store.additions$, this.store.removals$).pipe(
       filter((quad) => quad.subject.value === this.uri),
