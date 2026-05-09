@@ -1,9 +1,4 @@
 export default {
-  reporters: [
-    'default',
-    ['<rootDir>/../.pi/tdd-guard/jest-reporter.js', {}],
-  ],
-
   preset: '@stencil/core/testing',
   setupFilesAfterEnv: ['<rootDir>/jest-setup.ts'],
 

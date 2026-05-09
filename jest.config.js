@@ -7,6 +7,10 @@ export default async () => {
   const coreConfig = await coreConfigFactory();
 
   return {
+    reporters: [
+      'default',
+      ['<rootDir>/.pi/tdd-guard/jest-reporter.js', {}],
+    ],
     projects: [
       {
         displayName: "core",
