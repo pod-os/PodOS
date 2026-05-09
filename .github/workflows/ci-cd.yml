@@ -51,6 +51,9 @@ jobs:
     if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     outputs:
       prereleaseVersion: ${{ steps.prerelease.outputs.version }}
     steps:
@@ -66,16 +69,18 @@ jobs:
           echo "version=$(npm version prerelease --preid rc.${GITHUB_SHA_SHORT} --no-git-tag-version)" >> $GITHUB_OUTPUT
         id: prerelease
       - run: echo prerelease version is ${{ steps.prerelease.outputs.version }}
-      - uses: JS-DevTools/npm-publish@v1
+      - uses: JS-DevTools/npm-publish@v4
         name: Publish @pod-os/core
         with:
-          token: ${{ secrets.NPM_TOKEN }}
           tag: ${{ env.GITHUB_REF_SLUG }}
 
   npm-publish-elements-snapshot:
     if: github.ref == 'refs/heads/main'
     needs: [build, npm-publish-core-snapshot]
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     outputs:
       prereleaseVersion: ${{ steps.prerelease.outputs.version }}
     steps:
@@ -95,10 +100,9 @@ jobs:
           echo "version=$(npm version prerelease --preid rc.${GITHUB_SHA_SHORT} --no-git-tag-version)" >> $GITHUB_OUTPUT
         id: prerelease
       - run: echo prerelease version is ${{ steps.prerelease.outputs.version }}
-      - uses: JS-DevTools/npm-publish@v1
+      - uses: JS-DevTools/npm-publish@v4
         name: Publish @pod-os/elements
         with:
-          token: ${{ secrets.NPM_TOKEN }}
           tag: ${{ env.GITHUB_REF_SLUG }}
 
   deploy-preview-pod-os-browser:
@@ -195,6 +199,9 @@ jobs:
       github.ref == 'refs/heads/main' && needs.approve-release.outputs.approved == 'true'
     needs: [build, npm-publish-core-snapshot, approve-release]
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     outputs:
       releaseVersion: ${{ steps.release.outputs.version }}
     steps:
@@ -206,16 +213,18 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: lts/*
-      - uses: JS-DevTools/npm-publish@v1
+      - uses: JS-DevTools/npm-publish@v4
         id: release
         name: Release @pod-os/core
         with:
-          token: ${{ secrets.NPM_TOKEN }}
           tag: latest
 
   npm-release-elements:
     needs: [build, npm-publish-elements-snapshot, npm-release-core]
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     outputs:
       releaseVersion: ${{ steps.release.outputs.version }}
     steps:
@@ -231,11 +240,10 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: lts/*
-      - uses: JS-DevTools/npm-publish@v1
+      - uses: JS-DevTools/npm-publish@v4
         id: release
         name: Release @pod-os/elements
         with:
-          token: ${{ secrets.NPM_TOKEN }}
           tag: latest
 
   deploy-prod-pod-os-browser:
