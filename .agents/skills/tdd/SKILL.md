@@ -12,7 +12,7 @@ Follow the **red → green → refactor** cycle strictly, **one cycle at a time*
 ### 1. Red — write ONE failing test
 - Pick the **single next** unimplemented behaviour from the plan.
 - Write **one** test that captures it.
-- Run the full test suite: `npx jest --no-coverage`
+- Run the **full** test suite with no filters: `npx jest --no-coverage` (no `--testPathPatterns` or any other filter).
   - The new test must fail.
   - It must fail **for the expected reason** (missing feature — not a compile error).
   - No previously passing test may newly break.
@@ -21,8 +21,9 @@ Follow the **red → green → refactor** cycle strictly, **one cycle at a time*
 ### 2. Green — make it pass with minimal code
 - Write the simplest production code that makes the failing test pass.
   *(The guard allows this because tests are failing.)*
-- Run the full test suite again.
-- Confirm every test passes.
+- Run the **full** test suite with no filters: `npx jest --no-coverage`.
+- If the implementation change causes regressions in *other* test files, fix those tests immediately — this is still part of the green step, not a new red step.
+- Confirm every test passes before stopping.
 - **Stop. Show the output. The guard now blocks further impl writes.**
 
 ### 3. Refactor — clean up

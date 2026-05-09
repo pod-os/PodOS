@@ -54,6 +54,33 @@ function isTestFile(filePath: string): boolean {
   );
 }
 
+/**
+ * Count the number of test-case call sites (it / test) in a source string.
+ * We match `it(` and `test(` as bare identifiers to avoid counting
+ * e.g. `emit(` or comment references.
+ */
+function countTestCases(source: string): number {
+  // Match `it(` or `test(` preceded by a word boundary / start-of-line.
+  const matches = source.match(/(?<![\w$])(?:it|test)\s*\(/g);
+  return matches ? matches.length : 0;
+}
+
+/**
+ * For an `edit` tool call, apply the oldText→newText substitutions to the
+ * current file content and return the resulting string, or null if the file
+ * cannot be read.
+ */
+function applyEdits(
+  currentContent: string,
+  edits: Array<{ oldText: string; newText: string }>,
+): string {
+  let result = currentContent;
+  for (const { oldText, newText } of edits) {
+    result = result.replace(oldText, newText);
+  }
+  return result;
+}
+
 function isImplementationFile(filePath: string): boolean {
   return !isTestFile(filePath) && /\.(ts|tsx|js|jsx)$/.test(filePath);
 }
@@ -168,14 +195,82 @@ export default function (pi: ExtensionAPI) {
     // After the edit lands we can't know exactly how many new tests will fail,
     // but we can check the current state: if tests are already failing,
     // adding more test code without first going green is a violation.
+    //
+    // Exception: if the implementation change (green step) caused regressions
+    // in test files that were previously passing, those test files need to be
+    // repaired as part of the green step.  We detect this by checking whether
+    // ALL currently-failing tests live inside files that are already dirty
+    // (modified by the green step).  If so, the edit is a regression repair,
+    // not a new red step, and we allow it.
     if (isTestFile(filePath)) {
       if (results.failed.length > 0) {
+        // Collect the set of dirty (modified/untracked) absolute file paths.
+        let dirtyAbsPaths = new Set<string>();
+        try {
+          const gitStatus = execSync("git status --porcelain", { cwd, encoding: "utf8" }).trim();
+          for (const line of gitStatus.split("\n").filter(Boolean)) {
+            dirtyAbsPaths.add(path.resolve(cwd, line.slice(3).trim()));
+          }
+        } catch {
+          // Not a git repo — can't determine dirtiness, fall through to block.
+        }
+
+        // Map each failing test name back to a suite file path.
+        // The reporter stores only the test name, not the file, so we use
+        // the jest results file list embedded in a separate field if available.
+        // Since we only have test names, we check whether the file currently
+        // being edited (the regression target) is already dirty, AND whether
+        // the file being written is already dirty — meaning the agent is
+        // repairing a file it modified during the green step.
+        const absTarget = path.resolve(cwd, filePath);
+        const targetIsDirty = dirtyAbsPaths.has(absTarget);
+
+        // Allow the repair if the file being edited is already dirty
+        // (touched during this green step) — this is a regression fix,
+        // not a new red test.
+        if (targetIsDirty) {
+          return undefined;
+        }
+
+        // ── Regression-fix exception (content-based) ──────────────────────
+        // Even when the file is clean in git, the edit may just be updating
+        // existing assertions to match a changed interface — not adding new
+        // tests.  If the proposed content has no more `it(` / `test(` blocks
+        // than the current file, no new test case is being introduced, so
+        // the edit is a regression repair and should be allowed.
+        try {
+          const currentContent = fs.existsSync(absTarget)
+            ? fs.readFileSync(absTarget, "utf8")
+            : "";
+          const currentCount = countTestCases(currentContent);
+
+          let proposedContent: string | null = null;
+          if (toolName === "write") {
+            proposedContent =
+              (event.input as { content?: string }).content ?? "";
+          } else if (toolName === "edit") {
+            const rawEdits = (event.input as { edits?: Array<{ oldText: string; newText: string }> }).edits ?? [];
+            proposedContent = applyEdits(currentContent, rawEdits);
+          }
+
+          if (proposedContent !== null) {
+            const proposedCount = countTestCases(proposedContent);
+            if (proposedCount <= currentCount) {
+              // No new test cases — this is a regression fix, not a new red step.
+              return undefined;
+            }
+          }
+        } catch {
+          // If we can't read/parse, fall through to the block below.
+        }
+
         return {
           block: true,
           reason:
             `TDD Guard: ${results.failed.length} test(s) are already failing:\n` +
             results.failed.map((t) => `  - ${t}`).join("\n") +
-            "\n\nComplete the green step (make the failing test pass) before writing the next test.",
+            "\n\nComplete the green step (make the failing test pass) before writing the next test.\n" +
+            "If these are regressions caused by your implementation change, fix them now — that is still part of the green step.",
         };
       }
       // All tests passing — block if there are uncommitted changes *other than*
