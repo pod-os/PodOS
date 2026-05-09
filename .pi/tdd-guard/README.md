@@ -48,23 +48,27 @@ Committing is the **human's job**. The agent proposes a commit message after eac
 
 ## Setup
 
-The reporter is already wired into `elements/jest.config.js`.
-
-For other packages in this repo, add to their `jest.config.js`:
-
-```js
-reporters: [
-  'default',
-  ['<rootDir>/../.pi/tdd-guard/jest-reporter.js', {}],
-],
-```
-
-If the package is more than one level below the workspace root, adjust the path
-to `jest-reporter.js` and pass `projectRoot` explicitly:
+The reporter is wired into the **root `jest.config.js`** via the top-level
+`reporters` field. Because all sub-packages run as Jest `projects` from the
+root, a single reporter entry covers everything — no changes are needed in the
+individual package configs (`core/`, `elements/`, `contacts/`, etc.).
 
 ```js
-['path/to/jest-reporter.js', { projectRoot: '/absolute/path/to/workspace' }]
+// jest.config.js (workspace root)
+export default async () => ({
+  reporters: [
+    'default',
+    ['<rootDir>/.pi/tdd-guard/jest-reporter.js', {}],
+  ],
+  projects: [
+    // ... sub-package configs
+  ],
+});
 ```
+
+Always run tests from the **workspace root** (`npm test`) so the reporter is
+picked up and `test-results.json` stays current.
+
 
 ## Files
 

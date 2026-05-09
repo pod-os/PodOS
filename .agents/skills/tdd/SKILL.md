@@ -12,7 +12,7 @@ Follow the **red → green → refactor** cycle strictly, **one cycle at a time*
 ### 1. Red — write ONE failing test
 - Pick the **single next** unimplemented behaviour from the plan.
 - Write **one** test that captures it.
-- Run the **full** test suite with no filters: `npx jest --no-coverage` (no `--testPathPatterns` or any other filter).
+- Run the **full** test suite from the **repository root** with no filters: `npm test` (no `--testPathPatterns` or any other filter).
   - The new test must fail.
   - It must fail **for the expected reason** (missing feature — not a compile error).
   - No previously passing test may newly break.
@@ -21,14 +21,14 @@ Follow the **red → green → refactor** cycle strictly, **one cycle at a time*
 ### 2. Green — make it pass with minimal code
 - Write the simplest production code that makes the failing test pass.
   *(The guard allows this because tests are failing.)*
-- Run the **full** test suite with no filters: `npx jest --no-coverage`.
+- Run the **full** test suite from the **repository root** with no filters: `npm test`.
 - If the implementation change causes regressions in *other* test files, fix those tests immediately — this is still part of the green step, not a new red step.
 - Confirm every test passes before stopping.
 - **Stop. Show the output. The guard now blocks further impl writes.**
 
 ### 3. Refactor — clean up
 - Improve structure, naming, or remove duplication — without changing behaviour.
-- Run the full test suite again to confirm all tests still pass.
+- Run the full test suite again from the **repository root** (`npm test`) to confirm all tests still pass.
 - **Stop. Show the output.**
 
 ## Hard rules
@@ -36,7 +36,7 @@ Follow the **red → green → refactor** cycle strictly, **one cycle at a time*
 - **One test per red step.** Writing multiple tests at once is a violation. If you catch yourself adding more than one new test, stop and delete the extras.
 - **No implementation before red.** Writing production code before a failing test exists is a violation.
 - **No future-proofing.** Only write code a currently-failing test demands.
-- **Always run tests** after every step and include the output before continuing.
+- **Always run tests** after every step and include the output before continuing. Always run from the **repository root**: `npm test`.
 - **Confirm the failure reason.** A red test must fail because the feature is missing — not because of a syntax error or an already-failing unrelated test.
 
 ## Completing a cycle
