@@ -1,8 +1,13 @@
 import { newSpecPage } from '@stencil/core/testing';
 import { fireEvent, screen } from '@testing-library/dom';
 import { PosLoginForm } from '../pos-login-form';
+import { localSettings } from '../../../store/settings';
 
 describe('pos-login-form', () => {
+  beforeEach(() => {
+    localSettings.state.rememberedIdp = null;
+  });
+
   it('renders an input for the idpUrl and a login button', async () => {
     const page = await newSpecPage({
       components: [PosLoginForm],
@@ -79,6 +84,30 @@ describe('pos-login-form', () => {
       const button: HTMLButtonElement = screen.getByRole('button');
       expect(button.disabled).toBe(false);
     });
+  });
+
+  it('pre-fills IdP URL and checks the box when a value is in settings', async () => {
+    // given a remembered IdP URL
+    localSettings.state.rememberedIdp = 'https://remembered.idp.test';
+
+    // when the component mounts
+    const page = await newSpecPage({
+      components: [PosLoginForm],
+      html: `<pos-login-form></pos-login-form>`,
+      supportsShadowDom: false,
+    });
+
+    // then the URL input is pre-filled
+    const idpInput: HTMLInputElement = screen.getByLabelText('Please enter your Identity Provider');
+    expect(idpInput.value).toBe('https://remembered.idp.test');
+
+    // and the checkbox is pre-checked
+    const checkbox: HTMLInputElement = screen.getByLabelText('Remember me');
+    expect(checkbox.checked).toBe(true);
+
+    // and the submit button is already enabled
+    const button: HTMLInputElement = screen.getByRole('button');
+    expect(button.disabled).toBe(false);
   });
 
   it('renders "Remember me" checkbox unchecked by default', async () => {

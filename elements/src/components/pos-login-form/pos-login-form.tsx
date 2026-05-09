@@ -1,4 +1,5 @@
 import { Component, Event, EventEmitter, h, State, Watch } from '@stencil/core';
+import { localSettings } from '../../store/settings';
 
 @Component({
   tag: 'pos-login-form',
@@ -16,6 +17,16 @@ export class PosLoginForm {
    * Emits the selected IDP URL to use for login
    */
   @Event({ eventName: 'pod-os:idp-url-selected' }) idpUrlSelected: EventEmitter;
+
+  @State() rememberMe: boolean = false;
+
+  componentWillLoad() {
+    const remembered = localSettings.state.rememberedIdp;
+    if (remembered) {
+      this.idpUrl = remembered;
+      this.rememberMe = true;
+    }
+  }
 
   @Watch('idpUrl')
   validate() {
@@ -45,7 +56,7 @@ export class PosLoginForm {
           <option value="https://teamid.live/">teamid.live</option>
         </datalist>
         <label class="remember-me">
-          <input id="rememberMe" type="checkbox" checked={false} /> Remember me
+          <input id="rememberMe" type="checkbox" checked={this.rememberMe} /> Remember me
         </label>
         <input id="login" type="submit" value="Login" disabled={!this.canSubmit} />
       </form>
