@@ -253,9 +253,12 @@ describe('pos-app', () => {
         html: `<pos-app>item body</pos-app>`,
       });
 
-      expect(createPodOS).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({
-        offlineCache: false,
-      }));
+      expect(createPodOS).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          offlineCache: false,
+        }),
+      );
 
       page.rootInstance.disconnectedCallback();
     });
@@ -267,9 +270,12 @@ describe('pos-app', () => {
         html: `<pos-app>item body</pos-app>`,
       });
 
-      expect(createPodOS).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({
-        offlineCache: true,
-      }));
+      expect(createPodOS).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          offlineCache: true,
+        }),
+      );
       page.rootInstance.disconnectedCallback();
     });
 
@@ -279,15 +285,21 @@ describe('pos-app', () => {
         html: `<pos-app>item body</pos-app>`,
       });
 
-      expect(createPodOS).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({
-        offlineCache: false,
-      }));
+      expect(createPodOS).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          offlineCache: false,
+        }),
+      );
 
       localSettings.state.offlineCache = true;
 
-      expect(createPodOS).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({
-        offlineCache: true,
-      }));
+      expect(createPodOS).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          offlineCache: true,
+        }),
+      );
 
       page.rootInstance.disconnectedCallback();
     });

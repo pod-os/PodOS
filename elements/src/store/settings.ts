@@ -29,6 +29,7 @@ function syncChangesAcrossTabs() {
     if (event.key === 'settings' && event.newValue) {
       const newSettings: LocalSettings = JSON.parse(event.newValue);
       localSettings.state.offlineCache = newSettings.offlineCache;
+      localSettings.state.rememberedIdp = newSettings.rememberedIdp;
     }
   });
 }
