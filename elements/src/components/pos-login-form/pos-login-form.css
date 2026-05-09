@@ -53,6 +53,35 @@ label.remember-me {
 }
 
 label.remember-me input[type='checkbox'] {
-  width: auto;
-  accent-color: var(--pos-primary-color);
+  margin: 0;
+  appearance: none;
+  padding: var(--size-2);
+  width: var(--size-2);
+  height: var(--size-2);
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+}
+
+label.remember-me input[type='checkbox']:checked {
+  background-color: var(--pos-primary-color);
+  border-color: var(--pos-primary-color);
+}
+
+label.remember-me input[type='checkbox']:checked::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 3px;
+  height: 6px;
+  border: solid white;
+  border-width: 0 1.5px 1.5px 0;
+  transform: translateY(-1px) rotate(45deg);
+}
+
+label.remember-me input[type='checkbox']:focus {
+  outline: 2px solid var(--pos-primary-color);
+  outline-offset: 2px;
 }
