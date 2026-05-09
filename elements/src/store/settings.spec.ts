@@ -12,6 +12,10 @@ describe('Settings Store', () => {
     expect(localSettings.state.offlineCache).toBe(false);
   });
 
+  it('rememberedIdp defaults to null', () => {
+    expect(localSettings.state.rememberedIdp).toBe(null);
+  });
+
   it('should initialize with stored values from localStorage', () => {
     localStorage.setItem('settings', JSON.stringify({ offlineCache: true }));
     jest.resetModules();

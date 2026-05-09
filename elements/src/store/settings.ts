@@ -2,6 +2,7 @@ import { createStore } from '@stencil/store';
 
 export interface LocalSettings {
   offlineCache: boolean;
+  rememberedIdp: string | null;
 }
 
 const storedSettings = localStorage.getItem('settings');
@@ -9,6 +10,7 @@ const initialSettings = storedSettings
   ? JSON.parse(storedSettings)
   : {
       offlineCache: false,
+      rememberedIdp: null,
     };
 
 export const localSettings = createStore<LocalSettings>(initialSettings);
