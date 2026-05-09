@@ -40,6 +40,10 @@ describe('pos-login-form', () => {
         teamid.live
       </option>
     </datalist>
+    <label class="remember-me">
+      <input id="rememberMe" type="checkbox">
+      Remember me
+    </label>
     <input disabled="" id="login" type="submit" value="Login">
   </form>
 </pos-login-form>
@@ -75,6 +79,19 @@ describe('pos-login-form', () => {
       const button: HTMLButtonElement = screen.getByRole('button');
       expect(button.disabled).toBe(false);
     });
+  });
+
+  it('renders "Remember me" checkbox unchecked by default', async () => {
+    await newSpecPage({
+      components: [PosLoginForm],
+      html: `<pos-login-form></pos-login-form>`,
+      supportsShadowDom: false,
+    });
+
+    const checkbox: HTMLInputElement = screen.getByLabelText('Remember me');
+    expect(checkbox).not.toBeNull();
+    expect(checkbox.type).toBe('checkbox');
+    expect(checkbox.checked).toBe(false);
   });
 
   it('submitting the form emits pod-os:idp-url-selected event', async () => {

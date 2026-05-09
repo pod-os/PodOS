@@ -44,6 +44,9 @@ export class PosLoginForm {
           <option value="https://solid.redpencil.io/">redpencil.io</option>
           <option value="https://teamid.live/">teamid.live</option>
         </datalist>
+        <label class="remember-me">
+          <input id="rememberMe" type="checkbox" checked={false} /> Remember me
+        </label>
         <input id="login" type="submit" value="Login" disabled={!this.canSubmit} />
       </form>
     );
