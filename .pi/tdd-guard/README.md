@@ -32,7 +32,13 @@ The agent physically cannot call `write` or `edit` without this check running fi
 | Situation | Writing a test file | Writing an impl file |
 |---|---|---|
 | All tests passing (green) | ✅ Allowed — this is the red step | ❌ Blocked — no failing test to satisfy |
-| Tests failing (red) | ❌ Blocked — go green first | ✅ Allowed — this is the green step |
+| Tests failing (red) | ❌ Blocked — go green first (see exception below) | ✅ Allowed — this is the green step |
+
+### Exception: regression repair during the green step
+
+When an implementation change (green step) causes regressions in *other* test files that were previously passing, those test files need to be updated as part of completing the green step — not as a new red step.
+
+The guard detects this by checking git status: if the test file being edited is **already dirty** (modified during this green step), the edit is treated as a regression repair and allowed. If the test file is clean (not yet touched this cycle), the edit is a new red step and blocked until tests pass.
 
 ### Git write commands are always blocked in bash
 
