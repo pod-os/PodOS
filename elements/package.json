@@ -57,11 +57,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pod-os/pod-os.git"
+    "url": "git+https://github.com/pod-os/PodOS.git"
   },
   "author": "",
   "bugs": {
-    "url": "https://github.com/pod-os/pod-os/issues"
+    "url": "https://github.com/pod-os/PodOS/issues"
   },
-  "homepage": "https://github.com/pod-os/pod-os#readme"
+  "homepage": "https://github.com/pod-os/PodOS#readme"
 }

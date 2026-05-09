@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pod-os/pod-os.git"
+    "url": "git+https://github.com/pod-os/PodOS.git"
   },
   "keywords": [
     "Solid",
@@ -30,9 +30,9 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/pod-os/pod-os/issues"
+    "url": "https://github.com/pod-os/PodOS/issues"
   },
-  "homepage": "https://github.com/pod-os/pod-os#readme",
+  "homepage": "https://github.com/pod-os/PodOS#readme",
   "devDependencies": {
     "jest": "29.7.0",
     "prettier": "^3.2.5"
