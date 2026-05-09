@@ -44,3 +44,15 @@ input#login:focus {
   filter: brightness(110%);
   box-shadow: var(--shadow-md);
 }
+
+label.remember-me {
+  display: flex;
+  align-items: center;
+  gap: var(--size-2);
+  cursor: pointer;
+}
+
+label.remember-me input[type='checkbox'] {
+  width: auto;
+  accent-color: var(--pos-primary-color);
+}
