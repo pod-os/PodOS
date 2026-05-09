@@ -47,6 +47,23 @@ describe('Settings Store', () => {
     expect(localSettings.state.offlineCache).toBe(true);
   });
 
+  it('syncs rememberedIdp from other tabs', () => {
+    // given rememberedIdp is null
+    localSettings.state.rememberedIdp = null;
+
+    // when window gets a storage event with a remembered IdP
+    const storageEvent = new CustomEvent('storage', {
+      // @ts-ignore
+      key: 'settings',
+      newValue: JSON.stringify({ offlineCache: false, rememberedIdp: 'https://idp.example' }),
+    });
+    const handler = addEventListener.mock.calls[0][1] as Function;
+    handler(storageEvent);
+
+    // then the remembered IdP is updated
+    expect(localSettings.state.rememberedIdp).toBe('https://idp.example');
+  });
+
   it('should not sync changes for other storage keys', () => {
     // given offline cache is disabled
     localSettings.state.offlineCache = false;
