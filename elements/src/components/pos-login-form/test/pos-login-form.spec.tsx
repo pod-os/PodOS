@@ -123,6 +123,33 @@ describe('pos-login-form', () => {
     expect(checkbox.checked).toBe(false);
   });
 
+  it('saves IdP URL to settings on submit when "Remember me" is checked', async () => {
+    // given
+    const page = await newSpecPage({
+      components: [PosLoginForm],
+      html: `<pos-login-form></pos-login-form>`,
+      supportsShadowDom: false,
+    });
+
+    // and the user entered a URL
+    const urlInput = page.root.querySelector('#idpUrl');
+    fireEvent.input(urlInput, { target: { value: 'https://pod.provider.test' } });
+    await page.waitForChanges();
+
+    // and the user checks the "Remember me" checkbox
+    const checkbox: HTMLInputElement = screen.getByLabelText('Remember me');
+    fireEvent.change(checkbox, { target: { checked: true } });
+    await page.waitForChanges();
+
+    // when the form is submitted
+    const form: HTMLFormElement = page.root.querySelector('form');
+    fireEvent.submit(form);
+    await page.waitForChanges();
+
+    // then the IdP URL is saved to settings
+    expect(localSettings.state.rememberedIdp).toBe('https://pod.provider.test');
+  });
+
   it('submitting the form emits pod-os:idp-url-selected event', async () => {
     // given
     const page = await newSpecPage({

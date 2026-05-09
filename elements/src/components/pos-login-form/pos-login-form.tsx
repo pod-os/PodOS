@@ -56,7 +56,13 @@ export class PosLoginForm {
           <option value="https://teamid.live/">teamid.live</option>
         </datalist>
         <label class="remember-me">
-          <input id="rememberMe" type="checkbox" checked={this.rememberMe} /> Remember me
+          <input
+            id="rememberMe"
+            type="checkbox"
+            checked={this.rememberMe}
+            onChange={e => (this.rememberMe = (e.target as HTMLInputElement).checked)}
+          />
+          Remember me
         </label>
         <input id="login" type="submit" value="Login" disabled={!this.canSubmit} />
       </form>
@@ -69,6 +75,7 @@ export class PosLoginForm {
   }
 
   async handleSubmit() {
+    localSettings.state.rememberedIdp = this.rememberMe ? this.idpUrl : null;
     this.idpUrlSelected.emit(this.idpUrl);
   }
 }
