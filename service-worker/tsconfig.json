@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "rootDir": "./src",
+    "types": ["node"],
     "declaration": true,
     "target": "esnext",
     "module": "esnext",
