@@ -1,6 +1,6 @@
 # TDD Guard
 
-Deterministic red→green→refactor enforcement for pi.
+Deterministic test→impl→refactor enforcement for pi.
 
 ## How it works
 
@@ -21,7 +21,7 @@ Deterministic red→green→refactor enforcement for pi.
         tests already failing?                     no failing tests?
                   │                                               │
                BLOCK ◄─────────────────────────────────────── BLOCK
-          "complete green                                  "write a failing
+          "complete impl                                  "write a failing
            step first"                                      test first"
 ```
 
@@ -31,14 +31,14 @@ The agent physically cannot call `write` or `edit` without this check running fi
 
 | Situation | Writing a test file | Writing an impl file |
 |---|---|---|
-| All tests passing (green) | ✅ Allowed — this is the red step | ❌ Blocked — no failing test to satisfy |
-| Tests failing (red) | ❌ Blocked — go green first (see exception below) | ✅ Allowed — this is the green step |
+| All tests passing | ✅ Allowed — this is the test step | ❌ Blocked — no failing test to satisfy |
+| Tests failing | ❌ Blocked — complete impl step first (see exception below) | ✅ Allowed — this is the impl step |
 
-### Exception: regression repair during the green step
+### Exception: regression repair during the impl step
 
-When an implementation change (green step) causes regressions in *other* test files that were previously passing, those test files need to be updated as part of completing the green step — not as a new red step.
+When an implementation change (impl step) causes regressions in *other* test files that were previously passing, those test files need to be updated as part of completing the impl step — not as a new test step.
 
-The guard detects this by checking git status: if the test file being edited is **already dirty** (modified during this green step), the edit is treated as a regression repair and allowed. If the test file is clean (not yet touched this cycle), the edit is a new red step and blocked until tests pass.
+The guard detects this by checking git status: if the test file being edited is **already dirty** (modified during this impl step), the edit is treated as a regression repair and allowed. If the test file is clean (not yet touched this cycle), the edit is a new test step and blocked until tests pass.
 
 ### Git write commands are always blocked in bash
 
@@ -76,14 +76,18 @@ picked up and `test-results.json` stays current.
 |---|---|
 | `jest-reporter.js` | Jest reporter — writes `test-results.json` after every run |
 | `test-results.json` | Live test state (gitignored) |
+| `config.json` | Current phase — `{ "phase": "test" \| "impl" \| "refactor" }`. Gitignored; auto-created at `test` on first session. |
 | `README.md` | This file |
 
 The extension that does the blocking lives at `.pi/extensions/tdd-guard.ts`.
 
 ## Gitignore
 
-Add to `.gitignore`:
+The directory ships its own `.pi/tdd-guard/.gitignore`:
 
 ```
-.pi/tdd-guard/test-results.json
+test-results.json
+config.json
 ```
+
+Both files are runtime state. `config.json` is auto-created at `test` by the extension on first session start.
