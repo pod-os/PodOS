@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "rootDir": "./src",
+    "types": ["node"],
     "declaration": true,
     "target": "ES6",
     "lib": ["ES2022", "DOM"],
