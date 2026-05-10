@@ -49,6 +49,9 @@ jobs:
     if: github.ref == 'refs/heads/main'
     needs: [ build ]
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     outputs:
       prereleaseVersion: ${{ steps.prerelease.outputs.version }}
     steps:
@@ -58,17 +61,18 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: lts/*
+          registry-url: "https://registry.npmjs.org"
       - uses: rlespinasse/github-slug-action@v4.4.1
       - name: prerelease version
         run: |
           echo "version=$(npm version prerelease --preid rc.${GITHUB_SHA_SHORT} --no-git-tag-version)" >> $GITHUB_OUTPUT
         id: prerelease
       - run: echo prerelease version is ${{ steps.prerelease.outputs.version }}
-      - uses: JS-DevTools/npm-publish@v4
-        name: Publish @pod-os/contacts
+      - name: Publish @pod-os/contacts
+        uses: JS-DevTools/npm-publish@v4
         with:
           access: public
-          token: ${{ secrets.NPM_TOKEN }}
+          provenance: true
           tag: ${{ env.GITHUB_REF_SLUG }}
 
   approve-release:
@@ -90,6 +94,9 @@ jobs:
     if: github.ref == 'refs/heads/main' && needs.approve-release.outputs.approved == 'true'
     needs: [ build, npm-publish-contacts-snapshot, approve-release ]
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     outputs:
       releaseVersion: ${{ steps.release.outputs.version }}
     steps:
@@ -101,12 +108,13 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: lts/*
-      - uses: JS-DevTools/npm-publish@v4
+          registry-url: "https://registry.npmjs.org"
+      - name: Release @pod-os/contacts
         id: release
-        name: Release @pod-os/contacts
+        uses: JS-DevTools/npm-publish@v4
         with:
           access: public
-          token: ${{ secrets.NPM_TOKEN }}
+          provenance: true
           tag: latest
 
   bump-snapshot-versions:
