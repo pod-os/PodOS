@@ -5,6 +5,16 @@ description: Implements features using Test-Driven Development (TDD). Use when a
 
 # TDD Skill
 
+## Prerequisite: Wallaby must be running
+
+Before doing anything else, verify Wallaby is connected by calling `activate_tdd_phase` with phase `test`. If it returns a Wallaby connection error, **STOP IMMEDIATELY**. Do not attempt any workaround (e.g. writing files via `bash`, running `npm test` manually). Tell the user:
+
+> 🛑 **Wallaby is not running.** Please start Wallaby in your editor, then tell me to continue.
+
+This is a **showstopper** — the entire TDD workflow depends on Wallaby for live test results and the TDD guard depends on Wallaby to enforce phase transitions. Without it, nothing can proceed.
+
+---
+
 Follow the **red → green → refactor** cycle strictly, **one cycle at a time**.
 
 ## Cycle
@@ -56,3 +66,4 @@ Only proceed to the next red step once the human says so. The guard enforces thi
 
 - **Never run `git commit`, `git add`, `git push`, or any git write command.** These are reserved for the human. The guard will block you if you try.
 - **Never run `git stash`, `git reset`, or `git checkout` to manipulate history.** If the working tree is dirty and the guard is blocking, stop and tell the human — do not work around it.
+- **Never bypass the TDD guard.** If Wallaby is not running or the guard blocks a write, do **not** use `bash` (e.g. `cat >`, `echo >`, `tee`, `cp`, `mv`, `sed -i`) to create or modify source/test files. The guard exists for a reason — circumventing it is a violation. Stop and tell the human what's blocking you.

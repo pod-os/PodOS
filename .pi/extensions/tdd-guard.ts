@@ -34,7 +34,10 @@
  *        refactor — both impl and test files may be freely edited; no new
  *                   it()/test() call sites may be added.
  *
- *   5. It blocks git write commands (commit, add, push, stash, reset …)
+ *   5. If Wallaby is not running (no cached test results), ALL source file
+ *      writes are hard-blocked. The agent must not proceed without Wallaby.
+ *
+ *   6. It blocks git write commands (commit, add, push, stash, reset …)
  *      in bash — committing is the human's job, not the agent's.
  *
  * Status bar:
@@ -558,14 +561,13 @@ export default function (pi: ExtensionAPI) {
     const results = cachedResults;
 
     if (!results) {
-      // No cached results — Wallaby hasn't been queried yet. Warn but don't block.
-      if (ctx.hasUI) {
-        ctx.ui.notify(
-          "TDD Guard: test results not available. Make sure Wallaby is running.",
-          "warning",
-        );
-      }
-      return undefined;
+      // No cached results — Wallaby is not running. Hard block.
+      return {
+        block: true,
+        reason:
+          "TDD Guard: Wallaby is not running — all source file writes are blocked.\n" +
+          "Start Wallaby in your editor, then use activate_tdd_phase to verify the connection and switch phases.",
+      };
     }
 
     const staleness = Date.now() - results.timestamp;
