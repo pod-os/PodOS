@@ -7,7 +7,11 @@ import { HttpProblem, NetworkProblem } from "../problems";
  * Gateway for picture-related operations on Solid Pods and the store.
  */
 export class PictureGateway {
-  constructor(private readonly attachmentGateway: FileGateway) {}
+  private readonly attachmentGateway: FileGateway;
+
+  constructor(attachmentGateway: FileGateway) {
+    this.attachmentGateway = attachmentGateway;
+  }
 
   /**
    * Uploads a picture file and associates it with a thing.

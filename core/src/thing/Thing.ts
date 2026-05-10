@@ -39,14 +39,18 @@ export interface Attachment {
 }
 
 export class Thing {
-  constructor(
-    readonly uri: string,
-    readonly store: Store,
-    /**
-     * Whether the Thing can be edited according to its access control settings
-     */
-    readonly editable: boolean = false,
-  ) {}
+  readonly uri: string;
+  readonly store: Store;
+  /**
+   * Whether the Thing can be edited according to its access control settings
+   */
+  readonly editable: boolean;
+
+  constructor(uri: string, store: Store, editable: boolean = false) {
+    this.uri = uri;
+    this.store = store;
+    this.editable = editable;
+  }
 
   /**
    * Returns a human-readable label for this thing. Tries to match common RDF terms

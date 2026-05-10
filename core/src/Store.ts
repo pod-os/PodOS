@@ -54,12 +54,15 @@ export class Store {
   additions$: Subject<Quad>;
   removals$: Subject<Quad>;
 
+  private readonly internalStore: IndexedFormula;
+
   constructor(
     session: PodOsSession,
     offlineCache: OfflineCache = new NoOfflineCache(),
     onlineStatus: OnlineStatus = new AssumeAlwaysOnline(),
-    private readonly internalStore: IndexedFormula = graph(),
+    internalStore: IndexedFormula = graph(),
   ) {
+    this.internalStore = internalStore;
     this.fetcher = new OfflineCapableFetcher(this.internalStore, {
       fetch: session.authenticatedFetch,
       offlineCache,

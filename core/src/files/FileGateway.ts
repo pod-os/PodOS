@@ -11,10 +11,13 @@ import { createFileLinkOperation } from "./createFileLinkOperation";
  * @since 0.24.0
  */
 export class FileGateway {
-  constructor(
-    private readonly store: Store,
-    private readonly fileFetcher: FileFetcher,
-  ) {}
+  private readonly store: Store;
+  private readonly fileFetcher: FileFetcher;
+
+  constructor(store: Store, fileFetcher: FileFetcher) {
+    this.store = store;
+    this.fileFetcher = fileFetcher;
+  }
 
   /**
    * Uploads a file and associates it with a thing.

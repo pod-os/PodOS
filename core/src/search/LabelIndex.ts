@@ -8,11 +8,7 @@ import { Store } from "../Store";
  * https://github.com/pod-os/PodOS/blob/main/docs/features/full-text-search.md
  */
 export class LabelIndex extends RdfDocument {
-  constructor(
-    readonly uri: string,
-    readonly store: Store,
-    readonly editable: boolean = false,
-  ) {
+  constructor(uri: string, store: Store, editable: boolean = false) {
     super(uri, store, editable);
   }
 

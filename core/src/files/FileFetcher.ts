@@ -18,7 +18,11 @@ import mime from "mime/lite";
  * Handles HTTP operations for files, like fetching and updating file contents.
  */
 export class FileFetcher {
-  constructor(private session: PodOsSession) {}
+  private readonly session: PodOsSession;
+
+  constructor(session: PodOsSession) {
+    this.session = session;
+  }
 
   /**
    * Fetch the contents of the given file

@@ -4,7 +4,11 @@ import slugify from "slugify";
 export class UriService {
   // We expect to use the store for calculating the uris for things
   // e.g. looking up locations in type index
-  constructor(private readonly store: Store) {}
+  private readonly store: Store;
+
+  constructor(store: Store) {
+    this.store = store;
+  }
 
   /**
    * Proposes a URI for a new thing based on what the referenceUri identifies:

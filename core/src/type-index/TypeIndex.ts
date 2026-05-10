@@ -10,11 +10,7 @@ import { Store } from "../Store";
  * @since 0.24.0
  */
 export class TypeIndex extends Thing {
-  constructor(
-    readonly uri: string,
-    readonly store: Store,
-    readonly editable: boolean = false,
-  ) {
+  constructor(uri: string, store: Store, editable: boolean = false) {
     super(uri, store, editable);
   }
 

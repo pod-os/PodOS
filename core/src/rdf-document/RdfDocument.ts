@@ -7,11 +7,7 @@ export interface Subject {
 }
 
 export class RdfDocument extends Thing {
-  constructor(
-    readonly uri: string,
-    readonly store: Store,
-    readonly editable: boolean = false,
-  ) {
+  constructor(uri: string, store: Store, editable: boolean = false) {
     super(uri, store, editable);
   }
 

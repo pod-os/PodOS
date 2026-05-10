@@ -6,7 +6,10 @@ import lunr, { Index } from "lunr";
  */
 export class SearchIndex {
   private index: Index;
-  constructor(private labelIndexes: LabelIndex[]) {
+  private readonly labelIndexes: LabelIndex[];
+
+  constructor(labelIndexes: LabelIndex[]) {
+    this.labelIndexes = labelIndexes;
     this.index = this.rebuild().index;
   }
 

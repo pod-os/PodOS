@@ -9,7 +9,11 @@ import { HttpProblem, NetworkProblem } from "../problems";
  * @since 0.24.0
  */
 export class AttachmentGateway {
-  constructor(private readonly fileGateway: FileGateway) {}
+  private readonly fileGateway: FileGateway;
+
+  constructor(fileGateway: FileGateway) {
+    this.fileGateway = fileGateway;
+  }
 
   /**
    * Uploads an attachment file and associates it with a thing.

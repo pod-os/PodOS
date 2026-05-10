@@ -6,7 +6,11 @@ import { Store } from "../Store";
  * @since 0.24.0
  */
 export class ProfileGateway {
-  constructor(private readonly store: Store) {}
+  private readonly store: Store;
+
+  constructor(store: Store) {
+    this.store = store;
+  }
 
   /**
    * Fetches the profile for the given WebID and all linked documents

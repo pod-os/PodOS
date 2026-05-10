@@ -7,13 +7,12 @@ import { ProfileQuery } from "@solid-data-modules/rdflib-utils";
  * Allows finding things related to the WebID and their profile document
  */
 export class WebIdProfile extends Thing {
-  private profileQuery: ProfileQuery;
-  constructor(
-    readonly webId: string,
-    readonly store: Store,
-    readonly editable: boolean = false,
-  ) {
+  private readonly profileQuery: ProfileQuery;
+  readonly webId: string;
+
+  constructor(webId: string, store: Store, editable: boolean = false) {
     super(webId, store, editable);
+    this.webId = webId;
     this.profileQuery = this.store.profileQuery(this.webId);
   }
 

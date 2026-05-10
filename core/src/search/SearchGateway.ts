@@ -7,7 +7,11 @@ import { addToLabelIndex } from "./addToLabelIndex";
 import { SearchIndex } from "./SearchIndex";
 
 export class SearchGateway {
-  constructor(private store: Store) {}
+  private readonly store: Store;
+
+  constructor(store: Store) {
+    this.store = store;
+  }
 
   /**
    * Fetch the private label index for the given profile and build a search index from it
