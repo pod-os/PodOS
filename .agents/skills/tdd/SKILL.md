@@ -12,6 +12,7 @@ Follow the **red → green → refactor** cycle strictly, **one cycle at a time*
 ### 1. Red — write ONE failing test
 - Pick the **single next** unimplemented behaviour from the plan.
 - Write **one** test that captures it.
+- **Bootstrapping (no production module yet):** When the production module doesn't exist yet, you can't import it — the test would fail with a compile/module-not-found error instead of a proper assertion failure. To avoid this, **define a minimal stub directly in the test file** (e.g. a function that returns a dummy value). This keeps the test runnable and lets it fail for the right reason. The stub will be extracted to the production file during the refactor step.
 - Check test results using Wallaby: call `wallaby_failingTests` to see which tests are failing, or `wallaby_allTests` for the full picture.
   - The new test must fail.
   - It must fail **for the expected reason** (missing feature — not a compile error).
@@ -28,6 +29,7 @@ Follow the **red → green → refactor** cycle strictly, **one cycle at a time*
 
 ### 3. Refactor — clean up
 - Improve structure, naming, or remove duplication — without changing behaviour.
+- **Extract stubs:** If the red step used an inline stub (see bootstrapping above), extract it to the production file now and replace the stub with an import. The tests must stay green.
 - After each refactoring change, check Wallaby results (`wallaby_failingTests`) to confirm all tests still pass.
 - **Stop. Show the test results.**
 
