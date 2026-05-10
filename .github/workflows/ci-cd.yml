@@ -69,9 +69,13 @@ jobs:
         run: |
           echo "version=$(npm version prerelease --preid rc.${GITHUB_SHA_SHORT} --no-git-tag-version)" >> $GITHUB_OUTPUT
         id: prerelease
-      - run: echo prerelease version is ${{ steps.prerelease.outputs.version }}#
+      - run: echo prerelease version is ${{ steps.prerelease.outputs.version }}
       - name: Publish @pod-os/core
-        run: npm publish --provenance --access public --tag ${{ env.GITHUB_REF_SLUG }}
+        uses: JS-DevTools/npm-publish@v4
+        with:
+          access: public
+          provenance: true
+          tag: ${{ env.GITHUB_REF_SLUG }}
 
   npm-publish-elements-snapshot:
     if: github.ref == 'refs/heads/main'
@@ -101,7 +105,11 @@ jobs:
         id: prerelease
       - run: echo prerelease version is ${{ steps.prerelease.outputs.version }}
       - name: Publish @pod-os/elements
-        run: npm publish --provenance --access public --tag ${{ env.GITHUB_REF_SLUG }}
+        uses: JS-DevTools/npm-publish@v4
+        with:
+          access: public
+          provenance: true
+          tag: ${{ env.GITHUB_REF_SLUG }}
 
   deploy-preview-pod-os-browser:
     needs: npm-publish-elements-snapshot
@@ -213,7 +221,12 @@ jobs:
           node-version: lts/*
           registry-url: "https://registry.npmjs.org"
       - name: Release @pod-os/core
-        run: npm publish --provenance --access public --tag latest
+        id: release
+        uses: JS-DevTools/npm-publish@v4
+        with:
+          access: public
+          provenance: true
+          tag: latest
 
   npm-release-elements:
     needs: [build, npm-publish-elements-snapshot, npm-release-core]
@@ -238,7 +251,12 @@ jobs:
           node-version: lts/*
           registry-url: "https://registry.npmjs.org"
       - name: Release @pod-os/elements
-        run: npm publish --provenance --access public --tag latest
+        id: release
+        uses: JS-DevTools/npm-publish@v4
+        with:
+          access: public
+          provenance: true
+          tag: latest
 
   deploy-prod-pod-os-browser:
     needs: npm-release-elements
