@@ -18,7 +18,7 @@ jobs:
       NETLIFY_SITE_ID: ${{ secrets.NETLIFY_POD_OS_BROWSER_SITE_ID }}
       NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: echo release apps based on @pod-os/elements version ${POD_OS_ELEMENTS_VERSION}
       - name: install dependencies
         run: npm ci

@@ -13,9 +13,9 @@ jobs:
       matrix:
         node-version: [ lts/* ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -58,7 +58,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: contacts-dist
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: lts/*
           registry-url: "https://registry.npmjs.org"
@@ -105,7 +105,7 @@ jobs:
           name: contacts-dist
       - name: Prepare release version
         run: sed -i 's/-next\.0//' package.json
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: lts/*
           registry-url: "https://registry.npmjs.org"
@@ -124,7 +124,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Configure git

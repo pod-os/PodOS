@@ -13,9 +13,9 @@ jobs:
       matrix:
         node-version: [lts/*]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -60,7 +60,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: core-build
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: lts/*
           registry-url: "https://registry.npmjs.org"
@@ -94,7 +94,7 @@ jobs:
         run: |
           CORE_SNAPSHOT="${{ needs.npm-publish-core-snapshot.outputs.prereleaseVersion }}"
           sed -i "s/\"@pod-os\/core\": \"[^\"]*\"/\"@pod-os\/core\": \"${CORE_SNAPSHOT}\"/" package.json
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: lts/*
           registry-url: "https://registry.npmjs.org"
@@ -122,7 +122,7 @@ jobs:
       POD_OS_ELEMENTS_VERSION:
         ${{ needs.npm-publish-elements-snapshot.outputs.prereleaseVersion }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Deploy to Netlify (Preview)
         id: deploy
         uses: ./.github/actions/deploy-pod-os-app
@@ -159,11 +159,11 @@ jobs:
       - run:
           echo core version is ${{
           needs.npm-publish-core-snapshot.outputs.prereleaseVersion }}
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Setup Pages
-        uses: actions/configure-pages@v2
+        uses: actions/configure-pages@v5
       - name: Use Node.js 20
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
@@ -216,7 +216,7 @@ jobs:
           name: core-build
       - name: Prepare release version
         run: sed -i 's/-next\.0//' package.json
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: lts/*
           registry-url: "https://registry.npmjs.org"
@@ -246,7 +246,7 @@ jobs:
           sed -i "s/\"@pod-os\/core\": \"[^\"]*\"/\"@pod-os\/core\": \"^${CORE_VERSION}\"/" package.json
       - name: Prepare release version
         run: sed -i 's/-next\.0//' package.json
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: lts/*
           registry-url: "https://registry.npmjs.org"
@@ -269,7 +269,7 @@ jobs:
       POD_OS_ELEMENTS_VERSION:
         ${{ needs.npm-release-elements.outputs.releaseVersion }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Deploy to Netlify (Production)
         id: deploy
         uses: ./.github/actions/deploy-pod-os-app
@@ -286,7 +286,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Configure git
