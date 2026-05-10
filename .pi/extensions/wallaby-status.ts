@@ -65,12 +65,24 @@ export default function (pi: ExtensionAPI) {
 
   // Listen for Wallaby tool results to capture test data
   pi.on("tool_result", async (event, ctx) => {
-    if (
-      event.toolName === "wallaby_wallaby_allTests" ||
-      event.toolName === "wallaby_wallaby_failingTests"
-    ) {
+    // Tools that return the full test list (all tests, or all tests for a file/line)
+    const allTestTools = [
+      "wallaby_wallaby_allTests",
+      "wallaby_wallaby_allTestsForFile",
+      "wallaby_wallaby_allTestsForFileAndLine",
+    ];
+    // Tools that return only failing tests
+    const failingTestTools = [
+      "wallaby_wallaby_failingTests",
+      "wallaby_wallaby_failingTestsForFile",
+      "wallaby_wallaby_failingTestsForFileAndLine",
+    ];
+
+    const isAllTestTool = allTestTools.includes(event.toolName);
+    const isFailingTestTool = failingTestTools.includes(event.toolName);
+
+    if (isAllTestTool || isFailingTestTool) {
       try {
-        // Parse the result content to extract test data
         const content = event.content;
         if (!content || content.length === 0) return;
 
@@ -80,7 +92,8 @@ export default function (pi: ExtensionAPI) {
         const data = JSON.parse(textContent.text);
         if (!data || !data.tests) return;
 
-        if (event.toolName === "wallaby_wallaby_allTests") {
+        if (isAllTestTool) {
+          // All-test tools give us both passing and failing — update everything
           lastAllCount = data.tests.length;
           lastFailCount = data.tests.filter(
             (t: any) => t.status !== "passed",
@@ -89,15 +102,21 @@ export default function (pi: ExtensionAPI) {
             lastCoverage = data.coveragePercentage;
           }
           wallabyAvailable = true;
-        } else if (event.toolName === "wallaby_wallaby_failingTests") {
+          renderStatus(ctx);
+        } else if (isFailingTestTool) {
+          // Failing-test tools only return failures — update fail count
+          // and coverage, but do NOT update lastAllCount (it would
+          // reset the passing count to 0 and break the status bar).
           lastFailCount = data.tests.length;
           if (data.coveragePercentage !== undefined) {
             lastCoverage = data.coveragePercentage;
           }
-          wallabyAvailable = true;
+          // Only render if we've seen an all-test result before,
+          // otherwise the passing count would be wrong.
+          if (wallabyAvailable) {
+            renderStatus(ctx);
+          }
         }
-
-        renderStatus(ctx);
       } catch {
         // Ignore parse errors
       }
