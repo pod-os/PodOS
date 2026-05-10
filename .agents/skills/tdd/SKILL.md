@@ -46,7 +46,7 @@ Follow the **red → green → refactor** cycle strictly, **one cycle at a time*
 After the refactor step:
 1. State which behaviour was just implemented.
 2. Show the full passing test results from Wallaby.
-3. Propose a commit message: `test: <behaviour>` for the test file and `feat: <behaviour>` for the implementation (or a single combined message).
+3. Propose a commit message: `test: <behaviour>` for the test file, `feat: <behaviour>` for the implementation, or `refactor: <description>` for refactoring-only changes (or a single combined message).
 4. **Stop. Do not run `git commit` or any git write command. Committing is the human's job.**
 5. **Wait for explicit human approval before starting the next cycle.**
 
