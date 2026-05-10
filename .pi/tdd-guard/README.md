@@ -12,9 +12,9 @@ Deterministic test→impl→refactor enforcement for pi.
        │
        ├── on activation: queries Wallaby MCP for live results
        │
-       ├── writes results to test-results.json
+       ├── caches results in memory
        │
-       └── on every tool call: reads test-results.json
+       └── on every tool call: checks cached results
                   │
     ┌─────────────┴─────────────┐
     │                           │
@@ -70,7 +70,6 @@ No Jest reporter configuration is needed.
 
 | File | Purpose |
 |---|---|
-| `test-results.json` | Live test state (gitignored) — written by the guard after querying Wallaby |
 | `config.json` | Current phase — `{ "phase": "test" \| "impl" \| "refactor" }`. Gitignored; auto-created at `test` on first session. |
 | `README.md` | This file |
 
@@ -81,8 +80,7 @@ The extension that does the blocking lives at `.pi/extensions/tdd-guard.ts`.
 The directory ships its own `.pi/tdd-guard/.gitignore`:
 
 ```
-test-results.json
 config.json
 ```
 
-Both files are runtime state. `config.json` is auto-created at `test` by the extension on first session start.
+`config.json` is runtime state, auto-created at `test` by the extension on first session start.

@@ -6,7 +6,7 @@
  *
  * How it works:
  *   1. Wallaby MCP provides live test results. The guard queries Wallaby on
- *      phase activation and writes results to .pi/tdd-guard/test-results.json.
+ *      phase activation and caches results in memory.
  *   2. The current phase is stored in .pi/tdd-guard/config.json.
  *      config.json is INTERNAL RUNTIME STATE — it must never be written directly
  *      by the agent or by hand. Use the /tdd-activate command (or the
@@ -67,7 +67,6 @@ const WALLABY_MCP_SDK_BASE = path.resolve(
   __dirname, "wallaby-mcp/node_modules/@modelcontextprotocol/sdk/dist/esm",
 );
 
-const RESULTS_FILE = ".pi/tdd-guard/test-results.json";
 const CONFIG_FILE = ".pi/tdd-guard/config.json";
 
 type Phase = "test" | "impl" | "refactor";
@@ -80,16 +79,6 @@ interface TestResults {
 
 interface GuardConfig {
   phase: Phase;
-}
-
-function readResults(cwd: string): TestResults | null {
-  const filePath = path.join(cwd, RESULTS_FILE);
-  if (!fs.existsSync(filePath)) return null;
-  try {
-    return JSON.parse(fs.readFileSync(filePath, "utf8")) as TestResults;
-  } catch {
-    return null;
-  }
 }
 
 function readConfig(cwd: string): GuardConfig | null {
@@ -200,6 +189,9 @@ export default function (pi: ExtensionAPI) {
   // callback and the tool executor can reuse it without holding a ctx reference.
   let cachedSetStatus: ((text: string) => void) | null = null;
 
+  // In-memory cache of the latest Wallaby test results.
+  let cachedResults: TestResults | null = null;
+
   // Wallaby MCP client — used to query live test results.
   let wallabyClient: any = null;
 
@@ -227,7 +219,7 @@ export default function (pi: ExtensionAPI) {
   }
 
   /**
-   * Query Wallaby MCP for all test results and update test-results.json.
+   * Query Wallaby MCP for all test results and cache them in memory.
    * Returns the parsed results or null if Wallaby is unavailable.
    */
   async function fetchWallabyResults(): Promise<TestResults | null> {
@@ -263,10 +255,8 @@ export default function (pi: ExtensionAPI) {
         timestamp: Date.now(),
       };
 
-      // Write test-results.json so the guard's within-phase checks stay current.
-      const outFile = path.join(cwd, RESULTS_FILE);
-      fs.mkdirSync(path.dirname(outFile), { recursive: true });
-      fs.writeFileSync(outFile, JSON.stringify(results, null, 2));
+      // Cache results in memory for within-phase checks.
+      cachedResults = results;
 
       return results;
     } catch {
@@ -279,7 +269,6 @@ export default function (pi: ExtensionAPI) {
 
 
   pi.on("session_start", async (_event, ctx) => {
-    const resultsPath = path.join(cwd, RESULTS_FILE);
     const configPath = path.join(cwd, CONFIG_FILE);
 
     // Bootstrap config.json (gitignored runtime state) if missing.
@@ -294,7 +283,7 @@ export default function (pi: ExtensionAPI) {
     // Connect to Wallaby and fetch initial results.
     const wallabyResults = await fetchWallabyResults();
 
-    if (!wallabyResults && !fs.existsSync(resultsPath)) {
+    if (!wallabyResults) {
       if (ctx.hasUI) {
         ctx.ui.notify(
           "TDD Guard: no test results found. Make sure Wallaby is running in your editor.",
@@ -566,13 +555,13 @@ export default function (pi: ExtensionAPI) {
       return undefined;
     }
 
-    const results = readResults(cwd);
+    const results = cachedResults;
 
     if (!results) {
-      // No results file — Wallaby hasn't been queried yet. Warn but don't block.
+      // No cached results — Wallaby hasn't been queried yet. Warn but don't block.
       if (ctx.hasUI) {
         ctx.ui.notify(
-          "TDD Guard: test results not found. Make sure Wallaby is running.",
+          "TDD Guard: test results not available. Make sure Wallaby is running.",
           "warning",
         );
       }
