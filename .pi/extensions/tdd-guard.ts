@@ -5,15 +5,15 @@
  * before it reaches the filesystem or shell.
  *
  * How it works:
- *   1. A Jest reporter (.pi/tdd-guard/jest-reporter.js) writes test results to
- *      .pi/tdd-guard/test-results.json after every test run.
+ *   1. Wallaby MCP provides live test results. The guard queries Wallaby on
+ *      phase activation and writes results to .pi/tdd-guard/test-results.json.
  *   2. The current phase is stored in .pi/tdd-guard/config.json.
  *      config.json is INTERNAL RUNTIME STATE — it must never be written directly
  *      by the agent or by hand. Use the /tdd-activate command (or the
  *      activate_tdd_phase tool) to switch phases. Direct writes to config.json
  *      are blocked by the guard.
  *   3. Phase activation (/tdd-activate <phase> or activate_tdd_phase tool):
- *        a. Runs the full test suite (npm test) and updates test-results.json.
+ *        a. Queries Wallaby MCP for live test results (Wallaby must be running).
  *        b. Checks the precondition for the target phase:
  *             test     — all tests green AND working tree clean
  *             impl     — at least one test failing
@@ -38,16 +38,14 @@
  *      in bash — committing is the human's job, not the agent's.
  *
  * Status bar:
- *   tdd ● refactor  ✓ 42  ✗ 0
- *   The counts come from test-results.json and are refreshed:
- *     - After every activation command (which always runs the suite)
- *     - After every npm test run (the Jest reporter updates test-results.json,
- *       and the guard watches that file to refresh the status bar)
+ *   tdd ● refactor
+ *   Shows only the current phase. Test counts are provided by Wallaby.
+ *   Updated after every phase activation.
  *
  * Setup:
- *   - Install the reporter: see .pi/tdd-guard/README.md
+ *   - Ensure Wallaby is running in your editor.
+ *   - The wallaby-mcp extension must be loaded (provides the MCP SDK).
  *   - Use /tdd-activate <phase> or the activate_tdd_phase tool to switch phases.
- *   - Run your tests after every step so results stay fresh.
  *
  * Always-exempt files (never "dirty" for working-tree checks during activation):
  *   - .pi/extensions/tdd-guard.ts
@@ -58,6 +56,16 @@ import { Type } from "typebox";
 import * as fs from "fs";
 import * as path from "path";
 import { execSync } from "child_process";
+
+const WALLABY_MCP_COMMAND = process.env.WALLABY_MCP_COMMAND ?? "node";
+const WALLABY_MCP_ARGS = (
+  process.env.WALLABY_MCP_ARGS ?? "/home/node/.wallaby/mcp/"
+).split(" ");
+
+// Resolve MCP SDK from the wallaby-mcp extension's node_modules
+const WALLABY_MCP_SDK_BASE = path.resolve(
+  __dirname, "wallaby-mcp/node_modules/@modelcontextprotocol/sdk/dist/esm",
+);
 
 const RESULTS_FILE = ".pi/tdd-guard/test-results.json";
 const CONFIG_FILE = ".pi/tdd-guard/config.json";
@@ -170,10 +178,9 @@ const ALWAYS_EXEMPT = [
   ".pi/tdd-guard/config.json",
 ];
 
-/** Render the status bar text from phase + test results. */
+/** Render the status bar text from phase only (Wallaby handles test counts). */
 function buildStatusText(
   phase: Phase | null,
-  results: TestResults | null,
   theme: { fg: (color: string, text: string) => string },
 ): string {
   const phaseLabels: Record<string, string> = {
@@ -183,14 +190,7 @@ function buildStatusText(
   };
   const label = (phase ? phaseLabels[phase] : undefined) ?? theme.fg("dim", "● tdd-guard");
 
-  const counts = results
-    ? "  " +
-      theme.fg("success", `✓ ${results.passed.length}`) +
-      "  " +
-      theme.fg("error", `✗ ${results.failed.length}`)
-    : "";
-
-  return theme.fg("dim", "tdd ") + label + counts;
+  return theme.fg("dim", "tdd ") + label;
 }
 
 export default function (pi: ExtensionAPI) {
@@ -200,40 +200,83 @@ export default function (pi: ExtensionAPI) {
   // callback and the tool executor can reuse it without holding a ctx reference.
   let cachedSetStatus: ((text: string) => void) | null = null;
 
-  // File-watcher for test-results.json so the status bar refreshes after
-  // every npm test run, even if the agent didn't trigger it.
-  let resultsWatcher: fs.FSWatcher | null = null;
+  // Wallaby MCP client — used to query live test results.
+  let wallabyClient: any = null;
 
-  function startWatcher(theme: { fg: (color: string, text: string) => string }) {
-    const resultsPath = path.join(cwd, RESULTS_FILE);
-
-    if (resultsWatcher) {
-      try { resultsWatcher.close(); } catch { /* ignore */ }
-      resultsWatcher = null;
-    }
-
-    // Watch the directory so we don't miss the file being recreated.
-    const dir = path.dirname(resultsPath);
-    if (!fs.existsSync(dir)) return;
-
+  async function connectWallaby(): Promise<any> {
+    if (wallabyClient) return wallabyClient;
     try {
-      resultsWatcher = fs.watch(dir, (_event, filename) => {
-        if (filename && filename === path.basename(resultsPath)) {
-          // Small debounce — the reporter writes atomically but watch may fire
-          // before the write is fully flushed.
-          setTimeout(() => {
-            if (cachedSetStatus) {
-              const config = readConfig(cwd);
-              const results = readResults(cwd);
-              cachedSetStatus(buildStatusText(config?.phase ?? null, results, theme));
-            }
-          }, 200);
-        }
+      const { Client } = await import(
+        path.join(WALLABY_MCP_SDK_BASE, "client/index.js")
+      );
+      const { StdioClientTransport } = await import(
+        path.join(WALLABY_MCP_SDK_BASE, "client/stdio.js")
+      );
+      const transport = new StdioClientTransport({
+        command: WALLABY_MCP_COMMAND,
+        args: WALLABY_MCP_ARGS,
+        stderr: "pipe",
       });
-    } catch {
-      // If we can't watch, that's OK — status will still update on activate.
+      wallabyClient = new Client({ name: "tdd-guard-wallaby", version: "1.0.0" });
+      await wallabyClient.connect(transport);
+      return wallabyClient;
+    } catch (err) {
+      wallabyClient = null;
+      return null;
     }
   }
+
+  /**
+   * Query Wallaby MCP for all test results and update test-results.json.
+   * Returns the parsed results or null if Wallaby is unavailable.
+   */
+  async function fetchWallabyResults(): Promise<TestResults | null> {
+    const client = await connectWallaby();
+    if (!client) return null;
+
+    try {
+      const result = await client.callTool({
+        name: "wallaby_allTests",
+        arguments: {},
+      });
+
+      const text = (result.content as any[])
+        .filter((c: any) => c.type === "text")
+        .map((c: any) => c.text)
+        .join("\n");
+
+      const data = JSON.parse(text);
+      const tests: Array<{ name: string[]; status: string }> = data.tests ?? [];
+
+      const passed: string[] = [];
+      const failed: string[] = [];
+
+      for (const t of tests) {
+        const name = t.name.join(" > ");
+        if (t.status === "passed") passed.push(name);
+        else if (t.status === "failed") failed.push(name);
+      }
+
+      const results: TestResults = {
+        passed,
+        failed,
+        timestamp: Date.now(),
+      };
+
+      // Write test-results.json so the guard's within-phase checks stay current.
+      const outFile = path.join(cwd, RESULTS_FILE);
+      fs.mkdirSync(path.dirname(outFile), { recursive: true });
+      fs.writeFileSync(outFile, JSON.stringify(results, null, 2));
+
+      return results;
+    } catch {
+      // Connection may have died — reset so next call retries.
+      wallabyClient = null;
+      return null;
+    }
+  }
+
+
 
   pi.on("session_start", async (_event, ctx) => {
     const resultsPath = path.join(cwd, RESULTS_FILE);
@@ -248,10 +291,13 @@ export default function (pi: ExtensionAPI) {
       );
     }
 
-    if (!fs.existsSync(resultsPath)) {
+    // Connect to Wallaby and fetch initial results.
+    const wallabyResults = await fetchWallabyResults();
+
+    if (!wallabyResults && !fs.existsSync(resultsPath)) {
       if (ctx.hasUI) {
         ctx.ui.notify(
-          "TDD Guard: no test results found. Run your tests once to activate enforcement.",
+          "TDD Guard: no test results found. Make sure Wallaby is running in your editor.",
           "warning",
         );
       }
@@ -259,7 +305,8 @@ export default function (pi: ExtensionAPI) {
       const config = readConfig(cwd);
       if (ctx.hasUI) {
         ctx.ui.notify(
-          `TDD Guard active — phase: ${config?.phase ?? "test"} — use /tdd-activate <phase> to switch.`,
+          `TDD Guard active — phase: ${config?.phase ?? "test"} — use /tdd-activate <phase> to switch.` +
+          (wallabyResults ? " (using Wallaby for live test results)" : ""),
           "info",
         );
       }
@@ -267,20 +314,18 @@ export default function (pi: ExtensionAPI) {
 
     if (ctx.hasUI) {
       const config = readConfig(cwd);
-      const results = readResults(cwd);
-      const statusText = buildStatusText(config?.phase ?? null, results, ctx.ui.theme);
+      const statusText = buildStatusText(config?.phase ?? null, ctx.ui.theme);
       ctx.ui.setStatus("tdd-guard", statusText);
       cachedSetStatus = (text: string) => ctx.ui.setStatus("tdd-guard", text);
-      startWatcher(ctx.ui.theme);
     }
   });
 
   pi.on("session_shutdown", async () => {
-    if (resultsWatcher) {
-      try { resultsWatcher.close(); } catch { /* ignore */ }
-      resultsWatcher = null;
-    }
     cachedSetStatus = null;
+    if (wallabyClient) {
+      await wallabyClient.close().catch(() => {});
+      wallabyClient = null;
+    }
   });
 
   // Git write subcommands the agent must never run.
@@ -317,35 +362,21 @@ export default function (pi: ExtensionAPI) {
     targetPhase: Phase,
     onProgress: (msg: string) => void,
   ): Promise<{ success: boolean; message: string }> {
-    // 1. Run the full test suite.
-    onProgress(`Running npm test…`);
-    try {
-      execSync("npm test", { cwd, encoding: "utf8", stdio: "pipe" });
-    } catch {
-      // Jest exits non-zero when tests fail — that's expected. We read
-      // test-results.json regardless.
-    }
+    // 1. Fetch live test results from Wallaby.
+    onProgress(`Fetching test results from Wallaby…`);
+    let results = await fetchWallabyResults();
 
-    // 2. Re-read fresh results (the reporter writes test-results.json).
-    const results = readResults(cwd);
+    // No fallback — Wallaby must be running.
     if (!results) {
       return {
         success: false,
         message:
-          "TDD Guard: could not read test-results.json after running npm test.\n" +
-          "Make sure the Jest reporter is installed (see .pi/tdd-guard/README.md).",
+          "TDD Guard: could not get test results from Wallaby.\n" +
+          "Make sure Wallaby is running in your editor.",
       };
     }
 
-    // 3. Update the status bar with fresh counts.
-    if (cachedSetStatus) {
-      const config = readConfig(cwd);
-      // Use a dummy theme for now; we update properly in step 5.
-      const text = `tdd ● ${config?.phase ?? "?"} ✓ ${results.passed.length} ✗ ${results.failed.length}`;
-      cachedSetStatus(text);
-    }
-
-    // 4. Check the precondition for the target phase.
+    // 2. Check the precondition for the target phase.
     if (targetPhase === "test" || targetPhase === "refactor") {
       // Precondition: all tests green AND working tree clean.
       if (results.failed.length > 0) {
@@ -390,8 +421,7 @@ export default function (pi: ExtensionAPI) {
     return {
       success: true,
       message:
-        `TDD Guard: activated [${targetPhase}] phase. ` +
-        `✓ ${results.passed.length}  ✗ ${results.failed.length}`,
+        `TDD Guard: activated [${targetPhase}] phase.`,
     };
   }
 
@@ -399,7 +429,7 @@ export default function (pi: ExtensionAPI) {
   pi.registerCommand("tdd-activate", {
     description:
       "Activate a TDD phase (test | impl | refactor). " +
-      "Runs npm test, checks preconditions, and switches the phase.",
+      "Activate a TDD phase. Queries Wallaby for test results, checks preconditions, and switches the phase.",
     handler: async (args, ctx) => {
       const target = (args ?? "").trim() as Phase;
       if (!["test", "impl", "refactor"].includes(target)) {
@@ -410,7 +440,7 @@ export default function (pi: ExtensionAPI) {
         return;
       }
 
-      ctx.ui.notify(`TDD Guard: running npm test to check preconditions…`, "info");
+      ctx.ui.notify(`TDD Guard: checking test results to verify preconditions…`, "info");
 
       const { success, message } = await activatePhase(target, (msg) => {
         ctx.ui.notify(msg, "info");
@@ -419,8 +449,7 @@ export default function (pi: ExtensionAPI) {
       // Refresh status bar with proper theme.
       if (ctx.hasUI) {
         const config = readConfig(cwd);
-        const results = readResults(cwd);
-        const text = buildStatusText(config?.phase ?? null, results, ctx.ui.theme);
+        const text = buildStatusText(config?.phase ?? null, ctx.ui.theme);
         ctx.ui.setStatus("tdd-guard", text);
         cachedSetStatus = (t: string) => ctx.ui.setStatus("tdd-guard", t);
       }
@@ -444,7 +473,7 @@ export default function (pi: ExtensionAPI) {
       "  impl → at least one test failing; " +
       "  refactor → all tests green AND working tree clean.",
     promptSnippet:
-      "Switch TDD phase (test|impl|refactor); runs npm test and checks preconditions",
+      "Switch TDD phase (test|impl|refactor); queries Wallaby for test results and checks preconditions",
     promptGuidelines: [
       "Use activate_tdd_phase to switch between TDD phases (test, impl, refactor). " +
         "Never write .pi/tdd-guard/config.json directly.",
@@ -475,12 +504,8 @@ export default function (pi: ExtensionAPI) {
       // Refresh status bar (best-effort; cachedSetStatus may be null in non-UI mode).
       if (cachedSetStatus) {
         const config = readConfig(cwd);
-        const results = readResults(cwd);
-        // We don't have a theme here — emit a plain-text status as a fallback.
-        if (config && results) {
-          cachedSetStatus(
-            `tdd ● ${config.phase}  ✓ ${results.passed.length}  ✗ ${results.failed.length}`,
-          );
+        if (config) {
+          cachedSetStatus(`tdd ● ${config.phase}`);
         }
       }
 
@@ -544,10 +569,10 @@ export default function (pi: ExtensionAPI) {
     const results = readResults(cwd);
 
     if (!results) {
-      // No results file — reporter not set up. Warn but don't block.
+      // No results file — Wallaby hasn't been queried yet. Warn but don't block.
       if (ctx.hasUI) {
         ctx.ui.notify(
-          "TDD Guard: test results not found. Run tests to enable enforcement.",
+          "TDD Guard: test results not found. Make sure Wallaby is running.",
           "warning",
         );
       }
@@ -558,7 +583,7 @@ export default function (pi: ExtensionAPI) {
     const STALE_MS = 5 * 60 * 1000; // 5 minutes
     if (staleness > STALE_MS && ctx.hasUI) {
       ctx.ui.notify(
-        `TDD Guard: test results are ${Math.round(staleness / 1000)}s old. Run tests to refresh.`,
+        `TDD Guard: test results are ${Math.round(staleness / 1000)}s old. Use activate_tdd_phase to refresh.`,
         "warning",
       );
     }

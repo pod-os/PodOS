@@ -12,38 +12,38 @@ Follow the **red → green → refactor** cycle strictly, **one cycle at a time*
 ### 1. Red — write ONE failing test
 - Pick the **single next** unimplemented behaviour from the plan.
 - Write **one** test that captures it.
-- Run the **full** test suite from the **repository root** with no filters: `npm test` (no `--testPathPatterns` or any other filter).
+- Check test results using Wallaby: call `wallaby_failingTests` to see which tests are failing, or `wallaby_allTests` for the full picture.
   - The new test must fail.
   - It must fail **for the expected reason** (missing feature — not a compile error).
   - No previously passing test may newly break.
-- **Stop. Show the output. The guard now blocks impl writes until tests are run.**
+- **Stop. Show the test results. The guard now blocks impl writes until tests are run.**
 
 ### 2. Green — make it pass with minimal code
 - Write the simplest production code that makes the failing test pass.
   *(The guard allows this because tests are failing.)*
-- Run the **full** test suite from the **repository root** with no filters: `npm test`.
+- After making your change, check Wallaby results using `wallaby_failingTests` to verify the test now passes.
 - If the implementation change causes regressions in *other* test files, fix those tests immediately — this is still part of the green step, not a new red step.
-- Confirm every test passes before stopping.
-- **Stop. Show the output. The guard now blocks further impl writes.**
+- Confirm every test passes before stopping (use `wallaby_allTests` or `wallaby_failingTests` to verify).
+- **Stop. Show the test results. The guard now blocks further impl writes.**
 
 ### 3. Refactor — clean up
 - Improve structure, naming, or remove duplication — without changing behaviour.
-- Run the full test suite again from the **repository root** (`npm test`) to confirm all tests still pass.
-- **Stop. Show the output.**
+- After each refactoring change, check Wallaby results (`wallaby_failingTests`) to confirm all tests still pass.
+- **Stop. Show the test results.**
 
 ## Hard rules
 
 - **One test per red step.** Writing multiple tests at once is a violation. If you catch yourself adding more than one new test, stop and delete the extras.
 - **No implementation before red.** Writing production code before a failing test exists is a violation.
 - **No future-proofing.** Only write code a currently-failing test demands.
-- **Always run tests** after every step and include the output before continuing. Always run from the **repository root**: `npm test`.
-- **Confirm the failure reason.** A red test must fail because the feature is missing — not because of a syntax error or an already-failing unrelated test.
+- **Always check test results** after every step using Wallaby tools (`wallaby_failingTests`, `wallaby_allTests`) and include the results before continuing. Wallaby provides instant, continuous test results — no need to run `npm test`.
+- **Confirm the failure reason.** A red test must fail because the feature is missing — not because of a syntax error or an already-failing unrelated test. Use `wallaby_failingTests` to inspect the error details.
 
 ## Completing a cycle
 
 After the refactor step:
 1. State which behaviour was just implemented.
-2. Show the full passing test output.
+2. Show the full passing test results from Wallaby.
 3. Propose a commit message: `test: <behaviour>` for the test file and `feat: <behaviour>` for the implementation (or a single combined message).
 4. **Stop. Do not run `git commit` or any git write command. Committing is the human's job.**
 5. **Wait for explicit human approval before starting the next cycle.**

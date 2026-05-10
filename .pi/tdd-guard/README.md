@@ -5,27 +5,40 @@ Deterministic test→impl→refactor enforcement for pi.
 ## How it works
 
 ```
-  you run tests
+  Wallaby runs tests continuously
        │
        ▼
-  jest-reporter.js  ──writes──►  .pi/tdd-guard/test-results.json
-                                          │
-                                          │ read on every tool call
-                                          ▼
-                                 tdd-guard.ts extension
-                                          │
-                  ┌───────────────────────┴───────────────────────┐
-                  │                                               │
-           writing test file?                        writing impl file?
-                  │                                               │
-        tests already failing?                     no failing tests?
-                  │                                               │
-               BLOCK ◄─────────────────────────────────────── BLOCK
-          "complete impl                                  "write a failing
-           step first"                                      test first"
+  tdd-guard.ts extension
+       │
+       ├── on activation: queries Wallaby MCP for live results
+       │
+       ├── writes results to test-results.json
+       │
+       └── on every tool call: reads test-results.json
+                  │
+    ┌─────────────┴─────────────┐
+    │                           │
+ writing test file?    writing impl file?
+    │                           │
+ tests already failing?  no failing tests?
+    │                           │
+ BLOCK ◄──────────────────── BLOCK
+ "complete impl             "write a failing
+  step first"                test first"
 ```
 
 The agent physically cannot call `write` or `edit` without this check running first.
+
+## Wallaby Integration
+
+The guard uses **Wallaby MCP** for live test results.
+
+- Phase activation (`/tdd-activate` or `activate_tdd_phase`) queries Wallaby directly
+- No waiting for a full test suite run — results are instant
+- Wallaby must be running in your editor
+
+The agent should use Wallaby tools (`wallaby_failingTests`, `wallaby_allTests`)
+after every change to verify test results before proceeding.
 
 ## Rules enforced
 
@@ -48,34 +61,16 @@ Committing is the **human's job**. The agent proposes a commit message after eac
 
 ## Setup
 
-The reporter is wired into the **root `jest.config.js`** via the top-level
-`reporters` field. Because all sub-packages run as Jest `projects` from the
-root, a single reporter entry covers everything — no changes are needed in the
-individual package configs (`core/`, `elements/`, `contacts/`, etc.).
+1. Ensure Wallaby is running in your editor.
+2. The `wallaby-mcp` extension must be loaded at `.pi/extensions/wallaby-mcp/`.
 
-```js
-// jest.config.js (workspace root)
-export default async () => ({
-  reporters: [
-    'default',
-    ['<rootDir>/.pi/tdd-guard/jest-reporter.js', {}],
-  ],
-  projects: [
-    // ... sub-package configs
-  ],
-});
-```
-
-Always run tests from the **workspace root** (`npm test`) so the reporter is
-picked up and `test-results.json` stays current.
-
+No Jest reporter configuration is needed.
 
 ## Files
 
 | File | Purpose |
 |---|---|
-| `jest-reporter.js` | Jest reporter — writes `test-results.json` after every run |
-| `test-results.json` | Live test state (gitignored) |
+| `test-results.json` | Live test state (gitignored) — written by the guard after querying Wallaby |
 | `config.json` | Current phase — `{ "phase": "test" \| "impl" \| "refactor" }`. Gitignored; auto-created at `test` on first session. |
 | `README.md` | This file |
 
