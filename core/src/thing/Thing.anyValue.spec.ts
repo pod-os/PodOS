@@ -323,6 +323,195 @@ describe("Thing", function () {
         // Then: should emit "value B"
         expect(subscriber).toHaveBeenCalledWith("value B");
       });
+
+      describe("Multiple Predicates", () => {
+        it("picks first predicate when multiple have values in initial state", () => {
+          // Given: a store with values for multiple predicates
+          const uri = "https://jane.doe.example/container/file.ttl#fragment";
+          const predicateA = "https://vocab.test/predicate-a";
+          const predicateB = "https://vocab.test/predicate-b";
+          const predicateC = "https://vocab.test/predicate-c";
+
+          internalStore.add(sym(uri), sym(predicateA), "value-a");
+          internalStore.add(sym(uri), sym(predicateB), "value-b");
+          internalStore.add(sym(uri), sym(predicateC), "value-c");
+
+          const thing = new Thing(uri, store);
+          const subscriber = jest.fn();
+
+          // When: subscribing to multiple predicates
+          const observable = thing.observeAnyValue(
+            predicateA,
+            predicateB,
+            predicateC,
+          );
+          observable.subscribe(subscriber);
+
+          // Then: first emission should be the value of the first predicate
+          expect(subscriber).toHaveBeenCalledTimes(1);
+          expect(subscriber.mock.calls[0]).toEqual(["value-a"]);
+        });
+
+        it("falls back to second predicate when all values removed from first", () => {
+          // Given: a store with multiple values on first predicate and one on second
+          const uri = "https://jane.doe.example/container/file.ttl#fragment";
+          const predicateA = "https://vocab.test/predicate-a";
+          const predicateB = "https://vocab.test/predicate-b";
+          const predicateC = "https://vocab.test/predicate-c";
+
+          internalStore.add(sym(uri), sym(predicateA), "value-a1");
+          internalStore.add(sym(uri), sym(predicateA), "value-a2");
+          internalStore.add(sym(uri), sym(predicateB), "value-b");
+
+          const thing = new Thing(uri, store);
+          const subscriber = jest.fn();
+
+          // And: subscribing to multiple predicates
+          const observable = thing.observeAnyValue(
+            predicateA,
+            predicateB,
+            predicateC,
+          );
+          observable.subscribe(subscriber);
+
+          // And: initial value is from predicateA
+          expect(subscriber.mock.calls[0]).toEqual(["value-a1"]);
+
+          // When: both values from predicateA are removed
+          internalStore.removeMatches(
+            sym(uri),
+            sym(predicateA),
+            literal("value-a1"),
+          );
+          internalStore.removeMatches(
+            sym(uri),
+            sym(predicateA),
+            literal("value-a2"),
+          );
+          jest.advanceTimersByTime(250);
+
+          // Then: should fall back to predicateB
+          expect(subscriber).toHaveBeenCalledWith("value-b");
+        });
+      });
+
+      describe("Multiple Values Per Predicate", () => {
+        it("emits next value when first value removed if multiple exist", () => {
+          // Given: a store with multiple values for the same predicate
+          const uri = "https://jane.doe.example/container/file.ttl#fragment";
+          const predicate = "https://vocab.test/predicate";
+
+          internalStore.add(sym(uri), sym(predicate), "value1");
+          internalStore.add(sym(uri), sym(predicate), "value2");
+          internalStore.add(sym(uri), sym(predicate), "value3");
+
+          const thing = new Thing(uri, store);
+          const subscriber = jest.fn();
+
+          // And: thing subscribing to the predicate
+          const observable = thing.observeAnyValue(predicate);
+          observable.subscribe(subscriber);
+
+          // And: initial value is the first one
+          expect(subscriber.mock.calls[0]).toEqual(["value1"]);
+
+          // When: the first value is removed
+          internalStore.removeMatches(
+            sym(uri),
+            sym(predicate),
+            literal("value1"),
+          );
+          jest.advanceTimersByTime(250);
+
+          // Then: should emit the next value
+          expect(subscriber).toHaveBeenCalledWith("value2");
+        });
+      });
+
+      describe("Additional Predicate Switching", () => {
+        it("switches between predicates back and forth", () => {
+          // Given: two predicates are observed
+          const uri = "https://jane.doe.example/container/file.ttl#fragment";
+          const predicateA = "https://vocab.test/predicate-a";
+          const predicateB = "https://vocab.test/predicate-b";
+
+          const thing = new Thing(uri, store);
+          const subscriber = jest.fn();
+          const observable = thing.observeAnyValue(predicateA, predicateB);
+          observable.subscribe(subscriber);
+
+          // And both have no value
+          expect(subscriber).toHaveBeenCalledWith(undefined);
+
+          // When: +predicateA=value-a → emit value-a
+          internalStore.add(sym(uri), sym(predicateA), "value-a");
+          jest.advanceTimersByTime(250);
+          expect(subscriber).toHaveBeenCalledWith("value-a");
+
+          // When: -predicateA=value-a → emit undefined
+          internalStore.removeMatches(
+            sym(uri),
+            sym(predicateA),
+            literal("value-a"),
+          );
+          jest.advanceTimersByTime(250);
+          expect(subscriber).toHaveBeenCalledWith(undefined);
+
+          // When: +predicateB=value-b → emit value-b
+          internalStore.add(sym(uri), sym(predicateB), "value-b");
+          jest.advanceTimersByTime(250);
+          expect(subscriber).toHaveBeenCalledWith("value-b");
+
+          // When: -predicateB=value-b → emit undefined
+          internalStore.removeMatches(
+            sym(uri),
+            sym(predicateB),
+            literal("value-b"),
+          );
+          jest.advanceTimersByTime(250);
+          expect(subscriber).toHaveBeenCalledWith(undefined);
+
+          // When: +predicateA=value-a2 → emit value-a2
+          internalStore.add(sym(uri), sym(predicateA), "value-a2");
+          jest.advanceTimersByTime(250);
+          expect(subscriber).toHaveBeenCalledWith("value-a2");
+        });
+      });
+
+      describe("Consistency with anyValue() semantics", () => {
+        it("first emission equals anyValue() at subscription time", () => {
+          // Given: a store with multiple predicates and values
+          const uri = "https://jane.doe.example/container/file.ttl#fragment";
+          const predicateA = "https://vocab.test/predicate-a";
+          const predicateB = "https://vocab.test/predicate-b";
+          const predicateC = "https://vocab.test/predicate-c";
+
+          internalStore.add(sym(uri), sym(predicateA), "value-a");
+          internalStore.add(sym(uri), sym(predicateB), "value-b");
+          internalStore.add(sym(uri), sym(predicateC), "value-c");
+
+          const thing = new Thing(uri, store);
+
+          // When: getting anyValue
+          const anyValueResult = thing.anyValue(
+            predicateA,
+            predicateB,
+            predicateC,
+          );
+
+          // And: observing anyValue
+          const subscriber = jest.fn();
+          const observable = thing.observeAnyValue(
+            predicateA,
+            predicateB,
+            predicateC,
+          );
+          observable.subscribe(subscriber);
+
+          // Then: first emission should equal anyValue result
+          expect(subscriber.mock.calls[0][0]).toEqual(anyValueResult);
+        });
+      });
     });
   });
 });
