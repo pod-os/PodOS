@@ -24,6 +24,7 @@ export class PosDescription implements ResourceAware {
   }
 
   receiveResource = (resource: Thing) => {
+    this.disconnected$.next();
     resource
       .observeDescription()
       .pipe(takeUntil(this.disconnected$))
