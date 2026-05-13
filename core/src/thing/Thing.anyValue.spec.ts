@@ -420,6 +420,40 @@ describe("Thing", function () {
       });
 
       describe("Multiple Values Per Predicate", () => {
+        it("emits last remaining value when all but one are removed", () => {
+          // Given: a store with three values for the same predicate
+          const uri = "https://jane.doe.example/container/file.ttl#fragment";
+          const predicate = "https://vocab.test/predicate";
+
+          internalStore.add(sym(uri), sym(predicate), "value1");
+          internalStore.add(sym(uri), sym(predicate), "value2");
+          internalStore.add(sym(uri), sym(predicate), "value3");
+
+          const thing = new Thing(uri, store);
+          const subscriber = jest.fn();
+          const observable = thing.observeAnyValue(predicate);
+          observable.subscribe(subscriber);
+
+          expect(subscriber.mock.calls[0]).toEqual(["value1"]);
+
+          // When: value1 and value2 are removed
+          internalStore.removeMatches(
+            sym(uri),
+            sym(predicate),
+            literal("value1"),
+          );
+          internalStore.removeMatches(
+            sym(uri),
+            sym(predicate),
+            literal("value2"),
+          );
+          jest.advanceTimersByTime(250);
+
+          // Then: should emit value3 (the last remaining)
+          expect(subscriber).toHaveBeenCalledWith("value3");
+          expect(subscriber.mock.lastCall).toEqual(["value3"]);
+        });
+
         it("emits next value when first value removed if multiple exist", () => {
           // Given: a store with multiple values for the same predicate
           const uri = "https://jane.doe.example/container/file.ttl#fragment";
@@ -501,6 +535,51 @@ describe("Thing", function () {
           expect(subscriber).toHaveBeenCalledWith("value-a2");
         });
 
+        it("emits undefined once when all predicates lose all values in same debounce window", () => {
+          // Given: three predicates all have values
+          const uri = "https://jane.doe.example/container/file.ttl#fragment";
+          const predicateA = "https://vocab.test/predicate-a";
+          const predicateB = "https://vocab.test/predicate-b";
+          const predicateC = "https://vocab.test/predicate-c";
+
+          internalStore.add(sym(uri), sym(predicateA), "value-a");
+          internalStore.add(sym(uri), sym(predicateB), "value-b");
+          internalStore.add(sym(uri), sym(predicateC), "value-c");
+
+          const thing = new Thing(uri, store);
+          const subscriber = jest.fn();
+          const observable = thing.observeAnyValue(
+            predicateA,
+            predicateB,
+            predicateC,
+          );
+          observable.subscribe(subscriber);
+
+          expect(subscriber.mock.calls[0]).toEqual(["value-a"]);
+
+          // When: all values removed in same debounce window
+          internalStore.removeMatches(
+            sym(uri),
+            sym(predicateA),
+            literal("value-a"),
+          );
+          internalStore.removeMatches(
+            sym(uri),
+            sym(predicateB),
+            literal("value-b"),
+          );
+          internalStore.removeMatches(
+            sym(uri),
+            sym(predicateC),
+            literal("value-c"),
+          );
+          jest.advanceTimersByTime(250);
+
+          // Then: should emit undefined exactly once
+          expect(subscriber).toHaveBeenCalledTimes(2);
+          expect(subscriber.mock.lastCall).toEqual([undefined]);
+        });
+
         it("handles interleaved additions and removals across predicates", () => {
           // Given: two predicates are observed
           const uri = "https://jane.doe.example/container/file.ttl#fragment";
@@ -574,6 +653,73 @@ describe("Thing", function () {
           [undefined],
           ["value-b"],
         ]);
+      });
+
+      describe("Rapid Changes and Debouncing", () => {
+        it("emits once when multiple values removed in same debounce window", () => {
+          // Given: a store with multiple values for the same predicate
+          const uri = "https://jane.doe.example/container/file.ttl#fragment";
+          const predicate = "https://vocab.test/predicate";
+
+          internalStore.add(sym(uri), sym(predicate), "value1");
+          internalStore.add(sym(uri), sym(predicate), "value2");
+          internalStore.add(sym(uri), sym(predicate), "value3");
+
+          const thing = new Thing(uri, store);
+          const subscriber = jest.fn();
+
+          // And: subscribing to the predicate
+          const observable = thing.observeAnyValue(predicate);
+          observable.subscribe(subscriber);
+
+          // And: initial value is the first one
+          expect(subscriber.mock.calls[0]).toEqual(["value1"]);
+
+          // When: value1 and value2 are removed in the same debounce window
+          internalStore.removeMatches(
+            sym(uri),
+            sym(predicate),
+            literal("value1"),
+          );
+          internalStore.removeMatches(
+            sym(uri),
+            sym(predicate),
+            literal("value2"),
+          );
+          jest.advanceTimersByTime(250);
+
+          // Then: should emit once with value3 (not twice)
+          expect(subscriber).toHaveBeenCalledTimes(2);
+          expect(subscriber.mock.lastCall).toEqual(["value3"]);
+        });
+
+        it("emits once with new value when remove-then-add happen in same debounce window", () => {
+          // Given: a store with one value
+          const uri = "https://jane.doe.example/container/file.ttl#fragment";
+          const predicate = "https://vocab.test/predicate";
+
+          internalStore.add(sym(uri), sym(predicate), "value-a");
+
+          const thing = new Thing(uri, store);
+          const subscriber = jest.fn();
+          const observable = thing.observeAnyValue(predicate);
+          observable.subscribe(subscriber);
+
+          expect(subscriber.mock.calls[0]).toEqual(["value-a"]);
+
+          // When: value-a removed and value-b added within the same debounce window
+          internalStore.removeMatches(
+            sym(uri),
+            sym(predicate),
+            literal("value-a"),
+          );
+          internalStore.add(sym(uri), sym(predicate), "value-b");
+          jest.advanceTimersByTime(250);
+
+          // Then: should emit only once with value-b (not undefined then value-b)
+          expect(subscriber).toHaveBeenCalledTimes(2);
+          expect(subscriber.mock.lastCall).toEqual(["value-b"]);
+        });
       });
 
       describe("Consistency with anyValue() semantics", () => {
