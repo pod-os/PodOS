@@ -500,6 +500,80 @@ describe("Thing", function () {
           jest.advanceTimersByTime(250);
           expect(subscriber).toHaveBeenCalledWith("value-a2");
         });
+
+        it("handles interleaved additions and removals across predicates", () => {
+          // Given: two predicates are observed
+          const uri = "https://jane.doe.example/container/file.ttl#fragment";
+          const predicateA = "https://vocab.test/predicate-a";
+          const predicateB = "https://vocab.test/predicate-b";
+
+          const thing = new Thing(uri, store);
+          const subscriber = jest.fn();
+          const observable = thing.observeAnyValue(predicateA, predicateB);
+          observable.subscribe(subscriber);
+
+          // And store has: predicateA=value-a
+          internalStore.add(sym(uri), sym(predicateA), "value-a");
+          jest.advanceTimersByTime(250);
+          expect(subscriber).toHaveBeenCalledWith("value-a");
+
+          // When: +predicateB=value-b (while predicateA still has value-a)
+          internalStore.add(sym(uri), sym(predicateB), "value-b");
+          jest.advanceTimersByTime(250);
+          // Then: should not emit (predicateA already had value, new value doesn't change "any")
+          expect(subscriber.mock.calls.length).toBe(2); // still only 2: undefined, value-a
+
+          // When: -predicateA=value-a
+          internalStore.removeMatches(
+            sym(uri),
+            sym(predicateA),
+            literal("value-a"),
+          );
+          jest.advanceTimersByTime(250);
+          // Then: should emit value-b (now predicateA is gone, fall back to predicateB)
+          expect(subscriber).toHaveBeenCalledWith("value-b");
+        });
+      });
+
+      it("handles transitions from undefined to defined to undefined to defined", () => {
+        // Given: observeAnyValue(predicate) on empty store
+        const uri = "https://jane.doe.example/container/file.ttl#fragment";
+        const predicate = "https://vocab.test/predicate";
+
+        const thing = new Thing(uri, store);
+        const subscriber = jest.fn();
+        const observable = thing.observeAnyValue(predicate);
+        observable.subscribe(subscriber);
+
+        // Then: -empty (initial) → undefined
+        expect(subscriber).toHaveBeenCalledWith(undefined);
+
+        // When: +value-a → value-a
+        internalStore.add(sym(uri), sym(predicate), "value-a");
+        jest.advanceTimersByTime(250);
+        expect(subscriber).toHaveBeenCalledWith("value-a");
+
+        // When: -value-a → undefined
+        internalStore.removeMatches(
+          sym(uri),
+          sym(predicate),
+          literal("value-a"),
+        );
+        jest.advanceTimersByTime(250);
+        expect(subscriber).toHaveBeenCalledWith(undefined);
+
+        // When: +value-b → value-b
+        internalStore.add(sym(uri), sym(predicate), "value-b");
+        jest.advanceTimersByTime(250);
+        expect(subscriber).toHaveBeenCalledWith("value-b");
+
+        // Then: verify all emissions
+        expect(subscriber.mock.calls).toEqual([
+          [undefined],
+          ["value-a"],
+          [undefined],
+          ["value-b"],
+        ]);
       });
 
       describe("Consistency with anyValue() semantics", () => {
