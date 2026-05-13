@@ -96,205 +96,233 @@ describe("Thing", function () {
   describe("observeAnyValue", () => {
     jest.useFakeTimers();
 
-    let internalStore: IndexedFormula,
-      subscriber: jest.Mock,
-      uri: string,
-      predicate: string,
-      anyValueSpy: jest.SpyInstance,
-      subscription: Subscription;
+    describe("with pre-populated store", () => {
+      let internalStore: IndexedFormula,
+        subscriber: jest.Mock,
+        uri: string,
+        predicate: string,
+        anyValueSpy: jest.SpyInstance,
+        subscription: Subscription;
 
-    beforeEach(() => {
-      // Given a store with statements about a URI
-      internalStore = graph();
-      uri = "https://jane.doe.example/container/file.ttl#fragment";
-      predicate = "https://vocab.test/predicate";
-      internalStore.add(sym(uri), sym(predicate), "literal value");
-      internalStore.add(
-        sym(uri),
-        sym("https://vocab.test/other-predicate"),
-        "literal value",
-      );
-
-      const mockSession = {} as unknown as PodOsSession;
-      const store = new Store(mockSession, undefined, undefined, internalStore);
-
-      // and a Thing with a anyValue method
-      subscriber = jest.fn();
-      const thing = new Thing(uri, store);
-      anyValueSpy = jest.spyOn(thing, "anyValue");
-
-      // and a subscription to changes in value
-      const observable = thing.observeAnyValue(predicate);
-      subscription = observable.subscribe(subscriber);
-    });
-
-    it("pushes existing value immediately", () => {
-      expect(anyValueSpy).toHaveBeenCalledTimes(1);
-      expect(subscriber).toHaveBeenCalledTimes(1);
-      expect(subscriber.mock.calls).toEqual([["literal value"]]);
-    });
-
-    it("pushes undefined if single existing value is removed", () => {
-      internalStore.removeStatement(
-        quad(sym(uri), sym(predicate), literal("literal value")),
-      );
-      jest.advanceTimersByTime(250);
-      expect(anyValueSpy).toHaveBeenCalledTimes(2);
-      expect(subscriber).toHaveBeenCalledTimes(2);
-      expect(subscriber.mock.lastCall).toEqual([undefined]);
-    });
-
-    it("stops pushing after unsubscribe", () => {
-      subscription.unsubscribe();
-      internalStore.removeStatement(
-        quad(sym(uri), sym(predicate), literal("literal value")),
-      );
-      jest.advanceTimersByTime(250);
-      expect(subscriber).toHaveBeenCalledTimes(1);
-      expect(anyValueSpy).toHaveBeenCalledTimes(1);
-    });
-
-    it("ignores irrelevant removal", () => {
-      internalStore.removeStatement(
-        quad(
+      beforeEach(() => {
+        // Given a store with statements about a URI
+        internalStore = graph();
+        uri = "https://jane.doe.example/container/file.ttl#fragment";
+        predicate = "https://vocab.test/predicate";
+        internalStore.add(sym(uri), sym(predicate), "literal value");
+        internalStore.add(
           sym(uri),
           sym("https://vocab.test/other-predicate"),
-          literal("literal value"),
-        ),
-      );
-      jest.advanceTimersByTime(250);
-      expect(anyValueSpy).toHaveBeenCalledTimes(1);
-      expect(subscriber).toHaveBeenCalledTimes(1);
+          "literal value",
+        );
+
+        const mockSession = {} as unknown as PodOsSession;
+        const store = new Store(
+          mockSession,
+          undefined,
+          undefined,
+          internalStore,
+        );
+
+        // and a Thing with a anyValue method
+        subscriber = jest.fn();
+        const thing = new Thing(uri, store);
+        anyValueSpy = jest.spyOn(thing, "anyValue");
+
+        // and a subscription to changes in value
+        const observable = thing.observeAnyValue(predicate);
+        subscription = observable.subscribe(subscriber);
+      });
+
+      it("pushes existing value immediately", () => {
+        expect(anyValueSpy).toHaveBeenCalledTimes(1);
+        expect(subscriber).toHaveBeenCalledTimes(1);
+        expect(subscriber.mock.calls).toEqual([["literal value"]]);
+      });
+
+      it("pushes undefined if single existing value is removed", () => {
+        internalStore.removeStatement(
+          quad(sym(uri), sym(predicate), literal("literal value")),
+        );
+        jest.advanceTimersByTime(250);
+        expect(anyValueSpy).toHaveBeenCalledTimes(2);
+        expect(subscriber).toHaveBeenCalledTimes(2);
+        expect(subscriber.mock.lastCall).toEqual([undefined]);
+      });
+
+      it("stops pushing after unsubscribe", () => {
+        subscription.unsubscribe();
+        internalStore.removeStatement(
+          quad(sym(uri), sym(predicate), literal("literal value")),
+        );
+        jest.advanceTimersByTime(250);
+        expect(subscriber).toHaveBeenCalledTimes(1);
+        expect(anyValueSpy).toHaveBeenCalledTimes(1);
+      });
+
+      it("ignores irrelevant removal", () => {
+        internalStore.removeStatement(
+          quad(
+            sym(uri),
+            sym("https://vocab.test/other-predicate"),
+            literal("literal value"),
+          ),
+        );
+        jest.advanceTimersByTime(250);
+        expect(anyValueSpy).toHaveBeenCalledTimes(1);
+        expect(subscriber).toHaveBeenCalledTimes(1);
+      });
+
+      it("does not change if a value is already present", () => {
+        internalStore.add(sym(uri), sym(predicate), "literal value 2");
+        jest.advanceTimersByTime(250);
+        expect(anyValueSpy).toHaveBeenCalledTimes(1);
+        expect(subscriber).toHaveBeenCalledTimes(1);
+      });
+
+      it("pushes in groups", () => {
+        internalStore.removeStatement(
+          quad(sym(uri), sym(predicate), literal("literal value")),
+        );
+        internalStore.add(sym(uri), sym(predicate), "new literal value");
+        jest.advanceTimersByTime(250);
+        expect(subscriber).toHaveBeenCalledTimes(2);
+      });
+
+      it("pushes a different value when one is removed if multiple are present", () => {
+        internalStore.add(sym(uri), sym(predicate), "literal value 2");
+        internalStore.removeStatement(
+          quad(sym(uri), sym(predicate), literal("literal value")),
+        );
+        jest.advanceTimersByTime(250);
+        expect(anyValueSpy).toHaveBeenCalledTimes(2);
+        expect(subscriber.mock.lastCall).toEqual(["literal value 2"]);
+      });
+
+      it("does not change again until next removal", () => {
+        internalStore.removeStatement(
+          quad(sym(uri), sym(predicate), literal("literal value")),
+        );
+        internalStore.add(
+          quad(sym(uri), sym(predicate), literal("literal value 2")),
+        );
+        jest.advanceTimersByTime(250);
+        expect(anyValueSpy).toHaveBeenCalledTimes(1);
+        expect(subscriber).toHaveBeenCalledTimes(2);
+        expect(subscriber.mock.lastCall).toEqual(["literal value 2"]);
+
+        internalStore.add(
+          quad(sym(uri), sym(predicate), literal("literal value 3")),
+        );
+        jest.advanceTimersByTime(250);
+        expect(anyValueSpy).toHaveBeenCalledTimes(1);
+        expect(subscriber).toHaveBeenCalledTimes(2);
+
+        internalStore.removeStatement(
+          quad(sym(uri), sym(predicate), literal("literal value 2")),
+        );
+        jest.advanceTimersByTime(250);
+        expect(anyValueSpy).toHaveBeenCalledTimes(2);
+        expect(subscriber).toHaveBeenCalledTimes(3);
+        expect(subscriber.mock.lastCall).toEqual(["literal value 3"]);
+      });
+
+      it("ignores irrelevant addition", () => {
+        internalStore.removeStatement(
+          quad(sym(uri), sym(predicate), literal("literal value")),
+        );
+        internalStore.add(
+          sym(uri),
+          sym("https://vocab.test/other-predicate"),
+          literal("wrong literal value"),
+        );
+        internalStore.add(
+          sym(uri),
+          sym(predicate),
+          literal("right literal value"),
+        );
+        jest.advanceTimersByTime(250);
+        expect(subscriber.mock.lastCall).toEqual(["right literal value"]);
+      });
     });
 
-    it("does not change if a value is already present", () => {
-      internalStore.add(sym(uri), sym(predicate), "literal value 2");
-      jest.advanceTimersByTime(250);
-      expect(anyValueSpy).toHaveBeenCalledTimes(1);
-      expect(subscriber).toHaveBeenCalledTimes(1);
-    });
+    describe("a store without any statements yet", () => {
+      let internalStore: IndexedFormula,
+        subscriber: jest.Mock,
+        uri: string,
+        predicate: string,
+        anyValueSpy: jest.SpyInstance,
+        subscription: Subscription,
+        store: Store;
 
-    it("pushes in groups", () => {
-      internalStore.removeStatement(
-        quad(sym(uri), sym(predicate), literal("literal value")),
-      );
-      internalStore.add(sym(uri), sym(predicate), "new literal value");
-      jest.advanceTimersByTime(250);
-      expect(subscriber).toHaveBeenCalledTimes(2);
-    });
+      beforeEach(() => {
+        // Given a store without any statements yet
+        internalStore = graph();
+        uri = "https://jane.doe.example/container/file.ttl#fragment";
+        predicate = "https://vocab.test/predicate";
 
-    it("pushes a value if none was present, without calling anyValue again", () => {
-      // Given an empty store
-      const internalStore = graph();
-      const mockSession = {} as unknown as PodOsSession;
-      const store = new Store(mockSession, undefined, undefined, internalStore);
-      // and a thing
-      const thing = new Thing(uri, store);
-      const anyValueSpy = jest.spyOn(thing, "anyValue");
+        const mockSession = {} as unknown as PodOsSession;
+        store = new Store(mockSession, undefined, undefined, internalStore);
 
-      const observable = thing.observeAnyValue(predicate);
-      const subscriber = jest.fn();
-      observable.subscribe(subscriber);
+        // and a Thing with a anyValue method
+        subscriber = jest.fn();
+        const thing = new Thing(uri, store);
+        anyValueSpy = jest.spyOn(thing, "anyValue");
 
-      internalStore.add(sym(uri), sym(predicate), "new literal value");
-      jest.advanceTimersByTime(250);
-      expect(anyValueSpy).toHaveBeenCalledTimes(1);
-      expect(subscriber).toHaveBeenCalledTimes(2);
-      expect(subscriber.mock.calls).toEqual([
-        [undefined],
-        ["new literal value"],
-      ]);
-    });
+        // and a subscription to changes in value
+        const observable = thing.observeAnyValue(predicate);
+        subscription = observable.subscribe(subscriber);
+      });
 
-    it("pushes a different value when one is removed if multiple are present", () => {
-      internalStore.add(sym(uri), sym(predicate), "literal value 2");
-      internalStore.removeStatement(
-        quad(sym(uri), sym(predicate), literal("literal value")),
-      );
-      jest.advanceTimersByTime(250);
-      expect(anyValueSpy).toHaveBeenCalledTimes(2);
-      expect(subscriber.mock.lastCall).toEqual(["literal value 2"]);
-    });
+      afterEach(() => {
+        subscription.unsubscribe();
+      });
 
-    it("does not change again until next removal", () => {
-      internalStore.removeStatement(
-        quad(sym(uri), sym(predicate), literal("literal value")),
-      );
-      internalStore.add(
-        quad(sym(uri), sym(predicate), literal("literal value 2")),
-      );
-      jest.advanceTimersByTime(250);
-      expect(anyValueSpy).toHaveBeenCalledTimes(1);
-      expect(subscriber).toHaveBeenCalledTimes(2);
-      expect(subscriber.mock.lastCall).toEqual(["literal value 2"]);
+      it("pushes a value if none was present, without calling anyValue again", () => {
+        // when the first value for that predicate occurs
+        internalStore.add(sym(uri), sym(predicate), "new literal value");
+        jest.advanceTimersByTime(250);
 
-      internalStore.add(
-        quad(sym(uri), sym(predicate), literal("literal value 3")),
-      );
-      jest.advanceTimersByTime(250);
-      expect(anyValueSpy).toHaveBeenCalledTimes(1);
-      expect(subscriber).toHaveBeenCalledTimes(2);
+        // then the subscriber receives both the initial undefined and the new value
+        expect(subscriber).toHaveBeenCalledTimes(2);
+        expect(subscriber.mock.calls).toEqual([
+          [undefined],
+          ["new literal value"],
+        ]);
 
-      internalStore.removeStatement(
-        quad(sym(uri), sym(predicate), literal("literal value 2")),
-      );
-      jest.advanceTimersByTime(250);
-      expect(anyValueSpy).toHaveBeenCalledTimes(2);
-      expect(subscriber).toHaveBeenCalledTimes(3);
-      expect(subscriber.mock.lastCall).toEqual(["literal value 3"]);
-    });
+        // but anyValue was ony called once
+        expect(anyValueSpy).toHaveBeenCalledTimes(1);
+      });
 
-    it("ignores irrelevant addition", () => {
-      internalStore.removeStatement(
-        quad(sym(uri), sym(predicate), literal("literal value")),
-      );
-      internalStore.add(
-        sym(uri),
-        sym("https://vocab.test/other-predicate"),
-        literal("wrong literal value"),
-      );
-      internalStore.add(
-        sym(uri),
-        sym(predicate),
-        literal("right literal value"),
-      );
-      jest.advanceTimersByTime(250);
-      expect(subscriber.mock.lastCall).toEqual(["right literal value"]);
-    });
+      it("emits new value after add-remove-add cycle", () => {
+        // Given a thing observing multiple predicates
+        const uri = "https://jane.doe.example/container/file.ttl#fragment";
+        const predicateA = "https://vocab.test/predicate-a";
+        const predicateB = "https://vocab.test/predicate-b";
 
-    // TODO make this green
-    it("emits new value after add-remove-add cycle", () => {
-      // Given an empty store
-      const internalStore = graph();
-      const mockSession = {} as unknown as PodOsSession;
-      const store = new Store(mockSession, undefined, undefined, internalStore);
-      const uri = "https://jane.doe.example/container/file.ttl#fragment";
-      const predicateA = "https://vocab.test/predicate-a";
-      const predicateB = "https://vocab.test/predicate-b";
+        const thing = new Thing(uri, store);
+        const subscriber = jest.fn();
+        const observable = thing.observeAnyValue(predicateA, predicateB);
+        observable.subscribe(subscriber);
 
-      // and a thing observing multiple predicates
-      const thing = new Thing(uri, store);
-      const subscriber = jest.fn();
-      const observable = thing.observeAnyValue(predicateA, predicateB);
-      observable.subscribe(subscriber);
+        // When: undefined → +a → -a → +b
+        expect(subscriber).toHaveBeenCalledWith(undefined);
 
-      // When: undefined → +a → -a → +b
-      expect(subscriber).toHaveBeenCalledWith(undefined);
+        const valueAQuad = quad(sym(uri), sym(predicateA), literal("value A"));
+        internalStore.add(valueAQuad);
+        jest.advanceTimersByTime(250);
+        expect(subscriber).toHaveBeenCalledWith("value A");
 
-      const valueAQuad = quad(sym(uri), sym(predicateA), literal("value A"));
-      internalStore.add(valueAQuad);
-      jest.advanceTimersByTime(250);
-      expect(subscriber).toHaveBeenCalledWith("value A");
+        internalStore.removeStatement(valueAQuad);
+        jest.advanceTimersByTime(250);
+        expect(subscriber).toHaveBeenCalledWith(undefined);
 
-      internalStore.removeStatement(valueAQuad);
-      jest.advanceTimersByTime(250);
-      expect(subscriber).toHaveBeenCalledWith(undefined);
+        internalStore.add(sym(uri), sym(predicateB), "value B");
+        jest.advanceTimersByTime(250);
 
-      internalStore.add(sym(uri), sym(predicateB), "value B");
-      jest.advanceTimersByTime(250);
-
-      // Then: should emit "value B"
-      expect(subscriber).toHaveBeenCalledWith("value B");
+        // Then: should emit "value B"
+        expect(subscriber).toHaveBeenCalledWith("value B");
+      });
     });
   });
 });
