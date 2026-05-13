@@ -42,6 +42,38 @@ export interface Attachment {
   label: string;
 }
 
+/**
+ * Predicate URIs used to identify label values across multiple vocabularies
+ */
+const LABEL_PREDICATES = [
+  "http://www.w3.org/2006/vcard/ns#fn",
+  "http://xmlns.com/foaf/0.1/name",
+  "http://xmlns.com/foaf/0.1/nick",
+  "https://schema.org/name",
+  "http://schema.org/name",
+  "http://purl.org/dc/terms/title",
+  "http://purl.org/dc/elements/1.1/title",
+  "http://www.w3.org/2000/01/rdf-schema#label",
+  "https://www.w3.org/ns/activitystreams#name",
+  "http://schema.org/caption",
+  "https://schema.org/caption",
+];
+
+/**
+ * Predicate URIs used to identify description values across multiple vocabularies
+ */
+const DESCRIPTION_PREDICATES = [
+  "http://purl.org/dc/terms/description",
+  "http://purl.org/dc/elements/1.1/description",
+  "http://schema.org/description",
+  "https://schema.org/description",
+  "https://schema.org/text",
+  "http://www.w3.org/2000/01/rdf-schema#comment",
+  "https://www.w3.org/ns/activitystreams#summary",
+  "https://www.w3.org/ns/activitystreams#content",
+  "http://www.w3.org/2006/vcard/ns#note",
+];
+
 export class Thing {
   readonly uri: string;
   readonly store: Store;
@@ -63,19 +95,7 @@ export class Thing {
    * If no such term is present, it will derive a label from the URI.
    */
   label() {
-    const value = this.anyValue(
-      "http://www.w3.org/2006/vcard/ns#fn",
-      "http://xmlns.com/foaf/0.1/name",
-      "http://xmlns.com/foaf/0.1/nick",
-      "https://schema.org/name",
-      "http://schema.org/name",
-      "http://purl.org/dc/terms/title",
-      "http://purl.org/dc/elements/1.1/title",
-      "http://www.w3.org/2000/01/rdf-schema#label",
-      "https://www.w3.org/ns/activitystreams#name",
-      "http://schema.org/caption",
-      "https://schema.org/caption",
-    );
+    const value = this.anyValue(...LABEL_PREDICATES);
     if (value) {
       return value;
     }
@@ -86,19 +106,9 @@ export class Thing {
    * Observe changes in human-readable label for this thing. See `label`.
    */
   observeLabel() {
-    return this.observeAnyValue(
-      "http://www.w3.org/2006/vcard/ns#fn",
-      "http://xmlns.com/foaf/0.1/name",
-      "http://xmlns.com/foaf/0.1/nick",
-      "https://schema.org/name",
-      "http://schema.org/name",
-      "http://purl.org/dc/terms/title",
-      "http://purl.org/dc/elements/1.1/title",
-      "http://www.w3.org/2000/01/rdf-schema#label",
-      "https://www.w3.org/ns/activitystreams#name",
-      "http://schema.org/caption",
-      "https://schema.org/caption",
-    ).pipe(map((value) => value ?? labelFromUri(this.uri)));
+    return this.observeAnyValue(...LABEL_PREDICATES).pipe(
+      map((value) => value ?? labelFromUri(this.uri)),
+    );
   }
 
   /**
@@ -270,34 +280,14 @@ export class Thing {
    * used for descriptions, like `dct:description`, `schema:description` or `rdfs:comment`
    */
   description() {
-    return this.anyValue(
-      "http://purl.org/dc/terms/description",
-      "http://purl.org/dc/elements/1.1/description",
-      "http://schema.org/description",
-      "https://schema.org/description",
-      "https://schema.org/text",
-      "http://www.w3.org/2000/01/rdf-schema#comment",
-      "https://www.w3.org/ns/activitystreams#summary",
-      "https://www.w3.org/ns/activitystreams#content",
-      "http://www.w3.org/2006/vcard/ns#note",
-    );
+    return this.anyValue(...DESCRIPTION_PREDICATES);
   }
 
   /**
    * Observe changes in literal values that describe this thing. See `description`
    */
   observeDescription() {
-    return this.observeAnyValue(
-      "http://purl.org/dc/terms/description",
-      "http://purl.org/dc/elements/1.1/description",
-      "http://schema.org/description",
-      "https://schema.org/description",
-      "https://schema.org/text",
-      "http://www.w3.org/2000/01/rdf-schema#comment",
-      "https://www.w3.org/ns/activitystreams#summary",
-      "https://www.w3.org/ns/activitystreams#content",
-      "http://www.w3.org/2006/vcard/ns#note",
-    );
+    return this.observeAnyValue(...DESCRIPTION_PREDICATES);
   }
 
   /**
