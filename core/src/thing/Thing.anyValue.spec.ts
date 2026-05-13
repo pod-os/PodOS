@@ -393,6 +393,30 @@ describe("Thing", function () {
           // Then: should fall back to predicateB
           expect(subscriber).toHaveBeenCalledWith("value-b");
         });
+
+        it("keeps value from first predicate if second one gets a value after that", () => {
+          // Given multiple predicates are observed
+          const uri = "https://jane.doe.example/container/file.ttl#fragment";
+          const predicateA = "https://vocab.test/predicate-a";
+          const predicateB = "https://vocab.test/predicate-b";
+
+          const thing = new Thing(uri, store);
+          const subscriber = jest.fn();
+          const observable = thing.observeAnyValue(predicateA, predicateB);
+          observable.subscribe(subscriber);
+
+          // and predicateB has value
+          internalStore.add(sym(uri), sym(predicateB), "value-b");
+          jest.advanceTimersByTime(250);
+          expect(subscriber.mock.calls).toEqual([[undefined], ["value-b"]]);
+
+          // When predicateA gets a value while predicate B still has value
+          internalStore.add(sym(uri), sym(predicateA), "value-a");
+          jest.advanceTimersByTime(250);
+
+          // Then no change occurs because we have one from predicateA
+          expect(subscriber.mock.calls).toEqual([[undefined], ["value-b"]]);
+        });
       });
 
       describe("Multiple Values Per Predicate", () => {

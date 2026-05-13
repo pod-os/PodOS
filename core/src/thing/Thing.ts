@@ -15,9 +15,8 @@ import {
   merge,
   Observable,
   startWith,
-  skipUntil,
+  switchMap,
   take,
-  repeat,
 } from "rxjs";
 
 export interface Literal {
@@ -256,11 +255,16 @@ export class Thing {
     );
 
     // Watch for additions, but only after a removal (optimization: ignore additions when value exists)
-    const addition$ = relevantChanges$(this.store.additions$).pipe(
-      skipUntil(removalOrInitial$),
-      take(1),
-      map((quad) => ({ type: "addition" as const, value: quad.object.value })),
-      repeat(),
+    const addition$ = removalOrInitial$.pipe(
+      switchMap(() =>
+        relevantChanges$(this.store.additions$).pipe(
+          take(1),
+          map((quad) => ({
+            type: "addition" as const,
+            value: quad.object.value,
+          })),
+        ),
+      ),
     );
 
     return merge(removalOrInitial$, addition$).pipe(
