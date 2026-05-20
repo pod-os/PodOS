@@ -781,4 +781,90 @@ describe('pos-switch', () => {
     await page.waitForChanges();
     expect(page.root?.innerText).toEqualText('Video.');
   });
+
+  it.each([
+    // relation + some-value-eq
+    {
+      conditions: 'if-property="https://schema.org/video" some-value-eq="https://video.test/video-1"',
+      observedLiterals: [],
+      observedRelations: [
+        {
+          predicate: 'https://schema.org/video',
+          label: 'video',
+          uris: ['https://video.test/video-1', 'https://video.test/video-2'],
+        },
+      ],
+      observedReverseRelations: [],
+      expectedResult: 'matched',
+    },
+    {
+      conditions: 'not if-property="https://schema.org/video" some-value-eq="https://video.test/video-1"',
+      observedLiterals: [],
+      observedRelations: [
+        {
+          predicate: 'https://schema.org/video',
+          label: 'video',
+          uris: ['https://video.test/video-1', 'https://video.test/video-2'],
+        },
+      ],
+      observedReverseRelations: [],
+      expectedResult: 'not matched',
+    },
+    // literal + some-value-eq
+    {
+      conditions: 'if-property="https://schema.org/name" some-value-eq="the-name"',
+      observedLiterals: [
+        { predicate: 'https://schema.org/name', label: 'video', values: ['the-name', 'another-name'] },
+      ],
+      observedRelations: [],
+      observedReverseRelations: [],
+      expectedResult: 'matched',
+    },
+    {
+      conditions: 'not if-property="https://schema.org/name" some-value-eq="the-name"',
+      observedLiterals: [
+        { predicate: 'https://schema.org/name', label: 'video', values: ['the-name', 'another-name'] },
+      ],
+      observedRelations: [],
+      observedReverseRelations: [],
+      expectedResult: 'not matched',
+    },
+  ])(
+    `renders templates if condition is met: $conditions `,
+    async ({ conditions, observedLiterals, observedRelations, observedReverseRelations, expectedResult }) => {
+      const page = await newSpecPage({
+        components: [PosSwitch],
+        html: `
+      <pos-switch>
+        <pos-case ${conditions}>
+          <template>
+            <div>Condition is matched</div>
+          </template>
+        </pos-case>
+        <pos-case else>
+          <template>
+            <div>Condition is not matched</div>
+          </template>
+        </pos-case>
+      </pos-switch>`,
+      });
+      const observedRelations$ = new Subject<Relation[]>();
+      const observedLiterals$ = new Subject<Literal[]>();
+      const observedReverseRelations$ = new Subject<Relation[]>();
+      const thing = {
+        uri: 'https://pod.example/resource',
+        observeRelations: () => observedRelations$,
+        observeLiterals: () => observedLiterals$,
+        observedReverseRelations: () => observedLiterals$,
+      };
+      page.rootInstance.receiveResource(thing);
+      observedLiterals$.next(observedLiterals);
+      observedRelations$.next(observedRelations);
+      observedReverseRelations$.next(observedReverseRelations);
+      await page.waitForChanges();
+      expect(page.root?.innerHTML).toEqualHtml(`
+        <div>Condition is ${expectedResult}</div>
+        `);
+    },
+  );
 });
