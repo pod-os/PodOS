@@ -673,6 +673,69 @@ describe('pos-switch', () => {
         `);
   });
 
+  it('renders templates when property is absent (not if-property)', async () => {
+    const page = await newSpecPage({
+      components: [PosSwitch],
+      html: `
+      <pos-switch>
+        <pos-case not if-property="https://schema.org/description">
+          <template>
+            <div>Resource has no description</div>
+          </template>
+        </pos-case>
+        <pos-case if-property="https://schema.org/description">
+          <template>
+            <div>Should not render as description is not present</div>
+          </template>
+        </pos-case>
+      </pos-switch>`,
+    });
+    const observedRelations$ = new Subject<Relation[]>();
+    const observedLiterals$ = new Subject<Literal[]>();
+    const thing = {
+      uri: 'https://pod.example/resource',
+      observeRelations: () => observedRelations$,
+      observeLiterals: () => observedLiterals$,
+    };
+    page.rootInstance.receiveResource(thing);
+    observedLiterals$.next([]);
+    observedRelations$.next([]);
+    await page.waitForChanges();
+    expect(page.root?.innerHTML).toEqualHtml(`
+        <div>Resource has no description</div>
+        `);
+  });
+
+  it('renders templates when backward link is absent (not if-rev)', async () => {
+    const page = await newSpecPage({
+      components: [PosSwitch],
+      html: `
+      <pos-switch>
+        <pos-case not if-rev="https://schema.org/video">
+          <template>
+            <div>Resource is not a video object</div>
+          </template>
+        </pos-case>
+        <pos-case if-rev="https://schema.org/video">
+          <template>
+            <div>Should not render as video reverse relation is not present</div>
+          </template>
+        </pos-case>
+      </pos-switch>`,
+    });
+    const observedReverseRelations$ = new Subject<Relation[]>();
+    const thing = {
+      uri: 'https://pod.example/resource',
+      observeReverseRelations: () => observedReverseRelations$,
+    };
+    page.rootInstance.receiveResource(thing);
+    observedReverseRelations$.next([]);
+    await page.waitForChanges();
+    expect(page.root?.innerHTML).toEqualHtml(`
+        <div>Resource is not a video object</div>
+        `);
+  });
+
   it('resets and updates when resource is changed', async () => {
     const page = await newSpecPage({
       components: [PosSwitch],
