@@ -1,7 +1,0 @@
-{
-  "name": "wallaby-mcp",
-  "version": "1.0.0",
-  "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.0"
-  }
-}
