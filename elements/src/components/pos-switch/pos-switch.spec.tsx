@@ -783,6 +783,69 @@ describe('pos-switch', () => {
   });
 
   it.each([
+    // literal + some-value-eq
+    {
+      conditions: 'if-property="https://schema.org/name" some-value-eq="the-name"',
+      observedLiterals: [
+        { predicate: 'https://schema.org/name', label: 'video', values: ['the-name', 'another-name'] },
+      ],
+      observedRelations: [],
+      observedReverseRelations: [],
+      expectedResult: 'matched',
+    },
+    {
+      conditions: 'if-property="https://schema.org/name" some-value-eq="the-name"',
+      observedLiterals: [{ predicate: 'https://schema.org/name', label: 'video', values: ['the-name'] }],
+      observedRelations: [],
+      observedReverseRelations: [],
+      expectedResult: 'matched',
+    },
+    {
+      conditions: 'not if-property="https://schema.org/name" some-value-eq="the-name"',
+      observedLiterals: [
+        { predicate: 'https://schema.org/name', label: 'video', values: ['the-name', 'another-name'] },
+      ],
+      observedRelations: [],
+      observedReverseRelations: [],
+      expectedResult: 'not matched',
+    },
+    // TODO fails, but should match: there is some value that is not "different-name"
+    // {
+    //   conditions: 'not if-property="https://schema.org/name" some-value-eq="different-name"',
+    //   observedLiterals: [
+    //     { predicate: 'https://schema.org/name', label: 'video', values: ['the-name', 'another-name'] },
+    //   ],
+    //   observedRelations: [],
+    //   observedReverseRelations: [],
+    //   expectedResult: 'matched',
+    // },
+    // literal + every-value-eq
+    {
+      conditions: 'if-property="https://schema.org/name" every-value-eq="the-name"',
+      observedLiterals: [
+        { predicate: 'https://schema.org/name', label: 'video', values: ['the-name', 'another-name'] },
+      ],
+      observedRelations: [],
+      observedReverseRelations: [],
+      expectedResult: 'not matched',
+    },
+    {
+      conditions: 'if-property="https://schema.org/name" every-value-eq="the-name"',
+      observedLiterals: [{ predicate: 'https://schema.org/name', label: 'video', values: ['the-name'] }],
+      observedRelations: [],
+      observedReverseRelations: [],
+      expectedResult: 'matched',
+    },
+    // TODO fails, but should match: not every value is "the-name"
+    // {
+    //   conditions: 'not if-property="https://schema.org/name" every-value-eq="the-name"',
+    //   observedLiterals: [
+    //     { predicate: 'https://schema.org/name', label: 'video', values: ['the-name', 'another-name'] },
+    //   ],
+    //   observedRelations: [],
+    //   observedReverseRelations: [],
+    //   expectedResult: 'matched',
+    // },
     // relation + some-value-eq
     {
       conditions: 'if-property="https://schema.org/video" some-value-eq="https://video.test/video-1"',
@@ -807,25 +870,6 @@ describe('pos-switch', () => {
           uris: ['https://video.test/video-1', 'https://video.test/video-2'],
         },
       ],
-      observedReverseRelations: [],
-      expectedResult: 'not matched',
-    },
-    // literal + some-value-eq
-    {
-      conditions: 'if-property="https://schema.org/name" some-value-eq="the-name"',
-      observedLiterals: [
-        { predicate: 'https://schema.org/name', label: 'video', values: ['the-name', 'another-name'] },
-      ],
-      observedRelations: [],
-      observedReverseRelations: [],
-      expectedResult: 'matched',
-    },
-    {
-      conditions: 'not if-property="https://schema.org/name" some-value-eq="the-name"',
-      observedLiterals: [
-        { predicate: 'https://schema.org/name', label: 'video', values: ['the-name', 'another-name'] },
-      ],
-      observedRelations: [],
       observedReverseRelations: [],
       expectedResult: 'not matched',
     },
