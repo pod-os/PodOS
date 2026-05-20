@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 
 - [pos-value](https://pod-os.org/reference/elements/components/pos-value/), [pos-label](https://pod-os.org/reference/elements/components/pos-label/) and [pos-description](https://pod-os.org/reference/elements/components/pos-description/): update reactively when data in store changes
+- [pos-switch](https://pod-os.org/reference/elements/components/pos-switch/) and [pos-case](https://pod-os.org/reference/elements/components/pos-case/): Added attributes `(some|every)-value-(eq|gt|gte|lt|lte)` to test if some/every value linked by `if-property` or `if-rev` is equal to/greater than/less than the attribute.
 
 ## 0.41.0
 

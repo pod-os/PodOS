@@ -13,7 +13,11 @@ import {
 
 ## pos-switch
 
-Selects templates to render based on properties of the subject uri
+Selects templates to render based on properties of the subject uri. 
+
+See [pos-case](https://pod-os.org/reference/elements/components/pos-switch/pos-case/) for filter conditions.
+Conditions including testing based on type, if/else logic, presence of forward (`if-property`) and backward (`if-rev`) links, 
+and whether some/every value linked by `if-property` or `if-rev` is equal to/greater than/less than the given attribute.
 
 <Canvas
   withSource="open">
@@ -37,6 +41,21 @@ Selects templates to render based on properties of the subject uri
         <pos-case if-rev="http://xmlns.com/foaf/0.1/primaryTopic">
           <template>
             Primary topic of: <pos-rich-link rev="http://xmlns.com/foaf/0.1/primaryTopic">
+          </template>
+        </pos-case>
+        <pos-case if-rev="http://xmlns.com/foaf/0.1/primaryTopic" some-value-eq="https://pod-os.solidcommunity.net/profile/card">
+          <template>
+            <div>This data is provided by PodOS' profile <pos-rich-link rev="http://xmlns.com/foaf/0.1/primaryTopic">card</pos-rich-link></div>
+          </template>
+        </pos-case>
+        <pos-case if-property="http://www.w3.org/2006/vcard/ns#fn" every-value-gt="Apple">
+          <template>
+            <div><pos-value predicate="http://www.w3.org/2006/vcard/ns#fn"></pos-value> comes after Apple.</div>
+          </template>
+        </pos-case>
+        <pos-case if-property="http://www.w3.org/2006/vcard/ns#fn" every-value-lte="Romeo">
+          <template>
+            <div><pos-value predicate="http://www.w3.org/2006/vcard/ns#fn"></pos-value> comes before or is equal to Romeo.</div>
           </template>
         </pos-case>
       </pos-switch>

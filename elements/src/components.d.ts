@@ -73,6 +73,26 @@ export namespace Components {
          */
         "else"?: boolean;
         /**
+          * Test if every value linked by if-property or if-rev is equal to the attribute
+         */
+        "everyValueEq"?: string;
+        /**
+          * Test if every value linked by if-property or if-rev is strictly greater than the attribute. First a number comparison is attempted, then string.
+         */
+        "everyValueGt"?: string;
+        /**
+          * Test if every value linked by if-property or if-rev is greater than or equal to the attribute. First a number comparison is attempted, then string.
+         */
+        "everyValueGte"?: string;
+        /**
+          * Test if every value linked by if-property or if-rev is strictly less than the attribute. First a number comparison is attempted, then string.
+         */
+        "everyValueLt"?: string;
+        /**
+          * Test if every value linked by if-property or if-rev is less than or equal to the attribute. First a number comparison is attempted, then string.
+         */
+        "everyValueLte"?: string;
+        /**
           * Test if the resource has the specified property (forward link)
          */
         "ifProperty"?: string;
@@ -88,6 +108,26 @@ export namespace Components {
           * Negates the result of the test
          */
         "not"?: boolean;
+        /**
+          * Test if some value linked by if-property or if-rev is equal to the attribute
+         */
+        "someValueEq"?: string;
+        /**
+          * Test if some value linked by if-property or if-rev is strictly greater than the attribute. First a number comparison is attempted, then string.
+         */
+        "someValueGt"?: string;
+        /**
+          * Test if some value linked by if-property or if-rev is greater than or equal to the attribute. First a number comparison is attempted, then string.
+         */
+        "someValueGte"?: string;
+        /**
+          * Test if some value linked by if-property or if-rev is strictly less than the attribute. First a number comparison is attempted, then string.
+         */
+        "someValueLt"?: string;
+        /**
+          * Test if some value linked by if-property or if-rev is less than or equal to the attribute. First a number comparison is attempted, then string.
+         */
+        "someValueLte"?: string;
     }
     interface PosContainerContents {
     }
@@ -1518,6 +1558,26 @@ declare namespace LocalJSX {
          */
         "else"?: boolean;
         /**
+          * Test if every value linked by if-property or if-rev is equal to the attribute
+         */
+        "everyValueEq"?: string;
+        /**
+          * Test if every value linked by if-property or if-rev is strictly greater than the attribute. First a number comparison is attempted, then string.
+         */
+        "everyValueGt"?: string;
+        /**
+          * Test if every value linked by if-property or if-rev is greater than or equal to the attribute. First a number comparison is attempted, then string.
+         */
+        "everyValueGte"?: string;
+        /**
+          * Test if every value linked by if-property or if-rev is strictly less than the attribute. First a number comparison is attempted, then string.
+         */
+        "everyValueLt"?: string;
+        /**
+          * Test if every value linked by if-property or if-rev is less than or equal to the attribute. First a number comparison is attempted, then string.
+         */
+        "everyValueLte"?: string;
+        /**
           * Test if the resource has the specified property (forward link)
          */
         "ifProperty"?: string;
@@ -1533,6 +1593,26 @@ declare namespace LocalJSX {
           * Negates the result of the test
          */
         "not"?: boolean;
+        /**
+          * Test if some value linked by if-property or if-rev is equal to the attribute
+         */
+        "someValueEq"?: string;
+        /**
+          * Test if some value linked by if-property or if-rev is strictly greater than the attribute. First a number comparison is attempted, then string.
+         */
+        "someValueGt"?: string;
+        /**
+          * Test if some value linked by if-property or if-rev is greater than or equal to the attribute. First a number comparison is attempted, then string.
+         */
+        "someValueGte"?: string;
+        /**
+          * Test if some value linked by if-property or if-rev is strictly less than the attribute. First a number comparison is attempted, then string.
+         */
+        "someValueLt"?: string;
+        /**
+          * Test if some value linked by if-property or if-rev is less than or equal to the attribute. First a number comparison is attempted, then string.
+         */
+        "someValueLte"?: string;
     }
     interface PosContainerContents {
         "onPod-os:resource"?: (event: PosContainerContentsCustomEvent<any>) => void;
@@ -1899,6 +1979,16 @@ declare namespace LocalJSX {
         "ifRev": string;
         "not": boolean;
         "else": boolean;
+        "someValueEq": string;
+        "everyValueEq": string;
+        "someValueGt": string;
+        "everyValueGt": string;
+        "someValueGte": string;
+        "everyValueGte": string;
+        "someValueLt": string;
+        "everyValueLt": string;
+        "someValueLte": string;
+        "everyValueLte": string;
     }
     interface PosCreateNewContainerItemAttributes {
         "type": 'file' | 'folder';

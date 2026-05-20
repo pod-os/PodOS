@@ -7,12 +7,13 @@ import { PosPicture } from '../pos-picture/pos-picture';
 import { PosSwitch } from './pos-switch';
 import { PosResource } from '../pos-resource/pos-resource';
 import { when } from 'jest-when';
-import { RdfType, Relation, Thing } from '@pod-os/core';
+import { Literal, RdfType, Relation, Thing } from '@pod-os/core';
 import { ReplaySubject, Subject } from 'rxjs';
 
 describe('pos-switch', () => {
   it('renders template based on properties of resource, reactively', async () => {
     const os = mockPodOS();
+    const observedLiterals$ = new Subject<Literal[]>();
     const observedLabel$ = new ReplaySubject<string>();
     observedLabel$.next('Recipe 1');
     const observedTypes$ = new Subject<RdfType[]>();
@@ -25,6 +26,7 @@ describe('pos-switch', () => {
         // Label is used by pos-picture, and observeLabel by pos-label
         label: () => 'Recipe 1',
         observeLabel: () => observedLabel$,
+        observeLiterals: () => observedLiterals$,
         observeTypes: () => observedTypes$,
         observeRelations: () => observedRelations$,
         observeReverseRelations: () => observedReverseRelations$,
@@ -59,6 +61,9 @@ describe('pos-switch', () => {
             <pos-case if-typeof="http://schema.org/Thing">
               <template><div>Also a Thing</div></template>
             </pos-case>
+            <pos-case if-property="http://schema.org/name" some-value-eq="Recipe 1">
+              <template><div>This is Recipe 1</div></template>
+            </pos-case>
             <pos-case else>
               <template>Will not render as previous conditions are satisfied</template>
             </pos-case>
@@ -68,6 +73,7 @@ describe('pos-switch', () => {
     });
     expect((os.fetch as jest.Mock).mock.calls).toHaveLength(0);
     expect(page.root?.innerText).toEqualText('');
+    observedLiterals$.next([]);
     observedTypes$.next([
       {
         label: 'Recipe',
@@ -123,6 +129,27 @@ describe('pos-switch', () => {
         <pos-image src="https://resource.test/recipe-photo.jpg" alt="Recipe 1"></pos-image>
       </pos-picture>
       <div>Also a Thing</div>
+      `);
+    observedLiterals$.next([
+      {
+        predicate: 'http://schema.org/name',
+        label: 'name',
+        values: ['Recipe 1', 'Another recipe name'],
+      },
+    ]);
+    await page.waitForChanges();
+    expect(switchElement?.innerHTML).toEqualHtml(`
+      <div>Part of list</div>
+      <pos-label>
+        <!---->
+        Recipe 1
+      </pos-label>
+      <pos-picture>
+        <!---->
+        <pos-image src="https://resource.test/recipe-photo.jpg" alt="Recipe 1"></pos-image>
+      </pos-picture>
+      <div>Also a Thing</div>
+      <div>This is Recipe 1</div>
       `);
   });
 });

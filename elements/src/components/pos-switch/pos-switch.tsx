@@ -1,4 +1,4 @@
-import { RdfType, Relation, Thing } from '@pod-os/core';
+import { Literal, RdfType, Relation, Thing } from '@pod-os/core';
 import { Component, Element, Event, h, Host, State } from '@stencil/core';
 import { ResourceAware, ResourceEventEmitter, subscribeResource } from '../events/ResourceAware';
 import { combineLatest, firstValueFrom, Observable, Subject, takeUntil } from 'rxjs';
@@ -20,6 +20,7 @@ export class PosSwitch implements ResourceAware {
   @State() types: RdfType[];
   @State() relations: Relation[];
   @State() reverseRelations: Relation[];
+  @State() literals: Literal[];
 
   private readonly disconnected$ = new Subject<void>();
 
@@ -38,17 +39,75 @@ export class PosSwitch implements ResourceAware {
 
   test(caseElement): boolean {
     let state = null;
+    let values = null;
+
+    const compareValue = function (values: string[]): boolean {
+      let state = true;
+      for (let semantics of ['some', 'every']) {
+        for (let operator of ['eq', 'gt', 'gte', 'lt', 'lte']) {
+          const attr = `${semantics}-value-${operator}`;
+          if (caseElement.hasAttribute(attr)) {
+            const target = caseElement.getAttribute(attr);
+            const matches = values.map(val => {
+              let cmp;
+              const numVal = Number(val);
+              const numTarget = Number(target);
+              if (!isNaN(numVal) && !isNaN(numTarget)) {
+                cmp = numVal - numTarget;
+              } else {
+                cmp = String(val).localeCompare(String(target));
+              }
+              switch (operator) {
+                case 'eq':
+                  return cmp === 0;
+                case 'gt':
+                  return cmp > 0;
+                case 'gte':
+                  return cmp >= 0;
+                case 'lt':
+                  return cmp < 0;
+                case 'lte':
+                  return cmp <= 0;
+              }
+            });
+            if (semantics == 'some') {
+              state = state && matches.some(val => val);
+            } else if (semantics == 'every') {
+              state = state && matches.every(val => val);
+            }
+          }
+        }
+      }
+      return state;
+    };
+
     if (caseElement.getAttribute('if-typeof') !== null) {
       state = this.types.map(x => x.uri).includes(caseElement.getAttribute('if-typeof'));
     }
     if (caseElement.getAttribute('if-property') !== null) {
-      state = this.relations.map(x => x.predicate).includes(caseElement.getAttribute('if-property'));
+      const matchingRelations = this.relations.filter(x => x.predicate == caseElement.getAttribute('if-property'));
+      const matchingLiterals = this.literals.filter(x => x.predicate == caseElement.getAttribute('if-property'));
+      values = [];
+      if (matchingRelations.length > 0) {
+        values.push(...matchingRelations[0].uris);
+      }
+      if (matchingLiterals.length > 0) {
+        values.push(...matchingLiterals[0].values);
+      }
+      state = matchingRelations.length > 0 || matchingLiterals.length > 0;
     }
     if (caseElement.getAttribute('if-rev') !== null) {
-      state = this.reverseRelations.map(x => x.predicate).includes(caseElement.getAttribute('if-rev'));
+      const matchingRelations = this.reverseRelations.filter(x => x.predicate == caseElement.getAttribute('if-rev'));
+      if (matchingRelations.length > 0) {
+        values = matchingRelations[0].uris;
+      }
+      state = matchingRelations.length > 0;
     }
     if (caseElement.getAttribute('not') != null) {
       state = !state;
+    }
+    if (values) {
+      state = state && compareValue(values);
     }
     return state;
   }
@@ -71,6 +130,11 @@ export class PosSwitch implements ResourceAware {
         this.relations = relations;
       });
       observables.push(observeRelations);
+      const observeLiterals = resource.observeLiterals().pipe(takeUntil(this.disconnected$));
+      observeLiterals.subscribe(literals => {
+        this.literals = literals;
+      });
+      observables.push(observeLiterals);
     }
     if (this.caseElements.some(caseElement => caseElement.hasAttribute('if-rev'))) {
       const observeReverseRelations = resource.observeReverseRelations().pipe(takeUntil(this.disconnected$));

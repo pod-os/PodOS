@@ -6,13 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 0.29.0
+## 0.31.0
 
 ### Added
 
 - [`Thing.observeAnyValue`](https://pod-os.org/reference/core/classes/thing/#observeanyvalue) pushes changes to the value of predicates
 - [`Thing.observeLabel`](https://pod-os.org/reference/core/classes/thing/#observelabel) pushes changes to labels
 - [`Thing.observeDescription`](https://pod-os.org/reference/core/classes/thing/#observedescription) pushes changes to descriptions
+
+## 0.30.0
+
+- internal changes only
+
+## 0.29.0
+
+### Added
+
+- [`Thing.observeLiterals`](https://pod-os.org/reference/core/classes/thing/#observeliterals) pushes changes to literals
 
 ## 0.28.0
 

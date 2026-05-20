@@ -32,6 +32,46 @@ export class PosCase {
    * The test only evaluates to true if tests for preceding cases have failed
    */
   @Prop() else?: boolean;
+  /**
+   * Test if some value linked by if-property or if-rev is equal to the attribute
+   */
+  @Prop() someValueEq?: string;
+  /**
+   * Test if every value linked by if-property or if-rev is equal to the attribute
+   */
+  @Prop() everyValueEq?: string;
+  /**
+   * Test if some value linked by if-property or if-rev is strictly greater than the attribute. First a number comparison is attempted, then string.
+   */
+  @Prop() someValueGt?: string;
+  /**
+   * Test if every value linked by if-property or if-rev is strictly greater than the attribute. First a number comparison is attempted, then string.
+   */
+  @Prop() everyValueGt?: string;
+  /**
+   * Test if some value linked by if-property or if-rev is greater than or equal to the attribute. First a number comparison is attempted, then string.
+   */
+  @Prop() someValueGte?: string;
+  /**
+   * Test if every value linked by if-property or if-rev is greater than or equal to the attribute. First a number comparison is attempted, then string.
+   */
+  @Prop() everyValueGte?: string;
+  /**
+   * Test if some value linked by if-property or if-rev is strictly less than the attribute. First a number comparison is attempted, then string.
+   */
+  @Prop() someValueLt?: string;
+  /**
+   * Test if every value linked by if-property or if-rev is strictly less than the attribute. First a number comparison is attempted, then string.
+   */
+  @Prop() everyValueLt?: string;
+  /**
+   * Test if some value linked by if-property or if-rev is less than or equal to the attribute. First a number comparison is attempted, then string.
+   */
+  @Prop() someValueLte?: string;
+  /**
+   * Test if every value linked by if-property or if-rev is less than or equal to the attribute. First a number comparison is attempted, then string.
+   */
+  @Prop() everyValueLte?: string;
 
   componentWillLoad() {
     const templateElement = this.host.querySelector('template');
