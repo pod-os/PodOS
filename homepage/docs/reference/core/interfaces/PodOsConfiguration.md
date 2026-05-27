@@ -12,7 +12,7 @@ Defined in: [index.ts:41](https://github.com/pod-os/PodOS/blob/main/core/src/ind
 
 ### internalStore?
 
-> `optional` **internalStore**: `IndexedFormula`
+> `optional` **internalStore?**: `IndexedFormula`
 
 Defined in: [index.ts:45](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L45)
 
@@ -20,7 +20,7 @@ Defined in: [index.ts:45](https://github.com/pod-os/PodOS/blob/main/core/src/ind
 
 ### offlineCache?
 
-> `optional` **offlineCache**: [`OfflineCache`](OfflineCache.md)
+> `optional` **offlineCache?**: [`OfflineCache`](OfflineCache.md)
 
 Defined in: [index.ts:42](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L42)
 
@@ -28,7 +28,7 @@ Defined in: [index.ts:42](https://github.com/pod-os/PodOS/blob/main/core/src/ind
 
 ### onlineStatus?
 
-> `optional` **onlineStatus**: [`OnlineStatus`](OnlineStatus.md)
+> `optional` **onlineStatus?**: [`OnlineStatus`](OnlineStatus.md)
 
 Defined in: [index.ts:43](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L43)
 
@@ -36,6 +36,6 @@ Defined in: [index.ts:43](https://github.com/pod-os/PodOS/blob/main/core/src/ind
 
 ### session?
 
-> `optional` **session**: [`PodOsSession`](PodOsSession.md)
+> `optional` **session?**: [`PodOsSession`](PodOsSession.md)
 
 Defined in: [index.ts:44](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L44)

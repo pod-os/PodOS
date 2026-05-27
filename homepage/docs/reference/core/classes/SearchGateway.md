@@ -14,7 +14,7 @@ Defined in: [search/SearchGateway.ts:9](https://github.com/pod-os/PodOS/blob/mai
 
 > **new SearchGateway**(`store`): `SearchGateway`
 
-Defined in: [search/SearchGateway.ts:10](https://github.com/pod-os/PodOS/blob/main/core/src/search/SearchGateway.ts#L10)
+Defined in: [search/SearchGateway.ts:12](https://github.com/pod-os/PodOS/blob/main/core/src/search/SearchGateway.ts#L12)
 
 #### Parameters
 
@@ -32,7 +32,7 @@ Defined in: [search/SearchGateway.ts:10](https://github.com/pod-os/PodOS/blob/ma
 
 > **addToLabelIndex**(`thing`, `labelIndex`): `Promise`\<`void`\>
 
-Defined in: [search/SearchGateway.ts:28](https://github.com/pod-os/PodOS/blob/main/core/src/search/SearchGateway.ts#L28)
+Defined in: [search/SearchGateway.ts:32](https://github.com/pod-os/PodOS/blob/main/core/src/search/SearchGateway.ts#L32)
 
 #### Parameters
 
@@ -54,7 +54,7 @@ Defined in: [search/SearchGateway.ts:28](https://github.com/pod-os/PodOS/blob/ma
 
 > **buildSearchIndex**(`profile`): `Promise`\<[`SearchIndex`](SearchIndex.md)\>
 
-Defined in: [search/SearchGateway.ts:16](https://github.com/pod-os/PodOS/blob/main/core/src/search/SearchGateway.ts#L16)
+Defined in: [search/SearchGateway.ts:20](https://github.com/pod-os/PodOS/blob/main/core/src/search/SearchGateway.ts#L20)
 
 Fetch the private label index for the given profile and build a search index from it
 
@@ -74,7 +74,7 @@ Fetch the private label index for the given profile and build a search index fro
 
 > **createDefaultLabelIndex**(`profile`): `Promise`\<[`LabelIndex`](LabelIndex.md)\>
 
-Defined in: [search/SearchGateway.ts:32](https://github.com/pod-os/PodOS/blob/main/core/src/search/SearchGateway.ts#L32)
+Defined in: [search/SearchGateway.ts:36](https://github.com/pod-os/PodOS/blob/main/core/src/search/SearchGateway.ts#L36)
 
 #### Parameters
 

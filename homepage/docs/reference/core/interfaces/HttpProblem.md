@@ -19,7 +19,7 @@ https://datatracker.ietf.org/doc/html/rfc7807
 
 ### detail?
 
-> `optional` **detail**: `string`
+> `optional` **detail?**: `string`
 
 Defined in: [problems/index.ts:8](https://github.com/pod-os/PodOS/blob/main/core/src/problems/index.ts#L8)
 

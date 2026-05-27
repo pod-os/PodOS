@@ -34,21 +34,7 @@ Defined in: [authentication/index.ts:27](https://github.com/pod-os/PodOS/blob/ma
 
 ##### Returns
 
-> (`url`, `init?`): `Promise`\<`Response`\>
-
-###### Parameters
-
-###### url
-
-`RequestInfo`
-
-###### init?
-
-`RequestInit`
-
-###### Returns
-
-`Promise`\<`Response`\>
+(`url`, `init?`) => `Promise`\<`Response`\>
 
 #### Implementation of
 

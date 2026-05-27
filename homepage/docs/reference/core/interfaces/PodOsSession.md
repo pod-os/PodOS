@@ -18,7 +18,7 @@ Defined in: [authentication/index.ts:14](https://github.com/pod-os/PodOS/blob/ma
 
 ***
 
-### login()
+### login
 
 > **login**: (`oidcIssuer`) => `Promise`\<`void`\>
 
@@ -36,7 +36,7 @@ Defined in: [authentication/index.ts:16](https://github.com/pod-os/PodOS/blob/ma
 
 ***
 
-### logout()
+### logout
 
 > **logout**: () => `Promise`\<`void`\>
 
@@ -48,7 +48,7 @@ Defined in: [authentication/index.ts:17](https://github.com/pod-os/PodOS/blob/ma
 
 ***
 
-### observeSession()
+### observeSession
 
 > **observeSession**: () => `BehaviorSubject`\<[`SessionInfo`](../type-aliases/SessionInfo.md)\>
 

@@ -10,7 +10,7 @@ Defined in: [offline-cache/OfflineCapableFetcher.ts:14](https://github.com/pod-o
 
 ## Properties
 
-### fetch()
+### fetch
 
 > **fetch**: (`uri`) => `Promise`\<`Response`\>
 
@@ -28,7 +28,7 @@ Defined in: [offline-cache/OfflineCapableFetcher.ts:15](https://github.com/pod-o
 
 ***
 
-### isOnline()
+### isOnline
 
 > **isOnline**: () => `boolean`
 

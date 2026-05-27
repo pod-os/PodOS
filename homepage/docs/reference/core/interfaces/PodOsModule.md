@@ -6,7 +6,7 @@
 
 # Interface: PodOsModule\<T\>
 
-Defined in: [Store.ts:378](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L378)
+Defined in: [Store.ts:401](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L401)
 
 ## Type Parameters
 
@@ -16,11 +16,11 @@ Defined in: [Store.ts:378](https://github.com/pod-os/PodOS/blob/main/core/src/St
 
 ## Properties
 
-### default()
+### default
 
 > `readonly` **default**: (`config`) => `T`
 
-Defined in: [Store.ts:379](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L379)
+Defined in: [Store.ts:402](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L402)
 
 #### Parameters
 

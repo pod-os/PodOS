@@ -52,9 +52,9 @@ Defined in: [type-index/TypeIndex.ts:13](https://github.com/pod-os/PodOS/blob/ma
 
 ### editable
 
-> `readonly` **editable**: `boolean` = `false`
+> `readonly` **editable**: `boolean`
 
-Defined in: [type-index/TypeIndex.ts:16](https://github.com/pod-os/PodOS/blob/main/core/src/type-index/TypeIndex.ts#L16)
+Defined in: [thing/Thing.ts:82](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L82)
 
 Whether the Thing can be edited according to its access control settings
 
@@ -68,7 +68,7 @@ Whether the Thing can be edited according to its access control settings
 
 > `readonly` **store**: [`Store`](Store.md)
 
-Defined in: [type-index/TypeIndex.ts:15](https://github.com/pod-os/PodOS/blob/main/core/src/type-index/TypeIndex.ts#L15)
+Defined in: [thing/Thing.ts:78](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L78)
 
 #### Inherited from
 
@@ -80,7 +80,7 @@ Defined in: [type-index/TypeIndex.ts:15](https://github.com/pod-os/PodOS/blob/ma
 
 > `readonly` **uri**: `string`
 
-Defined in: [type-index/TypeIndex.ts:14](https://github.com/pod-os/PodOS/blob/main/core/src/type-index/TypeIndex.ts#L14)
+Defined in: [thing/Thing.ts:77](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L77)
 
 #### Inherited from
 
@@ -92,7 +92,7 @@ Defined in: [type-index/TypeIndex.ts:14](https://github.com/pod-os/PodOS/blob/ma
 
 > **anyValue**(...`predicateUris`): `undefined`
 
-Defined in: [thing/Thing.ts:183](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L183)
+Defined in: [thing/Thing.ts:219](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L219)
 
 Returns any value linked from this thing via one of the given predicates
 
@@ -116,7 +116,7 @@ Returns any value linked from this thing via one of the given predicates
 
 > **assume**\<`T`\>(`SpecificThing`): `T`
 
-Defined in: [thing/Thing.ts:319](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L319)
+Defined in: [thing/Thing.ts:406](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L406)
 
 Call this method to switch to a more specific subclass of Thing.
 
@@ -148,7 +148,7 @@ a subclass of Thing to assume
 
 > **attachments**(): [`Attachment`](../interfaces/Attachment.md)[]
 
-Defined in: [thing/Thing.ts:300](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L300)
+Defined in: [thing/Thing.ts:387](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L387)
 
 Returns all attachments linked to this thing
 
@@ -166,7 +166,7 @@ Returns all attachments linked to this thing
 
 > **container**(): `object`
 
-Defined in: [thing/Thing.ts:329](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L329)
+Defined in: [thing/Thing.ts:416](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L416)
 
 Returns the container that contains this thing's document
 The container URI is derived from the thing's URI.
@@ -189,7 +189,7 @@ The container URI is derived from the thing's URI.
 
 > **description**(): `undefined`
 
-Defined in: [thing/Thing.ts:196](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L196)
+Defined in: [thing/Thing.ts:286](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L286)
 
 Returns a literal value that describes this thing. Tries to match common RDF terms
 used for descriptions, like `dct:description`, `schema:description` or `rdfs:comment`
@@ -208,7 +208,7 @@ used for descriptions, like `dct:description`, `schema:description` or `rdfs:com
 
 > **label**(): `string`
 
-Defined in: [thing/Thing.ts:57](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L57)
+Defined in: [thing/Thing.ts:96](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L96)
 
 Returns a human-readable label for this thing. Tries to match common RDF terms
 used for labels, such as `rdfs:label`, `schema:name` and others.
@@ -229,7 +229,7 @@ If no such term is present, it will derive a label from the URI.
 
 > **listAll**(): [`TypeRegistration`](../interfaces/TypeRegistration.md)[]
 
-Defined in: [type-index/TypeIndex.ts:21](https://github.com/pod-os/PodOS/blob/main/core/src/type-index/TypeIndex.ts#L21)
+Defined in: [type-index/TypeIndex.ts:17](https://github.com/pod-os/PodOS/blob/main/core/src/type-index/TypeIndex.ts#L17)
 
 #### Returns
 
@@ -241,7 +241,7 @@ Defined in: [type-index/TypeIndex.ts:21](https://github.com/pod-os/PodOS/blob/ma
 
 > **literals**(): [`Literal`](../interfaces/Literal.md)[]
 
-Defined in: [thing/Thing.ts:80](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L80)
+Defined in: [thing/Thing.ts:116](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L116)
 
 Returns all the literal values that are linked to this thing
 
@@ -255,11 +255,73 @@ Returns all the literal values that are linked to this thing
 
 ***
 
+### observeAnyValue()
+
+> **observeAnyValue**(...`predicateUris`): `Observable`\<`string` \| `undefined`\>
+
+Defined in: [thing/Thing.ts:235](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L235)
+
+Observe changes in a value linked from this thing via one of the given predicates
+
+Note that return value may differ from that from `anyValue` when more than one value is present.
+
+#### Parameters
+
+##### predicateUris
+
+...`string`[]
+
+#### Returns
+
+`Observable`\<`string` \| `undefined`\>
+
+#### Inherited from
+
+[`Thing`](Thing.md).[`observeAnyValue`](Thing.md#observeanyvalue)
+
+***
+
+### observeDescription()
+
+> **observeDescription**(): `Observable`\<`string` \| `undefined`\>
+
+Defined in: [thing/Thing.ts:293](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L293)
+
+Observe changes in literal values that describe this thing. See `description`
+
+#### Returns
+
+`Observable`\<`string` \| `undefined`\>
+
+#### Inherited from
+
+[`Thing`](Thing.md).[`observeDescription`](Thing.md#observedescription)
+
+***
+
+### observeLabel()
+
+> **observeLabel**(): `Observable`\<`string`\>
+
+Defined in: [thing/Thing.ts:107](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L107)
+
+Observe changes in human-readable label for this thing. See `label`.
+
+#### Returns
+
+`Observable`\<`string`\>
+
+#### Inherited from
+
+[`Thing`](Thing.md).[`observeLabel`](Thing.md#observelabel)
+
+***
+
 ### observeRelations()
 
 > **observeRelations**(`predicate?`): `Observable`\<[`Relation`](../interfaces/Relation.md)[]\>
 
-Defined in: [thing/Thing.ts:117](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L117)
+Defined in: [thing/Thing.ts:153](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L153)
 
 Observe changes in links from this thing to other resources
 
@@ -283,7 +345,7 @@ Observe changes in links from this thing to other resources
 
 > **observeReverseRelations**(`predicate?`): `Observable`\<[`Relation`](../interfaces/Relation.md)[]\>
 
-Defined in: [thing/Thing.ts:159](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L159)
+Defined in: [thing/Thing.ts:195](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L195)
 
 Observe changes in links from other resources to this thing
 
@@ -307,7 +369,7 @@ Observe changes in links from other resources to this thing
 
 > **observeTypes**(): `Observable`\<[`RdfType`](../interfaces/RdfType.md)[]\>
 
-Defined in: [thing/Thing.ts:281](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L281)
+Defined in: [thing/Thing.ts:368](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L368)
 
 Observe changes to the list of RDF types for this thing
 
@@ -325,7 +387,7 @@ Observe changes to the list of RDF types for this thing
 
 > **picture**(): \{ `url`: `string`; \} \| `null`
 
-Defined in: [thing/Thing.ts:217](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L217)
+Defined in: [thing/Thing.ts:304](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L304)
 
 Returns the url of a picture or logo associated with this thing
 Tries to match common RDF terms used for pictures like `schema:image`,
@@ -347,7 +409,7 @@ An object containing the `url` of the picture
 
 > **relations**(`predicate?`): [`Relation`](../interfaces/Relation.md)[]
 
-Defined in: [thing/Thing.ts:97](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L97)
+Defined in: [thing/Thing.ts:133](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L133)
 
 Returns all the unique links from this thing to other resources. This only includes named nodes and excludes rdf:type relations.
 
@@ -371,7 +433,7 @@ Returns all the unique links from this thing to other resources. This only inclu
 
 > **reverseRelations**(`predicate?`): [`Relation`](../interfaces/Relation.md)[]
 
-Defined in: [thing/Thing.ts:140](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L140)
+Defined in: [thing/Thing.ts:176](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L176)
 
 Returns all the unique links from other resources to this thing
 
@@ -395,7 +457,7 @@ Returns all the unique links from other resources to this thing
 
 > **types**(): [`RdfType`](../interfaces/RdfType.md)[]
 
-Defined in: [thing/Thing.ts:270](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L270)
+Defined in: [thing/Thing.ts:357](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L357)
 
 Retrieves a list of RDF types for this thing.
 

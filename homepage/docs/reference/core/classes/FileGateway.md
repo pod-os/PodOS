@@ -20,7 +20,7 @@ Gateway for file-related operations on Solid Pods and the store.
 
 > **new FileGateway**(`store`, `fileFetcher`): `FileGateway`
 
-Defined in: [files/FileGateway.ts:14](https://github.com/pod-os/PodOS/blob/main/core/src/files/FileGateway.ts#L14)
+Defined in: [files/FileGateway.ts:17](https://github.com/pod-os/PodOS/blob/main/core/src/files/FileGateway.ts#L17)
 
 #### Parameters
 
@@ -42,7 +42,7 @@ Defined in: [files/FileGateway.ts:14](https://github.com/pod-os/PodOS/blob/main/
 
 > **uploadAndLinkFile**(`thing`, `predicateUri`, `fileToUpload`): `ResultAsync`\<[`NewFile`](../interfaces/NewFile.md), [`NetworkProblem`](../interfaces/NetworkProblem.md) \| [`HttpProblem`](../interfaces/HttpProblem.md)\>
 
-Defined in: [files/FileGateway.ts:29](https://github.com/pod-os/PodOS/blob/main/core/src/files/FileGateway.ts#L29)
+Defined in: [files/FileGateway.ts:32](https://github.com/pod-os/PodOS/blob/main/core/src/files/FileGateway.ts#L32)
 
 Uploads a file and associates it with a thing.
 The container is automatically derived from the thing's URI.

@@ -22,6 +22,6 @@ Defined in: [authentication/index.ts:9](https://github.com/pod-os/PodOS/blob/mai
 
 ### webId?
 
-> `optional` **webId**: `string`
+> `optional` **webId?**: `string`
 
 Defined in: [authentication/index.ts:10](https://github.com/pod-os/PodOS/blob/main/core/src/authentication/index.ts#L10)

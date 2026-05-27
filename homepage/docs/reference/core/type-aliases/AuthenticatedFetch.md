@@ -4,7 +4,7 @@
 
 [@pod-os/core](../globals.md) / AuthenticatedFetch
 
-# Type Alias: AuthenticatedFetch()
+# Type Alias: AuthenticatedFetch
 
 > **AuthenticatedFetch** = (`url`, `init?`) => `Promise`\<`Response`\>
 

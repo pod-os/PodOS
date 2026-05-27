@@ -10,7 +10,7 @@ Defined in: [files/SolidFile.ts:1](https://github.com/pod-os/PodOS/blob/main/cor
 
 ## Properties
 
-### blob()
+### blob
 
 > **blob**: () => `Blob` \| `null`
 

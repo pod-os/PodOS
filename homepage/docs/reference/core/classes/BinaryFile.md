@@ -18,7 +18,7 @@ Defined in: [files/BinaryFile.ts:3](https://github.com/pod-os/PodOS/blob/main/co
 
 > **new BinaryFile**(`url`, `data`): `BinaryFile`
 
-Defined in: [files/BinaryFile.ts:4](https://github.com/pod-os/PodOS/blob/main/core/src/files/BinaryFile.ts#L4)
+Defined in: [files/BinaryFile.ts:7](https://github.com/pod-os/PodOS/blob/main/core/src/files/BinaryFile.ts#L7)
 
 #### Parameters
 
@@ -40,7 +40,7 @@ Defined in: [files/BinaryFile.ts:4](https://github.com/pod-os/PodOS/blob/main/co
 
 > `readonly` **url**: `string`
 
-Defined in: [files/BinaryFile.ts:5](https://github.com/pod-os/PodOS/blob/main/core/src/files/BinaryFile.ts#L5)
+Defined in: [files/BinaryFile.ts:4](https://github.com/pod-os/PodOS/blob/main/core/src/files/BinaryFile.ts#L4)
 
 #### Implementation of
 
@@ -52,7 +52,7 @@ Defined in: [files/BinaryFile.ts:5](https://github.com/pod-os/PodOS/blob/main/co
 
 > **blob**(): `Blob`
 
-Defined in: [files/BinaryFile.ts:9](https://github.com/pod-os/PodOS/blob/main/core/src/files/BinaryFile.ts#L9)
+Defined in: [files/BinaryFile.ts:12](https://github.com/pod-os/PodOS/blob/main/core/src/files/BinaryFile.ts#L12)
 
 #### Returns
 

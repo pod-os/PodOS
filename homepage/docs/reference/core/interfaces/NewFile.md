@@ -6,7 +6,7 @@
 
 # Interface: NewFile
 
-Defined in: [files/FileFetcher.ts:118](https://github.com/pod-os/PodOS/blob/main/core/src/files/FileFetcher.ts#L118)
+Defined in: [files/FileFetcher.ts:122](https://github.com/pod-os/PodOS/blob/main/core/src/files/FileFetcher.ts#L122)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [files/FileFetcher.ts:118](https://github.com/pod-os/PodOS/blob/main
 
 > **contentType**: `string`
 
-Defined in: [files/FileFetcher.ts:121](https://github.com/pod-os/PodOS/blob/main/core/src/files/FileFetcher.ts#L121)
+Defined in: [files/FileFetcher.ts:125](https://github.com/pod-os/PodOS/blob/main/core/src/files/FileFetcher.ts#L125)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [files/FileFetcher.ts:121](https://github.com/pod-os/PodOS/blob/main
 
 > **name**: `string`
 
-Defined in: [files/FileFetcher.ts:120](https://github.com/pod-os/PodOS/blob/main/core/src/files/FileFetcher.ts#L120)
+Defined in: [files/FileFetcher.ts:124](https://github.com/pod-os/PodOS/blob/main/core/src/files/FileFetcher.ts#L124)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [files/FileFetcher.ts:120](https://github.com/pod-os/PodOS/blob/main
 
 > **url**: `string`
 
-Defined in: [files/FileFetcher.ts:119](https://github.com/pod-os/PodOS/blob/main/core/src/files/FileFetcher.ts#L119)
+Defined in: [files/FileFetcher.ts:123](https://github.com/pod-os/PodOS/blob/main/core/src/files/FileFetcher.ts#L123)

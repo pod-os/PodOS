@@ -6,7 +6,7 @@
 
 # Interface: Relation
 
-Defined in: [thing/Thing.ts:25](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L25)
+Defined in: [thing/Thing.ts:28](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L28)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [thing/Thing.ts:25](https://github.com/pod-os/PodOS/blob/main/core/s
 
 > **label**: `string`
 
-Defined in: [thing/Thing.ts:27](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L27)
+Defined in: [thing/Thing.ts:30](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L30)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [thing/Thing.ts:27](https://github.com/pod-os/PodOS/blob/main/core/s
 
 > **predicate**: `string`
 
-Defined in: [thing/Thing.ts:26](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L26)
+Defined in: [thing/Thing.ts:29](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L29)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [thing/Thing.ts:26](https://github.com/pod-os/PodOS/blob/main/core/s
 
 > **uris**: `string`[]
 
-Defined in: [thing/Thing.ts:28](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L28)
+Defined in: [thing/Thing.ts:31](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L31)

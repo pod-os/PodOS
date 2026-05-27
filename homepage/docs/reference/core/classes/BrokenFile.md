@@ -18,7 +18,7 @@ Defined in: [files/BrokenFile.ts:4](https://github.com/pod-os/PodOS/blob/main/co
 
 > **new BrokenFile**(`url`, `status`): `BrokenFile`
 
-Defined in: [files/BrokenFile.ts:5](https://github.com/pod-os/PodOS/blob/main/core/src/files/BrokenFile.ts#L5)
+Defined in: [files/BrokenFile.ts:8](https://github.com/pod-os/PodOS/blob/main/core/src/files/BrokenFile.ts#L8)
 
 #### Parameters
 
@@ -40,7 +40,7 @@ Defined in: [files/BrokenFile.ts:5](https://github.com/pod-os/PodOS/blob/main/co
 
 > `readonly` **status**: [`HttpStatus`](HttpStatus.md)
 
-Defined in: [files/BrokenFile.ts:7](https://github.com/pod-os/PodOS/blob/main/core/src/files/BrokenFile.ts#L7)
+Defined in: [files/BrokenFile.ts:6](https://github.com/pod-os/PodOS/blob/main/core/src/files/BrokenFile.ts#L6)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [files/BrokenFile.ts:7](https://github.com/pod-os/PodOS/blob/main/co
 
 > `readonly` **url**: `string`
 
-Defined in: [files/BrokenFile.ts:6](https://github.com/pod-os/PodOS/blob/main/core/src/files/BrokenFile.ts#L6)
+Defined in: [files/BrokenFile.ts:5](https://github.com/pod-os/PodOS/blob/main/core/src/files/BrokenFile.ts#L5)
 
 #### Implementation of
 
@@ -60,7 +60,7 @@ Defined in: [files/BrokenFile.ts:6](https://github.com/pod-os/PodOS/blob/main/co
 
 > **blob**(): `Blob` \| `null`
 
-Defined in: [files/BrokenFile.ts:14](https://github.com/pod-os/PodOS/blob/main/core/src/files/BrokenFile.ts#L14)
+Defined in: [files/BrokenFile.ts:17](https://github.com/pod-os/PodOS/blob/main/core/src/files/BrokenFile.ts#L17)
 
 #### Returns
 
@@ -76,7 +76,7 @@ Defined in: [files/BrokenFile.ts:14](https://github.com/pod-os/PodOS/blob/main/c
 
 > **toString**(): `string`
 
-Defined in: [files/BrokenFile.ts:10](https://github.com/pod-os/PodOS/blob/main/core/src/files/BrokenFile.ts#L10)
+Defined in: [files/BrokenFile.ts:13](https://github.com/pod-os/PodOS/blob/main/core/src/files/BrokenFile.ts#L13)
 
 Returns a string representation of an object.
 

@@ -48,7 +48,7 @@ Defined in: [index.ts:51](https://github.com/pod-os/PodOS/blob/main/core/src/ind
 
 > **addNewThing**(`uri`, `name`, `type`): `Promise`\<`void`\>
 
-Defined in: [index.ts:139](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L139)
+Defined in: [index.ts:155](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L155)
 
 #### Parameters
 
@@ -74,7 +74,37 @@ Defined in: [index.ts:139](https://github.com/pod-os/PodOS/blob/main/core/src/in
 
 > **addPropertyValue**(`thing`, `property`, `value`): `Promise`\<`void`\>
 
-Defined in: [index.ts:127](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L127)
+Defined in: [index.ts:133](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L133)
+
+Adds a new value to the property of the given thing
+
+#### Parameters
+
+##### thing
+
+[`Thing`](Thing.md)
+
+##### property
+
+`string`
+
+##### value
+
+`string`
+
+#### Returns
+
+`Promise`\<`void`\>
+
+***
+
+### addRelation()
+
+> **addRelation**(`thing`, `property`, `value`): `Promise`\<`void`\>
+
+Defined in: [index.ts:147](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L147)
+
+Adds a new relation (link) from the thing to the given uri using the property
 
 #### Parameters
 
@@ -100,7 +130,7 @@ Defined in: [index.ts:127](https://github.com/pod-os/PodOS/blob/main/core/src/in
 
 > **addToLabelIndex**(`thing`, `labelIndex`): `Promise`\<`void`\>
 
-Defined in: [index.ts:192](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L192)
+Defined in: [index.ts:208](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L208)
 
 Adds a label of the given thing to the label index, so that it can be found after the search index has been rebuilt
 
@@ -128,7 +158,7 @@ The index to update
 
 > **attachments**(): [`AttachmentGateway`](AttachmentGateway.md)
 
-Defined in: [index.ts:226](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L226)
+Defined in: [index.ts:242](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L242)
 
 Provides access to attachment operations such as uploading and linking attachments to things
 
@@ -148,7 +178,7 @@ An instance of AttachmentGateway that handles attachment operations
 
 > **buildSearchIndex**(`profile`): `Promise`\<[`SearchIndex`](SearchIndex.md)\>
 
-Defined in: [index.ts:166](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L166)
+Defined in: [index.ts:182](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L182)
 
 Fetch the private label index for the given profile and build a search index from it
 
@@ -168,7 +198,7 @@ Fetch the private label index for the given profile and build a search index fro
 
 > **createDefaultLabelIndex**(`profile`): `Promise`\<[`LabelIndex`](LabelIndex.md)\>
 
-Defined in: [index.ts:202](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L202)
+Defined in: [index.ts:218](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L218)
 
 Creates a new label index document at a default location and links it to the user's profile or preferences document
 
@@ -254,7 +284,7 @@ Use [FileFetcher.fetchFile](FileFetcher.md#fetchfile) via [PodOS.files](#files) 
 
 > **fetchProfile**(`webId`): `Promise`\<[`WebIdProfile`](WebIdProfile.md)\>
 
-Defined in: [index.ts:158](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L158)
+Defined in: [index.ts:174](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L174)
 
 Fetch the WebId profile and preferences file for the given WebID
 
@@ -290,7 +320,7 @@ An instance of FileFetcher that handles file operations
 
 > **listKnownTerms**(): [`Term`](../interfaces/Term.md)[]
 
-Defined in: [index.ts:135](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L135)
+Defined in: [index.ts:151](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L151)
 
 #### Returns
 
@@ -302,7 +332,7 @@ Defined in: [index.ts:135](https://github.com/pod-os/PodOS/blob/main/core/src/in
 
 > **loadModule**\<`T`\>(`moduleName`): `Promise`\<`T`\>
 
-Defined in: [index.ts:183](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L183)
+Defined in: [index.ts:199](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L199)
 
 Dynamically loads a module by its name and returns an instance of the module
 
@@ -328,7 +358,7 @@ Dynamically loads a module by its name and returns an instance of the module
 
 > **login**(`oidcIssuer?`): `Promise`\<`void`\>
 
-Defined in: [index.ts:175](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L175)
+Defined in: [index.ts:191](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L191)
 
 #### Parameters
 
@@ -346,7 +376,7 @@ Defined in: [index.ts:175](https://github.com/pod-os/PodOS/blob/main/core/src/in
 
 > **logout**(): `Promise`\<`void`\>
 
-Defined in: [index.ts:170](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L170)
+Defined in: [index.ts:186](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L186)
 
 #### Returns
 
@@ -358,7 +388,7 @@ Defined in: [index.ts:170](https://github.com/pod-os/PodOS/blob/main/core/src/in
 
 > **observeSession**(): `BehaviorSubject`\<[`SessionInfo`](../type-aliases/SessionInfo.md)\>
 
-Defined in: [index.ts:150](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L150)
+Defined in: [index.ts:166](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L166)
 
 returns a behavior subject that can be used to observe changes in the session state
 
@@ -372,7 +402,7 @@ returns a behavior subject that can be used to observe changes in the session st
 
 > **proposeAppsFor**(`thing`): [`OpenWithApp`](../interfaces/OpenWithApp.md)[]
 
-Defined in: [index.ts:235](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L235)
+Defined in: [index.ts:251](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L251)
 
 Propose matching apps to open a thing
 
@@ -396,7 +426,7 @@ An array of apps that can open the thing. The array is empty if no apps are foun
 
 > **proposeUriForNewThing**(`referenceUri`, `name`): `string`
 
-Defined in: [index.ts:143](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L143)
+Defined in: [index.ts:159](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L159)
 
 #### Parameters
 
@@ -418,7 +448,7 @@ Defined in: [index.ts:143](https://github.com/pod-os/PodOS/blob/main/core/src/in
 
 > **uploadAndAddPicture**(`thing`, `pictureFile`): `ResultAsync`\<\{ `url`: `string`; \}, [`NetworkProblem`](../interfaces/NetworkProblem.md) \| [`HttpProblem`](../interfaces/HttpProblem.md)\>
 
-Defined in: [index.ts:214](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L214)
+Defined in: [index.ts:230](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L230)
 
 Uploads a picture file and associates it with a thing.
 The container is automatically derived from the thing's URI.

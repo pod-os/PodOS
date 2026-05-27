@@ -16,7 +16,7 @@ Gateway for picture-related operations on Solid Pods and the store.
 
 > **new PictureGateway**(`attachmentGateway`): `PictureGateway`
 
-Defined in: [picture/PictureGateway.ts:10](https://github.com/pod-os/PodOS/blob/main/core/src/picture/PictureGateway.ts#L10)
+Defined in: [picture/PictureGateway.ts:12](https://github.com/pod-os/PodOS/blob/main/core/src/picture/PictureGateway.ts#L12)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [picture/PictureGateway.ts:10](https://github.com/pod-os/PodOS/blob/
 
 > **uploadAndAddPicture**(`thing`, `pictureFile`): `ResultAsync`\<[`NewFile`](../interfaces/NewFile.md), [`NetworkProblem`](../interfaces/NetworkProblem.md) \| [`HttpProblem`](../interfaces/HttpProblem.md)\>
 
-Defined in: [picture/PictureGateway.ts:21](https://github.com/pod-os/PodOS/blob/main/core/src/picture/PictureGateway.ts#L21)
+Defined in: [picture/PictureGateway.ts:25](https://github.com/pod-os/PodOS/blob/main/core/src/picture/PictureGateway.ts#L25)
 
 Uploads a picture file and associates it with a thing.
 The container is automatically derived from the thing's URI.

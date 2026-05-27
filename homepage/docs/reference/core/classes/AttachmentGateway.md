@@ -20,7 +20,7 @@ Gateway for attachment-related operations on Solid Pods and the store.
 
 > **new AttachmentGateway**(`fileGateway`): `AttachmentGateway`
 
-Defined in: [attachments/AttachmentGateway.ts:12](https://github.com/pod-os/PodOS/blob/main/core/src/attachments/AttachmentGateway.ts#L12)
+Defined in: [attachments/AttachmentGateway.ts:14](https://github.com/pod-os/PodOS/blob/main/core/src/attachments/AttachmentGateway.ts#L14)
 
 #### Parameters
 
@@ -38,7 +38,7 @@ Defined in: [attachments/AttachmentGateway.ts:12](https://github.com/pod-os/PodO
 
 > **uploadAndAddAttachment**(`thing`, `attachmentFile`): `ResultAsync`\<[`NewFile`](../interfaces/NewFile.md), [`NetworkProblem`](../interfaces/NetworkProblem.md) \| [`HttpProblem`](../interfaces/HttpProblem.md)\>
 
-Defined in: [attachments/AttachmentGateway.ts:23](https://github.com/pod-os/PodOS/blob/main/core/src/attachments/AttachmentGateway.ts#L23)
+Defined in: [attachments/AttachmentGateway.ts:27](https://github.com/pod-os/PodOS/blob/main/core/src/attachments/AttachmentGateway.ts#L27)
 
 Uploads an attachment file and associates it with a thing.
 The container is automatically derived from the thing's URI.
