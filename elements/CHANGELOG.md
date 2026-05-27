@@ -4,13 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 0.42.0
+## 0.41.0
 
 ### Changed
 
 - [pos-value](https://pod-os.org/reference/elements/components/pos-value/), [pos-label](https://pod-os.org/reference/elements/components/pos-label/) and [pos-description](https://pod-os.org/reference/elements/components/pos-description/): update reactively when data in store changes
 
-## 0.41.0
+## 0.40.0
 
 ### Changed
 
@@ -18,8 +18,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - Added a "Remember me" checkbox to the login form
   - When checked, the selected Identity Provider (IdP) URL is persisted in local settings and pre-filled on the next login
   - When unchecked, any previously remembered IdP URL is cleared from local settings
-
-## 0.40.0
 
 ### Fixed
 
