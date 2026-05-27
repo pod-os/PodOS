@@ -5,7 +5,7 @@ import { accumulateValues } from "./accumulateValues";
 import { isRdfType } from "./isRdfType";
 import { labelForType } from "./labelForType";
 import { labelFromUri } from "./labelFromUri";
-import { Store } from "../Store";
+import { Store, type Quad } from "../Store";
 import {
   debounceTime,
   distinctUntilChanged,
@@ -227,7 +227,7 @@ export class Thing {
    * @param args.compare Function that compares previous and current values
    */
   private observeChanges<T>(args: {
-    filterFn: (quad) => boolean;
+    filterFn: (quad: Quad) => boolean;
     observes: () => T;
     compare: (prev: T, curr: T) => boolean;
   }): Observable<T> {
