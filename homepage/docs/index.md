@@ -40,6 +40,14 @@ template: home.html.j2
 
     [:octicons-arrow-right-24: View the code](https://github.com/pod-os/PodOS)
 
+-   :material-rss:{ .lg .middle } __Blog & RSS Feed__
+
+    ---
+
+    Stay up to date with the latest PodOS news, releases, and tutorials.
+
+    [:octicons-arrow-right-24: Read the blog](blog/index.md) · [:octicons-rss-24: RSS feed](feed_rss_created.xml)
+
 -   <img src="https://nlnet.nl/image/logos/NGI0_tag.svg" alt="NGI Zero Logo" width="15%" /> __Funded by NLNet__
 
     ---

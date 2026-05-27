@@ -13,10 +13,20 @@
         <a href="getting-started/" class="md-button md-button--primary">Get Started</a>
         <a href="reference/" class="md-button">Reference</a>
       </p>
+        {% if config.extra.latest_blog_post %}
+        <section class="latest-post">
+          Latest from the blog: <a href="/blog/" class="latest-post__card">
+            <span class="latest-post__title">{{ config.extra.latest_blog_post.title }}</span>
+            <span class="latest-post__cta">Read more →</span>
+          </a>
+        </section>
+        {% endif %}
     </div>
   </section>
 
   {{ page.content }}
+
+
 
 {% endblock %}
 

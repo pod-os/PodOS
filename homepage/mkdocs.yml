@@ -2,6 +2,9 @@ site_name: PodOS
 site_url: https://pod-os.org/
 repo_url: https://github.com/pod-os/PodOS
 
+hooks:
+  - hooks/latest_blog_post.py
+
 plugins:
   - privacy
   - search

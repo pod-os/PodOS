@@ -25,6 +25,29 @@ section.hero {
   }
 }
 
+section.latest-post {
+  margin: 2rem 1rem 1rem 1rem;
+  padding: 0.5rem;
+  border: 1px solid var(--md-default-fg-color--lightest);
+
+  .latest-post__card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .latest-post__title {
+    font-weight: 600;
+  }
+
+  .latest-post__cta {
+    color: var(--md-accent-fg-color);
+    white-space: nowrap;
+  }
+}
+
 @media (max-width: 600px) {
   article {
     img {
