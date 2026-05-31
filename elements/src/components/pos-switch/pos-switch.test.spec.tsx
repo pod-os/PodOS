@@ -590,6 +590,80 @@ describe('pos-switch', () => {
       );
     });
 
+    describe('evaluating values of property and rev (no relations or literals)', () => {
+      /*
+        40 possible combinations:
+        
+        - Predicates: if-property, if-rev
+        - Condition: (some|every)-(eq|lt|lte|gt|gte)
+        - Modifier: negation
+        - Evaluation state: matched, not matched
+
+        Should always return not matched, or matched with negation
+        For if-property covers both cases where there are no relations or no literals
+        */
+      let testCases = [];
+      for (let direction of ['if-property', 'if-rev']) {
+        for (let semantics of ['some', 'every']) {
+          for (let operator of ['eq', 'gt', 'gte', 'lt', 'lte']) {
+            for (let negation of [true, false]) {
+              const result = negation ? 'matched' : 'not matched';
+              const not = negation ? 'not' : '';
+              testCases.push({
+                direction: direction,
+                conditions: `${direction}="https://schema.org/video" ${not} ${semantics}-value-${operator}="https://resource.test/resource-2"`,
+                expectedResult: result,
+              });
+            }
+          }
+        }
+      }
+
+      expect(testCases.filter(testCase => testCase.expectedResult == 'matched').length).toEqual(20);
+      expect(testCases.filter(testCase => testCase.expectedResult == 'not matched').length).toEqual(20);
+
+      it.each(testCases)(
+        `renders templates if condition is met: $conditions for no relations `,
+        async ({ conditions, expectedResult }) => {
+          const page = await newSpecPage({
+            components: [PosSwitch],
+            html: `
+      <pos-switch>
+        <pos-case ${conditions}>
+          <template>
+            <div>Condition is matched</div>
+          </template>
+        </pos-case>
+        <pos-case else>
+          <template>
+            <div>Condition is not matched</div>
+          </template>
+        </pos-case>
+      </pos-switch>`,
+          });
+          const observedRelations$ = new Subject<Relation[]>();
+          const observedLiterals$ = new Subject<Literal[]>();
+          const observedReverseRelations$ = new Subject<Relation[]>();
+          const thing = {
+            uri: 'https://pod.example/resource',
+            observeRelations: () => observedRelations$,
+            observeLiterals: () => observedLiterals$,
+            observeReverseRelations: () => observedReverseRelations$,
+          };
+          page.rootInstance.receiveResource(thing);
+          observedLiterals$.next([]);
+          observedRelations$.next([]);
+          observedReverseRelations$.next([]);
+          await page.waitForChanges();
+          expect(page.root?.innerHTML).toEqualHtml(`
+        <div>Condition is ${expectedResult}</div>
+        `);
+        },
+      );
+    });
+
+    // TODO evaluating values of property and rev with multiple relations
+
     it('renders templates if forward link value condition is met (literal)', async () => {
       const page = await newSpecPage({
         components: [PosSwitch],
