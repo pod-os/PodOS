@@ -5,29 +5,82 @@ import { Subject } from 'rxjs';
 
 describe('pos-switch', () => {
   describe('evaluation of caseElement conditions with test method ', () => {
-    it('renders matching condition with negation', async () => {
-      const page = await newSpecPage({
-        components: [PosSwitch],
-        html: `
-      <pos-switch>
-        <pos-case not if-typeof="http://schema.org/Video"><template><div>Not a Video</div></template></pos-case>
-      </pos-switch>`,
-      });
-      const observedTypes$ = new Subject<RdfType[]>();
-      const thing = {
-        observeTypes: () => observedTypes$,
-      } as unknown as Thing;
-      page.rootInstance.receiveResource(thing);
-      observedTypes$.next([
+    /*
+     Dimensions:
+       - Predicate tested: if-typeof | if-property | if-rev
+       - Condition: present, (some|every)-(eq|lt|lte|gt|gte)
+         - Modifier: negation
+       - Values: relation (URI), string literal, numeric literal
+       - Data state: matched, not matched
+    */
+    describe('if-typeof', () => {
+      // Possible combinations:
+      // Condition: present, not present
+      // Data state: matched, not matched
+      // N.B. Does not take values
+      it.each([
         {
-          label: 'Recipe',
-          uri: 'http://schema.org/Recipe',
+          conditions: 'if-typeof="http://schema.org/Recipe"',
+          observedTypes: [
+            {
+              label: 'Recipe',
+              uri: 'http://schema.org/Recipe',
+            },
+          ],
+          expectedResult: 'matched',
         },
-      ]);
-      await page.waitForChanges();
-      expect(page.root?.innerHTML).toEqualHtml(`
-        <div>Not a Video</div>
+        {
+          conditions: 'not if-typeof="http://schema.org/Recipe"',
+          observedTypes: [],
+          expectedResult: 'matched',
+        },
+        {
+          conditions: 'if-typeof="http://schema.org/Recipe"',
+          observedTypes: [],
+          expectedResult: 'not matched',
+        },
+        {
+          conditions: 'not if-typeof="http://schema.org/Recipe"',
+          observedTypes: [
+            {
+              label: 'Recipe',
+              uri: 'http://schema.org/Recipe',
+            },
+          ],
+          expectedResult: 'not matched',
+        },
+      ])(
+        `renders templates if condition is met: $conditions `,
+        async ({ conditions, observedTypes, expectedResult }) => {
+          const page = await newSpecPage({
+            components: [PosSwitch],
+            html: `
+      <pos-switch>
+        <pos-case ${conditions}>
+          <template>
+            <div>Condition is matched</div>
+          </template>
+        </pos-case>
+        <pos-case else>
+          <template>
+            <div>Condition is not matched</div>
+          </template>
+        </pos-case>
+      </pos-switch>`,
+          });
+          const observedTypes$ = new Subject<RdfType[]>();
+          const thing = {
+            uri: 'https://pod.example/resource',
+            observeTypes: () => observedTypes$,
+          };
+          page.rootInstance.receiveResource(thing);
+          observedTypes$.next(observedTypes);
+          await page.waitForChanges();
+          expect(page.root?.innerHTML).toEqualHtml(`
+        <div>Condition is ${expectedResult}</div>
         `);
+        },
+      );
     });
 
     it('renders templates if a forward link is present (relation)', async () => {
