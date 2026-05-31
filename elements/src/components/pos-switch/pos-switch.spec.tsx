@@ -836,16 +836,15 @@ describe('pos-switch', () => {
       observedReverseRelations: [],
       expectedResult: 'matched',
     },
-    // TODO fails, but should match: not every value is "the-name"
-    // {
-    //   conditions: 'not if-property="https://schema.org/name" every-value-eq="the-name"',
-    //   observedLiterals: [
-    //     { predicate: 'https://schema.org/name', label: 'video', values: ['the-name', 'another-name'] },
-    //   ],
-    //   observedRelations: [],
-    //   observedReverseRelations: [],
-    //   expectedResult: 'matched',
-    // },
+    {
+      conditions: 'not if-property="https://schema.org/name" every-value-eq="the-name"',
+      observedLiterals: [
+        { predicate: 'https://schema.org/name', label: 'video', values: ['the-name', 'another-name'] },
+      ],
+      observedRelations: [],
+      observedReverseRelations: [],
+      expectedResult: 'matched',
+    },
     // relation + some-value-eq
     {
       conditions: 'if-property="https://schema.org/video" some-value-eq="https://video.test/video-1"',

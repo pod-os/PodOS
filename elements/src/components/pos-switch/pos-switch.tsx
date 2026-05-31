@@ -103,11 +103,11 @@ export class PosSwitch implements ResourceAware {
       }
       state = matchingRelations.length > 0;
     }
-    if (caseElement.getAttribute('not') != null) {
-      state = !state;
-    }
     if (values) {
       state = state && compareValue(values);
+    }
+    if (caseElement.getAttribute('not') != null) {
+      state = !state;
     }
     return state;
   }
