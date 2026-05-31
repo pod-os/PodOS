@@ -480,39 +480,114 @@ describe('pos-switch', () => {
       );
     });
 
-    it('renders templates if forward link value condition is met (relation)', async () => {
-      const page = await newSpecPage({
-        components: [PosSwitch],
-        html: `
+    describe('evaluating values of property and rev (single relations)', () => {
+      /*
+        80 possible combinations:
+        
+        - Predicates: if-property, if-rev
+        - Condition: (some|every)-(eq|lt|lte|gt|gte)
+        - Modifier: negation
+        - Evaluation state: matched, not matched
+
+        We test three resource values (120 combinations) matching eq, lt, or gt
+        There is no difference between some and every with a single relation.
+        */
+      let testCases = [];
+      for (let direction of ['if-property', 'if-rev']) {
+        for (let semantics of ['some', 'every']) {
+          for (let operator of ['eq', 'gt', 'gte', 'lt', 'lte']) {
+            for (let negation of [true, false]) {
+              for (let resource of [
+                'https://resource.test/resource-1',
+                'https://resource.test/resource-2',
+                'https://resource.test/resource-3',
+              ]) {
+                const cmp = resource.localeCompare('https://resource.test/resource-2');
+                let matches;
+                switch (operator) {
+                  case 'eq':
+                    matches = cmp === 0;
+                    break;
+                  case 'gt':
+                    matches = cmp > 0;
+                    break;
+                  case 'gte':
+                    matches = cmp >= 0;
+                    break;
+                  case 'lt':
+                    matches = cmp < 0;
+                    break;
+                  case 'lte':
+                    matches = cmp <= 0;
+                    break;
+                }
+                matches = negation ? !matches : matches;
+                const result = matches ? 'matched' : 'not matched';
+                const not = negation ? 'not' : '';
+                testCases.push({
+                  direction: direction,
+                  conditions: `${direction}="https://schema.org/video" ${not} ${semantics}-value-${operator}="https://resource.test/resource-2"`,
+                  resource: resource,
+                  expectedResult: result,
+                });
+              }
+            }
+          }
+        }
+      }
+      expect(testCases.filter(testCase => testCase.expectedResult == 'matched').length).toEqual(60);
+      expect(testCases.filter(testCase => testCase.expectedResult == 'not matched').length).toEqual(60);
+
+      it.each(testCases)(
+        `renders templates if condition is met: $conditions for $resource `,
+        async ({ direction, conditions, resource, expectedResult }) => {
+          const page = await newSpecPage({
+            components: [PosSwitch],
+            html: `
       <pos-switch>
-        <pos-case if-property="https://schema.org/video" some-value-eq="https://video.test/video-1">
+        <pos-case ${conditions}>
           <template>
-            <div>Resource has video</div>
+            <div>Condition is matched</div>
           </template>
         </pos-case>
-        <pos-case if-property="https://schema.org/video" some-value-eq="https://video.test/video-missing">
+        <pos-case else>
           <template>
-            <div>Should not render as value condition is not met</div>
+            <div>Condition is not matched</div>
           </template>
         </pos-case>
       </pos-switch>`,
-      });
-      const observedRelations$ = new Subject<Relation[]>();
-      const observedLiterals$ = new Subject<Literal[]>();
-      const thing = {
-        uri: 'https://pod.example/resource',
-        observeRelations: () => observedRelations$,
-        observeLiterals: () => observedLiterals$,
-      };
-      page.rootInstance.receiveResource(thing);
-      observedLiterals$.next([]);
-      observedRelations$.next([
-        { predicate: 'https://schema.org/video', label: 'video', uris: ['https://video.test/video-1'] },
-      ]);
-      await page.waitForChanges();
-      expect(page.root?.innerHTML).toEqualHtml(`
-        <div>Resource has video</div>
+          });
+          const observedRelations$ = new Subject<Relation[]>();
+          const observedLiterals$ = new Subject<Literal[]>();
+          const observedReverseRelations$ = new Subject<Relation[]>();
+          const thing = {
+            uri: 'https://pod.example/resource',
+            observeRelations: () => observedRelations$,
+            observeLiterals: () => observedLiterals$,
+            observeReverseRelations: () => observedReverseRelations$,
+          };
+          const relations = [
+            {
+              predicate: 'https://schema.org/video',
+              label: 'video',
+              uris: [resource],
+            },
+          ];
+          page.rootInstance.receiveResource(thing);
+          observedLiterals$.next([]);
+          if (direction == 'if-property') {
+            observedRelations$.next(relations);
+            observedReverseRelations$.next([]);
+          } else {
+            observedRelations$.next([]);
+            observedReverseRelations$.next(relations);
+          }
+          await page.waitForChanges();
+          expect(page.root?.innerHTML).toEqualHtml(`
+        <div>Condition is ${expectedResult}</div>
         `);
+        },
+      );
     });
 
     it('renders templates if forward link value condition is met (literal)', async () => {
@@ -542,38 +617,6 @@ describe('pos-switch', () => {
       await page.waitForChanges();
       expect(page.root?.innerHTML).toEqualHtml(`
         <div>Resource has name</div>
-        `);
-    });
-
-    it('renders templates if backward link value condition is met', async () => {
-      const page = await newSpecPage({
-        components: [PosSwitch],
-        html: `
-      <pos-switch>
-        <pos-case if-rev="https://schema.org/video" some-value-eq="https://video.test/video-1">
-          <template>
-            <div>Resource is video</div>
-          </template>
-        </pos-case>
-        <pos-case if-rev="https://schema.org/video" some-value-eq="https://video.test/video-missing">
-          <template>
-            <div>Should not render as condition is not met</div>
-          </template>
-        </pos-case>
-      </pos-switch>`,
-      });
-      const observedReverseRelations$ = new Subject<Relation[]>();
-      const thing = {
-        uri: 'https://pod.example/resource',
-        observeReverseRelations: () => observedReverseRelations$,
-      };
-      page.rootInstance.receiveResource(thing);
-      observedReverseRelations$.next([
-        { predicate: 'https://schema.org/video', label: 'video', uris: ['https://video.test/video-1'] },
-      ]);
-      await page.waitForChanges();
-      expect(page.root?.innerHTML).toEqualHtml(`
-        <div>Resource is video</div>
         `);
     });
 
