@@ -11,42 +11,92 @@ describe('pos-switch', () => {
        - Condition: present, (some|every)-(eq|lt|lte|gt|gte)
          - Modifier: negation
        - Values: relation (URI), string literal, numeric literal
-       - Data state: matched, not matched
+       - Data state: single value present, no value present, other value present, multiple values present
+       - Evaluation state: matched, not matched
     */
     describe('if-typeof', () => {
-      // Possible combinations:
-      // Condition: present, not present
-      // Data state: matched, not matched
-      // N.B. Does not take values
+      /*
+       12 theoretical combinations:
+
+       - Condition: present, not present
+       - Data state: single value present, no value present, multiple values present
+       - Evaluation state: matched, not matched
+
+       10 possible after removing:
+       - Present - no value - matched
+       - Not present - no value - not matched
+       */
+      const RecipeType = {
+        label: 'Recipe',
+        uri: 'http://schema.org/Recipe',
+      };
+      const VideoType = {
+        label: 'Video',
+        uri: 'http://schema.org/Video',
+      };
+      const EventType = {
+        label: 'Event',
+        uri: 'http://schema.org/Event',
+      };
       it.each([
+        // Present
+        // Single value
         {
           conditions: 'if-typeof="http://schema.org/Recipe"',
-          observedTypes: [
-            {
-              label: 'Recipe',
-              uri: 'http://schema.org/Recipe',
-            },
-          ],
+          observedTypes: [RecipeType],
           expectedResult: 'matched',
         },
         {
-          conditions: 'not if-typeof="http://schema.org/Recipe"',
-          observedTypes: [],
-          expectedResult: 'matched',
+          conditions: 'if-typeof="http://schema.org/Recipe"',
+          observedTypes: [VideoType],
+          expectedResult: 'not matched',
         },
+        // No value
+        // Matched case does not exist
         {
           conditions: 'if-typeof="http://schema.org/Recipe"',
           observedTypes: [],
           expectedResult: 'not matched',
         },
+        // Multiple values
+        {
+          conditions: 'if-typeof="http://schema.org/Recipe"',
+          observedTypes: [RecipeType, VideoType],
+          expectedResult: 'matched',
+        },
+        {
+          conditions: 'if-typeof="http://schema.org/Recipe"',
+          observedTypes: [VideoType, EventType],
+          expectedResult: 'not matched',
+        },
+        // Not present
+        // Single value
         {
           conditions: 'not if-typeof="http://schema.org/Recipe"',
-          observedTypes: [
-            {
-              label: 'Recipe',
-              uri: 'http://schema.org/Recipe',
-            },
-          ],
+          observedTypes: [VideoType],
+          expectedResult: 'matched',
+        },
+        {
+          conditions: 'not if-typeof="http://schema.org/Recipe"',
+          observedTypes: [RecipeType],
+          expectedResult: 'not matched',
+        },
+        // No value
+        // Not matched case does not exist
+        {
+          conditions: 'not if-typeof="http://schema.org/Recipe"',
+          observedTypes: [],
+          expectedResult: 'matched',
+        },
+        // Multiple values
+        {
+          conditions: 'not if-typeof="http://schema.org/Recipe"',
+          observedTypes: [VideoType, EventType],
+          expectedResult: 'matched',
+        },
+        {
+          conditions: 'not if-typeof="http://schema.org/Recipe"',
+          observedTypes: [RecipeType, VideoType],
           expectedResult: 'not matched',
         },
       ])(
