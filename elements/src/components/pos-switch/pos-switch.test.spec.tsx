@@ -756,6 +756,99 @@ describe('pos-switch', () => {
 
     // TODO evaluating values of property with multiple strings
 
+    describe('evaluating values of property (single number)', () => {
+      /*
+        40 possible combinations:
+        
+        - Condition: (some|every)-(eq|lt|lte|gt|gte)
+        - Modifier: negation
+        - Evaluation state: matched, not matched
+
+        We test three values (60 combinations) matching eq, lt, or gt
+        The values are selected so that string comparison is insufficient.
+        There is no difference between some and every with a single number.
+        */
+      let testCases = [];
+      for (let semantics of ['some', 'every']) {
+        for (let operator of ['eq', 'gt', 'gte', 'lt', 'lte']) {
+          for (let negation of [true, false]) {
+            for (let stringValue of ['3', '20', '100']) {
+              const cmp = Number(stringValue) - 20;
+              let matches;
+              switch (operator) {
+                case 'eq':
+                  matches = cmp === 0;
+                  break;
+                case 'gt':
+                  matches = cmp > 0;
+                  break;
+                case 'gte':
+                  matches = cmp >= 0;
+                  break;
+                case 'lt':
+                  matches = cmp < 0;
+                  break;
+                case 'lte':
+                  matches = cmp <= 0;
+                  break;
+              }
+              matches = negation ? !matches : matches;
+              const result = matches ? 'matched' : 'not matched';
+              const not = negation ? 'not' : '';
+              testCases.push({
+                conditions: `if-property="https://schema.org/value" ${not} ${semantics}-value-${operator}="20"`,
+                stringValue: stringValue,
+                expectedResult: result,
+              });
+            }
+          }
+        }
+      }
+      expect(testCases.filter(testCase => testCase.expectedResult == 'matched').length).toEqual(30);
+      expect(testCases.filter(testCase => testCase.expectedResult == 'not matched').length).toEqual(30);
+
+      it.each(testCases)(
+        `renders templates if condition is met: $conditions for $resource `,
+        async ({ conditions, stringValue, expectedResult }) => {
+          const page = await newSpecPage({
+            components: [PosSwitch],
+            html: `
+      <pos-switch>
+        <pos-case ${conditions}>
+          <template>
+            <div>Condition is matched</div>
+          </template>
+        </pos-case>
+        <pos-case else>
+          <template>
+            <div>Condition is not matched</div>
+          </template>
+        </pos-case>
+      </pos-switch>`,
+          });
+          const observedRelations$ = new Subject<Relation[]>();
+          const observedLiterals$ = new Subject<Literal[]>();
+          const observedReverseRelations$ = new Subject<Relation[]>();
+          const thing = {
+            uri: 'https://pod.example/resource',
+            observeRelations: () => observedRelations$,
+            observeLiterals: () => observedLiterals$,
+            observeReverseRelations: () => observedReverseRelations$,
+          };
+          page.rootInstance.receiveResource(thing);
+          observedLiterals$.next([{ predicate: 'https://schema.org/value', label: 'value', values: [stringValue] }]);
+          observedRelations$.next([]);
+          observedReverseRelations$.next([]);
+          await page.waitForChanges();
+          expect(page.root?.innerHTML).toEqualHtml(`
+        <div>Condition is ${expectedResult}</div>
+        `);
+        },
+      );
+    });
+
+    // TODO evaluating values of property with multiple numbers
+
     it('renders templates if forward link value condition is met (literal)', async () => {
       const page = await newSpecPage({
         components: [PosSwitch],
@@ -871,54 +964,6 @@ describe('pos-switch', () => {
       };
       page.rootInstance.receiveResource(thing);
       observedLiterals$.next([{ predicate: 'https://schema.org/name', label: 'name', values: ['bravo', 'charlie'] }]);
-      observedRelations$.next([]);
-      await page.waitForChanges();
-      expect(page.root?.innerHTML).toEqualHtml(`
-        <div>No conditions match</div>
-        `);
-    });
-
-    it('does not render templates when compareValue indicates that some-value-(lt|lte|gt|gte) is not met (numeric)', async () => {
-      const page = await newSpecPage({
-        components: [PosSwitch],
-        html: `
-      <pos-switch>
-        <pos-case if-property="https://schema.org/name" some-value-lt="3">
-          <template>
-            <div>Not shown: ! 20 < 3</div>
-          </template>
-        </pos-case>
-        <pos-case if-property="https://schema.org/name" some-value-lte="3">
-          <template>
-            <div>Not shown: ! 20 <= 3</div>
-          </template>
-        </pos-case>
-        <pos-case if-property="https://schema.org/name" some-value-gte="100">
-          <template>
-            <div>Not shown: ! 20 >= 100</div>
-          </template>
-        </pos-case>
-        <pos-case if-property="https://schema.org/name" some-value-gt="100">
-          <template>
-            <div>Not shown: ! 20 > 100</div>
-          </template>
-        </pos-case>
-        <pos-case else>
-          <template>
-            <div>No conditions match</div>
-          </template>
-        </pos-case>
-      </pos-switch>`,
-      });
-      const observedRelations$ = new Subject<Relation[]>();
-      const observedLiterals$ = new Subject<Literal[]>();
-      const thing = {
-        uri: 'https://pod.example/resource',
-        observeLiterals: () => observedLiterals$,
-        observeRelations: () => observedRelations$,
-      };
-      page.rootInstance.receiveResource(thing);
-      observedLiterals$.next([{ predicate: 'https://schema.org/name', label: 'name', values: ['20'] }]);
       observedRelations$.next([]);
       await page.waitForChanges();
       expect(page.root?.innerHTML).toEqualHtml(`
