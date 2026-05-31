@@ -809,16 +809,15 @@ describe('pos-switch', () => {
       observedReverseRelations: [],
       expectedResult: 'not matched',
     },
-    // TODO fails, but should match: there is some value that is not "different-name"
-    // {
-    //   conditions: 'not if-property="https://schema.org/name" some-value-eq="different-name"',
-    //   observedLiterals: [
-    //     { predicate: 'https://schema.org/name', label: 'video', values: ['the-name', 'another-name'] },
-    //   ],
-    //   observedRelations: [],
-    //   observedReverseRelations: [],
-    //   expectedResult: 'matched',
-    // },
+    {
+      conditions: 'not if-property="https://schema.org/name" some-value-eq="different-name"',
+      observedLiterals: [
+        { predicate: 'https://schema.org/name', label: 'video', values: ['the-name', 'another-name'] },
+      ],
+      observedRelations: [],
+      observedReverseRelations: [],
+      expectedResult: 'matched',
+    },
     // literal + every-value-eq
     {
       conditions: 'if-property="https://schema.org/name" every-value-eq="the-name"',
