@@ -39,7 +39,7 @@ and this project adheres to
 
 ## 0.28.0
 
-- [`addRelation`](https://pod-os.org/reference/core/classes/podos/#addrelation: A method to add a relation (link) between things
+- [`addRelation`](https://pod-os.org/reference/core/classes/podos/#addrelation): A method to add a relation (link) between things
 
 ## 0.27.0
 
