@@ -11,7 +11,7 @@ describe('pos-switch', () => {
        - Condition: present, (some|every)-(eq|lt|lte|gt|gte)
          - Modifier: negation
        - Values: relation (URI), string literal, numeric literal
-       - Data state: single value present, no value present, other value present, multiple values present
+       - Data state: single value present, no value present, multiple values present
        - Evaluation state: matched, not matched
     */
     describe('if-typeof', () => {
@@ -133,68 +133,228 @@ describe('pos-switch', () => {
       );
     });
 
-    it('renders templates if a forward link is present (relation)', async () => {
-      const page = await newSpecPage({
-        components: [PosSwitch],
-        html: `
+    describe('if-property presence/absence', () => {
+      /*
+      24 theoretical combinations:
+
+      - Condition: present, not present
+      - Data state: single value present, no value present, multiple values present
+      - Values: relation, literal
+      - Evaluation state: matched, not matched
+
+      20 possible after removing:
+
+      - present - no value - relation - matched
+      - present - no value - literal - matched
+      - not present - no value - relation - not matched
+      - not present - no value - literal - not matched
+    */
+      const LinkedVideo = {
+        predicate: 'https://schema.org/video',
+        label: 'video',
+        uris: ['https://video.test/video-1'],
+      };
+      const LinkedRecipe = {
+        predicate: 'https://schema.org/recipe',
+        label: 'recipe',
+        uris: ['https://recipe.test/recipe-1'],
+      };
+      const LinkedEvent = {
+        predicate: 'https://schema.org/event',
+        label: 'event',
+        uris: ['https://event.test/event-1'],
+      };
+      const VideoName = { predicate: 'https://schema.org/name', label: 'name', values: ['the-name'] };
+      const VideoAlternateName = {
+        predicate: 'https://schema.org/alternateName',
+        label: 'alternate name',
+        values: ['alt-name'],
+      };
+      const VideoDescription = {
+        predicate: 'https://schema.org/description',
+        label: 'description',
+        values: ['the-description'],
+      };
+      it.each([
+        // Present
+        // Single value
+        // Relation
+        {
+          conditions: 'if-property="https://schema.org/video"',
+          observedLiterals: [],
+          observedRelations: [LinkedVideo],
+          expectedResult: 'matched',
+        },
+        {
+          conditions: 'if-property="https://schema.org/video"',
+          observedLiterals: [],
+          observedRelations: [LinkedRecipe],
+          expectedResult: 'not matched',
+        },
+        // Literal
+        {
+          conditions: 'if-property="https://schema.org/name"',
+          observedLiterals: [VideoName],
+          observedRelations: [],
+          expectedResult: 'matched',
+        },
+        {
+          conditions: 'if-property="https://schema.org/name"',
+          observedLiterals: [VideoDescription],
+          observedRelations: [],
+          expectedResult: 'not matched',
+        },
+        // No value
+        // Relation
+        // Matched not possible
+        {
+          conditions: 'if-property="https://schema.org/video"',
+          observedLiterals: [],
+          observedRelations: [],
+          expectedResult: 'not matched',
+        },
+        // Literal
+        // Matched not possible
+        {
+          conditions: 'if-property="https://schema.org/name"',
+          observedLiterals: [],
+          observedRelations: [],
+          expectedResult: 'not matched',
+        },
+        // Multiple values
+        // Relation
+        {
+          conditions: 'if-property="https://schema.org/video"',
+          observedLiterals: [],
+          observedRelations: [LinkedVideo, LinkedRecipe],
+          expectedResult: 'matched',
+        },
+        {
+          conditions: 'if-property="https://schema.org/video"',
+          observedLiterals: [],
+          observedRelations: [LinkedRecipe, LinkedEvent],
+          expectedResult: 'not matched',
+        },
+        // Literal
+        {
+          conditions: 'if-property="https://schema.org/name"',
+          observedLiterals: [VideoName, VideoDescription],
+          observedRelations: [],
+          expectedResult: 'matched',
+        },
+        {
+          conditions: 'if-property="https://schema.org/name"',
+          observedLiterals: [VideoDescription, VideoAlternateName],
+          observedRelations: [],
+          expectedResult: 'not matched',
+        },
+        // Not present
+        // Single value
+        // Relation
+        {
+          conditions: 'not if-property="https://schema.org/video"',
+          observedLiterals: [],
+          observedRelations: [LinkedRecipe],
+          expectedResult: 'matched',
+        },
+        {
+          conditions: 'not if-property="https://schema.org/video"',
+          observedLiterals: [],
+          observedRelations: [LinkedVideo],
+          expectedResult: 'not matched',
+        },
+        // Literal
+        {
+          conditions: 'not if-property="https://schema.org/name"',
+          observedLiterals: [VideoDescription],
+          observedRelations: [],
+          expectedResult: 'matched',
+        },
+        {
+          conditions: 'not if-property="https://schema.org/name"',
+          observedLiterals: [VideoName],
+          observedRelations: [],
+          expectedResult: 'not matched',
+        },
+        // No value
+        // Relation
+        // Not matched not possible
+        {
+          conditions: 'not if-property="https://schema.org/video"',
+          observedLiterals: [],
+          observedRelations: [],
+          expectedResult: 'matched',
+        },
+        // Literal
+        // Not matched not possible
+        {
+          conditions: 'not if-property="https://schema.org/name"',
+          observedLiterals: [],
+          observedRelations: [],
+          expectedResult: 'matched',
+        },
+        // Multiple values
+        // Relation
+        {
+          conditions: 'not if-property="https://schema.org/video"',
+          observedLiterals: [],
+          observedRelations: [LinkedRecipe, LinkedEvent],
+          expectedResult: 'matched',
+        },
+        {
+          conditions: 'not if-property="https://schema.org/video"',
+          observedLiterals: [],
+          observedRelations: [LinkedVideo, LinkedEvent],
+          expectedResult: 'not matched',
+        },
+        // Literal
+        {
+          conditions: 'not if-property="https://schema.org/name"',
+          observedLiterals: [VideoDescription, VideoAlternateName],
+          observedRelations: [],
+          expectedResult: 'matched',
+        },
+        {
+          conditions: 'not if-property="https://schema.org/name"',
+          observedLiterals: [VideoName, VideoDescription],
+          observedRelations: [],
+          expectedResult: 'not matched',
+        },
+      ])(
+        `renders templates if condition is met: $conditions `,
+        async ({ conditions, observedLiterals, observedRelations, expectedResult }) => {
+          const page = await newSpecPage({
+            components: [PosSwitch],
+            html: `
       <pos-switch>
-        <pos-case if-property="https://schema.org/video">
+        <pos-case ${conditions}>
           <template>
-            <div>Resource has video</div>
+            <div>Condition is matched</div>
           </template>
         </pos-case>
-        <pos-case if-property="https://schema.org/description">
+        <pos-case else>
           <template>
-            <div>Should not render as schema:description is not present</div>
+            <div>Condition is not matched</div>
           </template>
         </pos-case>
       </pos-switch>`,
-      });
-      const observedRelations$ = new Subject<Relation[]>();
-      const observedLiterals$ = new Subject<Literal[]>();
-
-      const thing = {
-        uri: 'https://pod.example/resource',
-        observeRelations: () => observedRelations$,
-        observeLiterals: () => observedLiterals$,
-      };
-      page.rootInstance.receiveResource(thing);
-      observedLiterals$.next([]);
-      observedRelations$.next([
-        { predicate: 'https://schema.org/video', label: 'video', uris: ['https://video.test/video-1'] },
-      ]);
-      await page.waitForChanges();
-      expect(page.root?.innerHTML).toEqualHtml(`
-        <div>Resource has video</div>
+          });
+          const observedRelations$ = new Subject<Relation[]>();
+          const observedLiterals$ = new Subject<Literal[]>();
+          const thing = {
+            uri: 'https://pod.example/resource',
+            observeRelations: () => observedRelations$,
+            observeLiterals: () => observedLiterals$,
+          };
+          page.rootInstance.receiveResource(thing);
+          observedLiterals$.next(observedLiterals);
+          observedRelations$.next(observedRelations);
+          await page.waitForChanges();
+          expect(page.root?.innerHTML).toEqualHtml(`
+        <div>Condition is ${expectedResult}</div>
         `);
-    });
-
-    it('renders templates if a forward link is present (literal)', async () => {
-      const page = await newSpecPage({
-        components: [PosSwitch],
-        html: `
-      <pos-switch>
-        <pos-case if-property="https://schema.org/name">
-          <template>
-            <div>Resource has a name</div>
-          </template>
-        </pos-case>
-      </pos-switch>`,
-      });
-      const observedRelations$ = new Subject<Relation[]>();
-      const observedLiterals$ = new Subject<Literal[]>();
-      const thing = {
-        uri: 'https://pod.example/resource',
-        observeRelations: () => observedRelations$,
-        observeLiterals: () => observedLiterals$,
-      };
-      page.rootInstance.receiveResource(thing);
-      observedRelations$.next([]);
-      observedLiterals$.next([{ predicate: 'https://schema.org/name', label: 'name', values: ['name'] }]);
-      await page.waitForChanges();
-      expect(page.root?.innerHTML).toEqualHtml(`
-        <div>Resource has a name</div>
-        `);
+        },
+      );
     });
 
     it('renders templates if a backward link is present', async () => {
@@ -559,39 +719,6 @@ describe('pos-switch', () => {
       await page.waitForChanges();
       expect(page.root?.innerHTML).toEqualHtml(`
         <div>No conditions match</div>
-        `);
-    });
-
-    it('renders templates when property is absent (not if-property)', async () => {
-      const page = await newSpecPage({
-        components: [PosSwitch],
-        html: `
-      <pos-switch>
-        <pos-case not if-property="https://schema.org/description">
-          <template>
-            <div>Resource has no description</div>
-          </template>
-        </pos-case>
-        <pos-case if-property="https://schema.org/description">
-          <template>
-            <div>Should not render as description is not present</div>
-          </template>
-        </pos-case>
-      </pos-switch>`,
-      });
-      const observedRelations$ = new Subject<Relation[]>();
-      const observedLiterals$ = new Subject<Literal[]>();
-      const thing = {
-        uri: 'https://pod.example/resource',
-        observeRelations: () => observedRelations$,
-        observeLiterals: () => observedLiterals$,
-      };
-      page.rootInstance.receiveResource(thing);
-      observedLiterals$.next([]);
-      observedRelations$.next([]);
-      await page.waitForChanges();
-      expect(page.root?.innerHTML).toEqualHtml(`
-        <div>Resource has no description</div>
         `);
     });
 
