@@ -357,36 +357,127 @@ describe('pos-switch', () => {
       );
     });
 
-    it('renders templates if a backward link is present', async () => {
-      const page = await newSpecPage({
-        components: [PosSwitch],
-        html: `
+    describe('if-rev presence/absence', () => {
+      /*
+      12 theoretical combinations:
+
+      - Condition: present, not present
+      - Data state: single value present, no value present, multiple values present
+      - Evaluation state: matched, not matched
+
+      10 possible after removing:
+
+      - Present - no value - matched
+      - Not present - no value - not matched
+      */
+      const VideoLink = {
+        predicate: 'https://schema.org/video',
+        label: 'video',
+        uris: ['https://video.test/resource'],
+      };
+      const RecipeLink = {
+        predicate: 'https://schema.org/recipe',
+        label: 'recipe',
+        uris: ['https://recipe.test/resource'],
+      };
+      const EventLink = {
+        predicate: 'https://schema.org/event',
+        label: 'event',
+        uris: ['https://recipe.test/resource'],
+      };
+      it.each([
+        // Present
+        // Single value
+        {
+          conditions: 'if-rev="https://schema.org/video"',
+          observedReverseRelations: [VideoLink],
+          expectedResult: 'matched',
+        },
+        {
+          conditions: 'if-rev="https://schema.org/video"',
+          observedReverseRelations: [RecipeLink],
+          expectedResult: 'not matched',
+        },
+        // No value
+        // Matched not possible
+        {
+          conditions: 'if-rev="https://schema.org/video"',
+          observedReverseRelations: [],
+          expectedResult: 'not matched',
+        },
+        // Multiple values
+        {
+          conditions: 'if-rev="https://schema.org/video"',
+          observedReverseRelations: [VideoLink, RecipeLink],
+          expectedResult: 'matched',
+        },
+        {
+          conditions: 'if-rev="https://schema.org/video"',
+          observedReverseRelations: [RecipeLink, EventLink],
+          expectedResult: 'not matched',
+        },
+        // Not present
+        // Single value
+        {
+          conditions: 'not if-rev="https://schema.org/video"',
+          observedReverseRelations: [RecipeLink],
+          expectedResult: 'matched',
+        },
+        {
+          conditions: 'not if-rev="https://schema.org/video"',
+          observedReverseRelations: [VideoLink],
+          expectedResult: 'not matched',
+        },
+        // No value
+        // Not matched not possible
+        {
+          conditions: 'not if-rev="https://schema.org/video"',
+          observedReverseRelations: [],
+          expectedResult: 'matched',
+        },
+        // Multiple values
+        {
+          conditions: 'not if-rev="https://schema.org/video"',
+          observedReverseRelations: [EventLink, RecipeLink],
+          expectedResult: 'matched',
+        },
+        {
+          conditions: 'not if-rev="https://schema.org/video"',
+          observedReverseRelations: [VideoLink, EventLink],
+          expectedResult: 'not matched',
+        },
+      ])(
+        `renders templates if condition is met: $conditions `,
+        async ({ conditions, observedReverseRelations, expectedResult }) => {
+          const page = await newSpecPage({
+            components: [PosSwitch],
+            html: `
       <pos-switch>
-        <pos-case if-rev="https://schema.org/video">
+        <pos-case ${conditions}>
           <template>
-            <div>Resource is video</div>
+            <div>Condition is matched</div>
           </template>
         </pos-case>
-        <pos-case if-rev="https://schema.org/subjectOf">
+        <pos-case else>
           <template>
-            <div>Should not render as resource is not object of schema:subjectOf</div>
+            <div>Condition is not matched</div>
           </template>
         </pos-case>
       </pos-switch>`,
-      });
-      const observedReverseRelations$ = new Subject<Relation[]>();
-      const thing = {
-        uri: 'https://pod.example/resource',
-        observeReverseRelations: () => observedReverseRelations$,
-      };
-      page.rootInstance.receiveResource(thing);
-      observedReverseRelations$.next([
-        { predicate: 'https://schema.org/video', label: 'video', uris: ['https://video.test/video-1'] },
-      ]);
-      await page.waitForChanges();
-      expect(page.root?.innerHTML).toEqualHtml(`
-        <div>Resource is video</div>
+          });
+          const observedReverseRelations$ = new Subject<Relation[]>();
+          const thing = {
+            uri: 'https://pod.example/resource',
+            observeReverseRelations: () => observedReverseRelations$,
+          };
+          page.rootInstance.receiveResource(thing);
+          observedReverseRelations$.next(observedReverseRelations);
+          await page.waitForChanges();
+          expect(page.root?.innerHTML).toEqualHtml(`
+        <div>Condition is ${expectedResult}</div>
         `);
+        },
+      );
     });
 
     it('renders templates if forward link value condition is met (relation)', async () => {
@@ -722,36 +813,6 @@ describe('pos-switch', () => {
         `);
     });
 
-    it('renders templates when backward link is absent (not if-rev)', async () => {
-      const page = await newSpecPage({
-        components: [PosSwitch],
-        html: `
-      <pos-switch>
-        <pos-case not if-rev="https://schema.org/video">
-          <template>
-            <div>Resource is not a video object</div>
-          </template>
-        </pos-case>
-        <pos-case if-rev="https://schema.org/video">
-          <template>
-            <div>Should not render as video reverse relation is not present</div>
-          </template>
-        </pos-case>
-      </pos-switch>`,
-      });
-      const observedReverseRelations$ = new Subject<Relation[]>();
-      const thing = {
-        uri: 'https://pod.example/resource',
-        observeReverseRelations: () => observedReverseRelations$,
-      };
-      page.rootInstance.receiveResource(thing);
-      observedReverseRelations$.next([]);
-      await page.waitForChanges();
-      expect(page.root?.innerHTML).toEqualHtml(`
-        <div>Resource is not a video object</div>
-        `);
-    });
-
     it.each([
       // literal + some-value-eq
       {
@@ -760,14 +821,12 @@ describe('pos-switch', () => {
           { predicate: 'https://schema.org/name', label: 'video', values: ['the-name', 'another-name'] },
         ],
         observedRelations: [],
-        observedReverseRelations: [],
         expectedResult: 'matched',
       },
       {
         conditions: 'if-property="https://schema.org/name" some-value-eq="the-name"',
         observedLiterals: [{ predicate: 'https://schema.org/name', label: 'video', values: ['the-name'] }],
         observedRelations: [],
-        observedReverseRelations: [],
         expectedResult: 'matched',
       },
       {
@@ -776,7 +835,6 @@ describe('pos-switch', () => {
           { predicate: 'https://schema.org/name', label: 'video', values: ['the-name', 'another-name'] },
         ],
         observedRelations: [],
-        observedReverseRelations: [],
         expectedResult: 'not matched',
       },
       {
@@ -785,7 +843,6 @@ describe('pos-switch', () => {
           { predicate: 'https://schema.org/name', label: 'video', values: ['the-name', 'another-name'] },
         ],
         observedRelations: [],
-        observedReverseRelations: [],
         expectedResult: 'matched',
       },
       // literal + every-value-eq
@@ -795,14 +852,12 @@ describe('pos-switch', () => {
           { predicate: 'https://schema.org/name', label: 'video', values: ['the-name', 'another-name'] },
         ],
         observedRelations: [],
-        observedReverseRelations: [],
         expectedResult: 'not matched',
       },
       {
         conditions: 'if-property="https://schema.org/name" every-value-eq="the-name"',
         observedLiterals: [{ predicate: 'https://schema.org/name', label: 'video', values: ['the-name'] }],
         observedRelations: [],
-        observedReverseRelations: [],
         expectedResult: 'matched',
       },
       {
@@ -811,7 +866,6 @@ describe('pos-switch', () => {
           { predicate: 'https://schema.org/name', label: 'video', values: ['the-name', 'another-name'] },
         ],
         observedRelations: [],
-        observedReverseRelations: [],
         expectedResult: 'matched',
       },
       // relation + some-value-eq
@@ -825,7 +879,6 @@ describe('pos-switch', () => {
             uris: ['https://video.test/video-1', 'https://video.test/video-2'],
           },
         ],
-        observedReverseRelations: [],
         expectedResult: 'matched',
       },
       {
@@ -838,12 +891,11 @@ describe('pos-switch', () => {
             uris: ['https://video.test/video-1', 'https://video.test/video-2'],
           },
         ],
-        observedReverseRelations: [],
         expectedResult: 'not matched',
       },
     ])(
       `renders templates if condition is met: $conditions `,
-      async ({ conditions, observedLiterals, observedRelations, observedReverseRelations, expectedResult }) => {
+      async ({ conditions, observedLiterals, observedRelations, expectedResult }) => {
         const page = await newSpecPage({
           components: [PosSwitch],
           html: `
@@ -862,17 +914,14 @@ describe('pos-switch', () => {
         });
         const observedRelations$ = new Subject<Relation[]>();
         const observedLiterals$ = new Subject<Literal[]>();
-        const observedReverseRelations$ = new Subject<Relation[]>();
         const thing = {
           uri: 'https://pod.example/resource',
           observeRelations: () => observedRelations$,
           observeLiterals: () => observedLiterals$,
-          observedReverseRelations: () => observedLiterals$,
         };
         page.rootInstance.receiveResource(thing);
         observedLiterals$.next(observedLiterals);
         observedRelations$.next(observedRelations);
-        observedReverseRelations$.next(observedReverseRelations);
         await page.waitForChanges();
         expect(page.root?.innerHTML).toEqualHtml(`
         <div>Condition is ${expectedResult}</div>
