@@ -77,12 +77,16 @@ export class Store {
     );
   }
 
+  readonly DESCRIBEDBY = "http://www.iana.org/assignments/link-relations/describedby";
+
   /**
-   * Fetch data for the given URI to the internalStore
+   * Fetch data for the given URI to the internalStore.
+   * If the response includes a Link header with rel="describedby",
+   * the metadata document will also be fetched automatically.
    * @param uri
    */
-  fetch(uri: string) {
-    return this.fetcher.load(sym(uri), {
+  async fetch(uri: string) {
+    await this.fetcher.load(sym(uri), {
       // force fetching due to
       // https://github.com/linkeddata/rdflib.js/issues/247
       // and
@@ -92,6 +96,22 @@ export class Store {
       // https://github.com/pod-os/PodOS/issues/17
       credentials: "omit",
     });
+
+    // Auto-follow describedby link already parsed from Link headers by rdflib
+    const describedByUri = this.internalStore.any(
+      sym(uri),
+      sym(this.DESCRIBEDBY),
+    );
+    if (describedByUri) {
+      try {
+        await this.fetcher.load(sym(describedByUri.value), {
+          force: true,
+          credentials: "omit",
+        });
+      } catch {
+        // Gracefully ignore failures to fetch metadata documents
+      }
+    }
   }
 
   /**
