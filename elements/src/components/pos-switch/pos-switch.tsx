@@ -2,6 +2,7 @@ import { Literal, RdfType, Relation, Thing } from '@pod-os/core';
 import { Component, Element, Event, h, Host, State } from '@stencil/core';
 import { ResourceAware, ResourceEventEmitter, subscribeResource } from '../events/ResourceAware';
 import { combineLatest, firstValueFrom, Observable, Subject, takeUntil } from 'rxjs';
+import { operatorSemanticCombinations, testIfValuesMatchTarget } from './logic';
 
 /**
  * Selects a child template to render based on properties of the subject resource, usually defined by an ancestor `pos-resource` element.
@@ -37,47 +38,19 @@ export class PosSwitch implements ResourceAware {
     }
   }
 
-  test(caseElement): boolean {
-    let state = null;
+  test(caseElement: HTMLPosCaseElement): boolean {
+    let state: boolean | null = null;
     let values = null;
 
-    const compareValue = function (values: string[]): boolean {
+    const compareValues = function (values: string[]): boolean {
       let state = true;
-      for (let semantics of ['some', 'every']) {
-        for (let operator of ['eq', 'gt', 'gte', 'lt', 'lte']) {
-          const attr = `${semantics}-value-${operator}`;
-          if (caseElement.hasAttribute(attr)) {
-            const target = caseElement.getAttribute(attr);
-            const matches = values.map(val => {
-              let cmp;
-              const numVal = Number(val);
-              const numTarget = Number(target);
-              if (!isNaN(numVal) && !isNaN(numTarget)) {
-                cmp = numVal - numTarget;
-              } else {
-                cmp = String(val).localeCompare(String(target));
-              }
-              switch (operator) {
-                case 'eq':
-                  return cmp === 0;
-                case 'gt':
-                  return cmp > 0;
-                case 'gte':
-                  return cmp >= 0;
-                case 'lt':
-                  return cmp < 0;
-                case 'lte':
-                  return cmp <= 0;
-              }
-            });
-            if (semantics == 'some') {
-              state = state && matches.some(val => val);
-            } else if (semantics == 'every') {
-              state = state && matches.every(val => val);
-            }
-          }
+      operatorSemanticCombinations.forEach(({ semantic, operator }) => {
+        const attr = `${semantic}-value-${operator}`;
+        if (caseElement.hasAttribute(attr)) {
+          const targetValue = caseElement.getAttribute(attr)!;
+          state = state && testIfValuesMatchTarget(values, semantic, operator, targetValue);
         }
-      }
+      });
       return state;
     };
 
@@ -104,12 +77,12 @@ export class PosSwitch implements ResourceAware {
       state = matchingRelations.length > 0;
     }
     if (values) {
-      state = state && compareValue(values);
+      state = state && compareValues(values);
     }
     if (caseElement.getAttribute('not') != null) {
       state = !state;
     }
-    return state;
+    return state ?? true;
   }
 
   receiveResource = (resource: Thing) => {
@@ -153,7 +126,7 @@ export class PosSwitch implements ResourceAware {
     if (!this.resource) {
       return null;
     }
-    let state = null;
+    let state: boolean | null = null;
     let activeElements: HTMLPosCaseElement[] = [];
     this.caseElements.forEach(el => {
       const elemState = this.test(el);
