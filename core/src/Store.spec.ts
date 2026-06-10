@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, Mock, vi } from "vitest";
 import { when } from "vitest-when";
-import { blankNode, graph, IndexedFormula, quad, sym } from "rdflib";
+import { blankNode, graph, IndexedFormula, quad, sym, lit } from "rdflib";
 import { Parser as SparqlParser, Update } from "sparqljs";
 import { PodOsSession } from "./authentication";
 import { Store } from "./Store";
@@ -122,6 +122,184 @@ describe("Store", () => {
           },
         },
       ]);
+    });
+
+    // TODO: skipped until upstream rdflib fix https://github.com/linkeddata/rdflib.js/issues/741
+    it.skip("auto-fetches metadata document linked via describedby from Link header", async () => {
+      const mockSession = {
+        authenticatedFetch: vi.fn(),
+      } as unknown as PodOsSession;
+
+      when(mockSession.authenticatedFetch)
+        .calledWith("https://pod.test/report.pdf", expect.anything())
+        .thenResolve({
+          ok: true,
+          status: 200,
+          statusText: "OK",
+          headers: new Headers({
+            "Content-Type": "application/pdf",
+            Link: '<https://pod.test/report.pdf.meta>; rel="describedby"',
+          }),
+        } as Response);
+
+      when(mockSession.authenticatedFetch)
+        .calledWith("https://pod.test/report.pdf.meta", expect.anything())
+        .thenResolve({
+          ok: true,
+          status: 200,
+          statusText: "OK",
+          headers: new Headers({
+            "Content-Type": "text/turtle",
+          }),
+          text: () =>
+            Promise.resolve(
+              '<https://pod.test/report.pdf> <http://purl.org/dc/terms/title> "Annual Report" .',
+            ),
+        } as Response);
+
+      const internalStore = graph();
+      const store = new Store(mockSession, undefined, undefined, internalStore);
+
+      await store.fetch("https://pod.test/report.pdf");
+
+      expect(
+        internalStore.holds(
+          sym("https://pod.test/report.pdf"),
+          sym("http://purl.org/dc/terms/title"),
+          lit("Annual Report"),
+        ),
+      ).toBe(true);
+    });
+
+    it("does not make additional fetches when there is no describedby link", async () => {
+      const mockSession = {
+        authenticatedFetch: vi.fn(),
+      } as unknown as PodOsSession;
+      when(mockSession.authenticatedFetch)
+        .calledWith("https://pod.test/resource", expect.anything())
+        .thenResolve({
+          ok: true,
+          status: 200,
+          statusText: "OK",
+          headers: new Headers({
+            "Content-Type": "text/turtle",
+          }),
+          text: () =>
+            Promise.resolve(
+              '<https://pod.test/resource#it> <https://pod.test/vocab/predicate> "literal value" .',
+            ),
+        } as Response);
+      const internalStore = graph();
+      const store = new Store(mockSession, undefined, undefined, internalStore);
+      await store.fetch("https://pod.test/resource");
+      // authenticatedFetch should only be called once (for the original resource)
+      expect(mockSession.authenticatedFetch).toHaveBeenCalledTimes(1);
+    });
+
+    // TODO: skipped until upstream rdflib fix https://github.com/linkeddata/rdflib.js/issues/741
+    it.skip("still returns original data when describedby metadata fetch fails", async () => {
+      const mockSession = {
+        authenticatedFetch: vi.fn(),
+      } as unknown as PodOsSession;
+
+      // First fetch: a binary resource with a Link header pointing to a .meta document
+      when(mockSession.authenticatedFetch)
+        .calledWith("https://pod.test/report.pdf", expect.anything())
+        .thenResolve({
+          ok: true,
+          status: 200,
+          statusText: "OK",
+          headers: new Headers({
+            "Content-Type": "application/pdf",
+            Link: '<https://pod.test/report.pdf.meta>; rel="describedby"',
+          }),
+        } as Response);
+
+      // Second fetch: the .meta document fails
+      when(mockSession.authenticatedFetch)
+        .calledWith("https://pod.test/report.pdf.meta", expect.anything())
+        .thenResolve({
+          ok: false,
+          status: 404,
+          statusText: "Not Found",
+          headers: new Headers({
+            "Content-Type": "text/plain",
+          }),
+          text: () => Promise.resolve("Not Found"),
+        } as Response);
+
+      const internalStore = graph();
+      const store = new Store(mockSession, undefined, undefined, internalStore);
+
+      // Should not throw even though metadata fetch fails
+      await expect(
+        store.fetch("https://pod.test/report.pdf"),
+      ).resolves.toBeUndefined();
+
+      // The describedby triple parsed from Link header should still be in the store
+      expect(
+        internalStore.holds(
+          sym("https://pod.test/report.pdf"),
+          sym("http://www.iana.org/assignments/link-relations/describedby"),
+          sym("https://pod.test/report.pdf.meta"),
+          sym("https://pod.test/report.pdf"),
+        ),
+      ).toBe(true);
+    });
+
+    it("does not auto-fetch rel=seeAlso links", async () => {
+      const mockSession = {
+        authenticatedFetch: vi.fn(),
+      } as unknown as PodOsSession;
+
+      when(mockSession.authenticatedFetch)
+        .calledWith("https://pod.test/resource", expect.anything())
+        .thenResolve({
+          ok: true,
+          status: 200,
+          statusText: "OK",
+          headers: new Headers({
+            "Content-Type": "text/turtle",
+            Link: '<https://pod.test/other>; rel="seeAlso"',
+          }),
+          text: () =>
+            Promise.resolve(
+              '<https://pod.test/resource#it> <https://pod.test/vocab/predicate> "value" .',
+            ),
+        } as Response);
+
+      const internalStore = graph();
+      const store = new Store(mockSession, undefined, undefined, internalStore);
+      await store.fetch("https://pod.test/resource");
+
+      // seeAlso link should NOT be auto-fetched — only describedby
+      expect(mockSession.authenticatedFetch).toHaveBeenCalledTimes(1);
+    });
+
+    it("does not auto-fetch rel=alternate links", async () => {
+      const mockSession = {
+        authenticatedFetch: vi.fn(),
+      } as unknown as PodOsSession;
+
+      when(mockSession.authenticatedFetch)
+        .calledWith("https://pod.test/resource", expect.anything())
+        .thenResolve({
+          ok: true,
+          status: 200,
+          statusText: "OK",
+          headers: new Headers({
+            "Content-Type": "text/html",
+            Link: '<https://pod.test/alternate>; rel="alternate"',
+          }),
+          text: () => Promise.resolve("<html></html>"),
+        } as Response);
+
+      const internalStore = graph();
+      const store = new Store(mockSession, undefined, undefined, internalStore);
+      await store.fetch("https://pod.test/resource");
+
+      // alternate link should NOT be auto-fetched — only describedby
+      expect(mockSession.authenticatedFetch).toHaveBeenCalledTimes(1);
     });
 
     it("fetches image type", async () => {
