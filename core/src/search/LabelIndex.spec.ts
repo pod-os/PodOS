@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from "vitest";
 import { graph, IndexedFormula, lit, sym } from "rdflib";
 import { PodOsSession } from "../authentication";
 import { LabelIndex } from "./LabelIndex";

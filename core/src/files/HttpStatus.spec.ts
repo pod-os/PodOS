@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { HttpStatus } from "./HttpStatus";
 
 describe("HttpStatus", () => {

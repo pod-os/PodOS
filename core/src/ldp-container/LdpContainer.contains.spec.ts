@@ -1,3 +1,4 @@
+import { afterEach, beforeEach, describe, expect, it, Mock, vi } from "vitest";
 import { graph, IndexedFormula, quad, sym } from "rdflib";
 import { PodOsSession } from "../authentication";
 import { ContainerContent, LdpContainer } from "./LdpContainer";
@@ -90,15 +91,15 @@ describe("LDP container", () => {
 
   describe("observeContains", () => {
     beforeEach(() => {
-      jest.useFakeTimers();
+      vi.useFakeTimers();
     });
 
     afterEach(() => {
-      jest.useRealTimers();
+      vi.useRealTimers();
     });
     let internalStore: IndexedFormula,
       store: Store,
-      subscriber: jest.Mock,
+      subscriber: Mock,
       subscription: Subscription,
       container: LdpContainer,
       observable: Observable<ContainerContent[]>;
@@ -117,7 +118,7 @@ describe("LDP container", () => {
         undefined,
         internalStore,
       );
-      subscriber = jest.fn();
+      subscriber = vi.fn();
       container = new LdpContainer("https://pod.test/container/", store);
       observable = container.observeContains();
       subscription = observable.subscribe(subscriber);
@@ -143,7 +144,7 @@ describe("LDP container", () => {
     });
 
     it("pushes new values once per group of changes until unsubcribe, ignoring irrelevant changes", () => {
-      const containsSpy = jest.spyOn(container, "contains");
+      const containsSpy = vi.spyOn(container, "contains");
       internalStore.removeDocument(sym("https://pod.test/container/"));
       internalStore.addAll([
         quad(
@@ -164,7 +165,7 @@ describe("LDP container", () => {
           sym("http://recipe.test/RecipeClass"),
         ),
       ]);
-      jest.advanceTimersByTime(255);
+      vi.advanceTimersByTime(255);
       // Note: subscriber counted initial push but containsSpy didn't
       expect(subscriber).toHaveBeenCalledTimes(2);
       expect(containsSpy).toHaveBeenCalledTimes(1);
@@ -182,7 +183,7 @@ describe("LDP container", () => {
         sym("http://www.w3.org/ns/ldp#Container"),
         sym("https://pod.test/container/"),
       );
-      jest.advanceTimersByTime(255);
+      vi.advanceTimersByTime(255);
       expect(subscriber).toHaveBeenCalledTimes(2);
       expect(containsSpy).toHaveBeenCalledTimes(1);
       expect(subscriber.mock.calls).toEqual([

@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { Statement, sym } from "rdflib";
 import { accumulateSubjects } from "./accumulateSubjects";
 

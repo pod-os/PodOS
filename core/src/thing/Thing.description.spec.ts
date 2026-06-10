@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, Mock, vi } from "vitest";
 import { graph, IndexedFormula, literal, quad, sym } from "rdflib";
 import { PodOsSession } from "../authentication";
 import { Thing } from "./Thing";
@@ -60,7 +61,7 @@ describe("Thing", function () {
       const store = new Store(mockSession, undefined, undefined, internalStore);
 
       // and a Thing
-      const subscriber = jest.fn();
+      const subscriber = vi.fn();
       const thing = new Thing(uri, store);
 
       // and a subscription to changes of label
@@ -76,7 +77,7 @@ describe("Thing", function () {
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
       );
-      const subscriber = jest.fn();
+      const subscriber = vi.fn();
       const observable = thing.observeDescription();
       observable.subscribe(subscriber);
 
@@ -101,16 +102,16 @@ describe("Thing", function () {
         "https://jane.doe.example/container/file.ttl#fragment",
         store,
       );
-      const subscriber = jest.fn();
+      const subscriber = vi.fn();
       const observable = thing.observeDescription();
       observable.subscribe(subscriber);
       expect(subscriber.mock.lastCall).toEqual(["literal value"]);
     });
 
     describe("follows observeAnyValue behaviour", () => {
-      jest.useFakeTimers();
+      vi.useFakeTimers();
 
-      let subscriber: jest.Mock;
+      let subscriber: Mock;
 
       beforeEach(() => {
         // Given a store with a URI with a description
@@ -123,7 +124,7 @@ describe("Thing", function () {
         );
 
         // and a Thing with a subscription to changes in description
-        subscriber = jest.fn();
+        subscriber = vi.fn();
         const thing = new Thing(uri, store);
         const observable = thing.observeDescription();
         observable.subscribe(subscriber);
@@ -135,7 +136,7 @@ describe("Thing", function () {
           sym("https://schema.org/description"),
           "literal value 2",
         );
-        jest.advanceTimersByTime(250);
+        vi.advanceTimersByTime(250);
         expect(subscriber).toHaveBeenCalledTimes(1);
       });
 
@@ -147,7 +148,7 @@ describe("Thing", function () {
             literal("literal value"),
           ),
         );
-        jest.advanceTimersByTime(250);
+        vi.advanceTimersByTime(250);
         expect(subscriber).toHaveBeenCalledTimes(2);
         expect(subscriber.mock.lastCall).toEqual([undefined]);
       });
@@ -165,7 +166,7 @@ describe("Thing", function () {
           sym("https://schema.org/description"),
           "literal value 2",
         );
-        jest.advanceTimersByTime(250);
+        vi.advanceTimersByTime(250);
         expect(subscriber).toHaveBeenCalledTimes(2);
         expect(subscriber.mock.lastCall).toEqual(["literal value 2"]);
       });

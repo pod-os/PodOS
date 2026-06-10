@@ -1,3 +1,4 @@
+import { describe, expect, it, vi } from "vitest";
 import { SearchGateway } from "./SearchGateway";
 import { PodOsSession } from "../authentication";
 import { Store } from "../Store";
@@ -6,7 +7,7 @@ import {
   expectPatchRequest,
   mockNotFound,
   mockTurtleDocument,
-} from "@solid-data-modules/rdflib-utils/test-support";
+} from "../test-support";
 import { WebIdProfile } from "../profile";
 import { graph, lit, st, sym } from "rdflib";
 import { pim, rdfs } from "../namespaces";
@@ -18,7 +19,7 @@ describe(SearchGateway.name, () => {
   describe("build search index", () => {
     it("creates an index that can find indexed items", async () => {
       // given a session and a store
-      const fetchMock = jest.fn();
+      const fetchMock = vi.fn();
       const mockSession = {
         authenticatedFetch: fetchMock,
       } as unknown as PodOsSession;
@@ -61,7 +62,7 @@ describe(SearchGateway.name, () => {
   describe("add to label index", () => {
     it("patches the label index with a label found in the store", async () => {
       // given a session and a store
-      const fetchMock = jest.fn();
+      const fetchMock = vi.fn();
       const mockSession = {
         authenticatedFetch: fetchMock,
       } as unknown as PodOsSession;
@@ -103,7 +104,7 @@ _:patch
     describe("given no preferences document exists", () => {
       it("creates a new label index document next to the profile and links it to the user in the profile document", async () => {
         // given a session and a store
-        const fetchMock = jest.fn();
+        const fetchMock = vi.fn();
         const mockSession = {
           authenticatedFetch: fetchMock,
         } as unknown as PodOsSession;
@@ -169,7 +170,7 @@ _:patch
     describe("given a preferences document exists", () => {
       it("creates a new label index document next to the preferences document and links it to the user in the preferences document", async () => {
         // given a session and a store
-        const fetchMock = jest.fn();
+        const fetchMock = vi.fn();
         const mockSession = {
           authenticatedFetch: fetchMock,
         } as unknown as PodOsSession;

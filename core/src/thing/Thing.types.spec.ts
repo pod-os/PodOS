@@ -1,4 +1,5 @@
-import { graph, sym, IndexedFormula, quad } from "rdflib";
+import { beforeEach, describe, expect, it, Mock, vi } from "vitest";
+import { graph, IndexedFormula, quad, sym } from "rdflib";
 import { PodOsSession } from "../authentication";
 import { Thing } from "./Thing";
 import { Store } from "../Store";
@@ -87,7 +88,7 @@ describe("Thing", function () {
   describe("observeTypes", () => {
     let internalStore: IndexedFormula,
       uri: string,
-      subscriber: jest.Mock,
+      subscriber: Mock,
       subscription: Subscription;
 
     beforeEach(() => {
@@ -108,7 +109,7 @@ describe("Thing", function () {
       const thing = new Thing(uri, store);
 
       // and a subscription to changes in types
-      subscriber = jest.fn();
+      subscriber = vi.fn();
       const observable = thing.observeTypes();
       subscription = observable.subscribe(subscriber);
     });

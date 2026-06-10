@@ -1,3 +1,4 @@
+import { afterEach, beforeEach, describe, expect, it, Mock, vi } from "vitest";
 import { graph, IndexedFormula, literal, quad, sym } from "rdflib";
 import { PodOsSession } from "../authentication";
 import { Thing } from "./Thing";
@@ -94,14 +95,14 @@ describe("Thing", function () {
   });
 
   describe("observeAnyValue", () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
 
     describe("with pre-populated store", () => {
       let internalStore: IndexedFormula,
-        subscriber: jest.Mock,
+        subscriber: Mock,
         uri: string,
         predicate: string,
-        anyValueSpy: jest.SpyInstance,
+        anyValueSpy: Mock,
         subscription: Subscription;
 
       beforeEach(() => {
@@ -125,9 +126,9 @@ describe("Thing", function () {
         );
 
         // and a Thing with a anyValue method
-        subscriber = jest.fn();
+        subscriber = vi.fn();
         const thing = new Thing(uri, store);
-        anyValueSpy = jest.spyOn(thing, "anyValue");
+        anyValueSpy = vi.spyOn(thing, "anyValue");
 
         // and a subscription to changes in value
         const observable = thing.observeAnyValue(predicate);
@@ -144,7 +145,7 @@ describe("Thing", function () {
         internalStore.removeStatement(
           quad(sym(uri), sym(predicate), literal("literal value")),
         );
-        jest.advanceTimersByTime(250);
+        vi.advanceTimersByTime(250);
         expect(anyValueSpy).toHaveBeenCalledTimes(2);
         expect(subscriber).toHaveBeenCalledTimes(2);
         expect(subscriber.mock.lastCall).toEqual([undefined]);
@@ -155,7 +156,7 @@ describe("Thing", function () {
         internalStore.removeStatement(
           quad(sym(uri), sym(predicate), literal("literal value")),
         );
-        jest.advanceTimersByTime(250);
+        vi.advanceTimersByTime(250);
         expect(subscriber).toHaveBeenCalledTimes(1);
         expect(anyValueSpy).toHaveBeenCalledTimes(1);
       });
@@ -168,14 +169,14 @@ describe("Thing", function () {
             literal("literal value"),
           ),
         );
-        jest.advanceTimersByTime(250);
+        vi.advanceTimersByTime(250);
         expect(anyValueSpy).toHaveBeenCalledTimes(1);
         expect(subscriber).toHaveBeenCalledTimes(1);
       });
 
       it("does not change if a value is already present", () => {
         internalStore.add(sym(uri), sym(predicate), "literal value 2");
-        jest.advanceTimersByTime(250);
+        vi.advanceTimersByTime(250);
         expect(anyValueSpy).toHaveBeenCalledTimes(1);
         expect(subscriber).toHaveBeenCalledTimes(1);
       });
@@ -185,7 +186,7 @@ describe("Thing", function () {
           quad(sym(uri), sym(predicate), literal("literal value")),
         );
         internalStore.add(sym(uri), sym(predicate), "new literal value");
-        jest.advanceTimersByTime(250);
+        vi.advanceTimersByTime(250);
         expect(subscriber).toHaveBeenCalledTimes(2);
       });
 
@@ -194,7 +195,7 @@ describe("Thing", function () {
         internalStore.removeStatement(
           quad(sym(uri), sym(predicate), literal("literal value")),
         );
-        jest.advanceTimersByTime(250);
+        vi.advanceTimersByTime(250);
         expect(anyValueSpy).toHaveBeenCalledTimes(2);
         expect(subscriber.mock.lastCall).toEqual(["literal value 2"]);
       });
@@ -206,7 +207,7 @@ describe("Thing", function () {
         internalStore.add(
           quad(sym(uri), sym(predicate), literal("literal value 2")),
         );
-        jest.advanceTimersByTime(250);
+        vi.advanceTimersByTime(250);
         expect(anyValueSpy).toHaveBeenCalledTimes(1);
         expect(subscriber).toHaveBeenCalledTimes(2);
         expect(subscriber.mock.lastCall).toEqual(["literal value 2"]);
@@ -214,14 +215,14 @@ describe("Thing", function () {
         internalStore.add(
           quad(sym(uri), sym(predicate), literal("literal value 3")),
         );
-        jest.advanceTimersByTime(250);
+        vi.advanceTimersByTime(250);
         expect(anyValueSpy).toHaveBeenCalledTimes(1);
         expect(subscriber).toHaveBeenCalledTimes(2);
 
         internalStore.removeStatement(
           quad(sym(uri), sym(predicate), literal("literal value 2")),
         );
-        jest.advanceTimersByTime(250);
+        vi.advanceTimersByTime(250);
         expect(anyValueSpy).toHaveBeenCalledTimes(2);
         expect(subscriber).toHaveBeenCalledTimes(3);
         expect(subscriber.mock.lastCall).toEqual(["literal value 3"]);
@@ -241,17 +242,17 @@ describe("Thing", function () {
           sym(predicate),
           literal("right literal value"),
         );
-        jest.advanceTimersByTime(250);
+        vi.advanceTimersByTime(250);
         expect(subscriber.mock.lastCall).toEqual(["right literal value"]);
       });
     });
 
     describe("a store without any statements yet", () => {
       let internalStore: IndexedFormula,
-        subscriber: jest.Mock,
+        subscriber: Mock,
         uri: string,
         predicate: string,
-        anyValueSpy: jest.SpyInstance,
+        anyValueSpy: Mock,
         subscription: Subscription,
         store: Store;
 
@@ -265,9 +266,9 @@ describe("Thing", function () {
         store = new Store(mockSession, undefined, undefined, internalStore);
 
         // and a Thing with a anyValue method
-        subscriber = jest.fn();
+        subscriber = vi.fn();
         const thing = new Thing(uri, store);
-        anyValueSpy = jest.spyOn(thing, "anyValue");
+        anyValueSpy = vi.spyOn(thing, "anyValue");
 
         // and a subscription to changes in value
         const observable = thing.observeAnyValue(predicate);
@@ -281,7 +282,7 @@ describe("Thing", function () {
       it("pushes a value if none was present, without calling anyValue again", () => {
         // when the first value for that predicate occurs
         internalStore.add(sym(uri), sym(predicate), "new literal value");
-        jest.advanceTimersByTime(250);
+        vi.advanceTimersByTime(250);
 
         // then the subscriber receives both the initial undefined and the new value
         expect(subscriber).toHaveBeenCalledTimes(2);
@@ -301,7 +302,7 @@ describe("Thing", function () {
         const predicateB = "https://vocab.test/predicate-b";
 
         const thing = new Thing(uri, store);
-        const subscriber = jest.fn();
+        const subscriber = vi.fn();
         const observable = thing.observeAnyValue(predicateA, predicateB);
         observable.subscribe(subscriber);
 
@@ -310,15 +311,15 @@ describe("Thing", function () {
 
         const valueAQuad = quad(sym(uri), sym(predicateA), literal("value A"));
         internalStore.add(valueAQuad);
-        jest.advanceTimersByTime(250);
+        vi.advanceTimersByTime(250);
         expect(subscriber).toHaveBeenCalledWith("value A");
 
         internalStore.removeStatement(valueAQuad);
-        jest.advanceTimersByTime(250);
+        vi.advanceTimersByTime(250);
         expect(subscriber).toHaveBeenCalledWith(undefined);
 
         internalStore.add(sym(uri), sym(predicateB), "value B");
-        jest.advanceTimersByTime(250);
+        vi.advanceTimersByTime(250);
 
         // Then: should emit "value B"
         expect(subscriber).toHaveBeenCalledWith("value B");
@@ -337,7 +338,7 @@ describe("Thing", function () {
           internalStore.add(sym(uri), sym(predicateC), "value-c");
 
           const thing = new Thing(uri, store);
-          const subscriber = jest.fn();
+          const subscriber = vi.fn();
 
           // When: subscribing to multiple predicates
           const observable = thing.observeAnyValue(
@@ -364,7 +365,7 @@ describe("Thing", function () {
           internalStore.add(sym(uri), sym(predicateB), "value-b");
 
           const thing = new Thing(uri, store);
-          const subscriber = jest.fn();
+          const subscriber = vi.fn();
 
           // And: subscribing to multiple predicates
           const observable = thing.observeAnyValue(
@@ -388,7 +389,7 @@ describe("Thing", function () {
             sym(predicateA),
             literal("value-a2"),
           );
-          jest.advanceTimersByTime(250);
+          vi.advanceTimersByTime(250);
 
           // Then: should fall back to predicateB
           expect(subscriber).toHaveBeenCalledWith("value-b");
@@ -401,18 +402,18 @@ describe("Thing", function () {
           const predicateB = "https://vocab.test/predicate-b";
 
           const thing = new Thing(uri, store);
-          const subscriber = jest.fn();
+          const subscriber = vi.fn();
           const observable = thing.observeAnyValue(predicateA, predicateB);
           observable.subscribe(subscriber);
 
           // and predicateB has value
           internalStore.add(sym(uri), sym(predicateB), "value-b");
-          jest.advanceTimersByTime(250);
+          vi.advanceTimersByTime(250);
           expect(subscriber.mock.calls).toEqual([[undefined], ["value-b"]]);
 
           // When predicateA gets a value while predicate B still has value
           internalStore.add(sym(uri), sym(predicateA), "value-a");
-          jest.advanceTimersByTime(250);
+          vi.advanceTimersByTime(250);
 
           // Then no change occurs because we have one from predicateA
           expect(subscriber.mock.calls).toEqual([[undefined], ["value-b"]]);
@@ -430,7 +431,7 @@ describe("Thing", function () {
           internalStore.add(sym(uri), sym(predicate), "value3");
 
           const thing = new Thing(uri, store);
-          const subscriber = jest.fn();
+          const subscriber = vi.fn();
           const observable = thing.observeAnyValue(predicate);
           observable.subscribe(subscriber);
 
@@ -447,7 +448,7 @@ describe("Thing", function () {
             sym(predicate),
             literal("value2"),
           );
-          jest.advanceTimersByTime(250);
+          vi.advanceTimersByTime(250);
 
           // Then: should emit value3 (the last remaining)
           expect(subscriber).toHaveBeenCalledWith("value3");
@@ -464,7 +465,7 @@ describe("Thing", function () {
           internalStore.add(sym(uri), sym(predicate), "value3");
 
           const thing = new Thing(uri, store);
-          const subscriber = jest.fn();
+          const subscriber = vi.fn();
 
           // And: thing subscribing to the predicate
           const observable = thing.observeAnyValue(predicate);
@@ -479,7 +480,7 @@ describe("Thing", function () {
             sym(predicate),
             literal("value1"),
           );
-          jest.advanceTimersByTime(250);
+          vi.advanceTimersByTime(250);
 
           // Then: should emit the next value
           expect(subscriber).toHaveBeenCalledWith("value2");
@@ -494,7 +495,7 @@ describe("Thing", function () {
           const predicateB = "https://vocab.test/predicate-b";
 
           const thing = new Thing(uri, store);
-          const subscriber = jest.fn();
+          const subscriber = vi.fn();
           const observable = thing.observeAnyValue(predicateA, predicateB);
           observable.subscribe(subscriber);
 
@@ -503,7 +504,7 @@ describe("Thing", function () {
 
           // When: +predicateA=value-a → emit value-a
           internalStore.add(sym(uri), sym(predicateA), "value-a");
-          jest.advanceTimersByTime(250);
+          vi.advanceTimersByTime(250);
           expect(subscriber).toHaveBeenCalledWith("value-a");
 
           // When: -predicateA=value-a → emit undefined
@@ -512,12 +513,12 @@ describe("Thing", function () {
             sym(predicateA),
             literal("value-a"),
           );
-          jest.advanceTimersByTime(250);
+          vi.advanceTimersByTime(250);
           expect(subscriber).toHaveBeenCalledWith(undefined);
 
           // When: +predicateB=value-b → emit value-b
           internalStore.add(sym(uri), sym(predicateB), "value-b");
-          jest.advanceTimersByTime(250);
+          vi.advanceTimersByTime(250);
           expect(subscriber).toHaveBeenCalledWith("value-b");
 
           // When: -predicateB=value-b → emit undefined
@@ -526,12 +527,12 @@ describe("Thing", function () {
             sym(predicateB),
             literal("value-b"),
           );
-          jest.advanceTimersByTime(250);
+          vi.advanceTimersByTime(250);
           expect(subscriber).toHaveBeenCalledWith(undefined);
 
           // When: +predicateA=value-a2 → emit value-a2
           internalStore.add(sym(uri), sym(predicateA), "value-a2");
-          jest.advanceTimersByTime(250);
+          vi.advanceTimersByTime(250);
           expect(subscriber).toHaveBeenCalledWith("value-a2");
         });
 
@@ -547,7 +548,7 @@ describe("Thing", function () {
           internalStore.add(sym(uri), sym(predicateC), "value-c");
 
           const thing = new Thing(uri, store);
-          const subscriber = jest.fn();
+          const subscriber = vi.fn();
           const observable = thing.observeAnyValue(
             predicateA,
             predicateB,
@@ -573,7 +574,7 @@ describe("Thing", function () {
             sym(predicateC),
             literal("value-c"),
           );
-          jest.advanceTimersByTime(250);
+          vi.advanceTimersByTime(250);
 
           // Then: should emit undefined exactly once
           expect(subscriber).toHaveBeenCalledTimes(2);
@@ -587,18 +588,18 @@ describe("Thing", function () {
           const predicateB = "https://vocab.test/predicate-b";
 
           const thing = new Thing(uri, store);
-          const subscriber = jest.fn();
+          const subscriber = vi.fn();
           const observable = thing.observeAnyValue(predicateA, predicateB);
           observable.subscribe(subscriber);
 
           // And store has: predicateA=value-a
           internalStore.add(sym(uri), sym(predicateA), "value-a");
-          jest.advanceTimersByTime(250);
+          vi.advanceTimersByTime(250);
           expect(subscriber).toHaveBeenCalledWith("value-a");
 
           // When: +predicateB=value-b (while predicateA still has value-a)
           internalStore.add(sym(uri), sym(predicateB), "value-b");
-          jest.advanceTimersByTime(250);
+          vi.advanceTimersByTime(250);
           // Then: should not emit (predicateA already had value, new value doesn't change "any")
           expect(subscriber.mock.calls.length).toBe(2); // still only 2: undefined, value-a
 
@@ -608,7 +609,7 @@ describe("Thing", function () {
             sym(predicateA),
             literal("value-a"),
           );
-          jest.advanceTimersByTime(250);
+          vi.advanceTimersByTime(250);
           // Then: should emit value-b (now predicateA is gone, fall back to predicateB)
           expect(subscriber).toHaveBeenCalledWith("value-b");
         });
@@ -620,7 +621,7 @@ describe("Thing", function () {
         const predicate = "https://vocab.test/predicate";
 
         const thing = new Thing(uri, store);
-        const subscriber = jest.fn();
+        const subscriber = vi.fn();
         const observable = thing.observeAnyValue(predicate);
         observable.subscribe(subscriber);
 
@@ -629,7 +630,7 @@ describe("Thing", function () {
 
         // When: +value-a → value-a
         internalStore.add(sym(uri), sym(predicate), "value-a");
-        jest.advanceTimersByTime(250);
+        vi.advanceTimersByTime(250);
         expect(subscriber).toHaveBeenCalledWith("value-a");
 
         // When: -value-a → undefined
@@ -638,12 +639,12 @@ describe("Thing", function () {
           sym(predicate),
           literal("value-a"),
         );
-        jest.advanceTimersByTime(250);
+        vi.advanceTimersByTime(250);
         expect(subscriber).toHaveBeenCalledWith(undefined);
 
         // When: +value-b → value-b
         internalStore.add(sym(uri), sym(predicate), "value-b");
-        jest.advanceTimersByTime(250);
+        vi.advanceTimersByTime(250);
         expect(subscriber).toHaveBeenCalledWith("value-b");
 
         // Then: verify all emissions
@@ -666,7 +667,7 @@ describe("Thing", function () {
           internalStore.add(sym(uri), sym(predicate), "value3");
 
           const thing = new Thing(uri, store);
-          const subscriber = jest.fn();
+          const subscriber = vi.fn();
 
           // And: subscribing to the predicate
           const observable = thing.observeAnyValue(predicate);
@@ -686,7 +687,7 @@ describe("Thing", function () {
             sym(predicate),
             literal("value2"),
           );
-          jest.advanceTimersByTime(250);
+          vi.advanceTimersByTime(250);
 
           // Then: should emit once with value3 (not twice)
           expect(subscriber).toHaveBeenCalledTimes(2);
@@ -701,7 +702,7 @@ describe("Thing", function () {
           internalStore.add(sym(uri), sym(predicate), "value-a");
 
           const thing = new Thing(uri, store);
-          const subscriber = jest.fn();
+          const subscriber = vi.fn();
           const observable = thing.observeAnyValue(predicate);
           observable.subscribe(subscriber);
 
@@ -714,7 +715,7 @@ describe("Thing", function () {
             literal("value-a"),
           );
           internalStore.add(sym(uri), sym(predicate), "value-b");
-          jest.advanceTimersByTime(250);
+          vi.advanceTimersByTime(250);
 
           // Then: should emit only once with value-b (not undefined then value-b)
           expect(subscriber).toHaveBeenCalledTimes(2);
@@ -744,7 +745,7 @@ describe("Thing", function () {
           );
 
           // And: observing anyValue
-          const subscriber = jest.fn();
+          const subscriber = vi.fn();
           const observable = thing.observeAnyValue(
             predicateA,
             predicateB,

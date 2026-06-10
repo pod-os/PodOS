@@ -1,8 +1,9 @@
+import { describe, expect, it, Mock, vi } from "vitest";
 import { OfflineCapableFetcher } from "./OfflineCapableFetcher";
 import { graph, sym } from "rdflib";
-import { when } from "jest-when";
+import { when } from "vitest-when";
 import { OfflineCache } from "./OfflineCache";
-import { mockTurtleDocument } from "@solid-data-modules/rdflib-utils/test-support";
+import { mockTurtleDocument } from "../test-support";
 
 describe(OfflineCapableFetcher.name, () => {
   describe("while online", () => {
@@ -19,7 +20,7 @@ describe(OfflineCapableFetcher.name, () => {
       `fetches document for given $argumentType and puts data to store and offline cache`,
       async ({ uriArg }) => {
         // given a turtle document can be fetched
-        const fetch = jest.fn();
+        const fetch = vi.fn();
         mockTurtleDocument(
           fetch,
           "https://alice.pod.test/thing",
@@ -94,11 +95,11 @@ describe(OfflineCapableFetcher.name, () => {
     );
 
     it("uses current time as revision if no etag is given", async () => {
-      jest.useFakeTimers({
+      vi.useFakeTimers({
         now: 1234,
       });
       // given a turtle document can be fetched, but without an etag
-      const fetch = jest.fn();
+      const fetch = vi.fn();
       mockTurtleDocument(
         fetch,
         "https://alice.pod.test/thing",
@@ -131,7 +132,7 @@ describe(OfflineCapableFetcher.name, () => {
 
     it("fetches multiple documents if array is given and puts all the data to the store and offline cache", async () => {
       // given two turtle documents can be fetched
-      const fetch = jest.fn();
+      const fetch = vi.fn();
       mockTurtleDocument(
         fetch,
         "https://alice.pod.test/one",
@@ -261,7 +262,7 @@ describe(OfflineCapableFetcher.name, () => {
 
     it("restores document from cache on non-http (network) errors", async () => {
       // given fetch returns a network error
-      const fetch = jest.fn();
+      const fetch = vi.fn();
       fetch.mockRejectedValue(new Error("Simulated network error"));
 
       // and an empty store
@@ -271,7 +272,7 @@ describe(OfflineCapableFetcher.name, () => {
       const offlineCache = mockOfflineCache();
       when(offlineCache.get)
         .calledWith("https://alice.pod.test/thing")
-        .mockResolvedValueOnce({
+        .thenResolve({
           url: "https://alice.pod.test/thing",
           revision: "some-revision",
           statements: `<https://alice.pod.test/thing#it> <http://www.w3.org/2000/01/rdf-schema#label> "Cached value" .`,
@@ -332,7 +333,7 @@ describe(OfflineCapableFetcher.name, () => {
 
     it("throws an error if document was not found in cache", async () => {
       // given fetch returns a network error
-      const fetch = jest.fn();
+      const fetch = vi.fn();
       fetch.mockRejectedValue(new Error("Simulated network error"));
 
       // and an empty store
@@ -340,7 +341,8 @@ describe(OfflineCapableFetcher.name, () => {
 
       // and an empty cache
       const offlineCache = mockOfflineCache();
-      when(offlineCache.get).mockResolvedValue(undefined);
+
+      (offlineCache.get as Mock).mockResolvedValue(undefined);
 
       // and a fetcher that is currently online
       const fetcher = new OfflineCapableFetcher(store, {
@@ -354,7 +356,7 @@ describe(OfflineCapableFetcher.name, () => {
 
       // then the network error is thrown
       await expect(fetchPromise).rejects.toThrow(
-        new Error("Fetcher: Error: undefined Simulated network error"),
+        "Fetcher: Error: undefined Simulated network error",
       );
 
       // and the store stays empty
@@ -371,7 +373,7 @@ describe(OfflineCapableFetcher.name, () => {
       "returns http errors if something fails",
       async (status) => {
         // given fetch returns a network error
-        const fetch = jest.fn();
+        const fetch = vi.fn();
         fetch.mockResolvedValue({
           ok: true,
           status,
@@ -399,9 +401,7 @@ describe(OfflineCapableFetcher.name, () => {
         await expect(
           fetcher.load("https://alice.pod.test/thing#it"),
         ).rejects.toThrow(
-          new Error(
-            `Fetcher: <https://alice.pod.test/thing> simulated http status ${status}`,
-          ),
+          `Fetcher: <https://alice.pod.test/thing> simulated http status ${status}`,
         );
       },
     );
@@ -421,7 +421,7 @@ describe(OfflineCapableFetcher.name, () => {
       `retrieves document for given $argumentType from cache and puts data to store`,
       async ({ uriArg }) => {
         // given a fetch function
-        const fetch = jest.fn();
+        const fetch = vi.fn();
 
         // and an empty store
         const store = graph();
@@ -430,7 +430,7 @@ describe(OfflineCapableFetcher.name, () => {
         const offlineCache = mockOfflineCache();
         when(offlineCache.get)
           .calledWith("https://alice.pod.test/thing")
-          .mockResolvedValueOnce({
+          .thenResolve({
             url: "https://alice.pod.test/thing",
             revision: "some-revision",
             statements: `<https://alice.pod.test/thing#it> <http://www.w3.org/2000/01/rdf-schema#label> "Cached value" .`,
@@ -500,7 +500,7 @@ describe(OfflineCapableFetcher.name, () => {
 
     it(`retrieves every document from cache when trying to load multiple`, async () => {
       // given a fetch function
-      const fetch = jest.fn();
+      const fetch = vi.fn();
 
       // and an empty store
       const store = graph();
@@ -509,14 +509,14 @@ describe(OfflineCapableFetcher.name, () => {
       const offlineCache = mockOfflineCache();
       when(offlineCache.get)
         .calledWith("https://alice.pod.test/one")
-        .mockResolvedValueOnce({
+        .thenResolve({
           url: "https://alice.pod.test/one",
           revision: "some-revision",
           statements: `<https://alice.pod.test/one#it> <http://www.w3.org/2000/01/rdf-schema#label> "First" .`,
         });
       when(offlineCache.get)
         .calledWith("https://alice.pod.test/two")
-        .mockResolvedValueOnce({
+        .thenResolve({
           url: "https://alice.pod.test/two",
           revision: "some-revision",
           statements: `<https://alice.pod.test/two#it> <http://www.w3.org/2000/01/rdf-schema#label> "Second" .`,
@@ -633,14 +633,15 @@ describe(OfflineCapableFetcher.name, () => {
 
     it(`throws an error if document was not found in cache`, async () => {
       // given a fetch function
-      const fetch = jest.fn();
+      const fetch = vi.fn();
 
       // and an empty store
       const store = graph();
 
       // and an empty offline cache
       const offlineCache = mockOfflineCache();
-      when(offlineCache.get).mockResolvedValue(undefined);
+
+      (offlineCache.get as Mock).mockResolvedValue(undefined);
 
       // and a fetcher that is currently offline
       const fetcher = new OfflineCapableFetcher(store, {
@@ -654,9 +655,7 @@ describe(OfflineCapableFetcher.name, () => {
 
       // then an error is thrown indicating a cache miss
       await expect(fetchPromise).rejects.toThrow(
-        new Error(
-          "You are offline and no data was found in the offline cache for https://alice.pod.test/thing",
-        ),
+        "You are offline and no data was found in the offline cache for https://alice.pod.test/thing",
       );
 
       // and the store stays empty
@@ -676,8 +675,8 @@ describe(OfflineCapableFetcher.name, () => {
 
 function mockOfflineCache(): OfflineCache {
   return {
-    put: jest.fn(),
-    get: jest.fn(),
-    clear: jest.fn(),
+    put: vi.fn(),
+    get: vi.fn(),
+    clear: vi.fn(),
   };
 }

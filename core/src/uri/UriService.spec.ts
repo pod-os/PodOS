@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { Store } from "../Store";
 import { UriService } from "./UriService";
 

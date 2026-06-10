@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { addToLabelIndex } from "./addToLabelIndex";
 import { graph, lit, st, sym } from "rdflib";
 import { rdfs } from "../namespaces";

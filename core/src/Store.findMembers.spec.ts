@@ -1,3 +1,4 @@
+import { afterEach, beforeEach, describe, expect, it, Mock, vi } from "vitest";
 import { graph, IndexedFormula, literal, quad, sym } from "rdflib";
 import { PodOsSession } from "./authentication";
 import { Store } from "./Store";
@@ -47,7 +48,7 @@ describe("Store", () => {
   describe("observeFindMembers", () => {
     let internalStore: IndexedFormula,
       store: Store,
-      subscriber: jest.Mock,
+      subscriber: Mock,
       subscription: Subscription,
       observable: Observable<string[]>;
     beforeEach(() => {
@@ -65,7 +66,7 @@ describe("Store", () => {
         undefined,
         internalStore,
       );
-      subscriber = jest.fn();
+      subscriber = vi.fn();
       observable = store.observeFindMembers("http://schema.org/Recipe");
       subscription = observable.subscribe(subscriber);
     });

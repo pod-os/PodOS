@@ -1,15 +1,16 @@
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { OfflineCache, PodOS, PodOsSession } from "./index";
 import { of } from "rxjs";
 
-jest.mock("./authentication", () => ({}));
+vi.mock("./authentication", () => ({}));
 
 describe("PodOS", () => {
   let mockSession: PodOsSession;
 
   beforeEach(() => {
     mockSession = {
-      logout: jest.fn(),
-      observeSession: jest.fn().mockReturnValue(of()),
+      logout: vi.fn(),
+      observeSession: vi.fn().mockReturnValue(of()),
     } as unknown as PodOsSession;
   });
 
@@ -23,7 +24,7 @@ describe("PodOS", () => {
     });
 
     it("clears the cache", async () => {
-      const mockOfflineCache = { clear: jest.fn() } as unknown as OfflineCache;
+      const mockOfflineCache = { clear: vi.fn() } as unknown as OfflineCache;
       const podOs = new PodOS({
         session: mockSession,
         offlineCache: mockOfflineCache,

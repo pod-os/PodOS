@@ -7,7 +7,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "jest",
+    "test": "npm run test --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
     "dev:core": "npm run dev --workspace core",
@@ -34,7 +34,6 @@
   },
   "homepage": "https://github.com/pod-os/PodOS#readme",
   "devDependencies": {
-    "jest": "29.7.0",
     "prettier": "^3.2.5"
   },
   "workspaces": [

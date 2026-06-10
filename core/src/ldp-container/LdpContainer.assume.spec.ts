@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { graph } from "rdflib";
 import { PodOsSession } from "../authentication";
 import { Thing } from "../thing";

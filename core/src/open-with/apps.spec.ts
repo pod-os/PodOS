@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { APPS } from "./apps";
 
 describe("well known solid apps", () => {

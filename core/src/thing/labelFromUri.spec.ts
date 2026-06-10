@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { labelFromUri } from "./labelFromUri";
 
 describe("label from URI", () => {

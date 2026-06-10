@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { BrokenFile } from "./BrokenFile";
 import { HttpStatus } from "./HttpStatus";
 

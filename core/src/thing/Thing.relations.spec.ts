@@ -1,4 +1,5 @@
-import { blankNode, graph, sym, IndexedFormula, quad } from "rdflib";
+import { afterEach, beforeEach, describe, expect, it, Mock, vi } from "vitest";
+import { blankNode, graph, IndexedFormula, quad, sym } from "rdflib";
 import { PodOsSession } from "../authentication";
 import { Relation, Thing } from "./Thing";
 import { Store } from "../Store";
@@ -255,17 +256,17 @@ describe("Thing", function () {
 
   describe("observeRelations", () => {
     beforeEach(() => {
-      jest.useFakeTimers();
+      vi.useFakeTimers();
     });
 
     afterEach(() => {
-      jest.useRealTimers();
+      vi.useRealTimers();
     });
 
     let uri: string,
-      subscriber: jest.Mock,
+      subscriber: Mock,
       thing: Thing,
-      relationsSpy: jest.SpyInstance,
+      relationsSpy: Mock,
       observable: Observable<Relation[]>,
       subscription: Subscription;
 
@@ -286,9 +287,9 @@ describe("Thing", function () {
       ]);
 
       // and a Thing with a relations method
-      subscriber = jest.fn();
+      subscriber = vi.fn();
       thing = new Thing(uri, store);
-      relationsSpy = jest.spyOn(thing, "relations");
+      relationsSpy = vi.spyOn(thing, "relations");
 
       // and a subscription to changes in relations
       observable = thing.observeRelations();
@@ -322,7 +323,7 @@ describe("Thing", function () {
         sym("http://vocab.test/first"),
         sym("https://pod.example/first"),
       );
-      jest.advanceTimersByTime(250);
+      vi.advanceTimersByTime(250);
       expect(subscriber).toHaveBeenCalledTimes(1);
       expect(relationsSpy).toHaveBeenCalledTimes(1);
     });
@@ -335,7 +336,7 @@ describe("Thing", function () {
           sym("https://pod.example/second"),
         ),
       );
-      jest.advanceTimersByTime(250);
+      vi.advanceTimersByTime(250);
       expect(subscriber).toHaveBeenCalledTimes(2);
       expect(relationsSpy).toHaveBeenCalledTimes(2);
       expect(subscriber.mock.lastCall).toEqual([
@@ -357,7 +358,7 @@ describe("Thing", function () {
           sym("https://pod.example/first-2"),
         ),
       );
-      jest.advanceTimersByTime(250);
+      vi.advanceTimersByTime(250);
       expect(subscriber).toHaveBeenCalledTimes(2);
       expect(relationsSpy).toHaveBeenCalledTimes(2);
       expect(subscriber.mock.lastCall).toEqual([
@@ -396,7 +397,7 @@ describe("Thing", function () {
           sym("https://pod.example/second-2"),
         ),
       ]);
-      jest.advanceTimersByTime(250);
+      vi.advanceTimersByTime(250);
       expect(subscriber).toHaveBeenCalledTimes(2);
       expect(relationsSpy).toHaveBeenCalledTimes(2);
       expect(subscriber.mock.lastCall).toEqual([
@@ -422,7 +423,7 @@ describe("Thing", function () {
           sym("https://example.com/type"),
         ),
       );
-      jest.advanceTimersByTime(250);
+      vi.advanceTimersByTime(250);
       expect(relationsSpy).toHaveBeenCalledTimes(2);
       expect(subscriber).toHaveBeenCalledTimes(1);
     });
@@ -434,7 +435,7 @@ describe("Thing", function () {
         sym("http://vocab.test/third"),
         sym("https://pod.example/third"),
       );
-      jest.advanceTimersByTime(250);
+      vi.advanceTimersByTime(250);
       expect(subscriber).toHaveBeenCalledTimes(1);
       expect(relationsSpy).toHaveBeenCalledTimes(1);
     });

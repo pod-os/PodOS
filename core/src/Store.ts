@@ -19,10 +19,10 @@ import {
   UpdateOperation,
 } from "@solid-data-modules/rdflib-utils";
 import {
+  AssumeAlwaysOnline,
+  NoOfflineCache,
   OfflineCache,
   OfflineCapableFetcher,
-  NoOfflineCache,
-  AssumeAlwaysOnline,
   OnlineStatus,
 } from "./offline-cache";
 import {

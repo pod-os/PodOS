@@ -1,11 +1,12 @@
-import { when } from "jest-when";
-import { graph, sym, quad, IndexedFormula, blankNode } from "rdflib";
+import { beforeEach, describe, expect, it, Mock, vi } from "vitest";
+import { when } from "vitest-when";
+import { blankNode, graph, IndexedFormula, quad, sym } from "rdflib";
 import { Parser as SparqlParser, Update } from "sparqljs";
-import { AuthenticatedFetch, PodOsSession } from "./authentication";
+import { PodOsSession } from "./authentication";
 import { Store } from "./Store";
 import { Thing } from "./thing";
 
-jest.mock("./authentication");
+vi.mock("./authentication");
 
 describe("Store", () => {
   describe("additions$", () => {
@@ -13,7 +14,7 @@ describe("Store", () => {
       const mockSession = {} as unknown as PodOsSession;
       const internalStore = new IndexedFormula();
       const store = new Store(mockSession, undefined, undefined, internalStore);
-      const subscriber = jest.fn();
+      const subscriber = vi.fn();
       store.additions$?.subscribe(subscriber);
       const quads = [
         quad(
@@ -38,7 +39,7 @@ describe("Store", () => {
       const mockSession = {} as unknown as PodOsSession;
       const internalStore = new IndexedFormula();
       const store = new Store(mockSession, undefined, undefined, internalStore);
-      const subscriber = jest.fn();
+      const subscriber = vi.fn();
       store.removals$?.subscribe(subscriber);
       const quads = [
         quad(
@@ -64,11 +65,11 @@ describe("Store", () => {
   describe("fetch", () => {
     it("fetches and parses turtle data", async () => {
       const mockSession = {
-        authenticatedFetch: jest.fn(),
+        authenticatedFetch: vi.fn(),
       } as unknown as PodOsSession;
       when(mockSession.authenticatedFetch)
         .calledWith("https://pod.test/resource", expect.anything())
-        .mockResolvedValue({
+        .thenResolve({
           ok: true,
           status: 200,
           statusText: "OK",
@@ -125,11 +126,11 @@ describe("Store", () => {
 
     it("fetches image type", async () => {
       const mockSession = {
-        authenticatedFetch: jest.fn(),
+        authenticatedFetch: vi.fn(),
       } as unknown as PodOsSession;
       when(mockSession.authenticatedFetch)
         .calledWith("https://pod.test/resource.png", expect.anything())
-        .mockResolvedValue({
+        .thenResolve({
           ok: true,
           status: 200,
           statusText: "OK",
@@ -161,11 +162,11 @@ describe("Store", () => {
     it("fetches and parses turtle data", async () => {
       // given
       const mockSession = {
-        authenticatedFetch: jest.fn(),
+        authenticatedFetch: vi.fn(),
       } as unknown as PodOsSession;
       when(mockSession.authenticatedFetch)
         .calledWith("https://pod.test/resource1", expect.anything())
-        .mockResolvedValue({
+        .thenResolve({
           ok: true,
           status: 200,
           statusText: "OK",
@@ -179,7 +180,7 @@ describe("Store", () => {
         } as Response);
       when(mockSession.authenticatedFetch)
         .calledWith("https://pod.test/resource2", expect.anything())
-        .mockResolvedValue({
+        .thenResolve({
           ok: true,
           status: 200,
           statusText: "OK",
@@ -280,11 +281,11 @@ describe("Store", () => {
     it("fetches data from second resource even if first failed", async () => {
       // given
       const mockSession = {
-        authenticatedFetch: jest.fn(),
+        authenticatedFetch: vi.fn(),
       } as unknown as PodOsSession;
       when(mockSession.authenticatedFetch)
         .calledWith("https://pod.test/resource1", expect.anything())
-        .mockResolvedValue({
+        .thenResolve({
           ok: false,
           status: 500,
           statusText: "Internal Server Error",
@@ -295,7 +296,7 @@ describe("Store", () => {
         } as Response);
       when(mockSession.authenticatedFetch)
         .calledWith("https://pod.test/resource2", expect.anything())
-        .mockResolvedValue({
+        .thenResolve({
           ok: true,
           status: 200,
           statusText: "OK",
@@ -362,12 +363,12 @@ describe("Store", () => {
   describe("get", () => {
     it("returns a new read-only Thing", async () => {
       const mockSession = {
-        authenticatedFetch: jest.fn(),
+        authenticatedFetch: vi.fn(),
       } as unknown as PodOsSession;
 
       when(mockSession.authenticatedFetch)
         .calledWith("https://pod.test/resource", expect.anything())
-        .mockResolvedValue({
+        .thenResolve({
           ok: true,
           status: 200,
           statusText: "OK",
@@ -395,12 +396,12 @@ describe("Store", () => {
 
     it("returns an editable Thing", async () => {
       const mockSession = {
-        authenticatedFetch: jest.fn(),
+        authenticatedFetch: vi.fn(),
       } as unknown as PodOsSession;
 
       when(mockSession.authenticatedFetch)
         .calledWith("https://pod.test/resource", expect.anything())
-        .mockResolvedValue({
+        .thenResolve({
           ok: true,
           status: 200,
           statusText: "OK",
@@ -427,13 +428,13 @@ describe("Store", () => {
 
   describe("add property value", () => {
     it("sends sparql insert via updater", async () => {
-      const fetchMock = jest.fn();
+      const fetchMock = vi.fn();
       const mockSession = {
         authenticatedFetch: fetchMock,
       } as unknown as PodOsSession;
       when(fetchMock)
         .calledWith("https://pod.test/resource", expect.anything())
-        .mockResolvedValue({
+        .thenResolve({
           ok: true,
           status: 200,
           statusText: "OK",
@@ -469,13 +470,13 @@ describe("Store", () => {
 
   describe("add relation", () => {
     it("sends sparql insert via updater", async () => {
-      const fetchMock = jest.fn();
+      const fetchMock = vi.fn();
       const mockSession = {
         authenticatedFetch: fetchMock,
       } as unknown as PodOsSession;
       when(fetchMock)
         .calledWith("https://pod.test/resource", expect.anything())
-        .mockResolvedValue({
+        .thenResolve({
           ok: true,
           status: 200,
           statusText: "OK",
@@ -511,13 +512,13 @@ describe("Store", () => {
 
   describe("add new thing", () => {
     it("sends sparql insert via updater", async () => {
-      const fetchMock = jest.fn();
+      const fetchMock = vi.fn();
       const mockSession = {
         authenticatedFetch: fetchMock,
       } as unknown as PodOsSession;
       when(fetchMock)
         .calledWith("https://pod.test/new-thing", expect.anything())
-        .mockResolvedValue({
+        .thenResolve({
           ok: true,
           status: 404,
           statusText: "Not found",
@@ -707,7 +708,7 @@ describe("Store", () => {
 });
 
 export function thenSparqlUpdateIsSentToUrl(
-  fetchMock: jest.Mock<AuthenticatedFetch>,
+  fetchMock: Mock,
   url: string,
   query: string,
 ) {
@@ -722,7 +723,7 @@ export function thenSparqlUpdateIsSentToUrl(
 
   expect(sparqlUpdateCall).toBeDefined();
 
-  const body = sparqlUpdateCall[1].body;
+  const body = sparqlUpdateCall![1].body;
   const actualQuery = parser.parse(body) as Update;
   const expectedQuery = parser.parse(query) as Update;
   expect(actualQuery).toEqual(expectedQuery);

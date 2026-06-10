@@ -1,3 +1,4 @@
+import { describe, expect, it, vi } from "vitest";
 import { LabelIndex } from "./LabelIndex";
 import { SearchIndex } from "./SearchIndex";
 
@@ -228,7 +229,7 @@ describe("search index", () => {
     it("finds items after rebuilding the index with new data", () => {
       const index = new SearchIndex([
         {
-          getIndexedItems: jest
+          getIndexedItems: vi
             .fn()
             .mockReturnValueOnce([])
             .mockReturnValueOnce([

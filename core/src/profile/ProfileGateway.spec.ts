@@ -1,34 +1,35 @@
+import { beforeEach, describe, expect, it, Mock, vi } from "vitest";
 import { ProfileGateway } from "./ProfileGateway";
 import { Store } from "../Store";
-import { when } from "jest-when";
+import { when } from "vitest-when";
 import { Thing } from "../thing";
 import { WebIdProfile } from "./WebIdProfile";
 
 describe("ProfileGateway", () => {
   let store: Store;
   let profile: WebIdProfile;
-  let getPreferencesFile: jest.Mock;
-  let getPublicTypeIndex: jest.Mock;
-  let getPrivateTypeIndex: jest.Mock;
+  let getPreferencesFile: Mock;
+  let getPublicTypeIndex: Mock;
+  let getPrivateTypeIndex: Mock;
   beforeEach(() => {
     // given a store
     store = {
-      fetch: jest.fn(),
-      fetchAll: jest.fn(),
-      get: jest.fn(),
+      fetch: vi.fn(),
+      fetchAll: vi.fn(),
+      get: vi.fn(),
     } as unknown as Store;
     // and a profile
-    getPreferencesFile = jest.fn();
-    getPublicTypeIndex = jest.fn();
-    getPrivateTypeIndex = jest.fn();
+    getPreferencesFile = vi.fn();
+    getPublicTypeIndex = vi.fn();
+    getPrivateTypeIndex = vi.fn();
     profile = {
       getPreferencesFile,
       getPublicTypeIndex,
       getPrivateTypeIndex,
     } as unknown as WebIdProfile;
-    const assume = jest.fn();
-    when(assume).calledWith(WebIdProfile).mockReturnValue(profile);
-    when(store.get).mockReturnValue({
+    const assume = vi.fn();
+    when(assume).calledWith(WebIdProfile).thenReturn(profile);
+    (store.get as Mock).mockReturnValue({
       assume,
     } as unknown as Thing);
   });
@@ -138,7 +139,7 @@ describe("ProfileGateway", () => {
     // and fetching the preferences file returns 404
     when(store.fetch)
       .calledWith("https://alice.example/settings/pref.ttl")
-      .mockRejectedValue(
+      .thenReject(
         new Error(
           "Fetcher: <https://alice.example/settings/pref.ttl> 404 - Not Found",
         ),

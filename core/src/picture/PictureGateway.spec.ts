@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, Mocked, vi } from "vitest";
 import { graph } from "rdflib";
 import { err, ok } from "neverthrow";
 import { PodOsSession } from "../authentication";
@@ -9,7 +10,7 @@ import { FileGateway } from "../files/FileGateway";
 
 describe("PictureGateway", () => {
   let gateway: PictureGateway;
-  let attachmentGateway: jest.Mocked<FileGateway>;
+  let attachmentGateway: Mocked<FileGateway>;
   let thing: Thing;
 
   beforeEach(() => {
@@ -96,15 +97,15 @@ describe("PictureGateway", () => {
     });
   }
 
-  function createMockAttachmentGateway(): jest.Mocked<FileGateway> {
+  function createMockAttachmentGateway(): Mocked<FileGateway> {
     return {
-      uploadAndLinkFile: jest.fn().mockReturnValue(
+      uploadAndLinkFile: vi.fn().mockReturnValue(
         ok({
           url: "https://pod.test/things/picture.png",
           name: "my-picture.png",
           contentType: "image/png",
         }),
       ),
-    } as unknown as jest.Mocked<FileGateway>;
+    } as unknown as Mocked<FileGateway>;
   }
 });

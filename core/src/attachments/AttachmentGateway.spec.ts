@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, Mocked, vi } from "vitest";
 import { graph } from "rdflib";
 import { ok } from "neverthrow";
 import { AttachmentGateway } from "./AttachmentGateway";
@@ -8,7 +9,7 @@ import { Store } from "../Store";
 
 describe("AttachmentGateway", () => {
   let gateway: AttachmentGateway;
-  let fileGateway: jest.Mocked<FileGateway>;
+  let fileGateway: Mocked<FileGateway>;
   let thing: Thing;
 
   beforeEach(() => {
@@ -53,15 +54,15 @@ describe("AttachmentGateway", () => {
     });
   }
 
-  function createMockFileGateway(): jest.Mocked<FileGateway> {
+  function createMockFileGateway(): Mocked<FileGateway> {
     return {
-      uploadAndLinkFile: jest.fn().mockReturnValue(
+      uploadAndLinkFile: vi.fn().mockReturnValue(
         ok({
           url: "https://pod.test/things/document.pdf",
           name: "document.pdf",
           contentType: "application/pdf",
         }),
       ),
-    } as unknown as jest.Mocked<FileGateway>;
+    } as unknown as Mocked<FileGateway>;
   }
 });

@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { proposeAppsFor } from "./proposeAppsFor";
 import { Thing } from "../thing";
 import { APPS } from "./apps";

@@ -1,3 +1,4 @@
+import { afterEach, beforeEach, describe, expect, it, Mock, vi } from "vitest";
 import { graph, IndexedFormula, quad, sym } from "rdflib";
 import { PodOsSession } from "../authentication";
 import { Relation, Thing } from "./Thing";
@@ -201,20 +202,20 @@ describe("Thing", function () {
 
   describe("observeReverseRelations", () => {
     beforeEach(() => {
-      jest.useFakeTimers();
+      vi.useFakeTimers();
     });
 
     afterEach(() => {
-      jest.useRealTimers();
+      vi.useRealTimers();
     });
 
     const mockSession = {} as unknown as PodOsSession;
     let store: Store,
       internalStore: IndexedFormula,
       uri: string,
-      subscriber: jest.Mock,
+      subscriber: Mock,
       thing: Thing,
-      reverseRelationsSpy: jest.SpyInstance,
+      reverseRelationsSpy: Mock,
       observable: Observable<Relation[]>,
       subscription: Subscription;
 
@@ -237,9 +238,9 @@ describe("Thing", function () {
       ]);
 
       // and a Thing with a reverseRelations method
-      subscriber = jest.fn();
+      subscriber = vi.fn();
       thing = new Thing(uri, store);
-      reverseRelationsSpy = jest.spyOn(thing, "reverseRelations");
+      reverseRelationsSpy = vi.spyOn(thing, "reverseRelations");
 
       // and a subscription to changes in reverse relations
       observable = thing.observeReverseRelations();
@@ -273,7 +274,7 @@ describe("Thing", function () {
         sym("http://vocab.test/first"),
         sym("http://example.com/other-resource"),
       );
-      jest.advanceTimersByTime(250);
+      vi.advanceTimersByTime(250);
       expect(subscriber).toHaveBeenCalledTimes(1);
       expect(reverseRelationsSpy).toHaveBeenCalledTimes(1);
     });
@@ -286,7 +287,7 @@ describe("Thing", function () {
           sym(uri),
         ),
       );
-      jest.advanceTimersByTime(250);
+      vi.advanceTimersByTime(250);
       expect(subscriber).toHaveBeenCalledTimes(2);
       expect(reverseRelationsSpy).toHaveBeenCalledTimes(2);
       expect(subscriber.mock.lastCall).toEqual([
@@ -308,7 +309,7 @@ describe("Thing", function () {
           sym(uri),
         ),
       );
-      jest.advanceTimersByTime(250);
+      vi.advanceTimersByTime(250);
       expect(subscriber).toHaveBeenCalledTimes(2);
       expect(reverseRelationsSpy).toHaveBeenCalledTimes(2);
       expect(subscriber.mock.lastCall).toEqual([
@@ -347,7 +348,7 @@ describe("Thing", function () {
           sym(uri),
         ),
       ]);
-      jest.advanceTimersByTime(250);
+      vi.advanceTimersByTime(250);
       expect(subscriber).toHaveBeenCalledTimes(2);
       expect(reverseRelationsSpy).toHaveBeenCalledTimes(2);
       expect(subscriber.mock.lastCall).toEqual([
@@ -375,7 +376,7 @@ describe("Thing", function () {
           sym("https://pod.example/another-document"),
         ),
       );
-      jest.advanceTimersByTime(250);
+      vi.advanceTimersByTime(250);
       expect(reverseRelationsSpy).toHaveBeenCalledTimes(2);
       expect(subscriber).toHaveBeenCalledTimes(1);
     });
@@ -387,7 +388,7 @@ describe("Thing", function () {
         sym("http://vocab.test/third"),
         sym(uri),
       );
-      jest.advanceTimersByTime(250);
+      vi.advanceTimersByTime(250);
       expect(subscriber).toHaveBeenCalledTimes(1);
       expect(reverseRelationsSpy).toHaveBeenCalledTimes(1);
     });

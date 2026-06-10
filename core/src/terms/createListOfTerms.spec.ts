@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { createListOfTerms } from "./createListOfTerms";
 
 describe("create list of terms", () => {

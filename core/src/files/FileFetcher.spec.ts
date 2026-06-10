@@ -1,4 +1,5 @@
-import { when } from "jest-when";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { when } from "vitest-when";
 import { PodOsSession } from "../authentication";
 import { BinaryFile } from "./BinaryFile";
 import { BrokenFile } from "./BrokenFile";
@@ -21,7 +22,7 @@ describe("FileFetcher", () => {
       // and an authenticated fetch for an image url returns the blob
       when(session.authenticatedFetch)
         .calledWith("https://pod.test/image.png")
-        .mockResolvedValue({
+        .thenResolve({
           ok: true,
           status: 200,
           statusText: "OK",
@@ -49,7 +50,7 @@ describe("FileFetcher", () => {
       // and an authenticated fetch for an image url returns a http error code
       when(session.authenticatedFetch)
         .calledWith("https://pod.test/image.png")
-        .mockResolvedValue({
+        .thenResolve({
           ok: false,
           status: 404,
           statusText: "Not Found",
@@ -84,7 +85,7 @@ describe("FileFetcher", () => {
       // and PUT usually works
       when(session.authenticatedFetch)
         .calledWith(expect.anything(), expect.anything())
-        .mockResolvedValue({
+        .thenResolve({
           ok: true,
           status: 200,
           statusText: "OK",
@@ -148,7 +149,7 @@ describe("FileFetcher", () => {
       // and PUT fails with an error
       when(session.authenticatedFetch)
         .calledWith(expect.anything(), expect.anything())
-        .mockResolvedValue({
+        .thenResolve({
           ok: false,
           status: 403,
           statusText: "Forbidden",
@@ -184,7 +185,7 @@ describe("FileFetcher", () => {
         // and PUT usually works
         when(session.authenticatedFetch)
           .calledWith(expect.anything(), expect.anything())
-          .mockResolvedValue({
+          .thenResolve({
             ok: true,
             status: 200,
             statusText: "OK",
@@ -251,7 +252,7 @@ describe("FileFetcher", () => {
         } as Response;
         when(session.authenticatedFetch)
           .calledWith(expect.anything(), expect.anything())
-          .mockResolvedValue(httpResponse);
+          .thenResolve(httpResponse);
         // when a new file is created
         const parent = new LdpContainer(
           "https://pod.test/parent/",
@@ -273,7 +274,7 @@ describe("FileFetcher", () => {
         // and PUT fails with an error
         when(session.authenticatedFetch)
           .calledWith(expect.anything(), expect.anything())
-          .mockRejectedValue(new Error("Network Error"));
+          .thenReject(new Error("Network Error"));
         // when a new file is created
         const parent = new LdpContainer(
           "https://pod.test/parent/",
@@ -309,7 +310,7 @@ describe("FileFetcher", () => {
         // and PUT usually works
         when(session.authenticatedFetch)
           .calledWith(expect.anything(), expect.anything())
-          .mockResolvedValue({
+          .thenResolve({
             ok: true,
             status: 200,
             statusText: "OK",
@@ -476,7 +477,7 @@ describe("FileFetcher", () => {
         } as Response;
         when(session.authenticatedFetch)
           .calledWith(expect.anything(), expect.anything())
-          .mockResolvedValue(httpResponse);
+          .thenResolve(httpResponse);
         // when a new file is created
         const parent = new LdpContainer(
           "https://pod.test/parent/",
@@ -498,7 +499,7 @@ describe("FileFetcher", () => {
         // and PUT fails with an error
         when(session.authenticatedFetch)
           .calledWith(expect.anything(), expect.anything())
-          .mockRejectedValue(new Error("Network Error"));
+          .thenReject(new Error("Network Error"));
         // when a new file is created
         const parent = new LdpContainer(
           "https://pod.test/parent/",
@@ -519,7 +520,7 @@ describe("FileFetcher", () => {
 
   function mockSession() {
     return {
-      authenticatedFetch: jest.fn(),
+      authenticatedFetch: vi.fn(),
     } as unknown as PodOsSession;
   }
 

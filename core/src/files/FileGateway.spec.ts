@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, Mocked, vi } from "vitest";
 import { err, ok } from "neverthrow";
 import { FileGateway } from "./FileGateway";
 import { Store } from "../Store";
@@ -6,7 +7,7 @@ import { Thing } from "../thing";
 
 describe("PictureGateway", () => {
   let gateway: FileGateway;
-  let fileFetcher: jest.Mocked<FileFetcher>;
+  let fileFetcher: Mocked<FileFetcher>;
   let thing: Thing;
   let mockStore: Store;
 
@@ -112,7 +113,7 @@ describe("PictureGateway", () => {
       );
 
       // and we track store update operations
-      const mockExecuteUpdate = jest.fn().mockResolvedValue(undefined);
+      const mockExecuteUpdate = vi.fn().mockResolvedValue(undefined);
       mockStore.executeUpdate = mockExecuteUpdate;
 
       // when uploading and adding the picture
@@ -156,7 +157,7 @@ describe("PictureGateway", () => {
       );
 
       // and the store update will fail
-      mockStore.executeUpdate = jest
+      mockStore.executeUpdate = vi
         .fn()
         .mockRejectedValue(new Error("Network failure"));
 
@@ -182,30 +183,28 @@ describe("PictureGateway", () => {
     });
   }
 
-  function createMockFileFetcher(): jest.Mocked<FileFetcher> {
+  function createMockFileFetcher(): Mocked<FileFetcher> {
     return {
-      createNewFile: jest.fn().mockReturnValue(
+      createNewFile: vi.fn().mockReturnValue(
         ok({
           url: "https://pod.test/things/picture.png",
           name: "my-picture.png",
           contentType: "image/png",
         }),
       ),
-    } as unknown as jest.Mocked<FileFetcher>;
+    } as unknown as Mocked<FileFetcher>;
   }
 
   function createMockStore(): Store {
     return {
       fetcher: {
-        load: jest.fn(),
+        load: vi.fn(),
       },
       updater: {
-        update: jest.fn(),
+        update: vi.fn(),
       },
-      get: jest.fn(
-        (uri: string) => new Thing(uri, {} as unknown as Store, true),
-      ),
-      executeUpdate: jest.fn().mockResolvedValue(undefined),
+      get: vi.fn((uri: string) => new Thing(uri, {} as unknown as Store, true)),
+      executeUpdate: vi.fn().mockResolvedValue(undefined),
     } as unknown as Store;
   }
 });

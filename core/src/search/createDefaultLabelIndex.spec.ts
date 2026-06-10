@@ -1,6 +1,6 @@
+import { describe, expect, it, Mock, vi } from "vitest";
 import { createDefaultLabelIndex } from "./createDefaultLabelIndex";
 import { WebIdProfile } from "../profile";
-import { when } from "jest-when";
 import { lit, st, sym } from "rdflib";
 import { solid } from "@solid-data-modules/rdflib-utils";
 import { rdfs } from "../namespaces";
@@ -9,9 +9,9 @@ describe(createDefaultLabelIndex, () => {
   it("creates a link from the profile to a private label index in the settings", () => {
     const profile = {
       webId: "https://alice.pod.test/profile/card#me",
-      getPreferencesFile: jest.fn(),
+      getPreferencesFile: vi.fn(),
     } as unknown as WebIdProfile;
-    when(profile.getPreferencesFile).mockReturnValue(
+    (profile.getPreferencesFile as Mock).mockReturnValue(
       "https://alice.pod.test/settings/pref.ttl",
     );
     const result = createDefaultLabelIndex(profile);
@@ -28,9 +28,9 @@ describe(createDefaultLabelIndex, () => {
   it("creates a link in the profile document when no preferences file exists", () => {
     const profile = {
       webId: "https://alice.pod.test/profile/card#me",
-      getPreferencesFile: jest.fn(),
+      getPreferencesFile: vi.fn(),
     } as unknown as WebIdProfile;
-    when(profile.getPreferencesFile).mockReturnValue(undefined);
+    (profile.getPreferencesFile as Mock).mockReturnValue(undefined);
 
     const result = createDefaultLabelIndex(profile);
 
@@ -47,9 +47,10 @@ describe(createDefaultLabelIndex, () => {
   it("creates a name for the index document", () => {
     const profile = {
       webId: "https://alice.pod.test/profile/card#me",
-      getPreferencesFile: jest.fn(),
+      getPreferencesFile: vi.fn(),
     } as unknown as WebIdProfile;
-    when(profile.getPreferencesFile).mockReturnValue(undefined);
+
+    (profile.getPreferencesFile as Mock).mockReturnValue(undefined);
 
     const result = createDefaultLabelIndex(profile);
 
@@ -66,9 +67,9 @@ describe(createDefaultLabelIndex, () => {
   it("returns the URI of the created index", () => {
     const profile = {
       webId: "https://alice.pod.test/profile/card#me",
-      getPreferencesFile: jest.fn(),
+      getPreferencesFile: vi.fn(),
     } as unknown as WebIdProfile;
-    when(profile.getPreferencesFile).mockReturnValue(
+    (profile.getPreferencesFile as Mock).mockReturnValue(
       "https://alice.pod.test/settings/pref.ttl",
     );
     const result = createDefaultLabelIndex(profile);
