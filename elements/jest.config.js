@@ -2,7 +2,7 @@ export default {
   preset: '@stencil/core/testing',
   setupFilesAfterEnv: ['<rootDir>/jest-setup.ts'],
 
-  testPathIgnorePatterns: ['.*\.vspec\.tsx?$'],
+  testPathIgnorePatterns: ['.*.vspec.tsx?$', '.*.vitest.ts$'],
 
   moduleNameMapper: {
     '^marked$': '<rootDir>/../node_modules/marked/lib/marked.umd.js',
