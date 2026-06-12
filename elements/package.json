@@ -18,7 +18,8 @@
   "scripts": {
     "build": "stencil build --docs",
     "start": "stencil build --dev --watch --serve",
-    "test": "jest ./src",
+    "test": "npm run jest && npm run vitest",
+    "jest": "jest ./src",
     "vitest": "vitest run",
     "generate": "stencil generate"
   },
