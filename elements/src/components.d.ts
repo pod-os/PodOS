@@ -831,7 +831,6 @@ declare global {
         new (): HTMLPosGettingStartedElement;
     };
     interface HTMLPosImageElementEventMap {
-        "pod-os:init": any;
         "pod-os:resource-loaded": string;
     }
     /**
@@ -1595,7 +1594,6 @@ declare namespace LocalJSX {
           * @default false
          */
         "blurredBackground"?: boolean;
-        "onPod-os:init"?: (event: PosImageCustomEvent<any>) => void;
         /**
           * Indicates that the resource given in `src` property has been loaded.
          */

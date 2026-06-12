@@ -1,9 +1,10 @@
 import { BrokenFile as BrokenFileData, PodOS } from '@pod-os/core';
 import { BrokenFile } from '../broken-file/BrokenFile';
-import { Component, Event, EventEmitter, h, Host, Prop, State, Watch } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, h, Host, Prop, State, Watch } from '@stencil/core';
 import session from '../../store/session';
 
 import '@shoelace-style/shoelace/dist/components/skeleton/skeleton.js';
+import { usePodOS } from '../events/usePodOS';
 
 /**
  * Tries fetch an image with the solid authentication, and can visualize http errors like 403 or 404 if this fails.
@@ -25,6 +26,9 @@ export class PosImage {
    */
   @Prop() blurredBackground: boolean = false;
 
+  @Element()
+  el: HTMLElement;
+
   @State() os: PodOS;
 
   @State()
@@ -42,21 +46,19 @@ export class PosImage {
   @State()
   private loading: boolean = true;
 
-  @Event({ eventName: 'pod-os:init' }) initializeOsEmitter: EventEmitter;
-
   /**
    * Indicates that the resource given in `src` property has been loaded.
    */
   @Event({ eventName: 'pod-os:resource-loaded' }) resourceLoadedEmitter: EventEmitter<string>;
 
-  componentWillLoad() {
+  async componentWillLoad() {
     session.onChange('isLoggedIn', () => this.fetchBlob());
-    this.initializeOsEmitter.emit(this.setOs);
+    this.os = await this.getPodOs();
   }
 
-  setOs = async (os: PodOS) => {
-    this.os = os;
-  };
+  getPodOs() {
+    return usePodOS(this.el);
+  }
 
   @Watch('os')
   @Watch('src')

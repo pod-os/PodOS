@@ -24,7 +24,6 @@ Renders a normal link if even this fails.
 
 | Event                    | Description                                                          | Type                  |
 | ------------------------ | -------------------------------------------------------------------- | --------------------- |
-| `pod-os:init`            |                                                                      | `CustomEvent<any>`    |
 | `pod-os:resource-loaded` | Indicates that the resource given in `src` property has been loaded. | `CustomEvent<string>` |
 
 
