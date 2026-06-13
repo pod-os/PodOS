@@ -6,6 +6,7 @@ export const config: Config = {
   namespace: 'elements',
   globalScript: 'src/global.ts',
   globalStyle: 'src/global.css',
+  sourceMap: true,
   outputTargets: [
     {
       type: 'dist',
