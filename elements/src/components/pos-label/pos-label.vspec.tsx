@@ -1,6 +1,8 @@
 import { render, h, describe, it, expect } from '@stencil/vitest';
 import { Subject } from 'rxjs';
 
+import './pos-label';
+
 describe('pos-label', () => {
   it('is empty initially', async () => {
     const { root } = await render(<pos-label></pos-label>);
