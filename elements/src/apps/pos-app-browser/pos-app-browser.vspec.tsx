@@ -1,15 +1,15 @@
-import { newSpecPage } from '@stencil/core/testing';
-import { PosAppBrowser } from './pos-app-browser';
+import { describe, expect, it } from '@stencil/vitest';
 import { getByRole } from '@testing-library/dom';
+
+import { render } from '@stencil/vitest';
+
+import './pos-app-browser';
 
 describe('pos-app-browser', () => {
   it('uses internal router for internal URIs', async () => {
-    const page = await newSpecPage({
-      components: [PosAppBrowser],
-      html: `<pos-app-browser />`,
-    });
+    const page = await render('<pos-app-browser></pos-app-browser>');
 
-    page.rootInstance.uri = 'pod-os:dashboard';
+    routeChangedTo(page.root, 'pod-os:dashboard');
 
     await page.waitForChanges();
 
@@ -23,12 +23,9 @@ describe('pos-app-browser', () => {
   });
 
   it('hides uri in navigation bar, if visiting dashboard', async () => {
-    const page = await newSpecPage({
-      components: [PosAppBrowser],
-      html: `<pos-app-browser />`,
-    });
+    const page = await render('<pos-app-browser></pos-app-browser>');
 
-    page.rootInstance.uri = 'pod-os:dashboard';
+    routeChangedTo(page.root, 'pod-os:dashboard');
 
     await page.waitForChanges();
 
@@ -39,12 +36,9 @@ describe('pos-app-browser', () => {
   });
 
   it('shows uri in navigation bar, if visiting other internal pages', async () => {
-    const page = await newSpecPage({
-      components: [PosAppBrowser],
-      html: `<pos-app-browser />`,
-    });
+    const page = await render('<pos-app-browser></pos-app-browser>');
 
-    page.rootInstance.uri = 'pod-os:other';
+    routeChangedTo(page.root, 'pod-os:other');
 
     await page.waitForChanges();
 
@@ -55,12 +49,9 @@ describe('pos-app-browser', () => {
   });
 
   it('shows uri in navigation bar, if visiting http(s) URIs', async () => {
-    const page = await newSpecPage({
-      components: [PosAppBrowser],
-      html: `<pos-app-browser />`,
-    });
+    const page = await render('<pos-app-browser></pos-app-browser>');
 
-    page.rootInstance.uri = 'https://resource.test';
+    routeChangedTo(page.root, 'https://resource.test');
 
     await page.waitForChanges();
 
@@ -71,25 +62,19 @@ describe('pos-app-browser', () => {
   });
 
   it('allows to log in', async () => {
-    const page = await newSpecPage({
-      components: [PosAppBrowser],
-      html: `<pos-app-browser />`,
-    });
+    const page = await render('<pos-app-browser></pos-app-browser>');
     const main = getByRole(page.root, 'banner');
     const login = main.querySelector('pos-login');
     expect(login).toEqualHtml(`
     <pos-login>
-      <pos-user-menu slot="if-logged-in" webid=""></pos-user-menu>
+      <pos-user-menu webid slot="if-logged-in"></pos-user-menu>
     </pos-login>`);
   });
 
   it('uses type router for http(s) URIs ', async () => {
-    const page = await newSpecPage({
-      components: [PosAppBrowser],
-      html: `<pos-app-browser />`,
-    });
+    const page = await render('<pos-app-browser></pos-app-browser>');
 
-    page.rootInstance.uri = 'https://resource.test/';
+    routeChangedTo(page.root, 'https://resource.test/');
 
     await page.waitForChanges();
 
@@ -105,10 +90,7 @@ describe('pos-app-browser', () => {
   });
 
   it('render nothing as long as uri is not set', async () => {
-    const page = await newSpecPage({
-      components: [PosAppBrowser],
-      html: `<pos-app-browser />`,
-    });
+    const page = await render('<pos-app-browser></pos-app-browser>');
 
     await page.waitForChanges();
 
@@ -119,4 +101,9 @@ describe('pos-app-browser', () => {
       </main>
     `);
   });
+
+  function routeChangedTo(root: HTMLElement, route: string) {
+    const router = root.querySelector('pos-router')!;
+    router.dispatchEvent(new CustomEvent('pod-os:route-changed', { detail: route }));
+  }
 });
