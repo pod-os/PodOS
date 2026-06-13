@@ -21,8 +21,8 @@
     "start": "stencil build --dev --watch --serve",
     "test": "npm run jest && npm run vitest",
     "jest": "jest ./src",
-    "vitest": "stencil-test --prod",
-    "vitest:watch": "stencil-test --prod --watch",
+    "vitest": "vitest run",
+    "vitest:watch": "vitest",
     "generate": "stencil generate"
   },
   "dependencies": {
