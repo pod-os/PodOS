@@ -8,6 +8,7 @@ export default defineVitestConfig({
       {
         plugins: [stencilVitestPlugin()],
         test: {
+          setupFiles: ['vitest/setup-spec.ts'],
           name: 'spec',
           include: ['src/**/*.vspec.{ts,tsx}'],
           environment: 'happy-dom',
