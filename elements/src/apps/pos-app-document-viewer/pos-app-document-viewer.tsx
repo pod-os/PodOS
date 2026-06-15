@@ -8,9 +8,9 @@ import { ResourceAware, subscribeResource } from '../../components/events/Resour
   styleUrls: ['../styles/default-app-layout.css', '../styles/article-card.css'],
 })
 export class PosAppDocumentViewer implements ResourceAware {
-  @State() resource: Thing;
+  @State() resource: Thing | null = null;
 
-  @Event({ eventName: 'pod-os:resource' }) subscribeResource: EventEmitter;
+  @Event({ eventName: 'pod-os:resource' }) subscribeResource!: EventEmitter;
 
   componentWillLoad() {
     subscribeResource(this);
