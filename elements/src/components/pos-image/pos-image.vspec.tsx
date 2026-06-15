@@ -1,13 +1,16 @@
-import { vi } from 'vitest';
-vi.mock('@shoelace-style/shoelace/dist/components/skeleton/skeleton.js', () => ({}));
+import { Mock, vi } from 'vitest';
 import { beforeEach, describe, expect, h, it, render } from '@stencil/vitest';
-import { mockPodOS } from '../../test/mockPodOS.vitest';
 import { when } from 'vitest-when';
 
+import { BrokenFile } from '../broken-file/BrokenFile';
+import { mockPodOS } from '../../test/mockPodOS.vitest';
 import { BinaryFile, BrokenFile as BrokenFileData } from '@pod-os/core';
-import './pos-image';
 
+import './pos-image';
 import session from '../../store/session';
+
+vi.mock('../broken-file/BrokenFile');
+vi.mock('@shoelace-style/shoelace/dist/components/skeleton/skeleton.js', () => ({}));
 
 describe('pos-image', () => {
   let pngBlob: Blob;
@@ -102,9 +105,10 @@ describe('pos-image', () => {
     } as unknown as BrokenFileData;
     const os = mockPodOS();
     when(os.files().fetchFile).calledWith('https://pod.test/image.png').thenResolve(brokenImage);
+    (BrokenFile as Mock).mockReturnValue(<div class="error">403 - Forbidden - https://pod.test/image.png</div>);
     const page = await render(<pos-image src="https://pod.test/image.png" />);
     await page.waitForChanges();
-    expect(page.root.shadowRoot).toHaveTextContent(`403Forbidden`);
+    expect(page.root.shadowRoot).toHaveTextContent('403 - Forbidden - https://pod.test/image.png');
   });
 
   it('updates and loads resource when src changes', async () => {
@@ -151,7 +155,7 @@ describe('pos-image', () => {
     const page = await render(<pos-image src="https://pod.test/image.png" />);
     when(os.files().fetchFile, { times: 1 }).calledWith('https://pod.test/image.png').thenResolve(file);
     expect(sessionChanged).toBeDefined();
-    sessionChanged();
+    sessionChanged!();
     await page.waitForChanges();
     expect(page.root.shadowRoot).toEqualHtml('<img src="blob:fake-png-data">');
   });

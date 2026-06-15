@@ -2,6 +2,8 @@ import { render, h, describe, it, expect } from '@stencil/vitest';
 import { Subject } from 'rxjs';
 
 import './pos-label';
+import { Thing } from '@pod-os/core';
+import { mockResource } from '../../test/mockResource';
 
 describe('pos-label', () => {
   it('is empty initially', async () => {
@@ -40,11 +42,9 @@ describe('pos-label', () => {
   function mockReceiveResourceWithLabel() {
     const observedLabel$ = new Subject<string>();
 
-    document.addEventListener('pod-os:resource', (event: any) => {
-      event.detail({
-        observeLabel: () => observedLabel$,
-      });
-    });
+    mockResource({
+      observeLabel: () => observedLabel$,
+    } as unknown as Thing);
     return observedLabel$;
   }
 });
