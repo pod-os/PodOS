@@ -48,6 +48,7 @@ export function mockPodOS(): PodOS {
     fetchProfile: vi.fn(),
     buildSearchIndex: vi.fn(),
     proposeAppsFor: vi.fn().mockReturnValue([]),
+    addPropertyValue: vi.fn(),
     addRelation: vi.fn(),
   };
   const observedLabel$ = new ReplaySubject<string>();
