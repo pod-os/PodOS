@@ -10,9 +10,13 @@ import { Subject, tap } from 'rxjs';
  * @param resource The resource to receive in the requesting component
  */
 export function mockResource(resource: Partial<Thing>) {
-  document.addEventListener('pod-os:resource', (event: any) => {
-    event.detail(resource);
-  });
+  document.addEventListener(
+    'pod-os:resource',
+    (event: any) => {
+      event.detail(resource);
+    },
+    { once: true }, // only once to prevent test pollution
+  );
 }
 
 /**
@@ -22,14 +26,18 @@ export function mockResource(resource: Partial<Thing>) {
  */
 export function mockResources() {
   const subject = new Subject<Partial<Thing>>();
-  document.addEventListener('pod-os:resource', (event: any) => {
-    subject
-      .pipe(
-        tap(resource => {
-          event.detail(resource);
-        }),
-      )
-      .subscribe();
-  });
+  document.addEventListener(
+    'pod-os:resource',
+    (event: any) => {
+      subject
+        .pipe(
+          tap(resource => {
+            event.detail(resource);
+          }),
+        )
+        .subscribe();
+    },
+    { once: true }, // only once to prevent test pollution
+  );
   return subject;
 }

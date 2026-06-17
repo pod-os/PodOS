@@ -1,11 +1,11 @@
 import { mockResource } from '../../../test/mockResource';
 import { Mock, vi } from 'vitest';
 import { describe, expect, h, it, render } from '@stencil/vitest';
-import { Literal, PodOS } from '@pod-os/core';
+import { Literal } from '@pod-os/core';
 import { fireEvent } from '@testing-library/dom';
 
 import '../pos-add-literal-value';
-import { mockPodOS } from '../../../test/mockPodOS.vitest';
+import { mockOsProvider, mockPodOS } from '../../../test/mockPodOS.vitest';
 
 vi.mock('@pod-os/core', () => ({
   labelFromUri: (uri: string) => `fake label for ${uri}`,
@@ -204,10 +204,4 @@ function enterValue(shadowRoot: ShadowRoot, value: string) {
 
 async function renderComponent() {
   return await render(<pos-add-literal-value></pos-add-literal-value>);
-}
-
-function mockOsProvider(os: Partial<PodOS>) {
-  document.addEventListener('pod-os:init', (event: any) => {
-    event.detail(os);
-  });
 }

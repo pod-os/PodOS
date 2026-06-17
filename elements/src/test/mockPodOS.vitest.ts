@@ -67,3 +67,17 @@ export function mockPodOS(): PodOS {
 
   return os as unknown as PodOS;
 }
+
+/**
+ * Respond to pod-os:init event with the given os instance
+ * @param os
+ */
+export function mockOsProvider(os: Partial<PodOS>) {
+  document.addEventListener(
+    'pod-os:init',
+    (event: any) => {
+      event.detail(os);
+    },
+    { once: true }, // only once to prevent test pollution
+  );
+}
