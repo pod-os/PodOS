@@ -1,70 +1,60 @@
-import { PodOS, HttpProblem } from '@pod-os/core';
+import { Mock, vi } from 'vitest';
+import { beforeEach, describe, expect, h, it, render } from '@stencil/vitest';
 
-jest.mock('../../events/usePodOS');
-
-import { newSpecPage } from '@stencil/core/testing';
-import { PosCreateNewContainerItem } from './pos-create-new-container-item';
+import { HttpProblem, LdpContainer, PodOS } from '@pod-os/core';
+import './pos-create-new-container-item';
 import { usePodOS } from '../../events/usePodOS';
-import { when } from 'jest-when';
 
-import { mockPodOS } from '../../../test/mockPodOS';
+import { mockPodOS } from '../../../test/mockPodOS.vitest';
 import { fireEvent } from '@testing-library/dom';
-import { errAsync, ok, okAsync } from 'neverthrow';
+import { errAsync, okAsync } from 'neverthrow';
+
+vi.mock('../../events/usePodOS');
 
 describe('pos-create-new-container-item', () => {
   let os: PodOS;
   beforeEach(() => {
     os = mockPodOS();
-    when(usePodOS).mockResolvedValue(os);
+    (usePodOS as Mock).mockResolvedValue(os);
   });
 
   it('renders input for new file', async () => {
-    const page = await newSpecPage({
-      components: [PosCreateNewContainerItem],
-      html: `<pos-create-new-container-item type="file"/>`,
-      supportsShadowDom: false,
-    });
+    const page = await render(
+      <pos-create-new-container-item type="file" container={{} as LdpContainer}></pos-create-new-container-item>,
+    );
 
-    expect(page.root).toEqualHtml(`
-      <pos-create-new-container-item type="file">
+    expect(page.root.shadowRoot).toEqualHtml(`
         <form>
           <sl-icon name="file-earmark-plus"></sl-icon>
-          <input placeholder="Enter file name" type="text">
+          <input type="text" placeholder="Enter file name">
         </form>
-      </pos-create-new-container-item>
     `);
   });
 
   it('renders input for new folder', async () => {
-    const page = await newSpecPage({
-      components: [PosCreateNewContainerItem],
-      html: `<pos-create-new-container-item type="folder"/>`,
-      supportsShadowDom: false,
-    });
+    const page = await render(
+      <pos-create-new-container-item type="folder" container={{} as LdpContainer}></pos-create-new-container-item>,
+    );
 
-    expect(page.root).toEqualHtml(`
-      <pos-create-new-container-item type="folder">
+    expect(page.root.shadowRoot).toEqualHtml(`
         <form>
           <sl-icon name="folder-plus"></sl-icon>
-          <input placeholder="Enter folder name" type="text">
+          <input type="text" placeholder="Enter folder name">
         </form>
-      </pos-create-new-container-item>
     `);
   });
 
   it('creates a new file in the container', async () => {
     // given a component to create a new file
-    const page = await newSpecPage({
-      components: [PosCreateNewContainerItem],
-      html: `<pos-create-new-container-item type="file"/>`,
-      supportsShadowDom: false,
-    });
-    page.rootInstance.container = { fake: 'Container' };
+    const container = { fake: 'Container' } as unknown as LdpContainer;
+    const page = await render(
+      <pos-create-new-container-item type="file" container={container}></pos-create-new-container-item>,
+    );
     // and the page listens to link events
-    const linkListener = jest.fn();
+    const linkListener = vi.fn();
     page.root.addEventListener('pod-os:link', linkListener);
     // and a new file can successfully be created
-    when(os.files().createNewFile).mockResolvedValue(
+    (os.files().createNewFile as Mock).mockResolvedValue(
       okAsync({
         url: 'https://pod.test/container/new-file.md',
         name: 'new-file.md',
@@ -72,13 +62,13 @@ describe('pos-create-new-container-item', () => {
       }),
     );
     // when the user enters a file name
-    const input = page.root.querySelector('input');
+    const input = page.root.shadowRoot!.querySelector('input')!;
     fireEvent.input(input, { target: { value: 'new-file.md' } });
     // and submits
-    const form = page.root.querySelector('form');
+    const form = page.root.shadowRoot!.querySelector('form')!;
     fireEvent.submit(form);
     // then the file is created
-    expect(os.files().createNewFile).toHaveBeenCalledWith(page.rootInstance.container, 'new-file.md');
+    expect(os.files().createNewFile).toHaveBeenCalledWith(container, 'new-file.md');
     // and the user is redirected to the new file
     await page.waitForChanges();
     expect(linkListener).toHaveBeenCalledWith(
@@ -90,26 +80,25 @@ describe('pos-create-new-container-item', () => {
 
   it('emits an error if file creation fails', async () => {
     // given a component to create a new file
-    const page = await newSpecPage({
-      components: [PosCreateNewContainerItem],
-      html: `<pos-create-new-container-item type="file"/>`,
-      supportsShadowDom: false,
-    });
-    page.rootInstance.container = { fake: 'Container' };
+    const container = { fake: 'Container' } as unknown as LdpContainer;
+    const page = await render(
+      <pos-create-new-container-item type="file" container={container}></pos-create-new-container-item>,
+    );
     // and the page listens to error events
-    const errorListener = jest.fn();
+    const errorListener = vi.fn();
     page.root.addEventListener('pod-os:error', errorListener);
     // and a new file fails to create
     const problem: HttpProblem = {
+      status: 999,
       type: 'http',
       title: 'Something failed',
     };
-    when(os.files().createNewFile).mockResolvedValue(errAsync(problem));
+    (os.files().createNewFile as Mock).mockResolvedValue(errAsync(problem));
     // when the user enters a file name
-    const input = page.root.querySelector('input');
+    const input = page.root.shadowRoot!.querySelector('input')!;
     fireEvent.input(input, { target: { value: 'new-file.md' } });
     // and submits
-    const form = page.root.querySelector('form');
+    const form = page.root.shadowRoot!.querySelector('form')!;
     fireEvent.submit(form);
     // then an error is emitted
     await page.waitForChanges();
@@ -118,30 +107,28 @@ describe('pos-create-new-container-item', () => {
 
   it('creates a new folder in the container', async () => {
     // given a component to create a new folder
-    const page = await newSpecPage({
-      components: [PosCreateNewContainerItem],
-      html: `<pos-create-new-container-item type="folder"/>`,
-      supportsShadowDom: false,
-    });
-    page.rootInstance.container = { fake: 'Container' };
+    const container = { fake: 'Container' } as unknown as LdpContainer;
+    const page = await render(
+      <pos-create-new-container-item type="folder" container={container}></pos-create-new-container-item>,
+    );
     // and the page listens to link events
-    const linkListener = jest.fn();
+    const linkListener = vi.fn();
     page.root.addEventListener('pod-os:link', linkListener);
     // and a new folder can successfully be created
-    when(os.files().createNewFolder).mockResolvedValue(
+    (os.files().createNewFolder as Mock).mockResolvedValue(
       okAsync({
         url: 'https://pod.test/container/new-new-folder-2/',
         name: 'New New Folder 2',
       }),
     );
     // when the user enters a folder name
-    const input = page.root.querySelector('input');
+    const input = page.root.shadowRoot!.querySelector('input')!;
     fireEvent.input(input, { target: { value: 'New New Folder 2' } });
     // and submits
-    const form = page.root.querySelector('form');
+    const form = page.root.shadowRoot!.querySelector('form')!;
     fireEvent.submit(form);
     // then the folder is created
-    expect(os.files().createNewFolder).toHaveBeenCalledWith(page.rootInstance.container, 'New New Folder 2');
+    expect(os.files().createNewFolder).toHaveBeenCalledWith(container, 'New New Folder 2');
     // and the user is redirected to the new folder
     await page.waitForChanges();
     expect(linkListener).toHaveBeenCalledWith(
@@ -153,26 +140,25 @@ describe('pos-create-new-container-item', () => {
 
   it('emits an error if folder creation fails', async () => {
     // given a component to create a new folder
-    const page = await newSpecPage({
-      components: [PosCreateNewContainerItem],
-      html: `<pos-create-new-container-item type="folder"/>`,
-      supportsShadowDom: false,
-    });
-    page.rootInstance.container = { fake: 'Container' };
+    const container = { fake: 'Container' } as unknown as LdpContainer;
+    const page = await render(
+      <pos-create-new-container-item type="folder" container={container}></pos-create-new-container-item>,
+    );
     // and the page listens to error events
-    const errorListener = jest.fn();
+    const errorListener = vi.fn();
     page.root.addEventListener('pod-os:error', errorListener);
     // and a new folder fails to create
     const problem: HttpProblem = {
+      status: 999,
       type: 'http',
       title: 'Something failed',
     };
-    when(os.files().createNewFolder).mockResolvedValue(errAsync(problem));
+    (os.files().createNewFolder as Mock).mockResolvedValue(errAsync(problem));
     // when the user enters a file name
-    const input = page.root.querySelector('input');
+    const input = page.root.shadowRoot!.querySelector('input')!;
     fireEvent.input(input, { target: { value: 'new-file.md' } });
     // and submits
-    const form = page.root.querySelector('form');
+    const form = page.root.shadowRoot!.querySelector('form')!;
     fireEvent.submit(form);
     // then an error is emitted
     await page.waitForChanges();
