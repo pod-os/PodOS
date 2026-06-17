@@ -8,6 +8,7 @@ import { usePodOS } from '../../events/usePodOS';
 import { mockPodOS } from '../../../test/mockPodOS.vitest';
 import { fireEvent } from '@testing-library/dom';
 import { errAsync, okAsync } from 'neverthrow';
+import { withinShadow } from '../../../test/withinShadow';
 
 vi.mock('../../events/usePodOS');
 
@@ -16,6 +17,16 @@ describe('pos-create-new-container-item', () => {
   beforeEach(() => {
     os = mockPodOS();
     (usePodOS as Mock).mockResolvedValue(os);
+  });
+
+  it('focuses the input initially', async () => {
+    const page = await render(
+      <pos-create-new-container-item type="file" container={{} as LdpContainer}></pos-create-new-container-item>,
+    );
+    await page.waitForChanges();
+    const input = withinShadow(page).getByRole('textbox', { hidden: true });
+    expect(document.activeElement).toEqual(page.root);
+    expect(page.root.shadowRoot!.activeElement).toEqual(input);
   });
 
   it('renders input for new file', async () => {
