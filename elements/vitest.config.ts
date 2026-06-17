@@ -6,11 +6,20 @@ export default defineVitestConfig({
   test: {
     projects: [
       {
+        // plain unit tests in node environment
+        test: {
+          name: 'unit',
+          include: ['src/**/*.vspec.ts'],
+          environment: 'node',
+        },
+      },
+      {
+        // component unit tests in dom environment
         plugins: [stencilVitestPlugin()],
         test: {
           setupFiles: ['vitest/setup-spec.ts'],
-          name: 'spec',
-          include: ['src/**/*.vspec.{ts,tsx}'],
+          name: 'unit-dom',
+          include: ['src/**/*.vspec.tsx'],
           environment: 'happy-dom',
         },
       },
