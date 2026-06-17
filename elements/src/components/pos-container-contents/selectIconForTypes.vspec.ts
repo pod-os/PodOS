@@ -1,3 +1,4 @@
+import { describe, expect, it } from '@stencil/vitest';
 import { selectIconForTypes } from './selectIconForTypes';
 
 describe('select icon for types', () => {
