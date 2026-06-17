@@ -1,19 +1,18 @@
-jest.mock('../events/useResource');
-jest.mock('@pod-os/core', () => ({
-  labelFromUri: uri => `fake label for ${uri}`,
-}));
-import { mockPodOS } from '../../test/mockPodOS';
-import { newSpecPage } from '@stencil/core/testing';
-import { PosAddRelation } from './pos-add-relation';
+import { Mock, vi } from 'vitest';
+import { beforeEach, describe, expect, h, it, render } from '@stencil/vitest';
+import { mockPodOS } from '../../test/mockPodOS.vitest';
 import { useResource } from '../events/useResource';
-import { when } from 'jest-when';
 
 import { PodOS, Relation, Thing } from '@pod-os/core';
 import { fireEvent } from '@testing-library/dom';
+import './pos-add-relation';
 
-function mockResource(thing: Partial<Thing> = {}) {
-  when(useResource).mockResolvedValue(thing as unknown as Thing);
-}
+vi.mock('../events/useResource');
+vi.mock('@pod-os/core', () => ({
+  labelFromUri: (uri: string) => `fake label for ${uri}`,
+}));
+
+vi.mock('@shoelace-style/shoelace/dist/components/icon/icon.js', () => ({}));
 
 describe('pos-add-relation', () => {
   let os: PodOS;
@@ -22,27 +21,21 @@ describe('pos-add-relation', () => {
     mockResource();
   });
 
-  async function render() {
-    const page = await newSpecPage({
-      components: [PosAddRelation],
-      html: `<pos-add-relation />`,
-      supportsShadowDom: false,
-    });
-    const input = page.root.querySelector('input');
-    input.focus = jest.fn();
+  async function renderComponent() {
+    const page = await render(<pos-add-relation></pos-add-relation>);
+    const input = page.root.shadowRoot!.querySelector('input')!;
+    input.focus = vi.fn();
     return page;
   }
 
   it('renders inputs if resource is editable', async () => {
     mockResource({ editable: true } as unknown as Thing);
-    const page = await render();
+    const page = await renderComponent();
 
-    expect(page.root).toEqualHtml(`
-      <pos-add-relation>
+    expect(page.root.shadowRoot).toEqualHtml(`
         <sl-icon name="plus-circle"></sl-icon>
         <pos-select-term placeholder="Add relation"></pos-select-term>
-        <input type="url" aria-label="URI" placeholder="">
-      </pos-add-relation>
+        <input type="url" aria-label="URI" placeholder>
     `);
   });
 
@@ -50,16 +43,8 @@ describe('pos-add-relation', () => {
     mockResource({
       editable: false,
     });
-    const page = await newSpecPage({
-      components: [PosAddRelation],
-      html: `<pos-add-relation></pos-add-relation>`,
-    });
-    expect(page.root).toEqualHtml(`
-      <pos-add-relation>
-        <mock:shadow-root>
-        </mock:shadow-root>
-      </pos-add-relation>
-    `);
+    const page = await render(<pos-add-relation></pos-add-relation>);
+    expect(page.root).toBeEmptyDOMElement();
   });
 
   it('focuses the input after a term was selected', async () => {
@@ -67,17 +52,17 @@ describe('pos-add-relation', () => {
     mockResource({ editable: true });
 
     // and a page with a pos-add-relation component
-    const page = await render();
+    const page = await renderComponent();
 
     // when the user selects a term
-    const termSelect = page.root.querySelector('pos-select-term');
+    const termSelect = page.root.shadowRoot!.querySelector('pos-select-term')!;
     fireEvent(
       termSelect,
       new CustomEvent('pod-os:term-selected', { detail: { uri: 'https://schema.org/description' } }),
     );
 
     // then the input is focussed
-    expect(page.root.querySelector('input').focus).toHaveBeenCalled();
+    expect(page.root.shadowRoot!.querySelector('input')!.focus).toHaveBeenCalled();
   });
 
   it('adds the relation after URI has been entered', async () => {
@@ -86,19 +71,13 @@ describe('pos-add-relation', () => {
     mockResource(thing);
 
     // and a page with a pos-add-relation component
-    const page = await render();
+    const page = await renderComponent();
 
     // and the user selected a term
-    const termSelect = page.root.querySelector('pos-select-term');
-    fireEvent(
-      termSelect,
-      new CustomEvent('pod-os:term-selected', { detail: { uri: 'http://xmlns.com/foaf/0.1/knows' } }),
-    );
+    selectTerm(page.root.shadowRoot!, 'http://xmlns.com/foaf/0.1/knows');
 
     // when the user enters a URI
-    const input = page.root.querySelector('input');
-    fireEvent.input(input, { target: { value: 'https://alice.test/profile/card#me' } });
-    fireEvent.change(input, { target: { value: 'https://alice.test/profile/card#me' } });
+    enterValue(page.root.shadowRoot!, 'https://alice.test/profile/card#me');
 
     // then the relation is added
     expect(os.addRelation).toHaveBeenCalledWith(
@@ -109,8 +88,8 @@ describe('pos-add-relation', () => {
     await page.waitForChanges();
 
     // and the value input is cleared
-    expect(input.value).toEqual('');
-    expect(page.rootInstance.currentValue).toBe('');
+    const input = page.root.shadowRoot!.querySelector('input')!;
+    expect(input).toHaveValue('');
   });
 
   it('fires event after save', async () => {
@@ -119,20 +98,16 @@ describe('pos-add-relation', () => {
     mockResource(thing);
 
     // and a page with a pos-add-relation component
-    const page = await newSpecPage({
-      supportsShadowDom: false,
-      components: [PosAddRelation],
-      html: `<pos-add-relation></pos-add-relation>`,
-    });
+    const page = await render(<pos-add-relation></pos-add-relation>);
 
     // and the page listens for pod-os:added-relation events
-    const eventListener = jest.fn();
+    const eventListener = vi.fn();
     page.root.addEventListener('pod-os:added-relation', eventListener);
 
-    // when save is called
-    page.rootInstance.selectedTermUri = 'http://xmlns.com/foaf/0.1/knows';
-    page.rootInstance.currentValue = 'https://alice.test/profile/card#me';
-    await page.rootInstance.save();
+    // when relation is added
+    selectTerm(page.root.shadowRoot!, 'http://xmlns.com/foaf/0.1/knows');
+    enterValue(page.root.shadowRoot!, 'https://alice.test/profile/card#me');
+    await page.waitForChanges();
 
     // then a pod-os:added-relation event with the added relation is received in the listener
     const relation: Relation = {
@@ -140,6 +115,7 @@ describe('pos-add-relation', () => {
       label: 'fake label for http://xmlns.com/foaf/0.1/knows',
       uris: ['https://alice.test/profile/card#me'],
     };
+
     expect(eventListener).toHaveBeenCalledWith(
       expect.objectContaining({
         detail: relation,
@@ -153,24 +129,20 @@ describe('pos-add-relation', () => {
     mockResource(thing);
 
     // and a page with a pos-add-relation component
-    const page = await newSpecPage({
-      supportsShadowDom: false,
-      components: [PosAddRelation],
-      html: `<pos-add-relation></pos-add-relation>`,
-    });
+    const page = await render(<pos-add-relation></pos-add-relation>);
 
     // and the page listens for pod-os:error event
-    const eventListener = jest.fn();
+    const eventListener = vi.fn();
     page.root.addEventListener('pod-os:error', eventListener);
 
     // and saving will cause an error
     const error = new Error('fake error in addPropertyValue');
-    when(os.addRelation).mockRejectedValue(error);
+    (os.addRelation as Mock).mockRejectedValue(error);
 
-    // when save is called
-    page.rootInstance.selectedTermUri = 'http://xmlns.com/foaf/0.1/knows';
-    page.rootInstance.currentValue = 'https://alice.test/profile/card#me';
-    await page.rootInstance.save();
+    // when relation is added
+    selectTerm(page.root.shadowRoot!, 'http://xmlns.com/foaf/0.1/knows');
+    enterValue(page.root.shadowRoot!, 'https://alice.test/profile/card#me');
+    await page.waitForChanges();
 
     // then a pod-os:error event with the error is received in the listener
     expect(eventListener).toHaveBeenCalledWith(
@@ -180,7 +152,28 @@ describe('pos-add-relation', () => {
     );
 
     // and the value input is not cleared
-    expect(page.rootInstance.selectedTermUri).toBe('http://xmlns.com/foaf/0.1/knows');
-    expect(page.rootInstance.currentValue).toBe('https://alice.test/profile/card#me');
+    const input = page.root.shadowRoot!.querySelector('input')!;
+    expect(input).toHaveValue('https://alice.test/profile/card#me');
   });
 });
+
+function selectTerm(shadowRoot: ShadowRoot, termUri: string) {
+  const termSelect = shadowRoot.querySelector('pos-select-term')!;
+  fireEvent(
+    termSelect,
+    new CustomEvent('pod-os:term-selected', {
+      detail: { uri: termUri },
+    }),
+  );
+}
+
+function enterValue(shadowRoot: ShadowRoot, value: string) {
+  const input = shadowRoot.querySelector('input')!;
+  input.value = value;
+  fireEvent(input, new CustomEvent('input'));
+  fireEvent(input, new CustomEvent('change'));
+}
+
+function mockResource(thing: Partial<Thing> = {}) {
+  (useResource as Mock).mockResolvedValue(thing as unknown as Thing);
+}
