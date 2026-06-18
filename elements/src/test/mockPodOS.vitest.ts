@@ -10,10 +10,13 @@ vi.mock('../pod-os', () => ({
 }));
 
 vi.mock('../authentication', () => ({
-  BrowserSession: vi.fn().mockReturnValue({
-    onSessionRestore: () => {},
-    handleIncomingRedirect: vi.fn(),
-  }),
+  BrowserSession: vi.fn().mockImplementation(
+    // @ts-ignore
+    class {
+      onSessionRestore = () => {};
+      handleIncomingRedirect = vi.fn();
+    },
+  ),
 }));
 
 vi.mock('../components/events/usePodOS');
