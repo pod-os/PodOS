@@ -5,7 +5,7 @@ import { accumulateValues } from "./accumulateValues";
 import { isRdfType } from "./isRdfType";
 import { labelForType } from "./labelForType";
 import { labelFromUri } from "./labelFromUri";
-import { Store } from "../Store";
+import { Store, type Quad } from "../Store";
 import {
   debounceTime,
   distinctUntilChanged,
@@ -128,6 +128,23 @@ export class Thing {
   }
 
   /**
+   * Observe changes in literal values linked to this thing
+   */
+  observeLiterals(): Observable<Literal[]> {
+    return this.observeSubjectChanges<Literal[]>({
+      observes: () => this.literals(),
+      compare: (prev, curr) =>
+        prev.length === curr.length &&
+        prev.every(
+          (rel, i) =>
+            rel.predicate === curr[i].predicate &&
+            rel.values.length === curr[i].values.length &&
+            rel.values.every((val, j) => val === curr[i].values[j]),
+        ),
+    });
+  }
+
+  /**
    * Returns all the unique links from this thing to other resources. This only includes named nodes and excludes rdf:type relations.
    */
   relations(predicate?: string): Relation[] {
@@ -151,22 +168,76 @@ export class Thing {
    * Observe changes in links from this thing to other resources
    */
   observeRelations(predicate?: string): Observable<Relation[]> {
+    return this.observeSubjectChanges<Relation[]>({
+      observes: () => this.relations(predicate),
+      compare: (prev, curr) =>
+        prev.length === curr.length &&
+        prev.every(
+          (rel, i) =>
+            rel.predicate === curr[i].predicate &&
+            rel.uris.length === curr[i].uris.length,
+        ),
+    });
+  }
+
+  /**
+   * Generic observable creator that watches the store for changes
+   * that have this thing as a subject
+   * @param args.observedValue Function that returns the current value to observe
+   * @param args.compare Function that compares previous and current values for distinctUntilChanged
+   */
+  private observeSubjectChanges<T>(args: {
+    observes: () => T;
+    compare: (prev: T, curr: T) => boolean;
+  }): Observable<T> {
+    const { observes, compare } = args;
+    return this.observeChanges({
+      filterFn: (quad) => quad.subject.value === this.uri,
+      observes,
+      compare,
+    });
+  }
+
+  /**
+   * Generic observable creator that watches the store for changes
+   * that have this thing as an object
+   * @param args.observedValue Function that returns the current value to observe
+   * @param args.compare Function that compares previous and current values for distinctUntilChanged
+   */
+  private observeObjectChanges<T>(args: {
+    observes: () => T;
+    compare: (prev: T, curr: T) => boolean;
+  }): Observable<T> {
+    const { observes, compare } = args;
+    return this.observeChanges({
+      filterFn: (quad) => quad.object.value === this.uri,
+      observes,
+      compare,
+    });
+  }
+
+  /**
+   * Generic observable creator that watches the store for changes
+   * that match the given filter function before comparing values of this thing for possible changes.
+   * The observable only emits a new value if relevant quads are added or removed, and in consequence
+   * the observed value changes according to the compare function
+   *
+   * @param args.filterFn Filter for relevant quads
+   * @param args.observedValue Function that returns the value to observe
+   * @param args.compare Function that compares previous and current values
+   */
+  private observeChanges<T>(args: {
+    filterFn: (quad: Quad) => boolean;
+    observes: () => T;
+    compare: (prev: T, curr: T) => boolean;
+  }): Observable<T> {
+    const { observes, compare, filterFn } = args;
     return merge(this.store.additions$, this.store.removals$).pipe(
-      // Note: we assume that cost of filtering by the optional predicate is not worthwhile
-      filter((quad) => quad.subject.value === this.uri),
+      filter(filterFn),
       debounceTime(250),
-      map(() => this.relations(predicate)),
-      startWith(this.relations(predicate)),
-      // Note: label is constructed from predicate and is therefore irrelevant to the comparison
-      distinctUntilChanged(
-        (prev, curr) =>
-          prev.length === curr.length &&
-          prev.every(
-            (rel, i) =>
-              rel.predicate === curr[i].predicate &&
-              rel.uris.length === curr[i].uris.length,
-          ),
-      ),
+      map(observes),
+      startWith(observes()),
+      distinctUntilChanged(compare),
     );
   }
 
@@ -193,23 +264,16 @@ export class Thing {
    * Observe changes in links from other resources to this thing
    */
   observeReverseRelations(predicate?: string): Observable<Relation[]> {
-    return merge(this.store.additions$, this.store.removals$).pipe(
-      // Note: we assume that cost of filtering by the optional predicate is not worthwhile
-      filter((quad) => quad.object.value === this.uri),
-      debounceTime(250),
-      map(() => this.reverseRelations(predicate)),
-      startWith(this.reverseRelations(predicate)),
-      // Note: label is constructed from predicate and is therefore irrelevant to the comparison
-      distinctUntilChanged(
-        (prev, curr) =>
-          prev.length === curr.length &&
-          prev.every(
-            (rel, i) =>
-              rel.predicate === curr[i].predicate &&
-              rel.uris.length === curr[i].uris.length,
-          ),
-      ),
-    );
+    return this.observeObjectChanges({
+      observes: () => this.reverseRelations(predicate),
+      compare: (prev, curr) =>
+        prev.length === curr.length &&
+        prev.every(
+          (rel, i) =>
+            rel.predicate === curr[i].predicate &&
+            rel.uris.length === curr[i].uris.length,
+        ),
+    });
   }
 
   /**

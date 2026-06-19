@@ -43,6 +43,7 @@ import {
   Quad_Subject,
   Term,
 } from "rdflib/lib/tf-types";
+export type { Quad } from "rdflib/lib/tf-types";
 
 /**
  * The Store contains all data that is known locally.
