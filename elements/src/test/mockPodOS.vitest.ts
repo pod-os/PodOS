@@ -46,6 +46,7 @@ export function mockPodOS(): PodOS {
     login: vi.fn().mockImplementation(() => {
       sessionInfo$.next({ isLoggedIn: true, webId: alice.webId });
     }),
+    logout: vi.fn(),
     proposeUriForNewThing: vi.fn(),
     addNewThing: vi.fn().mockResolvedValue(undefined),
     fetchProfile: vi.fn(),
