@@ -19,9 +19,11 @@
   "scripts": {
     "build": "stencil build --docs",
     "start": "stencil build --dev --watch --serve",
-    "test": "npm run jest && npm run vitest",
+    "test": "npm run jest && npm run vitest:unit && npm run vitest:integration",
     "jest": "jest ./src",
     "vitest": "vitest run",
+    "vitest:unit": "vitest run --project unit-dom --project unit",
+    "vitest:integration": "stencil-test --prod --project integration-dom",
     "vitest:watch": "vitest",
     "generate": "stencil generate"
   },
@@ -58,6 +60,7 @@
     "jest": "^30.3.0",
     "jest-cli": "^30.3.0",
     "jest-when": "^3.7.0",
+    "msw": "^2.14.6",
     "prettier": "^3.5.3",
     "url-template": "^3.1.1",
     "vitest": "^4.1.8",
