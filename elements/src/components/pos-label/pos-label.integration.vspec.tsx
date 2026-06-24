@@ -1,19 +1,16 @@
 import { describe, expect, h, it, render } from '@stencil/vitest';
-import { server } from '../../test/msw';
-import { http, HttpResponse } from 'msw';
+import { notFound, server, turtleFile } from '../../test/msw';
 
 describe('pos-label', () => {
   it('renders label for successfully loaded resource', async () => {
     // given
     server.use(
-      http.get('https://janedoe.test/profile/card', async () => {
-        const ttl = `
+      turtleFile(
+        'https://janedoe.test/profile/card',
+        `
           <#me> <http://schema.org/name> "Jane Doe" .
-        `;
-        const response = HttpResponse.text(ttl);
-        response.headers.set('Content-Type', 'text/turtle');
-        return response;
-      }),
+        `,
+      ),
     );
 
     // when
@@ -35,15 +32,15 @@ describe('pos-label', () => {
     // given a resource with a name, but loading takes a while
     let finishLoading: () => void;
     server.use(
-      http.get('https://janedoe.test/profile/card', async () => {
-        const ttl = `
+      turtleFile(
+        'https://janedoe.test/profile/card',
+        `
           <#me> <http://schema.org/name> "Jane Doe" .
-        `;
-        const response = HttpResponse.text(ttl);
-        response.headers.set('Content-Type', 'text/turtle');
-        await new Promise<void>(resolve => (finishLoading = resolve));
-        return response;
-      }),
+        `,
+        {
+          delayedUntil: new Promise<void>(resolve => (finishLoading = resolve)),
+        },
+      ),
     );
 
     // when a pos-label for the resource is rendered
@@ -69,14 +66,8 @@ describe('pos-label', () => {
   });
 
   it('renders nothing when resource loading failed', async () => {
-    // given a resource that fails loading
-    server.use(
-      http.get('https://janedoe.test/profile/card', async () => {
-        return HttpResponse.text('Not found', {
-          status: 404,
-        });
-      }),
-    );
+    // given a resource that fails to load
+    server.use(notFound('https://janedoe.test/profile/card'));
 
     // when a pos-label for the resource is rendered
     const page = await render(
@@ -96,22 +87,18 @@ describe('pos-label', () => {
   it('updates when resource changes', async () => {
     // given Alice and Bob have a profile with their name
     server.use(
-      http.get('https://alice.test/profile/card', async () => {
-        const ttl = `
+      turtleFile(
+        'https://alice.test/profile/card',
+        `
           <#me> <http://schema.org/name> "Alice" .
-        `;
-        const response = HttpResponse.text(ttl);
-        response.headers.set('Content-Type', 'text/turtle');
-        return response;
-      }),
-      http.get('https://bob.test/profile/card', async () => {
-        const ttl = `
+        `,
+      ),
+      turtleFile(
+        'https://bob.test/profile/card',
+        `
           <#me> <http://schema.org/name> "Bob" .
-        `;
-        const response = HttpResponse.text(ttl);
-        response.headers.set('Content-Type', 'text/turtle');
-        return response;
-      }),
+        `,
+      ),
     );
 
     // when pos-label is rendered for Alice's profile
