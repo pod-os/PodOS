@@ -1,35 +1,29 @@
-import { newSpecPage } from '@stencil/core/testing';
-import { PosList } from './pos-list';
-import { when } from 'jest-when';
-import { Subject } from 'rxjs';
+import { describe, expect, h, it, render } from '@stencil/vitest';
+import './pos-list';
+import { when } from 'vitest-when';
+import { of } from 'rxjs';
+import { mockResource } from '../../test/mockResource';
+import { mockOsProvider, mockPodOS } from '../../test/mockPodOS.vitest';
 
 describe('pos-list', () => {
   it('contains only template initially', async () => {
-    const page = await newSpecPage({
-      components: [PosList],
-      html: `
+    const page = await render(
       <pos-list rel="http://schema.org/video">
-        <template><div>Test</div></template>
-      </pos-list>`,
-    });
-    expect(page.root).toEqualHtml(`
-          <pos-list rel="http://schema.org/video" />
-            <template><div>Test</div></template>
-          </pos-list>
-      `);
+        <template>
+          <div>Test</div>
+        </template>
+      </pos-list>,
+    );
+    await page.waitForChanges();
+    expect(page.root).toMatchInlineSnapshot(`
+      <pos-list class="hydrated">
+        <template __self="[object global]" __source="[object Object]"></template>
+      </pos-list>
+    `);
   });
 
   it('renders single rel object', async () => {
-    const page = await newSpecPage({
-      components: [PosList],
-      html: `
-      <pos-list rel="http://schema.org/video">
-        <template>
-          Test
-        </template>
-      </pos-list>`,
-    });
-    await page.rootInstance.receiveResource({
+    mockResource({
       relations: () => [
         {
           predicate: 'http://schema.org/video',
@@ -38,6 +32,11 @@ describe('pos-list', () => {
         },
       ],
     });
+    const page = await render(
+      <pos-list rel="http://schema.org/video">
+        <template>Test</template>
+      </pos-list>,
+    );
     await page.waitForChanges();
 
     const el: HTMLElement = page.root as unknown as HTMLElement;
@@ -47,16 +46,7 @@ describe('pos-list', () => {
   });
 
   it('renders multiple rel objects', async () => {
-    const page = await newSpecPage({
-      components: [PosList],
-      html: `
-      <pos-list rel="http://schema.org/video">
-        <template>
-          Test
-        </template>
-      </pos-list>`,
-    });
-    await page.rootInstance.receiveResource({
+    mockResource({
       relations: () => [
         {
           predicate: 'http://schema.org/video',
@@ -65,6 +55,11 @@ describe('pos-list', () => {
         },
       ],
     });
+    const page = await render(
+      <pos-list rel="http://schema.org/video">
+        <template>Test</template>
+      </pos-list>,
+    );
     await page.waitForChanges();
 
     const el: HTMLElement = page.root as unknown as HTMLElement;
@@ -73,26 +68,17 @@ describe('pos-list', () => {
   });
 
   it('renders the template for all things of the given type', async () => {
-    const page = await newSpecPage({
-      components: [PosList],
-      html: `
+    const os = mockPodOS();
+    mockOsProvider(os);
+    when(os.store.observeFindMembers)
+      .calledWith('http://schema.org/Recipe')
+      .thenReturn(of(['https://recipe.test/1']));
+
+    const page = await render(
       <pos-list if-typeof="http://schema.org/Recipe">
-        <template>
-          Test
-        </template>
-      </pos-list>`,
-    });
-    const os = {
-      store: {
-        observeFindMembers: jest.fn(),
-      },
-    };
-
-    const observed$ = new Subject<String[]>();
-
-    when(os.store.observeFindMembers).calledWith('http://schema.org/Recipe').mockReturnValue(observed$);
-    await page.rootInstance.receivePodOs(os);
-    observed$.next(['https://recipe.test/1']);
+        <template>Test</template>
+      </pos-list>,
+    );
     await page.waitForChanges();
 
     const el: HTMLElement = page.root as unknown as HTMLElement;
@@ -100,19 +86,7 @@ describe('pos-list', () => {
   });
 
   it('displays error on missing template', async () => {
-    const page = await newSpecPage({
-      components: [PosList],
-      html: `<pos-list rel="http://schema.org/video"></pos-list>`,
-    });
-    await page.rootInstance.receiveResource({
-      relations: () => [
-        {
-          predicate: 'http://schema.org/video',
-          label: 'url',
-          uris: ['https://video.test/video-1'],
-        },
-      ],
-    });
+    const page = await render(<pos-list rel="http://schema.org/video"></pos-list>);
     await page.waitForChanges();
 
     const el: HTMLElement = page.root as unknown as HTMLElement;
@@ -121,16 +95,7 @@ describe('pos-list', () => {
   });
 
   it('sets about and uri attributes on children', async () => {
-    const page = await newSpecPage({
-      components: [PosList],
-      html: `
-      <pos-list rel="http://schema.org/video">
-        <template>
-          Test
-        </template>
-      </pos-list>`,
-    });
-    await page.rootInstance.receiveResource({
+    mockResource({
       relations: () => [
         {
           predicate: 'http://schema.org/video',
@@ -139,6 +104,12 @@ describe('pos-list', () => {
         },
       ],
     });
+    const page = await render(
+      <pos-list rel="http://schema.org/video">
+        <template>Test</template>
+      </pos-list>,
+    );
+
     await page.waitForChanges();
 
     const el: HTMLElement = page.root as unknown as HTMLElement;
@@ -151,16 +122,7 @@ describe('pos-list', () => {
   });
 
   it('sets lazy attribute on children if fetch is not present', async () => {
-    const page = await newSpecPage({
-      components: [PosList],
-      html: `
-      <pos-list rel="http://schema.org/video">
-        <template>
-          Test
-        </template>
-      </pos-list>`,
-    });
-    await page.rootInstance.receiveResource({
+    mockResource({
       relations: () => [
         {
           predicate: 'http://schema.org/video',
@@ -169,6 +131,11 @@ describe('pos-list', () => {
         },
       ],
     });
+    const page = await render(
+      <pos-list rel="http://schema.org/video">
+        <template>Test</template>
+      </pos-list>,
+    );
     await page.waitForChanges();
 
     const el: HTMLElement = page.root as unknown as HTMLElement;
@@ -177,16 +144,7 @@ describe('pos-list', () => {
   });
 
   it('does not set lazy attribute on children if fetch is present', async () => {
-    const page = await newSpecPage({
-      components: [PosList],
-      html: `
-      <pos-list rel="http://schema.org/video" fetch="">
-        <template>
-          Test
-        </template>
-      </pos-list>`,
-    });
-    await page.rootInstance.receiveResource({
+    mockResource({
       relations: () => [
         {
           predicate: 'http://schema.org/video',
@@ -195,6 +153,11 @@ describe('pos-list', () => {
         },
       ],
     });
+    const page = await render(
+      <pos-list rel="http://schema.org/video" fetch>
+        <template>Test</template>
+      </pos-list>,
+    );
     await page.waitForChanges();
 
     const el: HTMLElement = page.root as unknown as HTMLElement;
