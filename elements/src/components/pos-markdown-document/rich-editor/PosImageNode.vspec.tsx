@@ -1,5 +1,4 @@
-// noinspection ES6UnusedImports
-import { h } from '@stencil/core';
+import { describe, expect, it } from '@stencil/vitest';
 
 import { createNodeView } from './PosImageNode';
 import { NodeViewRendererProps } from '@tiptap/core';
@@ -72,6 +71,4 @@ describe('PosImageNode', () => {
     <pos-image></pos-image>
 `);
   });
-
-  //
 });

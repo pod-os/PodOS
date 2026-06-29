@@ -1,8 +1,5 @@
-/**
- * @jest-environment @happy-dom/jest-environment
- *
- * => editor needs a real DOM to work
- */
+import { vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from '@stencil/vitest';
 
 import { RichEditor } from './RichEditor';
 import { Subscription, tap } from 'rxjs';
@@ -87,11 +84,11 @@ describe('RichEditor', () => {
     describe('observe changes', () => {
       let subscription: Subscription;
       beforeEach(() => {
-        jest.useFakeTimers();
+        vi.useFakeTimers();
       });
 
       afterEach(() => {
-        jest.useRealTimers();
+        vi.useRealTimers();
         subscription?.unsubscribe();
       });
 
@@ -99,7 +96,7 @@ describe('RichEditor', () => {
         const div = document.createElement('div');
         const editor = new RichEditor(div, '# Hello World\n\n', 'https://pod.test');
         editor.startEditing();
-        const save = jest.fn();
+        const save = vi.fn();
         subscription = editor
           .observeChanges()
           .pipe(
@@ -113,9 +110,9 @@ describe('RichEditor', () => {
         const tiptap = editor.editor;
         tiptap.commands.insertContent('Modified ');
 
-        jest.advanceTimersByTime(999);
+        vi.advanceTimersByTime(999);
         expect(save).toHaveBeenCalledTimes(0);
-        jest.advanceTimersByTime(1);
+        vi.advanceTimersByTime(1);
         expect(save).toHaveBeenCalledTimes(1);
         expect(save).toHaveBeenLastCalledWith({
           content: '# Modified Hello World\n\n',
@@ -126,7 +123,7 @@ describe('RichEditor', () => {
         const div = document.createElement('div');
         const editor = new RichEditor(div, '# Hello World\n\n', 'https://pod.test');
         editor.startEditing();
-        const save = jest.fn();
+        const save = vi.fn();
         subscription = editor
           .observeChanges()
           .pipe(
@@ -140,13 +137,13 @@ describe('RichEditor', () => {
         const tiptap = editor.editor;
 
         tiptap.commands.insertContent('edit 1 ');
-        jest.advanceTimersByTime(999);
+        vi.advanceTimersByTime(999);
         tiptap.commands.insertContent('edit 2 ');
-        jest.advanceTimersByTime(999);
+        vi.advanceTimersByTime(999);
         tiptap.commands.insertContent('edit 3 ');
 
         expect(save).toHaveBeenCalledTimes(0);
-        jest.advanceTimersByTime(1000);
+        vi.advanceTimersByTime(1000);
         expect(save).toHaveBeenCalledTimes(1);
         expect(save).toHaveBeenLastCalledWith({
           content: '# edit 1 edit 2 edit 3 Hello World\n\n',

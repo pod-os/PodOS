@@ -1,5 +1,4 @@
-// noinspection ES6UnusedImports
-import { h } from '@stencil/core';
+import { describe, expect, it } from '@stencil/vitest';
 
 import { createMarkViewRenderer } from './PosRichLinkMark';
 import { MarkViewRendererProps } from '@tiptap/core';
@@ -10,7 +9,7 @@ describe('PosRichLinkMark', () => {
     const view = renderer({
       HTMLAttributes: { href: '' },
     } as unknown as MarkViewRendererProps);
-    const expected = '<pos-rich-link uri="https://link.example/" />';
+    const expected = '<pos-rich-link uri="https://link.example/"></pos-rich-link>';
     expect(view.dom).toEqualHtml(expected);
     expect(view.contentDOM).toEqualHtml(expected);
   });
@@ -19,7 +18,7 @@ describe('PosRichLinkMark', () => {
     const view = renderer({
       HTMLAttributes: { href: 'https://other.example' },
     } as unknown as MarkViewRendererProps);
-    const expected = '<pos-rich-link uri="https://other.example/" />';
+    const expected = '<pos-rich-link uri="https://other.example/"></pos-rich-link>';
     expect(view.dom).toEqualHtml(expected);
     expect(view.contentDOM).toEqualHtml(expected);
   });
@@ -28,7 +27,7 @@ describe('PosRichLinkMark', () => {
     const view = renderer({
       HTMLAttributes: { href: '/path/to/resource#it' },
     } as unknown as MarkViewRendererProps);
-    const expected = '<pos-rich-link uri="https://link.example/path/to/resource#it" />';
+    const expected = '<pos-rich-link uri="https://link.example/path/to/resource#it"></pos-rich-link>';
     expect(view.dom).toEqualHtml(expected);
     expect(view.contentDOM).toEqualHtml(expected);
   });
@@ -37,7 +36,7 @@ describe('PosRichLinkMark', () => {
     const view = renderer({
       HTMLAttributes: { href: 'mailto:alice@mail.test' },
     } as unknown as MarkViewRendererProps);
-    const expected = '<pos-rich-link uri="mailto:alice@mail.test" />';
+    const expected = '<pos-rich-link uri="mailto:alice@mail.test"></pos-rich-link>';
     expect(view.dom).toEqualHtml(expected);
     expect(view.contentDOM).toEqualHtml(expected);
   });
@@ -46,7 +45,7 @@ describe('PosRichLinkMark', () => {
     const view = renderer({
       HTMLAttributes: { href: 'tel:+123456789' },
     } as unknown as MarkViewRendererProps);
-    const expected = '<pos-rich-link uri="tel:+123456789" />';
+    const expected = '<pos-rich-link uri="tel:+123456789"></pos-rich-link>';
     expect(view.dom).toEqualHtml(expected);
     expect(view.contentDOM).toEqualHtml(expected);
   });
@@ -56,7 +55,7 @@ describe('PosRichLinkMark', () => {
     const view = renderer({
       HTMLAttributes: { href: 'http://url.test' },
     } as unknown as MarkViewRendererProps);
-    const expected = '<pos-rich-link uri="http://url.test/" />';
+    const expected = '<pos-rich-link uri="http://url.test/"></pos-rich-link>';
     expect(view.dom).toEqualHtml(expected);
     expect(view.contentDOM).toEqualHtml(expected);
   });
@@ -74,7 +73,7 @@ describe('PosRichLinkMark', () => {
     const view = renderer({
       HTMLAttributes: { href },
     } as unknown as MarkViewRendererProps);
-    const expected = '<pos-rich-link />';
+    const expected = '<pos-rich-link></pos-rich-link>';
     expect(view.dom).toEqualHtml(expected);
     expect(view.contentDOM).toEqualHtml(expected);
   });
