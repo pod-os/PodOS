@@ -11,8 +11,6 @@ vi.mock('@pod-os/core', () => ({
   labelFromUri: (uri: string) => `fake label for ${uri}`,
 }));
 
-vi.mock('@shoelace-style/shoelace/dist/components/icon/icon.js', () => ({}));
-
 describe('pos-add-literal-value', () => {
   it('renders nothing initially', async () => {
     const page = await renderComponent();

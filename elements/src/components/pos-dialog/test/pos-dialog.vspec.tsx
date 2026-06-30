@@ -3,8 +3,6 @@ import { describe, expect, h, it, render } from '@stencil/vitest';
 import { screen } from '@testing-library/dom';
 import '../pos-dialog';
 
-vi.mock('@shoelace-style/shoelace/dist/components/icon/icon.js', () => ({}));
-
 describe('pos-dialog', () => {
   it('renders a dialog with the given slot content', async () => {
     const page = await render(

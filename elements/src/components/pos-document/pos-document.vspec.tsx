@@ -11,7 +11,6 @@ import { beforeEach, describe, expect, h, it, render, RenderResult } from '@sten
 import './pos-document';
 
 vi.mock('../broken-file/BrokenFile');
-vi.mock('@shoelace-style/shoelace/dist/components/skeleton/skeleton.js', () => ({}));
 
 describe('pos-document', () => {
   let pdfBlob: Blob;

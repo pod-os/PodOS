@@ -1,10 +1,6 @@
-import { vi } from 'vitest';
-
-import { describe, h, it, render, expect } from '@stencil/vitest';
+import { describe, expect, h, it, render } from '@stencil/vitest';
 import { BrokenFile } from './BrokenFile';
 import { BrokenFile as BrokenFileData } from '@pod-os/core';
-
-vi.mock('@shoelace-style/shoelace/dist/components/icon/icon.js', () => ({}));
 
 describe('BrokenFile', () => {
   it('renders', async () => {

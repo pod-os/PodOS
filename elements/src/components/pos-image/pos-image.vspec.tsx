@@ -10,7 +10,6 @@ import './pos-image';
 import session from '../../store/session';
 
 vi.mock('../broken-file/BrokenFile');
-vi.mock('@shoelace-style/shoelace/dist/components/skeleton/skeleton.js', () => ({}));
 
 describe('pos-image', () => {
   let pngBlob: Blob;

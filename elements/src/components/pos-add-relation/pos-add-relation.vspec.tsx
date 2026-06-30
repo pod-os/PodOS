@@ -12,8 +12,6 @@ vi.mock('@pod-os/core', () => ({
   labelFromUri: (uri: string) => `fake label for ${uri}`,
 }));
 
-vi.mock('@shoelace-style/shoelace/dist/components/icon/icon.js', () => ({}));
-
 describe('pos-add-relation', () => {
   let os: PodOS;
   beforeEach(() => {

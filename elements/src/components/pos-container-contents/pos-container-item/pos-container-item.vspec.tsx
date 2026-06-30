@@ -6,8 +6,6 @@ import { RdfType } from '@pod-os/core';
 
 vi.mock('@pod-os/core', () => ({}));
 
-vi.mock('@shoelace-style/shoelace/dist/components/icon/icon.js', () => ({}));
-
 describe('pos-container-item', () => {
   it('only shows the body initially', async () => {
     const page = await render(<pos-container-item>item body</pos-container-item>);

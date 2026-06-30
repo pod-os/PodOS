@@ -4,8 +4,6 @@ import { describe, expect, h, it, render } from '@stencil/vitest';
 import '../pos-add-new-thing';
 import { withinShadow } from '../../../test/withinShadow';
 
-vi.mock('@shoelace-style/shoelace/dist/components/icon/icon.js', () => ({}));
-
 describe('pos-add-new-thing', () => {
   it('renders a button and a dialog with form for new thing', async () => {
     const page = await renderComponent();
