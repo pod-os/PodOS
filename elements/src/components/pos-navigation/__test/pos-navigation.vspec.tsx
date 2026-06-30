@@ -12,6 +12,10 @@ import { mockOsProvider } from '../../../test/mockPodOS.vitest';
 import { withinShadow } from '../../../test/withinShadow';
 import { userEvent } from '@testing-library/user-event';
 
+vi.mock('../debounce', () => ({
+  debounce: (it: unknown) => it,
+}));
+
 describe('pos-navigation', () => {
   it('renders navigation bar and search dialog', async () => {
     const page = await render(<pos-navigation uri="https://pod.example/resource"></pos-navigation>);

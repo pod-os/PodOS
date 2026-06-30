@@ -6,4 +6,5 @@ export async function typeToSearch(page: RenderResult, text: string) {
   searchBar.value = text;
   // @ts-ignore
   fireEvent(searchBar, new CustomEvent('change', { target: { value: text } }));
+  await page.waitForChanges();
 }

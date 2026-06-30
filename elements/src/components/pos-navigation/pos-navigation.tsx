@@ -1,9 +1,10 @@
 import { PodOS, SearchIndex, Thing } from '@pod-os/core';
 import { Component, Event, EventEmitter, h, Listen, Prop, State, Watch } from '@stencil/core';
-import { debounceTime, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 
 import session from '../../store/session';
 import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../events/PodOsAware';
+import { debounce } from './debounce';
 
 interface NavigateEvent {
   detail: Thing | null;
@@ -68,7 +69,7 @@ export class PosNavigation implements PodOsAware {
         this.clearSearchIndex();
       }
     });
-    this.debouncedSearch = this.changeEvents.pipe(debounceTime(300)).subscribe(() => this.search());
+    this.debouncedSearch = this.changeEvents.pipe(debounce).subscribe(() => this.search());
   }
 
   disconnectedCallback() {
