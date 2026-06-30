@@ -1,115 +1,106 @@
+import { Mock, vi } from 'vitest';
+import { beforeEach, describe, expect, h, it, render, RenderResult } from '@stencil/vitest';
 import { Components } from '../../components';
 
-jest.mock('../events/usePodOS');
-
-import { newSpecPage } from '@stencil/core/testing';
-import { PosPicture } from './pos-picture';
 import { usePodOS } from '../events/usePodOS';
-import { when } from 'jest-when';
+import './pos-picture';
+
+vi.mock('../events/usePodOS');
 
 describe('pos-picture', () => {
   it('is empty initially', async () => {
-    const page = await newSpecPage({
-      components: [PosPicture],
-      html: `<pos-picture />`,
-    });
-    expect(page.root).toEqualHtml(`
-      <pos-picture>
+    const page = await render(<pos-picture></pos-picture>);
+    expect(page.root).toMatchInlineSnapshot(`
+      <pos-picture class="hydrated">
         <mock:shadow-root>
           <div class="no-picture">
             <slot></slot>
           </div>
         </mock:shadow-root>
       </pos-picture>
-  `);
+    `);
   });
 
   it('renders pos-image depicting resource', async () => {
-    const page = await newSpecPage({
-      components: [PosPicture],
-      html: `<pos-picture />`,
-    });
-    await page.rootInstance.receiveResource({
+    const page = await render(<pos-picture></pos-picture>);
+
+    await page.instance.receiveResource({
       label: () => 'a picture',
       picture: () => ({
         url: 'https://resource.test/picture.png',
       }),
     });
     await page.waitForChanges();
-    expect(page.root).toEqualHtml(`
-      <pos-picture>
-        <mock:shadow-root><pos-image src="https://resource.test/picture.png" alt="a picture"/></mock:shadow-root>
+    expect(page.root).toMatchInlineSnapshot(`
+      <pos-picture class="hydrated">
+        <mock:shadow-root>
+          <pos-image src="https://resource.test/picture.png" alt="a picture"></pos-image>
+        </mock:shadow-root>
       </pos-picture>
-  `);
+    `);
   });
 
   it('renders pos-image with blurred background', async () => {
-    const page = await newSpecPage({
-      components: [PosPicture],
-      html: `<pos-picture blurred-background />`,
-    });
-    await page.rootInstance.receiveResource({
+    const page = await render(<pos-picture blurredBackground></pos-picture>);
+
+    await page.instance.receiveResource({
       label: () => 'a picture',
       picture: () => ({
         url: 'https://resource.test/picture.png',
       }),
     });
     await page.waitForChanges();
-    expect(page.root).toEqualHtml(`
-      <pos-picture blurred-background>
-        <mock:shadow-root><pos-image blurredbackground="" src="https://resource.test/picture.png" alt="a picture"/></mock:shadow-root>
+    expect(page.root).toMatchInlineSnapshot(`
+      <pos-picture class="hydrated">
+        <mock:shadow-root>
+          <pos-image blurredbackground src="https://resource.test/picture.png" alt="a picture"></pos-image>
+        </mock:shadow-root>
       </pos-picture>
-  `);
+    `);
   });
 
   it('renders nothing when resource has no picture', async () => {
-    const page = await newSpecPage({
-      components: [PosPicture],
-      html: `<pos-picture />`,
-    });
-    await page.rootInstance.receiveResource({
+    const page = await render(<pos-picture></pos-picture>);
+
+    await page.instance.receiveResource({
       picture: () => null,
     });
     await page.waitForChanges();
-    expect(page.root).toEqualHtml(`
-      <pos-picture>
+    expect(page.root).toMatchInlineSnapshot(`
+      <pos-picture class="hydrated">
         <mock:shadow-root>
           <div class="no-picture">
             <slot></slot>
           </div>
         </mock:shadow-root>
       </pos-picture>
-  `);
+    `);
   });
 
   it('renders slot as fallback when resource has no picture', async () => {
-    const page = await newSpecPage({
-      components: [PosPicture],
-      supportsShadowDom: false,
-      html: `<pos-picture>No picture, but this nice text</pos-picture>`,
-    });
-    await page.rootInstance.receiveResource({
+    const page = await render(<pos-picture>No picture, but this nice text</pos-picture>);
+    await page.instance.receiveResource({
       picture: () => null,
     });
     await page.waitForChanges();
-    expect(page.root).toEqualHtml(`
-      <pos-picture>
-        <div class="no-picture">
-          No picture, but this nice text
-        </div>
+    expect(page.root).toMatchInlineSnapshot(`
+      <pos-picture class="hydrated">
+        <mock:shadow-root>
+          <div class="no-picture">
+            <slot></slot>
+          </div>
+        </mock:shadow-root>
+        No picture, but this nice text
       </pos-picture>
-  `);
+    `);
   });
 
   describe('upload mode', () => {
-    let page;
+    let page: RenderResult;
 
     beforeEach(async () => {
-      page = await newSpecPage({
-        components: [PosPicture],
-        html: `<pos-picture />`,
-      });
-      await page.rootInstance.receiveResource({
+      page = await render(<pos-picture></pos-picture>);
+      await page.instance.receiveResource({
         label: () => 'a picture',
         picture: () => ({ url: 'https://resource.test/picture.png' }),
         editable: true,
@@ -137,7 +128,7 @@ describe('pos-picture', () => {
       uploadButton?.click();
       await page.waitForChanges();
 
-      const closeButton = page.root?.shadowRoot?.querySelector('button');
+      const closeButton = page.root?.shadowRoot?.querySelector('button')!;
       closeButton.click();
       await page.waitForChanges();
 
@@ -148,11 +139,8 @@ describe('pos-picture', () => {
   describe('upload button without picture', () => {
     it('renders upload button when resource has no picture', async () => {
       // Given an editable resource without a picture
-      const page = await newSpecPage({
-        components: [PosPicture],
-        html: `<pos-picture />`,
-      });
-      await page.rootInstance.receiveResource({
+      const page = await render(<pos-picture></pos-picture>);
+      await page.instance.receiveResource({
         label: () => 'resource without picture',
         picture: () => null,
         editable: true,
@@ -170,11 +158,8 @@ describe('pos-picture', () => {
   describe('no-upload property', () => {
     it('disables upload button when no-upload is set', async () => {
       // Given an editable resource with no-upload attribute
-      const page = await newSpecPage({
-        components: [PosPicture],
-        html: `<pos-picture no-upload />`,
-      });
-      await page.rootInstance.receiveResource({
+      const page = await render(<pos-picture no-upload></pos-picture>);
+      await page.instance.receiveResource({
         label: () => 'a picture',
         picture: () => ({ url: 'https://resource.test/picture.png' }),
         editable: true,
@@ -192,16 +177,13 @@ describe('pos-picture', () => {
   describe('uploading picture', () => {
     it('adds uploaded picture to the thing', async () => {
       // Given a PodOS instance with uploadAndAddPicture
-      const mockUploadAndAddPicture = jest.fn();
-      when(usePodOS).mockResolvedValue({
+      const mockUploadAndAddPicture = vi.fn();
+      (usePodOS as Mock).mockResolvedValue({
         uploadAndAddPicture: mockUploadAndAddPicture,
       } as any);
 
       // And an editable resource without a picture
-      const page = await newSpecPage({
-        components: [PosPicture],
-        html: `<pos-picture />`,
-      });
+      const page = await render(<pos-picture></pos-picture>);
 
       const mockResource = {
         label: () => 'a resource',
@@ -209,7 +191,7 @@ describe('pos-picture', () => {
         editable: true,
       };
 
-      await page.rootInstance.receiveResource(mockResource);
+      await page.instance.receiveResource(mockResource);
       await page.waitForChanges();
 
       // And the user enters upload mode
@@ -221,7 +203,7 @@ describe('pos-picture', () => {
       const mockFile = new File(['image content'], 'picture.jpg', {
         type: 'image/jpeg',
       });
-      const posUpload: Components.PosUpload = page.root?.shadowRoot?.querySelector('pos-upload');
+      const posUpload: Components.PosUpload = page.root?.shadowRoot?.querySelector('pos-upload')!;
       posUpload.uploader(mockFile);
 
       // Then the picture should be uploaded and added to the thing
