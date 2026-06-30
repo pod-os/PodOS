@@ -42,6 +42,8 @@ export class PosNavigation implements PodOsAware {
 
   @State() private resource: Thing = null;
 
+  private unsubscribeSessionChange?: () => void;
+
   private readonly changeEvents = new Subject<void>();
   private debouncedSearch = null;
 
@@ -58,7 +60,8 @@ export class PosNavigation implements PodOsAware {
   componentWillLoad() {
     subscribePodOs(this);
     this.updateResource();
-    session.onChange('isLoggedIn', async isLoggedIn => {
+
+    this.unsubscribeSessionChange = session.onChange('isLoggedIn', async isLoggedIn => {
       if (isLoggedIn) {
         await this.buildSearchIndex();
       } else {
@@ -69,6 +72,7 @@ export class PosNavigation implements PodOsAware {
   }
 
   disconnectedCallback() {
+    if (this.unsubscribeSessionChange) this.unsubscribeSessionChange();
     this.debouncedSearch?.unsubscribe();
   }
 
