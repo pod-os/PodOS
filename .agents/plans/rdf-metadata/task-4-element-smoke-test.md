@@ -1,6 +1,6 @@
 # Task 4 — Element smoke test
 
-> **Status:** Open
+> **Status:** Done
 > **Depends on:** Task 1
 
 ## Goal

@@ -16,6 +16,18 @@ export function turtleFile(url: string, content: string, { delayedUntil = Promis
   });
 }
 
+export function binaryResource(url: string, describedBy: string, contentType: string = 'application/pdf') {
+  return http.get(url, async () => {
+    const response = new HttpResponse(null, {
+      headers: {
+        'Content-Type': contentType,
+        'Link': `<${describedBy}>; rel="describedby"`,
+      },
+    });
+    return response;
+  });
+}
+
 export function notFound(url: string) {
   return http.get(url, async () => {
     return HttpResponse.text('Not found', {
