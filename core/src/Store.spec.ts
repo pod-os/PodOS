@@ -680,8 +680,7 @@ describe("Store", () => {
       );
     });
 
-    // TODO make green
-    it.skip("updates the description resource if target is non-RDF document", async () => {
+    it("updates the description resource if target is non-RDF document", async () => {
       const fetchMock = vi.fn();
       const mockSession = {
         authenticatedFetch: fetchMock,
@@ -736,6 +735,40 @@ describe("Store", () => {
           <https://vocab.example#property> "the value" .
       }`,
       );
+    });
+
+    it("throws an error if document to update could not be determined", async () => {
+      const fetchMock = vi.fn();
+      const mockSession = {
+        authenticatedFetch: fetchMock,
+      } as unknown as PodOsSession;
+      // given a non-RDF resource can be fetched but does not link to a description resource
+      when(fetchMock)
+        .calledWith("https://pod.test/resource.pdf", expect.anything())
+        .thenResolve({
+          ok: true,
+          status: 200,
+          statusText: "OK",
+          headers: new Headers({
+            "Content-Type": "application/pdf",
+            "wac-allow": 'user="read write append control",public="read"',
+            "accept-patch": "application/sparql-update",
+          }),
+          text: () => Promise.resolve(""),
+        } as Response);
+      // and the store already fetched the resource
+      const store = new Store(mockSession);
+      await store.fetch("https://pod.test/resource.pdf");
+
+      // when a property is added to the resource
+      const thing = store.get("https://pod.test/resource.pdf#thing");
+      const promise = store.addPropertyValue(
+        thing,
+        "https://vocab.example#property",
+        "the value",
+      );
+      // then an error is thrown
+      expect(promise).rejects.toThrow("Could not determine document to update");
     });
   });
 
