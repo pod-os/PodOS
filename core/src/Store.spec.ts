@@ -669,6 +669,64 @@ describe("Store", () => {
       }`,
       );
     });
+
+    // TODO make green
+    it.skip("updates the description resource if target is non-RDF document", async () => {
+      const fetchMock = vi.fn();
+      const mockSession = {
+        authenticatedFetch: fetchMock,
+      } as unknown as PodOsSession;
+      // given a non-RDF resource can be fetched and links to a description resource
+      when(fetchMock)
+        .calledWith("https://pod.test/resource.pdf", expect.anything())
+        .thenResolve({
+          ok: true,
+          status: 200,
+          statusText: "OK",
+          headers: new Headers({
+            "Content-Type": "application/pdf",
+            "wac-allow": 'user="read write append control",public="read"',
+            "accept-patch": "application/sparql-update",
+            link: '<https://pod.test/resource.pdf.meta>; rel="describedby"',
+          }),
+          text: () => Promise.resolve(""),
+        } as Response);
+      // and the description resource can be fetched and is writable
+      when(fetchMock)
+        .calledWith("https://pod.test/resource.pdf.meta", expect.anything())
+        .thenResolve({
+          ok: true,
+          status: 200,
+          statusText: "OK",
+          headers: new Headers({
+            "Content-Type": "text/turtle",
+            "wac-allow": 'user="read write append control",public="read"',
+            "accept-patch": "application/sparql-update",
+          }),
+          text: () => Promise.resolve(""),
+        } as Response);
+      // and the store already fetched the resource (and implicitly the description resource)
+      const store = new Store(mockSession);
+      await store.fetch("https://pod.test/resource.pdf");
+
+      // when a property is added to the resource
+      const thing = store.get("https://pod.test/resource.pdf#thing");
+      await store.addPropertyValue(
+        thing,
+        "https://vocab.example#property",
+        "the value",
+      );
+      // then the update targets the description resource
+      thenSparqlUpdateIsSentToUrl(
+        fetchMock,
+        "https://pod.test/resource.pdf.meta",
+        `
+      INSERT DATA {
+        <https://pod.test/resource.pdf#thing>
+          <https://vocab.example#property> "the value" .
+      }`,
+      );
+    });
   });
 
   describe("add relation", () => {
@@ -924,7 +982,10 @@ export function thenSparqlUpdateIsSentToUrl(
     (it) => it[0] === url && it[1].method === "PATCH",
   );
 
-  expect(sparqlUpdateCall).toBeDefined();
+  expect(
+    sparqlUpdateCall,
+    `PATCH request to ${url} expected but not found.`,
+  ).toBeDefined();
 
   const body = sparqlUpdateCall![1].body;
   const actualQuery = parser.parse(body) as Update;
