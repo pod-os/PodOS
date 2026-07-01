@@ -81,6 +81,8 @@ export class Store {
   readonly DESCRIBEDBY =
     "http://www.iana.org/assignments/link-relations/describedby";
 
+  private readonly INTERNAL_GRAPH = sym("urn:pod-os:internal");
+
   /**
    * Fetch data for the given URI to the internalStore.
    * If the response includes a Link header with rel="describedby",
@@ -100,20 +102,27 @@ export class Store {
     });
 
     // Auto-follow describedby link already parsed from Link headers by rdflib
-    const describedByUri = this.internalStore.any(
+    const descriptionResourceUri = this.internalStore.any(
       sym(uri),
       sym(this.DESCRIBEDBY),
       null,
       response.req,
     );
-    if (describedByUri) {
+    if (descriptionResourceUri) {
       try {
-        await this.fetcher.load(sym(describedByUri.value), {
+        await this.fetcher.load(sym(descriptionResourceUri.value), {
           force: true,
           credentials: "omit",
         });
       } catch {
         // Gracefully ignore failures to fetch metadata documents
+      } finally {
+        this.internalStore.add(
+          sym(uri),
+          sym(this.DESCRIBEDBY),
+          sym(descriptionResourceUri.value),
+          this.INTERNAL_GRAPH,
+        );
       }
     }
   }
