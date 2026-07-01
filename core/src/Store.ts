@@ -44,7 +44,7 @@ import {
   Quad_Subject,
   Term,
 } from "rdflib/lib/tf-types";
-import { iana } from "./namespaces";
+import { iana, internal } from "./namespaces";
 
 /**
  * The Store contains all data that is known locally.
@@ -80,8 +80,6 @@ export class Store {
   }
 
   readonly DESCRIBEDBY = iana("describedby");
-
-  private readonly INTERNAL_GRAPH = sym("urn:pod-os:internal");
 
   /**
    * Fetch data for the given URI to the internalStore.
@@ -121,7 +119,7 @@ export class Store {
           sym(uri),
           this.DESCRIBEDBY,
           sym(descriptionResourceUri.value),
-          this.INTERNAL_GRAPH,
+          internal(),
         );
       }
     }
@@ -151,14 +149,15 @@ export class Store {
    * @param property
    * @param value
    */
-  addPropertyValue(
-    thing: Thing,
-    property: string,
-    value: string,
-  ): Promise<void> {
+  async addPropertyValue(thing: Thing, property: string, value: string) {
+    const docUrl = thing.rdfDocument();
+    if (!docUrl) {
+      throw new Error("Could not determine document to update");
+    }
+
     return this.updater.update(
       [],
-      [st(sym(thing.uri), sym(property), lit(value), sym(thing.uri).doc())],
+      [st(sym(thing.uri), sym(property), lit(value), sym(docUrl))],
       undefined,
       false,
       {
@@ -166,7 +165,7 @@ export class Store {
         // https://github.com/pod-os/PodOS/issues/17
         credentials: "omit",
       },
-    ) as Promise<void>; // without passing callback updater returns a Promise;
+    );
   }
 
   /**
