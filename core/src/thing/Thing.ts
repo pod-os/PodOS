@@ -1,5 +1,5 @@
 import { isBlankNode, isLiteral, isNamedNode, sym } from "rdflib";
-import { flow } from "../namespaces";
+import { flow, iana, internal, link } from "../namespaces";
 import { accumulateSubjects } from "./accumulateSubjects";
 import { accumulateValues } from "./accumulateValues";
 import { isRdfType } from "./isRdfType";
@@ -420,5 +420,22 @@ export class Thing {
       : doc.value;
     const uri = new URL(".", baseUri).toString();
     return { uri };
+  }
+
+  rdfDocument(): string | undefined {
+    const doc = sym(this.uri).doc();
+    const isRdf = this.store.get(doc.uri).hasType(link("RDFDocument").value);
+
+    if (isRdf) {
+      return doc.value;
+    }
+
+    return this.store.anyValue(doc, iana("describedby"), null, internal());
+  }
+
+  private hasType(typeUri: string) {
+    return this.types()
+      .map((it) => it.uri)
+      .includes(typeUri);
   }
 }
