@@ -1,4 +1,5 @@
 import {
+  ExtendedResponse,
   Fetcher,
   graph,
   IndexedFormula,
@@ -77,7 +78,8 @@ export class Store {
     );
   }
 
-  readonly DESCRIBEDBY = "http://www.iana.org/assignments/link-relations/describedby";
+  readonly DESCRIBEDBY =
+    "http://www.iana.org/assignments/link-relations/describedby";
 
   /**
    * Fetch data for the given URI to the internalStore.
@@ -86,7 +88,7 @@ export class Store {
    * @param uri
    */
   async fetch(uri: string) {
-    await this.fetcher.load(sym(uri), {
+    const response: ExtendedResponse = await this.fetcher.load(sym(uri), {
       // force fetching due to
       // https://github.com/linkeddata/rdflib.js/issues/247
       // and
@@ -101,6 +103,8 @@ export class Store {
     const describedByUri = this.internalStore.any(
       sym(uri),
       sym(this.DESCRIBEDBY),
+      null,
+      response.req,
     );
     if (describedByUri) {
       try {
