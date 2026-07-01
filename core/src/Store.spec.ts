@@ -195,6 +195,34 @@ describe("Store", () => {
       expect(mockSession.authenticatedFetch).toHaveBeenCalledTimes(1);
     });
 
+    it("does not fetch a forged describedby link", async () => {
+      const mockSession = {
+        authenticatedFetch: vi.fn(),
+      } as unknown as PodOsSession;
+      when(mockSession.authenticatedFetch)
+        .calledWith("https://pod.test/resource", expect.anything())
+        .thenResolve({
+          ok: true,
+          status: 200,
+          statusText: "OK",
+          headers: new Headers({
+            "Content-Type": "text/turtle",
+          }),
+          text: () =>
+            Promise.resolve(
+              `<https://pod.test/resource> <http://www.iana.org/assignments/link-relations/describedby> <https://fake.test/forged> .`,
+            ),
+        } as Response);
+      const internalStore = graph();
+      const store = new Store(mockSession, undefined, undefined, internalStore);
+      await store.fetch("https://pod.test/resource");
+      // authenticatedFetch should only be called once (for the original resource)
+      expect(mockSession.authenticatedFetch).toHaveBeenCalledTimes(1);
+      expect((mockSession.authenticatedFetch as Mock).mock.calls[0][0]).toEqual(
+        "https://pod.test/resource",
+      );
+    });
+
     it("still returns original data when describedby metadata fetch fails", async () => {
       const mockSession = {
         authenticatedFetch: vi.fn(),
