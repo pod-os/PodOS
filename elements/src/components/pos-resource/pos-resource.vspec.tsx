@@ -35,9 +35,7 @@ describe('pos-resource', () => {
   it('renders slot after loading', async () => {
     const page = await render(<pos-resource uri="https://resource.test/"></pos-resource>);
     const os = mockPodOS();
-    when(os.fetch)
-      .calledWith('https://resource.test/')
-      .thenResolve({} as Response);
+    when(os.fetch).calledWith('https://resource.test/').thenResolve();
     await page.instance.receivePodOs(os);
     await page.waitForChanges();
     expect(page.root.shadowRoot).toEqualHtml(`
@@ -50,9 +48,7 @@ describe('pos-resource', () => {
     const page = await render(<pos-resource uri="https://resource.test/"></pos-resource>);
     page.root.addEventListener('pod-os:resource-loaded', onResourceLoaded);
     const os = mockPodOS();
-    when(os.fetch)
-      .calledWith('https://resource.test/')
-      .thenResolve({} as Response);
+    when(os.fetch).calledWith('https://resource.test/').thenResolve();
     await page.instance.receivePodOs(os);
     await page.waitForChanges();
     expect(onResourceLoaded).toHaveBeenCalled();
@@ -90,9 +86,7 @@ describe('pos-resource', () => {
   it('updates and loads resource when uri changes', async () => {
     const page = await render(<pos-resource uri="https://resource.test/"></pos-resource>);
     const os = mockPodOS();
-    when(os.fetch)
-      .calledWith('https://resource.test/')
-      .thenResolve({} as Response);
+    when(os.fetch).calledWith('https://resource.test/').thenResolve();
     when(os.fetch)
       .calledWith('https://other-resource.test')
       .thenReturn(new Promise(() => null));
@@ -107,9 +101,7 @@ describe('pos-resource', () => {
   it('re-fetches resource when session state changes', async () => {
     const page = await render(<pos-resource uri="https://resource.test/"></pos-resource>);
     const os = mockPodOS();
-    when(os.fetch, { times: 1 })
-      .calledWith('https://resource.test/')
-      .thenResolve({} as Response);
+    when(os.fetch, { times: 1 }).calledWith('https://resource.test/').thenResolve();
     await page.instance.receivePodOs(os);
     when(os.fetch, { times: 1 })
       .calledWith('https://resource.test/')
@@ -126,9 +118,7 @@ describe('pos-resource', () => {
     const os = mockPodOS();
     when(os.fetch, { times: 1 }).calledWith('https://resource.test/').thenReject(new Error('unauthorized'));
     await page.instance.receivePodOs(os);
-    when(os.fetch, { times: 1 })
-      .calledWith('https://resource.test/')
-      .thenResolve({} as Response);
+    when(os.fetch, { times: 1 }).calledWith('https://resource.test/').thenResolve();
     session.state.isLoggedIn = true;
     await page.waitForChanges();
     expect(page.root.shadowRoot).toEqualHtml(`
@@ -174,9 +164,7 @@ describe('pos-resource', () => {
 
       it('renders slot after loading', async () => {
         const os = mockPodOS();
-        when(os.fetch)
-          .calledWith('https://resource.test/')
-          .thenResolve({} as Response);
+        when(os.fetch).calledWith('https://resource.test/').thenResolve();
         await page.instance.receivePodOs(os);
         await page.root.fetch();
         await page.waitForChanges();
