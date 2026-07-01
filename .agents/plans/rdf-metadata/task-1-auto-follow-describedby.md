@@ -1,6 +1,6 @@
 # Task 1 — Auto-follow describedby in Store.fetch (read path)
 
-> **Status:** Open
+> **Status:** Done
 > **Depends on:** None (rdflib fix assumed upstream)
 
 ## Goal

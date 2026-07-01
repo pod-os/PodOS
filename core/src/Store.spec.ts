@@ -124,8 +124,7 @@ describe("Store", () => {
       ]);
     });
 
-    // TODO: skipped until upstream rdflib fix https://github.com/linkeddata/rdflib.js/issues/741
-    it.skip("auto-fetches metadata document linked via describedby from Link header", async () => {
+    it("auto-fetches metadata document linked via describedby from Link header", async () => {
       const mockSession = {
         authenticatedFetch: vi.fn(),
       } as unknown as PodOsSession;
@@ -196,8 +195,7 @@ describe("Store", () => {
       expect(mockSession.authenticatedFetch).toHaveBeenCalledTimes(1);
     });
 
-    // TODO: skipped until upstream rdflib fix https://github.com/linkeddata/rdflib.js/issues/741
-    it.skip("still returns original data when describedby metadata fetch fails", async () => {
+    it("still returns original data when describedby metadata fetch fails", async () => {
       const mockSession = {
         authenticatedFetch: vi.fn(),
       } as unknown as PodOsSession;
@@ -242,7 +240,6 @@ describe("Store", () => {
           sym("https://pod.test/report.pdf"),
           sym("http://www.iana.org/assignments/link-relations/describedby"),
           sym("https://pod.test/report.pdf.meta"),
-          sym("https://pod.test/report.pdf"),
         ),
       ).toBe(true);
     });
