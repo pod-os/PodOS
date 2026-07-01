@@ -168,6 +168,15 @@ describe("Store", () => {
           lit("Annual Report"),
         ),
       ).toBe(true);
+
+      expect(
+        internalStore.holds(
+          sym("https://pod.test/report.pdf"),
+          sym("http://www.iana.org/assignments/link-relations/describedby"),
+          sym("https://pod.test/report.pdf.meta"),
+          sym("urn:pod-os:internal"),
+        ),
+      ).toBe(true);
     });
 
     it("does not make additional fetches when there is no describedby link", async () => {
@@ -268,6 +277,7 @@ describe("Store", () => {
           sym("https://pod.test/report.pdf"),
           sym("http://www.iana.org/assignments/link-relations/describedby"),
           sym("https://pod.test/report.pdf.meta"),
+          sym("urn:pod-os:internal"),
         ),
       ).toBe(true);
     });
