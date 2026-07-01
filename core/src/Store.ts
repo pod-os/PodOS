@@ -44,6 +44,7 @@ import {
   Quad_Subject,
   Term,
 } from "rdflib/lib/tf-types";
+import { iana } from "./namespaces";
 
 /**
  * The Store contains all data that is known locally.
@@ -78,8 +79,7 @@ export class Store {
     );
   }
 
-  readonly DESCRIBEDBY =
-    "http://www.iana.org/assignments/link-relations/describedby";
+  readonly DESCRIBEDBY = iana("describedby");
 
   private readonly INTERNAL_GRAPH = sym("urn:pod-os:internal");
 
@@ -104,7 +104,7 @@ export class Store {
     // Auto-follow describedby link already parsed from Link headers by rdflib
     const descriptionResourceUri = this.internalStore.any(
       sym(uri),
-      sym(this.DESCRIBEDBY),
+      this.DESCRIBEDBY,
       null,
       response.req,
     );
@@ -119,7 +119,7 @@ export class Store {
       } finally {
         this.internalStore.add(
           sym(uri),
-          sym(this.DESCRIBEDBY),
+          this.DESCRIBEDBY,
           sym(descriptionResourceUri.value),
           this.INTERNAL_GRAPH,
         );
