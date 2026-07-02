@@ -768,7 +768,10 @@ describe("Store", () => {
         "the value",
       );
       // then an error is thrown
-      expect(promise).rejects.toThrow("Could not determine document to update");
+      // noinspection ES6RedundantAwait (await is a MUST https://vitest.dev/guide/learn/async.html#resolves-and-rejects)
+      await expect(promise).rejects.toThrow(
+        "Could not determine document to update",
+      );
     });
   });
 
