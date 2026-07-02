@@ -174,10 +174,18 @@ export class Store {
    * @param property
    * @param uri
    */
-  addRelation(thing: Thing, property: string, uri: string): Promise<void> {
+  async addRelation(
+    thing: Thing,
+    property: string,
+    uri: string,
+  ): Promise<void> {
+    const docUrl = thing.rdfDocument();
+    if (!docUrl) {
+      throw new Error("Could not determine document to update");
+    }
     return this.updater.update(
       [],
-      [st(sym(thing.uri), sym(property), sym(uri), sym(thing.uri).doc())],
+      [st(sym(thing.uri), sym(property), sym(uri), sym(docUrl))],
       undefined,
       false,
       {
@@ -185,7 +193,7 @@ export class Store {
         // https://github.com/pod-os/PodOS/issues/17
         credentials: "omit",
       },
-    ) as Promise<void>; // without passing callback updater returns a Promise;
+    );
   }
 
   async addNewThing(uri: string, name: string, type: string): Promise<void> {
