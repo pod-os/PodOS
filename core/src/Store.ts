@@ -150,11 +150,7 @@ export class Store {
    * @param value
    */
   async addPropertyValue(thing: Thing, property: string, value: string) {
-    const docUrl = thing.rdfDocument();
-    if (!docUrl) {
-      throw new Error("Could not determine document to update");
-    }
-
+    const docUrl = this.determineDocumentToUpdate(thing);
     return this.updater.update(
       [],
       [st(sym(thing.uri), sym(property), lit(value), sym(docUrl))],
@@ -179,10 +175,7 @@ export class Store {
     property: string,
     uri: string,
   ): Promise<void> {
-    const docUrl = thing.rdfDocument();
-    if (!docUrl) {
-      throw new Error("Could not determine document to update");
-    }
+    const docUrl = this.determineDocumentToUpdate(thing);
     return this.updater.update(
       [],
       [st(sym(thing.uri), sym(property), sym(uri), sym(docUrl))],
@@ -194,6 +187,14 @@ export class Store {
         credentials: "omit",
       },
     );
+  }
+
+  private determineDocumentToUpdate(thing: Thing) {
+    const docUrl = thing.rdfDocument();
+    if (!docUrl) {
+      throw new Error("Could not determine document to update");
+    }
+    return docUrl;
   }
 
   async addNewThing(uri: string, name: string, type: string): Promise<void> {
