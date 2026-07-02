@@ -1,6 +1,6 @@
 # Task 2 — Write-path routing for binary resources
 
-> **Status:** Open
+> **Status:** Done
 > **Depends on:** None (parallel with Task 1)
 
 ## Goal
