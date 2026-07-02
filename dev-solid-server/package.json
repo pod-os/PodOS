@@ -9,7 +9,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@solid/community-server": "^7.1.7"
+    "@solid/community-server": "^7.1.9"
   },
   "repository": {
     "type": "git",

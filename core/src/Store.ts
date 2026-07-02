@@ -1,4 +1,5 @@
 import {
+  ExtendedResponse,
   Fetcher,
   graph,
   IndexedFormula,
@@ -43,6 +44,7 @@ import {
   Quad_Subject,
   Term,
 } from "rdflib/lib/tf-types";
+import { iana, internal } from "./namespaces";
 
 /**
  * The Store contains all data that is known locally.
@@ -77,12 +79,16 @@ export class Store {
     );
   }
 
+  readonly DESCRIBEDBY = iana("describedby");
+
   /**
-   * Fetch data for the given URI to the internalStore
+   * Fetch data for the given URI to the internalStore.
+   * If the response includes a Link header with rel="describedby",
+   * the metadata document will also be fetched automatically.
    * @param uri
    */
-  fetch(uri: string) {
-    return this.fetcher.load(sym(uri), {
+  async fetch(uri: string) {
+    const response: ExtendedResponse = await this.fetcher.load(sym(uri), {
       // force fetching due to
       // https://github.com/linkeddata/rdflib.js/issues/247
       // and
@@ -92,6 +98,31 @@ export class Store {
       // https://github.com/pod-os/PodOS/issues/17
       credentials: "omit",
     });
+
+    // Auto-follow describedby link already parsed from Link headers by rdflib
+    const descriptionResourceUri = this.internalStore.any(
+      sym(uri),
+      this.DESCRIBEDBY,
+      null,
+      response.req,
+    );
+    if (descriptionResourceUri) {
+      try {
+        await this.fetcher.load(sym(descriptionResourceUri.value), {
+          force: true,
+          credentials: "omit",
+        });
+      } catch {
+        // Gracefully ignore failures to fetch metadata documents
+      } finally {
+        this.internalStore.add(
+          sym(uri),
+          this.DESCRIBEDBY,
+          sym(descriptionResourceUri.value),
+          internal(),
+        );
+      }
+    }
   }
 
   /**
@@ -118,22 +149,19 @@ export class Store {
    * @param property
    * @param value
    */
-  addPropertyValue(
-    thing: Thing,
-    property: string,
-    value: string,
-  ): Promise<void> {
-    return this.updater.update(
-      [],
-      [st(sym(thing.uri), sym(property), lit(value), sym(thing.uri).doc())],
-      undefined,
-      false,
-      {
-        // explicitly omit credentials due to
-        // https://github.com/pod-os/PodOS/issues/17
-        credentials: "omit",
-      },
-    ) as Promise<void>; // without passing callback updater returns a Promise;
+  async addPropertyValue(thing: Thing, property: string, value: string) {
+    const docUrl = this.determineDocumentToUpdate(thing);
+    return this.insert(
+      st(sym(thing.uri), sym(property), lit(value), sym(docUrl)),
+    );
+  }
+
+  private insert(statement: Statement) {
+    return this.updater.update([], [statement], undefined, false, {
+      // explicitly omit credentials due to
+      // https://github.com/pod-os/PodOS/issues/17
+      credentials: "omit",
+    });
   }
 
   /**
@@ -142,18 +170,23 @@ export class Store {
    * @param property
    * @param uri
    */
-  addRelation(thing: Thing, property: string, uri: string): Promise<void> {
-    return this.updater.update(
-      [],
-      [st(sym(thing.uri), sym(property), sym(uri), sym(thing.uri).doc())],
-      undefined,
-      false,
-      {
-        // explicitly omit credentials due to
-        // https://github.com/pod-os/PodOS/issues/17
-        credentials: "omit",
-      },
-    ) as Promise<void>; // without passing callback updater returns a Promise;
+  async addRelation(
+    thing: Thing,
+    property: string,
+    uri: string,
+  ): Promise<void> {
+    const docUrl = this.determineDocumentToUpdate(thing);
+    return this.insert(
+      st(sym(thing.uri), sym(property), sym(uri), sym(docUrl)),
+    );
+  }
+
+  private determineDocumentToUpdate(thing: Thing) {
+    const docUrl = thing.rdfDocument();
+    if (!docUrl) {
+      throw new Error("Could not determine document to update");
+    }
+    return docUrl;
   }
 
   async addNewThing(uri: string, name: string, type: string): Promise<void> {

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, Mock, vi } from "vitest";
 import { when } from "vitest-when";
-import { blankNode, graph, IndexedFormula, quad, sym } from "rdflib";
+import { blankNode, graph, IndexedFormula, quad, sym, lit } from "rdflib";
 import { Parser as SparqlParser, Update } from "sparqljs";
 import { PodOsSession } from "./authentication";
 import { Store } from "./Store";
@@ -122,6 +122,219 @@ describe("Store", () => {
           },
         },
       ]);
+    });
+
+    it("auto-fetches metadata document linked via describedby from Link header", async () => {
+      const mockSession = {
+        authenticatedFetch: vi.fn(),
+      } as unknown as PodOsSession;
+
+      when(mockSession.authenticatedFetch)
+        .calledWith("https://pod.test/report.pdf", expect.anything())
+        .thenResolve({
+          ok: true,
+          status: 200,
+          statusText: "OK",
+          headers: new Headers({
+            "Content-Type": "application/pdf",
+            Link: '<https://pod.test/report.pdf.meta>; rel="describedby"',
+          }),
+        } as Response);
+
+      when(mockSession.authenticatedFetch)
+        .calledWith("https://pod.test/report.pdf.meta", expect.anything())
+        .thenResolve({
+          ok: true,
+          status: 200,
+          statusText: "OK",
+          headers: new Headers({
+            "Content-Type": "text/turtle",
+          }),
+          text: () =>
+            Promise.resolve(
+              '<https://pod.test/report.pdf> <http://purl.org/dc/terms/title> "Annual Report" .',
+            ),
+        } as Response);
+
+      const internalStore = graph();
+      const store = new Store(mockSession, undefined, undefined, internalStore);
+
+      await store.fetch("https://pod.test/report.pdf");
+
+      expect(
+        internalStore.holds(
+          sym("https://pod.test/report.pdf"),
+          sym("http://purl.org/dc/terms/title"),
+          lit("Annual Report"),
+        ),
+      ).toBe(true);
+
+      expect(
+        internalStore.holds(
+          sym("https://pod.test/report.pdf"),
+          sym("http://www.iana.org/assignments/link-relations/describedby"),
+          sym("https://pod.test/report.pdf.meta"),
+          sym("urn:pod-os:internal"),
+        ),
+      ).toBe(true);
+    });
+
+    it("does not make additional fetches when there is no describedby link", async () => {
+      const mockSession = {
+        authenticatedFetch: vi.fn(),
+      } as unknown as PodOsSession;
+      when(mockSession.authenticatedFetch)
+        .calledWith("https://pod.test/resource", expect.anything())
+        .thenResolve({
+          ok: true,
+          status: 200,
+          statusText: "OK",
+          headers: new Headers({
+            "Content-Type": "text/turtle",
+          }),
+          text: () =>
+            Promise.resolve(
+              '<https://pod.test/resource#it> <https://pod.test/vocab/predicate> "literal value" .',
+            ),
+        } as Response);
+      const internalStore = graph();
+      const store = new Store(mockSession, undefined, undefined, internalStore);
+      await store.fetch("https://pod.test/resource");
+      // authenticatedFetch should only be called once (for the original resource)
+      expect(mockSession.authenticatedFetch).toHaveBeenCalledTimes(1);
+    });
+
+    it("does not fetch a forged describedby link", async () => {
+      const mockSession = {
+        authenticatedFetch: vi.fn(),
+      } as unknown as PodOsSession;
+      when(mockSession.authenticatedFetch)
+        .calledWith("https://pod.test/resource", expect.anything())
+        .thenResolve({
+          ok: true,
+          status: 200,
+          statusText: "OK",
+          headers: new Headers({
+            "Content-Type": "text/turtle",
+          }),
+          text: () =>
+            Promise.resolve(
+              `<https://pod.test/resource> <http://www.iana.org/assignments/link-relations/describedby> <https://fake.test/forged> .`,
+            ),
+        } as Response);
+      const internalStore = graph();
+      const store = new Store(mockSession, undefined, undefined, internalStore);
+      await store.fetch("https://pod.test/resource");
+      // authenticatedFetch should only be called once (for the original resource)
+      expect(mockSession.authenticatedFetch).toHaveBeenCalledTimes(1);
+      expect((mockSession.authenticatedFetch as Mock).mock.calls[0][0]).toEqual(
+        "https://pod.test/resource",
+      );
+    });
+
+    it("still returns original data when describedby metadata fetch fails", async () => {
+      const mockSession = {
+        authenticatedFetch: vi.fn(),
+      } as unknown as PodOsSession;
+
+      // First fetch: a binary resource with a Link header pointing to a .meta document
+      when(mockSession.authenticatedFetch)
+        .calledWith("https://pod.test/report.pdf", expect.anything())
+        .thenResolve({
+          ok: true,
+          status: 200,
+          statusText: "OK",
+          headers: new Headers({
+            "Content-Type": "application/pdf",
+            Link: '<https://pod.test/report.pdf.meta>; rel="describedby"',
+          }),
+        } as Response);
+
+      // Second fetch: the .meta document fails
+      when(mockSession.authenticatedFetch)
+        .calledWith("https://pod.test/report.pdf.meta", expect.anything())
+        .thenResolve({
+          ok: false,
+          status: 404,
+          statusText: "Not Found",
+          headers: new Headers({
+            "Content-Type": "text/plain",
+          }),
+          text: () => Promise.resolve("Not Found"),
+        } as Response);
+
+      const internalStore = graph();
+      const store = new Store(mockSession, undefined, undefined, internalStore);
+
+      // Should not throw even though metadata fetch fails
+      await expect(
+        store.fetch("https://pod.test/report.pdf"),
+      ).resolves.toBeUndefined();
+
+      // The describedby triple parsed from Link header should still be in the store
+      expect(
+        internalStore.holds(
+          sym("https://pod.test/report.pdf"),
+          sym("http://www.iana.org/assignments/link-relations/describedby"),
+          sym("https://pod.test/report.pdf.meta"),
+          sym("urn:pod-os:internal"),
+        ),
+      ).toBe(true);
+    });
+
+    it("does not auto-fetch rel=seeAlso links", async () => {
+      const mockSession = {
+        authenticatedFetch: vi.fn(),
+      } as unknown as PodOsSession;
+
+      when(mockSession.authenticatedFetch)
+        .calledWith("https://pod.test/resource", expect.anything())
+        .thenResolve({
+          ok: true,
+          status: 200,
+          statusText: "OK",
+          headers: new Headers({
+            "Content-Type": "text/turtle",
+            Link: '<https://pod.test/other>; rel="seeAlso"',
+          }),
+          text: () =>
+            Promise.resolve(
+              '<https://pod.test/resource#it> <https://pod.test/vocab/predicate> "value" .',
+            ),
+        } as Response);
+
+      const internalStore = graph();
+      const store = new Store(mockSession, undefined, undefined, internalStore);
+      await store.fetch("https://pod.test/resource");
+
+      // seeAlso link should NOT be auto-fetched — only describedby
+      expect(mockSession.authenticatedFetch).toHaveBeenCalledTimes(1);
+    });
+
+    it("does not auto-fetch rel=alternate links", async () => {
+      const mockSession = {
+        authenticatedFetch: vi.fn(),
+      } as unknown as PodOsSession;
+
+      when(mockSession.authenticatedFetch)
+        .calledWith("https://pod.test/resource", expect.anything())
+        .thenResolve({
+          ok: true,
+          status: 200,
+          statusText: "OK",
+          headers: new Headers({
+            "Content-Type": "text/html",
+            Link: '<https://pod.test/alternate>; rel="alternate"',
+          }),
+          text: () => Promise.resolve("<html></html>"),
+        } as Response);
+
+      const internalStore = graph();
+      const store = new Store(mockSession, undefined, undefined, internalStore);
+      await store.fetch("https://pod.test/resource");
+
+      // alternate link should NOT be auto-fetched — only describedby
+      expect(mockSession.authenticatedFetch).toHaveBeenCalledTimes(1);
     });
 
     it("fetches image type", async () => {
@@ -466,6 +679,100 @@ describe("Store", () => {
       }`,
       );
     });
+
+    it("updates the description resource if target is non-RDF document", async () => {
+      const fetchMock = vi.fn();
+      const mockSession = {
+        authenticatedFetch: fetchMock,
+      } as unknown as PodOsSession;
+      // given a non-RDF resource can be fetched and links to a description resource
+      when(fetchMock)
+        .calledWith("https://pod.test/resource.pdf", expect.anything())
+        .thenResolve({
+          ok: true,
+          status: 200,
+          statusText: "OK",
+          headers: new Headers({
+            "Content-Type": "application/pdf",
+            "wac-allow": 'user="read write append control",public="read"',
+            "accept-patch": "application/sparql-update",
+            link: '<https://pod.test/resource.pdf.meta>; rel="describedby"',
+          }),
+          text: () => Promise.resolve(""),
+        } as Response);
+      // and the description resource can be fetched and is writable
+      when(fetchMock)
+        .calledWith("https://pod.test/resource.pdf.meta", expect.anything())
+        .thenResolve({
+          ok: true,
+          status: 200,
+          statusText: "OK",
+          headers: new Headers({
+            "Content-Type": "text/turtle",
+            "wac-allow": 'user="read write append control",public="read"',
+            "accept-patch": "application/sparql-update",
+          }),
+          text: () => Promise.resolve(""),
+        } as Response);
+      // and the store already fetched the resource (and implicitly the description resource)
+      const store = new Store(mockSession);
+      await store.fetch("https://pod.test/resource.pdf");
+
+      // when a property is added to the resource
+      const thing = store.get("https://pod.test/resource.pdf#thing");
+      await store.addPropertyValue(
+        thing,
+        "https://vocab.example#property",
+        "the value",
+      );
+      // then the update targets the description resource
+      thenSparqlUpdateIsSentToUrl(
+        fetchMock,
+        "https://pod.test/resource.pdf.meta",
+        `
+      INSERT DATA {
+        <https://pod.test/resource.pdf#thing>
+          <https://vocab.example#property> "the value" .
+      }`,
+      );
+    });
+
+    it("throws an error if document to update could not be determined", async () => {
+      const fetchMock = vi.fn();
+      const mockSession = {
+        authenticatedFetch: fetchMock,
+      } as unknown as PodOsSession;
+      // given a non-RDF resource can be fetched but does not link to a description resource
+      when(fetchMock)
+        .calledWith("https://pod.test/resource.pdf", expect.anything())
+        .thenResolve({
+          ok: true,
+          status: 200,
+          statusText: "OK",
+          headers: new Headers({
+            "Content-Type": "application/pdf",
+            "wac-allow": 'user="read write append control",public="read"',
+            "accept-patch": "application/sparql-update",
+          }),
+          text: () => Promise.resolve(""),
+        } as Response);
+      // and the store already fetched the resource
+      const store = new Store(mockSession);
+      await store.fetch("https://pod.test/resource.pdf");
+
+      // when a property is added to the resource
+      const thing = store.get("https://pod.test/resource.pdf#thing");
+      const promise = store.addPropertyValue(
+        thing,
+        "https://vocab.example#property",
+        "the value",
+      );
+      // then an error is thrown
+      // noinspection ES6RedundantAwait (await is a MUST https://vitest.dev/guide/learn/async.html#resolves-and-rejects)
+      await expect(promise).rejects.toThrow(
+        "Could not determine document to update",
+      );
+    });
   });
 
   describe("add relation", () => {
@@ -506,6 +813,100 @@ describe("Store", () => {
         <https://pod.test/resource>
           <https://vocab.example#property> <https://pod.test/other-resource> .
       }`,
+      );
+    });
+
+    it("updates the description resource if target is non-RDF document", async () => {
+      const fetchMock = vi.fn();
+      const mockSession = {
+        authenticatedFetch: fetchMock,
+      } as unknown as PodOsSession;
+      // given a non-RDF resource can be fetched and links to a description resource
+      when(fetchMock)
+        .calledWith("https://pod.test/resource.pdf", expect.anything())
+        .thenResolve({
+          ok: true,
+          status: 200,
+          statusText: "OK",
+          headers: new Headers({
+            "Content-Type": "application/pdf",
+            "wac-allow": 'user="read write append control",public="read"',
+            "accept-patch": "application/sparql-update",
+            link: '<https://pod.test/resource.pdf.meta>; rel="describedby"',
+          }),
+          text: () => Promise.resolve(""),
+        } as Response);
+      // and the description resource can be fetched and is writable
+      when(fetchMock)
+        .calledWith("https://pod.test/resource.pdf.meta", expect.anything())
+        .thenResolve({
+          ok: true,
+          status: 200,
+          statusText: "OK",
+          headers: new Headers({
+            "Content-Type": "text/turtle",
+            "wac-allow": 'user="read write append control",public="read"',
+            "accept-patch": "application/sparql-update",
+          }),
+          text: () => Promise.resolve(""),
+        } as Response);
+      // and the store already fetched the resource (and implicitly the description resource)
+      const store = new Store(mockSession);
+      await store.fetch("https://pod.test/resource.pdf");
+
+      // when a relation is added
+      const thing = store.get("https://pod.test/resource.pdf#thing");
+      await store.addRelation(
+        thing,
+        "https://vocab.example#property",
+        "https://pod.test/other-resource",
+      );
+      // then the update targets the description resource
+      thenSparqlUpdateIsSentToUrl(
+        fetchMock,
+        "https://pod.test/resource.pdf.meta",
+        `
+      INSERT DATA {
+        <https://pod.test/resource.pdf#thing>
+          <https://vocab.example#property> <https://pod.test/other-resource> .
+      }`,
+      );
+    });
+
+    it("throws an error if document to update could not be determined", async () => {
+      const fetchMock = vi.fn();
+      const mockSession = {
+        authenticatedFetch: fetchMock,
+      } as unknown as PodOsSession;
+      // given a non-RDF resource can be fetched but does not link to a description resource
+      when(fetchMock)
+        .calledWith("https://pod.test/resource.pdf", expect.anything())
+        .thenResolve({
+          ok: true,
+          status: 200,
+          statusText: "OK",
+          headers: new Headers({
+            "Content-Type": "application/pdf",
+            "wac-allow": 'user="read write append control",public="read"',
+            "accept-patch": "application/sparql-update",
+          }),
+          text: () => Promise.resolve(""),
+        } as Response);
+      // and the store already fetched the resource
+      const store = new Store(mockSession);
+      await store.fetch("https://pod.test/resource.pdf");
+
+      // when a relation is added
+      const thing = store.get("https://pod.test/resource.pdf#thing");
+      const promise = store.addRelation(
+        thing,
+        "https://vocab.example#property",
+        "https://pod.test/other-resource",
+      );
+      // then an error is thrown
+      // noinspection ES6RedundantAwait (await is a MUST https://vitest.dev/guide/learn/async.html#resolves-and-rejects)
+      await expect(promise).rejects.toThrow(
+        "Could not determine document to update",
       );
     });
   });
@@ -721,7 +1122,10 @@ export function thenSparqlUpdateIsSentToUrl(
     (it) => it[0] === url && it[1].method === "PATCH",
   );
 
-  expect(sparqlUpdateCall).toBeDefined();
+  expect(
+    sparqlUpdateCall,
+    `PATCH request to ${url} expected but not found.`,
+  ).toBeDefined();
 
   const body = sparqlUpdateCall![1].body;
   const actualQuery = parser.parse(body) as Update;

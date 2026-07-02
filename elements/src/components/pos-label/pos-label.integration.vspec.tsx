@@ -1,5 +1,5 @@
 import { describe, expect, h, it, render } from '@stencil/vitest';
-import { notFound, server, turtleFile } from '../../test/msw';
+import { binaryResource, notFound, server, turtleFile } from '../../test/msw';
 
 describe('pos-label', () => {
   it('renders label for successfully loaded resource', async () => {
@@ -123,5 +123,32 @@ describe('pos-label', () => {
 
     // then Bob's name shows up
     expect(label!.shadowRoot).toEqualHtml('Bob');
+  });
+
+  it('pos-label renders title from .meta document of a binary resource', async () => {
+    // given a binary PDF resource with a describedby link to its .meta document
+    server.use(
+      binaryResource('https://pod.test/report.pdf', 'https://pod.test/report.pdf.meta', 'application/pdf'),
+      turtleFile(
+        'https://pod.test/report.pdf.meta',
+        `
+          <https://pod.test/report.pdf> <http://purl.org/dc/terms/title> "Annual Report" .
+        `,
+      ),
+    );
+
+    // when rendering pos-label for the binary resource
+    const page = await render(
+      <pos-app>
+        <pos-resource uri="https://pod.test/report.pdf">
+          <pos-label />
+        </pos-resource>
+      </pos-app>,
+    );
+    await page.waitForChanges();
+
+    // then the title from the .meta document is displayed
+    const label = page.root.querySelector('pos-label');
+    expect(label!.shadowRoot).toEqualHtml('Annual Report');
   });
 });
