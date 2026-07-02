@@ -151,17 +151,17 @@ export class Store {
    */
   async addPropertyValue(thing: Thing, property: string, value: string) {
     const docUrl = this.determineDocumentToUpdate(thing);
-    return this.updater.update(
-      [],
-      [st(sym(thing.uri), sym(property), lit(value), sym(docUrl))],
-      undefined,
-      false,
-      {
-        // explicitly omit credentials due to
-        // https://github.com/pod-os/PodOS/issues/17
-        credentials: "omit",
-      },
+    return this.insert(
+      st(sym(thing.uri), sym(property), lit(value), sym(docUrl)),
     );
+  }
+
+  private insert(statement: Statement) {
+    return this.updater.update([], [statement], undefined, false, {
+      // explicitly omit credentials due to
+      // https://github.com/pod-os/PodOS/issues/17
+      credentials: "omit",
+    });
   }
 
   /**
@@ -176,16 +176,8 @@ export class Store {
     uri: string,
   ): Promise<void> {
     const docUrl = this.determineDocumentToUpdate(thing);
-    return this.updater.update(
-      [],
-      [st(sym(thing.uri), sym(property), sym(uri), sym(docUrl))],
-      undefined,
-      false,
-      {
-        // explicitly omit credentials due to
-        // https://github.com/pod-os/PodOS/issues/17
-        credentials: "omit",
-      },
+    return this.insert(
+      st(sym(thing.uri), sym(property), sym(uri), sym(docUrl)),
     );
   }
 
