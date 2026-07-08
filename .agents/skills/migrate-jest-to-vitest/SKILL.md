@@ -6,6 +6,18 @@ description: Migrate a stencile component unit test (spec.tsx) from Jest to Vite
 The user will instruct you exactly what to do. Do only that, then document that into this skill. Do not try to solve
 problems on your own. Follow the described path and delegate anything that comes unexpected to the user.
 
+## CRITICAL: Execute steps mechanically — do not think ahead
+
+Each step below is a mechanical, self-contained action (rename a file, add imports, replace a snippet). Execute
+**only the current step**. Do NOT:
+
+- Read the component source, other vspec files, or the codebase "for reference" before a step.
+- Reason about which pattern to use, anticipate later steps, or pre-empt the user.
+- Combine multiple steps in one turn.
+
+**If you feel yourself starting to analyse or plan beyond executing the literal current step, STOP and ask the user
+what to do.** Do not proceed on your own initiative. Thinking is a signal to pause, not to act.
+
 ## IMPORTANT: Self-improve after user feedback
 
 After you apply an instruction the user gives you to the test file, update this skill file to document what
@@ -54,6 +66,32 @@ import { when } from 'vitest-when';
 `.mockRejectedValue(...)` → `.thenReject(...)`. The `when(fn).calledWith(...)` prefix is unchanged. The mocks must be
 `vi.fn()` instances.
 
+### Step 2c: Replace `jest.mock` / `jest.fn` with `vi.mock` / `vi.fn`
+
+If the test uses Jest's module mocking (`jest.mock('module', factory)`) or `jest.fn()` mocks (e.g. an event listener
+spy), convert them to their Vitest equivalents. `vi` is already imported in Step 2, so no new import is needed, and
+`vi.mock` is hoisted automatically just like `jest.mock`:
+
+```ts
+// before
+const push = jest.fn();
+jest.mock('stencil-router-v2', () => ({
+  createRouter: () => ({ onChange: jest.fn(), push }),
+}));
+// ...
+const onRouteChange = jest.fn();
+
+// after
+const push = vi.fn();
+vi.mock('stencil-router-v2', () => ({
+  createRouter: () => ({ onChange: vi.fn(), push }),
+}));
+// ...
+const onRouteChange = vi.fn();
+```
+
+Replace **every** occurrence — both the module-level mock factory (`jest.mock` → `vi.mock`) and any inline
+`jest.fn()` calls inside the tests.
 
 ### Step 3: Replace `newSpecPage` rendering with `render`
 
