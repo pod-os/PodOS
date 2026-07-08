@@ -10,6 +10,7 @@ test.describe("RDF metadata", () => {
   test("shows metadata triples for a binary resource via describedby", async ({
     page,
     navigationBar,
+    toolSelect,
   }) => {
     await test.step("Given PodOS Browser is open", async () => {
       await page.goto("/");
@@ -20,16 +21,13 @@ test.describe("RDF metadata", () => {
     });
 
     await test.step("Then metadata from the .meta document is visible in the Data tool", async () => {
-      // Switch to the Data tab where metadata triples are shown
-      const dataTab = page.getByRole("tab", { name: /Data/i });
-      await dataTab.click();
+      const dataTool = await toolSelect.openDataTool("Test Document");
 
       // The title from the .meta document should appear as the heading
-      const heading = page.getByRole("heading");
-      await expect(heading).toHaveText("Test Document");
+      await expect(dataTool.heading()).toHaveText("Test Document");
 
       // The type from the .meta document should be visible
-      const overview = page.getByRole("article", { name: "Test Document" });
+      const overview = dataTool.overview();
       await expect(overview).toHaveText(/DigitalDocument/);
 
       // The description from the .meta document should be visible
@@ -42,12 +40,13 @@ test.describe("RDF metadata", () => {
   test("can add a literal value to a binary resource and it persists via the .meta document", async ({
     page,
     navigationBar,
+    toolSelect,
   }) => {
     await test.step("Given PodOS Browser is open", async () => {
       await page.goto("/");
     });
 
-    await test.step("And pod owner is signed in", async () => {
+    await test.step("And I am signed in", async () => {
       await signIn(page, alice);
     });
 
@@ -55,34 +54,20 @@ test.describe("RDF metadata", () => {
       await navigationBar.fillAndSubmit(BINARY_RESOURCE_URI);
     });
 
-    await test.step("And I switch to the Data tool and add a literal value", async () => {
-      // Switch to the Data tab to access the add-literal interface
-      const dataTool = page
-        .getByRole("tab", { name: /Data/i })
-        .describe("Data tool");
-      await dataTool.click();
+    const dataTool =
+      await test.step("And I switch to the Data tool", async () => {
+        return await toolSelect.openDataTool("Test Document");
+      });
 
-      const addLiteralField = page
-        .getByPlaceholder("Add literal")
-        .describe("Add literal field");
-      await expect(addLiteralField).toBeVisible();
-
-      // Select a property
-      await addLiteralField.fill("https://schema.org/keywords");
-      await addLiteralField.press("Tab");
-
-      // Enter a value
-      await page.keyboard.type("integration-test", { delay: 100 });
-      await page.keyboard.press("Enter");
+    await test.step("And I add a literal value", async () => {
+      const addLiteral = dataTool.addLiteralValue();
+      await addLiteral.fill("https://schema.org/keywords", "integration-test");
     });
 
     await test.step("Then the new literal value appears on the page", async () => {
-      const newProperty = page
-        .getByRole("term")
-        .filter({ hasText: "keywords" })
-        .locator("..");
-      const newValue = newProperty.getByRole("definition");
-      await expect(newValue).toContainText("integration-test");
+      await expect(dataTool.literals().valueOf("keywords")).toContainText(
+        "integration-test",
+      );
     });
   });
 });
