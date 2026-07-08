@@ -1,6 +1,8 @@
 import { Locator, Page } from "@playwright/test";
 import { FileUpload } from "./FileUpload";
 import { AttachmentTool } from "./AttachmentTool";
+import { AddLiteralValue } from "./AddLiteralValue";
+import { Literals } from "./Literals";
 
 export class GenericThingPage {
   private readonly page: Page;
@@ -53,5 +55,15 @@ export class GenericThingPage {
   async openAttachmentsTool(): Promise<AttachmentTool> {
     await this.attachToolButton().click();
     return new AttachmentTool(this.page);
+  }
+
+  /** The component used to add a literal value to this thing. */
+  addLiteralValue(): AddLiteralValue {
+    return new AddLiteralValue(this.page);
+  }
+
+  /** The literals (term/definition pairs) shown for this thing. */
+  literals(): Literals {
+    return new Literals(this.page);
   }
 }
