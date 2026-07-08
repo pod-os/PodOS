@@ -20,7 +20,7 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.10.2",
     "@playwright/test": "^1.53.1",
-    "@solid/community-server": "^7.1.7",
+    "@solid/community-server": "^7.1.9",
     "netlify-cli": "^26.0.1",
     "pwa-asset-generator": "^8.0.5",
     "serve": "^14.2.4"
