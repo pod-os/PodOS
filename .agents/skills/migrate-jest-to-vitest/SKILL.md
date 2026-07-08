@@ -114,14 +114,48 @@ normally — `render`'s `componentWillLoad` fires synchronously and the document
 Note that `page` may then be unused if the test only asserts on the listener; drop the `const page =` binding in that
 case. But confirm this approach with the user first — do not improvise.
 
+### Step 3b: Handle tests that used `supportsShadowDom: false`
+
+Some Jest specs force **light DOM** by passing `supportsShadowDom: false` to `newSpecPage`. The `@stencil/vitest`
+`render` helper has no such option — it renders the component with whatever shadow mode its `@Component` decorator
+declares (usually shadow DOM). After converting with `render` (Step 3), such tests will be **red** because the
+rendered markup now lives inside a shadow root instead of as light-DOM children of the host element.
+
+Use normal render with shadow DOM in vitest. Then, for each affected  assertion:
+
+1. **Assert on the shadow root, not the host element.** Change `expect(page.root).toEqualHtml(...)` to
+   `expect(page.root.shadowRoot).toEqualHtml(...)`. Drop the host-element wrapper lines (e.g. `<pos-select-term>` and
+   its closing `</pos-select-term>`) from the expected HTML — `shadowRoot` only contains the shadow content.
+2. **Route `querySelector` through the shadow root.** Light-DOM lookups like `page.root.querySelector('input')` now
+   return `null` because the element is in the shadow root. Change them to `page.root.shadowRoot!.querySelector(...)`.
+   The `!` will be demanded by `tsc` in Step 7 — add it here so the test runs.
+3. **Re-derive the expected HTML from the actual test output.** Do NOT reuse the old light-DOM `toEqualHtml` string
+   verbatim — shadow-root serialization differs from light-DOM serialization in ways that are not obvious. Run the
+   test, read the `Received:` block, and match it exactly. Two diffs observed so far:
+   - An empty input that serialized as `value=""` in light DOM drops the `value` attribute entirely under shadow DOM.
+   - Inline element text content like `<option value="...">schema:name</option>` must be reformatted to multiline
+     (`<option value="...">\n  schema:name\n</option>`) to match the shadow-root pretty-printer — the inline form
+     fails even though the normalised diff looks identical to the received output.
+
+This is the established repo pattern: other migrated `.vspec.tsx` files assert on `page.root.shadowRoot` directly.
+
 
 ### Step 4: Replace the component import with a side-effect import
 
 Replace the named component import (e.g. `import { PosReverseRelations } from './pos-reverse-relations';`) with a
-side-effect import:
+side-effect import. **Preserve the original relative path exactly** — the original specifier includes whatever
+directory prefix it had. Do not rewrite `'../foo'` as `'./foo'`. Only the import form changes, not the path:
 
 ```ts
+// before
+import { PosReverseRelations } from './pos-reverse-relations';
+// after
 import './pos-reverse-relations';
+
+// before (test in a test/ subdirectory)
+import { PosSelectTerm } from '../pos-select-term';
+// after
+import '../pos-select-term';
 ```
 
 Since `render` no longer needs the `components` array, the named import is no longer needed.
