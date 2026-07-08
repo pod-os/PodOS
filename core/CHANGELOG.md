@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 0.30.0
+## 0.31.0
 
 ### Breaking changes
 
@@ -18,6 +18,10 @@ and this project adheres to
 - Adding data now works on Non-RDF documents. Data will be added to the corresponding [description resource](https://solidproject.org/TR/protocol#auxiliary-resources-description-resource). This is now supported by:
   - [`Store.addPropertyValue`](https://pod-os.org/reference/core/classes/store/#addpropertyvalue)
   - [`Store.addRelation`](https://pod-os.org/reference/core/classes/store/#addrelation)
+
+## 0.30.0
+
+- internal changes only
 
 ## 0.29.0
 
