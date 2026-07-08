@@ -15,6 +15,18 @@ export default defineVitestConfig({
       },
       {
         // component unit tests in dom environment
+        oxc: {
+          // vitest prints a warning:
+          // > Both esbuild and oxc options were set. oxc options will be used and esbuild options will be ignored. The following esbuild options were set: `{ jsxFactory: 'h', jsxFragment: 'Fragment' }`
+          // so osx is used, but it does not have jsx options set correctly, which leads to renderings like `__self="[object global]"` and `__source="[object Object]"` in tests
+          // we are setting the jsx options for oxc here to fix that
+          jsx: {
+            runtime: 'classic',
+            pragma: 'h',
+            pragmaFrag: 'Fragment',
+            development: false, // do not render development props like __self and __source
+          },
+        },
         plugins: [stencilVitestPlugin()],
         test: {
           setupFiles: ['vitest/setup-spec.ts'],

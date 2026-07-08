@@ -17,7 +17,7 @@ describe('pos-list', () => {
     await page.waitForChanges();
     expect(page.root).toMatchInlineSnapshot(`
       <pos-list class="hydrated">
-        <template __self="[object global]" __source="[object Object]"></template>
+        <template></template>
       </pos-list>
     `);
   });

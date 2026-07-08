@@ -10,7 +10,28 @@ describe('BrokenFile', () => {
       status: { code: 401, text: 'unauthenticated' },
     } as unknown as BrokenFileData;
     const page = await renderComponent(brokenFile);
-    expect(page.root).toMatchSnapshot();
+    expect(page.root).toMatchInlineSnapshot(`
+      <div>
+        <a
+          class="error"
+          href="https://pod.test/image.png"
+        >
+          <div>
+            <sl-icon name="lock"></sl-icon>
+          </div>
+          <div
+            class="code"
+          >
+            401
+          </div>
+          <div
+            class="text"
+          >
+            unauthenticated
+          </div>
+        </a>
+      </div>
+    `);
   });
 
   it.each`

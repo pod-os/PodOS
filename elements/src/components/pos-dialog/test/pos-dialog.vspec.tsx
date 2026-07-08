@@ -15,14 +15,14 @@ describe('pos-dialog', () => {
       <pos-dialog class="hydrated">
         <dialog>
           <header>
-            <span slot="title" __self="[object global]" __source="[object Object]">
+            <span slot="title">
               Title
             </span>
             <button tabindex="-1" id="close" title="Close">
               <sl-icon name="x"></sl-icon>
             </button>
           </header>
-          <span slot="content" __self="[object global]" __source="[object Object]">
+          <span slot="content">
             Content
           </span>
         </dialog>
