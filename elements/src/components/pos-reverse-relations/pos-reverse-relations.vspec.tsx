@@ -1,28 +1,16 @@
-import { newSpecPage } from '@stencil/core/testing';
+import { describe, expect, it, render, h } from '@stencil/vitest';
 
-import { getByText } from '@testing-library/dom';
-
-import { PosReverseRelations } from './pos-reverse-relations';
+import './pos-reverse-relations';
 
 describe('pos-reverse-relations', () => {
   it('are empty initially', async () => {
-    const page = await newSpecPage({
-      components: [PosReverseRelations],
-      html: `<pos-reverse-relations />`,
-    });
-    expect(page.root).toEqualHtml(`
-      <pos-reverse-relations>
-        <mock:shadow-root></mock:shadow-root>
-      </pos-reverse-relations>
-  `);
+    const page = await render(<pos-reverse-relations></pos-reverse-relations>);
+    expect(page.root).toBeEmptyDOMElement();
   });
 
   it('renders single predicate and rich link to resource', async () => {
-    const page = await newSpecPage({
-      components: [PosReverseRelations],
-      html: `<pos-reverse-relations />`,
-    });
-    await page.rootInstance.receiveResource({
+    const page = await render(<pos-reverse-relations></pos-reverse-relations>);
+    await page.instance.receiveResource({
       reverseRelations: () => [
         {
           predicate: 'http://schema.org/knows',
@@ -37,16 +25,13 @@ describe('pos-reverse-relations', () => {
 
     const knows = el.querySelector('pos-predicate[uri="http://schema.org/knows"]');
     expect(knows).toEqualAttribute('label', 'is knows of');
-    const linkToAlice = page.root.shadowRoot.querySelector('pos-rich-link[uri="https://person.test/alice"]');
+    const linkToAlice = page.root.shadowRoot!.querySelector('pos-rich-link[uri="https://person.test/alice"]');
     expect(linkToAlice).not.toBeNull();
   });
 
   it('renders multiple predicates and rich links to resource', async () => {
-    const page = await newSpecPage({
-      components: [PosReverseRelations],
-      html: `<pos-reverse-relations />`,
-    });
-    await page.rootInstance.receiveResource({
+    const page = await render(<pos-reverse-relations></pos-reverse-relations>);
+    await page.instance.receiveResource({
       reverseRelations: () => [
         {
           predicate: 'http://schema.org/knows',
@@ -66,14 +51,16 @@ describe('pos-reverse-relations', () => {
 
     const knows = el.querySelector('pos-predicate[uri="http://schema.org/participant"]');
     expect(knows).toEqualAttribute('label', 'is participant of');
-    const linkToAlice = page.root.shadowRoot.querySelector('pos-rich-link[uri="https://person.test/alice"]');
+    const linkToAlice = page.root.shadowRoot!.querySelector('pos-rich-link[uri="https://person.test/alice"]');
     expect(linkToAlice).not.toBeNull();
-    const linkToBernadette = page.root.shadowRoot.querySelector('pos-rich-link[uri="https://person.test/bernadette"]');
+    const linkToBernadette = page.root.shadowRoot!.querySelector(
+      'pos-rich-link[uri="https://person.test/bernadette"]',
+    );
     expect(linkToBernadette).not.toBeNull();
 
     const participant = el.querySelector('pos-predicate[uri="http://schema.org/participant"]');
     expect(participant).toEqualAttribute('label', 'is participant of');
-    const linkToAttachment = page.root.shadowRoot.querySelector('pos-rich-link[uri="https://event.test/party"]');
+    const linkToAttachment = page.root.shadowRoot!.querySelector('pos-rich-link[uri="https://event.test/party"]');
     expect(linkToAttachment).not.toBeNull();
   });
 });
