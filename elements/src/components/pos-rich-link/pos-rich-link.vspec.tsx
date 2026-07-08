@@ -1,47 +1,46 @@
-import { newSpecPage } from '@stencil/core/testing';
-import { PosRichLink } from './pos-rich-link';
+import { vi } from 'vitest';
+import { beforeEach, describe, expect, h, it, render, RenderResult } from '@stencil/vitest';
 import { getByText } from '@testing-library/dom';
-import { when } from 'jest-when';
+import { when } from 'vitest-when';
+
+import './pos-rich-link';
 
 describe('pos-rich-link with uri', () => {
-  let page;
+  let page: RenderResult;
   beforeEach(async () => {
-    page = await newSpecPage({
-      components: [PosRichLink],
-      html: `<pos-rich-link uri="https://pod.example/resource" />`,
-    });
+    page = await render(<pos-rich-link uri="https://pod.example/resource"></pos-rich-link>);
   });
 
   describe('contents', () => {
     it('lazy loads the linked resource', () => {
-      const resource = page.root.shadowRoot.querySelector('pos-resource');
+      const resource = page.root.shadowRoot!.querySelector('pos-resource');
       expect(resource).not.toBeNull();
       expect(resource).toEqualAttribute('uri', 'https://pod.example/resource');
       expect(resource).toHaveAttribute('lazy');
     });
 
     it('shows the resource label', () => {
-      const resource = page.root.shadowRoot.querySelector('pos-resource');
+      const resource = page.root.shadowRoot!.querySelector('pos-resource')!;
       const label = resource.querySelector('pos-label');
       expect(label).not.toBeNull();
     });
 
     it('shows the resource description', () => {
-      const resource = page.root.shadowRoot.querySelector('pos-resource');
+      const resource = page.root.shadowRoot!.querySelector('pos-resource')!;
       const description = resource.querySelector('pos-description');
       expect(description).not.toBeNull();
     });
 
     it('shows a link to the resource', () => {
-      const resource = page.root.shadowRoot.querySelector('pos-resource');
-      const link = resource.querySelector('a');
+      const resource = page.root.shadowRoot!.querySelector('pos-resource')!;
+      const link = resource.querySelector('a')!;
       expect(link).not.toBeNull();
       expect(link).toEqualAttribute('href', 'https://pod.example/resource');
       expect(link.innerHTML).toEqual('<pos-label></pos-label>');
     });
 
     it('shows the host of the link', () => {
-      const resource = page.root.shadowRoot.querySelector('pos-resource');
+      const resource = page.root.shadowRoot!.querySelector('pos-resource')!;
       expect(getByText(resource, 'pod.example')).toEqualHtml(`
       <span class="url">
         pod.example
@@ -53,25 +52,19 @@ describe('pos-rich-link with uri', () => {
 
 describe('pos-rich-link without uri', () => {
   it('does not emit pod-os:resource event if uri is present', async () => {
-    const onResource = jest.fn();
-    const page = await newSpecPage({
-      components: [PosRichLink],
-    });
-    page.body.addEventListener('pod-os:resource', onResource);
-    await page.setContent('<pos-rich-link uri="https://pod.example/resource" />');
+    const onResource = vi.fn();
+    document.addEventListener('pod-os:resource', onResource);
+    await render(<pos-rich-link uri="https://pod.example/resource"></pos-rich-link>);
     expect(onResource).toHaveBeenCalledTimes(0);
   });
 
   it('receives resource and sets it as link if uri is not present', async () => {
-    const onResource = jest.fn();
-    const page = await newSpecPage({
-      components: [PosRichLink],
-    });
-    page.body.addEventListener('pod-os:resource', onResource);
-    await page.setContent('<pos-rich-link/>');
+    const onResource = vi.fn();
+    document.addEventListener('pod-os:resource', onResource);
+    const page = await render(<pos-rich-link></pos-rich-link>);
     expect(onResource).toHaveBeenCalledTimes(1);
 
-    await page.rootInstance.receiveResource({
+    await page.instance.receiveResource({
       uri: 'https://pod.example/resource',
     });
     await page.waitForChanges();
@@ -80,19 +73,13 @@ describe('pos-rich-link without uri', () => {
   });
 
   it('is empty if neither uri nor resource are received', async () => {
-    const page = await newSpecPage({
-      components: [PosRichLink],
-      html: `<pos-rich-link/>`,
-    });
-    expect(page.root?.innerHTML).toBe('');
+    const page = await render(<pos-rich-link></pos-rich-link>);
+    expect(page.root).toBeEmptyDOMElement();
   });
 
   it('does not use pos-resource if uri is not present', async () => {
-    const page = await newSpecPage({
-      components: [PosRichLink],
-      html: `<pos-rich-link/>`,
-    });
-    await page.rootInstance.receiveResource({
+    const page = await render(<pos-rich-link></pos-rich-link>);
+    await page.instance.receiveResource({
       uri: 'https://pod.example/resource',
     });
     await page.waitForChanges();
@@ -100,51 +87,42 @@ describe('pos-rich-link without uri', () => {
   });
 
   it('uses the matching relation if rel prop is defined', async () => {
-    const page = await newSpecPage({
-      components: [PosRichLink],
-      html: `<pos-rich-link rel="https://schema.org/video" />`,
-    });
+    const page = await render(<pos-rich-link rel="https://schema.org/video"></pos-rich-link>);
     const thing = {
       uri: 'https://pod.example/resource',
-      relations: jest.fn(),
+      relations: vi.fn(),
     };
     when(thing.relations)
       .calledWith('https://schema.org/video')
-      .mockReturnValue([{ predicate: 'https://schema.org/video', uris: ['https://video.test/video-1'] }]);
+      .thenReturn([{ predicate: 'https://schema.org/video', uris: ['https://video.test/video-1'] }]);
 
-    await page.rootInstance.receiveResource(thing);
+    await page.instance.receiveResource(thing);
     await page.waitForChanges();
     const link = page.root?.shadowRoot?.querySelector('a');
     expect(link).toEqualAttribute('href', 'https://video.test/video-1');
   });
 
   it('uses the matching relation if rev prop is defined', async () => {
-    const page = await newSpecPage({
-      components: [PosRichLink],
-      html: `<pos-rich-link rev="https://schema.org/video" />`,
-    });
+    const page = await render(<pos-rich-link rev="https://schema.org/video"></pos-rich-link>);
     const thing = {
       uri: 'https://video.test/video-1',
-      reverseRelations: jest.fn(),
+      reverseRelations: vi.fn(),
     };
     when(thing.reverseRelations)
       .calledWith('https://schema.org/video')
-      .mockReturnValue([{ predicate: 'https://schema.org/video', uris: ['https://pod.example/resource'] }]);
+      .thenReturn([{ predicate: 'https://schema.org/video', uris: ['https://pod.example/resource'] }]);
 
-    await page.rootInstance.receiveResource(thing);
+    await page.instance.receiveResource(thing);
     await page.waitForChanges();
     const link = page.root?.shadowRoot?.querySelector('a');
     expect(link).toEqualAttribute('href', 'https://pod.example/resource');
   });
 
   it('displays and emits an error if no link is found', async () => {
-    const page = await newSpecPage({
-      components: [PosRichLink],
-      html: `<pos-rich-link rel="https://schema.org/video" />`,
-    });
-    const errorListener = jest.fn();
-    page.body.addEventListener('pod-os:error', errorListener);
-    await page.rootInstance.receiveResource({
+    const page = await render(<pos-rich-link rel="https://schema.org/video"></pos-rich-link>);
+    const errorListener = vi.fn();
+    page.root.addEventListener('pod-os:error', errorListener);
+    await page.instance.receiveResource({
       uri: 'https://pod.example/resource',
       relations: () => [],
     });
@@ -160,14 +138,11 @@ describe('pos-rich-link without uri', () => {
   });
 
   it('displays and emits an error if more than one link is found', async () => {
-    const page = await newSpecPage({
-      components: [PosRichLink],
-      html: `<pos-rich-link rel="https://schema.org/video" />`,
-    });
-    const errorListener = jest.fn();
-    page.body.addEventListener('pod-os:error', errorListener);
+    const page = await render(<pos-rich-link rel="https://schema.org/video"></pos-rich-link>);
+    const errorListener = vi.fn();
+    page.root.addEventListener('pod-os:error', errorListener);
 
-    await page.rootInstance.receiveResource({
+    await page.instance.receiveResource({
       uri: 'https://pod.example/resource',
       relations: () => [
         { predicate: 'https://schema.org/video', uris: ['https://video.test/video-1', 'https://video.test/video-2'] },
@@ -187,68 +162,78 @@ describe('pos-rich-link without uri', () => {
 
 describe('pos-rich-link with slot', () => {
   it('uses slotted text if present with specified uri', async () => {
-    const page = await newSpecPage({
-      components: [PosRichLink],
-      html: `<pos-rich-link uri="https://pod.example/resource">Link text</pos-rich-link>`,
-      supportsShadowDom: false,
-    });
-    expect(page.root.firstElementChild).toEqualHtml(
-      `
-      <pos-resource lazy="" uri="https://pod.example/resource">
-        <a href="https://pod.example/resource">
-          Link text
-        </a>
-      </pos-resource>
-      `,
-    );
+    const page = await render(<pos-rich-link uri="https://pod.example/resource">Link text</pos-rich-link>);
+    expect(page.root).toMatchInlineSnapshot(`
+      <pos-rich-link class="hydrated">
+        <mock:shadow-root>
+          <pos-resource lazy uri="https://pod.example/resource">
+            <a href="https://pod.example/resource">
+              <slot></slot>
+            </a>
+          </pos-resource>
+        </mock:shadow-root>
+        Link text
+      </pos-rich-link>
+    `);
   });
 
   it('uses slotted element if present with specified uri', async () => {
-    const page = await newSpecPage({
-      components: [PosRichLink],
-      html: `<pos-rich-link uri="https://pod.example/resource"><pos-label/></pos-rich-link>`,
-      supportsShadowDom: false,
-    });
-    expect(page.root.firstElementChild).toEqualHtml(
-      `
-      <pos-resource lazy="" uri="https://pod.example/resource">
-        <a href="https://pod.example/resource">
-          <pos-label/>
-        </a>
-      </pos-resource>
-      `,
+    const page = await render(
+      <pos-rich-link uri="https://pod.example/resource">
+        <pos-label />
+      </pos-rich-link>,
     );
+    expect(page.root).toMatchInlineSnapshot(`
+      <pos-rich-link class="hydrated">
+        <mock:shadow-root>
+          <pos-resource lazy uri="https://pod.example/resource">
+            <a href="https://pod.example/resource">
+              <slot></slot>
+            </a>
+          </pos-resource>
+        </mock:shadow-root>
+        <pos-label></pos-label>
+      </pos-rich-link>
+    `);
   });
 
   it('uses slotted text if present with received resource ', async () => {
-    const page = await newSpecPage({
-      components: [PosRichLink],
-      html: `<pos-rich-link>Link text</pos-rich-link>`,
-      supportsShadowDom: false,
-    });
-    await page.rootInstance.receiveResource({
+    const page = await render(<pos-rich-link>Link text</pos-rich-link>);
+    await page.instance.receiveResource({
       uri: 'https://pod.example/resource',
     });
     await page.waitForChanges();
-    expect(page.root.firstElementChild).toEqualHtml(`
-      <a href="https://pod.example/resource">
+    expect(page.root).toMatchInlineSnapshot(`
+      <pos-rich-link class="hydrated">
+        <mock:shadow-root>
+          <a href="https://pod.example/resource">
+            <slot></slot>
+          </a>
+        </mock:shadow-root>
         Link text
-      </a>`);
+      </pos-rich-link>
+    `);
   });
 
   it('uses slotted element if present with received resource ', async () => {
-    const page = await newSpecPage({
-      components: [PosRichLink],
-      html: `<pos-rich-link><pos-label/></pos-rich-link>`,
-      supportsShadowDom: false,
-    });
-    await page.rootInstance.receiveResource({
+    const page = await render(
+      <pos-rich-link>
+        <pos-label />
+      </pos-rich-link>,
+    );
+    await page.instance.receiveResource({
       uri: 'https://pod.example/resource',
     });
     await page.waitForChanges();
-    expect(page.root.firstElementChild).toEqualHtml(`
-      <a href="https://pod.example/resource">
-        <pos-label/>
-      </a>`);
+    expect(page.root).toMatchInlineSnapshot(`
+      <pos-rich-link class="hydrated">
+        <mock:shadow-root>
+          <a href="https://pod.example/resource">
+            <slot></slot>
+          </a>
+        </mock:shadow-root>
+        <pos-label></pos-label>
+      </pos-rich-link>
+    `);
   });
 });
