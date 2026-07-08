@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.30.0
+
+### Breaking changes
+
+- [`Store.fetch`](https://pod-os.org/reference/core/classes/store/#fetch) no longer returns the rdflib response. It now resolves to `Promise<void>` instead of `Promise<ExtendedResponse>`. This change also affects the public [`PodOS.fetch`](https://pod-os.org/reference/core/classes/podos/#fetch). The fetch is needed to load metadata documents linked via `rel="describedby"` automatically, and the response object is no longer meaningful as a single return value.
+
+### Changed
+
+- [`Store.fetch`](https://pod-os.org/reference/core/classes/store/#fetch) now auto-follows a `Link: rel="describedby"` response header and loads the referenced metadata document into the store.
+- Adding data now works on Non-RDF documents. Data will be added to the corresponding [description resource](https://solidproject.org/TR/protocol#auxiliary-resources-description-resource). This is now supported by:
+  - [`Store.addPropertyValue`](https://pod-os.org/reference/core/classes/store/#addpropertyvalue)
+  - [`Store.addRelation`](https://pod-os.org/reference/core/classes/store/#addrelation)
+
 ## 0.29.0
 
 ### Added
