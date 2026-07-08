@@ -47,5 +47,25 @@ describe("Thing", function () {
       expect(result).toBeDefined();
       expect(result).toEqual(meta.value);
     });
+
+    it("does not return a description document from a wrong provenance", () => {
+      const doc = sym("https://resource.test");
+      internalStore.add(
+        doc,
+        rdf("type"),
+        sym("https://vocab.test/NonRdfDocument"),
+        doc,
+      );
+      const meta = sym("https://resource.test.meta");
+      internalStore.add(
+        doc,
+        iana("describedby"),
+        meta,
+        sym("https://malicious.test"),
+      );
+      const thing = new Thing("https://resource.test#it", store, false);
+      const result = thing.rdfDocument();
+      expect(result).not.toBeDefined();
+    });
   });
 });
