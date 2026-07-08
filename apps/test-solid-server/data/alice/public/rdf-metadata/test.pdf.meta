@@ -1,0 +1,3 @@
+<http://localhost:4000/alice/public/rdf-metadata/test.pdf> a <http://schema.org/DigitalDocument>;
+    <http://purl.org/dc/terms/title> "Test Document";
+    <http://schema.org/description> "A PDF document for testing RDF metadata".

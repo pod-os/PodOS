@@ -1,6 +1,6 @@
 # Task 3 — End-to-end integration test
 
-> **Status:** Open
+> **Status:** Done
 > **Depends on:** Task 1, Task 2
 
 ## Goal
