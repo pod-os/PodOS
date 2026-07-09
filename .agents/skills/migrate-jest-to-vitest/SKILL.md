@@ -1,439 +1,136 @@
 ---
 name: migrate-jest-to-vitest
-description: Migrate a stencile component unit test (spec.tsx) from Jest to Vitest.
+description: Migrate a stencil component unit test (spec.tsx) from Jest to Vitest.
 ---
 
-The user will instruct you exactly what to do. Do only that, then document that into this skill. Do not try to solve
-problems on your own. Follow the described path and delegate anything that comes unexpected to the user.
+Execute steps mechanically. Do only what the current step says — do not read ahead, combine steps, or reason
+about the broader file. If anything unexpected comes up, STOP and ask the user.
 
-## CRITICAL: Execute steps mechanically — do not think ahead
-
-Each step below is a mechanical, self-contained action (rename a file, add imports, replace a snippet). Execute
-**only the current step**. Do NOT:
-
-- Read the component source, other vspec files, or the codebase "for reference" before a step.
-- Reason about which pattern to use, anticipate later steps, or pre-empt the user.
-- Combine multiple steps in one turn.
-
-**If you feel yourself starting to analyse or plan beyond executing the literal current step, STOP and ask the user
-what to do.** Do not proceed on your own initiative. Thinking is a signal to pause, not to act.
-
-## IMPORTANT: Self-improve after user feedback
-
-After you apply an instruction the user gives you to the test file, update this skill file to document what
-you just did as a new numbered step — but **only when the user gives feedback** (e.g. corrects your approach,
-clarifies a step, or points out something unexpected). Do not self-improve after every step that works as
-expected. The documentation step captures lessons learned, not routine successful execution.
-
-Do not wait for the user to say "self-improve" or "IMPORTANT: Self-Improvement". The documentation step is
-part of the task, not an afterthought.
+After the user gives corrective feedback, update this skill to document the lesson learned.
 
 ## Steps
 
-### Step 1: Rename the test file to `.vspec.tsx`
+### Step 1: Rename the test file
 
-Use `git mv` to rename the Jest spec file (`*.spec.tsx` / `*.spec.ts`) to the Vitest naming convention
-(`*.vspec.tsx` / `*.vspec.ts`). `git mv` preserves history.
+`git mv path/to/file.spec.tsx path/to/file.vspec.tsx`
 
-```bash
-git mv path/to/file.spec.tsx path/to/file.vspec.tsx
-```
+### Step 2: Replace the component import with a side-effect import
 
-Verify the rename landed, then self-improve and await the user's next instruction.
+Drop the named export, keep the path exactly: `import './pos-reverse-relations';`
 
-### Step 2: Add the Vitest imports
+### Step 3: Add the Vitest imports
 
-At the top of the renamed file, add these imports before the existing imports:
+At the top of the file, before the existing imports:
 
 ```ts
 import { vi } from 'vitest';
 import { beforeEach, afterEach, describe, expect, it, render, h } from '@stencil/vitest';
 ```
 
-### Step 2b: Replace `jest-when` with `vitest-when`
+### Step 4: Switch `mockPodOS` to the vitest variant
 
-If the test uses conditional mock return values via `jest-when`, swap the import:
+`import { mockPodOS } from '../../../test/mockPodOS.vitest';`
 
-```ts
-// before
-import { when } from 'jest-when';
-// after
-import { when } from 'vitest-when';
-```
+### Step 5: Replace `jest.*` with `vi.*`
 
-`vitest-when` is a drop-in import replacement, but its API differs from `jest-when`: replace
-`.mockReturnValue(...)` with `.thenReturn(...)`. Similarly, `.mockResolvedValue(...)` → `.thenResolve(...)` and
-`.mockRejectedValue(...)` → `.thenReject(...)`. The `when(fn).calledWith(...)` prefix is unchanged. The mocks must be
-`vi.fn()` instances.
+Global find-and-replace `jest.` → `vi.` throughout the file.
 
-### Step 2b.1: Replace chained `.mockReturnValueOnce(...)` with `vitest-when` `times` option
+### Step 6: Replace `jest-when` with `vitest-when`
 
-`jest-when` allowed chaining `.mockReturnValueOnce(...).mockReturnValueOnce(...)` to return different values on
-successive calls to the same mock. `vitest-when` does not have a `.thenReturnOnce(...)` — instead each call is a
-separate `when(...)` registration with a `{ times: 1 }` option, each with its own `.calledWith(...)`:
+Swap the import, then update the API: `.mockReturnValue` → `.thenReturn`, `.mockResolvedValue` → `.thenResolve`,
+`.mockRejectedValue` → `.thenReject`. The `when(fn).calledWith(...)` prefix is unchanged.
+
+**Chained `.mockReturnValueOnce`:** use separate `when` registrations with `{ times: 1 }`:
 
 ```ts
-// before
-when(os.proposeAppsFor)
-  .calledWith(thing)
-  .mockReturnValueOnce([])
-  .mockReturnValueOnce([{ name: 'Some app', ... }]);
-
-// after
-when(os.proposeAppsFor, { times: 1 })
-  .calledWith(thing)
-  .thenReturn([]);
-when(os.proposeAppsFor, { times: 1 })
-  .calledWith(thing)
-  .thenReturn([{ name: 'Some app', ... }]);
+when(fn, { times: 1 }).calledWith(arg).thenReturn(first);
+when(fn, { times: 1 }).calledWith(arg).thenReturn(second);
 ```
 
-**Beware match ordering.** `vitest-when` matches later registrations first (LIFO). When both `when` declarations
-sit *before* the code that consumes the mock, the second registration wins the first call. To make successive calls
-return in order, declare the first `when` before the consuming call and register the second `when` **after** the
-first call has been consumed (following the pattern in `pos-image.vspec.tsx`).
+⚠️ **LIFO ordering:** later registrations match first. Declare the first `when` before the consuming call,
+register the second `when` after the first call has been consumed.
 
-### Step 2b.2: Replace catch-all `jest-when` defaults (no `.calledWith`)
+**Bare catch-all defaults** (`when(fn).mockReturnValue(v)`, no `.calledWith`) are not supported. Drop if the
+mock factory already sets a default; otherwise cast: `(fn as Mock).mockReturnValue(v)` and add `Mock` to the
+`vitest` import.
 
-`jest-when` allowed a bare `when(fn).mockReturnValue(value)` — a catch-all default return with no `.calledWith(...)`.
-`vitest-when` does **not** support this form: `when(fn).thenReturn(value)` throws
-`TypeError: when(...).thenReturn is not a function` because `.thenReturn` must follow `.calledWith(...)`.
-
-Often the bare default is redundant — a shared mock factory (e.g. `mockPodOS.vitest.ts`) may already set
-`proposeAppsFor: vi.fn().mockReturnValue([])`. But if a test needs to (re)set a catch-all default on an existing
-`vi.fn()`, use Vitest's native mock API directly instead of `vitest-when`, casting the mock to `Mock`:
-
-```ts
-// before
-when(os.proposeAppsFor).mockReturnValue([]);
-// after
-(os.proposeAppsFor as Mock).mockReturnValue([]);
-```
-
-Import `Mock` alongside `vi` from `vitest`:
-
-```ts
-import { vi, Mock } from 'vitest';
-```
-
-### Step 2c: Replace `jest.mock` / `jest.fn` with `vi.mock` / `vi.fn`
-
-If the test uses Jest's module mocking (`jest.mock('module', factory)`) or `jest.fn()` mocks (e.g. an event listener
-spy), convert them to their Vitest equivalents. `vi` is already imported in Step 2, so no new import is needed, and
-`vi.mock` is hoisted automatically just like `jest.mock`:
-
-```ts
-// before
-const push = jest.fn();
-jest.mock('stencil-router-v2', () => ({
-  createRouter: () => ({ onChange: jest.fn(), push }),
-}));
-// ...
-const onRouteChange = jest.fn();
-
-// after
-const push = vi.fn();
-vi.mock('stencil-router-v2', () => ({
-  createRouter: () => ({ onChange: vi.fn(), push }),
-}));
-// ...
-const onRouteChange = vi.fn();
-```
-
-Replace **every** occurrence — both the module-level mock factory (`jest.mock` → `vi.mock`) and any inline
-`jest.fn()` calls inside the tests.
-
-### Step 2c.1: Provide value-used exports in a converted `@pod-os/core` mock factory
-
-A Jest spec often begins with a deliberately-empty stub of the core package:
-
-```ts
-jest.mock('@pod-os/core', () => ({}));
-```
-
-The mechanical `jest.mock` → `vi.mock` swap (Step 2c) preserves this as `vi.mock('@pod-os/core', () => ({}))`,
-which compiles cleanly and passes `tsc` — **but fails at test runtime** if the component under test accesses any
-`@pod-os/core` symbol **as a value** (not just as a type annotation):
-
-```
-Error: [vitest] No "RdfDocument" export is defined on the "@pod-os/core" mock.
-Did you forget to return it from "vi.mock"?
-```
-
-Why the difference: Jest returns a plain `{}` from a mock factory; accessing a missing property yields `undefined`
-silently. Vitest wraps the factory result in a strict **Proxy** that throws when the consumer dereferences an export
-name the factory didn't return. `tsc` does not catch this because type-only usages are erased and value usages share
-the same import shape at the type level.
-
-Type-only usages (`resource: Thing`, `data: Subject[]`) are erased at runtime and need no stub. **Value** usages —
-passing the symbol as an argument, e.g. `resource.assume(RdfDocument)` — must be provided. Add each value-used
-export as a minimal stub to the factory:
-
-```ts
-// component: const doc = resource.assume(RdfDocument);   ← RdfDocument used as a value
-// before (fails at runtime under vitest)
-vi.mock('@pod-os/core', () => ({}));
-// after
-vi.mock('@pod-os/core', () => ({
-  RdfDocument: class {},
-}));
-```
-
-This mirrors the established repo pattern (`pos-container-contents.vspec.tsx` stubs `LdpContainer: class {}`). Provide
-only the symbols the component references as values; leave type-only imports out. **Run the test to confirm the mock
-is complete** — `tsc` (Step 7/9) will not flag this; only the runtime does.
-
-### Step 2d: Switch `mockPodOS` import to the vitest variant
-
-The project ships two variants of the shared mock helper: `src/test/mockPodOS.ts` (Jest-based, uses `jest.mock`,
-`jest.fn()`, `jest-when`) and `src/test/mockPodOS.vitest.ts` (Vitest-based, uses `vi.mock`, `vi.fn()`, `vitest-when`).
-Under a Vitest project the Jest variant fails at import time (`ReferenceError: expect is not defined`, thrown from
-`jest-when/src/when.js`).
-
-After converting `jest`/`jest-when` usage (Steps 2b–2c), also switch the import path to the `.vitest` variant,
-keeping the relative path exactly as-is:
-
-```ts
-// before
-import { mockPodOS } from '../../../test/mockPodOS';
-// after
-import { mockPodOS } from '../../../test/mockPodOS.vitest';
-```
-
-The vitest variant has the same public API (`mockPodOS()`, and optionally `mockOsProvider`). Migrated `.vspec.tsx`
-files always import from `mockPodOS.vitest`.
-
-### Step 2e: Stub methods on read-only objects with `vi.spyOn`
-
-The DOM environment (happy-dom / jsdom / mock-doc) exposes some host objects as **getter-only**
-properties — e.g. `navigator.clipboard`, `navigator.permissions`, `window.location`. A migrated
-Jest spec that *replaced* the whole object throws under vitest:
-
-```
-TypeError: Cannot set property clipboard of [object Object] which has only a getter
-```
-
-Do **not** replace the whole object. Instead spy on the existing method directly — the DOM
-environment provides a real instance whose methods `vi.spyOn` can wrap:
-
-```ts
-// before (throws — host object is read-only)
-(navigator as any).clipboard = { writeText: vi.fn() } as unknown as Clipboard;
-
-// after
-vi.spyOn(navigator.clipboard, 'writeText');
-```
-
-Then assert on the spy as usual:
-
-```ts
-expect(navigator.clipboard.writeText).toHaveBeenCalledWith('https://resource.example#it');
-```
-
-`vi.restoreAllMocks()` (typically called in `beforeEach`/`afterEach`) restores the spy, so no
-manual teardown is needed. If a host object is entirely absent in the chosen environment (not
-just read-only), `vi.spyOn` will itself throw on the missing property — fall back to
-`Object.defineProperty(obj, 'prop', { value: {...}, configurable: true })` in that case.
-
-### Step 3: Replace `newSpecPage` rendering with `render`
-
-Replace each Stencil `newSpecPage({ components: [...], html: '...' })` call with the Vitest `render` helper using JSX:
+### Step 7: Replace `newSpecPage` with `render`
 
 ```ts
 const page = await render(<my-component></my-component>);
 ```
 
-This removes the need for the `components` array and HTML string. The `newSpecPage` import (and any now-unused
-component imports) may become unused — the user may instruct removal next.
+⚠️ If the test uses `page.setContent(...)`, STOP and ask the user.
 
-**`page.setContent(...)` is NOT covered by a mechanical conversion.** If the test calls `newSpecPage` *without* an
-`html` option and then uses `page.setContent(...)` to render the component, STOP and ask the user. `setContent` is
-used to defer component rendering so listeners can be attached before lifecycle hooks fire.
+### Step 8: Rename `page.rootInstance` → `page.instance`
 
-When the listener must be in place before `componentWillLoad` runs (e.g. to catch a `pod-os:resource` subscription
-event), the idiomatic Vitest conversion is: attach the listener to `document` *before* calling `render`, then render
-normally — `render`'s `componentWillLoad` fires synchronously and the document-level listener catches the event.
-Note that `page` may then be unused if the test only asserts on the listener; drop the `const page =` binding in that
-case. But confirm this approach with the user first — do not improvise.
+### Step 9: Remove unused imports — guided by `tsc`
 
-### Step 3b: Handle tests that used `supportsShadowDom: false`
-
-Some Jest specs force **light DOM** by passing `supportsShadowDom: false` to `newSpecPage`. The `@stencil/vitest`
-`render` helper has no such option — it renders the component with whatever shadow mode its `@Component` decorator
-declares (usually shadow DOM). After converting with `render` (Step 3), such tests will be **red** because the
-rendered markup now lives inside a shadow root instead of as light-DOM children of the host element.
-
-Use normal render with shadow DOM in vitest. Then, for each affected  assertion:
-
-1. **Assert on the shadow root, not the host element.** Change `expect(page.root).toEqualHtml(...)` to
-   `expect(page.root.shadowRoot).toEqualHtml(...)`. Drop the host-element wrapper lines (e.g. `<pos-select-term>` and
-   its closing `</pos-select-term>`) from the expected HTML — `shadowRoot` only contains the shadow content.
-2. **Route `querySelector` through the shadow root.** Light-DOM lookups like `page.root.querySelector('input')` now
-   return `null` because the element is in the shadow root. Change them to `page.root.shadowRoot!.querySelector(...)`.
-   The `!` will be demanded by `tsc` in Step 7 — add it here so the test runs.
-3. **Re-derive the expected HTML from the actual test output.** Do NOT reuse the old light-DOM `toEqualHtml` string
-   verbatim — shadow-root serialization differs from light-DOM serialization in ways that are not obvious. Run the
-   test, read the `Received:` block, and match it exactly. Two diffs observed so far:
-   - An empty input that serialized as `value=""` in light DOM drops the `value` attribute entirely under shadow DOM.
-   - Inline element text content like `<option value="...">schema:name</option>` must be reformatted to multiline
-     (`<option value="...">\n  schema:name\n</option>`) to match the shadow-root pretty-printer — the inline form
-     fails even though the normalised diff looks identical to the received output.
-
-This is the established repo pattern: other migrated `.vspec.tsx` files assert on `page.root.shadowRoot` directly.
-
-
-### Step 3c: Replace `SpecPage` type with `RenderResult` in helper signatures
-
-Helper functions that receive the `page` object (e.g. `function select(page: SpecPage, ...)`)
-are typically typed with `SpecPage` from `@stencil/core/testing`. After switching to the
-`render` helper (Step 3), the returned object is a `RenderResult` (re-exported from
-`@stencil/vitest`), **not** a `SpecPage`. Calling a `SpecPage`-typed helper with a `RenderResult`
-is a type error (`Argument of type 'RenderResult' is not assignable to parameter of type 'SpecPage'`).
-
-This surfaces during Step 7's `tsc` run. Fix it by changing the parameter type and importing
-`RenderResult` from `@stencil/vitest` alongside the other test globals:
-
-```ts
-// before
-import { newSpecPage, SpecPage } from '@stencil/core/testing';
-// ...
-function select(page: SpecPage, value: 'copy-uri' | OpenWithApp): void { ... }
-
-// after
-import { beforeEach, afterEach, describe, expect, it, render, h, RenderResult } from '@stencil/vitest';
-// ...
-function select(page: RenderResult, value: 'copy-uri' | OpenWithApp): void { ... }
+```bash
+npx tsc --noEmit -p elements/tsconfig.json 2>&1 | grep 'path/to/file.vspec'
 ```
 
-Drop the now-unused `@stencil/core/testing` import entirely — `RenderResult` has the same shape
-the helpers need (`root`, `waitForChanges`, `instance`, …). Step 9's `tsc` run flags the leftover
-`@stencil/core/testing` import as unused.
+⚠️ Always specify the package tsconfig — there is no root `tsconfig.json`, and a missing `-p` flag fails
+silently when piped to `grep`.
 
-### Step 3d: Reformat inline-text `toEqualHtml` expectations to multiline
+Remove every `TS6133` import.
 
-Under vitest's happy-dom shadow-root pretty-printer, **any** `toEqualHtml` expectation whose element contains
-text content must be written **multiline** — the inline form `<li>SomeType</li>` fails even though the normalised
-diff looks identical to the received output. This is not specific to the `supportsShadowDom: false` case (Step 3b):
-it affects **every** shadow-root `toEqualHtml`, including assertions on **individual child elements** fetched via
-`page.root.shadowRoot!.querySelector(...)` / `querySelectorAll(...)` indexing.
+### Step 10: Add non-null assertions — guided by `tsc`
 
-`tsc` does **not** catch this — only the test run does. Symptom: a failure where Expected and Received render
-visually identical. Fix: reformat the inline literal to multiline, matching the received block exactly:
+Run the same `tsc` command; add `!` only where `TS18047` is reported. Re-run to confirm 0 errors.
+
+### Step 11: Format with Prettier
+
+`npx prettier --write path/to/file.vspec.tsx`
+
+---
+
+## Situational
+
+### Shadow DOM: `supportsShadowDom: false` tests
+
+`render` always uses the component's declared shadow mode. Affected tests are red after Step 7:
+
+1. Assert on `page.root.shadowRoot` instead of `page.root`; drop host-element wrapper lines from expected HTML.
+2. Route `querySelector` through `page.root.shadowRoot!`.
+3. Re-derive expected HTML from the `Received:` block — do not reuse the light-DOM string. Known diffs:
+   - `value=""` on empty inputs is dropped under shadow DOM.
+   - Inline text content must be multiline (see below).
+
+### Shadow DOM: reformat inline-text `toEqualHtml` to multiline
+
+The shadow-root pretty-printer requires multiline format for elements with text — the inline form fails even
+when Expected and Received look identical. Read the `Received:` block and match it verbatim:
 
 ```ts
-// before (fails — inline text)
-expect(badges[0]).toEqualHtml(`<li>SomeType</li>`);
-// after
-expect(badges[0]).toEqualHtml(`
+expect(el).toEqualHtml(`
   <li>
     SomeType
   </li>
 `);
 ```
 
-Reuse the existing indentation style of already-multiline expectations in the same file (e.g. a passing
-`<button>` block) so Prettier leaves the result unchanged. Read the `Received:` block from the first failed run
-and match it verbatim — do not guess the indentation.
+### `RenderResult` type for helper functions
 
-### Step 4: Replace the component import with a side-effect import
+Change `SpecPage` parameter types to `RenderResult` (from `@stencil/vitest`). Drop `@stencil/core/testing`.
 
-Replace the named component import (e.g. `import { PosReverseRelations } from './pos-reverse-relations';`) with a
-side-effect import. **Preserve the original relative path exactly** — the original specifier includes whatever
-directory prefix it had. Do not rewrite `'../foo'` as `'./foo'`. Only the import form changes, not the path:
+### Stub value-used exports in `vi.mock('@pod-os/core', ...)`
 
-```ts
-// before
-import { PosReverseRelations } from './pos-reverse-relations';
-// after
-import './pos-reverse-relations';
-
-// before (test in a test/ subdirectory)
-import { PosSelectTerm } from '../pos-select-term';
-// after
-import '../pos-select-term';
-```
-
-Since `render` no longer needs the `components` array, the named import is no longer needed.
-
-
-### Step 5: Simplify empty-rendering assertions
-
-For tests that assert an initially-empty component, replace the verbose `toEqualHtml` block:
+`vi.mock('@pod-os/core', () => ({}))` fails at runtime if the component references a core symbol as a value —
+Vitest's Proxy throws on missing exports. Add a stub for each value-used symbol:
 
 ```ts
-expect(page.root).toEqualHtml(`
-  <pos-reverse-relations>
-    <mock:shadow-root></mock:shadow-root>
-  </pos-reverse-relations>
-`);
+vi.mock('@pod-os/core', () => ({ RdfDocument: class {} }));
 ```
 
-with the simpler matcher:
+Type-only usages are erased at runtime and need no stub. `tsc` will not catch this — only the runtime does.
+
+### Stub read-only host objects with `vi.spyOn`
+
+Assigning to getter-only properties (e.g. `navigator.clipboard`) throws. Use `vi.spyOn(navigator.clipboard, 'writeText')` instead. If the property is absent in the environment, fall back to `Object.defineProperty`.
+
+### Simplify empty-rendering assertions
 
 ```ts
 expect(page.root).toBeEmptyDOMElement();
 ```
-
-
-### Step 6: Rename `page.rootInstance` to `page.instance`
-
-In Stencil's `newSpecPage` API the component instance is accessed via `page.rootInstance`. The `@stencil/vitest` `render`
-helper exposes it directly as `page.instance` instead. Replace all occurrences:
-
-```ts
-// before
-await page.rootInstance.receiveResource({ ... });
-// after
-await page.instance.receiveResource({ ... });
-```
-
-
-### Step 7: Add non-null assertions (`!`) to `shadowRoot` — guided by `tsc`
-
-In tests we assume `shadowRoot` exists. `querySelector(...)` calls on it return `Element | null`, but when the result is only
-passed to `expect(...)` the compiler accepts `null` fine, so **do not blanket-add `!` everywhere**. Instead, add the
-minimal set of non-null assertions the compiler actually requires:
-
-1. Remove all non-null assertions (start clean).
-2. Run `tsc` and collect `TS18047: '...' is possibly 'null'` errors:
-
-```bash
-npx tsc --noEmit -p tsconfig.json 2>&1 | grep 'path/to/file.vspec'
-```
-
-⚠️ **tsconfig path matters.** This repo has **no root `tsconfig.json`** — running the command above from the repo
-root fails with `error TS5058: The specified path does not exist: 'tsconfig.json'`. Because the failure is on
-stderr, piping to `grep` masks it and the check silently reports "no errors" (a false negative). Use the package
-tsconfig that actually compiles the file: `elements/tsconfig.json` for `elements/` specs (it includes `*.vspec.tsx`
-and excludes `*.spec.tsx`). Always confirm `tsc` actually ran (a clean run against the wrong config still prints
-nothing) by introducing a deliberate error or checking the exit code before the `grep`.
-
-3. Add `!` only where `tsc` complains (typically directly on `page.root.shadowRoot!` for inline
-   `.querySelector(...)` calls). Lines that alias the result via `as unknown as HTMLElement` need no `!`.
-4. Re-run `tsc` to confirm 0 errors.
-
-
-### Step 8: Format with Prettier
-
-Run Prettier on the migrated file to clean up any reformatting introduced by the edits above (e.g. long `querySelector`
-lines wrapping onto multiple lines):
-
-```bash
-npx prettier --write path/to/file.vspec.tsx
-```
-
-
-### Step 9: Remove unused imports reported by `tsc`
-
-The migration above leaves several imports unused (e.g. `newSpecPage`, `getByText`, and possibly `vi` / `beforeEach` /
-`afterEach` if those Vitest globals aren't used in this particular test). The project's `tsconfig.json` already has
-`noUnusedLocals: true`, so `tsc` will flag them:
-
-```bash
-npx tsc --noEmit -p tsconfig.json 2>&1 | grep 'path/to/file.vspec'
-```
-
-Remove every import the compiler reports as `TS6133: '...' is declared but its value is never read.` Keep only the
-imports the test actually uses (typically `describe, expect, it, render, h` from `@stencil/vitest`, plus `vi` if the
-test mocks anything, plus the side-effect component import from Step 4).
-
