@@ -66,6 +66,56 @@ import { when } from 'vitest-when';
 `.mockRejectedValue(...)` → `.thenReject(...)`. The `when(fn).calledWith(...)` prefix is unchanged. The mocks must be
 `vi.fn()` instances.
 
+### Step 2b.1: Replace chained `.mockReturnValueOnce(...)` with `vitest-when` `times` option
+
+`jest-when` allowed chaining `.mockReturnValueOnce(...).mockReturnValueOnce(...)` to return different values on
+successive calls to the same mock. `vitest-when` does not have a `.thenReturnOnce(...)` — instead each call is a
+separate `when(...)` registration with a `{ times: 1 }` option, each with its own `.calledWith(...)`:
+
+```ts
+// before
+when(os.proposeAppsFor)
+  .calledWith(thing)
+  .mockReturnValueOnce([])
+  .mockReturnValueOnce([{ name: 'Some app', ... }]);
+
+// after
+when(os.proposeAppsFor, { times: 1 })
+  .calledWith(thing)
+  .thenReturn([]);
+when(os.proposeAppsFor, { times: 1 })
+  .calledWith(thing)
+  .thenReturn([{ name: 'Some app', ... }]);
+```
+
+**Beware match ordering.** `vitest-when` matches later registrations first (LIFO). When both `when` declarations
+sit *before* the code that consumes the mock, the second registration wins the first call. To make successive calls
+return in order, declare the first `when` before the consuming call and register the second `when` **after** the
+first call has been consumed (following the pattern in `pos-image.vspec.tsx`).
+
+### Step 2b.2: Replace catch-all `jest-when` defaults (no `.calledWith`)
+
+`jest-when` allowed a bare `when(fn).mockReturnValue(value)` — a catch-all default return with no `.calledWith(...)`.
+`vitest-when` does **not** support this form: `when(fn).thenReturn(value)` throws
+`TypeError: when(...).thenReturn is not a function` because `.thenReturn` must follow `.calledWith(...)`.
+
+Often the bare default is redundant — a shared mock factory (e.g. `mockPodOS.vitest.ts`) may already set
+`proposeAppsFor: vi.fn().mockReturnValue([])`. But if a test needs to (re)set a catch-all default on an existing
+`vi.fn()`, use Vitest's native mock API directly instead of `vitest-when`, casting the mock to `Mock`:
+
+```ts
+// before
+when(os.proposeAppsFor).mockReturnValue([]);
+// after
+(os.proposeAppsFor as Mock).mockReturnValue([]);
+```
+
+Import `Mock` alongside `vi` from `vitest`:
+
+```ts
+import { vi, Mock } from 'vitest';
+```
+
 ### Step 2c: Replace `jest.mock` / `jest.fn` with `vi.mock` / `vi.fn`
 
 If the test uses Jest's module mocking (`jest.mock('module', factory)`) or `jest.fn()` mocks (e.g. an event listener
@@ -92,6 +142,58 @@ const onRouteChange = vi.fn();
 
 Replace **every** occurrence — both the module-level mock factory (`jest.mock` → `vi.mock`) and any inline
 `jest.fn()` calls inside the tests.
+
+### Step 2d: Switch `mockPodOS` import to the vitest variant
+
+The project ships two variants of the shared mock helper: `src/test/mockPodOS.ts` (Jest-based, uses `jest.mock`,
+`jest.fn()`, `jest-when`) and `src/test/mockPodOS.vitest.ts` (Vitest-based, uses `vi.mock`, `vi.fn()`, `vitest-when`).
+Under a Vitest project the Jest variant fails at import time (`ReferenceError: expect is not defined`, thrown from
+`jest-when/src/when.js`).
+
+After converting `jest`/`jest-when` usage (Steps 2b–2c), also switch the import path to the `.vitest` variant,
+keeping the relative path exactly as-is:
+
+```ts
+// before
+import { mockPodOS } from '../../../test/mockPodOS';
+// after
+import { mockPodOS } from '../../../test/mockPodOS.vitest';
+```
+
+The vitest variant has the same public API (`mockPodOS()`, and optionally `mockOsProvider`). Migrated `.vspec.tsx`
+files always import from `mockPodOS.vitest`.
+
+### Step 2e: Stub methods on read-only objects with `vi.spyOn`
+
+The DOM environment (happy-dom / jsdom / mock-doc) exposes some host objects as **getter-only**
+properties — e.g. `navigator.clipboard`, `navigator.permissions`, `window.location`. A migrated
+Jest spec that *replaced* the whole object throws under vitest:
+
+```
+TypeError: Cannot set property clipboard of [object Object] which has only a getter
+```
+
+Do **not** replace the whole object. Instead spy on the existing method directly — the DOM
+environment provides a real instance whose methods `vi.spyOn` can wrap:
+
+```ts
+// before (throws — host object is read-only)
+(navigator as any).clipboard = { writeText: vi.fn() } as unknown as Clipboard;
+
+// after
+vi.spyOn(navigator.clipboard, 'writeText');
+```
+
+Then assert on the spy as usual:
+
+```ts
+expect(navigator.clipboard.writeText).toHaveBeenCalledWith('https://resource.example#it');
+```
+
+`vi.restoreAllMocks()` (typically called in `beforeEach`/`afterEach`) restores the spy, so no
+manual teardown is needed. If a host object is entirely absent in the chosen environment (not
+just read-only), `vi.spyOn` will itself throw on the missing property — fall back to
+`Object.defineProperty(obj, 'prop', { value: {...}, configurable: true })` in that case.
 
 ### Step 3: Replace `newSpecPage` rendering with `render`
 
@@ -139,6 +241,33 @@ Use normal render with shadow DOM in vitest. Then, for each affected  assertion:
 
 This is the established repo pattern: other migrated `.vspec.tsx` files assert on `page.root.shadowRoot` directly.
 
+
+### Step 3c: Replace `SpecPage` type with `RenderResult` in helper signatures
+
+Helper functions that receive the `page` object (e.g. `function select(page: SpecPage, ...)`)
+are typically typed with `SpecPage` from `@stencil/core/testing`. After switching to the
+`render` helper (Step 3), the returned object is a `RenderResult` (re-exported from
+`@stencil/vitest`), **not** a `SpecPage`. Calling a `SpecPage`-typed helper with a `RenderResult`
+is a type error (`Argument of type 'RenderResult' is not assignable to parameter of type 'SpecPage'`).
+
+This surfaces during Step 7's `tsc` run. Fix it by changing the parameter type and importing
+`RenderResult` from `@stencil/vitest` alongside the other test globals:
+
+```ts
+// before
+import { newSpecPage, SpecPage } from '@stencil/core/testing';
+// ...
+function select(page: SpecPage, value: 'copy-uri' | OpenWithApp): void { ... }
+
+// after
+import { beforeEach, afterEach, describe, expect, it, render, h, RenderResult } from '@stencil/vitest';
+// ...
+function select(page: RenderResult, value: 'copy-uri' | OpenWithApp): void { ... }
+```
+
+Drop the now-unused `@stencil/core/testing` import entirely — `RenderResult` has the same shape
+the helpers need (`root`, `waitForChanges`, `instance`, …). Step 9's `tsc` run flags the leftover
+`@stencil/core/testing` import as unused.
 
 ### Step 4: Replace the component import with a side-effect import
 
