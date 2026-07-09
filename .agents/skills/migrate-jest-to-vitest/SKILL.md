@@ -143,6 +143,46 @@ const onRouteChange = vi.fn();
 Replace **every** occurrence — both the module-level mock factory (`jest.mock` → `vi.mock`) and any inline
 `jest.fn()` calls inside the tests.
 
+### Step 2c.1: Provide value-used exports in a converted `@pod-os/core` mock factory
+
+A Jest spec often begins with a deliberately-empty stub of the core package:
+
+```ts
+jest.mock('@pod-os/core', () => ({}));
+```
+
+The mechanical `jest.mock` → `vi.mock` swap (Step 2c) preserves this as `vi.mock('@pod-os/core', () => ({}))`,
+which compiles cleanly and passes `tsc` — **but fails at test runtime** if the component under test accesses any
+`@pod-os/core` symbol **as a value** (not just as a type annotation):
+
+```
+Error: [vitest] No "RdfDocument" export is defined on the "@pod-os/core" mock.
+Did you forget to return it from "vi.mock"?
+```
+
+Why the difference: Jest returns a plain `{}` from a mock factory; accessing a missing property yields `undefined`
+silently. Vitest wraps the factory result in a strict **Proxy** that throws when the consumer dereferences an export
+name the factory didn't return. `tsc` does not catch this because type-only usages are erased and value usages share
+the same import shape at the type level.
+
+Type-only usages (`resource: Thing`, `data: Subject[]`) are erased at runtime and need no stub. **Value** usages —
+passing the symbol as an argument, e.g. `resource.assume(RdfDocument)` — must be provided. Add each value-used
+export as a minimal stub to the factory:
+
+```ts
+// component: const doc = resource.assume(RdfDocument);   ← RdfDocument used as a value
+// before (fails at runtime under vitest)
+vi.mock('@pod-os/core', () => ({}));
+// after
+vi.mock('@pod-os/core', () => ({
+  RdfDocument: class {},
+}));
+```
+
+This mirrors the established repo pattern (`pos-container-contents.vspec.tsx` stubs `LdpContainer: class {}`). Provide
+only the symbols the component references as values; leave type-only imports out. **Run the test to confirm the mock
+is complete** — `tsc` (Step 7/9) will not flag this; only the runtime does.
+
 ### Step 2d: Switch `mockPodOS` import to the vitest variant
 
 The project ships two variants of the shared mock helper: `src/test/mockPodOS.ts` (Jest-based, uses `jest.mock`,
@@ -269,6 +309,32 @@ Drop the now-unused `@stencil/core/testing` import entirely — `RenderResult` h
 the helpers need (`root`, `waitForChanges`, `instance`, …). Step 9's `tsc` run flags the leftover
 `@stencil/core/testing` import as unused.
 
+### Step 3d: Reformat inline-text `toEqualHtml` expectations to multiline
+
+Under vitest's happy-dom shadow-root pretty-printer, **any** `toEqualHtml` expectation whose element contains
+text content must be written **multiline** — the inline form `<li>SomeType</li>` fails even though the normalised
+diff looks identical to the received output. This is not specific to the `supportsShadowDom: false` case (Step 3b):
+it affects **every** shadow-root `toEqualHtml`, including assertions on **individual child elements** fetched via
+`page.root.shadowRoot!.querySelector(...)` / `querySelectorAll(...)` indexing.
+
+`tsc` does **not** catch this — only the test run does. Symptom: a failure where Expected and Received render
+visually identical. Fix: reformat the inline literal to multiline, matching the received block exactly:
+
+```ts
+// before (fails — inline text)
+expect(badges[0]).toEqualHtml(`<li>SomeType</li>`);
+// after
+expect(badges[0]).toEqualHtml(`
+  <li>
+    SomeType
+  </li>
+`);
+```
+
+Reuse the existing indentation style of already-multiline expectations in the same file (e.g. a passing
+`<button>` block) so Prettier leaves the result unchanged. Read the `Received:` block from the first failed run
+and match it verbatim — do not guess the indentation.
+
 ### Step 4: Replace the component import with a side-effect import
 
 Replace the named component import (e.g. `import { PosReverseRelations } from './pos-reverse-relations';`) with a
@@ -334,6 +400,13 @@ minimal set of non-null assertions the compiler actually requires:
 ```bash
 npx tsc --noEmit -p tsconfig.json 2>&1 | grep 'path/to/file.vspec'
 ```
+
+⚠️ **tsconfig path matters.** This repo has **no root `tsconfig.json`** — running the command above from the repo
+root fails with `error TS5058: The specified path does not exist: 'tsconfig.json'`. Because the failure is on
+stderr, piping to `grep` masks it and the check silently reports "no errors" (a false negative). Use the package
+tsconfig that actually compiles the file: `elements/tsconfig.json` for `elements/` specs (it includes `*.vspec.tsx`
+and excludes `*.spec.tsx`). Always confirm `tsc` actually ran (a clean run against the wrong config still prints
+nothing) by introducing a deliberate error or checking the exit code before the `grep`.
 
 3. Add `!` only where `tsc` complains (typically directly on `page.root.shadowRoot!` for inline
    `.querySelector(...)` calls). Lines that alias the result via `as unknown as HTMLElement` need no `!`.
