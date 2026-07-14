@@ -1,0 +1,169 @@
+import { vi } from 'vitest';
+import { describe, expect, it, render, h } from '@stencil/vitest';
+import { mockPodOS } from '../../test/mockPodOS.vitest';
+import './pos-type-index-entries';
+import { when } from 'vitest-when';
+import { Thing, TypeIndex, TypeRegistration } from '@pod-os/core';
+
+describe('pos-type-index-entries', () => {
+  function mockTypeIndex(typeIndex: TypeIndex) {
+    const os = mockPodOS();
+    const assume = vi.fn();
+    when(os.store.get)
+      .calledWith('https://alice.example/settings/publicTypeIndex')
+      .thenReturn({
+        assume,
+      } as unknown as Thing);
+    when(assume).calledWith(TypeIndex).thenReturn(typeIndex);
+  }
+
+  it('renders nothing if type index is empty', async () => {
+    // given an empty type index
+    const typeIndex = {
+      listAll: vi.fn().mockReturnValue([]),
+    } as unknown as TypeIndex;
+    mockTypeIndex(typeIndex);
+
+    // when the component is rendered
+    const page = await render(<pos-type-index-entries uri="https://alice.example/settings/publicTypeIndex" />);
+
+    // then it shows nothing
+    expect(page.root).toEqualHtml(`
+      <pos-type-index-entries class="hydrated">
+        <mock:shadow-root></mock:shadow-root>
+      </pos-type-index-entries>
+    `);
+  });
+
+  it('renders a single entry', async () => {
+    // given a single registration
+    const registration: TypeRegistration = {
+      forClass: 'http://schema.org/VideoGame',
+      label: 'VideoGame',
+      targets: [
+        {
+          uri: 'https://alice.example/games/minecraft#it',
+          type: 'instance',
+        },
+      ],
+    };
+    const typeIndex = {
+      listAll: vi.fn().mockReturnValue([registration]),
+    } as unknown as TypeIndex;
+    mockTypeIndex(typeIndex);
+
+    // when the component is rendered
+    const page = await render(<pos-type-index-entries uri="https://alice.example/settings/publicTypeIndex" />);
+
+    // then it shows one entry
+    expect(page.root.shadowRoot).toEqualHtml(`
+      <dl>
+        <div>
+          <dt>
+            <pos-predicate uri="http://schema.org/VideoGame" label="VideoGame"></pos-predicate>
+          </dt>
+          <dd>
+            <pos-rich-link uri="https://alice.example/games/minecraft#it"></pos-rich-link>
+          </dd>
+        </div>
+      </dl>
+    `);
+  });
+
+  it('renders multiple entries for a single class', async () => {
+    // given a registration with multiple targets for the same class
+    const registration: TypeRegistration = {
+      forClass: 'http://schema.org/VideoGame',
+      label: 'VideoGame',
+      targets: [
+        {
+          uri: 'https://alice.example/games/minecraft#it',
+          type: 'instance',
+        },
+        {
+          uri: 'https://alice.example/games/zelda#it',
+          type: 'instance',
+        },
+      ],
+    };
+    const typeIndex = {
+      listAll: vi.fn().mockReturnValue([registration]),
+    } as unknown as TypeIndex;
+    mockTypeIndex(typeIndex);
+
+    // when the component is rendered
+    const page = await render(<pos-type-index-entries uri="https://alice.example/settings/publicTypeIndex" />);
+
+    // then it shows a single entry with multiple targets
+    expect(page.root.shadowRoot).toEqualHtml(`
+      <dl>
+        <div>
+          <dt>
+            <pos-predicate uri="http://schema.org/VideoGame" label="VideoGame"></pos-predicate>
+          </dt>
+          <dd>
+            <pos-rich-link uri="https://alice.example/games/minecraft#it"></pos-rich-link>
+          </dd>
+          <dd>
+            <pos-rich-link uri="https://alice.example/games/zelda#it"></pos-rich-link>
+          </dd>
+        </div>
+      </dl>
+    `);
+  });
+
+  it('renders multiple entries for different classes', async () => {
+    // given multiple registrations for different classes
+    const registrations: TypeRegistration[] = [
+      {
+        forClass: 'http://schema.org/VideoGame',
+        label: 'VideoGame',
+        targets: [
+          {
+            uri: 'https://alice.example/games/minecraft#it',
+            type: 'instance',
+          },
+        ],
+      },
+      {
+        forClass: 'http://schema.org/MusicAlbum',
+        label: 'MusicAlbum',
+        targets: [
+          {
+            uri: 'https://alice.example/albums/dark-side#it',
+            type: 'instance',
+          },
+        ],
+      },
+    ];
+    const typeIndex = {
+      listAll: vi.fn().mockReturnValue(registrations),
+    } as unknown as TypeIndex;
+    mockTypeIndex(typeIndex);
+
+    // when the component is rendered
+    const page = await render(<pos-type-index-entries uri="https://alice.example/settings/publicTypeIndex" />);
+
+    // then it shows entries for both classes
+    expect(page.root.shadowRoot).toEqualHtml(`
+      <dl>
+        <div>
+          <dt>
+            <pos-predicate uri="http://schema.org/VideoGame" label="VideoGame"></pos-predicate>
+          </dt>
+          <dd>
+            <pos-rich-link uri="https://alice.example/games/minecraft#it"></pos-rich-link>
+          </dd>
+        </div>
+        <div>
+          <dt>
+            <pos-predicate uri="http://schema.org/MusicAlbum" label="MusicAlbum"></pos-predicate>
+          </dt>
+          <dd>
+            <pos-rich-link uri="https://alice.example/albums/dark-side#it"></pos-rich-link>
+          </dd>
+        </div>
+      </dl>
+    `);
+  });
+});
