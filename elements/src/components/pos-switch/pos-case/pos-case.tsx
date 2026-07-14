@@ -79,13 +79,22 @@ export class PosCase {
    */
   @Method()
   async getRule(): Promise<SwitchCaseRule> {
-    const ruleAttribute = this.host.getAttributeNames().find(it => it.startsWith('if-'));
-    if (ruleAttribute == null) return NO_RULE;
-    return {
-      type: ruleAttribute,
-      value: this.host.getAttribute(ruleAttribute)!,
-      not: this.not,
-    };
+    const not = this.not;
+    if (this.ifTypeof) {
+      return {
+        type: 'if-typeof',
+        value: this.ifTypeof,
+        not,
+      };
+    }
+    if (this.ifProperty) {
+      return {
+        type: 'if-property',
+        value: this.ifProperty,
+        not,
+      };
+    }
+    return NO_RULE;
   }
 
   componentWillLoad() {

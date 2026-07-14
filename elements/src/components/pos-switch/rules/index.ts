@@ -3,12 +3,12 @@ import { Literal, RdfType, Relation } from '@pod-os/core';
 export { findMatchingRules } from './findMatchingRules';
 
 export interface SwitchCaseRule {
-  type: string;
+  type: 'if-typeof' | 'if-property' | 'never';
   value?: string;
   not?: boolean;
 }
 
-export const NO_RULE = {
+export const NO_RULE: SwitchCaseRule = {
   type: 'never',
 };
 
