@@ -15,5 +15,8 @@ function evaluateRule(rule: SwitchCaseRule, context: RuleContext) {
     const hasRelation = context.relations.map(x => x.predicate).includes(rule.value ?? '');
     return hasLiteral || hasRelation;
   }
+  if (rule.type == 'if-rev') {
+    return context.reverseRelations.map(x => x.predicate).includes(rule.value ?? '');
+  }
   return false;
 }

@@ -94,6 +94,13 @@ export class PosCase {
         not,
       };
     }
+    if (this.ifRev) {
+      return {
+        type: 'if-rev',
+        value: this.ifRev,
+        not,
+      };
+    }
     return NO_RULE;
   }
 

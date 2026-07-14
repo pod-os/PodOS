@@ -91,7 +91,7 @@ describe('does rule match', () => {
       const result = doesRuleMatch(ifPropertyName, context);
       expect(result).toBe(true);
     });
-    it('matches if one matching is present besides others', () => {
+    it('matches if one match is present besides others', () => {
       const context = {
         ...EMPTY_CONTEXT,
         literals: [literal('http://vocab.example.org/other')],
@@ -126,13 +126,68 @@ describe('does rule match', () => {
         const result = doesRuleMatch(notIfPropertyName, context);
         expect(result).toBe(false);
       });
-      it('does not match if one matching is present besides others', () => {
+      it('does not match if one match is present besides others', () => {
         const context = {
           ...EMPTY_CONTEXT,
           literals: [literal('http://vocab.example.org/other')],
           relations: [relation('http://schema.org/name'), relation('http://vocab.example.org/other-rel')],
         };
         const result = doesRuleMatch(notIfPropertyName, context);
+        expect(result).toBe(false);
+      });
+    });
+  });
+
+  describe('if-rev', () => {
+    const ifRevImage: SwitchCaseRule = {
+      type: 'if-rev',
+      value: 'http://schema.org/image',
+    };
+    it('does not match if no properties are in context', () => {
+      const result = doesRuleMatch(ifRevImage, EMPTY_CONTEXT);
+      expect(result).toBe(false);
+    });
+
+    it('matches if context contains a reverse relation of that property', () => {
+      const context = {
+        ...EMPTY_CONTEXT,
+        reverseRelations: [relation('http://schema.org/image')],
+      };
+      const result = doesRuleMatch(ifRevImage, context);
+      expect(result).toBe(true);
+    });
+    it('matches if one match is present besides others', () => {
+      const context = {
+        ...EMPTY_CONTEXT,
+        reverseRelations: [relation('http://schema.org/image'), relation('http://vocab.example.org/other-rel')],
+      };
+      const result = doesRuleMatch(ifRevImage, context);
+      expect(result).toBe(true);
+    });
+
+    describe('when negated', () => {
+      const notIfRevImage = {
+        ...ifRevImage,
+        not: true,
+      };
+      it('matches if no properties are in context', () => {
+        const result = doesRuleMatch(notIfRevImage, EMPTY_CONTEXT);
+        expect(result).toBe(true);
+      });
+      it('does not match if context contains a reverse relation of that property', () => {
+        const context = {
+          ...EMPTY_CONTEXT,
+          reverseRelations: [relation('http://schema.org/image')],
+        };
+        const result = doesRuleMatch(notIfRevImage, context);
+        expect(result).toBe(false);
+      });
+      it('does not match if one match is present besides others', () => {
+        const context = {
+          ...EMPTY_CONTEXT,
+          reverseRelations: [relation('http://schema.org/image'), relation('http://vocab.example.org/other-rel')],
+        };
+        const result = doesRuleMatch(notIfRevImage, context);
         expect(result).toBe(false);
       });
     });

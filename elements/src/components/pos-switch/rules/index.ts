@@ -3,7 +3,7 @@ import { Literal, RdfType, Relation } from '@pod-os/core';
 export { findMatchingRules } from './findMatchingRules';
 
 export interface SwitchCaseRule {
-  type: 'if-typeof' | 'if-property' | 'never';
+  type: 'if-typeof' | 'if-property' | 'if-rev' | 'never';
   value?: string;
   not?: boolean;
 }

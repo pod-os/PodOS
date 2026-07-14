@@ -83,5 +83,20 @@ describe('pos-case', () => {
         value: 'http://schema.org/image',
       });
     });
+
+    it('provides the if-rev rule', async () => {
+      const page = await render<HTMLPosCaseElement>(
+        <pos-case if-rev="http://schema.org/image">
+          <template>
+            <div>Test</div>
+          </template>
+        </pos-case>,
+      );
+      const rule = await page.root.getRule();
+      expect(rule).toEqual({
+        type: 'if-rev',
+        value: 'http://schema.org/image',
+      });
+    });
   });
 });
