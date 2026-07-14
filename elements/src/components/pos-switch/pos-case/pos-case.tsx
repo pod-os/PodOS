@@ -84,6 +84,7 @@ export class PosCase {
     return {
       type: ruleAttribute,
       value: this.host.getAttribute(ruleAttribute)!,
+      not: this.not,
     };
   }
 

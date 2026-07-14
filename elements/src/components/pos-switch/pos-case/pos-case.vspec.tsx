@@ -52,6 +52,23 @@ describe('pos-case', () => {
         value: 'http://schema.org/Recipe',
       });
     });
+
+    it('can negate a rule with not', async () => {
+      const page = await render<HTMLPosCaseElement>(
+        <pos-case not if-typeof="http://schema.org/Recipe">
+          <template>
+            <div>Test</div>
+          </template>
+        </pos-case>,
+      );
+      const rule = await page.root.getRule();
+      expect(rule).toEqual({
+        type: 'if-typeof',
+        value: 'http://schema.org/Recipe',
+        not: true,
+      });
+    });
+
     it('provides the if-property rule', async () => {
       const page = await render<HTMLPosCaseElement>(
         <pos-case if-property="http://schema.org/image">
