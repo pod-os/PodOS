@@ -20,20 +20,20 @@ interface CaseWithRule {
   shadow: false,
 })
 export class PosSwitch implements ResourceAware {
-  @Element() host: HTMLElement;
-  @State() error: string = null;
-  @State() resource: Thing;
-  @State() caseElements: HTMLPosCaseElement[];
-  @State() cases: CaseWithRule[];
-  @State() types: RdfType[];
-  @State() relations: Relation[];
-  @State() reverseRelations: Relation[];
-  @State() literals: Literal[];
+  @Element() host!: HTMLElement;
+  @State() error: string | null = null;
+  @State() resource?: Thing;
+  @State() caseElements: HTMLPosCaseElement[] = [];
+  @State() cases: CaseWithRule[] = [];
+  @State() types: RdfType[] = [];
+  @State() relations: Relation[] = [];
+  @State() reverseRelations: Relation[] = [];
+  @State() literals: Literal[] = [];
 
   private readonly disconnected$ = new Subject<void>();
 
   @Event({ eventName: 'pod-os:resource' })
-  subscribeResource: ResourceEventEmitter;
+  subscribeResource!: ResourceEventEmitter;
 
   async componentWillLoad() {
     const caseElements = this.host.querySelectorAll('pos-case');
@@ -167,7 +167,7 @@ export class PosSwitch implements ResourceAware {
         activeElements.push(el);
       }
     });
-    const activeElementsContent = activeElements.map(el => el.querySelector('template').innerHTML).join('\n');
+    const activeElementsContent = activeElements.map(el => el.querySelector('template')?.innerHTML).join('\n');
     return <Host innerHTML={activeElementsContent}></Host>;
   }
 
