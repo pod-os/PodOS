@@ -3,7 +3,7 @@ import { Component, Element, Event, h, Host, State } from '@stencil/core';
 import { ResourceAware, ResourceEventEmitter, subscribeResource } from '../events/ResourceAware';
 import { combineLatest, firstValueFrom, Observable, Subject, takeUntil } from 'rxjs';
 import { operatorSemanticCombinations, testIfValuesMatchTarget } from './logic';
-import { RuleContext, SwitchCaseRule, testRule } from './rules';
+import { findMatchingRules, RuleContext, SwitchCaseRule } from './rules';
 
 interface CaseWithRule {
   caseElement: HTMLPosCaseElement;
@@ -152,11 +152,8 @@ export class PosSwitch implements ResourceAware {
       types: this.types,
     };
 
-    this.cases.forEach(it => {
-      const caseState = testRule(it.rule, context);
-      if (caseState) {
-        activeElements.push(it.caseElement);
-      }
+    findMatchingRules(this.cases, context).forEach(it => {
+      activeElements.push(it.caseElement);
     });
 
     this.caseElements.forEach(el => {
