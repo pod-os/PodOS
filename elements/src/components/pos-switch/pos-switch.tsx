@@ -137,7 +137,10 @@ export class PosSwitch implements ResourceAware {
       return this.error;
     }
     if (!this.resource) {
-      return null;
+      // because we set innerHTML for matching case elements, we need to
+      // unset it here to not leave "undefined" in the dom when switching
+      // from one resource to another
+      return <Host innerHTML=""></Host>;
     }
     let state: boolean | null = null;
     let activeElements: HTMLPosCaseElement[] = [];

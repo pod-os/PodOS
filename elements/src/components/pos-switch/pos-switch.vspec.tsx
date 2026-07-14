@@ -7,7 +7,7 @@ import { RdfType, Thing } from '@pod-os/core';
 
 describe('pos-switch', () => {
   describe('template loading', () => {
-    it('contains only templates initially', async () => {
+    it('contains nothing initially', async () => {
       const page = await render(
         <pos-switch>
           <pos-case if-typeof="http://schema.org/Recipe">
@@ -17,13 +17,7 @@ describe('pos-switch', () => {
           </pos-case>
         </pos-switch>,
       );
-      expect(page.root).toMatchInlineSnapshot(`
-        <pos-switch class="hydrated">
-          <pos-case if-typeof="http://schema.org/Recipe" class="hydrated">
-            <template></template>
-          </pos-case>
-        </pos-switch>
-      `);
+      expect(page.root).toMatchInlineSnapshot(`<pos-switch innerhtml class="hydrated"></pos-switch>`);
     });
     it('load rules from cases', async () => {
       const page = await render(
@@ -103,6 +97,50 @@ describe('pos-switch', () => {
         expect(page.root.innerHTML).toEqualHtml(`
         <div>Recipe 1</div>
         <div>Recipe 2</div>`);
+      });
+
+      it('resets and updates when resource is changed', async () => {
+        const page = await render(
+          <pos-switch>
+            <pos-case if-typeof="http://schema.org/Recipe">
+              <template>Recipe.</template>
+            </pos-case>
+            <pos-case if-typeof="http://schema.org/Video">
+              <template>Video.</template>
+            </pos-case>
+          </pos-switch>,
+        );
+        const observedTypes$ = new Subject<RdfType[]>();
+        const thing = {
+          uri: 'https://pod.example/recipe1',
+          observeTypes: () => observedTypes$,
+        };
+        page.instance.receiveResource(thing);
+        observedTypes$.next([
+          {
+            label: 'Recipe',
+            uri: 'http://schema.org/Recipe',
+          },
+        ]);
+        await page.waitForChanges();
+        expect(page.root).toEqualText('Recipe.');
+        // new thing
+        const observedTypes2$ = new Subject<RdfType[]>();
+        const thing2 = {
+          uri: 'https://pod.example/video1',
+          observeTypes: () => observedTypes2$,
+        };
+        page.instance.receiveResource(thing2);
+        await page.waitForChanges();
+        expect(page.root).toEqualText('');
+        observedTypes2$.next([
+          {
+            label: 'Video',
+            uri: 'http://schema.org/Video',
+          },
+        ]);
+        await page.waitForChanges();
+        expect(page.root).toEqualText('Video.');
       });
     });
   });
