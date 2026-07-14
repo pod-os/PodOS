@@ -69,6 +69,22 @@ describe('pos-case', () => {
       });
     });
 
+    it('provides else if-typeof', async () => {
+      const page = await render<HTMLPosCaseElement>(
+        <pos-case else if-typeof="http://schema.org/Recipe">
+          <template>
+            <div>Test</div>
+          </template>
+        </pos-case>,
+      );
+      const rule = await page.root.getRule();
+      expect(rule).toEqual({
+        type: 'if-typeof',
+        value: 'http://schema.org/Recipe',
+        else: true,
+      });
+    });
+
     it('provides the if-property rule', async () => {
       const page = await render<HTMLPosCaseElement>(
         <pos-case if-property="http://schema.org/image">
@@ -84,6 +100,22 @@ describe('pos-case', () => {
       });
     });
 
+    it('provides else if-property', async () => {
+      const page = await render<HTMLPosCaseElement>(
+        <pos-case else if-property="http://schema.org/image">
+          <template>
+            <div>Test</div>
+          </template>
+        </pos-case>,
+      );
+      const rule = await page.root.getRule();
+      expect(rule).toEqual({
+        type: 'if-property',
+        value: 'http://schema.org/image',
+        else: true,
+      });
+    });
+
     it('provides the if-rev rule', async () => {
       const page = await render<HTMLPosCaseElement>(
         <pos-case if-rev="http://schema.org/image">
@@ -96,6 +128,22 @@ describe('pos-case', () => {
       expect(rule).toEqual({
         type: 'if-rev',
         value: 'http://schema.org/image',
+      });
+    });
+
+    it('provides the else if-rev rule', async () => {
+      const page = await render<HTMLPosCaseElement>(
+        <pos-case else if-rev="http://schema.org/image">
+          <template>
+            <div>Test</div>
+          </template>
+        </pos-case>,
+      );
+      const rule = await page.root.getRule();
+      expect(rule).toEqual({
+        type: 'if-rev',
+        value: 'http://schema.org/image',
+        else: true,
       });
     });
   });

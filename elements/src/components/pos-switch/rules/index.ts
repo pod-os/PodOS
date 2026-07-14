@@ -6,23 +6,27 @@ export interface IfTypeofRule {
   type: 'if-typeof';
   value: string;
   not?: boolean;
+  else?: boolean;
 }
 
 export interface IfPropertyRule {
   type: 'if-property';
   value: string;
   not?: boolean;
+  else?: boolean;
 }
 
 export interface IfRevRule {
   type: 'if-rev';
   value: string;
   not?: boolean;
+  else?: boolean;
 }
 
 export interface NeverRule {
   type: 'never';
   not: false;
+  else: false;
 }
 
 export type SwitchCaseRule = IfTypeofRule | IfPropertyRule | IfRevRule | NeverRule;
@@ -30,6 +34,7 @@ export type SwitchCaseRule = IfTypeofRule | IfPropertyRule | IfRevRule | NeverRu
 export const NEVER_RULE: NeverRule = {
   type: 'never',
   not: false,
+  else: false,
 };
 
 export interface RuleContext {

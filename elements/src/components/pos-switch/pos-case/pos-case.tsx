@@ -79,26 +79,29 @@ export class PosCase {
    */
   @Method()
   async getRule(): Promise<SwitchCaseRule> {
-    const not = this.not;
+    const modifiers = {
+      not: this.not,
+      else: this.else,
+    };
     if (this.ifTypeof) {
       return {
         type: 'if-typeof',
         value: this.ifTypeof,
-        not,
+        ...modifiers,
       };
     }
     if (this.ifProperty) {
       return {
         type: 'if-property',
         value: this.ifProperty,
-        not,
+        ...modifiers,
       };
     }
     if (this.ifRev) {
       return {
         type: 'if-rev',
         value: this.ifRev,
-        not,
+        ...modifiers,
       };
     }
     return NEVER_RULE;
