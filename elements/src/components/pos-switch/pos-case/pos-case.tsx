@@ -1,4 +1,4 @@
-import { Component, Element, Prop, State } from '@stencil/core';
+import { Component, Element, Method, Prop, State } from '@stencil/core';
 
 /**
  * Defines a template to use if the specified condition is met - to be used with [pos-switch](https://pod-os.org/reference/elements/components/pos-switch/).
@@ -9,8 +9,8 @@ import { Component, Element, Prop, State } from '@stencil/core';
   shadow: false,
 })
 export class PosCase {
-  @Element() host: HTMLElement;
-  @State() error: string = null;
+  @Element() host!: HTMLElement;
+  @State() error: string | null = null;
 
   /**
    * Test if the resource is of the specified type
@@ -72,6 +72,19 @@ export class PosCase {
    * Test if every value linked by if-property or if-rev is less than or equal to the attribute. First a number comparison is attempted, then string.
    */
   @Prop() everyValueLte?: string;
+
+  /**
+   * Returns the rule definition for this case. The rule determines if the element's content gets rendered.
+   */
+  @Method()
+  async getRule() {
+    const ruleAttribute = this.host.getAttributeNames().find(it => it.startsWith('if-'));
+    if (ruleAttribute == null) return null;
+    return {
+      type: ruleAttribute,
+      value: this.host.getAttribute(ruleAttribute)!,
+    };
+  }
 
   componentWillLoad() {
     const templateElement = this.host.querySelector('template');

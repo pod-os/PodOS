@@ -29,6 +29,19 @@ See [storybook](https://pod-os.github.io/PodOS/storybook/?path=/story/basics--po
 | `someValueLte`  | `some-value-lte`  | Test if some value linked by if-property or if-rev is less than or equal to the attribute. First a number comparison is attempted, then string.     | `string`  | `undefined` |
 
 
+## Methods
+
+### `getRule() => Promise<{ type: string; value: string; }>`
+
+Returns the rule definition for this case. The rule determines if the element's content gets rendered.
+
+#### Returns
+
+Type: `Promise<{ type: string; value: string; }>`
+
+
+
+
 ----------------------------------------------
 
 *Built with [StencilJS](https://stenciljs.com/)*

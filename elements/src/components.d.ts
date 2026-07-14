@@ -93,6 +93,10 @@ export namespace Components {
          */
         "everyValueLte"?: string;
         /**
+          * Returns the rule definition for this case. The rule determines if the element's content gets rendered.
+         */
+        "getRule": () => Promise<{ type: string; value: string; }>;
+        /**
           * Test if the resource has the specified property (forward link)
          */
         "ifProperty"?: string;
