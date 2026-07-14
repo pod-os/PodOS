@@ -45,6 +45,7 @@ import {
   Term,
 } from "rdflib/lib/tf-types";
 import { iana, internal } from "./namespaces";
+export { Quad } from "rdflib/lib/tf-types";
 
 /**
  * The Store contains all data that is known locally.
