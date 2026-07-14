@@ -1,7 +1,7 @@
 import { describe, expect, it } from '@stencil/vitest';
 import { doesRuleMatch } from './doesRuleMatch';
 import { Literal, RdfType, Relation } from '@pod-os/core';
-import { SwitchCaseRule } from './index';
+import { NEVER_RULE, SwitchCaseRule } from './index';
 
 const EMPTY_CONTEXT = {
   types: [],
@@ -11,6 +11,12 @@ const EMPTY_CONTEXT = {
 };
 
 describe('does rule match', () => {
+  describe('never', () => {
+    it('does never match', () => {
+      const result = doesRuleMatch(NEVER_RULE, EMPTY_CONTEXT);
+      expect(result).toBe(false);
+    });
+  });
   describe('if-typeof', () => {
     const ifTypeOfRecipe: SwitchCaseRule = {
       type: 'if-typeof',

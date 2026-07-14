@@ -2,14 +2,34 @@ import { Literal, RdfType, Relation } from '@pod-os/core';
 
 export { findMatchingRules } from './findMatchingRules';
 
-export interface SwitchCaseRule {
-  type: 'if-typeof' | 'if-property' | 'if-rev' | 'never';
-  value?: string;
+export interface IfTypeofRule {
+  type: 'if-typeof';
+  value: string;
   not?: boolean;
 }
 
-export const NO_RULE: SwitchCaseRule = {
+export interface IfPropertyRule {
+  type: 'if-property';
+  value: string;
+  not?: boolean;
+}
+
+export interface IfRevRule {
+  type: 'if-rev';
+  value: string;
+  not?: boolean;
+}
+
+export interface NeverRule {
+  type: 'never';
+  not: false;
+}
+
+export type SwitchCaseRule = IfTypeofRule | IfPropertyRule | IfRevRule | NeverRule;
+
+export const NEVER_RULE: NeverRule = {
   type: 'never',
+  not: false,
 };
 
 export interface RuleContext {
