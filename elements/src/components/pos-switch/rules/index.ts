@@ -5,6 +5,7 @@ export { findMatchingRules } from './findMatchingRules';
 export interface SwitchCaseRule {
   type: string;
   value?: string;
+  not?: boolean;
 }
 
 export const NO_RULE = {
