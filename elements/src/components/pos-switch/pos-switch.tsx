@@ -34,20 +34,25 @@ export class PosSwitch implements ResourceAware {
   @Event({ eventName: 'pod-os:resource' })
   subscribeResource!: ResourceEventEmitter;
 
-  async componentWillLoad() {
+  componentWillLoad() {
     const caseElements = this.host.querySelectorAll('pos-case');
     if (caseElements.length == 0) {
       this.error = 'No pos-case elements found';
-    } else {
-      this.caseElements = Array.from(caseElements);
-      this.cases = await Promise.all(
-        this.caseElements.map(async it => ({
-          rule: await it.getRule(),
-          caseElement: it,
-        })),
-      );
-      subscribeResource(this);
+      return;
     }
+    this.caseElements = Array.from(caseElements);
+    // Do NOT await: awaiting a child @Method in componentWillLoad deadlocks the
+    // lazy load graph (the child can't render until this component renders).
+    // Build the rules once the children have upgraded, then subscribe to the resource
+    Promise.all(
+      this.caseElements.map(async it => ({
+        rule: await it.getRule(),
+        caseElement: it,
+      })),
+    ).then(cases => {
+      this.cases = cases;
+      subscribeResource(this);
+    });
   }
 
   receiveResource = (resource: Thing) => {
