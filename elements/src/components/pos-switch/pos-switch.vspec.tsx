@@ -3,7 +3,7 @@ import { describe, expect, h, it, render } from '@stencil/vitest';
 import './pos-switch';
 import './pos-case/pos-case';
 import { Subject } from 'rxjs';
-import { RdfType, Thing } from '@pod-os/core';
+import { Literal, RdfType, Relation, Thing } from '@pod-os/core';
 
 describe('pos-switch', () => {
   describe('template loading', () => {
@@ -142,6 +142,63 @@ describe('pos-switch', () => {
         await page.waitForChanges();
         expect(page.root).toEqualText('Video.');
       });
+    });
+
+    it('supports mixed test conditions', async () => {
+      const page = await render(
+        <pos-switch>
+          <pos-case if-typeof="http://schema.org/Recipe">
+            <template>
+              <div>Recipe.</div>
+            </template>
+          </pos-case>
+          <pos-case if-property="http://schema.org/image">
+            <template>
+              <div>Image.</div>
+            </template>
+          </pos-case>
+          <pos-case if-rev="http://schema.org/itemListElement">
+            <template>
+              <div>Recipe list.</div>
+            </template>
+          </pos-case>
+        </pos-switch>,
+      );
+      const observedTypes$ = new Subject<RdfType[]>();
+      const observedRelations$ = new Subject<Relation[]>();
+      const observedReverseRelations$ = new Subject<Relation[]>();
+      const observedLiterals$ = new Subject<Literal[]>();
+      const thing = {
+        uri: 'https://pod.example/recipe1',
+        observeLiterals: () => observedLiterals$,
+        observeTypes: () => observedTypes$,
+        observeRelations: () => observedRelations$,
+        observeReverseRelations: () => observedReverseRelations$,
+      };
+      page.instance.receiveResource(thing);
+      observedLiterals$.next([]);
+      observedTypes$.next([
+        {
+          label: 'Recipe',
+          uri: 'http://schema.org/Recipe',
+        },
+      ]);
+      observedRelations$.next([
+        { predicate: 'http://schema.org/image', label: 'image', uris: ['https://resource.test/recipe-photo.jpg'] },
+      ]);
+      observedReverseRelations$.next([
+        {
+          predicate: 'http://schema.org/itemListElement',
+          label: 'itemListElement',
+          uris: ['https://pod.example/recipe-list'],
+        },
+      ]);
+      await page.waitForChanges();
+      expect(page.root?.innerHTML).toEqualHtml(`
+        <div>Recipe.</div>
+        <div>Image.</div>
+        <div>Recipe list.</div>
+        `);
     });
   });
 });
