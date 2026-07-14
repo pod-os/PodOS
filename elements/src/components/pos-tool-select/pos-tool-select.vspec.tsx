@@ -1,20 +1,17 @@
-jest.mock('./shoelace', () => ({}));
+import { vi } from 'vitest';
+import { describe, expect, it, render, h } from '@stencil/vitest';
+import './pos-tool-select';
+import { ToolConfig } from '../pos-type-router/selectToolsForTypes';
+import { withinShadow } from '../../test/withinShadow';
 
-// noinspection ES6UnusedImports
-import { h } from '@stencil/core';
-import { newSpecPage } from '@stencil/core/testing';
-import { PosToolSelect } from './pos-tool-select';
-import { queryAllByRole } from '@testing-library/dom';
+vi.mock('./shoelace', () => ({}));
 
 describe('pos-tool-select', () => {
   it('renders nothing if no tools configured', async () => {
-    const page = await newSpecPage({
-      components: [PosToolSelect],
-      template: () => <pos-tool-select tools={[]} />,
-    });
+    const page = await render(<pos-tool-select tools={[]} />);
 
     expect(page.root).toEqualHtml(`
-      <pos-tool-select>
+      <pos-tool-select class="hydrated">
         <mock:shadow-root></mock:shadow-root>
       </pos-tool-select>
     `);
@@ -26,14 +23,11 @@ describe('pos-tool-select', () => {
         label: 'Test Tool',
         component: 'pos-test-tool',
       },
-    ];
-    const page = await newSpecPage({
-      components: [PosToolSelect],
-      template: () => <pos-tool-select tools={tools} />,
-    });
+    ] as unknown as ToolConfig[];
+    const page = await render(<pos-tool-select tools={tools} />);
 
     expect(page.root).toEqualHtml(`
-      <pos-tool-select>
+      <pos-tool-select class="hydrated">
         <mock:shadow-root></mock:shadow-root>
       </pos-tool-select>
     `);
@@ -49,14 +43,10 @@ describe('pos-tool-select', () => {
         label: 'Tool 2',
         component: 'pos-test-tool-2',
       },
-    ];
-    const page = await newSpecPage({
-      components: [PosToolSelect],
-      template: () => <pos-tool-select tools={tools} />,
-      supportsShadowDom: false,
-    });
+    ] as unknown as ToolConfig[];
+    const page = await render(<pos-tool-select tools={tools} />);
 
-    const buttons = queryAllByRole(page.root, 'tab');
+    const buttons = withinShadow(page).getAllByRole('tab');
     expect(buttons.length).toBe(2);
     expect(buttons[0].textContent).toEqual('Tool 1');
     expect(buttons[1].textContent).toEqual('Tool 2');
@@ -74,14 +64,10 @@ describe('pos-tool-select', () => {
         component: 'pos-test-tool-2',
         icon: 'icon-2',
       },
-    ];
-    const page = await newSpecPage({
-      components: [PosToolSelect],
-      template: () => <pos-tool-select tools={tools} />,
-      supportsShadowDom: false,
-    });
+    ] as unknown as ToolConfig[];
+    const page = await render(<pos-tool-select tools={tools} />);
 
-    const icons = page.root.querySelectorAll('sl-icon');
+    const icons = page.root.shadowRoot!.querySelectorAll('sl-icon');
     expect(icons.length).toBe(2);
     expect(icons[0].getAttribute('name')).toBe('icon-1');
     expect(icons[1].getAttribute('name')).toBe('icon-2');
@@ -97,17 +83,13 @@ describe('pos-tool-select', () => {
         label: 'Tool 2',
         component: 'pos-test-tool-2',
       },
-    ];
-    const page = await newSpecPage({
-      components: [PosToolSelect],
-      template: () => <pos-tool-select tools={tools} />,
-      supportsShadowDom: false,
-    });
+    ] as unknown as ToolConfig[];
+    const page = await render(<pos-tool-select tools={tools} />);
 
-    const eventSpy = jest.fn();
-    page.win.addEventListener('pod-os:tool-selected', eventSpy);
+    const eventSpy = vi.fn();
+    window.addEventListener('pod-os:tool-selected', eventSpy);
 
-    const button = queryAllByRole(page.root, 'tab')[0];
+    const button = withinShadow(page).getAllByRole('tab')[0];
     expect(button.textContent).toEqual('Tool 1');
     button.click();
 
@@ -130,14 +112,10 @@ describe('pos-tool-select', () => {
         component: 'pos-test-tool-2',
         element: 'element-2',
       },
-    ];
-    const page = await newSpecPage({
-      components: [PosToolSelect],
-      template: () => <pos-tool-select tools={tools} selected={tools[1]} />,
-      supportsShadowDom: false,
-    });
+    ] as unknown as ToolConfig[];
+    const page = await render(<pos-tool-select tools={tools} selected={tools[1]} />);
 
-    const buttons = queryAllByRole(page.root, 'tab');
+    const buttons = withinShadow(page).getAllByRole('tab');
     expect(buttons[0]).not.toHaveAttribute('aria-selected');
     expect(buttons[1]).toHaveAttribute('aria-selected');
   });

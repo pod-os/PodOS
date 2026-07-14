@@ -134,3 +134,54 @@ Assigning to getter-only properties (e.g. `navigator.clipboard`) throws. Use `vi
 ```ts
 expect(page.root).toBeEmptyDOMElement();
 ```
+
+### `toEqualText` expects an element, not a string
+
+`@stencil/vitest`'s `toEqualText` calls `getTextContentWithShadow(received)`, which iterates
+`received.childNodes`. Passing a **string** (e.g. `expect(el.innerText).toEqualText('x')`) throws
+`TypeError: undefined is not iterable`. Jest's version coerced strings; Vitest's does not. Pass the element:
+
+```ts
+expect(el).toEqualText('x');
+```
+
+### `.vspec.tsx` is newly type-checked
+
+`elements/tsconfig.json` excludes `**/*.spec.tsx` but **not** `**/*.vspec.tsx`, so renaming subjects the
+file to `tsc` for the first time. Pre-existing loose mock data surfaces as `TS2322`/`TS2739` (object
+literals missing required fields, wrong field names). Cast the mock data — precedented across the codebase
+(`pos-attachments`, `pos-container-contents`):
+
+```ts
+const tools = [{ label: 'Tool 1', component: 'pos-test-tool-1' }] as unknown as ToolConfig[];
+```
+
+Import the type from its source module. These appear during Steps 9–10 but are **not** `TS6133`/`TS18047` —
+they need this cast, not import removal.
+
+### `@testing-library/dom` queries don't pierce shadow DOM
+
+`queryAllByRole(el, 'tab')` and siblings operate on `el`'s light-DOM subtree only. For a `shadow: true`
+component, use the project helper `withinShadow` (in `elements/src/test/withinShadow.ts`), which wraps
+`@testing-library/dom`'s `within()` around `page.root.shadowRoot`. Precedented across `pos-login-form`,
+`pos-container-toolbar`, `pos-new-thing-form`:
+
+```ts
+import { withinShadow } from '<rel>/test/withinShadow';
+// ...
+const buttons = withinShadow(page).getAllByRole('tab');
+```
+
+The import path is relative to the test file's directory (`../../test/withinShadow`, `../../../test/withinShadow`, …).
+
+Note: `queryAllByRole` returns `[]` when nothing matches; `getAllByRole` **throws**. Use `queryAllByRole`
+when asserting absence.
+
+### `page.win` → `window`
+
+`SpecPage` exposes a `win` (mocked window); `RenderResult` does not. Replace window-scoped listeners with
+the global:
+
+```ts
+window.addEventListener('pod-os:tool-selected', spy);
+```
