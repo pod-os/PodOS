@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@stencil/vitest';
 import { doesRuleMatch } from './doesRuleMatch';
-import { RdfType } from '@pod-os/core';
+import { Literal, RdfType, Relation } from '@pod-os/core';
 import { SwitchCaseRule } from './index';
 
 const EMPTY_CONTEXT = {
@@ -66,10 +66,57 @@ describe('does rule match', () => {
       });
     });
   });
+  describe('if-property', () => {
+    const ifPropertyName: SwitchCaseRule = {
+      type: 'if-property',
+      value: 'http://schema.org/name',
+    };
+    it('does not match if no properties are in context', () => {
+      const result = doesRuleMatch(ifPropertyName, EMPTY_CONTEXT);
+      expect(result).toBe(false);
+    });
+    it('matches if context contains a literal of that property', () => {
+      const context = {
+        ...EMPTY_CONTEXT,
+        literals: [literal('http://schema.org/name')],
+      };
+      const result = doesRuleMatch(ifPropertyName, context);
+      expect(result).toBe(true);
+    });
+    it('matches if context contains a relation of that property', () => {
+      const context = {
+        ...EMPTY_CONTEXT,
+        relations: [relation('http://schema.org/name')],
+      };
+      const result = doesRuleMatch(ifPropertyName, context);
+      expect(result).toBe(true);
+    });
+    it('matches if one matching is present besides others', () => {
+      const context = {
+        ...EMPTY_CONTEXT,
+        literals: [literal('http://vocab.example.org/other')],
+        relations: [relation('http://schema.org/name'), relation('http://vocab.example.org/other-rel')],
+      };
+      const result = doesRuleMatch(ifPropertyName, context);
+      expect(result).toBe(true);
+    });
+  });
 });
 
 function type(uri: string) {
   return {
     uri,
   } as RdfType;
+}
+
+function literal(predicate: string) {
+  return {
+    predicate,
+  } as Literal;
+}
+
+function relation(predicate: string) {
+  return {
+    predicate,
+  } as Relation;
 }

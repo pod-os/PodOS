@@ -10,5 +10,10 @@ function evaluateRule(rule: SwitchCaseRule, context: RuleContext) {
   if (rule.type == 'if-typeof') {
     return context.types.map(x => x.uri).includes(rule.value ?? '');
   }
+  if (rule.type == 'if-property') {
+    const hasLiteral = context.literals.map(x => x.predicate).includes(rule.value ?? '');
+    const hasRelation = context.relations.map(x => x.predicate).includes(rule.value ?? '');
+    return hasLiteral || hasRelation;
+  }
   return false;
 }
