@@ -68,7 +68,7 @@ export class PosSwitch implements ResourceAware {
     };
 
     if (caseElement.getAttribute('if-typeof') !== null) {
-      state = this.types.map(x => x.uri).includes(caseElement.getAttribute('if-typeof'));
+      state = false; // covered by new refactored rules
     }
     if (caseElement.getAttribute('if-property') !== null) {
       const matchingRelations = this.relations.filter(x => x.predicate == caseElement.getAttribute('if-property'));
@@ -169,7 +169,10 @@ export class PosSwitch implements ResourceAware {
     this.disconnected$.complete();
   }
 
-  private testRule(_: SwitchCaseRule) {
+  private testRule(rule: SwitchCaseRule) {
+    if (rule.type == 'if-typeof') {
+      return this.types.map(x => x.uri).includes(rule.value);
+    }
     return false;
   }
 }
