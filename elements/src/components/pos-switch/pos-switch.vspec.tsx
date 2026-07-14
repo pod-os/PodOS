@@ -186,6 +186,38 @@ describe('pos-switch', () => {
         <div>Recipe 1</div>
         `);
       });
+
+      it('renders final else condition if no other templates match', async () => {
+        const page = await render(
+          <pos-switch>
+            <pos-case if-typeof="http://schema.org/Video">
+              <template>
+                <div>Video 1</div>
+              </template>
+            </pos-case>
+            <pos-case else>
+              <template>
+                <div>No matches</div>
+              </template>
+            </pos-case>
+          </pos-switch>,
+        );
+        const observedTypes$ = new Subject<RdfType[]>();
+        const thing = {
+          observeTypes: () => observedTypes$,
+        } as unknown as Thing;
+        page.instance.receiveResource(thing);
+        observedTypes$.next([
+          {
+            label: 'Recipe',
+            uri: 'http://schema.org/Recipe',
+          },
+        ]);
+        await page.waitForChanges();
+        expect(page.root?.innerHTML).toEqualHtml(`
+        <div>No matches</div>
+        `);
+      });
     });
 
     it('supports mixed test conditions', async () => {

@@ -1,6 +1,7 @@
 import { describe, expect, it, render, h } from '@stencil/vitest';
 
 import './pos-case';
+import { ELSE_RULE } from '../rules';
 
 describe('pos-case', () => {
   it('contains only templates initially', async () => {
@@ -145,6 +146,18 @@ describe('pos-case', () => {
         value: 'http://schema.org/image',
         else: true,
       });
+    });
+
+    it('provides else rule', async () => {
+      const page = await render<HTMLPosCaseElement>(
+        <pos-case else>
+          <template>
+            <div>Test</div>
+          </template>
+        </pos-case>,
+      );
+      const rule = await page.root.getRule();
+      expect(rule).toEqual(ELSE_RULE);
     });
   });
 });

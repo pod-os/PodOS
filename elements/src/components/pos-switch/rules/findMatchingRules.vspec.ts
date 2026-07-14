@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@stencil/vitest';
 import { findMatchingRules } from './findMatchingRules';
-import { SwitchCaseRule } from './index';
+import { ELSE_RULE, IfTypeofRule, SwitchCaseRule } from './index';
 import { Literal, RdfType, Relation } from '@pod-os/core';
 
 const EMPTY_CONTEXT = {
@@ -127,7 +127,7 @@ describe('find matching rules', () => {
       expect(result).toEqual([{ rule: ifRecipe }]);
     });
 
-    it('ignores a matching else branch, if first rule already matched', () => {
+    it('ignores a matching if-else branch, if first rule already matched', () => {
       const ifTypeA: SwitchCaseRule = {
         type: 'if-typeof',
         value: 'https://vocab.example/A',
@@ -146,7 +146,21 @@ describe('find matching rules', () => {
       expect(result).toEqual([{ rule: ifTypeA }]);
     });
 
-    it('falls back to a matching else branch, if first rule did not match', () => {
+    it('ignores a matching else branch, if first rule already matched', () => {
+      const ifTypeA: IfTypeofRule = {
+        type: 'if-typeof',
+        value: 'https://vocab.example/A',
+      };
+      const context = {
+        ...EMPTY_CONTEXT,
+        types: [type('https://vocab.example/A')],
+      };
+      const rules: TestRules[] = [{ rule: ifTypeA }, { rule: ELSE_RULE }];
+      const result = findMatchingRules(rules, context);
+      expect(result).toEqual([{ rule: ifTypeA }]);
+    });
+
+    it('falls back to a matching if-else branch, if first rule did not match', () => {
       const ifTypeA: SwitchCaseRule = {
         type: 'if-typeof',
         value: 'https://vocab.example/A',
@@ -163,6 +177,20 @@ describe('find matching rules', () => {
       const rules: TestRules[] = [{ rule: ifTypeA }, { rule: elseIfTypeB }];
       const result = findMatchingRules(rules, context);
       expect(result).toEqual([{ rule: elseIfTypeB }]);
+    });
+
+    it('falls back to plain else branch, if first rule did not match', () => {
+      const ifTypeA: SwitchCaseRule = {
+        type: 'if-typeof',
+        value: 'https://vocab.example/A',
+      };
+      const context = {
+        ...EMPTY_CONTEXT,
+        types: [type('https://vocab.example/B')],
+      };
+      const rules: TestRules[] = [{ rule: ifTypeA }, { rule: ELSE_RULE }];
+      const result = findMatchingRules(rules, context);
+      expect(result).toEqual([{ rule: ELSE_RULE }]);
     });
   });
 });

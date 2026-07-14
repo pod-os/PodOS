@@ -23,18 +23,30 @@ export interface IfRevRule {
   else?: boolean;
 }
 
+export interface ElseRule {
+  type: 'else';
+  not: false;
+  else: true;
+}
+
 export interface NeverRule {
   type: 'never';
   not: false;
   else: false;
 }
 
-export type SwitchCaseRule = IfTypeofRule | IfPropertyRule | IfRevRule | NeverRule;
+export type SwitchCaseRule = IfTypeofRule | IfPropertyRule | IfRevRule | ElseRule | NeverRule;
 
 export const NEVER_RULE: NeverRule = {
   type: 'never',
   not: false,
   else: false,
+};
+
+export const ELSE_RULE: ElseRule = {
+  type: 'else',
+  not: false,
+  else: true,
 };
 
 export interface RuleContext {

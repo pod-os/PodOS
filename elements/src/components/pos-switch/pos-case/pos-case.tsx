@@ -1,5 +1,5 @@
 import { Component, Element, Method, Prop, State } from '@stencil/core';
-import { NEVER_RULE, SwitchCaseRule } from '../rules';
+import { ELSE_RULE, NEVER_RULE, SwitchCaseRule } from '../rules';
 
 /**
  * Defines a template to use if the specified condition is met - to be used with [pos-switch](https://pod-os.org/reference/elements/components/pos-switch/).
@@ -104,7 +104,7 @@ export class PosCase {
         ...modifiers,
       };
     }
-    return NEVER_RULE;
+    return this.else ? ELSE_RULE : NEVER_RULE;
   }
 
   componentWillLoad() {

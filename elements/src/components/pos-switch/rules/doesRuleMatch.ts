@@ -13,6 +13,8 @@ function evaluateRule(rule: SwitchCaseRule, context: RuleContext) {
       return doesPropertyMatch(rule, context);
     case 'if-rev':
       return doesReverseRelationMatch(rule, context);
+    case 'else':
+      return true;
     default:
       return false;
   }
