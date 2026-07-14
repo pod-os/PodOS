@@ -31,13 +31,13 @@ See [storybook](https://pod-os.github.io/PodOS/storybook/?path=/story/basics--po
 
 ## Methods
 
-### `getRule() => Promise<{ type: string; value: string; }>`
+### `getRule() => Promise<SwitchCaseRule>`
 
 Returns the rule definition for this case. The rule determines if the element's content gets rendered.
 
 #### Returns
 
-Type: `Promise<{ type: string; value: string; }>`
+Type: `Promise<SwitchCaseRule>`
 
 
 

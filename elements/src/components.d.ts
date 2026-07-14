@@ -6,9 +6,11 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { Attachment, HttpProblem, LdpContainer, Literal, NetworkProblem, PodOS, Problem, Relation, SolidFile, Thing } from "@pod-os/core";
+import { SwitchCaseRule } from "./components/pos-switch/rules";
 import { ToolConfig } from "./components/pos-type-router/selectToolsForTypes";
 import { ResultAsync } from "neverthrow";
 export { Attachment, HttpProblem, LdpContainer, Literal, NetworkProblem, PodOS, Problem, Relation, SolidFile, Thing } from "@pod-os/core";
+export { SwitchCaseRule } from "./components/pos-switch/rules";
 export { ToolConfig } from "./components/pos-type-router/selectToolsForTypes";
 export { ResultAsync } from "neverthrow";
 export namespace Components {
@@ -95,7 +97,7 @@ export namespace Components {
         /**
           * Returns the rule definition for this case. The rule determines if the element's content gets rendered.
          */
-        "getRule": () => Promise<{ type: string; value: string; }>;
+        "getRule": () => Promise<SwitchCaseRule>;
         /**
           * Test if the resource has the specified property (forward link)
          */

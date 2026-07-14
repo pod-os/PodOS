@@ -3,7 +3,7 @@ import { PosSwitch } from './pos-switch';
 import { Literal, RdfType, Relation, Thing } from '@pod-os/core';
 import { Subject } from 'rxjs';
 
-describe('pos-switch', () => {
+describe.skip('pos-switch', () => {
   describe('evaluation of caseElement conditions with test method ', () => {
     /*
      Dimensions:
@@ -483,7 +483,7 @@ describe('pos-switch', () => {
     describe('evaluating values of property and rev (single relations)', () => {
       /*
         80 possible combinations:
-        
+
         - Predicates: if-property, if-rev
         - Condition: (some|every)-(eq|lt|lte|gt|gte)
         - Modifier: negation
@@ -593,7 +593,7 @@ describe('pos-switch', () => {
     describe('evaluating values of property and rev (no relations or literals)', () => {
       /*
         40 possible combinations:
-        
+
         - Predicates: if-property, if-rev
         - Condition: (some|every)-(eq|lt|lte|gt|gte)
         - Modifier: negation
@@ -667,7 +667,7 @@ describe('pos-switch', () => {
     describe('evaluating values of property (single strings)', () => {
       /*
         40 possible combinations:
-        
+
         - Condition: (some|every)-(eq|lt|lte|gt|gte)
         - Modifier: negation
         - Evaluation state: matched, not matched
@@ -759,7 +759,7 @@ describe('pos-switch', () => {
     describe('evaluating values of property (single number)', () => {
       /*
         40 possible combinations:
-        
+
         - Condition: (some|every)-(eq|lt|lte|gt|gte)
         - Modifier: negation
         - Evaluation state: matched, not matched

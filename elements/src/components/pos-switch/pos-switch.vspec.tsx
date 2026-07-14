@@ -1,0 +1,109 @@
+import { describe, expect, h, it, render } from '@stencil/vitest';
+
+import './pos-switch';
+import './pos-case/pos-case';
+import { Subject } from 'rxjs';
+import { RdfType, Thing } from '@pod-os/core';
+
+describe('pos-switch', () => {
+  describe('template loading', () => {
+    it('contains only templates initially', async () => {
+      const page = await render(
+        <pos-switch>
+          <pos-case if-typeof="http://schema.org/Recipe">
+            <template>
+              <div>Test</div>
+            </template>
+          </pos-case>
+        </pos-switch>,
+      );
+      expect(page.root).toMatchInlineSnapshot(`
+        <pos-switch class="hydrated">
+          <pos-case if-typeof="http://schema.org/Recipe" class="hydrated">
+            <template></template>
+          </pos-case>
+        </pos-switch>
+      `);
+    });
+    it('load rules from cases', async () => {
+      const page = await render(
+        <pos-switch>
+          <pos-case if-typeof="http://schema.org/Recipe">
+            <template>
+              <div>Recipe</div>
+            </template>
+          </pos-case>
+          <pos-case if-typeof="http://schema.org/Video">
+            <template>
+              <div>Video</div>
+            </template>
+          </pos-case>
+        </pos-switch>,
+      );
+      expect(page.instance.cases).toHaveLength(2);
+      expect(page.instance.cases[0].rule).toEqual({
+        type: 'if-typeof',
+        value: 'http://schema.org/Recipe',
+      });
+      expect(page.instance.cases[1].rule).toEqual({
+        type: 'if-typeof',
+        value: 'http://schema.org/Video',
+      });
+    });
+    it('does not load nested templates', async () => {
+      const page = await render(
+        <pos-switch>
+          <pos-case if-typeof="http://schema.org/Recipe">
+            <template>
+              <pos-case></pos-case>
+            </template>
+          </pos-case>
+        </pos-switch>,
+      );
+      expect(page.instance.cases).toHaveLength(1);
+    });
+    it('displays error on missing template', async () => {
+      const page = await render(<pos-switch></pos-switch>);
+      expect(page.root).toHaveTextContent('No pos-case elements found');
+    });
+
+    describe('reactive rendering', () => {
+      it('renders matching condition templates reactively', async () => {
+        const page = await render(
+          <pos-switch>
+            <pos-case if-typeof="http://schema.org/Recipe">
+              <template>
+                <div>Recipe 1</div>
+              </template>
+            </pos-case>
+            <pos-case if-typeof="http://schema.org/Recipe">
+              <template>
+                <div>Recipe 2</div>
+              </template>
+            </pos-case>
+            <pos-case if-typeof="http://schema.org/Video">
+              <template>
+                <div>Video 1</div>
+              </template>
+            </pos-case>
+          </pos-switch>,
+        );
+        const observedTypes$ = new Subject<RdfType[]>();
+        const thing = {
+          observeTypes: () => observedTypes$,
+        } as unknown as Thing;
+        page.instance.receiveResource(thing);
+        observedTypes$.next([
+          {
+            label: 'Recipe',
+            uri: 'http://schema.org/Recipe',
+          },
+        ]);
+        await page.waitForChanges();
+        expect(page.root.innerHTML).toEqualHtml(`
+        <div>Recipe 1</div>
+        <div>Recipe 2</div>`);
+      });
+    });
+  });
+});

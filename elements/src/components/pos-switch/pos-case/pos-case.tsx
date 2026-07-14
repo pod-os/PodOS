@@ -1,4 +1,5 @@
 import { Component, Element, Method, Prop, State } from '@stencil/core';
+import { NO_RULE, SwitchCaseRule } from '../rules';
 
 /**
  * Defines a template to use if the specified condition is met - to be used with [pos-switch](https://pod-os.org/reference/elements/components/pos-switch/).
@@ -77,9 +78,9 @@ export class PosCase {
    * Returns the rule definition for this case. The rule determines if the element's content gets rendered.
    */
   @Method()
-  async getRule() {
+  async getRule(): Promise<SwitchCaseRule> {
     const ruleAttribute = this.host.getAttributeNames().find(it => it.startsWith('if-'));
-    if (ruleAttribute == null) return null;
+    if (ruleAttribute == null) return NO_RULE;
     return {
       type: ruleAttribute,
       value: this.host.getAttribute(ruleAttribute)!,

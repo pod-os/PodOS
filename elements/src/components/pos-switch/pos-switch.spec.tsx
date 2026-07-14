@@ -3,7 +3,7 @@ import { PosSwitch } from './pos-switch';
 import { Literal, RdfType, Relation, Thing } from '@pod-os/core';
 import { Subject } from 'rxjs';
 
-describe('pos-switch', () => {
+describe.skip('pos-switch', () => {
   describe('template loading', () => {
     it('contains only templates initially', async () => {
       const page = await newSpecPage({

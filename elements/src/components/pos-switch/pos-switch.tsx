@@ -3,6 +3,12 @@ import { Component, Element, Event, h, Host, State } from '@stencil/core';
 import { ResourceAware, ResourceEventEmitter, subscribeResource } from '../events/ResourceAware';
 import { combineLatest, firstValueFrom, Observable, Subject, takeUntil } from 'rxjs';
 import { operatorSemanticCombinations, testIfValuesMatchTarget } from './logic';
+import { SwitchCaseRule } from './rules';
+
+interface CaseWithRule {
+  caseElement: HTMLPosCaseElement;
+  rule: SwitchCaseRule;
+}
 
 /**
  * Selects a child template to render based on properties of the subject resource, usually defined by an ancestor `pos-resource` element.
@@ -18,6 +24,7 @@ export class PosSwitch implements ResourceAware {
   @State() error: string = null;
   @State() resource: Thing;
   @State() caseElements: HTMLPosCaseElement[];
+  @State() cases: CaseWithRule[];
   @State() types: RdfType[];
   @State() relations: Relation[];
   @State() reverseRelations: Relation[];
@@ -28,12 +35,18 @@ export class PosSwitch implements ResourceAware {
   @Event({ eventName: 'pod-os:resource' })
   subscribeResource: ResourceEventEmitter;
 
-  componentWillLoad() {
+  async componentWillLoad() {
     const caseElements = this.host.querySelectorAll('pos-case');
     if (caseElements.length == 0) {
       this.error = 'No pos-case elements found';
     } else {
       this.caseElements = Array.from(caseElements);
+      this.cases = await Promise.all(
+        this.caseElements.map(async it => ({
+          rule: await it.getRule(),
+          caseElement: it,
+        })),
+      );
       subscribeResource(this);
     }
   }
@@ -128,6 +141,14 @@ export class PosSwitch implements ResourceAware {
     }
     let state: boolean | null = null;
     let activeElements: HTMLPosCaseElement[] = [];
+
+    this.cases.forEach(it => {
+      const caseState = this.testRule(it.rule);
+      if (caseState) {
+        activeElements.push(it.caseElement);
+      }
+    });
+
     this.caseElements.forEach(el => {
       const elemState = this.test(el);
       const includeCondition = state !== true || el.getAttribute('else') === null;
@@ -146,5 +167,9 @@ export class PosSwitch implements ResourceAware {
   disconnectedCallback() {
     this.disconnected$.next();
     this.disconnected$.complete();
+  }
+
+  private testRule(_: SwitchCaseRule) {
+    return false;
   }
 }
