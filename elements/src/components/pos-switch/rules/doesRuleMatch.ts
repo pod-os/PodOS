@@ -29,7 +29,7 @@ function doesTypeMatch(rule: IfTypeofRule, context: RuleContext) {
 function doesPropertyMatch(rule: IfPropertyRule, context: RuleContext) {
   const matchingLiteral = context.literals.find(it => it.predicate == rule.value);
   const matchingRelation = context.relations.find(it => it.predicate == rule.value);
-  if (rule.comparison) {
+  if (rule.comparison && (matchingLiteral || matchingRelation)) {
     return doValuesMatch([...(matchingLiteral?.values ?? []), ...(matchingRelation?.uris ?? [])], rule.comparison);
   }
   return matchingLiteral !== undefined || matchingRelation !== undefined;

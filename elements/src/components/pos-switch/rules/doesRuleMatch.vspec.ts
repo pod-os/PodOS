@@ -243,6 +243,31 @@ describe('does rule match', () => {
           expect(result).toBe(false);
         });
 
+        it('does not match if the property is not present at all', () => {
+          const ifEveryNameEqAlice: SwitchCaseRule = {
+            type: 'if-property',
+            value: 'http://schema.org/name',
+            comparison: {
+              semantic: 'every',
+              operator: 'eq',
+              target: 'Alice',
+            },
+          };
+          // every-value-eq must match both literals and relations!
+          const context = {
+            ...EMPTY_CONTEXT,
+            literals: [literal('http://schema.org/other', ['Alice'])],
+            relations: [relation('http://schema.org/other', ['https://alice.test/my-name#it'])],
+          };
+          const result = doesRuleMatch(ifEveryNameEqAlice, context);
+          // [vacuous truth](https://en.wikipedia.org/wiki/Vacuous_truth) does not apply here!
+          // The semantics of the rule are: The property is present AND all their values match the target
+          // So a missing property must evaluate to false - we are not taking any values into account then.
+          // The value matching is an *additional* condition on top of if-property, it would be surprising if
+          // it matches when you further constrain it
+          expect(result).toBe(false);
+        });
+
         it('matches if the URI in question is present as both a literal and a real relation', () => {
           const ifEveryVideoIsSomeVideo: SwitchCaseRule = {
             type: 'if-property',
