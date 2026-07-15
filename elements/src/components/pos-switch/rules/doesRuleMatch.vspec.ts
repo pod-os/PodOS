@@ -180,6 +180,38 @@ describe('does rule match', () => {
           expect(result).toBe(false);
         });
       });
+
+      describe('if-property with specific relation', () => {
+        const ifVideoIsSomeVideo: SwitchCaseRule = {
+          type: 'if-property',
+          value: 'http://schema.org/video',
+          comparison: {
+            semantic: 'some',
+            operator: 'eq',
+            target: 'https://video.test/some-video',
+          },
+        };
+        it('does not match if no properties are in context', () => {
+          const result = doesRuleMatch(ifVideoIsSomeVideo, EMPTY_CONTEXT);
+          expect(result).toBe(false);
+        });
+        it('matches if context contains a relation of that property with that uri', () => {
+          const context = {
+            ...EMPTY_CONTEXT,
+            relations: [relation('http://schema.org/video', ['https://video.test/some-video'])],
+          };
+          const result = doesRuleMatch(ifVideoIsSomeVideo, context);
+          expect(result).toBe(true);
+        });
+        it('does not match if context contains a relation of that property but without the uri', () => {
+          const context = {
+            ...EMPTY_CONTEXT,
+            relations: [relation('http://schema.org/video', ['https://video.test/other-video'])],
+          };
+          const result = doesRuleMatch(ifVideoIsSomeVideo, context);
+          expect(result).toBe(false);
+        });
+      });
     });
   });
 

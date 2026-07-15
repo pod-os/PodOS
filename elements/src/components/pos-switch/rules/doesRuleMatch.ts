@@ -27,7 +27,7 @@ function doesTypeMatch(rule: IfTypeofRule, context: RuleContext) {
 
 function doesPropertyMatch(rule: IfPropertyRule, context: RuleContext) {
   const matchingLiteral = context.literals.find(it => it.predicate == rule.value);
-  const hasRelation = context.relations.map(x => x.predicate).includes(rule.value);
+  const matchingRelation = context.relations.find(it => it.predicate == rule.value);
   if (rule.comparison && matchingLiteral) {
     return testIfValuesMatchTarget(
       matchingLiteral.values,
@@ -36,7 +36,15 @@ function doesPropertyMatch(rule: IfPropertyRule, context: RuleContext) {
       rule.comparison.target,
     );
   }
-  return matchingLiteral !== undefined || hasRelation;
+  if (rule.comparison && matchingRelation) {
+    return testIfValuesMatchTarget(
+      matchingRelation.uris,
+      rule.comparison.semantic,
+      rule.comparison.operator,
+      rule.comparison.target,
+    );
+  }
+  return matchingLiteral !== undefined || matchingRelation !== undefined;
 }
 
 function doesReverseRelationMatch(rule: IfRevRule, context: RuleContext) {
