@@ -150,4 +150,94 @@ describe('do values match', () => {
       });
     });
   });
+
+  describe.each([[['Alice', 'Bob', 'Claire']], [[99, 100, 101]]])('greater than or equal to (%s)', list => {
+    const less = list[0];
+    const target = list[1];
+    const greater = list[2];
+    describe('some', () => {
+      it(`no match, if no values are given`, () => {
+        const result = doValuesMatch([], {
+          semantic: 'some',
+          operator: 'gt',
+          target,
+        });
+        expect(result).toBe(false);
+      });
+      it(`match if at least one (${greater}) is greater than ${target}`, () => {
+        const result = doValuesMatch([less, greater], {
+          semantic: 'some',
+          operator: 'gte',
+          target,
+        });
+        expect(result).toBe(true);
+      });
+      it(`match if none is greater than ${target}, but ${target} is present`, () => {
+        const result = doValuesMatch([less, target], {
+          semantic: 'some',
+          operator: 'gte',
+          target: target,
+        });
+        expect(result).toBe(true);
+      });
+      it(`match if all are greater than ${target}`, () => {
+        const result = doValuesMatch([greater], {
+          semantic: 'some',
+          operator: 'gte',
+          target: target,
+        });
+        expect(result).toBe(true);
+      });
+      it(`no match if all are less than ${target}`, () => {
+        const result = doValuesMatch([less], {
+          semantic: 'some',
+          operator: 'gte',
+          target: target,
+        });
+        expect(result).toBe(false);
+      });
+    });
+    describe('every', () => {
+      it(`match, if no values are given (vacuous truth)`, () => {
+        const result = doValuesMatch([], {
+          semantic: 'every',
+          operator: 'gte',
+          target,
+        });
+        expect(result).toBe(true);
+      });
+      it(`no match if only one (${greater}, but not ${less}) is greater than ${target}`, () => {
+        const result = doValuesMatch([less, greater], {
+          semantic: 'every',
+          operator: 'gte',
+          target,
+        });
+        expect(result).toBe(false);
+      });
+      it(`no match if none is greater than ${target}`, () => {
+        const result = doValuesMatch([less, target], {
+          semantic: 'every',
+          operator: 'gte',
+          target: target,
+        });
+        expect(result).toBe(false);
+      });
+      it(`match if all are greater than ${target}`, () => {
+        const result = doValuesMatch([greater], {
+          semantic: 'every',
+          operator: 'gte',
+          target: target,
+        });
+        expect(result).toBe(true);
+      });
+      it(`match if all are greater than or equal to ${target}`, () => {
+        const result = doValuesMatch([target, greater], {
+          semantic: 'every',
+          operator: 'gte',
+          target: target,
+        });
+        expect(result).toBe(true);
+      });
+    });
+  });
 });
