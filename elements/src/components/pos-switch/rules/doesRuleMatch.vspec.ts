@@ -203,6 +203,15 @@ describe('does rule match', () => {
           const result = doesRuleMatch(ifVideoIsSomeVideo, context);
           expect(result).toBe(true);
         });
+        it('matches if context contains a relation of that property with that uri, even if a literal of the same property is present', () => {
+          const context = {
+            ...EMPTY_CONTEXT,
+            literals: [literal('http://schema.org/video', ['Other video'])],
+            relations: [relation('http://schema.org/video', ['https://video.test/some-video'])],
+          };
+          const result = doesRuleMatch(ifVideoIsSomeVideo, context);
+          expect(result).toBe(true);
+        });
         it('does not match if context contains a relation of that property but without the uri', () => {
           const context = {
             ...EMPTY_CONTEXT,
@@ -210,6 +219,48 @@ describe('does rule match', () => {
           };
           const result = doesRuleMatch(ifVideoIsSomeVideo, context);
           expect(result).toBe(false);
+        });
+      });
+
+      describe('if-property with every-value-eg', () => {
+        it('does not match if the name is Alice, but a relation is present as well (which is not the literal "Alice")', () => {
+          const ifEveryNameEqAlice: SwitchCaseRule = {
+            type: 'if-property',
+            value: 'http://schema.org/name',
+            comparison: {
+              semantic: 'every',
+              operator: 'eq',
+              target: 'Alice',
+            },
+          };
+          // every-value-eq must match both literals and relations!
+          const context = {
+            ...EMPTY_CONTEXT,
+            literals: [literal('http://schema.org/name', ['Alice'])],
+            relations: [relation('http://schema.org/name', ['https://alice.test/my-name#it'])],
+          };
+          const result = doesRuleMatch(ifEveryNameEqAlice, context);
+          expect(result).toBe(false);
+        });
+
+        it('matches if the URI in question is present as both a literal and a real relation', () => {
+          const ifEveryVideoIsSomeVideo: SwitchCaseRule = {
+            type: 'if-property',
+            value: 'http://schema.org/video',
+            comparison: {
+              semantic: 'every',
+              operator: 'eq',
+              target: 'https://video.test/some-video',
+            },
+          };
+          // every-value-eq must match both literals and relations!
+          const context = {
+            ...EMPTY_CONTEXT,
+            literals: [literal('http://schema.org/video', ['https://video.test/some-video'])],
+            relations: [relation('http://schema.org/video', ['https://video.test/some-video'])],
+          };
+          const result = doesRuleMatch(ifEveryVideoIsSomeVideo, context);
+          expect(result).toBe(true);
         });
       });
     });
