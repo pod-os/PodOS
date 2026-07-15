@@ -101,6 +101,48 @@ describe('pos-case', () => {
       });
     });
 
+    it.each(
+      ['if-property', 'if-rev'].flatMap(ruleName =>
+        ['some', 'every'].flatMap(semantic =>
+          ['eq'].flatMap(operator => [
+            {
+              appliedProps: {
+                ruleName,
+                comparisonName: `${semantic}-value-${operator}`,
+              },
+              expectedComparison: {
+                semantic,
+                operator: operator,
+              },
+            },
+          ]),
+        ),
+      ),
+    )(
+      'provides the $appliedProps.ruleName rule with $appliedProps.comparisonName comparison',
+      async ({ appliedProps, expectedComparison }) => {
+        const ruleName = appliedProps.ruleName;
+        const comparisonName = appliedProps.comparisonName;
+        const foo = `${ruleName}="http://schema.org/name" ${comparisonName}="Alice"`;
+        const page = await render<HTMLPosCaseElement>(
+          `<pos-case ${foo}>
+          <template>
+            <div>Test</div>
+          </template>
+        </pos-case>`,
+        );
+        const rule = await page.root.getRule();
+        expect(rule).toEqual({
+          type: ruleName,
+          value: 'http://schema.org/name',
+          comparison: {
+            ...expectedComparison,
+            target: 'Alice',
+          },
+        });
+      },
+    );
+
     it('provides else if-property', async () => {
       const page = await render<HTMLPosCaseElement>(
         <pos-case else if-property="http://schema.org/image">

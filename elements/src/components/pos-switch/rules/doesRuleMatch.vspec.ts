@@ -149,12 +149,12 @@ describe('does rule match', () => {
           expect(result).toBe(false);
         });
       });
-      describe('if-property some-value-eq', () => {
+      describe('if-property with specific value', () => {
         const ifSomeNameEqualsAlice: SwitchCaseRule = {
           type: 'if-property',
           value: 'http://schema.org/name',
           comparison: {
-            sematic: 'some',
+            semantic: 'some',
             operator: 'eq',
             target: 'Alice',
           },

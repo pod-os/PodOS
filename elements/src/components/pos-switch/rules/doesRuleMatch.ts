@@ -31,7 +31,7 @@ function doesPropertyMatch(rule: IfPropertyRule, context: RuleContext) {
   if (rule.comparison && matchingLiteral) {
     return testIfValuesMatchTarget(
       matchingLiteral.values,
-      rule.comparison.sematic,
+      rule.comparison.semantic,
       rule.comparison.operator,
       rule.comparison.target,
     );

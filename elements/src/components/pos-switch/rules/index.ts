@@ -1,5 +1,5 @@
 import { Literal, RdfType, Relation } from '@pod-os/core';
-import { Semantic, Operator } from '../logic';
+import { Comparison } from '../logic';
 
 export { findMatchingRules } from './findMatchingRules';
 
@@ -15,11 +15,7 @@ export interface IfPropertyRule {
   value: string;
   not?: boolean;
   else?: boolean;
-  comparison?: {
-    operator: Operator;
-    sematic: Semantic;
-    target: string;
-  };
+  comparison?: Comparison;
 }
 
 export interface IfRevRule {
@@ -27,6 +23,7 @@ export interface IfRevRule {
   value: string;
   not?: boolean;
   else?: boolean;
+  comparison?: Comparison;
 }
 
 export interface ElseRule {

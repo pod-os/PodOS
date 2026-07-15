@@ -1,5 +1,6 @@
 import { Component, Element, Method, Prop, State } from '@stencil/core';
 import { ELSE_RULE, NEVER_RULE, SwitchCaseRule } from '../rules';
+import { Comparison } from '../logic';
 
 /**
  * Defines a template to use if the specified condition is met - to be used with [pos-switch](https://pod-os.org/reference/elements/components/pos-switch/).
@@ -83,6 +84,7 @@ export class PosCase {
       not: this.not,
       else: this.else,
     };
+    const comparison = this.getComparison();
     if (this.ifTypeof) {
       return {
         type: 'if-typeof',
@@ -95,6 +97,7 @@ export class PosCase {
         type: 'if-property',
         value: this.ifProperty,
         ...modifiers,
+        comparison,
       };
     }
     if (this.ifRev) {
@@ -102,9 +105,28 @@ export class PosCase {
         type: 'if-rev',
         value: this.ifRev,
         ...modifiers,
+        comparison,
       };
     }
     return this.else ? ELSE_RULE : NEVER_RULE;
+  }
+
+  private getComparison(): Comparison | undefined {
+    if (this.someValueEq) {
+      return {
+        semantic: 'some',
+        operator: 'eq',
+        target: this.someValueEq,
+      };
+    }
+    if (this.everyValueEq) {
+      return {
+        semantic: 'every',
+        operator: 'eq',
+        target: this.everyValueEq,
+      };
+    }
+    return undefined;
   }
 
   componentWillLoad() {
