@@ -1,6 +1,5 @@
 import { Component, Element, Method, Prop, State } from '@stencil/core';
-import { ELSE_RULE, NEVER_RULE, SwitchCaseRule } from '../rules';
-import { Comparison, Operator, Semantic } from '../logic';
+import { ELSE_RULE, NEVER_RULE, SwitchCaseRule, Comparison, Operator, Semantic } from '../rules';
 
 /**
  * Defines a template to use if the specified condition is met - to be used with [pos-switch](https://pod-os.org/reference/elements/components/pos-switch/).
