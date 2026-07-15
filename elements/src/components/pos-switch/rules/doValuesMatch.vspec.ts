@@ -76,4 +76,44 @@ describe('do values match', () => {
       });
     });
   });
+
+  describe.each([[['Alice', 'Bob', 'Claire']], [[99, 100, 101]]])('greater than (%s)', list => {
+    const smaller = list[0];
+    const target = list[1];
+    const bigger = list[2];
+    describe('some', () => {
+      it(`no match, if no values are given`, () => {
+        const result = doValuesMatch([], {
+          semantic: 'some',
+          operator: 'gt',
+          target,
+        });
+        expect(result).toBe(false);
+      });
+      it(`match if at least one (${bigger}) is greater than ${target}`, () => {
+        const result = doValuesMatch([smaller, bigger], {
+          semantic: 'some',
+          operator: 'gt',
+          target,
+        });
+        expect(result).toBe(true);
+      });
+      it(`no match if none is greater than ${target}`, () => {
+        const result = doValuesMatch([smaller, target], {
+          semantic: 'some',
+          operator: 'gt',
+          target: target,
+        });
+        expect(result).toBe(false);
+      });
+      it(`match if all are greater than ${target}`, () => {
+        const result = doValuesMatch([bigger], {
+          semantic: 'some',
+          operator: 'gt',
+          target: target,
+        });
+        expect(result).toBe(true);
+      });
+    });
+  });
 });
