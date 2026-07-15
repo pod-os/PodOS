@@ -222,7 +222,7 @@ describe('does rule match', () => {
         });
       });
 
-      describe('if-property with every-value-eg', () => {
+      describe('if-property with every-value-eq', () => {
         it('does not match if the name is Alice, but a relation is present as well (which is not the literal "Alice")', () => {
           const ifEveryNameEqAlice: SwitchCaseRule = {
             type: 'if-property',
