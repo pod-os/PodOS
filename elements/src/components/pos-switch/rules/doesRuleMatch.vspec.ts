@@ -236,6 +236,38 @@ describe('does rule match', () => {
         expect(result).toBe(false);
       });
     });
+
+    describe('if-rev with specific value', () => {
+      const ifThisIsAnImageOfAlice: SwitchCaseRule = {
+        type: 'if-rev',
+        value: 'http://schema.org/image',
+        comparison: {
+          semantic: 'every',
+          operator: 'eq',
+          target: 'https://alice.example/profile/card#me',
+        },
+      };
+      it('does not match if no properties are in context', () => {
+        const result = doesRuleMatch(ifThisIsAnImageOfAlice, EMPTY_CONTEXT);
+        expect(result).toBe(false);
+      });
+      it('matches if context contains a reverse relation of that property with that uri', () => {
+        const context = {
+          ...EMPTY_CONTEXT,
+          reverseRelations: [relation('http://schema.org/image', ['https://alice.example/profile/card#me'])],
+        };
+        const result = doesRuleMatch(ifThisIsAnImageOfAlice, context);
+        expect(result).toBe(true);
+      });
+      it('does not match if context contains a literal of that property but without the name', () => {
+        const context = {
+          ...EMPTY_CONTEXT,
+          reverseRelations: [relation('http://schema.org/image', ['https://other.example/profile/card#me'])],
+        };
+        const result = doesRuleMatch(ifThisIsAnImageOfAlice, context);
+        expect(result).toBe(false);
+      });
+    });
   });
 });
 
@@ -252,8 +284,9 @@ function literal(predicate: string, values: string[] = []) {
   } as Literal;
 }
 
-function relation(predicate: string) {
+function relation(predicate: string, uris: string[] = []) {
   return {
     predicate,
+    uris,
   } as Relation;
 }

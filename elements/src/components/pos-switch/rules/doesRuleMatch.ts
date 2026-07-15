@@ -40,5 +40,14 @@ function doesPropertyMatch(rule: IfPropertyRule, context: RuleContext) {
 }
 
 function doesReverseRelationMatch(rule: IfRevRule, context: RuleContext) {
-  return context.reverseRelations.map(x => x.predicate).includes(rule.value);
+  const matchingRev = context.reverseRelations.find(x => x.predicate == rule.value);
+  if (rule.comparison && matchingRev) {
+    return testIfValuesMatchTarget(
+      matchingRev.uris,
+      rule.comparison.semantic,
+      rule.comparison.operator,
+      rule.comparison.target,
+    );
+  }
+  return matchingRev !== undefined;
 }
