@@ -1,18 +1,4 @@
-export const operators = ['eq', 'gt', 'gte', 'lt', 'lte'] as const;
-export type Operator = (typeof operators)[number];
-
-export const semantics = ['some', 'every'] as const;
-export type Semantic = (typeof semantics)[number];
-
-export interface Comparison {
-  semantic: Semantic;
-  operator: Operator;
-  target: string;
-}
-
-export const operatorSemanticCombinations = semantics.flatMap(semantic =>
-  operators.map(operator => ({ semantic, operator })),
-);
+import { Operator, Semantic } from './index';
 
 export function testIfValuesMatchTarget(
   values: string[],

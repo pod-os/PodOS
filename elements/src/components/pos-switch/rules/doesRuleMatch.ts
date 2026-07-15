@@ -1,5 +1,6 @@
 import { IfPropertyRule, IfRevRule, IfTypeofRule, RuleContext, SwitchCaseRule } from './index';
-import { testIfValuesMatchTarget } from '../logic';
+
+import { testIfValuesMatchTarget } from './testIfValuesMatchTarget';
 
 export function doesRuleMatch(rule: SwitchCaseRule, context: RuleContext) {
   const ruleResult = evaluateRule(rule, context);
