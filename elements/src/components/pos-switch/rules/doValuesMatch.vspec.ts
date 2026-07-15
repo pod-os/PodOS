@@ -3,7 +3,7 @@ import { doValuesMatch } from './doValuesMatch';
 import { Operator, Semantic } from './index';
 
 describe('do values match', () => {
-  describe.each([[['Alice', 'Bob', 'Claire']], [[99, 100, 101]]])('given %s', list => {
+  describe.each([[['Alice', 'Bob', 'Claire']], [['99', '100', '101']]])('given %s', list => {
     const less = list[0];
     const target = list[1];
     const greater = list[2];

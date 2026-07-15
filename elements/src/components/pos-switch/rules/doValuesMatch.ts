@@ -5,7 +5,7 @@ import { Comparison } from './index';
  * @param values
  * @param comparison
  */
-export function doValuesMatch(values: (string | number)[], comparison: Comparison): boolean {
+export function doValuesMatch(values: string[], comparison: Comparison): boolean {
   const { operator, semantic, target } = comparison;
   const matches = values.map(val => {
     let cmp;

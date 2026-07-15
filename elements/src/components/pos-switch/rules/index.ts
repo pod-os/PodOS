@@ -127,7 +127,7 @@ export interface Comparison {
   /**
    * The target value to compare against.
    */
-  target: string | number;
+  target: string;
 }
 
 export type equals = 'eq';
