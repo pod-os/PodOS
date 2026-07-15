@@ -140,6 +140,20 @@ export class PosCase {
         target: this.everyValueGt,
       };
     }
+    if (this.someValueGte) {
+      return {
+        semantic: 'some',
+        operator: 'gte',
+        target: this.someValueGte,
+      };
+    }
+    if (this.everyValueGte) {
+      return {
+        semantic: 'every',
+        operator: 'gte',
+        target: this.everyValueGte,
+      };
+    }
     return undefined;
   }
 
