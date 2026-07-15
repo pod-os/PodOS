@@ -1,11 +1,12 @@
-import { Operator, Semantic } from './index';
+import { Comparison } from './index';
 
-export function testIfValuesMatchTarget(
-  values: string[],
-  semantics: Semantic,
-  operator: Operator,
-  target: string,
-): boolean {
+/**
+ * Checks whether the given values match the given target according to the given comparison
+ * @param values
+ * @param comparison
+ */
+export function doValuesMatch(values: string[], comparison: Comparison): boolean {
+  const { operator, semantic, target } = comparison;
   const matches = values.map(val => {
     let cmp;
     const numVal = Number(val);
@@ -28,11 +29,11 @@ export function testIfValuesMatchTarget(
         return cmp <= 0;
     }
   });
-  if (semantics == 'some') {
+  if (semantic == 'some') {
     return matches.some(Boolean);
-  } else if (semantics == 'every') {
+  } else if (semantic == 'every') {
     return matches.every(Boolean);
   } else {
-    throw new Error(`Unknown semantic: ${semantics}`);
+    throw new Error(`Unknown semantic: ${semantic}`);
   }
 }

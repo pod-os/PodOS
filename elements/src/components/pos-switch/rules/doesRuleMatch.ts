@@ -1,6 +1,6 @@
 import { IfPropertyRule, IfRevRule, IfTypeofRule, RuleContext, SwitchCaseRule } from './index';
 
-import { testIfValuesMatchTarget } from './testIfValuesMatchTarget';
+import { doValuesMatch } from './doValuesMatch';
 
 export function doesRuleMatch(rule: SwitchCaseRule, context: RuleContext) {
   const ruleResult = evaluateRule(rule, context);
@@ -30,12 +30,7 @@ function doesPropertyMatch(rule: IfPropertyRule, context: RuleContext) {
   const matchingLiteral = context.literals.find(it => it.predicate == rule.value);
   const matchingRelation = context.relations.find(it => it.predicate == rule.value);
   if (rule.comparison) {
-    return testIfValuesMatchTarget(
-      [...(matchingLiteral?.values ?? []), ...(matchingRelation?.uris ?? [])],
-      rule.comparison.semantic,
-      rule.comparison.operator,
-      rule.comparison.target,
-    );
+    return doValuesMatch([...(matchingLiteral?.values ?? []), ...(matchingRelation?.uris ?? [])], rule.comparison);
   }
   return matchingLiteral !== undefined || matchingRelation !== undefined;
 }
@@ -43,12 +38,7 @@ function doesPropertyMatch(rule: IfPropertyRule, context: RuleContext) {
 function doesReverseRelationMatch(rule: IfRevRule, context: RuleContext) {
   const matchingRev = context.reverseRelations.find(x => x.predicate == rule.value);
   if (rule.comparison && matchingRev) {
-    return testIfValuesMatchTarget(
-      matchingRev.uris,
-      rule.comparison.semantic,
-      rule.comparison.operator,
-      rule.comparison.target,
-    );
+    return doValuesMatch(matchingRev.uris, rule.comparison);
   }
   return matchingRev !== undefined;
 }
