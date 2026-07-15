@@ -2,8 +2,9 @@ import { newSpecPage } from '@stencil/core/testing';
 import { PosSwitch } from './pos-switch';
 import { Literal, RdfType, Relation, Thing } from '@pod-os/core';
 import { Subject } from 'rxjs';
+import { PosCase } from './pos-case/pos-case';
 
-describe.skip('pos-switch', () => {
+describe('pos-switch', () => {
   describe('evaluation of caseElement conditions with test method ', () => {
     /*
      Dimensions:
@@ -103,7 +104,7 @@ describe.skip('pos-switch', () => {
         `renders templates if condition is met: $conditions `,
         async ({ conditions, observedTypes, expectedResult }) => {
           const page = await newSpecPage({
-            components: [PosSwitch],
+            components: [PosSwitch, PosCase],
             html: `
       <pos-switch>
         <pos-case ${conditions}>
@@ -324,7 +325,7 @@ describe.skip('pos-switch', () => {
         `renders templates if condition is met: $conditions `,
         async ({ conditions, observedLiterals, observedRelations, expectedResult }) => {
           const page = await newSpecPage({
-            components: [PosSwitch],
+            components: [PosSwitch, PosCase],
             html: `
       <pos-switch>
         <pos-case ${conditions}>
@@ -450,7 +451,7 @@ describe.skip('pos-switch', () => {
         `renders templates if condition is met: $conditions `,
         async ({ conditions, observedReverseRelations, expectedResult }) => {
           const page = await newSpecPage({
-            components: [PosSwitch],
+            components: [PosSwitch, PosCase],
             html: `
       <pos-switch>
         <pos-case ${conditions}>
@@ -542,7 +543,7 @@ describe.skip('pos-switch', () => {
         `renders templates if condition is met: $conditions for $resource `,
         async ({ direction, conditions, resource, expectedResult }) => {
           const page = await newSpecPage({
-            components: [PosSwitch],
+            components: [PosSwitch, PosCase],
             html: `
       <pos-switch>
         <pos-case ${conditions}>
@@ -626,7 +627,7 @@ describe.skip('pos-switch', () => {
         `renders templates if condition is met: $conditions for no relations `,
         async ({ conditions, expectedResult }) => {
           const page = await newSpecPage({
-            components: [PosSwitch],
+            components: [PosSwitch, PosCase],
             html: `
       <pos-switch>
         <pos-case ${conditions}>
@@ -718,7 +719,7 @@ describe.skip('pos-switch', () => {
         `renders templates if condition is met: $conditions for $resource `,
         async ({ conditions, stringValue, expectedResult }) => {
           const page = await newSpecPage({
-            components: [PosSwitch],
+            components: [PosSwitch, PosCase],
             html: `
       <pos-switch>
         <pos-case ${conditions}>
@@ -811,7 +812,7 @@ describe.skip('pos-switch', () => {
         `renders templates if condition is met: $conditions for $resource `,
         async ({ conditions, stringValue, expectedResult }) => {
           const page = await newSpecPage({
-            components: [PosSwitch],
+            components: [PosSwitch, PosCase],
             html: `
       <pos-switch>
         <pos-case ${conditions}>
@@ -851,7 +852,7 @@ describe.skip('pos-switch', () => {
 
     it('renders templates if forward link value condition is met (literal)', async () => {
       const page = await newSpecPage({
-        components: [PosSwitch],
+        components: [PosSwitch, PosCase],
         html: `
       <pos-switch>
         <pos-case if-property="https://schema.org/name" some-value-eq="Video 1">
@@ -881,7 +882,7 @@ describe.skip('pos-switch', () => {
 
     it('does not render templates when compareValue indicates that (some|every)-value-eq is not met', async () => {
       const page = await newSpecPage({
-        components: [PosSwitch],
+        components: [PosSwitch, PosCase],
         html: `
       <pos-switch>
         <pos-case if-property="https://schema.org/video" some-value-eq="https://video.test/video-missing">
@@ -925,7 +926,7 @@ describe.skip('pos-switch', () => {
 
     it('does not render templates when compareValue indicates that every-value-(lt|lte|gt|gte) is not met (string)', async () => {
       const page = await newSpecPage({
-        components: [PosSwitch],
+        components: [PosSwitch, PosCase],
         html: `
       <pos-switch>
         <pos-case if-property="https://schema.org/name" every-value-lt="bravo">
@@ -973,7 +974,7 @@ describe.skip('pos-switch', () => {
 
     it('does not render templates when compareValue indicates that every-value-(lt|lte|gt|gte) is not met (numeric)', async () => {
       const page = await newSpecPage({
-        components: [PosSwitch],
+        components: [PosSwitch, PosCase],
         html: `
       <pos-switch>
         <pos-case if-property="https://schema.org/name" every-value-lt="4">
@@ -1103,7 +1104,7 @@ describe.skip('pos-switch', () => {
       `renders templates if condition is met: $conditions `,
       async ({ conditions, observedLiterals, observedRelations, expectedResult }) => {
         const page = await newSpecPage({
-          components: [PosSwitch],
+          components: [PosSwitch, PosCase],
           html: `
       <pos-switch>
         <pos-case ${conditions}>
