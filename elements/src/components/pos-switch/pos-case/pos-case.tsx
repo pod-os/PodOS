@@ -118,7 +118,11 @@ export class PosCase {
       this.comparisonFor(this.someValueGt, 'some', 'gt') ??
       this.comparisonFor(this.everyValueGt, 'every', 'gt') ??
       this.comparisonFor(this.someValueGte, 'some', 'gte') ??
-      this.comparisonFor(this.everyValueGte, 'every', 'gte')
+      this.comparisonFor(this.everyValueGte, 'every', 'gte') ??
+      this.comparisonFor(this.someValueLt, 'some', 'lt') ??
+      this.comparisonFor(this.everyValueLt, 'every', 'lt') ??
+      this.comparisonFor(this.someValueLte, 'some', 'lte') ??
+      this.comparisonFor(this.everyValueLte, 'every', 'lte')
     );
   }
 

@@ -104,7 +104,7 @@ describe('pos-case', () => {
     it.each(
       ['if-property', 'if-rev'].flatMap(ruleName =>
         ['some', 'every'].flatMap(semantic =>
-          ['eq', 'gt', 'gte'].flatMap(operator => [
+          ['eq', 'gt', 'gte', 'lt', 'lte'].flatMap(operator => [
             {
               appliedProps: {
                 ruleName,
