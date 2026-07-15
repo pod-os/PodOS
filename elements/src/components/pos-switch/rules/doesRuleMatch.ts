@@ -1,4 +1,5 @@
 import { IfPropertyRule, IfRevRule, IfTypeofRule, RuleContext, SwitchCaseRule } from './index';
+import { testIfValuesMatchTarget } from '../logic';
 
 export function doesRuleMatch(rule: SwitchCaseRule, context: RuleContext) {
   const ruleResult = evaluateRule(rule, context);
@@ -25,9 +26,17 @@ function doesTypeMatch(rule: IfTypeofRule, context: RuleContext) {
 }
 
 function doesPropertyMatch(rule: IfPropertyRule, context: RuleContext) {
-  const hasLiteral = context.literals.map(x => x.predicate).includes(rule.value);
+  const matchingLiteral = context.literals.find(it => it.predicate == rule.value);
   const hasRelation = context.relations.map(x => x.predicate).includes(rule.value);
-  return hasLiteral || hasRelation;
+  if (rule.comparison && matchingLiteral) {
+    return testIfValuesMatchTarget(
+      matchingLiteral.values,
+      rule.comparison.sematic,
+      rule.comparison.operator,
+      rule.comparison.target,
+    );
+  }
+  return matchingLiteral !== undefined || hasRelation;
 }
 
 function doesReverseRelationMatch(rule: IfRevRule, context: RuleContext) {

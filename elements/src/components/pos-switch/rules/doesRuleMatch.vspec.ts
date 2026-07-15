@@ -79,73 +79,106 @@ describe('does rule match', () => {
     });
   });
   describe('if-property', () => {
-    const ifPropertyName: SwitchCaseRule = {
-      type: 'if-property',
-      value: 'http://schema.org/name',
-    };
-    it('does not match if no properties are in context', () => {
-      const result = doesRuleMatch(ifPropertyName, EMPTY_CONTEXT);
-      expect(result).toBe(false);
-    });
-    it('matches if context contains a literal of that property', () => {
-      const context = {
-        ...EMPTY_CONTEXT,
-        literals: [literal('http://schema.org/name')],
+    describe('is present', () => {
+      const ifPropertyName: SwitchCaseRule = {
+        type: 'if-property',
+        value: 'http://schema.org/name',
       };
-      const result = doesRuleMatch(ifPropertyName, context);
-      expect(result).toBe(true);
-    });
-    it('matches if context contains a relation of that property', () => {
-      const context = {
-        ...EMPTY_CONTEXT,
-        relations: [relation('http://schema.org/name')],
-      };
-      const result = doesRuleMatch(ifPropertyName, context);
-      expect(result).toBe(true);
-    });
-    it('matches if one match is present besides others', () => {
-      const context = {
-        ...EMPTY_CONTEXT,
-        literals: [literal('http://vocab.example.org/other')],
-        relations: [relation('http://schema.org/name'), relation('http://vocab.example.org/other-rel')],
-      };
-      const result = doesRuleMatch(ifPropertyName, context);
-      expect(result).toBe(true);
-    });
-
-    describe('when negated', () => {
-      const notIfPropertyName = {
-        ...ifPropertyName,
-        not: true,
-      };
-      it('matches if no properties are in context', () => {
-        const result = doesRuleMatch(notIfPropertyName, EMPTY_CONTEXT);
-        expect(result).toBe(true);
+      it('does not match if no properties are in context', () => {
+        const result = doesRuleMatch(ifPropertyName, EMPTY_CONTEXT);
+        expect(result).toBe(false);
       });
-      it('does not match if context contains a literal of that property', () => {
+      it('matches if context contains a literal of that property', () => {
         const context = {
           ...EMPTY_CONTEXT,
           literals: [literal('http://schema.org/name')],
         };
-        const result = doesRuleMatch(notIfPropertyName, context);
-        expect(result).toBe(false);
+        const result = doesRuleMatch(ifPropertyName, context);
+        expect(result).toBe(true);
       });
-      it('does not match if context contains a relation of that property', () => {
+      it('matches if context contains a relation of that property', () => {
         const context = {
           ...EMPTY_CONTEXT,
           relations: [relation('http://schema.org/name')],
         };
-        const result = doesRuleMatch(notIfPropertyName, context);
-        expect(result).toBe(false);
+        const result = doesRuleMatch(ifPropertyName, context);
+        expect(result).toBe(true);
       });
-      it('does not match if one match is present besides others', () => {
+      it('matches if one match is present besides others', () => {
         const context = {
           ...EMPTY_CONTEXT,
           literals: [literal('http://vocab.example.org/other')],
           relations: [relation('http://schema.org/name'), relation('http://vocab.example.org/other-rel')],
         };
-        const result = doesRuleMatch(notIfPropertyName, context);
-        expect(result).toBe(false);
+        const result = doesRuleMatch(ifPropertyName, context);
+        expect(result).toBe(true);
+      });
+
+      describe('when negated', () => {
+        const notIfPropertyName = {
+          ...ifPropertyName,
+          not: true,
+        };
+        it('matches if no properties are in context', () => {
+          const result = doesRuleMatch(notIfPropertyName, EMPTY_CONTEXT);
+          expect(result).toBe(true);
+        });
+        it('does not match if context contains a literal of that property', () => {
+          const context = {
+            ...EMPTY_CONTEXT,
+            literals: [literal('http://schema.org/name')],
+          };
+          const result = doesRuleMatch(notIfPropertyName, context);
+          expect(result).toBe(false);
+        });
+        it('does not match if context contains a relation of that property', () => {
+          const context = {
+            ...EMPTY_CONTEXT,
+            relations: [relation('http://schema.org/name')],
+          };
+          const result = doesRuleMatch(notIfPropertyName, context);
+          expect(result).toBe(false);
+        });
+        it('does not match if one match is present besides others', () => {
+          const context = {
+            ...EMPTY_CONTEXT,
+            literals: [literal('http://vocab.example.org/other')],
+            relations: [relation('http://schema.org/name'), relation('http://vocab.example.org/other-rel')],
+          };
+          const result = doesRuleMatch(notIfPropertyName, context);
+          expect(result).toBe(false);
+        });
+      });
+      describe('if-property some-value-eq', () => {
+        const ifSomeNameEqualsAlice: SwitchCaseRule = {
+          type: 'if-property',
+          value: 'http://schema.org/name',
+          comparison: {
+            sematic: 'some',
+            operator: 'eq',
+            target: 'Alice',
+          },
+        };
+        it('does not match if no properties are in context', () => {
+          const result = doesRuleMatch(ifSomeNameEqualsAlice, EMPTY_CONTEXT);
+          expect(result).toBe(false);
+        });
+        it('matches if context contains a literal of that property with that name', () => {
+          const context = {
+            ...EMPTY_CONTEXT,
+            literals: [literal('http://schema.org/name', ['Alice'])],
+          };
+          const result = doesRuleMatch(ifSomeNameEqualsAlice, context);
+          expect(result).toBe(true);
+        });
+        it('does not match if context contains a literal of that property but without the name', () => {
+          const context = {
+            ...EMPTY_CONTEXT,
+            literals: [literal('http://schema.org/name', ['Other'])],
+          };
+          const result = doesRuleMatch(ifSomeNameEqualsAlice, context);
+          expect(result).toBe(false);
+        });
       });
     });
   });
@@ -212,9 +245,10 @@ function type(uri: string) {
   } as RdfType;
 }
 
-function literal(predicate: string) {
+function literal(predicate: string, values: string[] = []) {
   return {
     predicate,
+    values,
   } as Literal;
 }
 
