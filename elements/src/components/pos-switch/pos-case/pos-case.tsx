@@ -1,6 +1,6 @@
 import { Component, Element, Method, Prop, State } from '@stencil/core';
 import { ELSE_RULE, NEVER_RULE, SwitchCaseRule } from '../rules';
-import { Comparison } from '../logic';
+import { Comparison, Operator, Semantic } from '../logic';
 
 /**
  * Defines a template to use if the specified condition is met - to be used with [pos-switch](https://pod-os.org/reference/elements/components/pos-switch/).
@@ -112,49 +112,20 @@ export class PosCase {
   }
 
   private getComparison(): Comparison | undefined {
-    if (this.someValueEq) {
-      return {
-        semantic: 'some',
-        operator: 'eq',
-        target: this.someValueEq,
-      };
+    return (
+      this.comparisonFor(this.someValueEq, 'some', 'eq') ??
+      this.comparisonFor(this.everyValueEq, 'every', 'eq') ??
+      this.comparisonFor(this.someValueGt, 'some', 'gt') ??
+      this.comparisonFor(this.everyValueGt, 'every', 'gt') ??
+      this.comparisonFor(this.someValueGte, 'some', 'gte') ??
+      this.comparisonFor(this.everyValueGte, 'every', 'gte')
+    );
+  }
+
+  private comparisonFor(target: string | undefined, semantic: Semantic, operator: Operator): Comparison | undefined {
+    if (target) {
+      return { semantic, operator, target };
     }
-    if (this.everyValueEq) {
-      return {
-        semantic: 'every',
-        operator: 'eq',
-        target: this.everyValueEq,
-      };
-    }
-    if (this.someValueGt) {
-      return {
-        semantic: 'some',
-        operator: 'gt',
-        target: this.someValueGt,
-      };
-    }
-    if (this.everyValueGt) {
-      return {
-        semantic: 'every',
-        operator: 'gt',
-        target: this.everyValueGt,
-      };
-    }
-    if (this.someValueGte) {
-      return {
-        semantic: 'some',
-        operator: 'gte',
-        target: this.someValueGte,
-      };
-    }
-    if (this.everyValueGte) {
-      return {
-        semantic: 'every',
-        operator: 'gte',
-        target: this.everyValueGte,
-      };
-    }
-    return undefined;
   }
 
   componentWillLoad() {
