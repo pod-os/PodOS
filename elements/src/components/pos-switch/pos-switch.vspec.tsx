@@ -60,166 +60,6 @@ describe('pos-switch', () => {
       const page = await render(<pos-switch></pos-switch>);
       expect(page.root).toHaveTextContent('No pos-case elements found');
     });
-
-    describe('reactive rendering', () => {
-      it('renders matching condition templates reactively', async () => {
-        const page = await render(
-          <pos-switch>
-            <pos-case if-typeof="http://schema.org/Recipe">
-              <template>
-                <div>Recipe 1</div>
-              </template>
-            </pos-case>
-            <pos-case if-typeof="http://schema.org/Recipe">
-              <template>
-                <div>Recipe 2</div>
-              </template>
-            </pos-case>
-            <pos-case if-typeof="http://schema.org/Video">
-              <template>
-                <div>Video 1</div>
-              </template>
-            </pos-case>
-          </pos-switch>,
-        );
-        const observedTypes$ = new Subject<RdfType[]>();
-        const thing = {
-          observeTypes: () => observedTypes$,
-        } as unknown as Thing;
-        page.instance.receiveResource(thing);
-        observedTypes$.next([
-          {
-            label: 'Recipe',
-            uri: 'http://schema.org/Recipe',
-          },
-        ]);
-        await page.waitForChanges();
-        expect(page.root.innerHTML).toEqualHtml(`
-        <div>Recipe 1</div>
-        <div>Recipe 2</div>`);
-      });
-
-      it('resets and updates when resource is changed', async () => {
-        const page = await render(
-          <pos-switch>
-            <pos-case if-typeof="http://schema.org/Recipe">
-              <template>Recipe.</template>
-            </pos-case>
-            <pos-case if-typeof="http://schema.org/Video">
-              <template>Video.</template>
-            </pos-case>
-          </pos-switch>,
-        );
-        const observedTypes$ = new Subject<RdfType[]>();
-        const thing = {
-          uri: 'https://pod.example/recipe1',
-          observeTypes: () => observedTypes$,
-        };
-        page.instance.receiveResource(thing);
-        observedTypes$.next([
-          {
-            label: 'Recipe',
-            uri: 'http://schema.org/Recipe',
-          },
-        ]);
-        await page.waitForChanges();
-        expect(page.root).toEqualText('Recipe.');
-        // new thing
-        const observedTypes2$ = new Subject<RdfType[]>();
-        const thing2 = {
-          uri: 'https://pod.example/video1',
-          observeTypes: () => observedTypes2$,
-        };
-        page.instance.receiveResource(thing2);
-        await page.waitForChanges();
-        expect(page.root).toEqualText('');
-        observedTypes2$.next([
-          {
-            label: 'Video',
-            uri: 'http://schema.org/Video',
-          },
-        ]);
-        await page.waitForChanges();
-        expect(page.root).toEqualText('Video.');
-      });
-    });
-
-    describe('if-else logic', () => {
-      it('renders matching condition templates with if-else logic', async () => {
-        const page = await render(
-          <pos-switch>
-            <pos-case if-typeof="http://schema.org/Video">
-              <template>
-                <div>Video 1</div>
-              </template>
-            </pos-case>
-            <pos-case else if-typeof="http://schema.org/Recipe">
-              <template>
-                <div>Recipe 1</div>
-              </template>
-            </pos-case>
-            <pos-case else if-typeof="http://schema.org/Recipe">
-              <template>
-                <div>Recipe 2</div>
-              </template>
-            </pos-case>
-            <pos-case else>
-              <template>
-                <div>No matches</div>
-              </template>
-            </pos-case>
-          </pos-switch>,
-        );
-        const observedTypes$ = new Subject<RdfType[]>();
-        const thing = {
-          observeTypes: () => observedTypes$,
-        } as unknown as Thing;
-        page.instance.receiveResource(thing);
-        observedTypes$.next([
-          {
-            label: 'Recipe',
-            uri: 'http://schema.org/Recipe',
-          },
-        ]);
-        await page.waitForChanges();
-        expect(page.root?.innerHTML).toEqualHtml(`
-        <div>Recipe 1</div>
-        `);
-      });
-
-      it('renders final else condition if no other templates match', async () => {
-        const page = await render(
-          <pos-switch>
-            <pos-case if-typeof="http://schema.org/Video">
-              <template>
-                <div>Video 1</div>
-              </template>
-            </pos-case>
-            <pos-case else>
-              <template>
-                <div>No matches</div>
-              </template>
-            </pos-case>
-          </pos-switch>,
-        );
-        const observedTypes$ = new Subject<RdfType[]>();
-        const thing = {
-          observeTypes: () => observedTypes$,
-        } as unknown as Thing;
-        page.instance.receiveResource(thing);
-        observedTypes$.next([
-          {
-            label: 'Recipe',
-            uri: 'http://schema.org/Recipe',
-          },
-        ]);
-        await page.waitForChanges();
-        expect(page.root?.innerHTML).toEqualHtml(`
-        <div>No matches</div>
-        `);
-      });
-    });
-
     it('supports mixed test conditions', async () => {
       const page = await render(
         <pos-switch>
@@ -274,6 +114,164 @@ describe('pos-switch', () => {
         <div>Recipe.</div>
         <div>Image.</div>
         <div>Recipe list.</div>
+        `);
+    });
+  });
+  describe('reactive rendering', () => {
+    it('renders matching condition templates reactively', async () => {
+      const page = await render(
+        <pos-switch>
+          <pos-case if-typeof="http://schema.org/Recipe">
+            <template>
+              <div>Recipe 1</div>
+            </template>
+          </pos-case>
+          <pos-case if-typeof="http://schema.org/Recipe">
+            <template>
+              <div>Recipe 2</div>
+            </template>
+          </pos-case>
+          <pos-case if-typeof="http://schema.org/Video">
+            <template>
+              <div>Video 1</div>
+            </template>
+          </pos-case>
+        </pos-switch>,
+      );
+      const observedTypes$ = new Subject<RdfType[]>();
+      const thing = {
+        observeTypes: () => observedTypes$,
+      } as unknown as Thing;
+      page.instance.receiveResource(thing);
+      observedTypes$.next([
+        {
+          label: 'Recipe',
+          uri: 'http://schema.org/Recipe',
+        },
+      ]);
+      await page.waitForChanges();
+      expect(page.root.innerHTML).toEqualHtml(`
+        <div>Recipe 1</div>
+        <div>Recipe 2</div>`);
+    });
+
+    it('resets and updates when resource is changed', async () => {
+      const page = await render(
+        <pos-switch>
+          <pos-case if-typeof="http://schema.org/Recipe">
+            <template>Recipe.</template>
+          </pos-case>
+          <pos-case if-typeof="http://schema.org/Video">
+            <template>Video.</template>
+          </pos-case>
+        </pos-switch>,
+      );
+      const observedTypes$ = new Subject<RdfType[]>();
+      const thing = {
+        uri: 'https://pod.example/recipe1',
+        observeTypes: () => observedTypes$,
+      };
+      page.instance.receiveResource(thing);
+      observedTypes$.next([
+        {
+          label: 'Recipe',
+          uri: 'http://schema.org/Recipe',
+        },
+      ]);
+      await page.waitForChanges();
+      expect(page.root).toEqualText('Recipe.');
+      // new thing
+      const observedTypes2$ = new Subject<RdfType[]>();
+      const thing2 = {
+        uri: 'https://pod.example/video1',
+        observeTypes: () => observedTypes2$,
+      };
+      page.instance.receiveResource(thing2);
+      await page.waitForChanges();
+      expect(page.root).toEqualText('');
+      observedTypes2$.next([
+        {
+          label: 'Video',
+          uri: 'http://schema.org/Video',
+        },
+      ]);
+      await page.waitForChanges();
+      expect(page.root).toEqualText('Video.');
+    });
+  });
+
+  describe('if-else logic', () => {
+    it('renders matching condition templates with if-else logic', async () => {
+      const page = await render(
+        <pos-switch>
+          <pos-case if-typeof="http://schema.org/Video">
+            <template>
+              <div>Video 1</div>
+            </template>
+          </pos-case>
+          <pos-case else if-typeof="http://schema.org/Recipe">
+            <template>
+              <div>Recipe 1</div>
+            </template>
+          </pos-case>
+          <pos-case else if-typeof="http://schema.org/Recipe">
+            <template>
+              <div>Recipe 2</div>
+            </template>
+          </pos-case>
+          <pos-case else>
+            <template>
+              <div>No matches</div>
+            </template>
+          </pos-case>
+        </pos-switch>,
+      );
+      const observedTypes$ = new Subject<RdfType[]>();
+      const thing = {
+        observeTypes: () => observedTypes$,
+      } as unknown as Thing;
+      page.instance.receiveResource(thing);
+      observedTypes$.next([
+        {
+          label: 'Recipe',
+          uri: 'http://schema.org/Recipe',
+        },
+      ]);
+      await page.waitForChanges();
+      expect(page.root?.innerHTML).toEqualHtml(`
+        <div>Recipe 1</div>
+        `);
+    });
+
+    it('renders final else condition if no other templates match', async () => {
+      const page = await render(
+        <pos-switch>
+          <pos-case if-typeof="http://schema.org/Video">
+            <template>
+              <div>Video 1</div>
+            </template>
+          </pos-case>
+          <pos-case else>
+            <template>
+              <div>No matches</div>
+            </template>
+          </pos-case>
+        </pos-switch>,
+      );
+      const observedTypes$ = new Subject<RdfType[]>();
+      const thing = {
+        observeTypes: () => observedTypes$,
+      } as unknown as Thing;
+      page.instance.receiveResource(thing);
+      observedTypes$.next([
+        {
+          label: 'Recipe',
+          uri: 'http://schema.org/Recipe',
+        },
+      ]);
+      await page.waitForChanges();
+      expect(page.root?.innerHTML).toEqualHtml(`
+        <div>No matches</div>
         `);
     });
   });
