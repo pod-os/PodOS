@@ -22,7 +22,6 @@ export class PosSwitch implements ResourceAware {
   @Element() host!: HTMLElement;
   @State() error: string | null = null;
   @State() resource?: Thing;
-  @State() caseElements: HTMLPosCaseElement[] = [];
   @State() cases: CaseWithRule[] = [];
   @State() types: RdfType[] = [];
   @State() relations: Relation[] = [];
@@ -35,17 +34,16 @@ export class PosSwitch implements ResourceAware {
   subscribeResource!: ResourceEventEmitter;
 
   componentWillLoad() {
-    const caseElements = this.host.querySelectorAll('pos-case');
+    const caseElements = Array.from(this.host.querySelectorAll('pos-case'));
     if (caseElements.length == 0) {
       this.error = 'No pos-case elements found';
       return;
     }
-    this.caseElements = Array.from(caseElements);
     // Do NOT await: awaiting a child @Method in componentWillLoad deadlocks the
     // lazy load graph (the child can't render until this component renders).
     // Build the rules once the children have upgraded, then subscribe to the resource
     Promise.all(
-      this.caseElements.map(async it => ({
+      caseElements.map(async it => ({
         rule: await it.getRule(),
         caseElement: it,
       })),
@@ -60,14 +58,14 @@ export class PosSwitch implements ResourceAware {
     this.disconnected$.next();
     this.resource = undefined;
     let observables: Observable<any>[] = [];
-    if (this.caseElements.some(caseElement => caseElement.hasAttribute('if-typeof'))) {
+    if (this.containsRule('if-typeof')) {
       const observeTypes = resource.observeTypes().pipe(takeUntil(this.disconnected$));
       observeTypes.subscribe(types => {
         this.types = types;
       });
       observables.push(observeTypes);
     }
-    if (this.caseElements.some(caseElement => caseElement.hasAttribute('if-property'))) {
+    if (this.containsRule('if-property')) {
       const observeRelations = resource.observeRelations().pipe(takeUntil(this.disconnected$));
       observeRelations.subscribe(relations => {
         this.relations = relations;
@@ -79,7 +77,7 @@ export class PosSwitch implements ResourceAware {
       });
       observables.push(observeLiterals);
     }
-    if (this.caseElements.some(caseElement => caseElement.hasAttribute('if-rev'))) {
+    if (this.containsRule('if-rev')) {
       const observeReverseRelations = resource.observeReverseRelations().pipe(takeUntil(this.disconnected$));
       observeReverseRelations.subscribe(reverseRelations => {
         this.reverseRelations = reverseRelations;
@@ -92,6 +90,10 @@ export class PosSwitch implements ResourceAware {
       this.resource = resource;
     }
   };
+
+  private containsRule(type: SwitchCaseRule['type']) {
+    return this.cases.some(it => it.rule.type === type);
+  }
 
   render() {
     if (this.error) {
