@@ -231,6 +231,32 @@ describe('does rule match', () => {
           const result = doesRuleMatch(ifSomeNameEqualsAlice, context);
           expect(result).toBe(false);
         });
+        describe('when negated', () => {
+          const notIfSomeNameEqualsAlice: SwitchCaseRule = {
+            ...ifSomeNameEqualsAlice,
+            not: true,
+          };
+          it('matches if no properties are in context', () => {
+            const result = doesRuleMatch(notIfSomeNameEqualsAlice, EMPTY_CONTEXT);
+            expect(result).toBe(true);
+          });
+          it('does not match if context contains a literal of that property with that name', () => {
+            const context = {
+              ...EMPTY_CONTEXT,
+              literals: [literal('http://schema.org/name', ['Alice'])],
+            };
+            const result = doesRuleMatch(notIfSomeNameEqualsAlice, context);
+            expect(result).toBe(false);
+          });
+          it('matches if context contains a literal of that property but without the name', () => {
+            const context = {
+              ...EMPTY_CONTEXT,
+              literals: [literal('http://schema.org/name', ['Other'])],
+            };
+            const result = doesRuleMatch(notIfSomeNameEqualsAlice, context);
+            expect(result).toBe(true);
+          });
+        });
       });
 
       describe('if-property with specific relation', () => {
