@@ -86,7 +86,11 @@ export class PosSwitch implements ResourceAware {
       });
       observables.push(observeReverseRelations);
     }
-    firstValueFrom(combineLatest(observables)).then(() => (this.resource = resource));
+    if (observables.length > 0) {
+      firstValueFrom(combineLatest(observables)).then(() => (this.resource = resource));
+    } else {
+      this.resource = resource;
+    }
   };
 
   render() {

@@ -274,5 +274,21 @@ describe('pos-switch', () => {
         <div>No matches</div>
         `);
     });
+
+    it('renders only the else case if it is the only case', async () => {
+      const page = await render(
+        <pos-switch>
+          <pos-case else>
+            <template>
+              <div>fallback</div>
+            </template>
+          </pos-case>
+        </pos-switch>,
+      );
+      const thing = { uri: 'https://pod.example/resource' } as unknown as Thing;
+      page.instance.receiveResource(thing);
+      await page.waitForChanges();
+      expect(page.root?.innerHTML).toEqualHtml(`<div>fallback</div>`);
+    });
   });
 });
