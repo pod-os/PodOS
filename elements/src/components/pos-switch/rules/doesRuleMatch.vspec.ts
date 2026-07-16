@@ -352,7 +352,14 @@ describe('does rule match', () => {
       const result = doesRuleMatch(ifRevImage, EMPTY_CONTEXT);
       expect(result).toBe(false);
     });
-
+    it('does not match if only wrong reverse relations are in context', () => {
+      const context = {
+        ...EMPTY_CONTEXT,
+        reverseRelations: [relation('http://vocab.example.org/other-rel')],
+      };
+      const result = doesRuleMatch(ifRevImage, context);
+      expect(result).toBe(false);
+    });
     it('matches if context contains a reverse relation of that property', () => {
       const context = {
         ...EMPTY_CONTEXT,
@@ -377,6 +384,14 @@ describe('does rule match', () => {
       };
       it('matches if no properties are in context', () => {
         const result = doesRuleMatch(notIfRevImage, EMPTY_CONTEXT);
+        expect(result).toBe(true);
+      });
+      it('matches if only wrong reverse relations are in context', () => {
+        const context = {
+          ...EMPTY_CONTEXT,
+          reverseRelations: [relation('http://vocab.example.org/other-rel')],
+        };
+        const result = doesRuleMatch(notIfRevImage, context);
         expect(result).toBe(true);
       });
       it('does not match if context contains a reverse relation of that property', () => {
