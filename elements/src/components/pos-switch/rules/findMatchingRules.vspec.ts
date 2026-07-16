@@ -266,6 +266,88 @@ describe('find matching rules', () => {
       });
     });
 
+    describe('if -> else, if -> else', () => {
+      /*
+        GIVEN
+          if-property name
+            else
+          if-property image
+            else
+       */
+      const ifHasName: TestRules = {
+        rule: {
+          type: 'if-property',
+          value: 'http://schema.org/name',
+        },
+      };
+      const else_name = {
+        rule: ELSE_RULE,
+        id: 1, // id is just a discriminator for the test, a real else cae would contain the element to render
+      };
+      const ifHasImage: TestRules = {
+        rule: {
+          type: 'if-property',
+          value: 'http://schema.org/image',
+        },
+      };
+      const else_image = { rule: ELSE_RULE, id: 2 };
+
+      const rules: TestRules[] = [ifHasName, else_name, ifHasImage, else_image];
+      it('if name is present, first if and last else match', () => {
+        const context = {
+          ...EMPTY_CONTEXT,
+          literals: [literal('http://schema.org/name')],
+        };
+        const result = findMatchingRules(rules, context);
+        expect(result).toEqual([ifHasName, else_image]);
+      });
+      it('if name and image are present, both if rules match', () => {
+        const context = {
+          ...EMPTY_CONTEXT,
+          literals: [literal('http://schema.org/name'), literal('http://schema.org/image')],
+        };
+        const result = findMatchingRules(rules, context);
+        expect(result).toEqual([ifHasName, ifHasImage]);
+      });
+      it('if label and picture are present, both else rules match', () => {
+        const context = {
+          ...EMPTY_CONTEXT,
+          literals: [literal('http://www.w3.org/2000/01/rdf-schema#label'), literal('http://schema.org/picture')],
+        };
+        const result = findMatchingRules(rules, context);
+        expect(result).toEqual([else_name, else_image]);
+      });
+      it('if name and picture are present the first if and second else match', () => {
+        const context = {
+          ...EMPTY_CONTEXT,
+          literals: [literal('http://schema.org/name'), literal('http://schema.org/picture')],
+        };
+        const result = findMatchingRules(rules, context);
+        expect(result).toEqual([ifHasName, else_image]);
+      });
+      it('if label and image are present the first else and second if match', () => {
+        const context = {
+          ...EMPTY_CONTEXT,
+          literals: [literal('http://www.w3.org/2000/01/rdf-schema#label'), literal('http://schema.org/image')],
+        };
+        const result = findMatchingRules(rules, context);
+        expect(result).toEqual([else_name, ifHasImage]);
+      });
+      it('if all are present, all if rules but no else matches', () => {
+        const context = {
+          ...EMPTY_CONTEXT,
+          literals: [
+            literal('http://schema.org/name'),
+            literal('http://schema.org/image'),
+            literal('http://www.w3.org/2000/01/rdf-schema#label'),
+            literal('http://schema.org/picture'),
+          ],
+        };
+        const result = findMatchingRules(rules, context);
+        expect(result).toEqual([ifHasName, ifHasImage]);
+      });
+    });
+
     describe('if -> else if, if -> else if', () => {
       /*
         GIVEN
