@@ -503,6 +503,32 @@ describe('does rule match', () => {
         const result = doesRuleMatch(ifThisIsAnImageOfAlice, context);
         expect(result).toBe(false);
       });
+      describe('when negated', () => {
+        const notIfThisIsAnImageOfAlice: SwitchCaseRule = {
+          ...ifThisIsAnImageOfAlice,
+          not: true,
+        };
+        it('matches if no properties are in context', () => {
+          const result = doesRuleMatch(notIfThisIsAnImageOfAlice, EMPTY_CONTEXT);
+          expect(result).toBe(true);
+        });
+        it('does not match if context contains a reverse relation of that property with that uri', () => {
+          const context = {
+            ...EMPTY_CONTEXT,
+            reverseRelations: [relation('http://schema.org/image', ['https://alice.example/profile/card#me'])],
+          };
+          const result = doesRuleMatch(notIfThisIsAnImageOfAlice, context);
+          expect(result).toBe(false);
+        });
+        it('matches if context contains a literal of that property but without the name', () => {
+          const context = {
+            ...EMPTY_CONTEXT,
+            reverseRelations: [relation('http://schema.org/image', ['https://other.example/profile/card#me'])],
+          };
+          const result = doesRuleMatch(notIfThisIsAnImageOfAlice, context);
+          expect(result).toBe(true);
+        });
+      });
     });
   });
 });
