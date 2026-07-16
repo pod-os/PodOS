@@ -209,6 +209,66 @@ describe('find matching rules', () => {
       expect(result).toEqual([{ rule: ifPerson }, { rule: elseIfHasLabel }]);
     });
 
+    describe('if -> else if -> else', () => {
+      /*
+        GIVEN
+          if-property name
+            else if-property label
+            else
+       */
+      const ifHasName: TestRules = {
+        rule: {
+          type: 'if-property',
+          value: 'http://schema.org/name',
+        },
+      };
+      const elseIfHasLabel: TestRules = {
+        rule: {
+          type: 'if-property',
+          value: 'http://www.w3.org/2000/01/rdf-schema#label',
+          else: true,
+        },
+      };
+      const _else = { rule: ELSE_RULE };
+
+      it('if name is present, first rule matches', () => {
+        const context = {
+          ...EMPTY_CONTEXT,
+          literals: [literal('http://schema.org/name')],
+        };
+        const rules: TestRules[] = [ifHasName, elseIfHasLabel, _else];
+        const result = findMatchingRules(rules, context);
+        expect(result).toEqual([ifHasName]);
+      });
+
+      it('if no name, but label is present, second rule matches', () => {
+        const context = {
+          ...EMPTY_CONTEXT,
+          literals: [literal('http://www.w3.org/2000/01/rdf-schema#label')],
+        };
+        const rules: TestRules[] = [ifHasName, elseIfHasLabel, _else];
+        const result = findMatchingRules(rules, context);
+        expect(result).toEqual([elseIfHasLabel]);
+      });
+      it('if neither name nor label are present, else rule matches', () => {
+        const context = {
+          ...EMPTY_CONTEXT,
+        };
+        const rules: TestRules[] = [ifHasName, elseIfHasLabel, _else];
+        const result = findMatchingRules(rules, context);
+        expect(result).toEqual([_else]);
+      });
+      it('if name and label are present, first rule matches', () => {
+        const context = {
+          ...EMPTY_CONTEXT,
+          literals: [literal('http://schema.org/name'), literal('http://www.w3.org/2000/01/rdf-schema#label')],
+        };
+        const rules: TestRules[] = [ifHasName, elseIfHasLabel, _else];
+        const result = findMatchingRules(rules, context);
+        expect(result).toEqual([ifHasName]);
+      });
+    });
+
     it('falls back to plain else branch, if first rule did not match', () => {
       const ifTypeA: SwitchCaseRule = {
         type: 'if-typeof',
