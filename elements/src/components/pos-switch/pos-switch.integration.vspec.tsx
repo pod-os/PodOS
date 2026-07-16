@@ -102,6 +102,61 @@ describe('pos-switch', () => {
     expect(page.root).toEqualText('Hi Bob, did you see Jane?');
   });
 
+  it('numeric value comparison', async () => {
+    // given Bob is 40 years old
+    server.use(
+      turtleFile(
+        'https://bob.test/profile/card',
+        `
+          <#me> a <http://schema.org/Person> ;
+                  <http://schema.org/name> "Bob";
+                  <http://schema.org/age> 40 .
+        `,
+      ),
+    );
+    // when a pos-switch has cases for different age ranges
+    const page = await render(
+      <pos-app>
+        <pos-resource uri="https://bob.test/profile/card#me">
+          <pos-switch>
+            <pos-case if-property="http://schema.org/age" every-value-gte="18">
+              <template>
+                <pos-label></pos-label> is a grown up.
+              </template>
+            </pos-case>
+            <pos-case if-property="http://schema.org/age" every-value-gte="21">
+              <template>Even in the US.</template>
+            </pos-case>
+            <pos-case if-property="http://schema.org/age" every-value-lt="60">
+              <template>
+                <pos-label></pos-label> is not older than 60.
+              </template>
+            </pos-case>
+            <pos-case if-property="http://schema.org/age" every-value-eq="40">
+              <template>
+                <pos-label></pos-label> is exactly 40 years old!
+              </template>
+            </pos-case>
+            <pos-case if-property="http://schema.org/age" every-value-gt="99">
+              <template>
+                <pos-label></pos-label> must be really wise.
+              </template>
+            </pos-case>
+            <pos-case if-property="http://schema.org/age" every-value-lt="6">
+              <template>
+                Hello little <pos-label></pos-label>.
+              </template>
+            </pos-case>
+          </pos-switch>
+        </pos-resource>
+      </pos-app>,
+    );
+    expect(page.root).toEqualText(`Bob is a grown up.
+Even in the US.
+Bob is not older than 60.
+Bob is exactly 40 years old!`);
+  });
+
   it('re-evaluates cases after the resource changed', async () => {
     // given a person named Alice
     server.use(
