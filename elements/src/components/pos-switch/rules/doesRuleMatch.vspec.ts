@@ -33,6 +33,14 @@ describe('does rule match', () => {
       const result = doesRuleMatch(ifTypeOfRecipe, EMPTY_CONTEXT);
       expect(result).toBe(false);
     });
+    it('does not match if wrong type is present', () => {
+      const context = {
+        ...EMPTY_CONTEXT,
+        types: [type('http://vocab.example.org/OtherType')],
+      };
+      const result = doesRuleMatch(ifTypeOfRecipe, context);
+      expect(result).toBe(false);
+    });
     it('matches if context contains the type in question', () => {
       const context = {
         ...EMPTY_CONTEXT,
@@ -58,6 +66,14 @@ describe('does rule match', () => {
 
       it('does match if no types are in context', () => {
         const result = doesRuleMatch(notIfTypeOfRecipe, EMPTY_CONTEXT);
+        expect(result).toBe(true);
+      });
+      it('does match if wrong type is present', () => {
+        const context = {
+          ...EMPTY_CONTEXT,
+          types: [type('http://vocab.example.org/OtherType')],
+        };
+        const result = doesRuleMatch(notIfTypeOfRecipe, context);
         expect(result).toBe(true);
       });
       it('does not match if context contains the type in question', () => {
