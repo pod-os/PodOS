@@ -69,4 +69,65 @@ describe('pos-switch', () => {
     // then the case for Jane is shown
     expect(page.root).toEqualText('Hi Jane, how are you?');
   });
+
+  it('re-evaluates cases after the resource changed', async () => {
+    // given a person named Alice
+    server.use(
+      turtleFile(
+        'https://alice.test/profile/card',
+        `
+          <#me> a <http://schema.org/Person> ; <http://schema.org/name> "Alice" .
+        `,
+      ),
+      turtleFile(
+        'https://bob.test/profile/card',
+        `
+          <#me> a <http://schema.org/Person> ; <http://schema.org/name> "Bob" .
+        `,
+      ),
+      turtleFile(
+        'https://someone.test/profile/card',
+        `
+          <#me> a <http://schema.org/Person> .
+        `,
+      ),
+    );
+    // and a pos-switch is set up to greet people depending on the available data
+    const page = await render(
+      <pos-app>
+        <pos-resource uri="https://alice.test/profile/card#me">
+          <pos-switch>
+            <pos-case if-typeof="http://schema.org/Person">
+              <template>Welcome!</template>
+            </pos-case>
+            <pos-case if-property="http://schema.org/name" every-value-eq="Alice">
+              <template>What a pleasure to see you, Alice!</template>
+            </pos-case>
+            <pos-case else if-property="http://schema.org/name" every-value-eq="Bob">
+              <template>
+                Nice to meet you! You're <pos-label></pos-label>, right?
+              </template>
+            </pos-case>
+            <pos-case else>
+              <template>Nice to meet you! What is your name?</template>
+            </pos-case>
+          </pos-switch>
+        </pos-resource>
+      </pos-app>,
+    );
+
+    // then it shows the case for Alice
+    const resourceElement = page.root.querySelector('pos-resource')!;
+    expect(page.root).toEqualText('Welcome!\nWhat a pleasure to see you, Alice!');
+
+    // and it updates for a differently named person
+    resourceElement.setAttribute('uri', 'https://bob.test/profile/card#me');
+    await page.waitForChanges();
+    expect(page.root).toEqualText("Welcome!\nNice to meet you! You're Bob, right?");
+
+    // and it updates for people without a name
+    resourceElement.setAttribute('uri', 'https://someone.test/profile/card#me');
+    await page.waitForChanges();
+    expect(page.root).toEqualText('Welcome!\nNice to meet you! What is your name?');
+  });
 });
