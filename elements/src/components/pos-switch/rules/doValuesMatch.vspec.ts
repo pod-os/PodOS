@@ -164,5 +164,14 @@ describe('do values match', () => {
         expect(result).toBe(match);
       },
     );
+    it('throws error for unknown semantic', () => {
+      expect(() =>
+        doValuesMatch(list, {
+          semantic: 'unknown' as Semantic,
+          operator: 'eq' as Operator,
+          target,
+        }),
+      ).toThrow(new Error('Unknown semantic: unknown'));
+    });
   });
 });
