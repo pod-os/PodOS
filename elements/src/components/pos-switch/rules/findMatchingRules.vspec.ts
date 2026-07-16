@@ -179,6 +179,36 @@ describe('find matching rules', () => {
       expect(result).toEqual([{ rule: elseIfTypeB }]);
     });
 
+    it('matches both, the first (independent) if rule and the else of the following if', () => {
+      /*
+        GIVEN
+          if-typeof Person
+          if-property name
+            else if-property label // the else belongs to the preceding if, not to the first if
+       */
+      const ifPerson: SwitchCaseRule = {
+        type: 'if-typeof',
+        value: 'http://schema.org/Person',
+      };
+      const ifHasName: SwitchCaseRule = {
+        type: 'if-property',
+        value: 'http://schema.org/name',
+      };
+      const elseIfHasLabel: SwitchCaseRule = {
+        type: 'if-property',
+        value: 'http://www.w3.org/2000/01/rdf-schema#label',
+        else: true,
+      };
+      const context = {
+        ...EMPTY_CONTEXT,
+        types: [type('http://schema.org/Person')],
+        literals: [literal('http://www.w3.org/2000/01/rdf-schema#label')],
+      };
+      const rules: TestRules[] = [{ rule: ifPerson }, { rule: ifHasName }, { rule: elseIfHasLabel }];
+      const result = findMatchingRules(rules, context);
+      expect(result).toEqual([{ rule: ifPerson }, { rule: elseIfHasLabel }]);
+    });
+
     it('falls back to plain else branch, if first rule did not match', () => {
       const ifTypeA: SwitchCaseRule = {
         type: 'if-typeof',
