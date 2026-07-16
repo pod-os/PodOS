@@ -11,6 +11,8 @@ export function turtleFile(url: string, content: string, { delayedUntil = Promis
   return http.get(url, async () => {
     const response = HttpResponse.text(content);
     response.headers.set('Content-Type', 'text/turtle');
+    response.headers.set('accept-patch', 'text/n3, application/sparql-update');
+    response.headers.set('wac-allow', 'user="append control read write",public="append control read write"');
     await delayedUntil;
     return response;
   });

@@ -1,5 +1,8 @@
 import { describe, expect, h, it, render } from '@stencil/vitest';
 import { server, turtleFile } from '../../test/msw';
+import { waitFor } from '@testing-library/dom';
+import { Store } from '@pod-os/core';
+import { http, HttpResponse } from 'msw';
 
 describe('pos-switch', () => {
   it('renders matching if-type and if-property cases', async () => {
@@ -216,5 +219,59 @@ Bob is exactly 40 years old!`);
     resourceElement.setAttribute('uri', 'https://someone.test/profile/card#me');
     await page.waitForChanges();
     expect(page.root).toEqualText('Welcome!\nNice to meet you! What is your name?');
+  });
+
+  it('updates the cases after matching data was added', async () => {
+    let store: Store;
+    document.addEventListener('pod-os:loaded', evt => {
+      store = (evt as CustomEvent).detail.os.store;
+    });
+
+    // given a person without a name
+    server.use(
+      turtleFile(
+        'https://janedoe.test/profile/card',
+        `
+          <#me> a <http://schema.org/Person> .
+        `,
+      ),
+      // but the profile document can be patched to add a name
+      http.patch('https://janedoe.test/profile/card', async () => {
+        return HttpResponse.text();
+      }),
+    );
+    // and a pos-switch is rendered asking users for a name or greeting them
+    const page = await render(
+      <pos-app>
+        <pos-resource uri="https://janedoe.test/profile/card#me">
+          <pos-switch>
+            <pos-case not if-property="http://schema.org/name">
+              <template>Please tell me your name</template>
+            </pos-case>
+            <pos-case else>
+              <template>
+                Hi, <pos-label></pos-label>
+              </template>
+            </pos-case>
+          </pos-switch>
+        </pos-resource>
+      </pos-app>,
+    );
+    // and we got the PodOS store from the page
+    await waitFor(() => {
+      expect(store).toBeDefined();
+    });
+
+    // and the "tell me your name" case is shown at first
+    expect(page.root).toEqualText('Please tell me your name');
+
+    // when the user adds their name
+    const resource = store!.get('https://janedoe.test/profile/card#me');
+    await store!.addPropertyValue(resource!, 'http://schema.org/name', 'Jane Doe');
+
+    // then the page updates to greet them
+    await waitFor(() => {
+      expect(page.root).toEqualText('Hi, Jane Doe');
+    });
   });
 });
