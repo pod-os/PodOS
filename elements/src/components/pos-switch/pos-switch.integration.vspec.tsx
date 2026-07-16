@@ -70,6 +70,38 @@ describe('pos-switch', () => {
     expect(page.root).toEqualText('Hi Jane, how are you?');
   });
 
+  it('when not is added, the cases NOT matching the property value in question are rendered', async () => {
+    // given a person named Bob
+    server.use(
+      turtleFile(
+        'https://bob.test/profile/card',
+        `
+          <#me> a <http://schema.org/Person> ; <http://schema.org/name> "Bob" .
+        `,
+      ),
+    );
+    // when a pos-switch has cases for anyone NOT named "Jane Doe" and a fallback else
+    const page = await render(
+      <pos-app>
+        <pos-resource uri="https://bob.test/profile/card#me">
+          <pos-switch>
+            <pos-case not if-property="http://schema.org/name" every-value-eq="Jane Doe">
+              <template>
+                Hi <pos-label></pos-label>, did you see Jane?
+              </template>
+            </pos-case>
+            <pos-case else>
+              <template>Hi Jane!</template>
+            </pos-case>
+          </pos-switch>
+        </pos-resource>
+      </pos-app>,
+    );
+
+    // then the negated case is shown
+    expect(page.root).toEqualText('Hi Bob, did you see Jane?');
+  });
+
   it('re-evaluates cases after the resource changed', async () => {
     // given a person named Alice
     server.use(
