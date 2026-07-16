@@ -438,6 +438,69 @@ describe('find matching rules', () => {
       });
     });
 
+    describe('negations', () => {
+      describe('if not -> else if not -> else', () => {
+        /*
+        GIVEN
+          not if-property name
+            else not if-property label
+            else
+       */
+        const ifNotHasName: TestRules = {
+          rule: {
+            type: 'if-property',
+            value: 'http://schema.org/name',
+            not: true,
+          },
+        };
+        const elseIfNotHasLabel: TestRules = {
+          rule: {
+            type: 'if-property',
+            value: 'http://www.w3.org/2000/01/rdf-schema#label',
+            not: true,
+            else: true,
+          },
+        };
+        const _else = { rule: ELSE_RULE };
+        const rules: TestRules[] = [ifNotHasName, elseIfNotHasLabel, _else];
+
+        it('if only name is present, else-if matches', () => {
+          const context = {
+            ...EMPTY_CONTEXT,
+            literals: [literal('http://schema.org/name')],
+          };
+          const result = findMatchingRules(rules, context);
+          expect(result).toEqual([elseIfNotHasLabel]);
+        });
+
+        it('if only label is present, first if matches', () => {
+          const context = {
+            ...EMPTY_CONTEXT,
+            literals: [literal('http://www.w3.org/2000/01/rdf-schema#label')],
+          };
+          const result = findMatchingRules(rules, context);
+          expect(result).toEqual([ifNotHasName]);
+        });
+
+        it('if nothing is present, first if matches', () => {
+          const context = {
+            ...EMPTY_CONTEXT,
+          };
+          const result = findMatchingRules(rules, context);
+          expect(result).toEqual([ifNotHasName]);
+        });
+
+        it('if both name and label are present, else matches', () => {
+          const context = {
+            ...EMPTY_CONTEXT,
+            literals: [literal('http://schema.org/name'), literal('http://www.w3.org/2000/01/rdf-schema#label')],
+          };
+          const result = findMatchingRules(rules, context);
+          expect(result).toEqual([_else]);
+        });
+      });
+    });
+
     it('falls back to plain else branch, if first rule did not match', () => {
       const ifTypeA: SwitchCaseRule = {
         type: 'if-typeof',
