@@ -298,6 +298,41 @@ describe('does rule match', () => {
           const result = doesRuleMatch(ifVideoIsSomeVideo, context);
           expect(result).toBe(false);
         });
+        describe('when negated', () => {
+          const notIfVideoIsSomeVideo: SwitchCaseRule = {
+            ...ifVideoIsSomeVideo,
+            not: true,
+          };
+          it('matches if no properties are in context', () => {
+            const result = doesRuleMatch(notIfVideoIsSomeVideo, EMPTY_CONTEXT);
+            expect(result).toBe(true);
+          });
+          it('does not match if context contains a relation of that property with that uri', () => {
+            const context = {
+              ...EMPTY_CONTEXT,
+              relations: [relation('http://schema.org/video', ['https://video.test/some-video'])],
+            };
+            const result = doesRuleMatch(notIfVideoIsSomeVideo, context);
+            expect(result).toBe(false);
+          });
+          it('does not match if context contains a relation of that property with that uri, even if a literal of the same property is present', () => {
+            const context = {
+              ...EMPTY_CONTEXT,
+              literals: [literal('http://schema.org/video', ['Other video'])],
+              relations: [relation('http://schema.org/video', ['https://video.test/some-video'])],
+            };
+            const result = doesRuleMatch(notIfVideoIsSomeVideo, context);
+            expect(result).toBe(false);
+          });
+          it('matches if context contains a relation of that property but without the uri', () => {
+            const context = {
+              ...EMPTY_CONTEXT,
+              relations: [relation('http://schema.org/video', ['https://video.test/other-video'])],
+            };
+            const result = doesRuleMatch(notIfVideoIsSomeVideo, context);
+            expect(result).toBe(true);
+          });
+        });
       });
 
       describe('if-property with every-value-eq', () => {
