@@ -104,6 +104,15 @@ describe('does rule match', () => {
         const result = doesRuleMatch(ifPropertyName, EMPTY_CONTEXT);
         expect(result).toBe(false);
       });
+      it('does not match if context contains only relations and literals of other properties', () => {
+        const context = {
+          ...EMPTY_CONTEXT,
+          literals: [literal('http://vocab.test/other')],
+          relations: [relation('http://vocab.test/other')],
+        };
+        const result = doesRuleMatch(ifPropertyName, context);
+        expect(result).toBe(false);
+      });
       it('matches if context contains a literal of that property', () => {
         const context = {
           ...EMPTY_CONTEXT,
@@ -115,6 +124,15 @@ describe('does rule match', () => {
       it('matches if context contains a relation of that property', () => {
         const context = {
           ...EMPTY_CONTEXT,
+          relations: [relation('http://schema.org/name')],
+        };
+        const result = doesRuleMatch(ifPropertyName, context);
+        expect(result).toBe(true);
+      });
+      it('matches if context contains both a relation and a literal of that property', () => {
+        const context = {
+          ...EMPTY_CONTEXT,
+          literals: [literal('http://schema.org/name')],
           relations: [relation('http://schema.org/name')],
         };
         const result = doesRuleMatch(ifPropertyName, context);
@@ -139,6 +157,15 @@ describe('does rule match', () => {
           const result = doesRuleMatch(notIfPropertyName, EMPTY_CONTEXT);
           expect(result).toBe(true);
         });
+        it('matches if context contains only relations and literals of other properties', () => {
+          const context = {
+            ...EMPTY_CONTEXT,
+            literals: [literal('http://vocab.test/other')],
+            relations: [relation('http://vocab.test/other')],
+          };
+          const result = doesRuleMatch(notIfPropertyName, context);
+          expect(result).toBe(true);
+        });
         it('does not match if context contains a literal of that property', () => {
           const context = {
             ...EMPTY_CONTEXT,
@@ -150,6 +177,15 @@ describe('does rule match', () => {
         it('does not match if context contains a relation of that property', () => {
           const context = {
             ...EMPTY_CONTEXT,
+            relations: [relation('http://schema.org/name')],
+          };
+          const result = doesRuleMatch(notIfPropertyName, context);
+          expect(result).toBe(false);
+        });
+        it('does not match if context contains both a relation and a literal of that property', () => {
+          const context = {
+            ...EMPTY_CONTEXT,
+            literals: [literal('http://schema.org/name')],
             relations: [relation('http://schema.org/name')],
           };
           const result = doesRuleMatch(notIfPropertyName, context);
