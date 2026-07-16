@@ -54,34 +54,34 @@ describe('pos-case', () => {
       });
     });
 
-    it('can negate a rule with not', async () => {
+    it.each(['if-typeof', 'if-rev', 'if-property'])('can negate %s with not', async ruleType => {
       const page = await render<HTMLPosCaseElement>(
-        <pos-case not if-typeof="http://schema.org/Recipe">
+        `<pos-case not ${ruleType}="https://vocab.test#something">
           <template>
             <div>Test</div>
           </template>
-        </pos-case>,
+        </pos-case>`,
       );
       const rule = await page.root.getRule();
       expect(rule).toEqual({
-        type: 'if-typeof',
-        value: 'http://schema.org/Recipe',
+        type: ruleType,
+        value: 'https://vocab.test#something',
         not: true,
       });
     });
 
-    it('provides else if-typeof', async () => {
+    it.each(['if-typeof', 'if-property', 'if-rev'])('provides else %s', async ruleType => {
       const page = await render<HTMLPosCaseElement>(
-        <pos-case else if-typeof="http://schema.org/Recipe">
+        `<pos-case else ${ruleType}="https://vocab.test#something">
           <template>
             <div>Test</div>
           </template>
-        </pos-case>,
+        </pos-case>`,
       );
       const rule = await page.root.getRule();
       expect(rule).toEqual({
-        type: 'if-typeof',
-        value: 'http://schema.org/Recipe',
+        type: ruleType,
+        value: 'https://vocab.test#something',
         else: true,
       });
     });
@@ -142,22 +142,6 @@ describe('pos-case', () => {
         });
       },
     );
-
-    it('provides else if-property', async () => {
-      const page = await render<HTMLPosCaseElement>(
-        <pos-case else if-property="http://schema.org/image">
-          <template>
-            <div>Test</div>
-          </template>
-        </pos-case>,
-      );
-      const rule = await page.root.getRule();
-      expect(rule).toEqual({
-        type: 'if-property',
-        value: 'http://schema.org/image',
-        else: true,
-      });
-    });
 
     it('provides the if-rev rule', async () => {
       const page = await render<HTMLPosCaseElement>(
