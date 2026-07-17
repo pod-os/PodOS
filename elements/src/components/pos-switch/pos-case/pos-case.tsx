@@ -75,6 +75,28 @@ export class PosCase {
    */
   @Prop() everyValueLte?: string;
 
+  componentWillRender() {
+    const countRules = [this.ifTypeof, this.ifProperty, this.ifRev].filter(it => it !== undefined).length;
+    if (countRules > 1) {
+      this.error = 'At most 1 "if-" must be present';
+    }
+    const countComparisons = [
+      this.someValueLt,
+      this.everyValueLt,
+      this.someValueLte,
+      this.everyValueLte,
+      this.someValueEq,
+      this.everyValueEq,
+      this.someValueGte,
+      this.everyValueGte,
+      this.someValueGt,
+      this.everyValueGt,
+    ].filter(it => it !== undefined).length;
+    if (countComparisons > 1) {
+      this.error = 'At most 1 comparison ("every-" / "some-") must be present';
+    }
+  }
+
   /**
    * Whether this case is active, i.e. shown. Usually this is controlled by the surrounding pos-switch, and there is no need to set this manually.
    */

@@ -51,6 +51,72 @@ describe('pos-case', () => {
     expect(page.root.innerHTML).toEqualHtml('');
   });
 
+  describe('rule configuration errors', () => {
+    it.each([
+      [
+        `if-typeof="http://schema.org/Recipe"
+         if-rev="http://schema.org/image"`,
+      ],
+      [
+        `if-typeof="http://schema.org/Recipe"
+         if-property="http://schema.org/image"`,
+      ],
+      [
+        `if-rev="http://schema.org/Recipe"
+         if-property="http://schema.org/image"`,
+      ],
+      ,
+      [
+        `if-typeof="http://schema.org/Recipe"
+         if-rev="http://schema.org/Recipe"
+         if-property="http://schema.org/image"`,
+      ],
+    ])('shows error if more than one rule is present', async rules => {
+      const page = await render(
+        `<pos-case ${rules}>
+          <template>
+            <div>Test</div>
+          </template>
+        </pos-case>`,
+      );
+      expect(page.root).toEqualText('At most 1 "if-" must be present');
+    });
+
+    it.each([
+      // we don't check every permutation here, but at least make sure every
+      // property is tested once
+      [
+        `some-value-eq="Alice"
+         every-value-eq="Alice"`,
+      ],
+      [
+        `some-value-gt="Alice"
+         some-value-lt="Zoe"`,
+      ],
+      [
+        `every-value-gt="Alice"
+         every-value-lt="Zoe"`,
+      ],
+      [
+        `every-value-lte="Alice"
+         every-value-gte="Zoe"`,
+      ],
+      [
+        `some-value-lte="Alice"
+         some-value-gte="Zoe"`,
+      ],
+    ])('shows error if more than one rule is present', async comparisons => {
+      const page = await render(
+        `<pos-case if-property="http://schema.org/name" ${comparisons}>
+          <template>
+            <div>Test</div>
+          </template>
+        </pos-case>`,
+      );
+      expect(page.root).toEqualText('At most 1 comparison ("every-" / "some-") must be present');
+    });
+  });
+
   describe('rules', () => {
     it('provides the if-typeof rule', async () => {
       const page = await render<HTMLPosCaseElement>(

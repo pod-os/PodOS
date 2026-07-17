@@ -284,4 +284,74 @@ describe('pos-switch', () => {
       expect(page.root).toEqualText('Hi, Jane Doe');
     });
   });
+
+  describe('misconfiguration is communicated to the user, such as', () => {
+    it('a pos-case without a template', async () => {
+      // given a person with a name
+      server.use(
+        turtleFile(
+          'https://janedoe.test/profile/card',
+          `
+          <#me> a <http://schema.org/Person> ; <http://schema.org/name> "Jane Doe" .
+        `,
+        ),
+      );
+      const page = await render(
+        <pos-app>
+          <pos-resource uri="https://janedoe.test/profile/card#me">
+            <pos-switch>
+              <pos-case if-property="https://vocab.test/does-not-need-to-match">Light dom still shows up</pos-case>
+            </pos-switch>
+          </pos-resource>
+        </pos-app>,
+      );
+
+      // and the "tell me your name" case is shown at first
+      expect(page.root).toHaveTextContent('No template element found');
+      expect(page.root).toHaveTextContent('Light dom still shows up');
+    });
+
+    it('duplicate rules or comparisons', async () => {
+      // given a person with a name
+      server.use(
+        turtleFile(
+          'https://janedoe.test/profile/card',
+          `
+          <#me> a <http://schema.org/Person> ; <http://schema.org/name> "Jane Doe" .
+        `,
+        ),
+      );
+      const page = await render(
+        <pos-app>
+          <pos-resource uri="https://janedoe.test/profile/card#me">
+            <pos-switch>
+              <pos-case if-typeof="https://vocab.test/Whatever" if-property="http://schema.org/name">
+                <template>two rules</template>
+              </pos-case>
+              <pos-case if-property="http://vocab.test/irrelevant" every-value-eq="Alice" every-value-gt="Bob">
+                <template>two comparisons</template>
+              </pos-case>
+            </pos-switch>
+          </pos-resource>
+        </pos-app>,
+      );
+
+      // and the "tell me your name" case is shown at first
+      expect(page.root).toHaveTextContent('At most 1 "if-" must be present');
+      expect(page.root).toHaveTextContent('At most 1 comparison ("every-" / "some-") must be present');
+      const switchElement = page.root.querySelector('pos-switch')!;
+      expect(switchElement).toEqualLightHtml(`
+        <pos-switch class="hydrated">
+          <pos-case if-typeof="https://vocab.test/Whatever" if-property="http://schema.org/name" class="hydrated">
+            <template></template>
+            At most 1 "if-" must be present
+          </pos-case>
+          <pos-case if-property="http://vocab.test/irrelevant" every-value-eq="Alice" every-value-gt="Bob" class="hydrated">
+            <template></template>
+            At most 1 comparison ("every-" / "some-") must be present
+          </pos-case>
+        </pos-switch>
+      `);
+    });
+  });
 });
