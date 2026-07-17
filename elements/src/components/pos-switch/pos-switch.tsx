@@ -1,7 +1,7 @@
 import { Literal, RdfType, Relation, Thing } from '@pod-os/core';
 import { Component, Element, Event, h, Host, State } from '@stencil/core';
 import { ResourceAware, ResourceEventEmitter, subscribeResource } from '../events/ResourceAware';
-import { combineLatest, firstValueFrom, Observable, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { findMatchingRules, RuleContext, SwitchCaseRule } from './rules';
 
 interface CaseWithRule {
@@ -56,38 +56,36 @@ export class PosSwitch implements ResourceAware {
   receiveResource = (resource: Thing) => {
     // reset any existing resource
     this.disconnected$.next();
-    this.resource = undefined;
-    let observables: Observable<any>[] = [];
+    this.resource = resource;
     if (this.containsRule('if-typeof')) {
-      const observeTypes = resource.observeTypes().pipe(takeUntil(this.disconnected$));
-      observeTypes.subscribe(types => {
-        this.types = types;
-      });
-      observables.push(observeTypes);
+      resource
+        .observeTypes()
+        .pipe(takeUntil(this.disconnected$))
+        .subscribe(types => {
+          this.types = types;
+        });
     }
     if (this.containsRule('if-property')) {
-      const observeRelations = resource.observeRelations().pipe(takeUntil(this.disconnected$));
-      observeRelations.subscribe(relations => {
-        this.relations = relations;
-      });
-      observables.push(observeRelations);
-      const observeLiterals = resource.observeLiterals().pipe(takeUntil(this.disconnected$));
-      observeLiterals.subscribe(literals => {
-        this.literals = literals;
-      });
-      observables.push(observeLiterals);
+      resource
+        .observeRelations()
+        .pipe(takeUntil(this.disconnected$))
+        .subscribe(relations => {
+          this.relations = relations;
+        });
+      resource
+        .observeLiterals()
+        .pipe(takeUntil(this.disconnected$))
+        .subscribe(literals => {
+          this.literals = literals;
+        });
     }
     if (this.containsRule('if-rev')) {
-      const observeReverseRelations = resource.observeReverseRelations().pipe(takeUntil(this.disconnected$));
-      observeReverseRelations.subscribe(reverseRelations => {
-        this.reverseRelations = reverseRelations;
-      });
-      observables.push(observeReverseRelations);
-    }
-    if (observables.length > 0) {
-      firstValueFrom(combineLatest(observables)).then(() => (this.resource = resource));
-    } else {
-      this.resource = resource;
+      resource
+        .observeReverseRelations()
+        .pipe(takeUntil(this.disconnected$))
+        .subscribe(reverseRelations => {
+          this.reverseRelations = reverseRelations;
+        });
     }
   };
 
