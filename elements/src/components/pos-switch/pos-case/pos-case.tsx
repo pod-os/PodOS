@@ -1,5 +1,5 @@
-import { Component, Element, Method, Prop, State } from '@stencil/core';
-import { ELSE_RULE, NEVER_RULE, SwitchCaseRule, Comparison, Operator, Semantic } from '../rules';
+import { Component, Element, h, Host, Method, Prop, State } from '@stencil/core';
+import { Comparison, ELSE_RULE, NEVER_RULE, Operator, Semantic, SwitchCaseRule } from '../rules';
 
 /**
  * Defines a template to use if the specified condition is met - to be used with [pos-switch](https://pod-os.org/reference/elements/components/pos-switch/).
@@ -12,6 +12,7 @@ import { ELSE_RULE, NEVER_RULE, SwitchCaseRule, Comparison, Operator, Semantic }
 export class PosCase {
   @Element() host!: HTMLElement;
   @State() error: string | null = null;
+  private templateHTML: string | null = null;
 
   /**
    * Test if the resource is of the specified type
@@ -75,6 +76,11 @@ export class PosCase {
   @Prop() everyValueLte?: string;
 
   /**
+   * Whether this case is active, i.e. shown. Usually this is controlled by the surrounding pos-switch, and there is no need to set this manually.
+   */
+  @Prop() active = false;
+
+  /**
    * Returns the rule definition for this case. The rule determines if the element's content gets rendered.
    */
   @Method()
@@ -135,11 +141,19 @@ export class PosCase {
     const templateElement = this.host.querySelector('template');
     if (templateElement == null) {
       this.error = 'No template element found';
+    } else {
+      this.templateHTML = templateElement.innerHTML;
     }
   }
 
   render() {
     if (this.error) return this.error;
-    return null;
+
+    if (!this.active) {
+      // because we set innerHTML for active case elements, we need to
+      // unset it here to not leave state in the dom
+      return <Host innerHTML=""></Host>;
+    }
+    return <Host innerHTML={this.templateHTML}></Host>;
   }
 }

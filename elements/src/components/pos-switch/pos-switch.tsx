@@ -1,5 +1,5 @@
 import { Thing } from '@pod-os/core';
-import { Component, Element, Event, h, Host, State } from '@stencil/core';
+import { Component, Element, Event, h, State } from '@stencil/core';
 import { ResourceAware, ResourceEventEmitter, subscribeResource } from '../events/ResourceAware';
 import { combineLatest, map, of, Subject, takeUntil } from 'rxjs';
 import { findMatchingRules, RuleContext, SwitchCaseRule } from './rules';
@@ -16,19 +16,13 @@ interface CaseWithRule {
  */
 @Component({
   tag: 'pos-switch',
-  shadow: false,
+  shadow: true,
 })
 export class PosSwitch implements ResourceAware {
   @Element() host!: HTMLElement;
   @State() error: string | null = null;
   @State() resource?: Thing;
   @State() cases: CaseWithRule[] = [];
-  @State() ruleContext: RuleContext = {
-    types: [],
-    literals: [],
-    relations: [],
-    reverseRelations: [],
-  };
 
   private readonly disconnected$ = new Subject<void>();
 
@@ -75,8 +69,15 @@ export class PosSwitch implements ResourceAware {
         })),
         takeUntil(this.disconnected$),
       )
-      .subscribe(context => {
-        this.ruleContext = context;
+      .subscribe((context: RuleContext) => {
+        const activeElements = new Set(findMatchingRules(this.cases, context).map(it => it.caseElement));
+        this.cases.forEach(it => {
+          if (activeElements.has(it.caseElement)) {
+            it.caseElement.setAttribute('active', '');
+          } else {
+            it.caseElement.removeAttribute('active');
+          }
+        });
       });
   };
 
@@ -89,19 +90,10 @@ export class PosSwitch implements ResourceAware {
       return this.error;
     }
     if (!this.resource) {
-      // because we set innerHTML for matching case elements, we need to
-      // unset it here to not leave "undefined" in the dom when switching
-      // from one resource to another
-      return <Host innerHTML=""></Host>;
+      return null;
     }
-    let activeElements: HTMLPosCaseElement[] = [];
 
-    findMatchingRules(this.cases, this.ruleContext).forEach(it => {
-      activeElements.push(it.caseElement);
-    });
-
-    const activeElementsContent = activeElements.map(el => el.querySelector('template')?.innerHTML).join('\n');
-    return <Host innerHTML={activeElementsContent}></Host>;
+    return <slot></slot>;
   }
 
   disconnectedCallback() {

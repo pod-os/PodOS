@@ -12,6 +12,7 @@ See [storybook](https://pod-os.github.io/PodOS/storybook/?path=/story/basics--po
 
 | Property        | Attribute         | Description                                                                                                                                         | Type      | Default     |
 | --------------- | ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ----------- |
+| `active`        | `active`          | Whether this case is active, i.e. shown. Usually this is controlled by the surrounding pos-switch, and there is no need to set this manually.       | `boolean` | `false`     |
 | `else`          | `else`            | The test only evaluates to true if tests for preceding cases have failed                                                                            | `boolean` | `undefined` |
 | `everyValueEq`  | `every-value-eq`  | Test if every value linked by if-property or if-rev is equal to the attribute                                                                       | `string`  | `undefined` |
 | `everyValueGt`  | `every-value-gt`  | Test if every value linked by if-property or if-rev is strictly greater than the attribute. First a number comparison is attempted, then string.    | `string`  | `undefined` |

@@ -4,7 +4,18 @@ import './pos-case';
 import { ELSE_RULE } from '../rules';
 
 describe('pos-case', () => {
-  it('contains only templates initially', async () => {
+  it('renders template when active', async () => {
+    const page = await render(
+      <pos-case active if-typeof="http://schema.org/Recipe">
+        <template>
+          <div>Test</div>
+        </template>
+      </pos-case>,
+    );
+    expect(page.root.innerHTML).toEqual('<div>Test</div>');
+  });
+
+  it('renders nothing when inactive', async () => {
     const page = await render(
       <pos-case if-typeof="http://schema.org/Recipe">
         <template>
@@ -12,11 +23,21 @@ describe('pos-case', () => {
         </template>
       </pos-case>,
     );
-    expect(page.root).toEqualHtml(`
-      <pos-case if-typeof="http://schema.org/Recipe" class="hydrated">
-        <template></template>
-      </pos-case>
-    `);
+    expect(page.root.innerHTML).toEqual('');
+  });
+
+  it('renders template after being activated', async () => {
+    const page = await render(
+      <pos-case if-typeof="http://schema.org/Recipe">
+        <template>
+          <div>Test</div>
+        </template>
+      </pos-case>,
+    );
+    expect(page.root.innerHTML).toEqual('');
+    page.root.setAttribute('active', '');
+    await page.waitForChanges();
+    expect(page.root.innerHTML).toEqual('<div>Test</div>');
   });
 
   it('renders empty by default', async () => {
@@ -27,15 +48,7 @@ describe('pos-case', () => {
         </template>
       </pos-case>,
     );
-    const el: HTMLElement = page.root as unknown as HTMLElement;
-    expect(el.textContent).toEqualHtml('');
-  });
-
-  it('displays error on missing template', async () => {
-    const page = await render(<pos-case></pos-case>);
-    const el: HTMLElement = page.root as unknown as HTMLElement;
-
-    expect(el.textContent).toEqual('No template element found');
+    expect(page.root.innerHTML).toEqualHtml('');
   });
 
   describe('rules', () => {

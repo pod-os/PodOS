@@ -37,7 +37,18 @@ describe('pos-switch', () => {
     await page.waitForChanges();
 
     // then both cases are rendert, but the else case is hidden
-    expect(page.root).toEqualText('They are a person\nand they have a name!');
+    expect(page.root).toEqualText('They are a personand they have a name!');
+    const switchElement = page.root.querySelector('pos-switch');
+    expect(switchElement).toEqualLightHtml(`
+        <pos-switch class="hydrated">
+          <pos-case if-typeof="http://schema.org/Person" innerhtml="They are a person" class="hydrated" active>
+            They are a person
+          </pos-case>
+          <pos-case if-property="http://schema.org/name" innerhtml="and they have a name!" class="hydrated" active>
+            and they have a name!
+          </pos-case>
+          <pos-case innerhtml class="hydrated"></pos-case>
+        </pos-switch>`);
   });
 
   it('renders the cases matching the property value in question', async () => {
@@ -154,10 +165,9 @@ describe('pos-switch', () => {
         </pos-resource>
       </pos-app>,
     );
-    expect(page.root).toEqualText(`Bob is a grown up.
-Even in the US.
-Bob is not older than 60.
-Bob is exactly 40 years old!`);
+    expect(page.root).toEqualText(
+      `Bob is a grown up.Even in the US.Bob is not older than 60.Bob is exactly 40 years old!`,
+    );
   });
 
   it('re-evaluates cases after the resource changed', async () => {
@@ -208,17 +218,17 @@ Bob is exactly 40 years old!`);
 
     // then it shows the case for Alice
     const resourceElement = page.root.querySelector('pos-resource')!;
-    expect(page.root).toEqualText('Welcome!\nWhat a pleasure to see you, Alice!');
+    expect(page.root).toEqualText('Welcome!What a pleasure to see you, Alice!');
 
     // and it updates for a differently named person
     resourceElement.setAttribute('uri', 'https://bob.test/profile/card#me');
     await page.waitForChanges();
-    expect(page.root).toEqualText("Welcome!\nNice to meet you! You're Bob, right?");
+    expect(page.root).toEqualText("Welcome!Nice to meet you! You're Bob, right?");
 
     // and it updates for people without a name
     resourceElement.setAttribute('uri', 'https://someone.test/profile/card#me');
     await page.waitForChanges();
-    expect(page.root).toEqualText('Welcome!\nNice to meet you! What is your name?');
+    expect(page.root).toEqualText('Welcome!Nice to meet you! What is your name?');
   });
 
   it('updates the cases after matching data was added', async () => {

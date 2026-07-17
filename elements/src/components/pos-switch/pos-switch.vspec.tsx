@@ -17,7 +17,12 @@ describe('pos-switch', () => {
           </pos-case>
         </pos-switch>,
       );
-      expect(page.root).toMatchInlineSnapshot(`<pos-switch innerhtml class="hydrated"></pos-switch>`);
+      expect(page.root).toMatchInlineSnapshot(`
+        <pos-switch class="hydrated">
+          <mock:shadow-root></mock:shadow-root>
+          <pos-case if-typeof="http://schema.org/Recipe" innerhtml class="hydrated"></pos-case>
+        </pos-switch>
+      `);
     });
     it('load rules from cases', async () => {
       const page = await render(
@@ -80,10 +85,10 @@ describe('pos-switch', () => {
           </pos-case>
         </pos-switch>,
       );
-      const observedTypes$ = new Subject<RdfType[]>();
-      const observedRelations$ = new Subject<Relation[]>();
-      const observedReverseRelations$ = new Subject<Relation[]>();
-      const observedLiterals$ = new Subject<Literal[]>();
+      const observedTypes$ = new BehaviorSubject<RdfType[]>([]);
+      const observedRelations$ = new BehaviorSubject<Relation[]>([]);
+      const observedReverseRelations$ = new BehaviorSubject<Relation[]>([]);
+      const observedLiterals$ = new BehaviorSubject<Literal[]>([]);
       const thing = {
         uri: 'https://pod.example/recipe1',
         observeLiterals: () => observedLiterals$,
@@ -110,11 +115,7 @@ describe('pos-switch', () => {
         },
       ]);
       await page.waitForChanges();
-      expect(page.root?.innerHTML).toEqualHtml(`
-        <div>Recipe.</div>
-        <div>Image.</div>
-        <div>Recipe list.</div>
-        `);
+      expect(page.root).toEqualText('Recipe.Image.Recipe list.');
     });
   });
   describe('reactive rendering', () => {
@@ -138,7 +139,7 @@ describe('pos-switch', () => {
           </pos-case>
         </pos-switch>,
       );
-      const observedTypes$ = new Subject<RdfType[]>();
+      const observedTypes$ = new BehaviorSubject<RdfType[]>([]);
       const thing = {
         observeTypes: () => observedTypes$,
       } as unknown as Thing;
@@ -150,9 +151,7 @@ describe('pos-switch', () => {
         },
       ]);
       await page.waitForChanges();
-      expect(page.root.innerHTML).toEqualHtml(`
-        <div>Recipe 1</div>
-        <div>Recipe 2</div>`);
+      expect(page.root).toEqualText('Recipe 1Recipe 2');
     });
 
     it('resets and updates types when resource is changed', async () => {
@@ -371,9 +370,7 @@ describe('pos-switch', () => {
         },
       ]);
       await page.waitForChanges();
-      expect(page.root?.innerHTML).toEqualHtml(`
-        <div>Recipe 1</div>
-        `);
+      expect(page.root).toEqualText('Recipe 1');
     });
 
     it('renders final else condition if no other templates match', async () => {
@@ -403,9 +400,7 @@ describe('pos-switch', () => {
         },
       ]);
       await page.waitForChanges();
-      expect(page.root?.innerHTML).toEqualHtml(`
-        <div>No matches</div>
-        `);
+      expect(page.root).toEqualText('No matches');
     });
 
     it('renders only the else case if it is the only case', async () => {
@@ -421,7 +416,7 @@ describe('pos-switch', () => {
       const thing = { uri: 'https://pod.example/resource' } as unknown as Thing;
       page.instance.receiveResource(thing);
       await page.waitForChanges();
-      expect(page.root?.innerHTML).toEqualHtml(`<div>fallback</div>`);
+      expect(page.root).toEqualText('fallback');
     });
   });
 });

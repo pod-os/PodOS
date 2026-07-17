@@ -71,6 +71,11 @@ export namespace Components {
      */
     interface PosCase {
         /**
+          * Whether this case is active, i.e. shown. Usually this is controlled by the surrounding pos-switch, and there is no need to set this manually.
+          * @default false
+         */
+        "active": boolean;
+        /**
           * The test only evaluates to true if tests for preceding cases have failed
          */
         "else"?: boolean;
@@ -1559,6 +1564,11 @@ declare namespace LocalJSX {
      */
     interface PosCase {
         /**
+          * Whether this case is active, i.e. shown. Usually this is controlled by the surrounding pos-switch, and there is no need to set this manually.
+          * @default false
+         */
+        "active"?: boolean;
+        /**
           * The test only evaluates to true if tests for preceding cases have failed
          */
         "else"?: boolean;
@@ -1993,6 +2003,7 @@ declare namespace LocalJSX {
         "everyValueLt": string;
         "someValueLte": string;
         "everyValueLte": string;
+        "active": boolean;
     }
     interface PosCreateNewContainerItemAttributes {
         "type": 'file' | 'folder';
