@@ -2,7 +2,7 @@ import { describe, expect, h, it, render } from '@stencil/vitest';
 
 import './pos-switch';
 import './pos-case/pos-case';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { Literal, RdfType, Relation, Thing } from '@pod-os/core';
 
 describe('pos-switch', () => {
@@ -155,7 +155,7 @@ describe('pos-switch', () => {
         <div>Recipe 2</div>`);
     });
 
-    it('resets and updates when resource is changed', async () => {
+    it('resets and updates types when resource is changed', async () => {
       const page = await render(
         <pos-switch>
           <pos-case if-typeof="http://schema.org/Recipe">
@@ -166,11 +166,7 @@ describe('pos-switch', () => {
           </pos-case>
         </pos-switch>,
       );
-      const observedTypes$ = new Subject<RdfType[]>();
-      const thing = {
-        uri: 'https://pod.example/recipe1',
-        observeTypes: () => observedTypes$,
-      };
+      const { thing, observedTypes$ } = mockObservedResource('https://pod.example/recipe1');
       page.instance.receiveResource(thing);
       observedTypes$.next([
         {
@@ -181,11 +177,7 @@ describe('pos-switch', () => {
       await page.waitForChanges();
       expect(page.root).toEqualText('Recipe.');
       // new thing
-      const observedTypes2$ = new Subject<RdfType[]>();
-      const thing2 = {
-        uri: 'https://pod.example/video1',
-        observeTypes: () => observedTypes2$,
-      };
+      const { thing: thing2, observedTypes$: observedTypes2$ } = mockObservedResource('https://pod.example/video1');
       page.instance.receiveResource(thing2);
       await page.waitForChanges();
       expect(page.root).toEqualText('');
@@ -198,6 +190,147 @@ describe('pos-switch', () => {
       await page.waitForChanges();
       expect(page.root).toEqualText('Video.');
     });
+
+    it('resets and updates literals when resource is changed', async () => {
+      const page = await render(
+        <pos-switch>
+          <pos-case if-property="http://schema.org/name">
+            <template>Name</template>
+          </pos-case>
+          <pos-case if-property="http://schema.org/description">
+            <template>Description</template>
+          </pos-case>
+        </pos-switch>,
+      );
+      const { thing, observedLiterals$ } = mockObservedResource('https://pod.example/recipe1');
+      page.instance.receiveResource(thing);
+      observedLiterals$.next([
+        {
+          label: 'name',
+          predicate: 'http://schema.org/name',
+          values: ['some name'],
+        },
+      ]);
+      await page.waitForChanges();
+      expect(page.root).toEqualText('Name');
+      // new thing
+      const { thing: thing2, observedLiterals$: observedLiterals2$ } =
+        mockObservedResource('https://pod.example/video1');
+      page.instance.receiveResource(thing2);
+      await page.waitForChanges();
+      expect(page.root).toEqualText('');
+      observedLiterals2$.next([
+        {
+          label: 'description',
+          predicate: 'http://schema.org/description',
+          values: ['some description'],
+        },
+      ]);
+      await page.waitForChanges();
+      expect(page.root).toEqualText('Description');
+    });
+
+    it('resets and updates relations when resource is changed', async () => {
+      const page = await render(
+        <pos-switch>
+          <pos-case if-property="http://schema.org/video">
+            <template>Video</template>
+          </pos-case>
+          <pos-case if-property="http://schema.org/recipe">
+            <template>Recipe</template>
+          </pos-case>
+        </pos-switch>,
+      );
+      const { thing, observedRelations$ } = mockObservedResource('https://pod.example/has-recipe');
+      page.instance.receiveResource(thing);
+      observedRelations$.next([
+        {
+          label: 'recipe',
+          predicate: 'http://schema.org/recipe',
+          uris: ['https://recipe.test/#it'],
+        },
+      ]);
+      await page.waitForChanges();
+      expect(page.root).toEqualText('Recipe');
+      // new thing
+      const { thing: thing2, observedRelations$: observedRelations2$ } = mockObservedResource(
+        'https://pod.example/has-video',
+      );
+      page.instance.receiveResource(thing2);
+      await page.waitForChanges();
+      expect(page.root).toEqualText('');
+      observedRelations2$.next([
+        {
+          label: 'video',
+          predicate: 'http://schema.org/video',
+          uris: ['https://video.test/#it'],
+        },
+      ]);
+      await page.waitForChanges();
+      expect(page.root).toEqualText('Video');
+    });
+
+    it('resets and updates reverse relations when resource is changed', async () => {
+      const page = await render(
+        <pos-switch>
+          <pos-case if-rev="http://schema.org/video">
+            <template>Video</template>
+          </pos-case>
+          <pos-case if-rev="http://schema.org/recipe">
+            <template>Recipe</template>
+          </pos-case>
+        </pos-switch>,
+      );
+      const { thing, observedReverseRelations$ } = mockObservedResource('https://recipe.test/#it');
+      page.instance.receiveResource(thing);
+      observedReverseRelations$.next([
+        {
+          label: 'recipe',
+          predicate: 'http://schema.org/recipe',
+          uris: ['https://something.test/has-recipe'],
+        },
+      ]);
+      await page.waitForChanges();
+      expect(page.root).toEqualText('Recipe');
+      // new thing
+      const { thing: thing2, observedReverseRelations$: observedReverseRelations2$ } = mockObservedResource(
+        'https://pod.example/has-video',
+      );
+      page.instance.receiveResource(thing2);
+      await page.waitForChanges();
+      expect(page.root).toEqualText('');
+      observedReverseRelations2$.next([
+        {
+          label: 'video',
+          predicate: 'http://schema.org/video',
+          uris: ['https://something.test/has-video'],
+        },
+      ]);
+      await page.waitForChanges();
+      expect(page.root).toEqualText('Video');
+    });
+
+    function mockObservedResource(uri: string) {
+      // use BehaviorSubject here, since it has a starting value, which matches the original behaviour
+      // of the observe* functions of Thing which use startWith(currentValue) to have an initial value
+      const observedTypes$ = new BehaviorSubject<RdfType[]>([]);
+      const observedLiterals$ = new BehaviorSubject<Literal[]>([]);
+      const observedRelations$ = new BehaviorSubject<Relation[]>([]);
+      const observedReverseRelations$ = new BehaviorSubject<Relation[]>([]);
+      return {
+        thing: {
+          uri,
+          observeTypes: () => observedTypes$,
+          observeLiterals: () => observedLiterals$,
+          observeRelations: () => observedRelations$,
+          observeReverseRelations: () => observedReverseRelations$,
+        } as unknown as Thing,
+        observedTypes$,
+        observedLiterals$,
+        observedRelations$,
+        observedReverseRelations$,
+      };
+    }
   });
 
   describe('if-else logic', () => {
