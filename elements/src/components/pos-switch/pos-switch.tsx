@@ -1,7 +1,7 @@
-import { Literal, RdfType, Relation, Thing } from '@pod-os/core';
+import { Thing } from '@pod-os/core';
 import { Component, Element, Event, h, Host, State } from '@stencil/core';
 import { ResourceAware, ResourceEventEmitter, subscribeResource } from '../events/ResourceAware';
-import { Subject, takeUntil } from 'rxjs';
+import { combineLatest, map, of, Subject, takeUntil } from 'rxjs';
 import { findMatchingRules, RuleContext, SwitchCaseRule } from './rules';
 
 interface CaseWithRule {
@@ -23,10 +23,12 @@ export class PosSwitch implements ResourceAware {
   @State() error: string | null = null;
   @State() resource?: Thing;
   @State() cases: CaseWithRule[] = [];
-  @State() types: RdfType[] = [];
-  @State() relations: Relation[] = [];
-  @State() reverseRelations: Relation[] = [];
-  @State() literals: Literal[] = [];
+  @State() ruleContext: RuleContext = {
+    types: [],
+    literals: [],
+    relations: [],
+    reverseRelations: [],
+  };
 
   private readonly disconnected$ = new Subject<void>();
 
@@ -57,36 +59,25 @@ export class PosSwitch implements ResourceAware {
     // reset any existing resource
     this.disconnected$.next();
     this.resource = resource;
-    if (this.containsRule('if-typeof')) {
-      resource
-        .observeTypes()
-        .pipe(takeUntil(this.disconnected$))
-        .subscribe(types => {
-          this.types = types;
-        });
-    }
-    if (this.containsRule('if-property')) {
-      resource
-        .observeRelations()
-        .pipe(takeUntil(this.disconnected$))
-        .subscribe(relations => {
-          this.relations = relations;
-        });
-      resource
-        .observeLiterals()
-        .pipe(takeUntil(this.disconnected$))
-        .subscribe(literals => {
-          this.literals = literals;
-        });
-    }
-    if (this.containsRule('if-rev')) {
-      resource
-        .observeReverseRelations()
-        .pipe(takeUntil(this.disconnected$))
-        .subscribe(reverseRelations => {
-          this.reverseRelations = reverseRelations;
-        });
-    }
+
+    combineLatest([
+      this.containsRule('if-typeof') ? resource.observeTypes() : of([]),
+      this.containsRule('if-property') ? resource.observeLiterals() : of([]),
+      this.containsRule('if-property') ? resource.observeRelations() : of([]),
+      this.containsRule('if-rev') ? resource.observeReverseRelations() : of([]),
+    ])
+      .pipe(
+        map(([types, literals, relations, reverseRelations]) => ({
+          types,
+          literals,
+          relations,
+          reverseRelations,
+        })),
+        takeUntil(this.disconnected$),
+      )
+      .subscribe(context => {
+        this.ruleContext = context;
+      });
   };
 
   private containsRule(type: SwitchCaseRule['type']) {
@@ -105,14 +96,7 @@ export class PosSwitch implements ResourceAware {
     }
     let activeElements: HTMLPosCaseElement[] = [];
 
-    const context: RuleContext = {
-      literals: this.literals,
-      relations: this.relations,
-      reverseRelations: this.reverseRelations,
-      types: this.types,
-    };
-
-    findMatchingRules(this.cases, context).forEach(it => {
+    findMatchingRules(this.cases, this.ruleContext).forEach(it => {
       activeElements.push(it.caseElement);
     });
 
