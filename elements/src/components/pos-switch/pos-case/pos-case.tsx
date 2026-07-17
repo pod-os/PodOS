@@ -8,6 +8,7 @@ import { Comparison, ELSE_RULE, NEVER_RULE, Operator, Semantic, SwitchCaseRule }
 @Component({
   tag: 'pos-case',
   shadow: false,
+  styleUrl: 'pos-case.css',
 })
 export class PosCase {
   @Element() host!: HTMLElement;
@@ -169,7 +170,7 @@ export class PosCase {
   }
 
   render() {
-    if (this.error) return this.error;
+    if (this.error) return <div class="error">{this.error}</div>;
 
     if (!this.active) {
       // because we set innerHTML for active case elements, we need to

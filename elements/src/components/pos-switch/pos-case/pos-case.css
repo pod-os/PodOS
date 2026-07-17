@@ -1,0 +1,6 @@
+.error {
+  background-color: var(--pos-error-background-color);
+  border: 1px solid var(--pos-error-border-color);
+  padding: var(--size-3);
+  border-radius: var(--radius-md);
+}

@@ -344,11 +344,15 @@ describe('pos-switch', () => {
         <pos-switch class="hydrated">
           <pos-case if-typeof="https://vocab.test/Whatever" if-property="http://schema.org/name" class="hydrated">
             <template></template>
-            At most 1 "if-" must be present
+            <div class="error">
+              At most 1 "if-" must be present
+            </div>
           </pos-case>
           <pos-case if-property="http://vocab.test/irrelevant" every-value-eq="Alice" every-value-gt="Bob" class="hydrated">
             <template></template>
-            At most 1 comparison ("every-" / "some-") must be present
+            <div class="error">
+              At most 1 comparison ("every-" / "some-") must be present
+            </div>
           </pos-case>
         </pos-switch>
       `);
