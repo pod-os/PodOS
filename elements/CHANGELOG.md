@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## Breaking Changes
 
 - [pos-switch](https://pod-os.org/reference/elements/components/pos-switch/) and [pos-case](https://pod-os.org/reference/elements/components/pos-case/):
+  - semantics of `else` attribute changed. Those cases are now scoped to the preceding `if-`.
   - now use [`display: contents`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/display#contents) style, so that the elements do not interfere with, e.g. flex layout
 
 ### Changed
