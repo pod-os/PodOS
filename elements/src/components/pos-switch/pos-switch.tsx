@@ -17,6 +17,7 @@ interface CaseWithRule {
 @Component({
   tag: 'pos-switch',
   shadow: true,
+  styleUrl: 'pos-switch.css',
 })
 export class PosSwitch implements ResourceAware {
   @Element() host!: HTMLElement;

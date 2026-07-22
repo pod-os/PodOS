@@ -177,6 +177,6 @@ export class PosCase {
       // unset it here to not leave state in the dom
       return <Host innerHTML=""></Host>;
     }
-    return <Host innerHTML={this.templateHTML}></Host>;
+    return <Host style={{ display: 'contents' }} innerHTML={this.templateHTML}></Host>;
   }
 }

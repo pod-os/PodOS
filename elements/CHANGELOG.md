@@ -6,9 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## 0.43.0
 
+## Breaking Changes
+
+- [pos-switch](https://pod-os.org/reference/elements/components/pos-switch/) and [pos-case](https://pod-os.org/reference/elements/components/pos-case/):
+  - now use [`display: contents`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/display#contents) style, so that the elements do not interfere with, e.g. flex layout
+
 ### Changed
 
-- [pos-switch](https://pod-os.org/reference/elements/components/pos-switch/) and [pos-case](https://pod-os.org/reference/elements/components/pos-case/): Added attributes `(some|every)-value-(eq|gt|gte|lt|lte)` to test if some/every value linked by `if-property` or `if-rev` is equal to/greater than/less than the attribute.
+- [pos-switch](https://pod-os.org/reference/elements/components/pos-switch/) and [pos-case](https://pod-os.org/reference/elements/components/pos-case/):
+  - Added attributes `(some|every)-value-(eq|gt|gte|lt|lte)` to test if some/every value linked by `if-property` or `if-rev` is equal to/greater than/less than the attribute.
 
 ## 0.42.0
 

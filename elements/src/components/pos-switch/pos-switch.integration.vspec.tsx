@@ -41,10 +41,10 @@ describe('pos-switch', () => {
     const switchElement = page.root.querySelector('pos-switch');
     expect(switchElement).toEqualLightHtml(`
         <pos-switch class="hydrated">
-          <pos-case if-typeof="http://schema.org/Person" innerhtml="They are a person" class="hydrated" active>
+          <pos-case if-typeof="http://schema.org/Person" innerhtml="They are a person" class="hydrated" active style="display: contents;">
             They are a person
           </pos-case>
-          <pos-case if-property="http://schema.org/name" innerhtml="and they have a name!" class="hydrated" active>
+          <pos-case if-property="http://schema.org/name" innerhtml="and they have a name!" class="hydrated" active style="display: contents;">
             and they have a name!
           </pos-case>
           <pos-case innerhtml class="hydrated"></pos-case>
