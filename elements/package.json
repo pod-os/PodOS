@@ -1,6 +1,6 @@
 {
   "name": "@pod-os/elements",
-  "version": "0.43.0-next.0",
+  "version": "0.44.0-next.0",
   "description": "Custom elements for usage with Solid Pods",
   "main": "dist/index.cjs.js",
   "type": "module",
@@ -28,7 +28,7 @@
     "generate": "stencil generate"
   },
   "dependencies": {
-    "@pod-os/core": "0.32.0-next.0",
+    "@pod-os/core": "0.33.0-next.0",
     "@shoelace-style/shoelace": "^2.20.1",
     "@stencil/core": "^4.43.2",
     "@stencil/store": "^2.2.2",
