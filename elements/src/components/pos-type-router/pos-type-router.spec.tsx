@@ -136,6 +136,29 @@ describe('pos-type-router', () => {
 `);
   });
 
+  it('renders HTML tool if available', async () => {
+    const page = await newSpecPage({
+      components: [PosTypeRouter],
+      html: `<pos-type-router />`,
+      supportsShadowDom: false,
+    });
+    await page.rootInstance.receiveResource({
+      types: () => [{ uri: 'https://schema.org/Recipe', label: 'Recipe' }],
+    });
+    await page.waitForChanges();
+
+    expect(page.root).toEqualHtml(`
+    <pos-type-router>
+      <section>
+        <pos-tool-select></pos-tool-select>
+        <div class="tools">
+          <pos-html-tool class="tool visible" fragment="<pos-label/>"></pos-html-tool>
+        </div>
+      </section>
+    </pos-type-router>
+`);
+  });
+
   it('renders the selected tool and updates query param', async () => {
     const page = await newSpecPage({
       components: [PosTypeRouter],
