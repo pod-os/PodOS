@@ -10,6 +10,7 @@ export default defineVitestConfig({
         test: {
           name: 'unit',
           include: ['src/**/*.vspec.ts'],
+          exclude: ['src/**/*.dom.vspec.ts'],
           environment: 'node',
         },
       },
@@ -31,7 +32,7 @@ export default defineVitestConfig({
         test: {
           setupFiles: ['vitest/setup-spec.ts'],
           name: 'unit-dom',
-          include: ['src/**/*.vspec.tsx'],
+          include: ['src/**/*.vspec.tsx', 'src/**/*.dom.vspec.ts'],
           exclude: ['src/**/*.integration.vspec.tsx'],
           environment: 'happy-dom',
         },
