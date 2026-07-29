@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { RdfType } from '@pod-os/core';
 import { selectToolsForTypes } from './selectToolsForTypes';
 import { AvailableTools } from './availableTools';
