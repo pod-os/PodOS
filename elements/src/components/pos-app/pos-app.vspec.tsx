@@ -1,53 +1,49 @@
-jest.mock('../../authentication', () => ({
-  BrowserSession: jest.fn(),
+import { Mock, vi } from 'vitest';
+import { beforeEach, describe, expect, it, afterEach, render, h, RenderResult } from '@stencil/vitest';
+vi.mock('../../authentication', () => ({
+  BrowserSession: vi.fn(
+    class {
+      onSessionRestore = () => {};
+      handleIncomingRedirect = () => {};
+    },
+  ),
 }));
 
-jest.mock('../../pod-os', () => ({
-  createPodOS: jest.fn(),
+vi.mock('../../pod-os', () => ({
+  createPodOS: vi.fn(),
 }));
 
 import { localSettings } from '../../store/settings';
 
-import { newSpecPage } from '@stencil/core/testing';
 import { fireEvent } from '@testing-library/dom';
 import { BehaviorSubject, EMPTY } from 'rxjs';
 import { createPodOS } from '../../pod-os';
-import { PosApp } from './pos-app';
+import './pos-app';
 import { BrowserSession } from '../../authentication';
+import { SessionInfo } from '@pod-os/core';
 
 describe('pos-app', () => {
   describe('load preferences', () => {
-    const mockFetchProfile = jest.fn();
-    let sessionInfo$;
-    let page;
+    const mockFetchProfile = vi.fn();
+    let sessionInfo$: BehaviorSubject<SessionInfo>;
+    let page: RenderResult;
 
     beforeEach(() => {
-      sessionInfo$ = new BehaviorSubject({ isLoggedIn: false, webId: '' });
-      jest.resetAllMocks();
+      sessionInfo$ = new BehaviorSubject<SessionInfo>({ isLoggedIn: false, webId: '' });
+      vi.resetAllMocks();
 
-      (BrowserSession as jest.Mock).mockImplementation(() => {
-        return {
-          onSessionRestore: () => {},
-          handleIncomingRedirect: () => {},
-        };
-      });
-
-      (createPodOS as jest.Mock).mockReturnValue({
+      (createPodOS as Mock).mockReturnValue({
         observeSession: () => sessionInfo$,
         fetchProfile: mockFetchProfile,
       });
     });
 
     afterEach(() => {
-      page.rootInstance.disconnectedCallback();
+      page.instance.disconnectedCallback();
     });
 
     it('does not load the preferences before login', async () => {
-      page = await newSpecPage({
-        components: [PosApp],
-        html: `<pos-app>item body</pos-app>`,
-        supportsShadowDom: false,
-      });
+      page = await render(<pos-app>item body</pos-app>);
 
       sessionInfo$.next({
         isLoggedIn: false,
@@ -58,11 +54,7 @@ describe('pos-app', () => {
     });
 
     it('loads the preferences after login', async () => {
-      page = await newSpecPage({
-        components: [PosApp],
-        html: `<pos-app>item body</pos-app>`,
-        supportsShadowDom: false,
-      });
+      page = await render(<pos-app>item body</pos-app>);
 
       sessionInfo$.next({
         isLoggedIn: true,
@@ -74,17 +66,12 @@ describe('pos-app', () => {
   });
 
   describe('load module', () => {
-    const mockLoadContactsModule = jest.fn();
+    const mockLoadContactsModule = vi.fn();
 
     beforeEach(() => {
-      jest.resetAllMocks();
-      (BrowserSession as jest.Mock).mockImplementation(() => {
-        return {
-          onSessionRestore: () => {},
-          handleIncomingRedirect: () => {},
-        };
-      });
-      (createPodOS as jest.Mock).mockReturnValue({
+      vi.resetAllMocks();
+
+      (createPodOS as Mock).mockReturnValue({
         observeSession: () => EMPTY,
         loadContactsModule: mockLoadContactsModule,
       });
@@ -92,14 +79,11 @@ describe('pos-app', () => {
 
     it('loads the contacts module', async () => {
       // given
-      const loadModule = jest.fn().mockResolvedValue('fake contacts module');
-      const receiver = jest.fn();
-      const page = await newSpecPage({
-        components: [PosApp],
-        html: `<pos-app>item body</pos-app>`,
-        supportsShadowDom: false,
-      });
-      page.rootInstance.os = {
+      const loadModule = vi.fn().mockResolvedValue('fake contacts module');
+      const receiver = vi.fn();
+      const page = await render(<pos-app>item body</pos-app>);
+
+      page.instance.os = {
         loadModule,
       };
 
@@ -110,43 +94,40 @@ describe('pos-app', () => {
       // then
       expect(loadModule).toHaveBeenCalled();
       expect(receiver).toHaveBeenCalledWith('fake contacts module');
-      page.rootInstance.disconnectedCallback();
+      page.instance.disconnectedCallback();
     });
   });
 
   describe('handle incoming redirect', () => {
-    const mockHandleIncomingRedirect = jest.fn();
-    let sessionRestoredCallback;
-    let sessionInfo$;
-    let page;
+    const mockHandleIncomingRedirect = vi.fn();
+    let sessionRestoredCallback: (url: string) => any;
+    let sessionInfo$: BehaviorSubject<SessionInfo>;
+    let page: RenderResult;
 
     beforeEach(() => {
-      sessionInfo$ = new BehaviorSubject({ isLoggedIn: false, webId: '' });
-      jest.resetAllMocks();
+      sessionInfo$ = new BehaviorSubject<SessionInfo>({ isLoggedIn: false, webId: '' });
+      vi.resetAllMocks();
 
-      (BrowserSession as jest.Mock).mockImplementation(() => {
-        return {
-          onSessionRestore: callback => (sessionRestoredCallback = callback),
-          handleIncomingRedirect: mockHandleIncomingRedirect,
-        };
-      });
+      (BrowserSession as Mock).mockImplementation(
+        // @ts-ignore
+        class {
+          onSessionRestore = (callback: () => any) => (sessionRestoredCallback = callback);
+          handleIncomingRedirect = mockHandleIncomingRedirect;
+        },
+      );
 
-      (createPodOS as jest.Mock).mockReturnValue({
+      (createPodOS as Mock).mockReturnValue({
         observeSession: () => sessionInfo$,
         fetchProfile: () => null,
       });
     });
 
     afterEach(() => {
-      page.rootInstance.disconnectedCallback();
+      page.instance.disconnectedCallback();
     });
 
     it('does not restore previous session by default', async () => {
-      page = await newSpecPage({
-        components: [PosApp],
-        html: `<pos-app>item body</pos-app>`,
-        supportsShadowDom: false,
-      });
+      page = await render(<pos-app>item body</pos-app>);
 
       sessionInfo$.next({
         isLoggedIn: false,
@@ -157,11 +138,7 @@ describe('pos-app', () => {
     });
 
     it('restores previous session if prop tells so', async () => {
-      page = await newSpecPage({
-        components: [PosApp],
-        html: `<pos-app restore-previous-session>item body</pos-app>`,
-        supportsShadowDom: false,
-      });
+      page = await render(<pos-app restore-previous-session>item body</pos-app>);
 
       sessionInfo$.next({
         isLoggedIn: false,
@@ -172,11 +149,7 @@ describe('pos-app', () => {
     });
 
     it('does not restore previous session if prop states explicitly not to', async () => {
-      page = await newSpecPage({
-        components: [PosApp],
-        html: `<pos-app restore-previous-session='false'>item body</pos-app>`,
-        supportsShadowDom: false,
-      });
+      page = await render(<pos-app restore-previous-session={false}>item body</pos-app>);
 
       sessionInfo$.next({
         isLoggedIn: false,
@@ -187,12 +160,8 @@ describe('pos-app', () => {
     });
 
     it('fires session-restored event', async () => {
-      const onSessionRestored = jest.fn();
-      page = await newSpecPage({
-        components: [PosApp],
-        html: `<pos-app>item body</pos-app>`,
-        supportsShadowDom: false,
-      });
+      const onSessionRestored = vi.fn();
+      page = await render(<pos-app>item body</pos-app>);
 
       page.root.addEventListener('pod-os:session-restored', onSessionRestored);
 
@@ -210,15 +179,12 @@ describe('pos-app', () => {
     });
 
     it('recovers from incoming redirect failure', async () => {
-      mockHandleIncomingRedirect.mockRejectedValue(new Error('Simulated failure handling incoming redirect'));
-      page = await newSpecPage({
-        components: [PosApp],
-        html: `<pos-app>app body</pos-app>`,
-        supportsShadowDom: true,
-      });
-      expect(page.rootInstance.loading).toBe(false);
+      mockHandleIncomingRedirect.mockRejectedValue('Simulated failure handling incoming redirect');
+      page = await render(<pos-app>app body</pos-app>);
+
+      expect(page.instance.loading).toBe(false);
       expect(page.root).toEqualHtml(`
-        <pos-app>
+        <pos-app class="hydrated">
           <mock:shadow-root>
             <slot></slot>
           </mock:shadow-root>
@@ -229,29 +195,27 @@ describe('pos-app', () => {
   });
 
   describe('local settings', () => {
-    let sessionInfo$;
+    let sessionInfo$: BehaviorSubject<SessionInfo>;
     beforeEach(() => {
       localSettings.dispose();
-      sessionInfo$ = new BehaviorSubject({ isLoggedIn: false, webId: '' });
-      jest.resetAllMocks();
+      sessionInfo$ = new BehaviorSubject<SessionInfo>({ isLoggedIn: false, webId: '' });
+      vi.resetAllMocks();
 
-      (BrowserSession as jest.Mock).mockImplementation(() => {
-        return {
-          onSessionRestore: () => {},
-          handleIncomingRedirect: jest.fn(),
-        };
-      });
+      (BrowserSession as Mock).mockImplementation(
+        // @ts-ignore
+        class {
+          onSessionRestore = () => {};
+          handleIncomingRedirect = vi.fn();
+        },
+      );
 
-      (createPodOS as jest.Mock).mockReturnValue({
+      (createPodOS as Mock).mockReturnValue({
         observeSession: () => sessionInfo$,
       });
     });
 
     it('creates PodOS instance with default settings', async () => {
-      const page = await newSpecPage({
-        components: [PosApp],
-        html: `<pos-app>item body</pos-app>`,
-      });
+      const page = await render(<pos-app>item body</pos-app>);
 
       expect(createPodOS).toHaveBeenCalledWith(
         expect.anything(),
@@ -260,15 +224,12 @@ describe('pos-app', () => {
         }),
       );
 
-      page.rootInstance.disconnectedCallback();
+      page.instance.disconnectedCallback();
     });
 
     it('creates PodOS instance with stored settings', async () => {
       localSettings.state.offlineCache = true;
-      const page = await newSpecPage({
-        components: [PosApp],
-        html: `<pos-app>item body</pos-app>`,
-      });
+      const page = await render(<pos-app>item body</pos-app>);
 
       expect(createPodOS).toHaveBeenCalledWith(
         expect.anything(),
@@ -276,14 +237,11 @@ describe('pos-app', () => {
           offlineCache: true,
         }),
       );
-      page.rootInstance.disconnectedCallback();
+      page.instance.disconnectedCallback();
     });
 
     it('recreates PodOS instance with updated settings', async () => {
-      const page = await newSpecPage({
-        components: [PosApp],
-        html: `<pos-app>item body</pos-app>`,
-      });
+      const page = await render(<pos-app>item body</pos-app>);
 
       expect(createPodOS).toHaveBeenCalledWith(
         expect.anything(),
@@ -301,35 +259,37 @@ describe('pos-app', () => {
         }),
       );
 
-      page.rootInstance.disconnectedCallback();
+      page.instance.disconnectedCallback();
     });
   });
 
   describe('loading state', () => {
     beforeEach(() => {
-      jest.resetAllMocks();
+      vi.resetAllMocks();
     });
 
     it('indicates loading when signed in, until profile has been fetched', async () => {
-      let finishFetchingProfile = null;
-      (BrowserSession as jest.Mock).mockImplementation(() => {
-        return {
-          onSessionRestore: () => null,
-          handleIncomingRedirect: jest.fn(),
-        };
-      });
-      (createPodOS as jest.Mock).mockReturnValue({
+      let finishFetchingProfile: (value?: unknown) => void = () => null;
+      (BrowserSession as Mock).mockImplementation(
+        // @ts-ignore
+        class {
+          onSessionRestore = () => null;
+          handleIncomingRedirect = vi.fn();
+        },
+      );
+      (createPodOS as Mock).mockReturnValue({
         observeSession: () => new BehaviorSubject({ isLoggedIn: true, webId: 'https://pod.test/alice#me' }),
         fetchProfile: () => new Promise(resolve => (finishFetchingProfile = resolve)),
       });
-      const page = await newSpecPage({
-        components: [PosApp],
-        html: `<pos-app><div>app body</div></pos-app>`,
-        supportsShadowDom: true,
-      });
-      expect(page.rootInstance.loading).toBe(true);
-      expect(page.root).toEqualHtml(`
+      const page = await render(
         <pos-app>
+          <div>app body</div>
+        </pos-app>,
+      );
+
+      expect(page.instance.loading).toBe(true);
+      expect(page.root).toEqualHtml(`
+        <pos-app class="hydrated">
           <mock:shadow-root>
             <sl-progress-bar indeterminate></sl-progress-bar>
           </mock:shadow-root>
@@ -340,29 +300,26 @@ describe('pos-app', () => {
       `);
       finishFetchingProfile();
       await page.waitForChanges();
-      expect(page.rootInstance.loading).toBe(false);
+      expect(page.instance.loading).toBe(false);
     });
 
     it('shows slot directly, when not signed in', async () => {
-      let finishFetchingProfile = null;
-      (BrowserSession as jest.Mock).mockImplementation(() => {
-        return {
-          onSessionRestore: () => null,
-          handleIncomingRedirect: jest.fn(),
-        };
-      });
-      (createPodOS as jest.Mock).mockReturnValue({
+      (BrowserSession as Mock).mockImplementation(
+        // @ts-ignore
+        class {
+          onSessionRestore = () => null;
+          handleIncomingRedirect = vi.fn();
+        },
+      );
+      (createPodOS as Mock).mockReturnValue({
         observeSession: () => new BehaviorSubject({ isLoggedIn: false, webId: '' }),
         fetchProfile: null,
       });
-      const page = await newSpecPage({
-        components: [PosApp],
-        html: `<pos-app>app body</pos-app>`,
-        supportsShadowDom: true,
-      });
-      expect(page.rootInstance.loading).toBe(false);
+      const page = await render(<pos-app>app body</pos-app>);
+
+      expect(page.instance.loading).toBe(false);
       expect(page.root).toEqualHtml(`
-        <pos-app>
+        <pos-app class="hydrated">
           <mock:shadow-root>
             <slot></slot>
           </mock:shadow-root>
@@ -374,28 +331,23 @@ describe('pos-app', () => {
 
   describe('loaded event', () => {
     it('fires loaded event after the component has fully loaded', async () => {
-      (BrowserSession as jest.Mock).mockImplementation(() => {
-        return {
-          authenticatedFetch: 'fake authenticated fetch',
-          onSessionRestore: () => null,
-          handleIncomingRedirect: jest.fn(),
-        };
-      });
+      (BrowserSession as Mock).mockImplementation(
+        // @ts-ignore
+        class {
+          authenticatedFetch = 'fake authenticated fetch';
+          onSessionRestore = () => null;
+          handleIncomingRedirect = vi.fn();
+        },
+      );
       const os = {
         observeSession: () => new BehaviorSubject({ isLoggedIn: true, webId: 'https://pod.test/alice#me' }),
         fetchProfile: () => {},
       };
-      (createPodOS as jest.Mock).mockReturnValue(os);
+      (createPodOS as Mock).mockReturnValue(os);
 
-      const page = await newSpecPage({
-        components: [PosApp],
-        supportsShadowDom: true,
-      });
-
-      const onLoaded = jest.fn();
-      page.body.addEventListener('pod-os:loaded', onLoaded);
-
-      await page.setContent(`<pos-app><div>app body</div></pos-app>`);
+      const onLoaded = vi.fn();
+      document.addEventListener('pod-os:loaded', onLoaded);
+      const page = await render(<pos-app>app body</pos-app>);
 
       await page.waitForChanges();
 
