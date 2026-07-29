@@ -1,53 +1,44 @@
-// noinspection ES6UnusedImports
-import { h } from '@stencil/core';
+import { vi } from 'vitest';
+import { beforeEach, describe, expect, it, render, h } from '@stencil/vitest';
 
-const setOptions = jest.fn();
-const addUploader = jest.fn();
-const getFilesByIds = jest.fn();
-const emit = jest.fn();
+const setOptions = vi.fn();
+const addUploader = vi.fn();
+const getFilesByIds = vi.fn();
+const emit = vi.fn();
 
-class MockUppy {
-  use = jest.fn().mockImplementation(() => this);
-  setOptions = setOptions;
-  addUploader = addUploader;
-  getFilesByIds = getFilesByIds;
-  emit = emit;
-}
+vi.mock('@uppy/core', () => ({
+  default: class {
+    use = vi.fn().mockImplementation(() => this);
+    setOptions = setOptions;
+    addUploader = addUploader;
+    getFilesByIds = getFilesByIds;
+    emit = emit;
+  },
+}));
 
-jest.mock('@uppy/core', () => MockUppy);
-jest.mock('@uppy/dashboard', () => ({}));
-jest.mock('@uppy/image-editor', () => ({}));
-jest.mock('@uppy/webcam', () => ({}));
+vi.mock('@uppy/dashboard', () => ({ default: {} }));
+vi.mock('@uppy/image-editor', () => ({ default: {} }));
+vi.mock('@uppy/webcam', () => ({ default: {} }));
 
-import { newSpecPage } from '@stencil/core/testing';
-import { PosUpload } from './pos-upload';
-import { when } from 'jest-when';
+import './pos-upload';
+import { when } from 'vitest-when';
 import { err, ok } from 'neverthrow';
 import { HttpProblem } from '@pod-os/core';
 
 describe('pos-upload', () => {
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
   });
 
   it('renders a div as a host for uppy', async () => {
-    const page = await newSpecPage({
-      components: [PosUpload],
-      html: `<pos-upload />`,
-      supportsShadowDom: false,
-    });
-    expect(page.root).toEqualHtml(`
-      <pos-upload>
+    const page = await render(<pos-upload></pos-upload>);
+    expect(page.root.shadowRoot).toEqualHtml(`
         <div class="container"></div>
-      </pos-upload>
     `);
   });
 
   it('accepts image file types by default', async () => {
-    await newSpecPage({
-      components: [PosUpload],
-      template: () => <pos-upload />,
-    });
+    await render(<pos-upload></pos-upload>);
     expect(setOptions).toHaveBeenCalledWith({
       restrictions: {
         allowedFileTypes: ['image/*'],
@@ -56,10 +47,7 @@ describe('pos-upload', () => {
   });
 
   it('can accept other file types', async () => {
-    await newSpecPage({
-      components: [PosUpload],
-      template: () => <pos-upload accept={['application/pdf']} />,
-    });
+    await render(<pos-upload accept={['application/pdf']}></pos-upload>);
     expect(setOptions).toHaveBeenCalledWith({
       restrictions: {
         allowedFileTypes: ['application/pdf'],
@@ -69,15 +57,12 @@ describe('pos-upload', () => {
 
   it('uses the uploader function to successfully upload a single file', async () => {
     // given an upload component with an upload function that works fine
-    const uploadFn = jest.fn().mockReturnValue(ok({ url: 'https://pod.test/image.png' }));
-    await newSpecPage({
-      components: [PosUpload],
-      template: () => <pos-upload uploader={uploadFn} />,
-    });
+    const uploadFn = vi.fn().mockReturnValue(ok({ url: 'https://pod.test/image.png' }));
+    await render(<pos-upload uploader={uploadFn}></pos-upload>);
 
     // and a single file has been selected for upload
     const filesToUpload = [{ data: new File([''], 'image.png', { type: 'image/png' }) }];
-    when(getFilesByIds).calledWith(['image.png']).mockReturnValue(filesToUpload);
+    when(getFilesByIds).calledWith(['image.png']).thenReturn(filesToUpload);
 
     // when upload is triggered for the file
     expect(addUploader).toHaveBeenCalled();
@@ -96,15 +81,12 @@ describe('pos-upload', () => {
 
   it('uses the uploader function to successfully upload a blob as new file', async () => {
     // given an upload component with an upload function that works fine
-    const uploadFn = jest.fn().mockReturnValue(ok({ url: 'https://pod.test/image.png' }));
-    await newSpecPage({
-      components: [PosUpload],
-      template: () => <pos-upload uploader={uploadFn} />,
-    });
+    const uploadFn = vi.fn().mockReturnValue(ok({ url: 'https://pod.test/image.png' }));
+    await render(<pos-upload uploader={uploadFn}></pos-upload>);
 
     // and a single blob has been selected for upload
     const filesToUpload = [{ data: new Blob(['file to upload']), name: 'file.txt', type: 'text/plain' }];
-    when(getFilesByIds).calledWith(['file.txt']).mockReturnValue(filesToUpload);
+    when(getFilesByIds).calledWith(['file.txt']).thenReturn(filesToUpload);
 
     // when upload is triggered for the file
     expect(addUploader).toHaveBeenCalled();
@@ -121,25 +103,23 @@ describe('pos-upload', () => {
     expect(uploadFn).toHaveBeenCalled();
     const uploadedFile: File = uploadFn.mock.calls[0][0];
     expect(uploadedFile instanceof File).toBeTruthy();
-    expect(await uploadedFile.bytes()).toEqual(new Uint8Array(Buffer.from('file to upload', 'utf-8')));
+    // @ts-ignore
+    expect(Buffer.from(await uploadedFile.arrayBuffer()).toString()).toEqual('file to upload');
     expect(uploadedFile.name).toEqual('file.txt');
     expect(uploadedFile.type).toEqual('text/plain');
   });
 
   it('uses the uploader function to successfully upload multiple files', async () => {
     // given an upload component with an upload function that works fine
-    const uploadFn = jest.fn().mockReturnValue(ok({ url: 'https://pod.test/image.png' }));
-    await newSpecPage({
-      components: [PosUpload],
-      template: () => <pos-upload uploader={uploadFn} />,
-    });
+    const uploadFn = vi.fn().mockReturnValue(ok({ url: 'https://pod.test/image.png' }));
+    await render(<pos-upload uploader={uploadFn}></pos-upload>);
 
     // and multiple files have been selected for upload
     const filesToUpload = [
       { data: new File([''], 'image.png', { type: 'image/png' }) },
       { data: new File([''], 'file.pdf', { type: 'application/pdf' }) },
     ];
-    when(getFilesByIds).calledWith(['image.png', 'file.pdf']).mockReturnValue(filesToUpload);
+    when(getFilesByIds).calledWith(['image.png', 'file.pdf']).thenReturn(filesToUpload);
 
     // when upload is triggered for the files
     expect(addUploader).toHaveBeenCalled();
@@ -162,15 +142,12 @@ describe('pos-upload', () => {
       detail: 'Some details about the failure',
       status: 429,
     };
-    const uploadFn = jest.fn().mockReturnValue(err(problem));
-    await newSpecPage({
-      components: [PosUpload],
-      template: () => <pos-upload uploader={uploadFn} />,
-    });
+    const uploadFn = vi.fn().mockReturnValue(err(problem));
+    await render(<pos-upload uploader={uploadFn}></pos-upload>);
 
     // and a single file has been selected for upload
     const filesToUpload = [{ data: new File([''], 'image.png', { type: 'image/png' }) }];
-    when(getFilesByIds).calledWith(['image.png']).mockReturnValue(filesToUpload);
+    when(getFilesByIds).calledWith(['image.png']).thenReturn(filesToUpload);
 
     // when upload is triggered for the file
     expect(addUploader).toHaveBeenCalled();
@@ -193,13 +170,13 @@ describe('pos-upload', () => {
     const workingFile = new File(['working'], 'works.png', { type: 'image/png' });
     const failingFile = new File(['failing'], 'fails.pdf', { type: 'application/pdf' });
 
-    const uploadFn = jest.fn();
+    const uploadFn = vi.fn();
     when(uploadFn)
       .calledWith(workingFile)
-      .mockReturnValue(ok({ url: 'https://pod.test/works.png' }));
+      .thenReturn(ok({ url: 'https://pod.test/works.png' }));
     when(uploadFn)
       .calledWith(failingFile)
-      .mockReturnValue(
+      .thenReturn(
         err({
           type: 'http',
           title: 'Failed',
@@ -207,14 +184,11 @@ describe('pos-upload', () => {
           status: 429,
         }),
       );
-    await newSpecPage({
-      components: [PosUpload],
-      template: () => <pos-upload uploader={uploadFn} />,
-    });
+    await render(<pos-upload uploader={uploadFn}></pos-upload>);
 
     // and multiple files have been selected for upload
     const filesToUpload = [{ data: workingFile }, { data: failingFile }];
-    when(getFilesByIds).calledWith(['works.png', 'fails.pdf']).mockReturnValue(filesToUpload);
+    when(getFilesByIds).calledWith(['works.png', 'fails.pdf']).thenReturn(filesToUpload);
 
     // when upload is triggered for the files
     expect(addUploader).toHaveBeenCalled();
@@ -236,15 +210,12 @@ describe('pos-upload', () => {
 
   it('throws error if selected items are no File or Blob for some reason', async () => {
     // given an upload component with an upload function
-    const uploadFn = jest.fn();
-    await newSpecPage({
-      components: [PosUpload],
-      template: () => <pos-upload uploader={uploadFn} />,
-    });
+    const uploadFn = vi.fn();
+    await render(<pos-upload uploader={uploadFn}></pos-upload>);
 
     // and a single file has been selected for upload
     const fileToUpload = [{ data: { size: 123 } }];
-    when(getFilesByIds).calledWith(['image.png']).mockReturnValue(fileToUpload);
+    when(getFilesByIds).calledWith(['image.png']).thenReturn(fileToUpload);
 
     // when upload is triggered for the file
     expect(addUploader).toHaveBeenCalled();
