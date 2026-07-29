@@ -6,7 +6,7 @@
 
 # Interface: OnlineStatus
 
-Defined in: [offline-cache/OnlineStatus.ts:1](https://github.com/pod-os/PodOS/blob/main/core/src/offline-cache/OnlineStatus.ts#L1)
+Defined in: [src/offline-cache/OnlineStatus.ts:1](https://github.com/pod-os/PodOS/blob/main/core/src/offline-cache/OnlineStatus.ts#L1)
 
 ## Methods
 
@@ -14,7 +14,7 @@ Defined in: [offline-cache/OnlineStatus.ts:1](https://github.com/pod-os/PodOS/bl
 
 > **isOnline**(): `boolean`
 
-Defined in: [offline-cache/OnlineStatus.ts:2](https://github.com/pod-os/PodOS/blob/main/core/src/offline-cache/OnlineStatus.ts#L2)
+Defined in: [src/offline-cache/OnlineStatus.ts:2](https://github.com/pod-os/PodOS/blob/main/core/src/offline-cache/OnlineStatus.ts#L2)
 
 #### Returns
 

@@ -6,7 +6,7 @@
 
 # Class: WebIdProfile
 
-Defined in: [profile/WebIdProfile.ts:9](https://github.com/pod-os/PodOS/blob/main/core/src/profile/WebIdProfile.ts#L9)
+Defined in: [src/profile/WebIdProfile.ts:9](https://github.com/pod-os/PodOS/blob/main/core/src/profile/WebIdProfile.ts#L9)
 
 Allows finding things related to the WebID and their profile document
 
@@ -20,7 +20,7 @@ Allows finding things related to the WebID and their profile document
 
 > **new WebIdProfile**(`webId`, `store`, `editable?`): `WebIdProfile`
 
-Defined in: [profile/WebIdProfile.ts:13](https://github.com/pod-os/PodOS/blob/main/core/src/profile/WebIdProfile.ts#L13)
+Defined in: [src/profile/WebIdProfile.ts:13](https://github.com/pod-os/PodOS/blob/main/core/src/profile/WebIdProfile.ts#L13)
 
 #### Parameters
 
@@ -50,7 +50,7 @@ Defined in: [profile/WebIdProfile.ts:13](https://github.com/pod-os/PodOS/blob/ma
 
 > `readonly` **editable**: `boolean`
 
-Defined in: [thing/Thing.ts:82](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L82)
+Defined in: [src/thing/Thing.ts:82](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L82)
 
 Whether the Thing can be edited according to its access control settings
 
@@ -64,7 +64,7 @@ Whether the Thing can be edited according to its access control settings
 
 > `readonly` **store**: [`Store`](Store.md)
 
-Defined in: [thing/Thing.ts:78](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L78)
+Defined in: [src/thing/Thing.ts:78](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L78)
 
 #### Inherited from
 
@@ -76,7 +76,7 @@ Defined in: [thing/Thing.ts:78](https://github.com/pod-os/PodOS/blob/main/core/s
 
 > `readonly` **uri**: `string`
 
-Defined in: [thing/Thing.ts:77](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L77)
+Defined in: [src/thing/Thing.ts:77](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L77)
 
 #### Inherited from
 
@@ -88,7 +88,7 @@ Defined in: [thing/Thing.ts:77](https://github.com/pod-os/PodOS/blob/main/core/s
 
 > `readonly` **webId**: `string`
 
-Defined in: [profile/WebIdProfile.ts:11](https://github.com/pod-os/PodOS/blob/main/core/src/profile/WebIdProfile.ts#L11)
+Defined in: [src/profile/WebIdProfile.ts:11](https://github.com/pod-os/PodOS/blob/main/core/src/profile/WebIdProfile.ts#L11)
 
 ## Methods
 
@@ -96,7 +96,7 @@ Defined in: [profile/WebIdProfile.ts:11](https://github.com/pod-os/PodOS/blob/ma
 
 > **anyValue**(...`predicateUris`): `undefined`
 
-Defined in: [thing/Thing.ts:219](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L219)
+Defined in: [src/thing/Thing.ts:283](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L283)
 
 Returns any value linked from this thing via one of the given predicates
 
@@ -120,7 +120,7 @@ Returns any value linked from this thing via one of the given predicates
 
 > **assume**\<`T`\>(`SpecificThing`): `T`
 
-Defined in: [thing/Thing.ts:406](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L406)
+Defined in: [src/thing/Thing.ts:470](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L470)
 
 Call this method to switch to a more specific subclass of Thing.
 
@@ -152,7 +152,7 @@ a subclass of Thing to assume
 
 > **attachments**(): [`Attachment`](../interfaces/Attachment.md)[]
 
-Defined in: [thing/Thing.ts:387](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L387)
+Defined in: [src/thing/Thing.ts:451](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L451)
 
 Returns all attachments linked to this thing
 
@@ -170,7 +170,7 @@ Returns all attachments linked to this thing
 
 > **container**(): `object`
 
-Defined in: [thing/Thing.ts:416](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L416)
+Defined in: [src/thing/Thing.ts:480](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L480)
 
 Returns the container that contains this thing's document
 The container URI is derived from the thing's URI.
@@ -193,7 +193,7 @@ The container URI is derived from the thing's URI.
 
 > **description**(): `undefined`
 
-Defined in: [thing/Thing.ts:286](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L286)
+Defined in: [src/thing/Thing.ts:350](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L350)
 
 Returns a literal value that describes this thing. Tries to match common RDF terms
 used for descriptions, like `dct:description`, `schema:description` or `rdfs:comment`
@@ -212,7 +212,7 @@ used for descriptions, like `dct:description`, `schema:description` or `rdfs:com
 
 > **getPreferencesFile**(): `string` \| `undefined`
 
-Defined in: [profile/WebIdProfile.ts:22](https://github.com/pod-os/PodOS/blob/main/core/src/profile/WebIdProfile.ts#L22)
+Defined in: [src/profile/WebIdProfile.ts:22](https://github.com/pod-os/PodOS/blob/main/core/src/profile/WebIdProfile.ts#L22)
 
 Returns the URI of the preferences document
 
@@ -226,7 +226,7 @@ Returns the URI of the preferences document
 
 > **getPrivateLabelIndexes**(): `string`[]
 
-Defined in: [profile/WebIdProfile.ts:48](https://github.com/pod-os/PodOS/blob/main/core/src/profile/WebIdProfile.ts#L48)
+Defined in: [src/profile/WebIdProfile.ts:48](https://github.com/pod-os/PodOS/blob/main/core/src/profile/WebIdProfile.ts#L48)
 
 Returns the URIs of the private label indexes
 
@@ -240,7 +240,7 @@ Returns the URIs of the private label indexes
 
 > **getPrivateTypeIndex**(): `string` \| `undefined`
 
-Defined in: [profile/WebIdProfile.ts:38](https://github.com/pod-os/PodOS/blob/main/core/src/profile/WebIdProfile.ts#L38)
+Defined in: [src/profile/WebIdProfile.ts:38](https://github.com/pod-os/PodOS/blob/main/core/src/profile/WebIdProfile.ts#L38)
 
 Returns the URI of the private type index document
 
@@ -258,7 +258,7 @@ Returns the URI of the private type index document
 
 > **getPublicTypeIndex**(): `string` \| `undefined`
 
-Defined in: [profile/WebIdProfile.ts:30](https://github.com/pod-os/PodOS/blob/main/core/src/profile/WebIdProfile.ts#L30)
+Defined in: [src/profile/WebIdProfile.ts:30](https://github.com/pod-os/PodOS/blob/main/core/src/profile/WebIdProfile.ts#L30)
 
 Returns the URI of the public type index document
 
@@ -276,7 +276,7 @@ Returns the URI of the public type index document
 
 > **label**(): `string`
 
-Defined in: [thing/Thing.ts:96](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L96)
+Defined in: [src/thing/Thing.ts:96](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L96)
 
 Returns a human-readable label for this thing. Tries to match common RDF terms
 used for labels, such as `rdfs:label`, `schema:name` and others.
@@ -297,7 +297,7 @@ If no such term is present, it will derive a label from the URI.
 
 > **literals**(): [`Literal`](../interfaces/Literal.md)[]
 
-Defined in: [thing/Thing.ts:116](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L116)
+Defined in: [src/thing/Thing.ts:116](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L116)
 
 Returns all the literal values that are linked to this thing
 
@@ -315,7 +315,7 @@ Returns all the literal values that are linked to this thing
 
 > **observeAnyValue**(...`predicateUris`): `Observable`\<`string` \| `undefined`\>
 
-Defined in: [thing/Thing.ts:235](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L235)
+Defined in: [src/thing/Thing.ts:299](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L299)
 
 Observe changes in a value linked from this thing via one of the given predicates
 
@@ -341,7 +341,7 @@ Note that return value may differ from that from `anyValue` when more than one v
 
 > **observeDescription**(): `Observable`\<`string` \| `undefined`\>
 
-Defined in: [thing/Thing.ts:293](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L293)
+Defined in: [src/thing/Thing.ts:357](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L357)
 
 Observe changes in literal values that describe this thing. See `description`
 
@@ -359,7 +359,7 @@ Observe changes in literal values that describe this thing. See `description`
 
 > **observeLabel**(): `Observable`\<`string`\>
 
-Defined in: [thing/Thing.ts:107](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L107)
+Defined in: [src/thing/Thing.ts:107](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L107)
 
 Observe changes in human-readable label for this thing. See `label`.
 
@@ -373,11 +373,29 @@ Observe changes in human-readable label for this thing. See `label`.
 
 ***
 
+### observeLiterals()
+
+> **observeLiterals**(): `Observable`\<[`Literal`](../interfaces/Literal.md)[]\>
+
+Defined in: [src/thing/Thing.ts:133](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L133)
+
+Observe changes in literal values linked to this thing
+
+#### Returns
+
+`Observable`\<[`Literal`](../interfaces/Literal.md)[]\>
+
+#### Inherited from
+
+[`Thing`](Thing.md).[`observeLiterals`](Thing.md#observeliterals)
+
+***
+
 ### observeRelations()
 
 > **observeRelations**(`predicate?`): `Observable`\<[`Relation`](../interfaces/Relation.md)[]\>
 
-Defined in: [thing/Thing.ts:153](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L153)
+Defined in: [src/thing/Thing.ts:170](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L170)
 
 Observe changes in links from this thing to other resources
 
@@ -401,7 +419,7 @@ Observe changes in links from this thing to other resources
 
 > **observeReverseRelations**(`predicate?`): `Observable`\<[`Relation`](../interfaces/Relation.md)[]\>
 
-Defined in: [thing/Thing.ts:195](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L195)
+Defined in: [src/thing/Thing.ts:266](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L266)
 
 Observe changes in links from other resources to this thing
 
@@ -425,7 +443,7 @@ Observe changes in links from other resources to this thing
 
 > **observeTypes**(): `Observable`\<[`RdfType`](../interfaces/RdfType.md)[]\>
 
-Defined in: [thing/Thing.ts:368](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L368)
+Defined in: [src/thing/Thing.ts:432](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L432)
 
 Observe changes to the list of RDF types for this thing
 
@@ -443,7 +461,7 @@ Observe changes to the list of RDF types for this thing
 
 > **picture**(): \{ `url`: `string`; \} \| `null`
 
-Defined in: [thing/Thing.ts:304](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L304)
+Defined in: [src/thing/Thing.ts:368](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L368)
 
 Returns the url of a picture or logo associated with this thing
 Tries to match common RDF terms used for pictures like `schema:image`,
@@ -461,11 +479,27 @@ An object containing the `url` of the picture
 
 ***
 
+### rdfDocument()
+
+> **rdfDocument**(): `string` \| `undefined`
+
+Defined in: [src/thing/Thing.ts:489](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L489)
+
+#### Returns
+
+`string` \| `undefined`
+
+#### Inherited from
+
+[`Thing`](Thing.md).[`rdfDocument`](Thing.md#rdfdocument)
+
+***
+
 ### relations()
 
 > **relations**(`predicate?`): [`Relation`](../interfaces/Relation.md)[]
 
-Defined in: [thing/Thing.ts:133](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L133)
+Defined in: [src/thing/Thing.ts:150](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L150)
 
 Returns all the unique links from this thing to other resources. This only includes named nodes and excludes rdf:type relations.
 
@@ -489,7 +523,7 @@ Returns all the unique links from this thing to other resources. This only inclu
 
 > **reverseRelations**(`predicate?`): [`Relation`](../interfaces/Relation.md)[]
 
-Defined in: [thing/Thing.ts:176](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L176)
+Defined in: [src/thing/Thing.ts:247](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L247)
 
 Returns all the unique links from other resources to this thing
 
@@ -513,7 +547,7 @@ Returns all the unique links from other resources to this thing
 
 > **types**(): [`RdfType`](../interfaces/RdfType.md)[]
 
-Defined in: [thing/Thing.ts:357](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L357)
+Defined in: [src/thing/Thing.ts:421](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L421)
 
 Retrieves a list of RDF types for this thing.
 

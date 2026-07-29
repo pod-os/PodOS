@@ -6,7 +6,7 @@
 
 # Class: Store
 
-Defined in: [Store.ts:51](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L51)
+Defined in: [src/Store.ts:54](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L54)
 
 The Store contains all data that is known locally.
 It can be used to fetch additional data from the web and also update data and sync it back to editable resources.
@@ -17,7 +17,7 @@ It can be used to fetch additional data from the web and also update data and sy
 
 > **new Store**(`session`, `offlineCache?`, `onlineStatus?`, `internalStore?`): `Store`
 
-Defined in: [Store.ts:59](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L59)
+Defined in: [src/Store.ts:62](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L62)
 
 #### Parameters
 
@@ -45,17 +45,25 @@ Defined in: [Store.ts:59](https://github.com/pod-os/PodOS/blob/main/core/src/Sto
 
 ### additions$
 
-> **additions$**: `Subject`\<`Quad`\<`Quad_Subject`, `Quad_Predicate`, `Quad_Object`, `Quad_Graph`\>\>
+> **additions$**: `Subject`\<[`Quad`](../interfaces/Quad.md)\<`Quad_Subject`, `Quad_Predicate`, `Quad_Object`, `Quad_Graph`\>\>
 
-Defined in: [Store.ts:54](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L54)
+Defined in: [src/Store.ts:57](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L57)
+
+***
+
+### DESCRIBEDBY
+
+> `readonly` **DESCRIBEDBY**: `NamedNode`
+
+Defined in: [src/Store.ts:83](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L83)
 
 ***
 
 ### removals$
 
-> **removals$**: `Subject`\<`Quad`\<`Quad_Subject`, `Quad_Predicate`, `Quad_Object`, `Quad_Graph`\>\>
+> **removals$**: `Subject`\<[`Quad`](../interfaces/Quad.md)\<`Quad_Subject`, `Quad_Predicate`, `Quad_Object`, `Quad_Graph`\>\>
 
-Defined in: [Store.ts:55](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L55)
+Defined in: [src/Store.ts:58](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L58)
 
 ## Methods
 
@@ -63,7 +71,7 @@ Defined in: [Store.ts:55](https://github.com/pod-os/PodOS/blob/main/core/src/Sto
 
 > **addNewThing**(`uri`, `name`, `type`): `Promise`\<`void`\>
 
-Defined in: [Store.ts:159](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L159)
+Defined in: [src/Store.ts:193](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L193)
 
 #### Parameters
 
@@ -89,7 +97,7 @@ Defined in: [Store.ts:159](https://github.com/pod-os/PodOS/blob/main/core/src/St
 
 > **addPropertyValue**(`thing`, `property`, `value`): `Promise`\<`void`\>
 
-Defined in: [Store.ts:121](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L121)
+Defined in: [src/Store.ts:153](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L153)
 
 Adds a new value to the property of the given thing
 
@@ -117,7 +125,7 @@ Adds a new value to the property of the given thing
 
 > **addRelation**(`thing`, `property`, `uri`): `Promise`\<`void`\>
 
-Defined in: [Store.ts:145](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L145)
+Defined in: [src/Store.ts:174](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L174)
 
 Adds a new relation (link) from the thing to the given uri using the property
 
@@ -145,7 +153,7 @@ Adds a new relation (link) from the thing to the given uri using the property
 
 > **any**(`subject?`, `predicate?`, `object?`, `graph?`): `Term` \| `null`
 
-Defined in: [Store.ts:325](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L325)
+Defined in: [src/Store.ts:359](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L359)
 
 Any one RDF/JS term matching the first wildcard in the provided quad pattern
 
@@ -179,7 +187,7 @@ RDF/JS term
 
 > **anyValue**(`subject?`, `predicate?`, `object?`, `graph?`): `string` \| `undefined`
 
-Defined in: [Store.ts:361](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L361)
+Defined in: [src/Store.ts:395](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L395)
 
 Value of any one RDF/JS term matching the first wildcard in the provided quad pattern
 
@@ -213,7 +221,7 @@ value of RDF/JS term
 
 > **each**(`subject?`, `predicate?`, `object?`, `graph?`): `Term`[]
 
-Defined in: [Store.ts:292](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L292)
+Defined in: [src/Store.ts:326](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L326)
 
 RDF/JS terms matching the first wildcard in the provided quad pattern
 
@@ -247,7 +255,7 @@ Array of terms
 
 > **executeUpdate**(`operation`): `Promise`\<`void`\>
 
-Defined in: [Store.ts:186](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L186)
+Defined in: [src/Store.ts:220](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L220)
 
 #### Parameters
 
@@ -263,11 +271,13 @@ Defined in: [Store.ts:186](https://github.com/pod-os/PodOS/blob/main/core/src/St
 
 ### fetch()
 
-> **fetch**(`uri`): `Promise`\<`Response`\>
+> **fetch**(`uri`): `Promise`\<`void`\>
 
-Defined in: [Store.ts:84](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L84)
+Defined in: [src/Store.ts:91](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L91)
 
-Fetch data for the given URI to the internalStore
+Fetch data for the given URI to the internalStore.
+If the response includes a Link header with rel="describedby",
+the metadata document will also be fetched automatically.
 
 #### Parameters
 
@@ -277,15 +287,15 @@ Fetch data for the given URI to the internalStore
 
 #### Returns
 
-`Promise`\<`Response`\>
+`Promise`\<`void`\>
 
 ***
 
 ### fetchAll()
 
-> **fetchAll**(`uris`): `Promise`\<`PromiseSettledResult`\<`Response`\>[]\>
+> **fetchAll**(`uris`): `Promise`\<`PromiseSettledResult`\<`void`\>[]\>
 
-Defined in: [Store.ts:101](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L101)
+Defined in: [src/Store.ts:133](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L133)
 
 Fetch all the given URIs in parallel and put the data to the internalStore
 
@@ -297,7 +307,7 @@ Fetch all the given URIs in parallel and put the data to the internalStore
 
 #### Returns
 
-`Promise`\<`PromiseSettledResult`\<`Response`\>[]\>
+`Promise`\<`PromiseSettledResult`\<`void`\>[]\>
 
 ***
 
@@ -305,7 +315,7 @@ Fetch all the given URIs in parallel and put the data to the internalStore
 
 > **findMembers**(`classUri`): `string`[]
 
-Defined in: [Store.ts:207](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L207)
+Defined in: [src/Store.ts:241](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L241)
 
 Finds instances of the given class or its sub-classes
 
@@ -327,7 +337,7 @@ An array of URIs
 
 > **findTypes**(`uri`): `string`[]
 
-Defined in: [Store.ts:237](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L237)
+Defined in: [src/Store.ts:271](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L271)
 
 Finds types of the given resource
 
@@ -351,7 +361,7 @@ An array of URIs of types
 
 > **flagAuthorizationMetadata**(): `void`
 
-Defined in: [Store.ts:190](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L190)
+Defined in: [src/Store.ts:224](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L224)
 
 #### Returns
 
@@ -363,7 +373,7 @@ Defined in: [Store.ts:190](https://github.com/pod-os/PodOS/blob/main/core/src/St
 
 > **get**(`uri`): [`Thing`](Thing.md)
 
-Defined in: [Store.ts:110](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L110)
+Defined in: [src/Store.ts:142](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L142)
 
 Retrieve the thing identified by the given URI from the internalStore
 
@@ -383,7 +393,7 @@ Retrieve the thing identified by the given URI from the internalStore
 
 > **holds**(`subject?`, `predicate?`, `object?`, `graph?`): `boolean`
 
-Defined in: [Store.ts:251](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L251)
+Defined in: [src/Store.ts:285](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L285)
 
 Determines whether the store includes a certain quad pattern, returning true or false as appropriate.
 
@@ -417,7 +427,7 @@ Whether the store includes the quad pattern
 
 > **loadModule**\<`T`\>(`module`): `T`
 
-Defined in: [Store.ts:194](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L194)
+Defined in: [src/Store.ts:228](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L228)
 
 #### Type Parameters
 
@@ -441,7 +451,7 @@ Defined in: [Store.ts:194](https://github.com/pod-os/PodOS/blob/main/core/src/St
 
 > **observeFindMembers**(`classUri`): `Observable`\<`string`[]\>
 
-Defined in: [Store.ts:216](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L216)
+Defined in: [src/Store.ts:250](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L250)
 
 Get an Observable that will push new results from [findMembers](#findmembers) when it changes
 
@@ -463,7 +473,7 @@ Observable that pushes an array of URIs of instances of the given class or its s
 
 > **preferencesQuery**(`webId`, `preferencesDoc`): `PreferencesQuery`
 
-Defined in: [Store.ts:378](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L378)
+Defined in: [src/Store.ts:412](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L412)
 
 Create a query to fetch information from a user's preferences file
 
@@ -490,7 +500,7 @@ PreferencesQuery instance. See [@solid-data-modules/rdflib-utils
 
 > **profileQuery**(`webId`): `ProfileQuery`
 
-Defined in: [Store.ts:395](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L395)
+Defined in: [src/Store.ts:429](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L429)
 
 Create a query to fetch information from a user's profile document
 
@@ -513,7 +523,7 @@ ProfileQuery instance. See [@solid-data-modules/rdflib-utils
 
 > **statementsMatching**(`subject?`, `predicate?`, `object?`, `graph?`): `Statement`\<`SubjectType`, `PredicateType`, `ObjectType`, `GraphType`\>[]
 
-Defined in: [Store.ts:269](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L269)
+Defined in: [src/Store.ts:303](https://github.com/pod-os/PodOS/blob/main/core/src/Store.ts#L303)
 
 Statements matching the provided quad pattern
 

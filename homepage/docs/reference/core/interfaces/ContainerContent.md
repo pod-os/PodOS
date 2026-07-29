@@ -6,7 +6,7 @@
 
 # Interface: ContainerContent
 
-Defined in: [ldp-container/LdpContainer.ts:6](https://github.com/pod-os/PodOS/blob/main/core/src/ldp-container/LdpContainer.ts#L6)
+Defined in: [src/ldp-container/LdpContainer.ts:6](https://github.com/pod-os/PodOS/blob/main/core/src/ldp-container/LdpContainer.ts#L6)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [ldp-container/LdpContainer.ts:6](https://github.com/pod-os/PodOS/bl
 
 > **name**: `string`
 
-Defined in: [ldp-container/LdpContainer.ts:8](https://github.com/pod-os/PodOS/blob/main/core/src/ldp-container/LdpContainer.ts#L8)
+Defined in: [src/ldp-container/LdpContainer.ts:8](https://github.com/pod-os/PodOS/blob/main/core/src/ldp-container/LdpContainer.ts#L8)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [ldp-container/LdpContainer.ts:8](https://github.com/pod-os/PodOS/bl
 
 > **uri**: `string`
 
-Defined in: [ldp-container/LdpContainer.ts:7](https://github.com/pod-os/PodOS/blob/main/core/src/ldp-container/LdpContainer.ts#L7)
+Defined in: [src/ldp-container/LdpContainer.ts:7](https://github.com/pod-os/PodOS/blob/main/core/src/ldp-container/LdpContainer.ts#L7)

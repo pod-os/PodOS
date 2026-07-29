@@ -8,7 +8,7 @@
 
 > **httpProblem**(`title`, `response`): [`HttpProblem`](../interfaces/HttpProblem.md)
 
-Defined in: [problems/index.ts:20](https://github.com/pod-os/PodOS/blob/main/core/src/problems/index.ts#L20)
+Defined in: [src/problems/index.ts:20](https://github.com/pod-os/PodOS/blob/main/core/src/problems/index.ts#L20)
 
 ## Parameters
 

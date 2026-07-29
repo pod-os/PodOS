@@ -48,6 +48,7 @@
 - [PodOsModule](interfaces/PodOsModule.md)
 - [PodOsSession](interfaces/PodOsSession.md)
 - [Problem](interfaces/Problem.md)
+- [Quad](interfaces/Quad.md)
 - [RdfType](interfaces/RdfType.md)
 - [Relation](interfaces/Relation.md)
 - [SolidFile](interfaces/SolidFile.md)

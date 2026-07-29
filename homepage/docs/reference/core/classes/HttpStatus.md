@@ -6,7 +6,7 @@
 
 # Class: HttpStatus
 
-Defined in: [files/HttpStatus.ts:1](https://github.com/pod-os/PodOS/blob/main/core/src/files/HttpStatus.ts#L1)
+Defined in: [src/files/HttpStatus.ts:1](https://github.com/pod-os/PodOS/blob/main/core/src/files/HttpStatus.ts#L1)
 
 ## Constructors
 
@@ -14,7 +14,7 @@ Defined in: [files/HttpStatus.ts:1](https://github.com/pod-os/PodOS/blob/main/co
 
 > **new HttpStatus**(`code`, `text?`): `HttpStatus`
 
-Defined in: [files/HttpStatus.ts:5](https://github.com/pod-os/PodOS/blob/main/core/src/files/HttpStatus.ts#L5)
+Defined in: [src/files/HttpStatus.ts:5](https://github.com/pod-os/PodOS/blob/main/core/src/files/HttpStatus.ts#L5)
 
 #### Parameters
 
@@ -36,7 +36,7 @@ Defined in: [files/HttpStatus.ts:5](https://github.com/pod-os/PodOS/blob/main/co
 
 > `readonly` **code**: `number`
 
-Defined in: [files/HttpStatus.ts:2](https://github.com/pod-os/PodOS/blob/main/core/src/files/HttpStatus.ts#L2)
+Defined in: [src/files/HttpStatus.ts:2](https://github.com/pod-os/PodOS/blob/main/core/src/files/HttpStatus.ts#L2)
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: [files/HttpStatus.ts:2](https://github.com/pod-os/PodOS/blob/main/co
 
 > `readonly` `optional` **text?**: `string`
 
-Defined in: [files/HttpStatus.ts:3](https://github.com/pod-os/PodOS/blob/main/core/src/files/HttpStatus.ts#L3)
+Defined in: [src/files/HttpStatus.ts:3](https://github.com/pod-os/PodOS/blob/main/core/src/files/HttpStatus.ts#L3)
 
 ## Methods
 
@@ -52,7 +52,7 @@ Defined in: [files/HttpStatus.ts:3](https://github.com/pod-os/PodOS/blob/main/co
 
 > **toString**(): `string`
 
-Defined in: [files/HttpStatus.ts:10](https://github.com/pod-os/PodOS/blob/main/core/src/files/HttpStatus.ts#L10)
+Defined in: [src/files/HttpStatus.ts:10](https://github.com/pod-os/PodOS/blob/main/core/src/files/HttpStatus.ts#L10)
 
 #### Returns
 

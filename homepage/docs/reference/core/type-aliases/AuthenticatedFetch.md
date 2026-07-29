@@ -8,7 +8,7 @@
 
 > **AuthenticatedFetch** = (`url`, `init?`) => `Promise`\<`Response`\>
 
-Defined in: [authentication/index.ts:3](https://github.com/pod-os/PodOS/blob/main/core/src/authentication/index.ts#L3)
+Defined in: [src/authentication/index.ts:3](https://github.com/pod-os/PodOS/blob/main/core/src/authentication/index.ts#L3)
 
 ## Parameters
 

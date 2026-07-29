@@ -6,7 +6,7 @@
 
 # Class: UriService
 
-Defined in: [uri/UriService.ts:4](https://github.com/pod-os/PodOS/blob/main/core/src/uri/UriService.ts#L4)
+Defined in: [src/uri/UriService.ts:4](https://github.com/pod-os/PodOS/blob/main/core/src/uri/UriService.ts#L4)
 
 ## Constructors
 
@@ -14,7 +14,7 @@ Defined in: [uri/UriService.ts:4](https://github.com/pod-os/PodOS/blob/main/core
 
 > **new UriService**(`store`): `UriService`
 
-Defined in: [uri/UriService.ts:9](https://github.com/pod-os/PodOS/blob/main/core/src/uri/UriService.ts#L9)
+Defined in: [src/uri/UriService.ts:9](https://github.com/pod-os/PodOS/blob/main/core/src/uri/UriService.ts#L9)
 
 #### Parameters
 
@@ -32,7 +32,7 @@ Defined in: [uri/UriService.ts:9](https://github.com/pod-os/PodOS/blob/main/core
 
 > **proposeUriForNewThing**(`referenceUri`, `name`): `string`
 
-Defined in: [uri/UriService.ts:21](https://github.com/pod-os/PodOS/blob/main/core/src/uri/UriService.ts#L21)
+Defined in: [src/uri/UriService.ts:21](https://github.com/pod-os/PodOS/blob/main/core/src/uri/UriService.ts#L21)
 
 Proposes a URI for a new thing based on what the referenceUri identifies:
 - if a container, the new URI is in this container

@@ -6,7 +6,7 @@
 
 # Interface: Attachment
 
-Defined in: [thing/Thing.ts:39](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L39)
+Defined in: [src/thing/Thing.ts:39](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L39)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [thing/Thing.ts:39](https://github.com/pod-os/PodOS/blob/main/core/s
 
 > **label**: `string`
 
-Defined in: [thing/Thing.ts:41](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L41)
+Defined in: [src/thing/Thing.ts:41](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L41)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [thing/Thing.ts:41](https://github.com/pod-os/PodOS/blob/main/core/s
 
 > **uri**: `string`
 
-Defined in: [thing/Thing.ts:40](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L40)
+Defined in: [src/thing/Thing.ts:40](https://github.com/pod-os/PodOS/blob/main/core/src/thing/Thing.ts#L40)

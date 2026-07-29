@@ -6,7 +6,7 @@
 
 # Class: AnonymousSession
 
-Defined in: [authentication/index.ts:20](https://github.com/pod-os/PodOS/blob/main/core/src/authentication/index.ts#L20)
+Defined in: [src/authentication/index.ts:20](https://github.com/pod-os/PodOS/blob/main/core/src/authentication/index.ts#L20)
 
 ## Implements
 
@@ -30,7 +30,7 @@ Defined in: [authentication/index.ts:20](https://github.com/pod-os/PodOS/blob/ma
 
 > **get** **authenticatedFetch**(): (`url`, `init?`) => `Promise`\<`Response`\>
 
-Defined in: [authentication/index.ts:27](https://github.com/pod-os/PodOS/blob/main/core/src/authentication/index.ts#L27)
+Defined in: [src/authentication/index.ts:27](https://github.com/pod-os/PodOS/blob/main/core/src/authentication/index.ts#L27)
 
 ##### Returns
 
@@ -46,7 +46,7 @@ Defined in: [authentication/index.ts:27](https://github.com/pod-os/PodOS/blob/ma
 
 > **login**(): `Promise`\<`void`\>
 
-Defined in: [authentication/index.ts:38](https://github.com/pod-os/PodOS/blob/main/core/src/authentication/index.ts#L38)
+Defined in: [src/authentication/index.ts:38](https://github.com/pod-os/PodOS/blob/main/core/src/authentication/index.ts#L38)
 
 #### Returns
 
@@ -62,7 +62,7 @@ Defined in: [authentication/index.ts:38](https://github.com/pod-os/PodOS/blob/ma
 
 > **logout**(): `Promise`\<`void`\>
 
-Defined in: [authentication/index.ts:42](https://github.com/pod-os/PodOS/blob/main/core/src/authentication/index.ts#L42)
+Defined in: [src/authentication/index.ts:42](https://github.com/pod-os/PodOS/blob/main/core/src/authentication/index.ts#L42)
 
 #### Returns
 
@@ -78,7 +78,7 @@ Defined in: [authentication/index.ts:42](https://github.com/pod-os/PodOS/blob/ma
 
 > **observeSession**(): `BehaviorSubject`\<[`SessionInfo`](../type-aliases/SessionInfo.md)\>
 
-Defined in: [authentication/index.ts:34](https://github.com/pod-os/PodOS/blob/main/core/src/authentication/index.ts#L34)
+Defined in: [src/authentication/index.ts:34](https://github.com/pod-os/PodOS/blob/main/core/src/authentication/index.ts#L34)
 
 #### Returns
 

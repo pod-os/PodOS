@@ -6,7 +6,7 @@
 
 # Interface: NewFolder
 
-Defined in: [files/FileFetcher.ts:117](https://github.com/pod-os/PodOS/blob/main/core/src/files/FileFetcher.ts#L117)
+Defined in: [src/files/FileFetcher.ts:117](https://github.com/pod-os/PodOS/blob/main/core/src/files/FileFetcher.ts#L117)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [files/FileFetcher.ts:117](https://github.com/pod-os/PodOS/blob/main
 
 > **name**: `string`
 
-Defined in: [files/FileFetcher.ts:119](https://github.com/pod-os/PodOS/blob/main/core/src/files/FileFetcher.ts#L119)
+Defined in: [src/files/FileFetcher.ts:119](https://github.com/pod-os/PodOS/blob/main/core/src/files/FileFetcher.ts#L119)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [files/FileFetcher.ts:119](https://github.com/pod-os/PodOS/blob/main
 
 > **url**: `string`
 
-Defined in: [files/FileFetcher.ts:118](https://github.com/pod-os/PodOS/blob/main/core/src/files/FileFetcher.ts#L118)
+Defined in: [src/files/FileFetcher.ts:118](https://github.com/pod-os/PodOS/blob/main/core/src/files/FileFetcher.ts#L118)

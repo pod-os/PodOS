@@ -6,7 +6,7 @@
 
 # Interface: Subject
 
-Defined in: [rdf-document/RdfDocument.ts:5](https://github.com/pod-os/PodOS/blob/main/core/src/rdf-document/RdfDocument.ts#L5)
+Defined in: [src/rdf-document/RdfDocument.ts:5](https://github.com/pod-os/PodOS/blob/main/core/src/rdf-document/RdfDocument.ts#L5)
 
 ## Properties
 
@@ -14,4 +14,4 @@ Defined in: [rdf-document/RdfDocument.ts:5](https://github.com/pod-os/PodOS/blob
 
 > **uri**: `string`
 
-Defined in: [rdf-document/RdfDocument.ts:6](https://github.com/pod-os/PodOS/blob/main/core/src/rdf-document/RdfDocument.ts#L6)
+Defined in: [src/rdf-document/RdfDocument.ts:6](https://github.com/pod-os/PodOS/blob/main/core/src/rdf-document/RdfDocument.ts#L6)

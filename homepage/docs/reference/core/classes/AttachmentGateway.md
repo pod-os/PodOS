@@ -6,7 +6,7 @@
 
 # Class: AttachmentGateway
 
-Defined in: [attachments/AttachmentGateway.ts:11](https://github.com/pod-os/PodOS/blob/main/core/src/attachments/AttachmentGateway.ts#L11)
+Defined in: [src/attachments/AttachmentGateway.ts:11](https://github.com/pod-os/PodOS/blob/main/core/src/attachments/AttachmentGateway.ts#L11)
 
 Gateway for attachment-related operations on Solid Pods and the store.
 
@@ -20,7 +20,7 @@ Gateway for attachment-related operations on Solid Pods and the store.
 
 > **new AttachmentGateway**(`fileGateway`): `AttachmentGateway`
 
-Defined in: [attachments/AttachmentGateway.ts:14](https://github.com/pod-os/PodOS/blob/main/core/src/attachments/AttachmentGateway.ts#L14)
+Defined in: [src/attachments/AttachmentGateway.ts:14](https://github.com/pod-os/PodOS/blob/main/core/src/attachments/AttachmentGateway.ts#L14)
 
 #### Parameters
 
@@ -38,7 +38,7 @@ Defined in: [attachments/AttachmentGateway.ts:14](https://github.com/pod-os/PodO
 
 > **uploadAndAddAttachment**(`thing`, `attachmentFile`): `ResultAsync`\<[`NewFile`](../interfaces/NewFile.md), [`NetworkProblem`](../interfaces/NetworkProblem.md) \| [`HttpProblem`](../interfaces/HttpProblem.md)\>
 
-Defined in: [attachments/AttachmentGateway.ts:27](https://github.com/pod-os/PodOS/blob/main/core/src/attachments/AttachmentGateway.ts#L27)
+Defined in: [src/attachments/AttachmentGateway.ts:27](https://github.com/pod-os/PodOS/blob/main/core/src/attachments/AttachmentGateway.ts#L27)
 
 Uploads an attachment file and associates it with a thing.
 The container is automatically derived from the thing's URI.

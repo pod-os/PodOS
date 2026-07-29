@@ -6,7 +6,7 @@
 
 # Class: ProfileGateway
 
-Defined in: [profile/ProfileGateway.ts:8](https://github.com/pod-os/PodOS/blob/main/core/src/profile/ProfileGateway.ts#L8)
+Defined in: [src/profile/ProfileGateway.ts:8](https://github.com/pod-os/PodOS/blob/main/core/src/profile/ProfileGateway.ts#L8)
 
 Gateway for profile-related operations on Solid Pods and the store.
 
@@ -20,7 +20,7 @@ Gateway for profile-related operations on Solid Pods and the store.
 
 > **new ProfileGateway**(`store`): `ProfileGateway`
 
-Defined in: [profile/ProfileGateway.ts:11](https://github.com/pod-os/PodOS/blob/main/core/src/profile/ProfileGateway.ts#L11)
+Defined in: [src/profile/ProfileGateway.ts:11](https://github.com/pod-os/PodOS/blob/main/core/src/profile/ProfileGateway.ts#L11)
 
 #### Parameters
 
@@ -38,7 +38,7 @@ Defined in: [profile/ProfileGateway.ts:11](https://github.com/pod-os/PodOS/blob/
 
 > **fetchProfile**(`webId`): `Promise`\<[`WebIdProfile`](WebIdProfile.md)\>
 
-Defined in: [profile/ProfileGateway.ts:21](https://github.com/pod-os/PodOS/blob/main/core/src/profile/ProfileGateway.ts#L21)
+Defined in: [src/profile/ProfileGateway.ts:21](https://github.com/pod-os/PodOS/blob/main/core/src/profile/ProfileGateway.ts#L21)
 
 Fetches the profile for the given WebID and all linked documents
 
