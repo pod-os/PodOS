@@ -3,6 +3,8 @@ import { afterAll, afterEach, beforeAll } from 'vitest';
 import { defineCustomElements } from '../loader';
 import { server } from '../src/test/msw';
 
+import 'fake-indexeddb/auto'; // indexeddb is used by integration tests that use authentication
+
 // happy-dom installs its own `fetch` on `globalThis` with a **non-writable, non-configurable** property descriptor
 // while the `cross-fetch` browser ponyfill used by rdflib tries to overwrite it. This causes the tests to fail with
 // "TypeError: 'fetch' is read-only". To prevent that, we make fetch writable again.
