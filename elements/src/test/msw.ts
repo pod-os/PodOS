@@ -26,17 +26,28 @@ const IDP_PUBLIC_JWK = {
 
 interface Options {
   delayedUntil?: Promise<void>;
+  once?: boolean;
 }
 
-export function turtleFile(url: string, content: string, { delayedUntil = Promise.resolve() }: Options = {}) {
-  return http.get(url, async () => {
-    const response = HttpResponse.text(content);
-    response.headers.set('Content-Type', 'text/turtle');
-    response.headers.set('accept-patch', 'text/n3, application/sparql-update');
-    response.headers.set('wac-allow', 'user="append control read write",public="append control read write"');
-    await delayedUntil;
-    return response;
-  });
+export const forever = new Promise<void>(() => {});
+
+export function turtleFile(
+  url: string,
+  content: string,
+  { delayedUntil = Promise.resolve(), once = false }: Options = {},
+) {
+  return http.get(
+    url,
+    async () => {
+      const response = HttpResponse.text(content);
+      response.headers.set('Content-Type', 'text/turtle');
+      response.headers.set('accept-patch', 'text/n3, application/sparql-update');
+      response.headers.set('wac-allow', 'user="append control read write",public="append control read write"');
+      await delayedUntil;
+      return response;
+    },
+    { once },
+  );
 }
 
 export function binaryResource(url: string, describedBy: string, contentType: string = 'application/pdf') {
@@ -52,12 +63,16 @@ export function binaryResource(url: string, describedBy: string, contentType: st
   );
 }
 
-export function notFound(url: string) {
-  return http.get(url, async () => {
-    return HttpResponse.text('Not found', {
-      status: 404,
-    });
-  });
+export function notFound(url: string, { once = false }: { once?: boolean } = {}) {
+  return http.get(
+    url,
+    async () => {
+      return HttpResponse.text('Not found', {
+        status: 404,
+      });
+    },
+    { once },
+  );
 }
 
 export function authenticatedUser(webId: string) {
