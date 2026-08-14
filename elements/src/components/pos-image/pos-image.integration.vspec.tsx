@@ -1,21 +1,11 @@
-import { vi } from 'vitest';
 import { describe, expect, h, it, render } from '@stencil/vitest';
 import { waitFor } from '@testing-library/dom';
-import { server } from '../../test/msw';
-import { http, HttpResponse } from 'msw';
+import { jpeg, server } from '../../test/msw';
 
 describe('pos-image', () => {
   it('renders img after successfully loading image data', async () => {
     // given, a jpeg image is hosted at https://pod.example/image.jpg
-    const jpgResponse = HttpResponse.text('fake image data');
-    jpgResponse.headers.set('Content-Type', 'image/jpg');
-    const jpgBlob = await jpgResponse.blob();
-    vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:fake-object-url');
-    server.use(
-      http.get('https://pod.example/image.jpg', async () => {
-        return jpgResponse;
-      }),
-    );
+    server.use(jpeg('https://pod.example/image.jpg', 'fake-image-data'));
 
     // when a PodOS app is using a pos-image pointing to that URL
     const page = await render(
@@ -32,9 +22,6 @@ describe('pos-image', () => {
       expect(img).toBeInTheDocument();
     });
 
-    // and an object URL has been created from the jpeg blob
-    expect(URL.createObjectURL).toHaveBeenCalledWith(jpgBlob);
-
     // and img tag uses the object URL as src
     expect(page.root).toMatchInlineSnapshot(`
       <pos-app class="hydrated">
@@ -43,7 +30,7 @@ describe('pos-image', () => {
         </mock:shadow-root>
         <pos-image class="hydrated">
           <mock:shadow-root>
-            <img src="blob:fake-object-url">
+            <img src="blob:fake-image-data">
           </mock:shadow-root>
         </pos-image>
       </pos-app>

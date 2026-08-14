@@ -1,5 +1,7 @@
 import { setupServer } from 'msw/node';
 import { http, HttpResponse } from 'msw';
+import { vi } from 'vitest';
+import { when } from 'vitest-when';
 
 export const server = setupServer();
 
@@ -61,6 +63,21 @@ export function binaryResource(url: string, describedBy: string, contentType: st
         },
       }),
   );
+}
+
+export function jpeg(url: string, data: string) {
+  return http.get(url, async () => {
+    const jpgResponse = HttpResponse.text(data, {
+      headers: {
+        'Content-Type': 'image/jpg',
+        'Link': `<${url}>; rel="describedby"`,
+      },
+    });
+    const jpgBlob = await jpgResponse.blob();
+    vi.spyOn(URL, 'createObjectURL');
+    when(URL.createObjectURL).calledWith(jpgBlob).thenReturn(`blob:${data}`);
+    return jpgResponse;
+  });
 }
 
 export function notFound(url: string, { once = false }: { once?: boolean } = {}) {
