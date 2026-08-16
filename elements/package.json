@@ -19,8 +19,7 @@
   "scripts": {
     "build": "stencil build --docs",
     "start": "stencil build --dev --watch --serve",
-    "test": "npm run jest && npm run vitest:unit && npm run vitest:integration",
-    "jest": "jest ./src",
+    "test": "npm run vitest:unit && npm run vitest:integration",
     "vitest": "vitest run",
     "vitest:unit": "vitest run --project unit-dom --project unit",
     "vitest:integration": "stencil-test --prod --project integration-dom",
