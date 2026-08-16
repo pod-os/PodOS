@@ -56,6 +56,11 @@ export default defineVitestConfig({
           name: 'integration-dom',
           include: ['src/**/*.integration.vspec.tsx'],
           environment: 'happy-dom',
+          environmentOptions: {
+            happyDOM: {
+              url: 'http://integration.test',
+            },
+          },
         },
       },
     ],
