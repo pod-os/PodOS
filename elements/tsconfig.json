@@ -16,6 +16,6 @@
     "sourceMap": true,
     "skipLibCheck": true // https://github.com/ionic-team/ionicons/issues/1011#issuecomment-962038754
   },
-  "include": ["src", "./jest-setup.ts"],
+  "include": ["src"],
   "exclude": ["node_modules", "src/test/**/*", "**/*.spec.ts", "**/*.spec.tsx"]
 }
