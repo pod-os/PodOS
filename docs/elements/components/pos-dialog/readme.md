@@ -32,6 +32,14 @@ Type: `Promise<void>`
 
 
 
+## Slots
+
+| Slot        | Description |
+| ----------- | ----------- |
+| `"content"` |             |
+| `"title"`   |             |
+
+
 ## Dependencies
 
 ### Used by

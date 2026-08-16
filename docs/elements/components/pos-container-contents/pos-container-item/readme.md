@@ -11,6 +11,13 @@
 | `pod-os:resource` |             | `CustomEvent<any>` |
 
 
+## Slots
+
+| Slot | Description      |
+| ---- | ---------------- |
+|      | The default slot |
+
+
 ## Dependencies
 
 ### Used by

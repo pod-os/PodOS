@@ -16,6 +16,13 @@ See [pos-case](https://pod-os.org/reference/elements/components/pos-switch/pos-c
 | `pod-os:resource` |             | `CustomEvent<any>` |
 
 
+## Slots
+
+| Slot | Description      |
+| ---- | ---------------- |
+|      | The default slot |
+
+
 ----------------------------------------------
 
 *Built with [StencilJS](https://stenciljs.com/)*

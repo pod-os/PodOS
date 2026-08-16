@@ -12,6 +12,13 @@
 | `pod-os:init` |             | `CustomEvent<any>` |
 
 
+## Slots
+
+| Slot             | Description |
+| ---------------- | ----------- |
+| `"if-logged-in"` |             |
+
+
 ## Dependencies
 
 ### Used by

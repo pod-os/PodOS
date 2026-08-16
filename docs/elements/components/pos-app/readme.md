@@ -20,6 +20,13 @@
 | `pod-os:session-restored` | Fired whenever the session was restored                                                                                                                                                                                              | `CustomEvent<{ url: string; }>`                                                                                         |
 
 
+## Slots
+
+| Slot | Description      |
+| ---- | ---------------- |
+|      | The default slot |
+
+
 ## Dependencies
 
 ### Used by

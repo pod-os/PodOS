@@ -25,6 +25,13 @@ It also intercepts the URLs from `pod-os:link` events and pushes them as a new `
 | `pod-os:route-changed` | Emits the new URI that is active | `CustomEvent<string>` |
 
 
+## Slots
+
+| Slot | Description      |
+| ---- | ---------------- |
+|      | The default slot |
+
+
 ## Dependencies
 
 ### Used by
