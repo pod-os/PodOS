@@ -1,0 +1,28 @@
+version: 2
+updates:
+
+  - package-ecosystem: "npm"
+    directory: "/elements"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+    open-pull-requests-limit: 5
+    groups:
+      dev-dependencies:
+        dependency-type: development
+        update-types:
+          - patch
+          - minor
+
+  - package-ecosystem: "npm"
+    directory: "/core"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+    open-pull-requests-limit: 5
+    groups:
+      dev-dependencies:
+        dependency-type: development
+        update-types:
+          - patch
+          - minor
