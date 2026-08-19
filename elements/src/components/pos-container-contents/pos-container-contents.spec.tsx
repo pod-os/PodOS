@@ -4,11 +4,11 @@ import { fireEvent } from '@testing-library/dom';
 
 import './pos-container-contents';
 
-import { Components, LdpContainer } from '../../components';
+import { Components } from '../../components';
 import PosCreateNewContainerItem = Components.PosCreateNewContainerItem;
 import { pressKey } from '../../test/pressKey';
 import { Subject } from 'rxjs';
-import { ContainerContent, Thing } from '@pod-os/core';
+import { ContainerContent, LdpContainer, Thing } from '@pod-os/core';
 import { mockResource } from '../../test/mockResource';
 
 vi.mock('@pod-os/core', () => ({
