@@ -1,0 +1,28 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+    open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-major"
+    groups:
+      tiptap:
+        patterns:
+          - "@tiptap/*"
+      stencil:
+        patterns:
+          - "@stencil/*"
+      uppy:
+        patterns:
+          - "@uppy/*"
+      babel:
+        patterns:
+          - "@babel/*"
+      shoelace:
+        patterns:
+          - "@shoelace-style/*"
