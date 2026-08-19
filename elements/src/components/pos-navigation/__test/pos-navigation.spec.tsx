@@ -104,7 +104,7 @@ describe('pos-navigation', () => {
     page.instance.uri = 'irrelevant, since store mock throws error';
     page.instance.updateResource(mockResource);
 
-    expect(page.instance.resource).toEqual(null);
+    expect(page.instance.resource).toBeNull();
   });
 
   it('selects all text & opens the dialog when navigate event is emitted', async () => {

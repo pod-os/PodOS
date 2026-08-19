@@ -47,7 +47,7 @@ describe('pos-tool-select', () => {
     const page = await render(<pos-tool-select tools={tools} />);
 
     const buttons = withinShadow(page).getAllByRole('tab');
-    expect(buttons.length).toBe(2);
+    expect(buttons).toHaveLength(2);
     expect(buttons[0].textContent).toEqual('Tool 1');
     expect(buttons[1].textContent).toEqual('Tool 2');
   });
@@ -68,7 +68,7 @@ describe('pos-tool-select', () => {
     const page = await render(<pos-tool-select tools={tools} />);
 
     const icons = page.root.shadowRoot!.querySelectorAll('sl-icon');
-    expect(icons.length).toBe(2);
+    expect(icons).toHaveLength(2);
     expect(icons[0].getAttribute('name')).toBe('icon-1');
     expect(icons[1].getAttribute('name')).toBe('icon-2');
   });

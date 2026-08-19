@@ -466,7 +466,7 @@ describe('pos-make-findable', () => {
 
       // and an option is chosen
       const options = withinShadow(page).getAllByRole('option');
-      expect(options.length).toEqual(2);
+      expect(options).toHaveLength(2);
       const firstOption = options[0] as HTMLInputElement & { option: LabelIndex };
       page.root.dispatchEvent(new CustomEvent('sl-select', { detail: { item: { value: firstOption.value } } }));
       await page.waitForChanges();
