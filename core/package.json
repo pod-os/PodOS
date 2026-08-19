@@ -55,7 +55,7 @@
     "sparqljs": "^3.7.4",
     "typedoc": "^0.28.20",
     "typedoc-plugin-markdown": "^4.12.0",
-    "typescript": "^6.0.3",
+    "typescript": "^7.0.2",
     "typescript-eslint": "^8.67.0",
     "vitest": "^4.1.10",
     "vitest-when": "^0.10.0"
