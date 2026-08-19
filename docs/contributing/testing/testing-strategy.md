@@ -2,7 +2,7 @@
 
 ## Testing framework
 
-We are using vitest as a testing framework. Jest is deprecated and will be phased out. Until this is complete vitest test files need to include the part `*.vspec.*` instead of `*.spec.*` to keep them apart.
+We are using vitest as a testing framework.
 
 ## PodOS core
 
@@ -10,14 +10,14 @@ We are using vitest as a testing framework. Jest is deprecated and will be phase
 
 Unit tests only test a single class or function, everything else is mocked.
 
-Naming convention: `*.vspec.ts`
+Naming convention: `*.spec.ts`
 
 ### Integration tests
 
 Test the integration with other components. May use a real rdflib store and verify against its contents. Network
 requests are mocked by mocking the `fetch` function.
 
-Naming convention: `*.integration.vspec.ts`
+Naming convention: `*.integration.spec.ts`
 
 ## PodOS elements
 
@@ -36,8 +36,9 @@ so that changes compile on the fly and dependencies can be mocked.
 Unit tests that target plain functions / classes and do not need a DOM can be run with plain node.
 
 Naming conventions:
-- `*.vspec.tsx` for component unit test, using a dom environment 
-- `*.vspec.ts` for unit tests, that only need a node environment 
+- `*.spec.tsx` for component unit test, using a dom environment 
+- `*.spec.ts` for unit tests, that only need a node environment 
+- `*.dom.spec.ts` for unit tests don't render components, but still need a dom environment 
 
 ## Integration Tests
 
@@ -50,7 +51,7 @@ so the tests are very close to the real behaviour.
 
 Network requests are mocked using a mock service worker provided by [msw](https://mswjs.io).
 
-Naming convention: `*.integration.vspec.tsx`
+Naming convention: `*.integration.spec.tsx`
 
 ## End-to-end tests (E2E)
 
