@@ -10,8 +10,10 @@ import { ResourceAware, subscribeResource } from '../events/ResourceAware';
 export class PosLiterals implements ResourceAware {
   @State() data: Literal[] = [];
 
+  @State() editable: boolean = false;
+
   @Event({ eventName: 'pod-os:resource' })
-  subscribeResource: EventEmitter;
+  subscribeResource!: EventEmitter;
 
   componentWillLoad() {
     subscribeResource(this);
@@ -19,6 +21,7 @@ export class PosLiterals implements ResourceAware {
 
   receiveResource = (resource: Thing) => {
     this.data = resource.literals();
+    this.editable = resource.editable;
   };
 
   literalValueAdded(newLiteral: Literal) {
@@ -45,13 +48,20 @@ export class PosLiterals implements ResourceAware {
         {this.data.length > 0 ? (
           <dl>
             {this.data.map(it => (
-              <div class="predicate-values">
+              <div class="predicate-values" key={it.predicate}>
                 <dt>
                   <pos-predicate uri={it.predicate} label={it.label} />
                 </dt>
                 <div class="values">
                   {it.values.map(value => (
-                    <dd>{value}</dd>
+                    <dd key={value}>
+                      <div
+                        role={this.editable ? 'textbox' : undefined}
+                        contentEditable={this.editable ? 'plaintext-only' : 'false'}
+                      >
+                        {value}
+                      </div>
+                    </dd>
                   ))}
                 </div>
               </div>

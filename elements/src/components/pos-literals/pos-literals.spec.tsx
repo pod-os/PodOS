@@ -6,6 +6,7 @@ import './pos-literals';
 import { Literal } from '@pod-os/core';
 import { mockResource } from '../../test/mockResource';
 import { withinShadow } from '../../test/withinShadow';
+import { getByShadowRole } from 'shadow-dom-testing-library';
 
 describe('pos-literals', () => {
   it('are empty initially, but include option to add one', async () => {
@@ -13,121 +14,188 @@ describe('pos-literals', () => {
     expect(page.root.shadowRoot).toEqualHtml('<pos-add-literal-value></pos-add-literal-value>');
   });
 
-  it('renders single predicate and value', async () => {
-    mockResource({
-      literals: () => [
-        {
-          predicate: 'http://schema.org/name',
-          label: 'name',
-          values: ['Alice'],
-        },
-      ],
+  describe('render literal values', () => {
+    it('renders single predicate and value', async () => {
+      mockResource({
+        literals: () => [
+          {
+            predicate: 'http://schema.org/name',
+            label: 'name',
+            values: ['Alice'],
+          },
+        ],
+      });
+      const page = await render(<pos-literals></pos-literals>);
+      await page.waitForChanges();
+
+      const el: HTMLElement = page.root.shadowRoot as unknown as HTMLElement;
+
+      expect(getByRole(el, 'definition')).toEqualText('Alice');
+      const term = getByRole(el, 'term');
+      const predicate = term.querySelector('pos-predicate');
+      expect(predicate).toEqualHtml('<pos-predicate uri="http://schema.org/name" label="name"></pos-predicate>');
     });
-    const page = await render(<pos-literals></pos-literals>);
-    await page.waitForChanges();
 
-    const el: HTMLElement = page.root.shadowRoot as unknown as HTMLElement;
+    it('renders multiple predicates and values', async () => {
+      mockResource({
+        literals: () => [
+          {
+            predicate: 'http://schema.org/name',
+            label: 'name',
+            values: ['Alice', 'Bernadette'],
+          },
+          {
+            predicate: 'http://schema.org/description',
+            label: 'description',
+            values: ['the description'],
+          },
+        ],
+      });
+      const page = await render(<pos-literals></pos-literals>);
+      await page.waitForChanges();
 
-    expect(getByRole(el, 'definition')).toEqualText('Alice');
-    const term = getByRole(el, 'term');
-    const predicate = term.querySelector('pos-predicate');
-    expect(predicate).toEqualHtml('<pos-predicate uri="http://schema.org/name" label="name"></pos-predicate>');
+      const el: HTMLElement = page.root.shadowRoot as unknown as HTMLElement;
+
+      expect(getByText(el, 'Alice')).toBeDefined();
+      expect(getByText(el, 'Bernadette')).toBeDefined();
+      const name = el.querySelector('pos-predicate[uri="http://schema.org/name"]');
+      expect(name).toEqualAttribute('label', 'name');
+
+      expect(getByText(el, 'the description')).toBeDefined();
+      const description = el.querySelector('pos-predicate[uri="http://schema.org/description"]');
+      expect(description).toEqualAttribute('label', 'description');
+    });
   });
 
-  it('renders multiple predicates and values', async () => {
-    mockResource({
-      literals: () => [
-        {
-          predicate: 'http://schema.org/name',
-          label: 'name',
-          values: ['Alice', 'Bernadette'],
-        },
-        {
-          predicate: 'http://schema.org/description',
-          label: 'description',
-          values: ['the description'],
-        },
-      ],
+  describe('add a new literal value', () => {
+    it('adds newly added predicate to the list', async () => {
+      // given
+      mockResource({
+        literals: () => [],
+      });
+      const page = await render(<pos-literals></pos-literals>);
+      await page.waitForChanges();
+
+      // when
+      const input = page.root.shadowRoot!.querySelector('pos-add-literal-value')!;
+      const literal: Literal = {
+        predicate: 'https://schema.org/name',
+        label: 'name',
+        values: ['Alice'],
+      };
+      fireEvent(
+        input,
+        new CustomEvent('pod-os:added-literal-value', {
+          detail: literal,
+        }),
+      );
+
+      await page.waitForChanges();
+
+      // then
+      expect(withinShadow(page).getByText('Alice')).toBeDefined();
+      const name = page.root.shadowRoot!.querySelector('pos-predicate[uri="https://schema.org/name"]');
+      expect(name).toEqualAttribute('label', 'name');
     });
-    const page = await render(<pos-literals></pos-literals>);
-    await page.waitForChanges();
 
-    const el: HTMLElement = page.root.shadowRoot as unknown as HTMLElement;
+    it('adds newly added predicate value to the existing list without duplicating the predicate', async () => {
+      // given
+      mockResource({
+        literals: () => [
+          {
+            predicate: 'https://schema.org/name',
+            label: 'name',
+            values: ['Alice'],
+          },
+        ],
+      });
+      const page = await render(<pos-literals></pos-literals>);
+      await page.waitForChanges();
 
-    expect(getByText(el, 'Alice')).toBeDefined();
-    expect(getByText(el, 'Bernadette')).toBeDefined();
-    const name = el.querySelector('pos-predicate[uri="http://schema.org/name"]');
-    expect(name).toEqualAttribute('label', 'name');
+      // when
+      const input = page.root.shadowRoot!.querySelector('pos-add-literal-value')!;
+      const literal: Literal = {
+        predicate: 'https://schema.org/name',
+        label: 'name',
+        values: ['Bernadette'],
+      };
+      fireEvent(
+        input,
+        new CustomEvent('pod-os:added-literal-value', {
+          detail: literal,
+        }),
+      );
 
-    expect(getByText(el, 'the description')).toBeDefined();
-    const description = el.querySelector('pos-predicate[uri="http://schema.org/description"]');
-    expect(description).toEqualAttribute('label', 'description');
+      await page.waitForChanges();
+
+      // then
+      expect(withinShadow(page).getByText('Alice')).toBeDefined();
+      expect(withinShadow(page).getByText('Bernadette')).toBeDefined();
+      const name = page.root.shadowRoot!.querySelectorAll('pos-predicate[uri="https://schema.org/name"]');
+      expect(name).toHaveLength(1);
+    });
   });
 
-  it('adds newly added predicate to the list', async () => {
-    // given
-    mockResource({
-      literals: () => [],
+  describe('edit values', () => {
+    it('the content is not editable if resource is not editable', async () => {
+      // given a resource is not editable
+      mockResource({
+        editable: false,
+        literals: () => [
+          {
+            predicate: 'http://schema.org/name',
+            label: 'name',
+            values: ['Alice'],
+          },
+        ],
+      });
+
+      // when pos-literals render
+      const page = await render(<pos-literals></pos-literals>);
+      await page.waitForChanges();
+
+      // then the content is not editable
+      const value = getByShadowRole(page.root, 'definition');
+      expect(value).toMatchInlineSnapshot(`
+        <dd>
+          <div
+            contenteditable="false"
+          >
+            Alice
+          </div>
+        </dd>
+      `);
     });
-    const page = await render(<pos-literals></pos-literals>);
-    await page.waitForChanges();
 
-    // when
-    const input = page.root.shadowRoot!.querySelector('pos-add-literal-value')!;
-    const literal: Literal = {
-      predicate: 'https://schema.org/name',
-      label: 'name',
-      values: ['Alice'],
-    };
-    fireEvent(
-      input,
-      new CustomEvent('pod-os:added-literal-value', {
-        detail: literal,
-      }),
-    );
+    it('the content is editable if resource is editable', async () => {
+      // given a resource is editable
+      mockResource({
+        editable: true,
+        literals: () => [
+          {
+            predicate: 'http://schema.org/name',
+            label: 'name',
+            values: ['Alice'],
+          },
+        ],
+      });
 
-    await page.waitForChanges();
+      // when pos-literals render
+      const page = await render(<pos-literals></pos-literals>);
+      await page.waitForChanges();
 
-    // then
-    expect(withinShadow(page).getByText('Alice')).toBeDefined();
-    const name = page.root.shadowRoot!.querySelector('pos-predicate[uri="https://schema.org/name"]');
-    expect(name).toEqualAttribute('label', 'name');
-  });
-
-  it('adds newly added predicate value to the existing list without duplicating the predicate', async () => {
-    // given
-    mockResource({
-      literals: () => [
-        {
-          predicate: 'https://schema.org/name',
-          label: 'name',
-          values: ['Alice'],
-        },
-      ],
+      // then the content is editable
+      const value = getByShadowRole(page.root, 'definition');
+      expect(value).toMatchInlineSnapshot(`
+        <dd>
+          <div
+            contenteditable="plaintext-only"
+            role="textbox"
+          >
+            Alice
+          </div>
+        </dd>
+      `);
     });
-    const page = await render(<pos-literals></pos-literals>);
-    await page.waitForChanges();
-
-    // when
-    const input = page.root.shadowRoot!.querySelector('pos-add-literal-value')!;
-    const literal: Literal = {
-      predicate: 'https://schema.org/name',
-      label: 'name',
-      values: ['Bernadette'],
-    };
-    fireEvent(
-      input,
-      new CustomEvent('pod-os:added-literal-value', {
-        detail: literal,
-      }),
-    );
-
-    await page.waitForChanges();
-
-    // then
-    expect(withinShadow(page).getByText('Alice')).toBeDefined();
-    expect(withinShadow(page).getByText('Bernadette')).toBeDefined();
-    const name = page.root.shadowRoot!.querySelectorAll('pos-predicate[uri="https://schema.org/name"]');
-    expect(name).toHaveLength(1);
   });
 });
