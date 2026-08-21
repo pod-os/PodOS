@@ -75,4 +75,41 @@ describe('process edits', () => {
       'Name 3',
     );
   });
+
+  it('processes edits to separate values independently', () => {
+    // given os and resource
+    const os = mockPodOS();
+    const resource = {} as Thing;
+
+    // when multiple edits are done quickly to two different values of the same predicated
+    const edits$: Subject<LiteralChanged> = new Subject();
+    edits$.pipe(processEdits(os, resource)).subscribe();
+    edits$.next({
+      predicate: 'http://schema.org/name',
+      oldValue: 'Value A',
+      newValue: 'New Value A',
+    });
+    vi.advanceTimersByTime(999);
+    edits$.next({
+      predicate: 'http://schema.org/name',
+      oldValue: 'Value B',
+      newValue: 'New Value B',
+    });
+    vi.advanceTimersByTime(999);
+
+    // then the os only updated the first value because it has not been changed for over a second
+    expect(os.editPropertyValue).toHaveBeenCalledExactlyOnceWith(
+      resource,
+      'http://schema.org/name',
+      'Value A',
+      'New Value A',
+    );
+
+    // and when the debounce-threshold is reached for the second value
+    vi.advanceTimersByTime(1);
+
+    // then the os updates that one as well
+    expect(os.editPropertyValue).toHaveBeenCalledTimes(2);
+    expect(os.editPropertyValue).toHaveBeenCalledWith(resource, 'http://schema.org/name', 'Value B', 'New Value B');
+  });
 });
