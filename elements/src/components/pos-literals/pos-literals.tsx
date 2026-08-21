@@ -20,20 +20,19 @@ export class PosLiterals implements ResourceAware {
 
   @Element() el!: HTMLElement;
 
-  private edits: Subject<LiteralChanged> = new Subject<LiteralChanged>();
+  private readonly edits: Subject<LiteralChanged> = new Subject<LiteralChanged>();
 
   @Event({ eventName: 'pod-os:resource' })
   subscribeResource!: EventEmitter;
 
   async componentWillLoad() {
     this.os = await usePodOS(this.el);
+    this.edits.pipe(processEdits(this.os)).subscribe(); // no need to unsubscribe since the stream source dies with the component
     subscribeResource(this);
   }
 
   receiveResource = (resource: Thing) => {
     this.resource = resource;
-    this.edits.pipe(processEdits(this.os, this.resource)).subscribe();
-    // TODO: unsubscribe
     this.data = resource.literals();
     this.editable = resource.editable;
   };
@@ -74,6 +73,7 @@ export class PosLiterals implements ResourceAware {
                         contentEditable={this.editable ? 'plaintext-only' : 'false'}
                         onInput={ev =>
                           this.edits.next({
+                            resource: this.resource,
                             predicate: it.predicate,
                             oldValue: value,
                             newValue: (ev.target as HTMLElement).textContent,
