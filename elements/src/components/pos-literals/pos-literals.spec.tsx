@@ -1,14 +1,27 @@
-import { describe, expect, h, it, render } from '@stencil/vitest';
+import { mockPodOS } from '../../test/mockPodOS.vitest';
+
+import { Mock, vi } from 'vitest';
+import { beforeEach, describe, expect, h, it, render } from '@stencil/vitest';
 
 import { fireEvent, getByRole, getByText } from '@testing-library/dom';
-
 import './pos-literals';
-import { Literal } from '@pod-os/core';
+import { Literal, Thing } from '@pod-os/core';
 import { mockResource } from '../../test/mockResource';
 import { withinShadow } from '../../test/withinShadow';
 import { getByShadowRole } from 'shadow-dom-testing-library';
+import { userEvent } from '@testing-library/user-event';
+import { processEdits } from './processEdits';
+import { when } from 'vitest-when';
+import { tap } from 'rxjs';
+
+vi.mock('./processEdits');
 
 describe('pos-literals', () => {
+  beforeEach(() => {
+    vi.resetAllMocks();
+    (processEdits as Mock).mockReturnValue((it: unknown) => it);
+  });
+
   it('are empty initially, but include option to add one', async () => {
     const page = await render(<pos-literals></pos-literals>);
     expect(page.root.shadowRoot).toEqualHtml('<pos-add-literal-value></pos-add-literal-value>');
@@ -197,5 +210,69 @@ describe('pos-literals', () => {
         </dd>
       `);
     });
+
+    it('processes edits of a literal value', async () => {
+      // given a resource is editable
+      const os = mockPodOS();
+      const resource = {
+        editable: true,
+        literals: () => [
+          {
+            predicate: 'http://schema.org/name',
+            label: 'name',
+            values: ['Alice'],
+          },
+        ],
+      } as Thing;
+      mockResource(resource);
+
+      // and edits can be processed
+      const processEdit = vi.fn();
+      when(processEdits)
+        .calledWith(os, resource)
+        .thenReturn(edits$ => edits$.pipe(tap(processEdit)));
+
+      // and a pos-literals element is present
+      const page = await render(<pos-literals></pos-literals>);
+
+      // when the user changes the literal value
+      const value = getByShadowRole(page.root, 'textbox');
+      await editContent(value);
+
+      // then the dom value is updated
+      expect(value.textContent).toBe('Bob');
+
+      // and the edit is processed as a stream
+      expect(processEdits).toHaveBeenCalledOnce();
+      expect(processEdit).toHaveBeenCalledTimes(4);
+      expect(processEdit).toHaveBeenCalledWith({
+        newValue: '',
+        oldValue: 'Alice',
+        predicate: 'http://schema.org/name',
+      });
+      expect(processEdit).toHaveBeenCalledWith({
+        newValue: 'B',
+        oldValue: 'Alice',
+        predicate: 'http://schema.org/name',
+      });
+      expect(processEdit).toHaveBeenCalledWith({
+        newValue: 'Bo',
+        oldValue: 'Alice',
+        predicate: 'http://schema.org/name',
+      });
+      expect(processEdit).toHaveBeenCalledWith({
+        newValue: 'Bob',
+        oldValue: 'Alice',
+        predicate: 'http://schema.org/name',
+      });
+    });
   });
 });
+
+async function editContent(value: HTMLElement, text: string = '{Control>}a{/Control}{Backspace}Bob') {
+  // happy-dom + user-event only support contenteditable="true", not "plaintext-only", so set "true" for the interaction
+  expect(value).toEqualAttribute('contenteditable', 'plaintext-only');
+  (value as HTMLElement).setAttribute('contenteditable', 'true');
+  await userEvent.click(value);
+  await userEvent.keyboard(text);
+}
