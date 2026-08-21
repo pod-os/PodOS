@@ -7,7 +7,6 @@ export interface LiteralChanged {
   newValue: string;
 }
 
-// @ts-expect-error TODO use variables
 export function processEdits(os: PodOS, resource: Thing): OperatorFunction<LiteralChanged, any> {
-  return edits$ => edits$.pipe(tap(it => console.log('TODO: process edit', it)));
+  return edits$ => edits$.pipe(tap(it => os.editPropertyValue(resource, it.predicate, it.oldValue, it.newValue)));
 }
