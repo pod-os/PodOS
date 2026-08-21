@@ -139,6 +139,29 @@ export class PodOS {
   }
 
   /**
+   * Updates the value of the given property of the given thing to the new value
+   * @param thing
+   * @param property
+   * @param oldValue
+   * @param newValue
+   */
+  editPropertyValue(
+    thing: Thing,
+    property: string,
+    oldValue: string,
+    newValue: string,
+  ): Promise<void> {
+    console.log(
+      "TODO: edit property value",
+      thing,
+      property,
+      oldValue,
+      newValue,
+    );
+    return Promise.resolve();
+  }
+
+  /**
    * Adds a new relation (link) from the thing to the given uri using the property
    * @param thing
    * @param property
