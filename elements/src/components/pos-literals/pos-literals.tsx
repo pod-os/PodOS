@@ -1,6 +1,9 @@
-import { Literal, Thing } from '@pod-os/core';
-import { Component, Event, EventEmitter, h, Host, State } from '@stencil/core';
+import { Literal, PodOS, Thing } from '@pod-os/core';
+import { Component, Element, Event, EventEmitter, h, Host, State } from '@stencil/core';
 import { ResourceAware, subscribeResource } from '../events/ResourceAware';
+import { Subject } from 'rxjs';
+import { usePodOS } from '../events/usePodOS';
+import { LiteralChanged, processEdits } from './processEdits';
 
 @Component({
   tag: 'pos-literals',
@@ -12,14 +15,25 @@ export class PosLiterals implements ResourceAware {
 
   @State() editable: boolean = false;
 
+  @State() resource!: Thing;
+  @State() os!: PodOS;
+
+  @Element() el!: HTMLElement;
+
+  private edits: Subject<LiteralChanged> = new Subject<LiteralChanged>();
+
   @Event({ eventName: 'pod-os:resource' })
   subscribeResource!: EventEmitter;
 
-  componentWillLoad() {
+  async componentWillLoad() {
+    this.os = await usePodOS(this.el);
     subscribeResource(this);
   }
 
   receiveResource = (resource: Thing) => {
+    this.resource = resource;
+    this.edits.pipe(processEdits(this.os, this.resource)).subscribe();
+    // TODO: unsubscribe
     this.data = resource.literals();
     this.editable = resource.editable;
   };
@@ -58,6 +72,13 @@ export class PosLiterals implements ResourceAware {
                       <div
                         role={this.editable ? 'textbox' : undefined}
                         contentEditable={this.editable ? 'plaintext-only' : 'false'}
+                        onInput={ev =>
+                          this.edits.next({
+                            predicate: it.predicate,
+                            oldValue: value,
+                            newValue: (ev.target as HTMLElement).textContent,
+                          })
+                        }
                       >
                         {value}
                       </div>
