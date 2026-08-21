@@ -3,19 +3,20 @@ import { PodOS, Thing } from '@pod-os/core';
 import { debounceTime } from 'rxjs/operators';
 
 export interface LiteralChanged {
+  resource: Thing;
   predicate: string;
   oldValue: string;
   newValue: string;
 }
 
-export function processEdits(os: PodOS, resource: Thing): OperatorFunction<LiteralChanged, any> {
+export function processEdits(os: PodOS): OperatorFunction<LiteralChanged, any> {
   return edits$ =>
     edits$.pipe(
-      groupBy(it => it.predicate + it.oldValue),
+      groupBy(it => `${it.resource.uri}|${it.predicate}|${it.oldValue}`),
       mergeMap(group$ =>
         group$.pipe(
           debounceTime(1000),
-          tap(it => os.editPropertyValue(resource, it.predicate, it.oldValue, it.newValue)),
+          tap(it => os.editPropertyValue(it.resource, it.predicate, it.oldValue, it.newValue)),
         ),
       ),
     );

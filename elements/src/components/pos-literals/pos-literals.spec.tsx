@@ -229,7 +229,7 @@ describe('pos-literals', () => {
       // and edits can be processed
       const processEdit = vi.fn();
       when(processEdits)
-        .calledWith(os, resource)
+        .calledWith(os)
         .thenReturn(edits$ => edits$.pipe(tap(processEdit)));
 
       // and a pos-literals element is present
@@ -246,21 +246,25 @@ describe('pos-literals', () => {
       expect(processEdits).toHaveBeenCalledOnce();
       expect(processEdit).toHaveBeenCalledTimes(4);
       expect(processEdit).toHaveBeenCalledWith({
+        resource,
         newValue: '',
         oldValue: 'Alice',
         predicate: 'http://schema.org/name',
       });
       expect(processEdit).toHaveBeenCalledWith({
+        resource,
         newValue: 'B',
         oldValue: 'Alice',
         predicate: 'http://schema.org/name',
       });
       expect(processEdit).toHaveBeenCalledWith({
+        resource,
         newValue: 'Bo',
         oldValue: 'Alice',
         predicate: 'http://schema.org/name',
       });
       expect(processEdit).toHaveBeenCalledWith({
+        resource,
         newValue: 'Bob',
         oldValue: 'Alice',
         predicate: 'http://schema.org/name',
