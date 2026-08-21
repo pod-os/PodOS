@@ -11,7 +11,7 @@ export interface LiteralChanged {
 export function processEdits(os: PodOS, resource: Thing): OperatorFunction<LiteralChanged, any> {
   return edits$ =>
     edits$.pipe(
-      groupBy(it => it.oldValue),
+      groupBy(it => it.predicate + it.oldValue),
       mergeMap(group$ =>
         group$.pipe(
           debounceTime(1000),

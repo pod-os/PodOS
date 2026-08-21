@@ -16,7 +16,6 @@ describe('process edits', () => {
     // given os and resource
     const os = mockPodOS();
     const resource = {} as Thing;
-
     // when a single edit processed
     const edits$: Observable<LiteralChanged> = of({
       predicate: 'http://schema.org/name',
@@ -111,5 +110,47 @@ describe('process edits', () => {
     // then the os updates that one as well
     expect(os.editPropertyValue).toHaveBeenCalledTimes(2);
     expect(os.editPropertyValue).toHaveBeenCalledWith(resource, 'http://schema.org/name', 'Value B', 'New Value B');
+  });
+
+  it('processes edits to separate predicates independently', () => {
+    // given os and resource
+    const os = mockPodOS();
+    const resource = {} as Thing;
+
+    // when multiple edits are done quickly to two different predicates with the same value
+    const edits$: Subject<LiteralChanged> = new Subject();
+    edits$.pipe(processEdits(os, resource)).subscribe();
+    edits$.next({
+      predicate: 'http://schema.org/name',
+      oldValue: 'Old Value',
+      newValue: 'New Name',
+    });
+    vi.advanceTimersByTime(999);
+    edits$.next({
+      predicate: 'http://www.w3.org/2000/01/rdf-schema#label',
+      oldValue: 'Old Value',
+      newValue: 'New Label',
+    });
+    vi.advanceTimersByTime(999);
+
+    // then the os only updated the first value because it has not been changed for over a second
+    expect(os.editPropertyValue).toHaveBeenCalledExactlyOnceWith(
+      resource,
+      'http://schema.org/name',
+      'Old Value',
+      'New Name',
+    );
+
+    // and when the debounce-threshold is reached for the second value
+    vi.advanceTimersByTime(1);
+
+    // then the os updates that one as well
+    expect(os.editPropertyValue).toHaveBeenCalledTimes(2);
+    expect(os.editPropertyValue).toHaveBeenCalledWith(
+      resource,
+      'http://www.w3.org/2000/01/rdf-schema#label',
+      'Old Value',
+      'New Label',
+    );
   });
 });
