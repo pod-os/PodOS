@@ -201,4 +201,43 @@ describe('process edits', () => {
     expect(os.editPropertyValue).toHaveBeenCalledTimes(2);
     expect(os.editPropertyValue).toHaveBeenCalledWith(second, 'http://schema.org/name', 'Name', 'New Name on second');
   });
+
+  // TODO: we need an updated "old" value when a first edit already happend and updated the current value
+  it.skip('processes two subsequent edits with the updated old value', () => {
+    // given os and resource
+    const os = mockPodOS();
+    const resource = { uri: 'https://pod.test/resource' } as Thing;
+
+    // when a value is edited
+    const edits$: Subject<LiteralChanged> = new Subject();
+    edits$.pipe(processEdits(os)).subscribe();
+    edits$.next({
+      resource,
+      predicate: 'http://schema.org/name',
+      oldValue: 'Old Value',
+      newValue: 'First edit',
+    });
+    vi.advanceTimersByTime(1000);
+
+    // and the os already edited the property value
+    expect(os.editPropertyValue).toHaveBeenCalledExactlyOnceWith(
+      resource,
+      'http://schema.org/name',
+      'Old Value',
+      'First edit',
+    );
+
+    // when a second edit is done for the same original old value
+    edits$.next({
+      resource,
+      predicate: 'http://schema.org/name',
+      oldValue: 'Old Value',
+      newValue: 'Second edit',
+    });
+    vi.advanceTimersByTime(1000);
+
+    // then the os updates that one as well, but uses the latest value as old value
+    expect(os.editPropertyValue).toHaveBeenCalledTimes(2);
+    expect(os.editPropertyValue).toHaveBeenCalledWith(resource, 'http://schema.org/name', 'First edit', 'Second edit');
+  });
 });
