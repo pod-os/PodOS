@@ -1,6 +1,6 @@
 import { mockPodOS } from '../../test/mockPodOS.vitest';
 
-import { Mock, vi } from 'vitest';
+import { vi } from 'vitest';
 import { beforeEach, describe, expect, h, it, render } from '@stencil/vitest';
 
 import { fireEvent, getByRole, getByText } from '@testing-library/dom';
@@ -10,16 +10,13 @@ import { mockResource } from '../../test/mockResource';
 import { withinShadow } from '../../test/withinShadow';
 import { getByShadowRole } from 'shadow-dom-testing-library';
 import { userEvent } from '@testing-library/user-event';
-import { processEdits } from './processEdits';
-import { when } from 'vitest-when';
-import { tap } from 'rxjs';
+import { LiteralEditor } from './processEdits';
 
-vi.mock('./processEdits');
+vi.mock('./processEdits', () => ({ LiteralEditor: vi.fn() }));
 
 describe('pos-literals', () => {
   beforeEach(() => {
     vi.resetAllMocks();
-    (processEdits as Mock).mockReturnValue((it: unknown) => it);
   });
 
   it('are empty initially, but include option to add one', async () => {
@@ -213,7 +210,7 @@ describe('pos-literals', () => {
 
     it('processes edits of a literal value', async () => {
       // given a resource is editable
-      const os = mockPodOS();
+      mockPodOS();
       const resource = {
         editable: true,
         literals: () => [
@@ -228,9 +225,11 @@ describe('pos-literals', () => {
 
       // and edits can be processed
       const processEdit = vi.fn();
-      when(processEdits)
-        .calledWith(os)
-        .thenReturn(edits$ => edits$.pipe(tap(processEdit)));
+      (LiteralEditor as any).mockImplementation(
+        class {
+          processEdit = processEdit;
+        },
+      );
 
       // and a pos-literals element is present
       const page = await render(<pos-literals></pos-literals>);
@@ -243,31 +242,22 @@ describe('pos-literals', () => {
       expect(value.textContent).toBe('Bob');
 
       // and the edit is processed as a stream
-      expect(processEdits).toHaveBeenCalledOnce();
       expect(processEdit).toHaveBeenCalledTimes(4);
       expect(processEdit).toHaveBeenCalledWith({
-        resource,
+        fieldId: expect.anything(),
         newValue: '',
-        oldValue: 'Alice',
-        predicate: 'http://schema.org/name',
       });
       expect(processEdit).toHaveBeenCalledWith({
-        resource,
+        fieldId: expect.anything(),
         newValue: 'B',
-        oldValue: 'Alice',
-        predicate: 'http://schema.org/name',
       });
       expect(processEdit).toHaveBeenCalledWith({
-        resource,
+        fieldId: expect.anything(),
         newValue: 'Bo',
-        oldValue: 'Alice',
-        predicate: 'http://schema.org/name',
       });
       expect(processEdit).toHaveBeenCalledWith({
-        resource,
+        fieldId: expect.anything(),
         newValue: 'Bob',
-        oldValue: 'Alice',
-        predicate: 'http://schema.org/name',
       });
     });
   });

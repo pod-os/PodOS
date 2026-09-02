@@ -1,18 +1,11 @@
-import { groupBy, mergeMap, OperatorFunction, tap } from 'rxjs';
+import { groupBy, mergeMap, Subject, tap } from 'rxjs';
 import { PodOS, Thing } from '@pod-os/core';
 import { debounceTime } from 'rxjs/operators';
 
-export interface LiteralChanged {
-  resource: Thing;
-  predicate: string;
-  oldValue: string;
-  newValue: string;
-}
-
 export interface EditableLiteral {
+  resource: Thing;
   predicate: string;
   label: string;
-  resource: Thing;
   values: EditableValue[];
 }
 
@@ -21,15 +14,41 @@ export interface EditableValue {
   value: string;
 }
 
-export function processEdits(os: PodOS): OperatorFunction<LiteralChanged, any> {
-  return edits$ =>
-    edits$.pipe(
-      groupBy(it => `${it.resource.uri}|${it.predicate}|${it.oldValue}`),
-      mergeMap(group$ =>
-        group$.pipe(
-          debounceTime(1000),
-          tap(it => os.editPropertyValue(it.resource, it.predicate, it.oldValue, it.newValue)),
+export interface Edit {
+  fieldId: string;
+  newValue: string;
+}
+
+export class LiteralEditor {
+  private readonly edits: Subject<Edit> = new Subject<Edit>();
+
+  constructor(os: PodOS, editableLiterals: EditableLiteral[]) {
+    this.edits
+      .pipe(
+        groupBy(it => it.fieldId),
+        mergeMap(group$ =>
+          group$.pipe(
+            debounceTime(1000),
+            tap(async edit => {
+              const field = editableLiterals
+                .flatMap(literal =>
+                  literal.values.map(value => ({
+                    fieldId: value.fieldId,
+                    resource: literal.resource,
+                    predicate: literal.predicate,
+                    value: value.value,
+                  })),
+                )
+                .find(it => it.fieldId === edit.fieldId)!;
+              await os.editPropertyValue(field.resource, field.predicate, field.value, edit.newValue);
+            }),
+          ),
         ),
-      ),
-    );
+      )
+      .subscribe();
+  }
+
+  processEdit(edit: Edit) {
+    this.edits.next(edit);
+  }
 }
