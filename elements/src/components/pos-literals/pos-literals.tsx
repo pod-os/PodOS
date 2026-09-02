@@ -24,6 +24,11 @@ export class PosLiterals implements ResourceAware {
   @Event({ eventName: 'pod-os:resource' })
   subscribeResource!: EventEmitter;
 
+  /**
+   * Emitted when an error occurs during editing literals
+   */
+  @Event({ eventName: 'pod-os:error' }) errorEmitter!: EventEmitter<Error>;
+
   async componentWillLoad() {
     this.os = await usePodOS(this.el);
     subscribeResource(this);
@@ -34,6 +39,11 @@ export class PosLiterals implements ResourceAware {
     this.data = resource.literals().map(it => makeEditable(resource, it));
     this.editable = resource.editable;
     this.editor = new LiteralEditor(this.os, this.data);
+    this.editor.states$.subscribe(state => {
+      if (state.status === 'error') {
+        this.errorEmitter.emit(new Error(state.message));
+      }
+    });
   };
 
   literalValueAdded(newLiteral: Literal) {
