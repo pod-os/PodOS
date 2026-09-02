@@ -25,6 +25,8 @@ export interface Edit {
 export class LiteralEditor {
   private readonly edits: Subject<Edit> = new Subject<Edit>();
 
+  private lastKnownValue: { [fieldId: string]: string } = {};
+
   constructor(os: PodOS, editableLiterals: EditableLiteral[]) {
     this.edits
       .pipe(
@@ -43,7 +45,9 @@ export class LiteralEditor {
                   })),
                 )
                 .find(it => it.fieldId === edit.fieldId)!;
-              await os.editPropertyValue(field.resource, field.predicate, field.value, edit.newValue);
+              const value = this.lastKnownValue[edit.fieldId] ?? field.value;
+              this.lastKnownValue[edit.fieldId] = edit.newValue;
+              await os.editPropertyValue(field.resource, field.predicate, value, edit.newValue);
             }),
           ),
         ),
