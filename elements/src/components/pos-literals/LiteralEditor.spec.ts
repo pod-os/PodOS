@@ -238,8 +238,7 @@ describe('Literal Editor', () => {
     expect(os.editPropertyValue).toHaveBeenCalledWith(second, 'http://schema.org/name', 'Name', 'New Name on second');
   });
 
-  // TODO: we need an updated "old" value when a first edit already happend and updated the current value
-  it.skip('processes two subsequent edits with the updated old value', () => {
+  it('processes two subsequent edits with the updated old value', () => {
     // given os and resource
     const os = mockPodOS();
     const resource = { uri: 'https://pod.test/resource' } as Thing;
