@@ -157,6 +157,29 @@ export class Store {
     );
   }
 
+  /**
+   * Updates the value of the given property of the given thing to the new value
+   * @param thing
+   * @param property
+   * @param oldValue
+   * @param newValue
+   */
+  async editPropertyValue(
+    thing: Thing,
+    property: string,
+    oldValue: string,
+    newValue: string,
+  ) {
+    console.log(
+      "TODO: edit property value",
+      thing,
+      property,
+      oldValue,
+      newValue,
+    );
+    await Promise.resolve();
+  }
+
   private insert(statement: Statement) {
     return this.updater.update([], [statement], undefined, false, {
       // explicitly omit credentials due to
