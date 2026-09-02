@@ -1,9 +1,9 @@
 import { Literal, PodOS, Thing } from '@pod-os/core';
 import { Component, Element, Event, EventEmitter, h, Host, State } from '@stencil/core';
 import { ResourceAware, subscribeResource } from '../events/ResourceAware';
-import { Subject } from 'rxjs';
 import { usePodOS } from '../events/usePodOS';
-import { LiteralChanged, processEdits } from './processEdits';
+import { EditableLiteral, EditableValue, LiteralChanged, processEdits } from './processEdits';
+import { Subject } from 'rxjs';
 
 @Component({
   tag: 'pos-literals',
@@ -11,7 +11,7 @@ import { LiteralChanged, processEdits } from './processEdits';
   shadow: true,
 })
 export class PosLiterals implements ResourceAware {
-  @State() data: Literal[] = [];
+  @State() data: EditableLiteral[] = [];
 
   @State() editable: boolean = false;
 
@@ -33,7 +33,7 @@ export class PosLiterals implements ResourceAware {
 
   receiveResource = (resource: Thing) => {
     this.resource = resource;
-    this.data = resource.literals();
+    this.data = resource.literals().map(it => makeEditable(resource, it));
     this.editable = resource.editable;
   };
 
@@ -41,14 +41,15 @@ export class PosLiterals implements ResourceAware {
     const existing = this.data.find(it => it.predicate === newLiteral.predicate);
 
     if (!existing) {
-      this.data = [...this.data, newLiteral];
+      this.data = [...this.data, makeEditable(this.resource, newLiteral)];
     } else {
       this.data = this.data.map(it => {
         return it.predicate === existing.predicate
           ? {
+              resource: existing.resource,
               predicate: existing.predicate,
               label: existing.label,
-              values: [...existing.values, ...newLiteral.values],
+              values: [...existing.values, ...newLiteral.values.map(makeEditableValue)],
             }
           : it;
       });
@@ -66,8 +67,8 @@ export class PosLiterals implements ResourceAware {
                   <pos-predicate uri={it.predicate} label={it.label} />
                 </dt>
                 <div class="values">
-                  {it.values.map(value => (
-                    <dd key={value}>
+                  {it.values.map(field => (
+                    <dd key={field.fieldId}>
                       <div
                         role={this.editable ? 'textbox' : undefined}
                         contentEditable={this.editable ? 'plaintext-only' : 'false'}
@@ -75,12 +76,12 @@ export class PosLiterals implements ResourceAware {
                           this.edits.next({
                             resource: this.resource,
                             predicate: it.predicate,
-                            oldValue: value,
+                            oldValue: field.value,
                             newValue: (ev.target as HTMLElement).textContent,
                           })
                         }
                       >
-                        {value}
+                        {field.value}
                       </div>
                     </dd>
                   ))}
@@ -93,4 +94,20 @@ export class PosLiterals implements ResourceAware {
       </Host>
     );
   }
+}
+
+function makeEditable(resource: Thing, literal: Literal): EditableLiteral {
+  return {
+    resource,
+    predicate: literal.predicate,
+    label: literal.label,
+    values: literal.values.map(it => makeEditableValue(it)),
+  };
+}
+
+function makeEditableValue(value: string): EditableValue {
+  return {
+    fieldId: crypto.randomUUID(),
+    value: value,
+  };
 }
