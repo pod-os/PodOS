@@ -151,14 +151,7 @@ export class PodOS {
     oldValue: string,
     newValue: string,
   ): Promise<void> {
-    console.log(
-      "TODO: edit property value",
-      thing,
-      property,
-      oldValue,
-      newValue,
-    );
-    return Promise.resolve();
+    return this.store.editPropertyValue(thing, property, oldValue, newValue);
   }
 
   /**
