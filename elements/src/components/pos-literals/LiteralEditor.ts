@@ -19,6 +19,12 @@ export interface Edit {
   newValue: string;
 }
 
+export interface FieldState {
+  fieldId: string;
+  status: 'touched' | 'pending' | 'success' | 'error';
+  message: string;
+}
+
 /**
  * Processes a stream of edits to literal values and sends them to the PodOS core debounced
  */
@@ -27,12 +33,17 @@ export class LiteralEditor {
 
   private lastKnownValue: { [fieldId: string]: string } = {};
 
+  readonly states$ = new Subject<FieldState>();
+
   constructor(os: PodOS, editableLiterals: EditableLiteral[]) {
     this.edits
       .pipe(
         groupBy(it => it.fieldId),
         mergeMap(group$ =>
           group$.pipe(
+            tap(edit => {
+              this.states$.next({ fieldId: edit.fieldId, status: 'touched', message: 'User is typing' });
+            }),
             debounceTime(1000),
             tap(async edit => {
               const field = editableLiterals
@@ -46,8 +57,14 @@ export class LiteralEditor {
                 )
                 .find(it => it.fieldId === edit.fieldId)!;
               const value = this.lastKnownValue[edit.fieldId] ?? field.value;
-              await os.editPropertyValue(field.resource, field.predicate, value, edit.newValue);
-              this.lastKnownValue[edit.fieldId] = edit.newValue;
+              this.states$.next({ fieldId: edit.fieldId, status: 'pending', message: 'Data is being saved' });
+              try {
+                await os.editPropertyValue(field.resource, field.predicate, value, edit.newValue);
+                this.states$.next({ fieldId: edit.fieldId, status: 'success', message: 'Saved successfully' });
+                this.lastKnownValue[edit.fieldId] = edit.newValue;
+              } catch (error) {
+                this.states$.next({ fieldId: edit.fieldId, status: 'error', message: (error as Error).message });
+              }
             }),
           ),
         ),
