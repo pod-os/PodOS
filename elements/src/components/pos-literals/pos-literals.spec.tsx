@@ -10,13 +10,19 @@ import { mockResource } from '../../test/mockResource';
 import { withinShadow } from '../../test/withinShadow';
 import { getByShadowRole } from 'shadow-dom-testing-library';
 import { userEvent } from '@testing-library/user-event';
-import { LiteralEditor } from './LiteralEditor';
+import { FieldState, LiteralEditor } from './LiteralEditor';
+import { EMPTY, Subject } from 'rxjs';
 
 vi.mock('./LiteralEditor', () => ({ LiteralEditor: vi.fn() }));
 
 describe('pos-literals', () => {
   beforeEach(() => {
     vi.resetAllMocks();
+    (LiteralEditor as any).mockImplementation(
+      class {
+        states$ = EMPTY;
+      },
+    );
   });
 
   it('are empty initially, but include option to add one', async () => {
@@ -227,6 +233,7 @@ describe('pos-literals', () => {
       const processEdit = vi.fn();
       (LiteralEditor as any).mockImplementation(
         class {
+          states$ = EMPTY;
           processEdit = processEdit;
         },
       );
@@ -259,6 +266,57 @@ describe('pos-literals', () => {
         fieldId: expect.anything(),
         newValue: 'Bob',
       });
+    });
+
+    it('emits the error if literal editor publishes one', async () => {
+      // given a resource is editable
+      mockPodOS();
+      const resource = {
+        editable: true,
+        literals: () => [
+          {
+            predicate: 'http://schema.org/name',
+            label: 'name',
+            values: ['Alice'],
+          },
+        ],
+      } as Thing;
+      mockResource(resource);
+
+      // and edits can be processed
+      const states$ = new Subject<FieldState>();
+      const processEdit = vi.fn();
+      (LiteralEditor as any).mockImplementation(
+        class {
+          states$ = states$;
+          processEdit = processEdit;
+        },
+      );
+
+      // and a pos-literals element is present
+      const page = await render(<pos-literals></pos-literals>);
+
+      // and error events are subscribed
+      const errorListener = vi.fn();
+      page.root.addEventListener('pod-os:error', errorListener);
+
+      // when the editor emits some events and finally an error
+      states$.next({
+        fieldId: '123',
+        message: 'Something else happened',
+        status: 'pending',
+      });
+      states$.next({
+        fieldId: '123',
+        message: 'Something when wrong',
+        status: 'error',
+      });
+
+      // then the error event is emitted
+      expect(errorListener).toHaveBeenCalledOnce();
+      expect(errorListener).toHaveBeenCalledExactlyOnceWith(
+        expect.objectContaining({ detail: new Error('Something when wrong') }),
+      );
     });
   });
 });
