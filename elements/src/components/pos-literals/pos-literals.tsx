@@ -2,8 +2,7 @@ import { Literal, PodOS, Thing } from '@pod-os/core';
 import { Component, Element, Event, EventEmitter, h, Host, State } from '@stencil/core';
 import { ResourceAware, subscribeResource } from '../events/ResourceAware';
 import { usePodOS } from '../events/usePodOS';
-import { EditableLiteral, EditableValue, LiteralChanged, processEdits } from './processEdits';
-import { Subject } from 'rxjs';
+import { EditableLiteral, EditableValue, LiteralEditor } from './processEdits';
 
 @Component({
   tag: 'pos-literals',
@@ -20,14 +19,13 @@ export class PosLiterals implements ResourceAware {
 
   @Element() el!: HTMLElement;
 
-  private readonly edits: Subject<LiteralChanged> = new Subject<LiteralChanged>();
+  editor!: LiteralEditor;
 
   @Event({ eventName: 'pod-os:resource' })
   subscribeResource!: EventEmitter;
 
   async componentWillLoad() {
     this.os = await usePodOS(this.el);
-    this.edits.pipe(processEdits(this.os)).subscribe(); // no need to unsubscribe since the stream source dies with the component
     subscribeResource(this);
   }
 
@@ -35,6 +33,7 @@ export class PosLiterals implements ResourceAware {
     this.resource = resource;
     this.data = resource.literals().map(it => makeEditable(resource, it));
     this.editable = resource.editable;
+    this.editor = new LiteralEditor(this.os, this.data);
   };
 
   literalValueAdded(newLiteral: Literal) {
@@ -73,10 +72,8 @@ export class PosLiterals implements ResourceAware {
                         role={this.editable ? 'textbox' : undefined}
                         contentEditable={this.editable ? 'plaintext-only' : 'false'}
                         onInput={ev =>
-                          this.edits.next({
-                            resource: this.resource,
-                            predicate: it.predicate,
-                            oldValue: field.value,
+                          this.editor.processEdit({
+                            fieldId: field.fieldId,
                             newValue: (ev.target as HTMLElement).textContent,
                           })
                         }

@@ -1,11 +1,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { LiteralChanged, processEdits } from './processEdits';
+import { LiteralEditor } from './processEdits';
 import { mockPodOS } from '../../test/mockPodOS.vitest';
-import { Observable, of, Subject } from 'rxjs';
 import { Thing } from '@pod-os/core';
 import { beforeEach } from '@stencil/vitest';
 
-describe('process edits', () => {
+describe('Literal Editor', () => {
   beforeEach(() => {
     vi.useFakeTimers();
   });
@@ -16,14 +15,23 @@ describe('process edits', () => {
     // given os and resource
     const os = mockPodOS();
     const resource = { uri: 'https://pod.test/resource' } as Thing;
+
+    // and a literal editor for a field
+    const editor = new LiteralEditor(os, [
+      {
+        resource,
+        predicate: 'http://schema.org/name',
+        label: 'irrelevant',
+        values: [{ fieldId: '123', value: 'Old Name' }],
+      },
+    ]);
+
     // when a single edit processed
-    const edits$: Observable<LiteralChanged> = of({
-      resource,
-      predicate: 'http://schema.org/name',
-      oldValue: 'Old Name',
+    editor.processEdit({
+      fieldId: '123',
       newValue: 'New Name',
     });
-    edits$.pipe(processEdits(os)).subscribe();
+    vi.advanceTimersByTime(1000);
 
     // then the os updates the property value once
     expect(os.editPropertyValue).toHaveBeenCalledExactlyOnceWith(
@@ -39,27 +47,29 @@ describe('process edits', () => {
     const os = mockPodOS();
     const resource = { uri: 'https://pod.test/resource' } as Thing;
 
+    // and a literal editor for a field
+    const editor = new LiteralEditor(os, [
+      {
+        resource,
+        predicate: 'http://schema.org/name',
+        label: 'irrelevant',
+        values: [{ fieldId: '123', value: 'Old Name' }],
+      },
+    ]);
+
     // when multiple edits are done quickly before the debounce time is reached
-    const edits$: Subject<LiteralChanged> = new Subject();
-    edits$.pipe(processEdits(os)).subscribe();
-    edits$.next({
-      resource,
-      predicate: 'http://schema.org/name',
-      oldValue: 'Old Name',
+    editor.processEdit({
+      fieldId: '123',
       newValue: 'Name 1',
     });
     vi.advanceTimersByTime(999);
-    edits$.next({
-      resource,
-      predicate: 'http://schema.org/name',
-      oldValue: 'Old Name',
+    editor.processEdit({
+      fieldId: '123',
       newValue: 'Name 2',
     });
     vi.advanceTimersByTime(999);
-    edits$.next({
-      resource,
-      predicate: 'http://schema.org/name',
-      oldValue: 'Old Name',
+    editor.processEdit({
+      fieldId: '123',
       newValue: 'Name 3',
     });
     vi.advanceTimersByTime(999);
@@ -84,20 +94,26 @@ describe('process edits', () => {
     const os = mockPodOS();
     const resource = { uri: 'https://pod.test/resource' } as Thing;
 
+    // and a literal editor with two fields for the same predicate
+    const editor = new LiteralEditor(os, [
+      {
+        resource,
+        predicate: 'http://schema.org/name',
+        label: 'irrelevant',
+        values: [
+          { fieldId: '1', value: 'Value A' },
+          { fieldId: '2', value: 'Value B' },
+        ],
+      },
+    ]);
     // when multiple edits are done quickly to two different values of the same predicated
-    const edits$: Subject<LiteralChanged> = new Subject();
-    edits$.pipe(processEdits(os)).subscribe();
-    edits$.next({
-      resource,
-      predicate: 'http://schema.org/name',
-      oldValue: 'Value A',
+    editor.processEdit({
+      fieldId: '1',
       newValue: 'New Value A',
     });
     vi.advanceTimersByTime(999);
-    edits$.next({
-      resource,
-      predicate: 'http://schema.org/name',
-      oldValue: 'Value B',
+    editor.processEdit({
+      fieldId: '2',
       newValue: 'New Value B',
     });
     vi.advanceTimersByTime(999);
@@ -123,20 +139,30 @@ describe('process edits', () => {
     const os = mockPodOS();
     const resource = { uri: 'https://pod.test/resource' } as Thing;
 
+    // and a literal editor with two fields for different predicates
+    const editor = new LiteralEditor(os, [
+      {
+        resource,
+        predicate: 'http://schema.org/name',
+        label: 'irrelevant',
+        values: [{ fieldId: '1', value: 'Old Name' }],
+      },
+      {
+        resource,
+        predicate: 'http://www.w3.org/2000/01/rdf-schema#label',
+        label: 'irrelevant',
+        values: [{ fieldId: '2', value: 'Old Label' }],
+      },
+    ]);
+
     // when multiple edits are done quickly to two different predicates with the same value
-    const edits$: Subject<LiteralChanged> = new Subject();
-    edits$.pipe(processEdits(os)).subscribe();
-    edits$.next({
-      resource,
-      predicate: 'http://schema.org/name',
-      oldValue: 'Old Value',
+    editor.processEdit({
+      fieldId: '1',
       newValue: 'New Name',
     });
     vi.advanceTimersByTime(999);
-    edits$.next({
-      resource,
-      predicate: 'http://www.w3.org/2000/01/rdf-schema#label',
-      oldValue: 'Old Value',
+    editor.processEdit({
+      fieldId: '2',
       newValue: 'New Label',
     });
     vi.advanceTimersByTime(999);
@@ -145,7 +171,7 @@ describe('process edits', () => {
     expect(os.editPropertyValue).toHaveBeenCalledExactlyOnceWith(
       resource,
       'http://schema.org/name',
-      'Old Value',
+      'Old Name',
       'New Name',
     );
 
@@ -157,7 +183,7 @@ describe('process edits', () => {
     expect(os.editPropertyValue).toHaveBeenCalledWith(
       resource,
       'http://www.w3.org/2000/01/rdf-schema#label',
-      'Old Value',
+      'Old Label',
       'New Label',
     );
   });
@@ -168,20 +194,30 @@ describe('process edits', () => {
     const first = { uri: 'https://pod.test/first' } as Thing;
     const second = { uri: 'https://pod.test/second' } as Thing;
 
+    // and a literal editor with two fields for different resources
+    const editor = new LiteralEditor(os, [
+      {
+        resource: first,
+        predicate: 'http://schema.org/name',
+        label: 'irrelevant',
+        values: [{ fieldId: '1', value: 'Name' }],
+      },
+      {
+        resource: second,
+        predicate: 'http://schema.org/name',
+        label: 'irrelevant',
+        values: [{ fieldId: '2', value: 'Name' }],
+      },
+    ]);
+
     // when the same value is edited on the first resource, and then (e.g. after navigation) on the second
-    const edits$: Subject<LiteralChanged> = new Subject();
-    edits$.pipe(processEdits(os)).subscribe();
-    edits$.next({
-      resource: first,
-      predicate: 'http://schema.org/name',
-      oldValue: 'Name',
+    editor.processEdit({
+      fieldId: '1',
       newValue: 'New Name on first',
     });
     vi.advanceTimersByTime(999);
-    edits$.next({
-      resource: second,
-      predicate: 'http://schema.org/name',
-      oldValue: 'Name',
+    editor.processEdit({
+      fieldId: '2',
       newValue: 'New Name on second',
     });
     vi.advanceTimersByTime(999);
@@ -208,13 +244,18 @@ describe('process edits', () => {
     const os = mockPodOS();
     const resource = { uri: 'https://pod.test/resource' } as Thing;
 
+    // and a literal editor for a field
+    const editor = new LiteralEditor(os, [
+      {
+        resource,
+        predicate: 'http://schema.org/name',
+        label: 'irrelevant',
+        values: [{ fieldId: '1', value: 'Old Value' }],
+      },
+    ]);
     // when a value is edited
-    const edits$: Subject<LiteralChanged> = new Subject();
-    edits$.pipe(processEdits(os)).subscribe();
-    edits$.next({
-      resource,
-      predicate: 'http://schema.org/name',
-      oldValue: 'Old Value',
+    editor.processEdit({
+      fieldId: '1',
       newValue: 'First edit',
     });
     vi.advanceTimersByTime(1000);
@@ -228,10 +269,8 @@ describe('process edits', () => {
     );
 
     // when a second edit is done for the same original old value
-    edits$.next({
-      resource,
-      predicate: 'http://schema.org/name',
-      oldValue: 'Old Value',
+    editor.processEdit({
+      fieldId: '1',
       newValue: 'Second edit',
     });
     vi.advanceTimersByTime(1000);
