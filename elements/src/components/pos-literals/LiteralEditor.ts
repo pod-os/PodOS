@@ -46,8 +46,8 @@ export class LiteralEditor {
                 )
                 .find(it => it.fieldId === edit.fieldId)!;
               const value = this.lastKnownValue[edit.fieldId] ?? field.value;
-              this.lastKnownValue[edit.fieldId] = edit.newValue;
               await os.editPropertyValue(field.resource, field.predicate, value, edit.newValue);
+              this.lastKnownValue[edit.fieldId] = edit.newValue;
             }),
           ),
         ),

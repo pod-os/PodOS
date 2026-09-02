@@ -238,7 +238,7 @@ describe('Literal Editor', () => {
     expect(os.editPropertyValue).toHaveBeenCalledWith(second, 'http://schema.org/name', 'Name', 'New Name on second');
   });
 
-  it('processes two subsequent edits with the updated old value', () => {
+  it('processes two subsequent edits with the updated old value', async () => {
     // given os and resource
     const os = mockPodOS();
     const resource = { uri: 'https://pod.test/resource' } as Thing;
@@ -257,7 +257,7 @@ describe('Literal Editor', () => {
       fieldId: '1',
       newValue: 'First edit',
     });
-    vi.advanceTimersByTime(1000);
+    await vi.advanceTimersByTimeAsync(1000);
 
     // and the os already edited the property value
     expect(os.editPropertyValue).toHaveBeenCalledExactlyOnceWith(
@@ -272,7 +272,7 @@ describe('Literal Editor', () => {
       fieldId: '1',
       newValue: 'Second edit',
     });
-    vi.advanceTimersByTime(1000);
+    await vi.advanceTimersByTimeAsync(1000);
 
     // then the os updates that one as well, but uses the latest value as old value
     expect(os.editPropertyValue).toHaveBeenCalledTimes(2);
