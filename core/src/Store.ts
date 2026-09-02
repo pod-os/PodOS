@@ -170,14 +170,24 @@ export class Store {
     oldValue: string,
     newValue: string,
   ) {
-    console.log(
-      "TODO: edit property value",
-      thing,
-      property,
-      oldValue,
-      newValue,
+    const docUrl = this.determineDocumentToUpdate(thing);
+    const remove = st(
+      sym(thing.uri),
+      sym(property),
+      lit(oldValue),
+      sym(docUrl),
     );
-    await Promise.resolve();
+    const insert = st(
+      sym(thing.uri),
+      sym(property),
+      lit(newValue),
+      sym(docUrl),
+    );
+    return this.updater.update([remove], [insert], undefined, false, {
+      // explicitly omit credentials due to
+      // https://github.com/pod-os/PodOS/issues/17
+      credentials: "omit",
+    });
   }
 
   private insert(statement: Statement) {

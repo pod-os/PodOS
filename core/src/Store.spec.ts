@@ -775,6 +775,52 @@ describe("Store", () => {
     });
   });
 
+  describe("edit property value", () => {
+    it("sends sparql delete and insert via updater", async () => {
+      const fetchMock = vi.fn();
+      const mockSession = {
+        authenticatedFetch: fetchMock,
+      } as unknown as PodOsSession;
+      when(fetchMock)
+        .calledWith("https://pod.test/resource", expect.anything())
+        .thenResolve({
+          ok: true,
+          status: 200,
+          statusText: "OK",
+          headers: new Headers({
+            "Content-Type": "text/turtle",
+            "wac-allow": 'user="read write append control",public="read"',
+            "accept-patch": "application/sparql-update",
+          }),
+          text: () =>
+            Promise.resolve(
+              '<https://pod.test/resource#it> <https://pod.test/vocab/predicate> "literal value" .',
+            ),
+        } as Response);
+      const store = new Store(mockSession);
+      await store.fetch("https://pod.test/resource#it");
+      const thing = store.get("https://pod.test/resource#it");
+      await store.editPropertyValue(
+        thing,
+        "https://pod.test/vocab/predicate",
+        "literal value",
+        "updated value",
+      );
+      thenSparqlUpdateIsSentToUrl(
+        fetchMock,
+        "https://pod.test/resource",
+        `DELETE DATA {
+        <https://pod.test/resource#it>
+          <https://pod.test/vocab/predicate> "literal value" .
+      };
+      INSERT DATA {
+        <https://pod.test/resource#it>
+          <https://pod.test/vocab/predicate> "updated value" .
+      }`,
+      );
+    });
+  });
+
   describe("add relation", () => {
     it("sends sparql insert via updater", async () => {
       const fetchMock = vi.fn();
