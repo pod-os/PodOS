@@ -2,7 +2,7 @@ import { Literal, PodOS, Thing } from '@pod-os/core';
 import { Component, Element, Event, EventEmitter, h, Host, State } from '@stencil/core';
 import { ResourceAware, subscribeResource } from '../events/ResourceAware';
 import { usePodOS } from '../events/usePodOS';
-import { EditableLiteral, EditableValue, LiteralEditor } from './processEdits';
+import { EditableLiteral, EditableValue, LiteralEditor } from './LiteralEditor';
 
 @Component({
   tag: 'pos-literals',

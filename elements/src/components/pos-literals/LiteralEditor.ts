@@ -19,6 +19,9 @@ export interface Edit {
   newValue: string;
 }
 
+/**
+ * Processes a stream of edits to literal values and sends them to the PodOS core debounced
+ */
 export class LiteralEditor {
   private readonly edits: Subject<Edit> = new Subject<Edit>();
 
