@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { LiteralEditor } from './processEdits';
+import { LiteralEditor } from './LiteralEditor';
 import { mockPodOS } from '../../test/mockPodOS.vitest';
 import { Thing } from '@pod-os/core';
 import { beforeEach } from '@stencil/vitest';

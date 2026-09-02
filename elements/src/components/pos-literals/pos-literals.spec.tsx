@@ -10,9 +10,9 @@ import { mockResource } from '../../test/mockResource';
 import { withinShadow } from '../../test/withinShadow';
 import { getByShadowRole } from 'shadow-dom-testing-library';
 import { userEvent } from '@testing-library/user-event';
-import { LiteralEditor } from './processEdits';
+import { LiteralEditor } from './LiteralEditor';
 
-vi.mock('./processEdits', () => ({ LiteralEditor: vi.fn() }));
+vi.mock('./LiteralEditor', () => ({ LiteralEditor: vi.fn() }));
 
 describe('pos-literals', () => {
   beforeEach(() => {
