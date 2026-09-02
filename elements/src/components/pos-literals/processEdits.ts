@@ -9,6 +9,18 @@ export interface LiteralChanged {
   newValue: string;
 }
 
+export interface EditableLiteral {
+  predicate: string;
+  label: string;
+  resource: Thing;
+  values: EditableValue[];
+}
+
+export interface EditableValue {
+  fieldId: string;
+  value: string;
+}
+
 export function processEdits(os: PodOS): OperatorFunction<LiteralChanged, any> {
   return edits$ =>
     edits$.pipe(
