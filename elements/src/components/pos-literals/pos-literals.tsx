@@ -2,7 +2,7 @@ import { Literal, PodOS, Thing } from '@pod-os/core';
 import { Component, Element, Event, EventEmitter, h, Host, State } from '@stencil/core';
 import { ResourceAware, subscribeResource } from '../events/ResourceAware';
 import { usePodOS } from '../events/usePodOS';
-import { EditableLiteral, EditableValue, LiteralEditor } from './LiteralEditor';
+import { EditableLiteral, EditableValue, FieldState, LiteralEditor } from './LiteralEditor';
 
 @Component({
   tag: 'pos-literals',
@@ -16,6 +16,8 @@ export class PosLiterals implements ResourceAware {
 
   @State() resource!: Thing;
   @State() os!: PodOS;
+
+  @State() fieldStates: Record<string, FieldState> = {};
 
   @Element() el!: HTMLElement;
 
@@ -40,6 +42,10 @@ export class PosLiterals implements ResourceAware {
     this.editable = resource.editable;
     this.editor = new LiteralEditor(this.os, this.data);
     this.editor.states$.subscribe(state => {
+      this.fieldStates = {
+        ...this.fieldStates,
+        [state.fieldId]: state,
+      };
       if (state.status === 'error') {
         this.errorEmitter.emit(new Error(state.message));
       }
@@ -80,6 +86,7 @@ export class PosLiterals implements ResourceAware {
                     <dd key={field.fieldId}>
                       <div
                         role={this.editable ? 'textbox' : undefined}
+                        class={this.fieldStates[field.fieldId]?.status}
                         contentEditable={this.editable ? 'plaintext-only' : 'false'}
                         onInput={ev =>
                           this.editor.processEdit({
