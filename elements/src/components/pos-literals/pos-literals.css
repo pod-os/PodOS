@@ -43,3 +43,55 @@ dt {
     gap: var(--size-2);
   }
 }
+
+[role='textbox'] {
+  &.touched {
+    text-decoration: underline;
+    &::before {
+      content: '🖊 ';
+    }
+  }
+  &.pending {
+    &::after {
+      animation: pulse 1.2s ease-in-out 0.4s infinite backwards;
+      content: ' ⏳';
+    }
+  }
+  &.success {
+    &::after {
+      animation: blink-once 1.5s ease-in-out forwards;
+      content: ' ✅';
+    }
+  }
+  &.error {
+    border: 1px dashed var(--pos-error-border-color);
+    &::before {
+      content: '⚠️ ';
+    }
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes blink-once {
+  0% {
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
