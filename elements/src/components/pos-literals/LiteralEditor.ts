@@ -38,7 +38,7 @@ interface EditorField {
 export class LiteralEditor {
   private readonly edits: Subject<Edit> = new Subject<Edit>();
 
-  private readonly fields: EditorField[] = [];
+  private fields: EditorField[] = [];
 
   private lastKnownValue: { [fieldId: string]: string } = {};
 
@@ -81,14 +81,16 @@ export class LiteralEditor {
   }
 
   registerFields(literal: EditableLiteral) {
-    this.fields.push(
-      ...literal.values.map(value => ({
-        fieldId: value.fieldId,
-        resource: literal.resource,
-        predicate: literal.predicate,
-        value: value.value,
-      })),
-    );
+    const updatedFields: EditorField[] = literal.values.map(value => ({
+      fieldId: value.fieldId,
+      resource: literal.resource,
+      predicate: literal.predicate,
+      value: value.value,
+    }));
+    const unchangedFields = this.fields.filter(field => {
+      return this.fields.find(it => it.fieldId !== field.fieldId);
+    });
+    this.fields = [...unchangedFields, ...updatedFields];
   }
 
   processEdit(edit: Edit) {
