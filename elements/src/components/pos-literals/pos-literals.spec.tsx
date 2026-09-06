@@ -3,7 +3,7 @@ import { mockPodOS } from '../../test/mockPodOS.vitest';
 import { vi } from 'vitest';
 import { beforeEach, describe, expect, h, it, render } from '@stencil/vitest';
 
-import { fireEvent, getByRole, getByText } from '@testing-library/dom';
+import { fireEvent, getByRole, getByText, waitFor } from '@testing-library/dom';
 import './pos-literals';
 import { Literal, Thing } from '@pod-os/core';
 import { mockResource } from '../../test/mockResource';
@@ -267,6 +267,53 @@ describe('pos-literals', () => {
         newValue: 'Bob',
       });
     });
+
+    it.each(['touched', 'pending', 'success', 'error'])(
+      'shows the %s status from literal editor',
+      async (status: string) => {
+        // given a resource is editable
+        mockPodOS();
+        const resource = {
+          editable: true,
+          literals: () => [
+            {
+              predicate: 'http://schema.org/name',
+              label: 'name',
+              values: ['Alice'],
+            },
+          ],
+        } as Thing;
+        mockResource(resource);
+
+        // and edits can be processed
+        const states$ = new Subject<FieldState>();
+        const processEdit = vi.fn();
+        (LiteralEditor as any).mockImplementation(
+          class {
+            states$ = states$;
+            processEdit = processEdit;
+          },
+        );
+
+        // and a pos-literals element is present
+        const page = await render(<pos-literals></pos-literals>);
+
+        // then the state is first neutral
+        const textbox = getByShadowRole(page.root, 'textbox');
+        expect(textbox).not.toHaveClass('touched');
+
+        const fieldId = page.instance.data[0].values[0].fieldId;
+
+        // when fields states changes
+        // @ts-ignore
+        states$.next({ fieldId, message: 'Something happened', status });
+
+        // then a CSS class is added to visualize the state
+        await waitFor(() => {
+          expect(textbox).toHaveClass(status);
+        });
+      },
+    );
 
     it('emits the error if literal editor publishes one', async () => {
       // given a resource is editable
