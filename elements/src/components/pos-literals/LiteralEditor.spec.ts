@@ -331,7 +331,7 @@ describe('Literal Editor', () => {
           resource,
           predicate: 'http://schema.org/name',
           label: 'irrelevant',
-          values: [{ fieldId: '1', value: 'Old Value 1' }],
+          values: [{ fieldId: '1', value: 'Outdated value' }],
         },
       ]);
 
