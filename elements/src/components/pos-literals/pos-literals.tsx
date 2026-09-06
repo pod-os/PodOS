@@ -55,8 +55,11 @@ export class PosLiterals implements ResourceAware {
   literalValueAdded(newLiteral: Literal) {
     const existing = this.data.find(it => it.predicate === newLiteral.predicate);
 
+    const newEditableLiteral = makeEditable(this.resource, newLiteral);
+    this.editor.registerFields(newEditableLiteral);
+
     if (!existing) {
-      this.data = [...this.data, makeEditable(this.resource, newLiteral)];
+      this.data = [...this.data, newEditableLiteral];
     } else {
       this.data = this.data.map(it => {
         return it.predicate === existing.predicate
@@ -64,7 +67,7 @@ export class PosLiterals implements ResourceAware {
               resource: existing.resource,
               predicate: existing.predicate,
               label: existing.label,
-              values: [...existing.values, ...newLiteral.values.map(makeEditableValue)],
+              values: [...existing.values, newEditableLiteral.values[0]],
             }
           : it;
       });

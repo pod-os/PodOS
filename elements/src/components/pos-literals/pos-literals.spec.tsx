@@ -1,6 +1,6 @@
 import { mockPodOS } from '../../test/mockPodOS.vitest';
 
-import { vi } from 'vitest';
+import { Mock, vi } from 'vitest';
 import { beforeEach, describe, expect, h, it, render } from '@stencil/vitest';
 
 import { fireEvent, getByRole, getByText, waitFor } from '@testing-library/dom';
@@ -10,7 +10,7 @@ import { mockResource } from '../../test/mockResource';
 import { withinShadow } from '../../test/withinShadow';
 import { getByShadowRole } from 'shadow-dom-testing-library';
 import { userEvent } from '@testing-library/user-event';
-import { FieldState, LiteralEditor } from './LiteralEditor';
+import { EditableLiteral, FieldState, LiteralEditor } from './LiteralEditor';
 import { EMPTY, Subject } from 'rxjs';
 
 vi.mock('./LiteralEditor', () => ({ LiteralEditor: vi.fn() }));
@@ -85,14 +85,26 @@ describe('pos-literals', () => {
 
   describe('add a new literal value', () => {
     it('adds newly added predicate to the list', async () => {
-      // given
-      mockResource({
+      // given a thing without literals
+      const resource = {
         literals: () => [],
-      });
+      } as unknown as Thing;
+      mockResource(resource);
+
+      // and a literal editor
+      const registerFields = vi.fn();
+      (LiteralEditor as any).mockImplementation(
+        class {
+          states$ = EMPTY;
+          registerFields = registerFields;
+        },
+      );
+
+      // and a page rendering pos-literals
       const page = await render(<pos-literals></pos-literals>);
       await page.waitForChanges();
 
-      // when
+      // when a new literal is added
       const input = page.root.shadowRoot!.querySelector('pos-add-literal-value')!;
       const literal: Literal = {
         predicate: 'https://schema.org/name',
@@ -108,15 +120,29 @@ describe('pos-literals', () => {
 
       await page.waitForChanges();
 
-      // then
+      // then it shows up
       expect(withinShadow(page).getByText('Alice')).toBeDefined();
       const name = page.root.shadowRoot!.querySelector('pos-predicate[uri="https://schema.org/name"]');
       expect(name).toEqualAttribute('label', 'name');
+
+      // and a field is registered in the editor
+      const field: EditableLiteral = {
+        label: 'name',
+        predicate: 'https://schema.org/name',
+        resource,
+        values: [
+          {
+            fieldId: expect.anything(),
+            value: 'Alice',
+          },
+        ],
+      };
+      expect(registerFields).toHaveBeenCalledExactlyOnceWith(field);
     });
 
     it('adds newly added predicate value to the existing list without duplicating the predicate', async () => {
-      // given
-      mockResource({
+      // given a resource with a name
+      const resource = {
         literals: () => [
           {
             predicate: 'https://schema.org/name',
@@ -124,11 +150,23 @@ describe('pos-literals', () => {
             values: ['Alice'],
           },
         ],
-      });
+      } as unknown as Thing;
+      mockResource(resource);
+
+      // and a literal editor
+      const registerFields = vi.fn();
+      (LiteralEditor as any).mockImplementation(
+        class {
+          states$ = EMPTY;
+          registerFields = registerFields;
+        },
+      );
+
+      // and a page rendering pos-literals
       const page = await render(<pos-literals></pos-literals>);
       await page.waitForChanges();
 
-      // when
+      // when another value for the name property is added
       const input = page.root.shadowRoot!.querySelector('pos-add-literal-value')!;
       const literal: Literal = {
         predicate: 'https://schema.org/name',
@@ -144,11 +182,25 @@ describe('pos-literals', () => {
 
       await page.waitForChanges();
 
-      // then
+      // then both names show up
       expect(withinShadow(page).getByText('Alice')).toBeDefined();
       expect(withinShadow(page).getByText('Bernadette')).toBeDefined();
       const name = page.root.shadowRoot!.querySelectorAll('pos-predicate[uri="https://schema.org/name"]');
       expect(name).toHaveLength(1);
+
+      // and a new field is added to the literal editor
+      const field: EditableLiteral = {
+        label: 'name',
+        predicate: 'https://schema.org/name',
+        resource,
+        values: [
+          {
+            fieldId: expect.anything(),
+            value: 'Bernadette',
+          },
+        ],
+      };
+      expect(registerFields).toHaveBeenCalledExactlyOnceWith(field);
     });
   });
 
@@ -243,7 +295,7 @@ describe('pos-literals', () => {
 
       // when the user changes the literal value
       const value = getByShadowRole(page.root, 'textbox');
-      await editContent(value);
+      await editContent(value, '{Control>}a{/Control}{Backspace}Bob');
 
       // then the dom value is updated
       expect(value.textContent).toBe('Bob');
@@ -264,6 +316,76 @@ describe('pos-literals', () => {
       });
       expect(processEdit).toHaveBeenCalledWith({
         fieldId: expect.anything(),
+        newValue: 'Bob',
+      });
+    });
+
+    it('processes edits to a newly added literal value', async () => {
+      // given a resource is editable but does not have literals yet
+      mockPodOS();
+      const resource = {
+        editable: true,
+        literals: () => [] as Literal[],
+      } as Thing;
+      mockResource(resource);
+
+      // and edits can be processed
+      const processEdit = vi.fn();
+      const registerFields = vi.fn();
+      (LiteralEditor as any).mockImplementation(
+        class {
+          states$ = EMPTY;
+          processEdit = processEdit;
+          registerFields = registerFields;
+        },
+      );
+
+      // and a pos-literals element is present
+      const page = await render(<pos-literals></pos-literals>);
+
+      // when the user adds a literal value
+      const input = page.root.shadowRoot!.querySelector('pos-add-literal-value')!;
+      const literal: Literal = {
+        predicate: 'https://schema.org/name',
+        label: 'name',
+        values: ['Alice'],
+      };
+      fireEvent(
+        input,
+        new CustomEvent('pod-os:added-literal-value', {
+          detail: literal,
+        }),
+      );
+
+      await page.waitForChanges();
+      const textbox = getByShadowRole(page.root, 'textbox');
+      expect(textbox).toHaveTextContent('Alice');
+
+      // and a new field is registered in the editor
+      const field: EditableLiteral = {
+        label: 'name',
+        predicate: 'https://schema.org/name',
+        resource,
+        values: [
+          {
+            fieldId: expect.anything(),
+            value: 'Alice',
+          },
+        ],
+      };
+      expect(registerFields).toHaveBeenCalledExactlyOnceWith(field);
+      const fieldId = (registerFields as Mock).mock.calls[0][0].values[0].fieldId;
+
+      // when the user edits the new field
+      const value = getByShadowRole(page.root, 'textbox');
+      await editContent(value, '{Control>}a{/Control}{Backspace}Bob');
+
+      // then the entered value is shown
+      expect(textbox).toHaveTextContent('Bob');
+
+      // and the edit is processed with the newly registered field's ID
+      expect(processEdit).toHaveBeenCalledWith({
+        fieldId,
         newValue: 'Bob',
       });
     });
@@ -368,7 +490,7 @@ describe('pos-literals', () => {
   });
 });
 
-async function editContent(value: HTMLElement, text: string = '{Control>}a{/Control}{Backspace}Bob') {
+async function editContent(value: HTMLElement, text: string) {
   // happy-dom + user-event only support contenteditable="true", not "plaintext-only", so set "true" for the interaction
   expect(value).toEqualAttribute('contenteditable', 'plaintext-only');
   (value as HTMLElement).setAttribute('contenteditable', 'true');
