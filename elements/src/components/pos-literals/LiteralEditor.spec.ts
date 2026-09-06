@@ -287,6 +287,93 @@ describe('Literal Editor', () => {
     });
   });
 
+  describe('register fields', () => {
+    it('processes a single edit to a newly registered field', () => {
+      // given os and resource
+      const os = mockPodOS();
+      const resource = { uri: 'https://pod.test/resource' } as Thing;
+
+      // and a literal editor without fields
+      const editor = new LiteralEditor(os, []);
+
+      // but a field is registered afterwards
+      editor.registerFields({
+        resource,
+        predicate: 'http://schema.org/name',
+        label: 'irrelevant',
+        values: [{ fieldId: '123', value: 'Old Name' }],
+      });
+
+      // when a single edit processed for that field
+      editor.processEdit({
+        fieldId: '123',
+        newValue: 'New Name',
+      });
+      vi.advanceTimersByTime(1000);
+
+      // then the os updates the property value once
+      expect(os.editPropertyValue).toHaveBeenCalledExactlyOnceWith(
+        resource,
+        'http://schema.org/name',
+        'Old Name',
+        'New Name',
+      );
+    });
+
+    it('ignores duplicate fields', () => {
+      // given os and resource
+      const os = mockPodOS();
+      const resource = { uri: 'https://pod.test/resource' } as Thing;
+
+      // and a literal editor for a field
+      const editor = new LiteralEditor(os, [
+        {
+          resource,
+          predicate: 'http://schema.org/name',
+          label: 'irrelevant',
+          values: [{ fieldId: '1', value: 'Old Value 1' }],
+        },
+      ]);
+
+      // and an editable literal is registered with one new field and one pre-existing
+      editor.registerFields({
+        resource,
+        predicate: 'http://schema.org/name',
+        label: 'irrelevant',
+        values: [
+          { fieldId: '1', value: 'Old Value 1' },
+          { fieldId: '2', value: 'Old Value 2' },
+        ],
+      });
+
+      // when both fields are edited
+      editor.processEdit({
+        fieldId: '1',
+        newValue: 'New Value 1',
+      });
+      editor.processEdit({
+        fieldId: '2',
+        newValue: 'New Value 2',
+      });
+      vi.advanceTimersByTime(1000);
+
+      // then the os updates both values once
+      expect(os.editPropertyValue).toHaveBeenCalledTimes(2);
+      expect(os.editPropertyValue).toHaveBeenCalledWith(
+        resource,
+        'http://schema.org/name',
+        'Old Value 1',
+        'New Value 1',
+      );
+      expect(os.editPropertyValue).toHaveBeenCalledWith(
+        resource,
+        'http://schema.org/name',
+        'Old Value 2',
+        'New Value 2',
+      );
+    });
+  });
+
   describe('tracks the states', () => {
     it('tracks the state of a single edit', async () => {
       // given os and resource

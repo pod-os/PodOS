@@ -25,17 +25,34 @@ export interface FieldState {
   message: string;
 }
 
+interface EditorField {
+  fieldId: string;
+  resource: Thing;
+  predicate: string;
+  value: string;
+}
+
 /**
  * Processes a stream of edits to literal values and sends them to the PodOS core debounced
  */
 export class LiteralEditor {
   private readonly edits: Subject<Edit> = new Subject<Edit>();
 
+  private readonly fields: EditorField[] = [];
+
   private lastKnownValue: { [fieldId: string]: string } = {};
 
   readonly states$ = new Subject<FieldState>();
 
   constructor(os: PodOS, editableLiterals: EditableLiteral[]) {
+    this.fields = editableLiterals.flatMap(literal =>
+      literal.values.map(value => ({
+        fieldId: value.fieldId,
+        resource: literal.resource,
+        predicate: literal.predicate,
+        value: value.value,
+      })),
+    );
     this.edits
       .pipe(
         groupBy(it => it.fieldId),
@@ -46,16 +63,7 @@ export class LiteralEditor {
             }),
             debounceTime(1000),
             tap(async edit => {
-              const field = editableLiterals
-                .flatMap(literal =>
-                  literal.values.map(value => ({
-                    fieldId: value.fieldId,
-                    resource: literal.resource,
-                    predicate: literal.predicate,
-                    value: value.value,
-                  })),
-                )
-                .find(it => it.fieldId === edit.fieldId)!;
+              const field = this.fields.find(it => it.fieldId === edit.fieldId)!;
               const value = this.lastKnownValue[edit.fieldId] ?? field.value;
               this.states$.next({ fieldId: edit.fieldId, status: 'pending', message: 'Data is being saved' });
               try {
@@ -70,6 +78,17 @@ export class LiteralEditor {
         ),
       )
       .subscribe();
+  }
+
+  registerFields(literal: EditableLiteral) {
+    this.fields.push(
+      ...literal.values.map(value => ({
+        fieldId: value.fieldId,
+        resource: literal.resource,
+        predicate: literal.predicate,
+        value: value.value,
+      })),
+    );
   }
 
   processEdit(edit: Edit) {
