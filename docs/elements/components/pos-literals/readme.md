@@ -7,9 +7,10 @@
 
 ## Events
 
-| Event             | Description | Type               |
-| ----------------- | ----------- | ------------------ |
-| `pod-os:resource` |             | `CustomEvent<any>` |
+| Event             | Description                                          | Type                 |
+| ----------------- | ---------------------------------------------------- | -------------------- |
+| `pod-os:error`    | Emitted when an error occurs during editing literals | `CustomEvent<Error>` |
+| `pod-os:resource` |                                                      | `CustomEvent<any>`   |
 
 
 ## Dependencies
