@@ -390,52 +390,65 @@ describe('pos-literals', () => {
       });
     });
 
-    it.each(['touched', 'pending', 'success', 'error'])(
-      'shows the %s status from literal editor',
-      async (status: string) => {
-        // given a resource is editable
-        mockPodOS();
-        const resource = {
-          editable: true,
-          literals: () => [
-            {
-              predicate: 'http://schema.org/name',
-              label: 'name',
-              values: ['Alice'],
-            },
-          ],
-        } as Thing;
-        mockResource(resource);
-
-        // and edits can be processed
-        const states$ = new Subject<FieldState>();
-        const processEdit = vi.fn();
-        (LiteralEditor as any).mockImplementation(
-          class {
-            states$ = states$;
-            processEdit = processEdit;
+    it.each([
+      ['touched', 'pencil'],
+      ['pending', 'hourglass-split'],
+      ['success', 'check2-circle'],
+      ['error', 'exclamation-triangle'],
+    ])('shows the %s status from literal editor using %s icon', async (status: string, icon: string) => {
+      // given a resource is editable
+      mockPodOS();
+      const resource = {
+        editable: true,
+        literals: () => [
+          {
+            predicate: 'http://schema.org/name',
+            label: 'name',
+            values: ['Alice'],
           },
-        );
+        ],
+      } as Thing;
+      mockResource(resource);
 
-        // and a pos-literals element is present
-        const page = await render(<pos-literals></pos-literals>);
+      // and edits can be processed
+      const states$ = new Subject<FieldState>();
+      const processEdit = vi.fn();
+      (LiteralEditor as any).mockImplementation(
+        class {
+          states$ = states$;
+          processEdit = processEdit;
+        },
+      );
 
-        // then the state is first neutral
-        const textbox = getByShadowRole(page.root, 'textbox');
-        expect(textbox).not.toHaveClass('touched');
+      // and a pos-literals element is present
+      const page = await render(<pos-literals></pos-literals>);
 
-        const fieldId = page.instance.data[0].values[0].fieldId;
+      // then the state is first neutral
+      const textbox = getByShadowRole(page.root, 'textbox');
+      expect(textbox).not.toHaveClass('touched');
 
-        // when fields states changes
-        // @ts-ignore
-        states$.next({ fieldId, message: 'Something happened', status });
+      const fieldId = page.instance.data[0].values[0].fieldId;
 
-        // then a CSS class is added to visualize the state
-        await waitFor(() => {
-          expect(textbox).toHaveClass(status);
-        });
-      },
-    );
+      // when fields states changes
+      // @ts-ignore
+      states$.next({ fieldId, message: 'Something happened', status });
+
+      // then a CSS class is added to visualize the state
+      await waitFor(() => {
+        expect(textbox).toHaveClass(status);
+      });
+
+      // and the status region shows an icon and the message
+      expect(textbox).toEqualAttribute('aria-describedby', `${fieldId}-status`);
+      const statusEl = getByShadowRole(page.root, 'status')!;
+      const iconEl = statusEl.querySelector('sl-icon');
+      expect(statusEl).toEqualAttribute('id', `${fieldId}-status`);
+      expect(iconEl).toEqualAttribute('name', icon);
+      expect(iconEl).toEqualAttribute('aria-hidden', 'true');
+
+      // and the status is announced
+      expect(getByShadowRole(page.root, 'status')).toHaveTextContent('Something happened');
+    });
 
     it('emits the error if literal editor publishes one', async () => {
       // given a resource is editable

@@ -3,6 +3,7 @@ import { Component, Element, Event, EventEmitter, h, Host, State } from '@stenci
 import { ResourceAware, subscribeResource } from '../events/ResourceAware';
 import { usePodOS } from '../events/usePodOS';
 import { EditableLiteral, EditableValue, FieldState, LiteralEditor } from './LiteralEditor';
+import { StatusIcon } from './StatusIcon';
 
 @Component({
   tag: 'pos-literals',
@@ -85,23 +86,28 @@ export class PosLiterals implements ResourceAware {
                   <pos-predicate uri={it.predicate} label={it.label} />
                 </dt>
                 <div class="values">
-                  {it.values.map(field => (
-                    <dd key={field.fieldId}>
-                      <div
-                        role={this.editable ? 'textbox' : undefined}
-                        class={this.fieldStates[field.fieldId]?.status}
-                        contentEditable={this.editable ? 'plaintext-only' : 'false'}
-                        onInput={ev =>
-                          this.editor.processEdit({
-                            fieldId: field.fieldId,
-                            newValue: (ev.target as HTMLElement).textContent,
-                          })
-                        }
-                      >
-                        {field.value}
-                      </div>
-                    </dd>
-                  ))}
+                  {it.values.map(field => {
+                    const state = this.fieldStates[field.fieldId];
+                    return (
+                      <dd key={field.fieldId}>
+                        <div
+                          role={this.editable ? 'textbox' : undefined}
+                          class={state?.status}
+                          aria-describedby={state ? `${field.fieldId}-status` : undefined}
+                          contentEditable={this.editable ? 'plaintext-only' : 'false'}
+                          onInput={ev =>
+                            this.editor.processEdit({
+                              fieldId: field.fieldId,
+                              newValue: (ev.target as HTMLElement).textContent,
+                            })
+                          }
+                        >
+                          {field.value}
+                        </div>
+                        <StatusIcon state={state} field={field} />
+                      </dd>
+                    );
+                  })}
                 </div>
               </div>
             ))}
