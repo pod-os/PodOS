@@ -6,7 +6,8 @@
     schema:name "Something" ;
     schema:image <thing.png>;
     schema:description  "A very generic item" ;
-    schema:parentItem :parent
+    schema:parentItem :parent ;
+    schema:text "Old value" ;
 .
 
 :parent
