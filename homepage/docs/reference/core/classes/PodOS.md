@@ -48,7 +48,7 @@ Defined in: [src/index.ts:51](https://github.com/pod-os/PodOS/blob/main/core/src
 
 > **addNewThing**(`uri`, `name`, `type`): `Promise`\<`void`\>
 
-Defined in: [src/index.ts:155](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L155)
+Defined in: [src/index.ts:171](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L171)
 
 #### Parameters
 
@@ -102,7 +102,7 @@ Adds a new value to the property of the given thing
 
 > **addRelation**(`thing`, `property`, `value`): `Promise`\<`void`\>
 
-Defined in: [src/index.ts:147](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L147)
+Defined in: [src/index.ts:163](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L163)
 
 Adds a new relation (link) from the thing to the given uri using the property
 
@@ -130,7 +130,7 @@ Adds a new relation (link) from the thing to the given uri using the property
 
 > **addToLabelIndex**(`thing`, `labelIndex`): `Promise`\<`void`\>
 
-Defined in: [src/index.ts:208](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L208)
+Defined in: [src/index.ts:224](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L224)
 
 Adds a label of the given thing to the label index, so that it can be found after the search index has been rebuilt
 
@@ -158,7 +158,7 @@ The index to update
 
 > **attachments**(): [`AttachmentGateway`](AttachmentGateway.md)
 
-Defined in: [src/index.ts:242](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L242)
+Defined in: [src/index.ts:258](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L258)
 
 Provides access to attachment operations such as uploading and linking attachments to things
 
@@ -178,7 +178,7 @@ An instance of AttachmentGateway that handles attachment operations
 
 > **buildSearchIndex**(`profile`): `Promise`\<[`SearchIndex`](SearchIndex.md)\>
 
-Defined in: [src/index.ts:182](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L182)
+Defined in: [src/index.ts:198](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L198)
 
 Fetch the private label index for the given profile and build a search index from it
 
@@ -198,7 +198,7 @@ Fetch the private label index for the given profile and build a search index fro
 
 > **createDefaultLabelIndex**(`profile`): `Promise`\<[`LabelIndex`](LabelIndex.md)\>
 
-Defined in: [src/index.ts:218](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L218)
+Defined in: [src/index.ts:234](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L234)
 
 Creates a new label index document at a default location and links it to the user's profile or preferences document
 
@@ -215,6 +215,38 @@ The profile for that to create the index
 `Promise`\<[`LabelIndex`](LabelIndex.md)\>
 
 the newly created label index
+
+***
+
+### editPropertyValue()
+
+> **editPropertyValue**(`thing`, `property`, `oldValue`, `newValue`): `Promise`\<`void`\>
+
+Defined in: [src/index.ts:148](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L148)
+
+Updates the value of the given property of the given thing to the new value
+
+#### Parameters
+
+##### thing
+
+[`Thing`](Thing.md)
+
+##### property
+
+`string`
+
+##### oldValue
+
+`string`
+
+##### newValue
+
+`string`
+
+#### Returns
+
+`Promise`\<`void`\>
 
 ***
 
@@ -284,7 +316,7 @@ Use [FileFetcher.fetchFile](FileFetcher.md#fetchfile) via [PodOS.files](#files) 
 
 > **fetchProfile**(`webId`): `Promise`\<[`WebIdProfile`](WebIdProfile.md)\>
 
-Defined in: [src/index.ts:174](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L174)
+Defined in: [src/index.ts:190](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L190)
 
 Fetch the WebId profile and preferences file for the given WebID
 
@@ -320,7 +352,7 @@ An instance of FileFetcher that handles file operations
 
 > **listKnownTerms**(): [`Term`](../interfaces/Term.md)[]
 
-Defined in: [src/index.ts:151](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L151)
+Defined in: [src/index.ts:167](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L167)
 
 #### Returns
 
@@ -332,7 +364,7 @@ Defined in: [src/index.ts:151](https://github.com/pod-os/PodOS/blob/main/core/sr
 
 > **loadModule**\<`T`\>(`moduleName`): `Promise`\<`T`\>
 
-Defined in: [src/index.ts:199](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L199)
+Defined in: [src/index.ts:215](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L215)
 
 Dynamically loads a module by its name and returns an instance of the module
 
@@ -358,7 +390,7 @@ Dynamically loads a module by its name and returns an instance of the module
 
 > **login**(`oidcIssuer?`): `Promise`\<`void`\>
 
-Defined in: [src/index.ts:191](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L191)
+Defined in: [src/index.ts:207](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L207)
 
 #### Parameters
 
@@ -376,7 +408,7 @@ Defined in: [src/index.ts:191](https://github.com/pod-os/PodOS/blob/main/core/sr
 
 > **logout**(): `Promise`\<`void`\>
 
-Defined in: [src/index.ts:186](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L186)
+Defined in: [src/index.ts:202](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L202)
 
 #### Returns
 
@@ -388,7 +420,7 @@ Defined in: [src/index.ts:186](https://github.com/pod-os/PodOS/blob/main/core/sr
 
 > **observeSession**(): `BehaviorSubject`\<[`SessionInfo`](../type-aliases/SessionInfo.md)\>
 
-Defined in: [src/index.ts:166](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L166)
+Defined in: [src/index.ts:182](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L182)
 
 returns a behavior subject that can be used to observe changes in the session state
 
@@ -402,7 +434,7 @@ returns a behavior subject that can be used to observe changes in the session st
 
 > **proposeAppsFor**(`thing`): [`OpenWithApp`](../interfaces/OpenWithApp.md)[]
 
-Defined in: [src/index.ts:251](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L251)
+Defined in: [src/index.ts:267](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L267)
 
 Propose matching apps to open a thing
 
@@ -426,7 +458,7 @@ An array of apps that can open the thing. The array is empty if no apps are foun
 
 > **proposeUriForNewThing**(`referenceUri`, `name`): `string`
 
-Defined in: [src/index.ts:159](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L159)
+Defined in: [src/index.ts:175](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L175)
 
 #### Parameters
 
@@ -448,7 +480,7 @@ Defined in: [src/index.ts:159](https://github.com/pod-os/PodOS/blob/main/core/sr
 
 > **uploadAndAddPicture**(`thing`, `pictureFile`): `ResultAsync`\<\{ `url`: `string`; \}, [`NetworkProblem`](../interfaces/NetworkProblem.md) \| [`HttpProblem`](../interfaces/HttpProblem.md)\>
 
-Defined in: [src/index.ts:230](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L230)
+Defined in: [src/index.ts:246](https://github.com/pod-os/PodOS/blob/main/core/src/index.ts#L246)
 
 Uploads a picture file and associates it with a thing.
 The container is automatically derived from the thing's URI.
