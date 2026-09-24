@@ -173,6 +173,12 @@ export namespace Components {
     }
     interface PosGettingStarted {
     }
+    interface PosHtmlTool {
+        /**
+          * HTML fragment to sanitize and render
+         */
+        "fragment": string;
+    }
     /**
      * Tries fetch an image with the solid authentication, and can visualize http errors like 403 or 404 if this fails.
      * Falls back to classic `<img src="...">` on network errors like CORS.
@@ -881,6 +887,12 @@ declare global {
         prototype: HTMLPosGettingStartedElement;
         new (): HTMLPosGettingStartedElement;
     };
+    interface HTMLPosHtmlToolElement extends Components.PosHtmlTool, HTMLStencilElement {
+    }
+    var HTMLPosHtmlToolElement: {
+        prototype: HTMLPosHtmlToolElement;
+        new (): HTMLPosHtmlToolElement;
+    };
     interface HTMLPosImageElementEventMap {
         "pod-os:resource-loaded": string;
     }
@@ -1444,6 +1456,7 @@ declare global {
         "pos-error-toast": HTMLPosErrorToastElement;
         "pos-example-resources": HTMLPosExampleResourcesElement;
         "pos-getting-started": HTMLPosGettingStartedElement;
+        "pos-html-tool": HTMLPosHtmlToolElement;
         "pos-image": HTMLPosImageElement;
         "pos-internal-router": HTMLPosInternalRouterElement;
         "pos-label": HTMLPosLabelElement;
@@ -1677,6 +1690,12 @@ declare namespace LocalJSX {
     }
     interface PosGettingStarted {
         "onPod-os:login"?: (event: PosGettingStartedCustomEvent<void>) => void;
+    }
+    interface PosHtmlTool {
+        /**
+          * HTML fragment to sanitize and render
+         */
+        "fragment"?: string;
     }
     /**
      * Tries fetch an image with the solid authentication, and can visualize http errors like 403 or 404 if this fails.
@@ -2103,6 +2122,7 @@ declare namespace LocalJSX {
         "pos-error-toast": PosErrorToast;
         "pos-example-resources": PosExampleResources;
         "pos-getting-started": PosGettingStarted;
+        "pos-html-tool": PosHtmlTool;
         "pos-image": Omit<PosImage, keyof PosImageAttributes> & { [K in keyof PosImage & keyof PosImageAttributes]?: PosImage[K] } & { [K in keyof PosImage & keyof PosImageAttributes as `attr:${K}`]?: PosImageAttributes[K] } & { [K in keyof PosImage & keyof PosImageAttributes as `prop:${K}`]?: PosImage[K] };
         "pos-internal-router": Omit<PosInternalRouter, keyof PosInternalRouterAttributes> & { [K in keyof PosInternalRouter & keyof PosInternalRouterAttributes]?: PosInternalRouter[K] } & { [K in keyof PosInternalRouter & keyof PosInternalRouterAttributes as `attr:${K}`]?: PosInternalRouterAttributes[K] } & { [K in keyof PosInternalRouter & keyof PosInternalRouterAttributes as `prop:${K}`]?: PosInternalRouter[K] };
         "pos-label": PosLabel;
@@ -2182,6 +2202,7 @@ declare module "@stencil/core" {
             "pos-error-toast": LocalJSX.IntrinsicElements["pos-error-toast"] & JSXBase.HTMLAttributes<HTMLPosErrorToastElement>;
             "pos-example-resources": LocalJSX.IntrinsicElements["pos-example-resources"] & JSXBase.HTMLAttributes<HTMLPosExampleResourcesElement>;
             "pos-getting-started": LocalJSX.IntrinsicElements["pos-getting-started"] & JSXBase.HTMLAttributes<HTMLPosGettingStartedElement>;
+            "pos-html-tool": LocalJSX.PosHtmlTool & JSXBase.HTMLAttributes<HTMLPosHtmlToolElement>;
             /**
              * Tries fetch an image with the solid authentication, and can visualize http errors like 403 or 404 if this fails.
              * Falls back to classic `<img src="...">` on network errors like CORS.
