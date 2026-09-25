@@ -1,4 +1,4 @@
-import { Editor } from '@tiptap/core';
+import { Editor, mergeAttributes } from '@tiptap/core';
 import { Markdown } from '@tiptap/markdown';
 import StarterKit from '@tiptap/starter-kit';
 import { PosImageNode } from './PosImageNode';
@@ -29,19 +29,21 @@ export class RichEditor {
           HTMLAttributes: {
             class: 'mention',
           },
+          renderHTML({ options, node }) {
+            return ['pos-rich-link', mergeAttributes({ uri: node.attrs.id }, options.HTMLAttributes), node.attrs.label];
+          },
           suggestion: {
             char: '#',
             items: ({ query }) => {
-              console.log(query);
               return [
-                { id: 'https://alice.example/#me', label: 'Alice' },
-                { id: 'https://bob.example/#me', label: 'Bob' },
-                { id: 'https://carol.example/#me', label: 'Carol' },
+                { id: 'http://localhost:3000/alice/profile/card#me', label: 'Alice' },
+                { id: 'http://localhost:3000/bob/profile/card#me', label: 'Bob' },
+                { id: 'http://localhost:3000/carol/profile/card#me', label: 'Carol' },
               ].filter(person => person.label.toLowerCase().includes(query.toLowerCase()));
             },
+
             render: () => {
               let popup: HTMLElement;
-              console.log('render poppup');
               let unmount: () => void | undefined;
               return {
                 onStart: props => {
