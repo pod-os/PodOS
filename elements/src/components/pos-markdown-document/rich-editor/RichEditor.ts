@@ -38,6 +38,7 @@ export class RichEditor {
             render: () => {
               let popup: HTMLElement;
               console.log('render poppup');
+              let unmount: () => void | undefined;
               return {
                 onStart: props => {
                   popup = document.createElement('div');
@@ -48,7 +49,7 @@ export class RichEditor {
                     button.addEventListener('click', () => props.command({ id: item }));
                     popup.appendChild(button);
                   });
-                  document.body.appendChild(popup);
+                  unmount = props.mount(popup);
                 },
                 onUpdate: props => {
                   popup.innerHTML = '';
@@ -60,7 +61,8 @@ export class RichEditor {
                   });
                 },
                 onExit: () => {
-                  popup?.remove();
+                  unmount?.();
+                  popup.remove();
                 },
               };
             },
