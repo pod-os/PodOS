@@ -41,10 +41,9 @@ export class RichEditor {
               let unmount: () => void | undefined;
               return {
                 onStart: props => {
-                  popup = document.createElement('div');
-                  popup.classList.add('suggestion-popup');
+                  popup = document.createElement('sl-menu');
                   props.items.forEach(item => {
-                    const button = document.createElement('button');
+                    const button = document.createElement('sl-menu-item');
                     button.textContent = item;
                     button.addEventListener('click', () => props.command({ id: item }));
                     popup.appendChild(button);
@@ -54,7 +53,7 @@ export class RichEditor {
                 onUpdate: props => {
                   popup.innerHTML = '';
                   props.items.forEach(item => {
-                    const button = document.createElement('button');
+                    const button = document.createElement('sl-menu-item');
                     button.textContent = item;
                     button.addEventListener('click', () => props.command({ id: item }));
                     popup.appendChild(button);
