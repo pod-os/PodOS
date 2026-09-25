@@ -8,6 +8,12 @@
     .tiptap {
       border: none;
       outline: none;
+      .mention {
+        background-color: color-mix(in srgb, var(--pos-primary-highlight-color) 20%, transparent);
+        color: var(--pos-primary-color);
+        padding: 0 var(--size-1);
+        border-radius: 0.4rem;
+      }
     }
 
     line-height: 1.5;
