@@ -30,10 +30,14 @@ export class RichEditor {
             class: 'mention',
           },
           suggestion: {
-            char: '@',
+            char: '#',
             items: ({ query }) => {
               console.log(query);
-              return ['Alice', 'Bob', 'Carol'].filter(name => name.toLowerCase().includes(query.toLowerCase()));
+              return [
+                { id: 'https://alice.example/#me', label: 'Alice' },
+                { id: 'https://bob.example/#me', label: 'Bob' },
+                { id: 'https://carol.example/#me', label: 'Carol' },
+              ].filter(person => person.label.toLowerCase().includes(query.toLowerCase()));
             },
             render: () => {
               let popup: HTMLElement;
@@ -44,8 +48,8 @@ export class RichEditor {
                   popup = document.createElement('sl-menu');
                   props.items.forEach(item => {
                     const button = document.createElement('sl-menu-item');
-                    button.textContent = item;
-                    button.addEventListener('click', () => props.command({ id: item }));
+                    button.textContent = item.label;
+                    button.addEventListener('click', () => props.command(item));
                     popup.appendChild(button);
                   });
                   unmount = props.mount(popup);
@@ -54,8 +58,8 @@ export class RichEditor {
                   popup.innerHTML = '';
                   props.items.forEach(item => {
                     const button = document.createElement('sl-menu-item');
-                    button.textContent = item;
-                    button.addEventListener('click', () => props.command({ id: item }));
+                    button.textContent = item.label;
+                    button.addEventListener('click', () => props.command(item));
                     popup.appendChild(button);
                   });
                 },
