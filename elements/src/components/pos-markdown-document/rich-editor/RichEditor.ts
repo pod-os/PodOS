@@ -5,6 +5,7 @@ import { PosImageNode } from './PosImageNode';
 import { PosRichLinkMark } from './PosRichLinkMark';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import Mention from '@tiptap/extension-mention';
 
 export class RichEditor {
   private readonly editor: Editor;
@@ -19,8 +20,54 @@ export class RichEditor {
   constructor(target: HTMLElement, content: string, baseUrl: string) {
     this.editor = new Editor({
       element: target,
-      extensions: [Markdown, StarterKit.configure({ link: false }), PosImageNode(baseUrl), PosRichLinkMark(baseUrl)],
-      content: content,
+      extensions: [
+        Markdown,
+        StarterKit.configure({ link: false }),
+        PosImageNode(baseUrl),
+        PosRichLinkMark(baseUrl),
+        Mention.configure({
+          HTMLAttributes: {
+            class: 'mention',
+          },
+          suggestion: {
+            char: '@',
+            items: ({ query }) => {
+              console.log(query);
+              return ['Alice', 'Bob', 'Carol'].filter(name => name.toLowerCase().includes(query.toLowerCase()));
+            },
+            render: () => {
+              let popup: HTMLElement;
+              console.log('render poppup');
+              return {
+                onStart: props => {
+                  popup = document.createElement('div');
+                  popup.classList.add('suggestion-popup');
+                  props.items.forEach(item => {
+                    const button = document.createElement('button');
+                    button.textContent = item;
+                    button.addEventListener('click', () => props.command({ id: item }));
+                    popup.appendChild(button);
+                  });
+                  document.body.appendChild(popup);
+                },
+                onUpdate: props => {
+                  popup.innerHTML = '';
+                  props.items.forEach(item => {
+                    const button = document.createElement('button');
+                    button.textContent = item;
+                    button.addEventListener('click', () => props.command({ id: item }));
+                    popup.appendChild(button);
+                  });
+                },
+                onExit: () => {
+                  popup?.remove();
+                },
+              };
+            },
+          },
+        }),
+      ],
+      content,
       contentType: 'markdown',
       editable: false,
     });
