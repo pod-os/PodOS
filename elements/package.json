@@ -57,7 +57,7 @@
     "fake-indexeddb": "^6.2.5",
     "happy-dom": "^20.11.2",
     "msw": "^2.15.0",
-    "prettier": "^3.5.3",
+    "prettier": "^3.9.9",
     "shadow-dom-testing-library": "^1.14.1",
     "url-template": "^3.1.1",
     "vitest": "^4.1.11",
