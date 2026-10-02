@@ -55,7 +55,7 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@vitest/coverage-v8": "^4.1.11",
     "fake-indexeddb": "^6.2.5",
-    "happy-dom": "^20.11.2",
+    "happy-dom": "^20.14.5",
     "msw": "^2.15.0",
     "prettier": "^3.9.9",
     "shadow-dom-testing-library": "^1.14.1",
