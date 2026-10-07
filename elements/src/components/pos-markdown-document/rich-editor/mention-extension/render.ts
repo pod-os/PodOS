@@ -13,6 +13,7 @@ export const render = () => {
     },
     onUpdate: (props: SuggestionProps<any, MentionNodeAttrs>) => {
       menu.items = props.items;
+      menu.command = props.command;
     },
     onExit: () => {
       unmount?.();

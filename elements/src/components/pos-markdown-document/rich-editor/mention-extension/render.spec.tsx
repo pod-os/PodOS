@@ -30,7 +30,7 @@ describe('render', () => {
       expect(menu).toHaveProperty('items', items);
     });
     it('passes on the command function', () => {
-      const { onStart } = render();
+      const { onStart, onUpdate } = render();
       const mount = vi.fn();
       onStart({
         mount,
@@ -40,6 +40,10 @@ describe('render', () => {
       expect(mount).toHaveBeenCalled();
       const menu = mount.mock.calls[0][0];
       expect(menu).toHaveProperty('command', 'fake command');
+
+      // the command changes with every update, as it closes over the current suggestion range
+      onUpdate({ command: 'updated command' } as unknown as SuggestionProps);
+      expect(menu).toHaveProperty('command', 'updated command');
     });
   });
   describe('onUpdate', () => {
