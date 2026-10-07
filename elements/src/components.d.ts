@@ -258,6 +258,12 @@ export namespace Components {
     }
     interface PosMentionMenu {
         /**
+          * Function to call when a suggestion is selected
+          * @default () => {}
+         */
+        "command": (item: MentionItem) => void;
+        /**
+          * List of suggestions to display
           * @default []
          */
         "items": MentionItem[];
@@ -1794,6 +1800,12 @@ declare namespace LocalJSX {
     }
     interface PosMentionMenu {
         /**
+          * Function to call when a suggestion is selected
+          * @default () => {}
+         */
+        "command"?: (item: MentionItem) => void;
+        /**
+          * List of suggestions to display
           * @default []
          */
         "items"?: MentionItem[];

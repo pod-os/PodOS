@@ -1,6 +1,8 @@
+import { vi } from 'vitest';
 import { describe, expect, h, it, render } from '@stencil/vitest';
 
 import './pos-mention-menu';
+import { fireEvent } from '@testing-library/dom';
 
 describe('pos-mention-menu', () => {
   it('renders empty', async () => {
@@ -58,5 +60,29 @@ describe('pos-mention-menu', () => {
         </sl-menu>
       </pos-mention-menu>
     `);
+  });
+
+  it('calls the comand when option is selected', async () => {
+    const command = vi.fn();
+    const item = {
+      id: 'https://resource.test',
+      label: 'Something',
+    };
+    const page = await render(<pos-mention-menu items={[item]} command={command}></pos-mention-menu>);
+
+    expect(page.root).toMatchInlineSnapshot(`
+      <pos-mention-menu class="hydrated">
+        <sl-menu>
+          <sl-menu-item>
+            Something
+          </sl-menu-item>
+        </sl-menu>
+      </pos-mention-menu>
+    `);
+
+    const option = page.root.querySelector('sl-menu-item')!;
+    fireEvent(option, new CustomEvent('sl-select', { detail: { item: { value: item } }, bubbles: true }));
+    await page.waitForChanges();
+    expect(command).toHaveBeenCalledWith(item);
   });
 });

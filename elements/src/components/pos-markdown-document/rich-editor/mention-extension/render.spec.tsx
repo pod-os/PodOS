@@ -29,6 +29,18 @@ describe('render', () => {
       expect(menu).toMatchInlineSnapshot(`<pos-mention-menu />`);
       expect(menu).toHaveProperty('items', items);
     });
+    it('passes on the command function', () => {
+      const { onStart } = render();
+      const mount = vi.fn();
+      onStart({
+        mount,
+        items: [],
+        command: 'fake command',
+      } as unknown as SuggestionProps);
+      expect(mount).toHaveBeenCalled();
+      const menu = mount.mock.calls[0][0];
+      expect(menu).toHaveProperty('command', 'fake command');
+    });
   });
   describe('onUpdate', () => {
     it('updates the menu items', () => {

@@ -8,6 +8,7 @@ export const render = () => {
     onStart: (props: SuggestionProps<any, MentionNodeAttrs>) => {
       menu = document.createElement('pos-mention-menu');
       menu.items = props.items;
+      menu.command = props.command;
       unmount = props.mount(menu);
     },
     onUpdate: (props: SuggestionProps<any, MentionNodeAttrs>) => {
