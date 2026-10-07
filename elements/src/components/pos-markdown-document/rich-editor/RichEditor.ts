@@ -5,7 +5,7 @@ import { PosImageNode } from './PosImageNode';
 import { PosRichLinkMark } from './PosRichLinkMark';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-import { mention } from './mention';
+import { mention } from './mention-extension';
 
 export class RichEditor {
   private readonly editor: Editor;
