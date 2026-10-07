@@ -7,10 +7,12 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { Attachment, HttpProblem, LdpContainer, Literal, NetworkProblem, PodOS, Problem, Relation, SolidFile, Thing } from "@pod-os/core";
 import { SwitchCaseRule } from "./components/pos-switch/rules";
+import { MentionItem } from "./components/pos-markdown-document/rich-editor/mention-extension/pos-mention-menu/pos-mention-menu";
 import { ToolConfig } from "./components/pos-type-router/selectToolsForTypes";
 import { ResultAsync } from "neverthrow";
 export { Attachment, HttpProblem, LdpContainer, Literal, NetworkProblem, PodOS, Problem, Relation, SolidFile, Thing } from "@pod-os/core";
 export { SwitchCaseRule } from "./components/pos-switch/rules";
+export { MentionItem } from "./components/pos-markdown-document/rich-editor/mention-extension/pos-mention-menu/pos-mention-menu";
 export { ToolConfig } from "./components/pos-type-router/selectToolsForTypes";
 export { ResultAsync } from "neverthrow";
 export namespace Components {
@@ -253,6 +255,12 @@ export namespace Components {
           * Switch to view mode
          */
         "stopEditing": () => Promise<void>;
+    }
+    interface PosMentionMenu {
+        /**
+          * @default []
+         */
+        "items": MentionItem[];
     }
     interface PosNavigation {
         /**
@@ -957,6 +965,7 @@ declare global {
     };
     interface HTMLPosLiteralsElementEventMap {
         "pod-os:resource": any;
+        "pod-os:error": Error;
     }
     interface HTMLPosLiteralsElement extends Components.PosLiterals, HTMLStencilElement {
         addEventListener<K extends keyof HTMLPosLiteralsElementEventMap>(type: K, listener: (this: HTMLPosLiteralsElement, ev: PosLiteralsCustomEvent<HTMLPosLiteralsElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -1042,6 +1051,12 @@ declare global {
     var HTMLPosMarkdownDocumentElement: {
         prototype: HTMLPosMarkdownDocumentElement;
         new (): HTMLPosMarkdownDocumentElement;
+    };
+    interface HTMLPosMentionMenuElement extends Components.PosMentionMenu, HTMLStencilElement {
+    }
+    var HTMLPosMentionMenuElement: {
+        prototype: HTMLPosMentionMenuElement;
+        new (): HTMLPosMentionMenuElement;
     };
     interface HTMLPosNavigationElementEventMap {
         "pod-os:init": any;
@@ -1453,6 +1468,7 @@ declare global {
         "pos-login-form": HTMLPosLoginFormElement;
         "pos-make-findable": HTMLPosMakeFindableElement;
         "pos-markdown-document": HTMLPosMarkdownDocumentElement;
+        "pos-mention-menu": HTMLPosMentionMenuElement;
         "pos-navigation": HTMLPosNavigationElement;
         "pos-navigation-bar": HTMLPosNavigationBarElement;
         "pos-new-thing-form": HTMLPosNewThingFormElement;
@@ -1734,6 +1750,10 @@ declare namespace LocalJSX {
         "rel"?: string;
     }
     interface PosLiterals {
+        /**
+          * Emitted when an error occurs during editing literals
+         */
+        "onPod-os:error"?: (event: PosLiteralsCustomEvent<Error>) => void;
         "onPod-os:resource"?: (event: PosLiteralsCustomEvent<any>) => void;
     }
     interface PosLogin {
@@ -1771,6 +1791,12 @@ declare namespace LocalJSX {
           * @default 'idle'
          */
         "saveStatus"?: 'idle' | 'saving' | 'failed';
+    }
+    interface PosMentionMenu {
+        /**
+          * @default []
+         */
+        "items"?: MentionItem[];
     }
     interface PosNavigation {
         "onPod-os:init"?: (event: PosNavigationCustomEvent<any>) => void;
@@ -2112,6 +2138,7 @@ declare namespace LocalJSX {
         "pos-login-form": PosLoginForm;
         "pos-make-findable": Omit<PosMakeFindable, keyof PosMakeFindableAttributes> & { [K in keyof PosMakeFindable & keyof PosMakeFindableAttributes]?: PosMakeFindable[K] } & { [K in keyof PosMakeFindable & keyof PosMakeFindableAttributes as `attr:${K}`]?: PosMakeFindableAttributes[K] } & { [K in keyof PosMakeFindable & keyof PosMakeFindableAttributes as `prop:${K}`]?: PosMakeFindable[K] } & OneOf<"uri", PosMakeFindable["uri"], PosMakeFindableAttributes["uri"]>;
         "pos-markdown-document": Omit<PosMarkdownDocument, keyof PosMarkdownDocumentAttributes> & { [K in keyof PosMarkdownDocument & keyof PosMarkdownDocumentAttributes]?: PosMarkdownDocument[K] } & { [K in keyof PosMarkdownDocument & keyof PosMarkdownDocumentAttributes as `attr:${K}`]?: PosMarkdownDocumentAttributes[K] } & { [K in keyof PosMarkdownDocument & keyof PosMarkdownDocumentAttributes as `prop:${K}`]?: PosMarkdownDocument[K] };
+        "pos-mention-menu": PosMentionMenu;
         "pos-navigation": Omit<PosNavigation, keyof PosNavigationAttributes> & { [K in keyof PosNavigation & keyof PosNavigationAttributes]?: PosNavigation[K] } & { [K in keyof PosNavigation & keyof PosNavigationAttributes as `attr:${K}`]?: PosNavigationAttributes[K] } & { [K in keyof PosNavigation & keyof PosNavigationAttributes as `prop:${K}`]?: PosNavigation[K] };
         "pos-navigation-bar": Omit<PosNavigationBar, keyof PosNavigationBarAttributes> & { [K in keyof PosNavigationBar & keyof PosNavigationBarAttributes]?: PosNavigationBar[K] } & { [K in keyof PosNavigationBar & keyof PosNavigationBarAttributes as `attr:${K}`]?: PosNavigationBarAttributes[K] } & { [K in keyof PosNavigationBar & keyof PosNavigationBarAttributes as `prop:${K}`]?: PosNavigationBar[K] };
         "pos-new-thing-form": Omit<PosNewThingForm, keyof PosNewThingFormAttributes> & { [K in keyof PosNewThingForm & keyof PosNewThingFormAttributes]?: PosNewThingForm[K] } & { [K in keyof PosNewThingForm & keyof PosNewThingFormAttributes as `attr:${K}`]?: PosNewThingFormAttributes[K] } & { [K in keyof PosNewThingForm & keyof PosNewThingFormAttributes as `prop:${K}`]?: PosNewThingForm[K] } & OneOf<"referenceUri", PosNewThingForm["referenceUri"], PosNewThingFormAttributes["referenceUri"]>;
@@ -2207,6 +2234,7 @@ declare module "@stencil/core" {
             "pos-login-form": LocalJSX.IntrinsicElements["pos-login-form"] & JSXBase.HTMLAttributes<HTMLPosLoginFormElement>;
             "pos-make-findable": LocalJSX.IntrinsicElements["pos-make-findable"] & JSXBase.HTMLAttributes<HTMLPosMakeFindableElement>;
             "pos-markdown-document": LocalJSX.IntrinsicElements["pos-markdown-document"] & JSXBase.HTMLAttributes<HTMLPosMarkdownDocumentElement>;
+            "pos-mention-menu": LocalJSX.IntrinsicElements["pos-mention-menu"] & JSXBase.HTMLAttributes<HTMLPosMentionMenuElement>;
             "pos-navigation": LocalJSX.IntrinsicElements["pos-navigation"] & JSXBase.HTMLAttributes<HTMLPosNavigationElement>;
             "pos-navigation-bar": LocalJSX.IntrinsicElements["pos-navigation-bar"] & JSXBase.HTMLAttributes<HTMLPosNavigationBarElement>;
             "pos-new-thing-form": LocalJSX.IntrinsicElements["pos-new-thing-form"] & JSXBase.HTMLAttributes<HTMLPosNewThingFormElement>;
