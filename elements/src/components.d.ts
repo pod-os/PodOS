@@ -267,6 +267,11 @@ export namespace Components {
           * @default []
          */
         "items": MentionItem[];
+        /**
+          * Index of the currently selected suggestion
+          * @default 0
+         */
+        "selectedIndex": number;
     }
     interface PosNavigation {
         /**
@@ -1809,6 +1814,11 @@ declare namespace LocalJSX {
           * @default []
          */
         "items"?: MentionItem[];
+        /**
+          * Index of the currently selected suggestion
+          * @default 0
+         */
+        "selectedIndex"?: number;
     }
     interface PosNavigation {
         "onPod-os:init"?: (event: PosNavigationCustomEvent<any>) => void;
@@ -2070,6 +2080,9 @@ declare namespace LocalJSX {
         "saveStatus": 'idle' | 'saving' | 'failed';
         "editable": boolean;
     }
+    interface PosMentionMenuAttributes {
+        "selectedIndex": number;
+    }
     interface PosNavigationAttributes {
         "uri": string;
     }
@@ -2150,7 +2163,7 @@ declare namespace LocalJSX {
         "pos-login-form": PosLoginForm;
         "pos-make-findable": Omit<PosMakeFindable, keyof PosMakeFindableAttributes> & { [K in keyof PosMakeFindable & keyof PosMakeFindableAttributes]?: PosMakeFindable[K] } & { [K in keyof PosMakeFindable & keyof PosMakeFindableAttributes as `attr:${K}`]?: PosMakeFindableAttributes[K] } & { [K in keyof PosMakeFindable & keyof PosMakeFindableAttributes as `prop:${K}`]?: PosMakeFindable[K] } & OneOf<"uri", PosMakeFindable["uri"], PosMakeFindableAttributes["uri"]>;
         "pos-markdown-document": Omit<PosMarkdownDocument, keyof PosMarkdownDocumentAttributes> & { [K in keyof PosMarkdownDocument & keyof PosMarkdownDocumentAttributes]?: PosMarkdownDocument[K] } & { [K in keyof PosMarkdownDocument & keyof PosMarkdownDocumentAttributes as `attr:${K}`]?: PosMarkdownDocumentAttributes[K] } & { [K in keyof PosMarkdownDocument & keyof PosMarkdownDocumentAttributes as `prop:${K}`]?: PosMarkdownDocument[K] };
-        "pos-mention-menu": PosMentionMenu;
+        "pos-mention-menu": Omit<PosMentionMenu, keyof PosMentionMenuAttributes> & { [K in keyof PosMentionMenu & keyof PosMentionMenuAttributes]?: PosMentionMenu[K] } & { [K in keyof PosMentionMenu & keyof PosMentionMenuAttributes as `attr:${K}`]?: PosMentionMenuAttributes[K] } & { [K in keyof PosMentionMenu & keyof PosMentionMenuAttributes as `prop:${K}`]?: PosMentionMenu[K] };
         "pos-navigation": Omit<PosNavigation, keyof PosNavigationAttributes> & { [K in keyof PosNavigation & keyof PosNavigationAttributes]?: PosNavigation[K] } & { [K in keyof PosNavigation & keyof PosNavigationAttributes as `attr:${K}`]?: PosNavigationAttributes[K] } & { [K in keyof PosNavigation & keyof PosNavigationAttributes as `prop:${K}`]?: PosNavigation[K] };
         "pos-navigation-bar": Omit<PosNavigationBar, keyof PosNavigationBarAttributes> & { [K in keyof PosNavigationBar & keyof PosNavigationBarAttributes]?: PosNavigationBar[K] } & { [K in keyof PosNavigationBar & keyof PosNavigationBarAttributes as `attr:${K}`]?: PosNavigationBarAttributes[K] } & { [K in keyof PosNavigationBar & keyof PosNavigationBarAttributes as `prop:${K}`]?: PosNavigationBar[K] };
         "pos-new-thing-form": Omit<PosNewThingForm, keyof PosNewThingFormAttributes> & { [K in keyof PosNewThingForm & keyof PosNewThingFormAttributes]?: PosNewThingForm[K] } & { [K in keyof PosNewThingForm & keyof PosNewThingFormAttributes as `attr:${K}`]?: PosNewThingFormAttributes[K] } & { [K in keyof PosNewThingForm & keyof PosNewThingFormAttributes as `prop:${K}`]?: PosNewThingForm[K] } & OneOf<"referenceUri", PosNewThingForm["referenceUri"], PosNewThingFormAttributes["referenceUri"]>;

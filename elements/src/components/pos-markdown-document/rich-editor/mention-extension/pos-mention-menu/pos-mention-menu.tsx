@@ -1,8 +1,5 @@
 import { Component, h, Listen, Prop } from '@stencil/core';
 
-import '@shoelace-style/shoelace/dist/components/menu/menu.js';
-import '@shoelace-style/shoelace/dist/components/menu-item/menu-item.js';
-
 export interface MentionItem {
   id: string;
   label: string;
@@ -10,6 +7,7 @@ export interface MentionItem {
 
 @Component({
   tag: 'pos-mention-menu',
+  styleUrls: ['pos-mention-menu.css'],
 })
 export class PosMentionMenu {
   /**
@@ -19,25 +17,36 @@ export class PosMentionMenu {
   items: MentionItem[] = [];
 
   /**
+   * Index of the currently selected suggestion
+   */
+  @Prop()
+  selectedIndex = 0;
+
+  /**
    * Function to call when a suggestion is selected
    */
   @Prop()
   command: (item: MentionItem) => void = () => {};
 
-  @Listen('sl-select')
-  async onSelect(e: CustomEvent<{ item: { value: MentionItem } }>) {
-    this.command(e.detail.item.value);
+  @Listen('mousedown')
+  onMouseDown(e: MouseEvent) {
+    e.preventDefault();
   }
 
   render() {
     return (
-      <sl-menu>
-        {this.items.map(item => (
-          <sl-menu-item key={item.id} value={item}>
+      <ul role="listbox">
+        {this.items.map((item, index) => (
+          <li
+            key={item.id}
+            role="option"
+            aria-selected={index === this.selectedIndex ? 'true' : undefined}
+            onMouseDown={() => this.command(item)}
+          >
             {item.label}
-          </sl-menu-item>
+          </li>
         ))}
-      </sl-menu>
+      </ul>
     );
   }
 }
