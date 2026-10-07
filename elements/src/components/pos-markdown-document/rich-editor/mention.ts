@@ -20,31 +20,19 @@ export function mention() {
       },
 
       render: () => {
-        let popup: HTMLElement;
+        let menu: HTMLPosMentionMenuElement;
         let unmount: () => void | undefined;
         return {
           onStart: props => {
-            popup = document.createElement('sl-menu');
-            props.items.forEach(item => {
-              const button = document.createElement('sl-menu-item');
-              button.textContent = item.label;
-              button.addEventListener('click', () => props.command(item));
-              popup.appendChild(button);
-            });
-            unmount = props.mount(popup);
+            menu = document.createElement('pos-mention-menu');
+            menu.items = props.items;
+            unmount = props.mount(menu);
           },
           onUpdate: props => {
-            popup.innerHTML = '';
-            props.items.forEach(item => {
-              const button = document.createElement('sl-menu-item');
-              button.textContent = item.label;
-              button.addEventListener('click', () => props.command(item));
-              popup.appendChild(button);
-            });
+            menu.items = props.items;
           },
           onExit: () => {
             unmount?.();
-            popup.remove();
           },
         };
       },
