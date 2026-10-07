@@ -46,6 +46,35 @@ describe('RichEditor', () => {
       });
     });
 
+    describe('Mentions', () => {
+      it('renders a mention as pos-rich-link with the mention class', () => {
+        const div = document.createElement('div');
+        new RichEditor(
+          div,
+          '[@ id="https://pod.test/alice/profile/card#me" label="Alice" char="#"]',
+          'https://pod.test',
+        );
+        expect(div.children[0].innerHTML).toEqual(
+          `<p><pos-rich-link uri="https://pod.test/alice/profile/card#me" data-type="mention" class="mention" data-id="https://pod.test/alice/profile/card#me" data-label="Alice" data-mention-suggestion-char="#" contenteditable="false">Alice</pos-rich-link><br class="ProseMirror-trailingBreak"></p>`,
+        );
+      });
+
+      it('renders a mention without explicit char attribute', () => {
+        const div = document.createElement('div');
+        new RichEditor(div, '[@ id="https://pod.test/alice/profile/card#me" label="Alice"]', 'https://pod.test');
+        expect(div.children[0].innerHTML).toEqual(
+          `<p><pos-rich-link uri="https://pod.test/alice/profile/card#me" data-type="mention" class="mention" data-id="https://pod.test/alice/profile/card#me" data-label="Alice" data-mention-suggestion-char="@" contenteditable="false">Alice</pos-rich-link><br class="ProseMirror-trailingBreak"></p>`,
+        );
+      });
+
+      it('round-trips a mention through markdown', () => {
+        const markdown = '[@ id="https://pod.test/alice/profile/card#me" label="Alice"]';
+        const div = document.createElement('div');
+        const editor = new RichEditor(div, markdown, 'https://pod.test');
+        expect(editor.getContent()).toEqual(markdown);
+      });
+    });
+
     describe('Links', () => {
       it('renders links as pos-rich-link', () => {
         const div = document.createElement('div');
