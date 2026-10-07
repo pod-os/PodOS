@@ -129,6 +129,38 @@ Lifecycle correctness (one owner of build/rebuild/clear, others just query) matt
 - Search moves to core; core owns lifecycle; lazy demand-based build; keep warm until logout;
   headless-first. [H]
 
+## 8. Merge strategy discussion — [H + LLM]
+
+Context [LLM]: branch `feat/markdown-mentions` is 15 commits ahead of main; latest commit
+b50b5975 contains this plan doc. Exposure analysis: the hardcoded suggestion menu (Alice/Bob/Carol
+on `localhost:3000`) only appears when a user with edit permission enters edit mode and types `#`;
+view mode and stored mention markdown (`[@ id=... label=...]` → `pos-rich-link`) don't touch
+`items.ts`. But `elements` is published and `pos-document`/`pos-app-document-viewer` pass
+`editable` through — downstream editors would see fake suggestions and could insert broken URIs.
+
+Decision [H]: disable the mention extension before merging; skip affected tests until the
+extension returns. User: "i would like to remove the mention extension from the editor. tests might
+break. i have no better idea to skip those then until the extension is back in" / "disable ext.
+skip affectedf tests" / "Skip via .skip".
+
+Details agreed [H with LLM analysis]:
+- Unregister `mention()` in `RichEditor.ts` (disable-on-branch variant: commit on
+  `feat/markdown-mentions`, merge tip to main — avoids future revert/conflict dance).
+- The 3 registration-tied tests in `RichEditor.spec.tsx` (Mentions describe block: render with char,
+  render without char, round-trip) get `.skip` treatment [H chose .skip over delete-and-restore;
+  LLM had argued delete-and-restore is cleaner but the user decided].
+- Standalone tests (`render.spec.tsx`, `pos-mention-menu.spec.tsx`, 42 tests total pass currently)
+  keep running — they don't depend on registration.
+- Mention rendering/serialization code (`PosRichLinkMark`, markdown syntax) stays on main, inert.
+- Re-add path: when the search-based provider lands (post-refactor feature phase), the extension is
+  re-registered and the 3 skipped tests are un-skipped.
+- Housekeeping before merge: commit the plan-file move (old `.agents/plans/mentions-fulltext-search.md`
+  shows `AD` in working tree).
+
+**Status: applied [LLM]** — disable commit made on `feat/markdown-mentions`
+(disable commit hash follows), RichEditor suite green (39 passed / 3 skipped / 0 failed),
+LSP diagnostics clean. Pending: commit plan-file move, then merge tip to main.
+
 ## 9. Notes location
 
 - This file: `.agents/plans/mentions-fulltext-search/plan.md` (user chose dir; moved into a

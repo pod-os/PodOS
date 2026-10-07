@@ -46,7 +46,9 @@ describe('RichEditor', () => {
       });
     });
 
-    describe('Mentions', () => {
+    // skipped: mention extension is disabled in RichEditor until it is backed by a
+    // search-based suggestions provider — see .agents/plans/mentions-fulltext-search/plan.md
+    describe.skip('Mentions', () => {
       it('renders a mention as pos-rich-link with the mention class', () => {
         const div = document.createElement('div');
         new RichEditor(
