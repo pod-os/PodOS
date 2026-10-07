@@ -1,11 +1,11 @@
-import { Editor, mergeAttributes } from '@tiptap/core';
+import { Editor } from '@tiptap/core';
 import { Markdown } from '@tiptap/markdown';
 import StarterKit from '@tiptap/starter-kit';
 import { PosImageNode } from './PosImageNode';
 import { PosRichLinkMark } from './PosRichLinkMark';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-import Mention from '@tiptap/extension-mention';
+import { mention } from './mention';
 
 export class RichEditor {
   private readonly editor: Editor;
@@ -25,54 +25,7 @@ export class RichEditor {
         StarterKit.configure({ link: false }),
         PosImageNode(baseUrl),
         PosRichLinkMark(baseUrl),
-        Mention.configure({
-          HTMLAttributes: {
-            class: 'mention',
-          },
-          renderHTML({ options, node }) {
-            return ['pos-rich-link', mergeAttributes({ uri: node.attrs.id }, options.HTMLAttributes), node.attrs.label];
-          },
-          suggestion: {
-            char: '#',
-            items: ({ query }) => {
-              return [
-                { id: 'http://localhost:3000/alice/profile/card#me', label: 'Alice' },
-                { id: 'http://localhost:3000/bob/profile/card#me', label: 'Bob' },
-                { id: 'http://localhost:3000/carol/profile/card#me', label: 'Carol' },
-              ].filter(person => person.label.toLowerCase().includes(query.toLowerCase()));
-            },
-
-            render: () => {
-              let popup: HTMLElement;
-              let unmount: () => void | undefined;
-              return {
-                onStart: props => {
-                  popup = document.createElement('sl-menu');
-                  props.items.forEach(item => {
-                    const button = document.createElement('sl-menu-item');
-                    button.textContent = item.label;
-                    button.addEventListener('click', () => props.command(item));
-                    popup.appendChild(button);
-                  });
-                  unmount = props.mount(popup);
-                },
-                onUpdate: props => {
-                  popup.innerHTML = '';
-                  props.items.forEach(item => {
-                    const button = document.createElement('sl-menu-item');
-                    button.textContent = item.label;
-                    button.addEventListener('click', () => props.command(item));
-                    popup.appendChild(button);
-                  });
-                },
-                onExit: () => {
-                  unmount?.();
-                  popup.remove();
-                },
-              };
-            },
-          },
-        }),
+        mention(),
       ],
       content,
       contentType: 'markdown',
