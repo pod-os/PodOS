@@ -25,6 +25,13 @@ export interface ToolConfig {
 }
 
 /**
+ * Describes a tool that can be used implemented as a HTML fragment
+ */
+export interface HTMLToolConfig extends ToolConfig {
+  fragment: string;
+}
+
+/**
  * Describes how well a given RDF type can be handled
  */
 interface TypePriority {
@@ -52,10 +59,10 @@ interface ToolPriority {
   priority: number;
 }
 
-export function selectToolsForTypes(types: RdfType[]) {
+export function selectToolsForTypes(types: RdfType[], registeredTools: ToolConfig[] = []) {
   const typeUris = new Set(types.map(type => type.uri));
 
-  return Object.values(AvailableTools)
+  return [...Object.values(AvailableTools), ...registeredTools]
     .map(maxPriorityFor(typeUris))
     .filter(onlyRelevant)
     .toSorted(byPriority)

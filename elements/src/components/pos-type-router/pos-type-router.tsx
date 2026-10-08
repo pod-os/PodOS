@@ -1,7 +1,7 @@
 import { Thing } from '@pod-os/core';
 import { Component, Event, EventEmitter, h, Listen, State } from '@stencil/core';
 import { ResourceAware, subscribeResource } from '../events/ResourceAware';
-import { selectToolsForTypes, ToolConfig } from './selectToolsForTypes';
+import { HTMLToolConfig, selectToolsForTypes, ToolConfig } from './selectToolsForTypes';
 
 /**
  * This component is responsible for rendering tools that are useful to interact with the current resource.
@@ -43,7 +43,21 @@ export class PosTypeRouter implements ResourceAware {
 
   receiveResource = (resource: Thing) => {
     const types = resource.types();
-    this.availableTools = selectToolsForTypes(types);
+    const registeredTools = [
+      {
+        element: 'pos-html-tool',
+        label: 'Example tool',
+        icon: 'list-ul',
+        types: [
+          {
+            uri: 'https://schema.org/Recipe',
+            priority: 20,
+          },
+        ],
+        fragment: '<pos-label/>',
+      },
+    ];
+    this.availableTools = selectToolsForTypes(types, registeredTools);
     this.currentTool = this.availableTools.find(it => it.element === this.initialTool) ?? this.availableTools[0];
   };
 
@@ -59,7 +73,14 @@ export class PosTypeRouter implements ResourceAware {
         <pos-tool-select selected={this.currentTool} tools={this.availableTools}></pos-tool-select>
         <div class={{ tools: true, transition: this.transitioning }} onAnimationEnd={() => this.removeOldTool()}>
           {OldTool && <OldTool class="tool hidden"></OldTool>}
-          <SelectedTool class="tool visible"></SelectedTool>
+          {SelectedTool == 'pos-html-tool' ? (
+            <pos-html-tool
+              fragment={(this.currentTool as HTMLToolConfig).fragment}
+              class="tool visible"
+            ></pos-html-tool>
+          ) : (
+            <SelectedTool class="tool visible"></SelectedTool>
+          )}
         </div>
       </section>
     );
