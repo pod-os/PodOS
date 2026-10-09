@@ -169,15 +169,18 @@ LSP diagnostics clean. Pending: commit plan-file move, then merge tip to main.
 - This file: `.agents/plans/mentions-fulltext-search/plan.md` (user chose dir; moved into a
   plan-specific subdir to allow task breakdown later, like `.agents/plans/rdf-metadata/` [H])
 
-## 10. Task breakdown convention — [H]
+## Task breakdown convention — [H, clarified 2026-10-09 after §11/§12 leakage]
 
-- Each task gets its own file in this directory (`NN-short-name.md`); this plan.md remains the
-  discussion log.
-- **plan.md only changes when the plan itself changes.** Going into more detail / concrete steps
-  happens in the task files, not here. [H, verbatim: "plan.md should only change if what we
-  planned changes. what we are doing now is only go into more details and concrete steps"]
-- First task file: `01-cache-search-index-in-core.md` — owns the concrete slice decisions
-  (questionnaire answers, scope, test plan, open questions). Details of the slice are NOT
-  duplicated here.
-- The slice decision itself (a cached index in core with ensure-build semantics) *did* change the
-  plan, so it is recorded in the decision log above.
+plan.md = **what** we plan; task files (`NN-short-name.md`) = **how** we do it.
+
+- plan.md gets: slice order/roadmap, decisions that change scope/architecture/API (decision +
+  one-line rationale + owning task file), plan-blocking open questions, task status.
+- Task files get: code facts, slice-level scope decisions, design sketches, test plans,
+  slice-local open questions (graduate to plan.md only if the answer changes the plan).
+- LLM rule: before writing to plan.md ask — "does this change what we plan, or only how a
+  planned item is done?" Only the latter → task file. Unsure → task file.
+
+Current task: [02-recreate-search-index-on-label-update.md](02-recreate-search-index-on-label-update.md)
+(internal rebuild/recreate in core; rationale in the task file).
+
+
