@@ -94,6 +94,7 @@ export class PodOS {
       .pipe(
         tap(() => {
           this.store.flagAuthorizationMetadata();
+          this.searchGateway.clear();
         }),
       )
       .subscribe();
