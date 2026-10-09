@@ -23,11 +23,19 @@ needed.
 
 All contributions have to be made under the same [license](./LICENSE) as PodOS.
 
+## Git Hooks
+
+A pre-commit hook runs checks on every commit. It is installed automatically
+with `npm ci`. If npm skipped install scripts in your environment, enable it
+manually with `npx husky`. Commits that fail these checks are rejected locally;
+a matching CI run enforces the same checks for everyone.
+
 ## Changelog Guidelines
 
 When updating changelogs in `CHANGELOG.md`:
 
-- **Add entries under next release version e.g. `## 0.23.5`** at the top of the file
+- **Add entries under next release version e.g. `## 0.23.5`** at the top of the
+  file
 - **Keep descriptions user-centric and concise** - focus on what changed from
   the user's perspective
 - **Use single-line descriptions** - avoid listing implementation details or

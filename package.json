@@ -13,7 +13,8 @@
     "dev:core": "npm run dev --workspace core",
     "dev:elements": "npm start --workspace elements",
     "dev:contacts": "npm start --workspace contacts",
-    "dev:server": "npm start --workspace dev-solid-server"
+    "dev:server": "npm start --workspace dev-solid-server",
+    "prepare": "husky"
   },
   "repository": {
     "type": "git",
@@ -34,6 +35,7 @@
   },
   "homepage": "https://github.com/pod-os/PodOS#readme",
   "devDependencies": {
+    "husky": "^9.1.7",
     "prettier": "^3.9.9"
   },
   "workspaces": [
