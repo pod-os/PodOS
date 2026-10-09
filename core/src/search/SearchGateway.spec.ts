@@ -166,7 +166,7 @@ describe(SearchGateway.name, () => {
         "https://alice.test/label-index",
         "https://alice.test/profile/privateLabelIndex.ttl",
       ]);
-      const newIndex = await gateway.createDefaultLabelIndex(updatedProfile);
+      await gateway.createDefaultLabelIndex(updatedProfile);
 
       // then the cached index is a new instance, built anew from the current label indexes
       expect(await gateway.buildSearchIndex(updatedProfile)).not.toBe(cachedIndex);
