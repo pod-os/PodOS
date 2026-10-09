@@ -1,6 +1,11 @@
 # Task 02: Update cached search index on label-index writes
 
-Status: **approved — ready for implementation** (lgtm, Angelo, 2026-10-09)
+Status: **done** (Angelo, 2026-10-10 — implemented via commits e82ee88a..9c14f84b)
+Post-implementation review: two-axis LLM review ran 2026-10-10; findings triaged and **not acted
+on** [H]: the profile-staleness concern was retracted on re-verification (`getPrivateLabelIndexes()`
+reads live from the rdflib store and `createDefaultLabelIndex`'s update operations already insert
+the `solid:privateLabelIndex` triple before the recreate runs); the remaining findings were test-
+assertion nits and style notes. Task marked done.
 Parent: [plan.md](plan.md) — post-task-01 scoping discussion (plan.md only records the plan-level
 consequence: §6 DOM-event removal reopened)
 
@@ -129,4 +134,5 @@ Wallaby run (user side): core suite + pos-navigation suite green.
 5. **Logout-clear timing vs in-flight build**: if `buildSearchIndex` is mid-flight during
    logout, the clear must not be overwritten by the completing build (task 01 accepted
    "no in-flight dedup"; the clear adds a stale-write race). [LLM leaning: acceptable wart for
-   now, same precedent as task 01 — flag, don't engineer.]
+   now, same precedent as task 01 — flag, don't engineer.] — **accepted [H, 2026-10-10]**:
+   reviewed as-is, wart stands, no code change.
