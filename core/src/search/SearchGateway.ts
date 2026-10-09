@@ -48,6 +48,9 @@ export class SearchGateway {
 
   async addToLabelIndex(thing: Thing, labelIndex: LabelIndex) {
     await this.store.executeUpdate(addToLabelIndex(thing, labelIndex));
+    if (this.cached) {
+      this.cached.rebuild();
+    }
   }
 
   async createDefaultLabelIndex(profile: WebIdProfile): Promise<LabelIndex> {
