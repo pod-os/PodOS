@@ -188,7 +188,10 @@ describe(SearchGateway.name, () => {
       } as unknown as Thing;
       await gateway.addToLabelIndex(
         thing,
-        new LabelIndex("https://alice.test/profile/privateLabelIndex.ttl"),
+        new LabelIndex(
+          "https://alice.test/profile/privateLabelIndex.ttl",
+          store,
+        ),
       );
       const results = (await gateway.buildSearchIndex(updatedProfile)).search(
         "Fresh Thing",
