@@ -8,7 +8,7 @@ import { SearchIndex } from "./SearchIndex";
 
 export class SearchGateway {
   private readonly store: Store;
-  private cached?: { webId: string; index: SearchIndex };
+  private cached?: SearchIndex;
 
   constructor(store: Store) {
     this.store = store;
@@ -16,17 +16,23 @@ export class SearchGateway {
 
   /**
    * Fetch the private label index for the given profile and build a search index from it.
-   * Repeated calls with the same webId return the cached index instance.
+   * Repeated calls return the cached index instance.
    * @param profile
    */
   async buildSearchIndex(profile: WebIdProfile) {
-    if (this.cached?.webId === profile.webId) {
-      return this.cached.index;
+    if (!this.cached) {
+      const labelIndexUris = profile.getPrivateLabelIndexes();
+      this.cached = await this.buildIndex(labelIndexUris);
     }
-    const labelIndexUris = profile.getPrivateLabelIndexes();
-    const index = await this.buildIndex(labelIndexUris);
-    this.cached = { webId: profile.webId, index };
-    return index;
+    return this.cached;
+  }
+
+  /**
+   * Clears the cached search index, so that the next call to {@link buildSearchIndex}
+   * builds a new index.
+   */
+  clear() {
+    this.cached = undefined;
   }
 
   private async buildIndex(labelIndexUris: string[]): Promise<SearchIndex> {
