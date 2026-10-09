@@ -128,6 +128,9 @@ Lifecycle correctness (one owner of build/rebuild/clear, others just query) matt
 
 - Search moves to core; core owns lifecycle; lazy demand-based build; keep warm until logout;
   headless-first. [H]
+- First refactoring slice: cache `SearchIndex` in core — repeated `buildSearchIndex(profile)`
+  calls with the same `profile.webId` return the cached instance; no in-flight dedup; details and
+  open questions in `01-cache-search-index-in-core.md`. [H]
 
 ## 8. Merge strategy discussion — [H + LLM]
 
@@ -165,3 +168,16 @@ LSP diagnostics clean. Pending: commit plan-file move, then merge tip to main.
 
 - This file: `.agents/plans/mentions-fulltext-search/plan.md` (user chose dir; moved into a
   plan-specific subdir to allow task breakdown later, like `.agents/plans/rdf-metadata/` [H])
+
+## 10. Task breakdown convention — [H]
+
+- Each task gets its own file in this directory (`NN-short-name.md`); this plan.md remains the
+  discussion log.
+- **plan.md only changes when the plan itself changes.** Going into more detail / concrete steps
+  happens in the task files, not here. [H, verbatim: "plan.md should only change if what we
+  planned changes. what we are doing now is only go into more details and concrete steps"]
+- First task file: `01-cache-search-index-in-core.md` — owns the concrete slice decisions
+  (questionnaire answers, scope, test plan, open questions). Details of the slice are NOT
+  duplicated here.
+- The slice decision itself (a cached index in core with ensure-build semantics) *did* change the
+  plan, so it is recorded in the decision log above.
