@@ -26,7 +26,7 @@ describe(SearchGateway.name, () => {
   }
 
   describe("caching", () => {
-    it("returns the same index instance when built twice for the same webId", async () => {
+    it("returns the same index instance when built twice", async () => {
       // given a gateway backed by a fake store
       const { gateway, store } = setupWithFakeStore();
       const fetchAllSpy = vi.spyOn(store, "fetchAll");
@@ -34,7 +34,7 @@ describe(SearchGateway.name, () => {
         "https://alice.test/label-index",
       ]);
 
-      // when building a search index for the same profile twice
+      // when building a search index twice
       const first = await gateway.buildSearchIndex(alice);
       const second = await gateway.buildSearchIndex(alice);
 
@@ -45,27 +45,23 @@ describe(SearchGateway.name, () => {
       expect(fetchAllSpy).toHaveBeenCalledTimes(1);
     });
 
-    it("rebuilds the index when built for a different webId", async () => {
+    it("builds a new index after the cache has been cleared", async () => {
       // given a gateway backed by a fake store
       const { gateway, store } = setupWithFakeStore();
       const fetchAllSpy = vi.spyOn(store, "fetchAll");
+      const alice = profile("https://alice.test/profile/card#me", [
+        "https://alice.test/label-index",
+      ]);
 
-      // when building search indexes for two different profiles
-      const aliceIndex = await gateway.buildSearchIndex(
-        profile("https://alice.test/profile/card#me", [
-          "https://alice.test/label-index",
-        ]),
-      );
-      const bobIndex = await gateway.buildSearchIndex(
-        profile("https://bob.test/profile/card#me", [
-          "https://bob.test/label-index",
-        ]),
-      );
+      // when building a search index, then clearing the cache, then building again
+      const first = await gateway.buildSearchIndex(alice);
+      gateway.clear();
+      const second = await gateway.buildSearchIndex(alice);
 
-      // then a new index is built for the different webId
-      expect(bobIndex).not.toBe(aliceIndex);
+      // then a new index is built
+      expect(second).not.toBe(first);
 
-      // and both label indexes were fetched
+      // and the label index was fetched again
       expect(fetchAllSpy).toHaveBeenCalledTimes(2);
     });
 
