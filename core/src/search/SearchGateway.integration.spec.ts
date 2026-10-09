@@ -14,7 +14,6 @@ import { pim, rdfs } from "../namespaces";
 import { LabelIndex } from "./LabelIndex";
 import { Thing } from "../thing";
 import { solid } from "@solid-data-modules/rdflib-utils";
-
 describe(SearchGateway.name, () => {
   describe("build search index", () => {
     it("creates an index that can find indexed items", async () => {
