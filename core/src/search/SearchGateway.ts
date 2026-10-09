@@ -56,6 +56,9 @@ export class SearchGateway {
   async createDefaultLabelIndex(profile: WebIdProfile): Promise<LabelIndex> {
     const operation = createDefaultLabelIndex(profile);
     await this.store.executeUpdate(operation);
+    if (this.cached) {
+      this.cached = await this.buildIndex(profile.getPrivateLabelIndexes());
+    }
     return this.store.get(operation.uri).assume(LabelIndex);
   }
 }

@@ -22,6 +22,7 @@ describe(SearchGateway.name, () => {
   function profile(webId: string, labelIndexUris: string[]): WebIdProfile {
     return {
       webId,
+      getPreferencesFile: () => undefined,
       getPrivateLabelIndexes: () => labelIndexUris,
     } as unknown as WebIdProfile;
   }
@@ -147,6 +148,69 @@ describe(SearchGateway.name, () => {
   });
 
   describe("create default label index", () => {
-    it.todo("recreates the cached search index after creating a default label index");
+    it("recreates the cached search index including the new label index document", async () => {
+      // given a gateway with a cached search index built from one label index document
+      const { gateway, store, labelIndexStub } = setupWithFakeStore();
+      labelIndexStub.getIndexedItems = () => [
+        { uri: "https://thing.test#it", label: "Something" },
+      ];
+      const cachedIndex = await gateway.buildSearchIndex(
+        profile("https://alice.test/profile/card#me", [
+          "https://alice.test/label-index",
+        ]),
+      );
+      const fetchAllSpy = vi.spyOn(store, "fetchAll");
+
+      // when creating a default label index, so that the profile now links two label indexes
+      const updatedProfile = profile("https://alice.test/profile/card#me", [
+        "https://alice.test/label-index",
+        "https://alice.test/profile/privateLabelIndex.ttl",
+      ]);
+      const newIndex = await gateway.createDefaultLabelIndex(updatedProfile);
+
+      // then the cached index is a new instance, built anew from the current label indexes
+      expect(await gateway.buildSearchIndex(updatedProfile)).not.toBe(cachedIndex);
+
+      // and the label indexes were refetched, including the new document
+      expect(fetchAllSpy).toHaveBeenLastCalledWith([
+        "https://alice.test/label-index",
+        "https://alice.test/profile/privateLabelIndex.ttl",
+      ]);
+
+      // and items added to the new label index afterwards are found by the cache
+      labelIndexStub.getIndexedItems = () => [
+        { uri: "https://thing.test#it", label: "Something" },
+        { uri: "https://thing.test#fresh", label: "Fresh Thing" },
+      ];
+      const thing = {
+        uri: "https://thing.test#fresh",
+        label: () => "Fresh Thing",
+      } as unknown as Thing;
+      await gateway.addToLabelIndex(
+        thing,
+        new LabelIndex("https://alice.test/profile/privateLabelIndex.ttl"),
+      );
+      const results = (await gateway.buildSearchIndex(updatedProfile)).search(
+        "Fresh Thing",
+      );
+      expect(results).toHaveLength(1);
+      expect(results[0].ref).toEqual("https://thing.test#fresh");
+    });
+
+    it("does not build a search index when creating a default label index without a cache", async () => {
+      // given a gateway with no cached search index
+      const { gateway, store } = setupWithFakeStore();
+      const fetchAllSpy = vi.spyOn(store, "fetchAll");
+
+      // when creating a default label index
+      await gateway.createDefaultLabelIndex(
+        profile("https://alice.test/profile/card#me", [
+          "https://alice.test/label-index",
+        ]),
+      );
+
+      // then no index was built
+      expect(fetchAllSpy).not.toHaveBeenCalled();
+    });
   });
 });
