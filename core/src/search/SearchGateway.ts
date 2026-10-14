@@ -39,11 +39,15 @@ export class SearchGateway {
     if (labelIndexUris.length === 0) {
       return new SearchIndex([]);
     }
+    const labelIndex = await this.resolveLabelIndexes(labelIndexUris);
+    return new SearchIndex(labelIndex);
+  }
+
+  private async resolveLabelIndexes(labelIndexUris: string[]): Promise<LabelIndex[]> {
     await this.store.fetchAll(labelIndexUris);
-    const labelIndex = labelIndexUris.map((uri) =>
+    return labelIndexUris.map((uri) =>
       this.store.get(uri).assume(LabelIndex),
     );
-    return new SearchIndex(labelIndex);
   }
 
   async addToLabelIndex(thing: Thing, labelIndex: LabelIndex) {
@@ -57,7 +61,9 @@ export class SearchGateway {
     const operation = createDefaultLabelIndex(profile);
     await this.store.executeUpdate(operation);
     if (this.cached) {
-      this.cached = await this.buildIndex(profile.getPrivateLabelIndexes());
+      this.cached.rebuild(
+        await this.resolveLabelIndexes(profile.getPrivateLabelIndexes()),
+      );
     }
     return this.store.get(operation.uri).assume(LabelIndex);
   }
