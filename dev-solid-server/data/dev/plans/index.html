@@ -119,7 +119,10 @@
         const text = obj(iri, SCHEMA + 'text');
         if (text === undefined) return { text: iri, agents: [] }; // not an entry resource (legacy literal IRI)
         const agentList = objs(iri, PROV + 'wasAttributedTo').map(a => agents[a] ?? { label: a.split('#').pop() ?? a, webid: true });
-        return { text, agents: agentList, created: obj(iri, DCT + 'created') };
+        // normalize: xsd:date values become midnight-UTC instants so they compare
+        // correctly against xsd:dateTime modified stamps
+        const created = obj(iri, DCT + 'created');
+        return { text, agents: agentList, created: created ? (created.length === 10 ? created + 'T00:00:00Z' : created) : undefined };
       });
       const plan = {
         iri: planIri,
@@ -128,6 +131,7 @@
         description: obj(planIri, DCT + 'description'),
         status: obj(planIri, PLAN + 'status')?.split('#').pop() ?? 'draft',
         created: obj(planIri, DCT + 'created'),
+        modified: obj(planIri, DCT + 'modified'),
         goal: entryList(planIri, 'goal')[0],
         contexts: entryList(planIri, 'context'),
         decisions: entryList(planIri, 'decision'),
@@ -145,6 +149,8 @@
           iri: t,
           title: obj(t, DCT + 'title') ?? t.split('/').pop(),
           status: obj(t, PLAN + 'status')?.split('#').pop() ?? 'planned',
+          created: obj(t, DCT + 'created'),
+          modified: obj(t, DCT + 'modified'),
           goal: entryList(t, 'goal')[0],
           scope: entryList(t, 'scope'),
           verification: entryList(t, 'verification'),
@@ -202,8 +208,9 @@
     // ---- Board (the validated prototype design) -------------------------
 
     class PlansBoard extends LitElement {
-      static properties = { plan: {} };
+      static properties = { plan: {}, reviewed: {} };
       openTask = null;
+      reviewKey = '';
       static styles = [chipStyles, fileTagStyles, css`
         :host { display: block; }
         .plan-head h1 { margin: 0 0 .35rem; font-size: 1.45rem; letter-spacing: -.01em; }
@@ -213,6 +220,9 @@
         .card { border: 1px solid var(--border); border-radius: 10px; padding: .7rem .85rem; margin-bottom: .6rem; background: var(--surface); cursor: pointer; box-shadow: 0 1px 2px rgba(16,24,40,.04); }
         .card:hover { border-color: #c7cdd6; }
         .card.done { opacity: .7; }
+        /* tasks added/changed since the last review: left accent bar */
+        .card.is-new { box-shadow: inset 3px 0 0 #10b981; }
+        .card.is-new:hover { border-color: #c7cdd6; }
         .card h3 { margin: 0 0 .35rem; font-size: .95rem; font-weight: 600; }
         .goal { font-size: .82rem; color: var(--muted); line-height: 1.4;
           display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
@@ -246,14 +256,41 @@
         .plan-details code { background: var(--accent-soft); border-color: transparent; }
         /* entry attribution badges: H (human) / LLM + optional date */
         .entry { margin: .25rem 0; }
+        .entry.is-new { border-radius: 6px; padding: .35rem .5rem; margin: .45rem -.5rem; box-shadow: inset 3px 0 0 #10b981; }
         .entry .badges { display: inline-flex; gap: .3rem; margin-right: .35rem; vertical-align: baseline; }
         .badge { font-size: .62rem; font-weight: 600; padding: .05rem .4rem; border-radius: 4px; border: 1px solid; vertical-align: 1px; }
         .badge-human { background: var(--accent-soft); border-color: transparent; color: var(--accent); }
         .badge-llm { background: #f1f5f9; border-color: #cbd5e1; color: #475569; }
         .badge-date { background: transparent; border-color: var(--border); color: var(--muted); font-weight: 400; }
+        .badge-new { background: transparent; border-color: var(--border); color: var(--done); font-weight: 700; letter-spacing: .04em; }
         .badge title { font-weight: 400; }
+        .review-btn { font-size: .75rem; padding: .2rem .6rem; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); cursor: pointer; }
+        .review-btn:hover { border-color: #10b981; color: var(--done); }
+        .review-row { display: flex; align-items: baseline; gap: .6rem; margin: .35rem 0 .75rem; }
+        .reviewed-info { color: var(--muted); font-size: .78rem; }
       `];
-      constructor() { super(); this.plan = null; }
+      constructor() { super(); this.plan = null; this.reviewed = null; }
+      willUpdate(changed) {
+        if (changed.has('plan') && this.plan) {
+          // per-plan review baseline: stored only after the user explicitly
+          // clicks "Mark reviewed". Until then reviewed stays null and every
+          // timestamped entry counts as NEW (first-visit behaviour).
+          this.reviewKey = 'plans-reviewed:v2:' + (this.plan.docUri ?? this.plan.iri);
+          this.reviewed = localStorage.getItem(this.reviewKey);
+        }
+      }
+      // recency cutoff: the stored "last reviewed" instant of THIS plan
+      // (localStorage, keyed per plan doc); only set by the "Mark reviewed"
+      // button. With no baseline (reviewed = null) every timestamped entry
+      // counts as NEW — nothing is silently swallowed on first visit.
+      isNew(instant) {
+        return !!(instant && (this.reviewed == null || instant > this.reviewed));
+      }
+      markReviewed() {
+        this.reviewed = new Date().toISOString();
+        localStorage.setItem(this.reviewKey, this.reviewed);
+        this.requestUpdate();
+      }
       open(iri) { this.openTask = iri; this.requestUpdate(); }
       close() { this.openTask = null; this.requestUpdate(); }
       onKeydown(e) {
@@ -266,7 +303,11 @@
         return html`
           <div class="plan-head">
             <h1>${p.title}</h1>
-            <div class="meta">${statusChip(p.status)} ${p.created ? html`· created ${p.created}` : ''}</div>
+            <div class="meta">${statusChip(p.status)} ${p.created ? html`· created ${p.created?.slice(0,10)}` : ''} ${p.modified ? html`· updated ${p.modified}` : ''}</div>
+            <div class="review-row">
+              <button class="review-btn" title="Mark everything as seen — NEW highlights reset" @click=${() => this.markReviewed()}>Mark reviewed</button>
+              <span class="reviewed-info">new since ${this.reviewed ?? '—'}</span>
+            </div>
           </div>
           ${p.description ? html`<p>${p.description}</p>` : ''}
           <div class="columns" @keydown=${e => this.onKeydown(e)}>
@@ -274,7 +315,7 @@
               <div class="col">
                 <h2>${STATUS_LABEL[s]} (${cols[i].length})</h2>
                 ${cols[i].map(t => html`
-                  <div class="card ${t.status}" role="button" tabindex="0"
+                  <div class="card ${t.status}${this.isNew(t.modified ?? t.created) ? ' is-new' : ''}" role="button" tabindex="0"
                        @click=${() => this.open(t.iri)}
                        @keydown=${e => { if (e.key === 'Enter') this.open(t.iri); }}>
                     <h3>${t.title}</h3>
@@ -288,24 +329,27 @@
           ${task ? this.renderDetail(task) : ''}
         `;
       }
-      renderEntry(e) {
+      renderEntry(e, since) {
         if (typeof e === 'string') return html`<li>${e}</li>`; // legacy literal
+        const isNew = this.isNew(e.created);
         const badges = html`<span class="badges">
+          ${isNew ? html`<span class="badge badge-new" title="added ${e.created}">NEW</span>` : ''}
           ${e.agents.map(a => html`<span class="badge ${a.webid ? 'badge-human' : 'badge-llm'}" title="${a.label}">${a.label}</span>`)}
-          ${e.created ? html`<span class="badge badge-date" title="recorded ${e.created}">${e.created}</span>` : ''}
+          ${e.created ? html`<span class="badge badge-date" title="recorded ${e.created}">${e.created.slice(0, 10)}</span>` : ''}
         </span>`;
-        return html`<li class="entry">${badges}${e.text}</li>`;
+        return html`<li class="entry${isNew ? ' is-new' : ''}">${badges}${e.text}</li>`;
       }
       renderPlanDetails(p) {
+        const since = this.reviewed;
         const sections = [
           { title: 'Goal', body: p.goal ? html`<p>${p.goal.text}</p>` : '' },
-          { title: 'User stories', body: p.userStories.length ? html`<ul>${p.userStories.map(s => this.renderEntry(s))}</ul>` : '' },
-          { title: 'Context', body: p.contexts.length ? html`<ul>${p.contexts.map(c => this.renderEntry(c))}</ul>` : '' },
-          { title: 'Decisions', body: p.decisions.length ? html`<ul>${p.decisions.map(d => this.renderEntry(d))}</ul>` : '' },
-          { title: 'Options considered', body: p.options.length ? html`<ul>${p.options.map(o => this.renderEntry(o))}</ul>` : '' },
-          { title: 'Open questions', body: p.openQuestions.length ? html`<ul>${p.openQuestions.map(q => this.renderEntry(q))}</ul>` : '' },
-          { title: 'Notes', body: p.notes.length ? html`<ul>${p.notes.map(n => this.renderEntry(n))}</ul>` : '' },
-          { title: 'Out of scope', body: p.outOfScope.length ? html`<ul>${p.outOfScope.map(o => this.renderEntry(o))}</ul>` : '' },
+          { title: 'User stories', body: p.userStories.length ? html`<ul>${p.userStories.map(s => this.renderEntry(s, since))}</ul>` : '' },
+          { title: 'Context', body: p.contexts.length ? html`<ul>${p.contexts.map(c => this.renderEntry(c, since))}</ul>` : '' },
+          { title: 'Decisions', body: p.decisions.length ? html`<ul>${p.decisions.map(d => this.renderEntry(d, since))}</ul>` : '' },
+          { title: 'Options considered', body: p.options.length ? html`<ul>${p.options.map(o => this.renderEntry(o, since))}</ul>` : '' },
+          { title: 'Open questions', body: p.openQuestions.length ? html`<ul>${p.openQuestions.map(q => this.renderEntry(q, since))}</ul>` : '' },
+          { title: 'Notes', body: p.notes.length ? html`<ul>${p.notes.map(n => this.renderEntry(n, since))}</ul>` : '' },
+          { title: 'Out of scope', body: p.outOfScope.length ? html`<ul>${p.outOfScope.map(o => this.renderEntry(o, since))}</ul>` : '' },
           { title: 'Files', body: p.files.length ? html`<div class="files">${p.files.map(f => html`<code>${f}</code>`)}</div>` : '' },
         ].filter(s => s.body);
         if (!sections.length) return '';
@@ -323,7 +367,7 @@
                 <h3>${t.title}</h3>
                 <button class="close" @click=${() => this.close()} aria-label="Close">✕</button>
               </div>
-              <div class="meta">${statusChip(t.status)}${t.dependsOn.length ? ` · depends on ${t.dependsOn.map(d => d.split('/').pop()).join(', ')}` : ''}</div>
+              <div class="meta">${statusChip(t.status)}${t.dependsOn.length ? ` · depends on ${t.dependsOn.map(d => d.split('/').pop()).join(', ')}` : ''}${t.modified ? ` · updated ${t.modified}` : ''}</div>
               ${t.files.length ? html`<div class="files">${t.files.map(f => html`<code>${f}</code>`)}</div>` : ''}
               ${t.goal ? html`<div class="section"><h4>Goal</h4><p>${t.goal.text}</p></div>` : ''}
               ${t.scope.length ? html`<div class="section"><h4>Scope</h4><ul>${t.scope.map(x => this.renderEntry(x))}</ul></div>` : ''}

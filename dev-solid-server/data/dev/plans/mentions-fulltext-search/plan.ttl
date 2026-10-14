@@ -9,7 +9,7 @@
     dct:description "Replace hard-coded items in RichEditor markdown mentions with label search over the search index, same as pos-navigation. Refactor the search-index ownership first, re-enable the mention extension afterwards.";
     plan:status plan:in-progress;
     dct:created "2026-10-09"^^xsd:date;
-    dct:modified "2026-10-14"^^xsd:date;
+    dct:modified "2026-10-14T15:58:28Z"^^xsd:dateTime;
     plan:hasTask <./mentions-fulltext-search.ttl#task-01-cache-search-index-in-core>, <./mentions-fulltext-search.ttl#task-02-recreate-search-index-on-label-update>, <./mentions-fulltext-search.ttl#task-03-remove-search-dom-events>;
     plan:context <#entry-plan-context-01>, <#entry-plan-context-02>, <#entry-plan-context-03>;
     plan:decision <#entry-plan-decision-01>, <#entry-plan-decision-02>, <#entry-plan-decision-03>, <#entry-plan-decision-04>, <#entry-plan-decision-05>, <#entry-plan-decision-06>, <#entry-plan-decision-07>, <#entry-plan-decision-08>, <#entry-plan-decision-09>, <#entry-plan-decision-10>, <#entry-plan-decision-11>, <#entry-plan-decision-12>, <#entry-plan-decision-13>;
@@ -47,8 +47,8 @@
     dct:title "Remove pod-os:search:index-created/updated DOM events";
     plan:parent <plan.ttl#plan>;
     plan:status plan:planned;
-    dct:created "2026-10-14"^^xsd:date;
-    dct:modified "2026-10-14"^^xsd:date;
+    dct:created "2026-10-14T15:58:28Z"^^xsd:dateTime;
+    dct:modified "2026-10-14T15:58:28Z"^^xsd:dateTime;
     plan:dependsOn <./mentions-fulltext-search.ttl#task-02-recreate-search-index-on-label-update>;
     plan:touchesFile "elements/src/components/pos-make-findable/pos-make-findable.tsx", "elements/src/components/pos-make-findable/pos-make-findable.spec.tsx", "elements/src/components/pos-navigation/pos-navigation.tsx", "elements/src/components/pos-navigation/__test/pos-navigation.spec.tsx";
     plan:goal <#entry-task-03-remove-search-dom-events-goal-01>;
@@ -122,12 +122,12 @@
 <#entry-plan-decision-13> a schema:Comment;
     schema:text "Scope ruling for the remaining plan: the mention feature is out of scope — this plan is only about the search refactoring. User: \"the mention should be out of scope, we are focusing on the search refactoring only here\". Consequently openQuestion-01 (os-to-RichEditor bridge) and openQuestion-02 (mention fallback) are no longer open in this plan.";
     prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
-    dct:created "2026-10-14"^^xsd:date.
+    dct:created "2026-10-14T15:58:28Z"^^xsd:dateTime.
 
 <#entry-plan-outOfScope-01> a schema:Comment;
     schema:text "The mentions feature in all its parts: search-based suggestion provider for RichEditor (os-to-RichEditor bridge), mention fallback for things not in the index, re-enabling the mention extension and un-skipping its 3 tests. User: \"the mention should be out of scope, we are focusing on the search refactoring only here\".";
     prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
-    dct:created "2026-10-14"^^xsd:date.
+    dct:created "2026-10-14T15:58:28Z"^^xsd:dateTime.
 
 <#entry-plan-option-01> a schema:Comment;
     schema:text "A. Core-owned search service: PodOS holds a SearchIndex instance; lifecycle built on login, invalidated/rebuilt on label-index change events, cleared on logout; consumers call os.search(term) synchronously. + lunr and LabelIndex logic already live in core; single source of truth; one fetch, one rebuild. - core must know about session/login lifecycle or get an explicit initSearch(profile) call; introduces stateful lifetime into an otherwise stateless-ish facade; elements must still bridge os-to-RichEditor (RichEditor has no os reference; needs a suggestionsProvider callback injected at construction).";
@@ -320,29 +320,29 @@
 <#entry-task-03-remove-search-dom-events-goal-01> a schema:Comment;
     schema:text "The pod-os:search:index-created/updated DOM events and their listeners are gone; core's internal cache updates (task-02) are the sole mechanism keeping search indexes fresh.";
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
-    dct:created "2026-10-14"^^xsd:date.
+    dct:created "2026-10-14T15:58:28Z"^^xsd:dateTime.
 
 <#entry-task-03-remove-search-dom-events-scope-01> a schema:Comment;
     schema:text "pos-make-findable: remove the two @Event emitters (indexUpdatedEmitter, indexCreatedEmitter) and the emits in onClick() and onSelect().";
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
-    dct:created "2026-10-14"^^xsd:date.
+    dct:created "2026-10-14T15:58:28Z"^^xsd:dateTime.
 
 <#entry-task-03-remove-search-dom-events-scope-02> a schema:Comment;
     schema:text "pos-navigation: drop the two @Listen decorators (pod-os:search:index-created on buildSearchIndex, pod-os:search:index-updated on rebuildSearchIndex). Keep the buildSearchIndex method — the session subscriber's login branch already calls it. Remove rebuildSearchIndex() entirely: the searchIndex it holds is core's shared cached instance, which core rebuilds in place (task-02), so the component reference stays fresh without any listener.";
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
-    dct:created "2026-10-14"^^xsd:date.
+    dct:created "2026-10-14T15:58:28Z"^^xsd:dateTime.
 
 <#entry-task-03-remove-search-dom-events-scope-03> a schema:Comment;
     schema:text "Update the affected specs: pos-navigation.spec.tsx (the two tests dispatching pod-os:search:index-created/updated at lines ~505/520), pos-make-findable.spec.tsx (the three listener assertions at lines ~69/204/461).";
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
-    dct:created "2026-10-14"^^xsd:date.
+    dct:created "2026-10-14T15:58:28Z"^^xsd:dateTime.
 
 <#entry-task-03-remove-search-dom-events-verification-01> a schema:Comment;
     schema:text "pos-navigation suite green without the event-dispatch tests (index still built on login via session subscription; search results reflect core-side rebuilds). pos-make-findable suite green without event assertions (addToLabelIndex / createDefaultLabelIndex still resolve and update isIndexed). Wallaby runs are executed on the user's side.";
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
-    dct:created "2026-10-14"^^xsd:date.
+    dct:created "2026-10-14T15:58:28Z"^^xsd:dateTime.
 
 <#entry-task-03-remove-search-dom-events-decision-01> a schema:Comment;
     schema:text "No replacement trigger needed for pos-navigation: its session subscription already calls buildSearchIndex when isLoggedIn becomes true (the @Listen decorator on that same method was an additional path). Index freshness after the removal comes from core rebuilding the shared cached instance in place, so the component's searchIndex reference sees the updates.";
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
-    dct:created "2026-10-14"^^xsd:date.
+    dct:created "2026-10-14T15:58:28Z"^^xsd:dateTime.

@@ -42,12 +42,12 @@ plan:PlanShape sh:property _:n3-2.
 _:n3-9 sh:path dct:created;
     sh:name "created";
     sh:maxCount 1;
-    sh:datatype xsd:date.
+    sh:or ( [ sh:datatype xsd:date ] [ sh:datatype xsd:dateTime ] ).
 plan:PlanShape sh:property _:n3-9.
 _:n3-10 sh:path dct:modified;
     sh:name "modified";
     sh:maxCount 1;
-    sh:datatype xsd:date.
+    sh:datatype xsd:dateTime.
 plan:PlanShape sh:property _:n3-10.
 _:n3-11 sh:path plan:hasTask;
     sh:name "has task";
@@ -71,7 +71,7 @@ plan:EntryShape sh:property _:n3-101.
 _:n3-102 sh:path dct:created;
     sh:name "created";
     sh:maxCount 1;
-    sh:datatype xsd:date.
+    sh:or ( [ sh:datatype xsd:date ] [ sh:datatype xsd:dateTime ] ).
 plan:EntryShape sh:property _:n3-102.
 _:n3-103 sh:path plan:decision;
     sh:name "decision";
@@ -144,12 +144,12 @@ plan:TaskShape sh:property _:n3-28.
 _:n3-29 sh:path dct:created;
     sh:name "created";
     sh:maxCount 1;
-    sh:datatype xsd:date.
+    sh:or ( [ sh:datatype xsd:date ] [ sh:datatype xsd:dateTime ] ).
 plan:TaskShape sh:property _:n3-29.
 _:n3-30 sh:path dct:modified;
     sh:name "modified";
     sh:maxCount 1;
-    sh:datatype xsd:date.
+    sh:datatype xsd:dateTime.
 plan:TaskShape sh:property _:n3-30.
 _:n3-31 sh:path plan:goal;
     sh:name "goal";
