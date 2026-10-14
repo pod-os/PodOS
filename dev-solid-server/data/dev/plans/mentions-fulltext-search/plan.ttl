@@ -45,9 +45,9 @@
 <#task-03-remove-search-dom-events> a plan:Task;
     dct:title "Remove pod-os:search:index-created/updated DOM events";
     plan:parent <plan.ttl#plan>;
-    plan:status plan:planned;
+    plan:status plan:done;
     dct:created "2026-10-14T15:58:28Z"^^xsd:dateTime;
-    dct:modified "2026-10-14T15:58:28Z"^^xsd:dateTime;
+    dct:modified "2026-10-14T17:23:23Z"^^xsd:dateTime;
     plan:dependsOn <#task-02-recreate-search-index-on-label-update>;
     plan:touchesFile "elements/src/components/pos-make-findable/pos-make-findable.tsx", "elements/src/components/pos-make-findable/pos-make-findable.spec.tsx", "elements/src/components/pos-navigation/pos-navigation.tsx", "elements/src/components/pos-navigation/__test/pos-navigation.spec.tsx";
     plan:goal <#entry-task-03-remove-search-dom-events-goal-01>;
