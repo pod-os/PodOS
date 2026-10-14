@@ -9,13 +9,13 @@
     dct:description "Users want to annotate non-RDF resources — such as PDF documents, images, or other binary files stored on a Solid Pod — with RDF metadata. Currently PodOS has no mechanism to attach structured, queryable data to resources that are not themselves RDF documents, making it impossible to describe, tag, or relate those resources within the Linked Data graph.";
     plan:status plan:draft;
     dct:created "2026-06-09"^^xsd:date;
-    plan:hasTask <./rdf-metadata-for-non-rdf-resources.ttl#task-1-auto-follow-describedby>, <./rdf-metadata-for-non-rdf-resources.ttl#task-2-write-path-routing>, <./rdf-metadata-for-non-rdf-resources.ttl#task-3-integration-test>, <./rdf-metadata-for-non-rdf-resources.ttl#task-4-element-smoke-test>;
+    plan:hasTask <#task-1-auto-follow-describedby>, <#task-2-write-path-routing>, <#task-3-integration-test>, <#task-4-element-smoke-test>;
     plan:userStory <#entry-plan-userStory-01>, <#entry-plan-userStory-02>, <#entry-plan-userStory-03>;
     plan:decision <#entry-plan-decision-01>, <#entry-plan-decision-02>, <#entry-plan-decision-03>, <#entry-plan-decision-04>;
     plan:openQuestion <#entry-plan-openQuestion-01>, <#entry-plan-openQuestion-02>;
     plan:note <#entry-plan-note-01>;
     plan:outOfScope <#entry-plan-outOfScope-01>, <#entry-plan-outOfScope-02>, <#entry-plan-outOfScope-03>, <#entry-plan-outOfScope-04>.
-<./rdf-metadata-for-non-rdf-resources.ttl#task-1-auto-follow-describedby> a plan:Task;
+<#task-1-auto-follow-describedby> a plan:Task;
     dct:title "Auto-follow describedby in Store.fetch (read path)";
     plan:parent <plan.ttl#plan>;
     plan:status plan:done;
@@ -25,7 +25,7 @@
     plan:verification <#entry-task-1-auto-follow-describedby-verification-01>;
     plan:outOfScope <#entry-task-1-auto-follow-describedby-outOfScope-01>, <#entry-task-1-auto-follow-describedby-outOfScope-02>;
     plan:note <#entry-task-1-auto-follow-describedby-note-01>.
-<./rdf-metadata-for-non-rdf-resources.ttl#task-2-write-path-routing> a plan:Task;
+<#task-2-write-path-routing> a plan:Task;
     dct:title "Write-path routing for binary resources";
     plan:parent <plan.ttl#plan>;
     plan:status plan:done;
@@ -35,7 +35,7 @@
     plan:verification <#entry-task-2-write-path-routing-verification-01>;
     plan:outOfScope <#entry-task-2-write-path-routing-outOfScope-01>, <#entry-task-2-write-path-routing-outOfScope-02>;
     plan:note <#entry-task-2-write-path-routing-note-01>.
-<./rdf-metadata-for-non-rdf-resources.ttl#task-3-integration-test> a plan:Task;
+<#task-3-integration-test> a plan:Task;
     dct:title "End-to-end integration test";
     plan:parent <plan.ttl#plan>;
     plan:status plan:done;
@@ -45,7 +45,7 @@
     plan:verification <#entry-task-3-integration-test-verification-01>;
     plan:outOfScope <#entry-task-3-integration-test-outOfScope-01>, <#entry-task-3-integration-test-outOfScope-02>;
     plan:note <#entry-task-3-integration-test-note-01>.
-<./rdf-metadata-for-non-rdf-resources.ttl#task-4-element-smoke-test> a plan:Task;
+<#task-4-element-smoke-test> a plan:Task;
     dct:title "Element smoke test";
     plan:parent <plan.ttl#plan>;
     plan:status plan:done;
