@@ -9,8 +9,8 @@
     dct:description "Replace hard-coded items in RichEditor markdown mentions with label search over the search index, same as pos-navigation. Refactor the search-index ownership first, re-enable the mention extension afterwards.";
     plan:status plan:in-progress;
     dct:created "2026-10-09"^^xsd:date;
-    dct:modified "2026-10-14T16:21:55Z"^^xsd:dateTime;
-    plan:hasTask <#task-01-cache-search-index-in-core>, <#task-02-recreate-search-index-on-label-update>, <#task-03-remove-search-dom-events>;
+    dct:modified "2026-10-14T18:10:57Z"^^xsd:dateTime;
+    plan:hasTask <#task-01-cache-search-index-in-core>, <#task-02-recreate-search-index-on-label-update>, <#task-03-remove-search-dom-events>, <#task-04-fix-cache-reference-invalidation>;
     plan:context <#entry-plan-context-01>, <#entry-plan-context-02>, <#entry-plan-context-03>;
     plan:decision <#entry-plan-decision-01>, <#entry-plan-decision-02>, <#entry-plan-decision-03>, <#entry-plan-decision-04>, <#entry-plan-decision-05>, <#entry-plan-decision-06>, <#entry-plan-decision-07>, <#entry-plan-decision-08>, <#entry-plan-decision-09>, <#entry-plan-decision-10>, <#entry-plan-decision-11>, <#entry-plan-decision-12>, <#entry-plan-decision-13>, <#entry-plan-decision-14>;
     plan:outOfScope <#entry-plan-outOfScope-01>;
@@ -47,13 +47,27 @@
     plan:parent <plan.ttl#plan>;
     plan:status plan:done;
     dct:created "2026-10-14T15:58:28Z"^^xsd:dateTime;
-    dct:modified "2026-10-14T17:23:23Z"^^xsd:dateTime;
+    dct:modified "2026-10-14T17:53:21Z"^^xsd:dateTime;
     plan:dependsOn <#task-02-recreate-search-index-on-label-update>;
     plan:touchesFile "elements/src/components/pos-make-findable/pos-make-findable.tsx", "elements/src/components/pos-make-findable/pos-make-findable.spec.tsx", "elements/src/components/pos-navigation/pos-navigation.tsx", "elements/src/components/pos-navigation/__test/pos-navigation.spec.tsx";
     plan:goal <#entry-task-03-remove-search-dom-events-goal-01>;
     plan:scope <#entry-task-03-remove-search-dom-events-scope-01>, <#entry-task-03-remove-search-dom-events-scope-02>, <#entry-task-03-remove-search-dom-events-scope-03>;
     plan:verification <#entry-task-03-remove-search-dom-events-verification-01>;
-    plan:decision <#entry-task-03-remove-search-dom-events-decision-01>.
+    plan:decision <#entry-task-03-remove-search-dom-events-decision-01>;
+    plan:note <#entry-task-03-remove-search-dom-events-note-01>;
+    plan:openQuestion <#entry-task-03-remove-search-dom-events-openQuestion-01>.
+
+<#task-04-fix-cache-reference-invalidation> a plan:Task;
+    dct:title "Fix search-index cache reference invalidation in createDefaultLabelIndex";
+    plan:parent <plan.ttl#plan>;
+    plan:status plan:in-progress;
+    dct:created "2026-10-14T18:05:00Z"^^xsd:dateTime;
+    dct:modified "2026-10-14T18:05:00Z"^^xsd:dateTime;
+    plan:dependsOn <#task-03-remove-search-dom-events>;
+    plan:touchesFile "core/src/search/SearchGateway.ts", "core/src/search/SearchGateway.spec.ts", "core/src/search/SearchIndex.ts", "elements/src/components/pos-navigation/__test/pos-navigation.spec.tsx";
+    plan:goal <#entry-task-04-fix-cache-reference-invalidation-goal-01>;
+    plan:decision <#entry-task-04-fix-cache-reference-invalidation-decision-01>;
+    plan:note <#entry-task-04-fix-cache-reference-invalidation-note-01>.
 
 # ---- Entries (schema:Comment; text + attribution) ----
 
@@ -338,3 +352,28 @@
     schema:text "No replacement trigger needed for pos-navigation: its session subscription already calls buildSearchIndex when isLoggedIn becomes true (the @Listen decorator on that same method was an additional path). Index freshness after the removal comes from core rebuilding the shared cached instance in place, so the component's searchIndex reference sees the updates.";
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
     dct:created "2026-10-14T15:58:28Z"^^xsd:dateTime.
+
+<#entry-task-03-remove-search-dom-events-note-01> a schema:Comment;
+    schema:text "Bug report (user, after merge): with a user who has no label index at all, the first 'make findable' click leaves pos-navigation searching an empty index — the newly created index never reaches it. Diagnosis: the task-03 scope-02 assumption 'core rebuilds the shared cached instance in place, so the component reference stays fresh' only holds for addToLabelIndex (cached.rebuild()). createDefaultLabelIndex REPLACES this.cached with a fresh SearchIndex built from the updated label-index document list (task-02 scope-03). Sequence: login builds and caches an empty SearchIndex; user clicks make-findable with no existing index; createDefaultLabelIndex swaps the cache to a new instance; addToLabelIndex then rebuilds the NEW instance; pos-navigation still holds the OLD empty one and its search() returns nothing. Pre-task-03 the pod-os:search:index-created event triggered a buildSearchIndex call in pos-navigation, which masked this reference invalidation (the de-duplication made the create path return the updated cached instance).";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>, <https://angelo.veltens.org/profile/card#me>;
+    dct:created "2026-10-14T17:53:21Z"^^xsd:dateTime.
+
+<#entry-task-03-remove-search-dom-events-openQuestion-01> a schema:Comment;
+    schema:text "How to fix the create-path reference invalidation without re-adding DOM events? Candidate A: SearchGateway.createDefaultLabelIndex updates the cached SearchIndex in place (e.g. SearchIndex.setLabelIndexes(labelIndexes) assigning the new LabelIndex[] and rebuilding) so all consumers keep holding a live reference. Candidate B: keep cache replacement and re-introduce a component-side re-fetch trigger (contra: contradicts task-03's decision-01). A also amends task-02 scope-03's formulation 'this.cached = await this.buildIndex(...)'. Affected test: SearchGateway.spec 'recreates the cached search index including the new label index document' asserts not.toBe(cachedIndex) and would flip to toBe; pos-navigation.spec needs a regression test: build index while profile has no label indexes, then createDefaultLabelIndex, then search must find the added thing. RESOLVED (2026-10-14): candidate A chosen in refined form — rebuild(labelIndexes?) instead of setLabelIndexes(); see task-04 decision-01. Candidate B rejected (contradicts task-03 decision-01).";
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-14T17:53:21Z"^^xsd:dateTime.
+
+<#entry-task-04-fix-cache-reference-invalidation-goal-01> a schema:Comment;
+    schema:text "All consumers holding the shared cached SearchIndex keep a live reference across BOTH label-index write paths — pos-navigation's search finds things added via the make-findable flow even when the user had no label index at login.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-14T18:05:00Z"^^xsd:dateTime.
+
+<#entry-task-04-fix-cache-reference-invalidation-decision-01> a schema:Comment;
+    schema:text "Fix A with optional-parameter variant: SearchIndex.rebuild(labelIndexes?) accepts an optional LabelIndex[] replacing the captured list before rebuilding; SearchGateway.createDefaultLabelIndex updates the cached instance in place via this.cached.rebuild(await this.resolveLabelIndexes(profile.getPrivateLabelIndexes())) instead of replacing this.cached (Angelo: \"we could also pass optional labelindexes to rebuild to update them\"). Supersedes task-02 scope-03's this.cached = await this.buildIndex(...) formulation and the setLabelIndexes() variant of task-03 openQuestion-01 candidate A; both write paths now update the same cached instance. No DOM events, no notification API for now (data freshness only; already-rendered suggestions refresh on next input).";
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-14T18:10:57Z"^^xsd:dateTime.
+
+<#entry-task-04-fix-cache-reference-invalidation-note-01> a schema:Comment;
+    schema:text "Task spun off from task-03's bug report (note-01) and open question (openQuestion-01). Fix candidates are undecided: A (createDefaultLabelIndex updates the cached SearchIndex in place via SearchIndex.setLabelIndexes) vs B (keep cache replacement, re-introduce a component-side re-fetch trigger — contradicts task-03 decision-01). Decision pending with Angelo; see task-03 openQuestion-01 for details and affected tests.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-14T18:05:00Z"^^xsd:dateTime.
