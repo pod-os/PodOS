@@ -1,0 +1,7 @@
+@prefix plan: <./plan-ontology.ttl#> .
+
+# Which plan is currently active (rendered by /dev/plans/index.html).
+# Switching plans in the viewer updates this file; agents read it to know
+# what is being worked on. One active pointer at a time.
+
+<#active> plan:active <./mentions-fulltext-search/plan.ttl#plan> .

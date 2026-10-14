@@ -1,0 +1,41 @@
+@prefix plan: <../plan-ontology.ttl#>.
+@prefix dct: <http://purl.org/dc/terms/>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+
+<plan.ttl#plan> a plan:Plan;
+    dct:title "Remember Me for the IdP in pos-login";
+    dct:description "When a user submits the login form, their chosen IdP URL is saved to the existing localSettings store (elements/src/store/settings.ts). On the next visit, pos-login-form reads that value back and pre-fills the IdP input, so the user only has to click Login instead of re-typing the URL. A 'Remember me' checkbox gives them explicit control over whether the IdP is persisted.";
+    plan:status plan:planned;
+    plan:goal "Remember the chosen IdP URL across visits, pre-fill it on the next login, with explicit user control via a 'Remember me' checkbox.";
+    plan:decision "Reuse elements/src/store/settings.ts instead of raw localStorage: it already uses @stencil/store backed by localStorage. Automatic persistence comes from the on('set') handler in persistChanges() which writes the whole settings object to localStorage on every state change (no manual setItem/removeItem needed); cross-tab sync comes free from the storage-event listener in syncChangesAcrossTabs(); and all persisted user preferences keep a single source of truth (localStorage key \"settings\").";
+    plan:touchesFile "elements/src/store/settings.ts", "elements/src/components/pos-login-form/pos-login-form.tsx", "elements/src/components/pos-login-form/pos-login-form.css", "elements/src/components/pos-login-form/test/pos-login-form.spec.tsx", "elements/src/components/pos-login/pos-login.integration.spec.tsx";
+    plan:outOfScope "No auto-login / silent login on page load — the user must still click Login and confirm. This keeps the behaviour predictable and avoids surprising redirects.", "No separate 'forget me' button — unchecking the box and logging in again is the natural flow for opting out.", "No migration of the old rememberedIdp localStorage key — the key never shipped, so there is nothing to migrate.".
+<plan.ttl#task-1-extend-settings-store> a plan:Task;
+    dct:title "Extend localSettings store with rememberedIdp";
+    plan:parent <plan.ttl#plan>;
+    plan:status plan:planned;
+    plan:touchesFile "elements/src/store/settings.ts";
+    plan:scope "Add rememberedIdp: string | null to LocalSettings; initialise it to null in the default initialSettings (storedSettings ? JSON.parse(storedSettings) : { offlineCache: false, rememberedIdp: null }).", "Sync in syncChangesAcrossTabs: localSettings.state.rememberedIdp = newSettings.rememberedIdp ?? null.";
+    plan:outOfScope "pos-login-form changes (task-2).".
+<plan.ttl#task-2-login-form-remember-me> a plan:Task;
+    dct:title "pos-login-form: rememberMe state, pre-fill, submit, checkbox UI";
+    plan:parent <plan.ttl#plan>;
+    plan:status plan:planned;
+    plan:dependsOn <plan.ttl#task-1-extend-settings-store>;
+    plan:touchesFile "elements/src/components/pos-login-form/pos-login-form.tsx", "elements/src/components/pos-login-form/pos-login-form.css";
+    plan:scope "Import localSettings; add @State() rememberMe: boolean = false.", "Read from the store on component init (componentWillLoad): if localSettings.state.rememberedIdp is set, pre-fill this.idpUrl, set rememberMe = true and canSubmit = true.", "In handleSubmit: localSettings.state.rememberedIdp = this.rememberMe ? this.idpUrl : null; then emit pod-os:idp-url-selected (emission must happen regardless of checkbox state).", "Render: checkbox row below the datalist, above the submit button — label.remember-me wrapping an input#rememberMe[type=checkbox] bound to rememberMe state.", "CSS: label.remember-me { display: flex; align-items: center; gap: var(--size-2); cursor: pointer; } and label.remember-me input[type=checkbox] { width: auto; accent-color: var(--pos-primary-color); } (override the full-width input rule).";
+    plan:outOfScope "Store changes (task-1); integration test (task-4).".
+<plan.ttl#task-3-unit-tests> a plan:Task;
+    dct:title "pos-login-form unit tests";
+    plan:parent <plan.ttl#plan>;
+    plan:status plan:planned;
+    plan:dependsOn <plan.ttl#task-2-login-form-remember-me>;
+    plan:touchesFile "elements/src/components/pos-login-form/test/pos-login-form.spec.tsx";
+    plan:scope "Add a beforeEach resetting the store: localSettings.state.rememberedIdp = null.", "Update the existing full-render snapshot: new checkbox row between the datalist and the submit input (label.remember-me > input#rememberMe + 'Remember me').", "New test: renders 'Remember me' checkbox unchecked by default (checkbox.checked === false when store is empty).", "New test: pre-fills IdP URL and checks box when a value is in settings (set localSettings.state.rememberedIdp before mount; input value and checkbox checked; submit button already enabled).", "New test: saves IdP URL to settings on submit when 'Remember me' is checked (enter URL, check box, submit; localSettings.state.rememberedIdp equals the entered URL).", "New test: clears IdP URL from settings on submit when 'Remember me' is unchecked (pre-seed store, uncheck, submit; localSettings.state.rememberedIdp is null).", "New test: still emits pod-os:idp-url-selected even when 'Remember me' is unchecked (regression guard).".
+<plan.ttl#task-4-integration-test> a plan:Task;
+    dct:title "pos-login integration test: pre-fill on next open";
+    plan:parent <plan.ttl#plan>;
+    plan:status plan:planned;
+    plan:dependsOn <plan.ttl#task-2-login-form-remember-me>;
+    plan:touchesFile "elements/src/components/pos-login/pos-login.integration.spec.tsx";
+    plan:scope "Add one scenario after the existing 'allows Alice to log in' test: 'pre-fills the IdP URL when one has been remembered' — 1. seed localSettings.state.rememberedIdp with a remembered IdP URL; 2. mount the page; 3. open the login dialog; 4. assert the pos-login-form input already has the remembered URL as its value; 5. assert the submit button is already enabled (no typing required).".

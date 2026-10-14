@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plans</title>
+  <!--
+    Plans viewer. Renders the active plan (plan:active pointer in active.ttl)
+    as a board; clicking a task opens a full-screen detail sheet.
+    Source of truth: .agents/plans/<slug>/plan.ttl in the PodOS repo, copied
+    into this pod container (see .agents/skills/podos-plans/SKILL.md).
+    Vocabulary: plan-ontology.ttl# in this container (see below for base IRI)
+  -->
+  <link href="https://esm.sh/@pod-os/elements@latest/dist/elements/elements.css" rel="stylesheet" />
+  <style>
+    :root {
+      /* PodOS design tokens (from elements.css / Pollen), with local fallbacks */
+      --bg: var(--pos-background-color, #f6f7f9);
+      --surface: var(--color-white, #ffffff);
+      --border: var(--pos-border-color, #e2e5ea);
+      --text: var(--pos-normal-text-color, #1a1f28);
+      --muted: var(--pos-subtle-text-color, #6b7280);
+      --accent: var(--pos-primary-color, #4f46e5);
+      --accent-soft: var(--pos-primary-highlight-color, #eef2ff);
+      --done: #15803d; --done-bg: #ecfdf3; --done-border: #86efac;
+      --progress: #b45309; --progress-bg: #fffbeb; --progress-border: #fcd34d;
+      --planned: #475569; --planned-bg: #f1f5f9; --planned-border: #cbd5e1;
+      --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    }
+    html { background: var(--bg); }
+    body {
+      margin: 0; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      color: var(--text); -webkit-font-smoothing: antialiased;
+      font-size: 15px; line-height: 1.5;
+    }
+  </style>
+  <script type="module">
+    import { LitElement, html, css } from 'https://cdn.jsdelivr.net/npm/lit@3.1.4/+esm';
+
+    // vocabulary lives beside this page; resolve relative IRIs against this page's URL
+    const BASE = new URL('.', location.href).href;
+    const PLAN = new URL('plan-ontology.ttl#', BASE).href;
+    const DCT = 'http://purl.org/dc/terms/';
+    const RDF_TYPE = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type';
+
+    // ---- data loading ------------------------------------------------
+
+    async function fetchTurtle(url) {
+      // cache-bust: the pod data changes between visits; a cached response
+      // would show a stale active-plan pointer or stale plan content
+      const busted = `${url}${url.includes('?') ? '&' : '?'}t=${Date.now()}`;
+      const res = await fetch(busted, { headers: { Accept: 'text/turtle' } });
+      if (!res.ok) throw new Error(`${res.status} ${url}`);
+      return res.text();
+    }
+
+    async function parseTurtle(text, baseIRI) {
+      const { Parser, Store } = await importN3();
+      const g = new Store();
+      new Parser({ baseIRI }).parse(text).forEach(q => g.addQuad(q));
+      return g;
+    }
+
+    let n3Promise = null;
+    function importN3() {
+      if (!n3Promise) n3Promise = import('https://cdn.jsdelivr.net/npm/n3@1.17.2/+esm');
+      return n3Promise;
+    }
+
+    /** Discover plan containers by querying each sub-container's own
+     *  listing for a plan.ttl resource — no hard-coded slugs. */
+    async function discoverPlanDocs() {
+      const base = new URL('.', location.href).pathname; // /dev/plans/
+      const indexText = await fetchTurtle(base);
+      const g = await parseTurtle(indexText, location.origin + base);
+      const contains = g.getQuads(null, 'http://www.w3.org/ns/ldp#contains', null)
+        .map(q => q.object.value)
+        .filter(u => u.endsWith('/'));
+      const docs = [];
+      for (const dir of contains) {
+        const dirText = await fetchTurtle(dir);
+        const dg = await parseTurtle(dirText, dir);
+        const hasPlan = dg.getQuads(null, 'http://www.w3.org/ns/ldp#contains', null)
+          .map(q => q.object.value)
+          .find(u => u.endsWith('plan.ttl'));
+        if (hasPlan) docs.push(hasPlan);
+      }
+      return docs;
+    }
+
+    function graphToPlan(g, docUri) {
+      const planIri = g.getQuads(null, RDF_TYPE, PLAN + 'Plan')[0]?.subject.value;
+      if (!planIri) throw new Error('no plan:Plan in ' + docUri);
+      const obj = (s, p) => g.getQuads(s, p, null)[0]?.object.value;
+      const objs = (s, p) => g.getQuads(s, p, null).map(q => q.object.value);
+      const plan = {
+        iri: planIri,
+        docUri,
+        title: obj(planIri, DCT + 'title'),
+        description: obj(planIri, DCT + 'description'),
+        status: obj(planIri, PLAN + 'status')?.split('#').pop() ?? 'draft',
+        created: obj(planIri, DCT + 'created'),
+        goal: obj(planIri, PLAN + 'goal'),
+        contexts: objs(planIri, PLAN + 'context'),
+        decisions: objs(planIri, PLAN + 'decision'),
+        options: objs(planIri, PLAN + 'option'),
+        userStories: objs(planIri, PLAN + 'userStory'),
+        outOfScope: objs(planIri, PLAN + 'outOfScope'),
+        openQuestions: objs(planIri, PLAN + 'openQuestion'),
+        notes: objs(planIri, PLAN + 'note'),
+        files: objs(planIri, PLAN + 'touchesFile'),
+        tasks: [],
+      };
+      const taskIris = objs(planIri, PLAN + 'hasTask').sort();
+      for (const t of taskIris) {
+        plan.tasks.push({
+          iri: t,
+          title: obj(t, DCT + 'title') ?? t.split('/').pop(),
+          status: obj(t, PLAN + 'status')?.split('#').pop() ?? 'planned',
+          goal: obj(t, PLAN + 'goal'),
+          scope: objs(t, PLAN + 'scope'),
+          verification: objs(t, PLAN + 'verification'),
+          outOfScope: objs(t, PLAN + 'outOfScope'),
+          decisions: objs(t, PLAN + 'decision'),
+          notes: objs(t, PLAN + 'note'),
+          dependsOn: objs(t, PLAN + 'dependsOn'),
+          files: objs(t, PLAN + 'touchesFile'),
+        });
+      }
+      return plan;
+    }
+
+    async function loadPlans() {
+      const docs = await discoverPlanDocs();
+      const plans = [];
+      for (const planDoc of docs) {
+        const text = await fetchTurtle(planDoc);
+        const g = await parseTurtle(text, planDoc);
+        plans.push(graphToPlan(g, planDoc));
+      }
+      if (!plans.length) throw new Error('no plans found in ' + location.pathname);
+      let activeIri = null;
+      try {
+        const aText = await fetchTurtle(new URL('active.ttl', location.href).href);
+        const ag = await parseTurtle(aText, new URL('active.ttl', location.href).href);
+        activeIri = ag.getQuads(null, PLAN + 'active', null)[0]?.object.value ?? null;
+      } catch { /* pointer file missing -> fall back to first plan */ }
+      return { plans, activeIri };
+    }
+
+    // ---- shared helpers ------------------------------------------------
+
+    const STATUS_ORDER = ['draft', 'planned', 'in-progress', 'done'];
+    const STATUS_LABEL = { draft: 'Draft', planned: 'Planned', 'in-progress': 'In progress', done: 'Done', deferred: 'Deferred', abandoned: 'Abandoned' };
+
+    function statusChip(status) {
+      return html`<span class="chip chip-${status}">${STATUS_LABEL[status] ?? status}</span>`;
+    }
+
+    const chipStyles = css`
+      .chip { display: inline-block; font-size: .72rem; font-weight: 500; padding: .1rem .55rem; border-radius: 999px; border: 1px solid; }
+      .chip-done { background: var(--done-bg); border-color: var(--done-border); color: var(--done); }
+      .chip-planned { background: var(--planned-bg); border-color: var(--planned-border); color: var(--planned); }
+      .chip-in-progress { background: var(--progress-bg); border-color: var(--progress-border); color: var(--progress); }
+      .chip-draft { background: var(--planned-bg); border-color: var(--planned-border); color: var(--planned); }
+      .chip-deferred, .chip-abandoned { background: #fef2f2; border-color: #fecaca; color: #b91c1c; }
+    `;
+
+    const fileTagStyles = css`
+      .file, code { background: #f1f5f9; border: 1px solid #e2e8f0; padding: .05rem .4rem; border-radius: 4px; font-family: var(--mono); font-size: .78rem; color: #334155; }
+    `;
+
+    // ---- Board (the validated prototype design) -------------------------
+
+    class PlansBoard extends LitElement {
+      static properties = { plan: {} };
+      openTask = null;
+      static styles = [chipStyles, fileTagStyles, css`
+        :host { display: block; }
+        .plan-head h1 { margin: 0 0 .35rem; font-size: 1.45rem; letter-spacing: -.01em; }
+        .plan-head .meta { color: var(--muted); font-size: .85rem; margin-bottom: .75rem; }
+        .columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; align-items: start; }
+        .col h2 { font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 .5rem; }
+        .card { border: 1px solid var(--border); border-radius: 10px; padding: .7rem .85rem; margin-bottom: .6rem; background: var(--surface); cursor: pointer; box-shadow: 0 1px 2px rgba(16,24,40,.04); }
+        .card:hover { border-color: #c7cdd6; }
+        .card.done { opacity: .7; }
+        .card h3 { margin: 0 0 .35rem; font-size: .95rem; font-weight: 600; }
+        .goal { font-size: .82rem; color: var(--muted); line-height: 1.4;
+          display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        p { margin: .4rem 0; }
+        /* full-screen task detail */
+        .overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, .45); z-index: 50; display: flex; align-items: flex-start; justify-content: center; padding: 3rem 1rem; overflow-y: auto; }
+        .sheet { background: var(--surface); border-radius: 14px; max-width: 760px; width: 100%; padding: 1.5rem 1.75rem 2rem; box-shadow: 0 20px 50px rgba(0,0,0,.3); }
+        .sheet-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: .5rem; }
+        .sheet h3 { margin: 0 0 .4rem; font-size: 1.2rem; letter-spacing: -.01em; }
+        .sheet .meta { color: var(--muted); font-size: .85rem; margin-bottom: .8rem; }
+        .close { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--muted); line-height: 1; padding: .1rem .3rem; border-radius: 6px; }
+        .close:hover { background: var(--planned-bg); color: var(--text); }
+        .section h4 { font-weight: 600; font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin: 1.1rem 0 .25rem; }
+        .section ul { margin: .2rem 0; padding-left: 1.2rem; }
+        .section li { margin: .3rem 0; }
+      `];
+      constructor() { super(); this.plan = null; }
+      open(iri) { this.openTask = iri; this.requestUpdate(); }
+      close() { this.openTask = null; this.requestUpdate(); }
+      onKeydown(e) {
+        if (e.key === 'Escape' && this.openTask) this.close();
+      }
+      render() {
+        const p = this.plan;
+        const cols = STATUS_ORDER.map(s => p.tasks.filter(t => t.status === s));
+        const task = p.tasks.find(t => t.iri === this.openTask);
+        return html`
+          <div class="plan-head">
+            <h1>${p.title}</h1>
+            <div class="meta">${statusChip(p.status)} ${p.created ? html`· created ${p.created}` : ''}</div>
+          </div>
+          ${p.description ? html`<p>${p.description}</p>` : ''}
+          <div class="columns" @keydown=${e => this.onKeydown(e)}>
+            ${STATUS_ORDER.map((s, i) => html`
+              <div class="col">
+                <h2>${STATUS_LABEL[s]} (${cols[i].length})</h2>
+                ${cols[i].map(t => html`
+                  <div class="card ${t.status}" role="button" tabindex="0"
+                       @click=${() => this.open(t.iri)}
+                       @keydown=${e => { if (e.key === 'Enter') this.open(t.iri); }}>
+                    <h3>${t.title}</h3>
+                    ${t.goal ? html`<div class="goal">${t.goal}</div>` : ''}
+                  </div>
+                `)}
+              </div>
+            `)}
+          </div>
+          ${task ? this.renderDetail(task) : ''}
+        `;
+      }
+      renderDetail(t) {
+        return html`
+          <div class="overlay" @click=${e => { if (e.target.classList.contains('overlay')) this.close(); }}>
+            <div class="sheet" role="dialog" aria-modal="true" aria-label="${t.title}">
+              <div class="sheet-head">
+                <h3>${t.title}</h3>
+                <button class="close" @click=${() => this.close()} aria-label="Close">✕</button>
+              </div>
+              <div class="meta">${statusChip(t.status)}${t.dependsOn.length ? ` · depends on ${t.dependsOn.map(d => d.split('/').pop()).join(', ')}` : ''}</div>
+              ${t.files.length ? html`<div class="files">${t.files.map(f => html`<code>${f}</code>`)}</div>` : ''}
+              ${t.goal ? html`<div class="section"><h4>Goal</h4><p>${t.goal}</p></div>` : ''}
+              ${t.scope.length ? html`<div class="section"><h4>Scope</h4><ul>${t.scope.map(x => html`<li>${x}</li>`)}</ul></div>` : ''}
+              ${t.verification.length ? html`<div class="section"><h4>Verification</h4><ul>${t.verification.map(x => html`<li>${x}</li>`)}</ul></div>` : ''}
+              ${t.decisions.length ? html`<div class="section"><h4>Decisions</h4><ul>${t.decisions.map(x => html`<li>${x}</li>`)}</ul></div>` : ''}
+              ${t.outOfScope.length ? html`<div class="section"><h4>Out of scope</h4><ul>${t.outOfScope.map(x => html`<li>${x}</li>`)}</ul></div>` : ''}
+              ${t.notes.length ? html`<div class="section"><h4>Notes</h4><ul>${t.notes.map(x => html`<li>${x}</li>`)}</ul></div>` : ''}
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    // ---- app shell ------------------------------------------------------
+
+    class PlansApp extends LitElement {
+      static properties = { plans: {}, selected: {} };
+      static styles = css`
+        :host { display: block; padding: 1.5rem 2rem 5rem; max-width: 1100px; margin: 0 auto; }
+        .muted { color: var(--muted); font-size: .85rem; }
+        .loading { padding: 2rem; color: var(--muted); }
+        .error { padding: 1rem; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; color: #991b1b; }
+      `;
+      constructor() {
+        super();
+        this.plans = null;
+        this.selected = null;
+        window.addEventListener('keydown', e => {
+          if (e.key === 'Escape') {
+            const board = this.shadowRoot?.querySelector('plans-board');
+            board?.close?.();
+          }
+        });
+      }
+      async connectedCallback() {
+        super.connectedCallback();
+        try {
+          const { plans, activeIri } = await loadPlans();
+          this.plans = plans;
+          // ?plan= URL param wins over the pointer (deep links keep working);
+          // otherwise render the active plan from active.ttl
+          const planParam = new URL(location.href).searchParams.get('plan');
+          this.selected = planParam
+            ? (plans.find(p => p.docUri === location.origin + planParam)?.iri ?? plans[0].iri)
+            : ((activeIri && plans.find(p => p.iri === activeIri)?.iri) ?? plans[0].iri);
+        } catch (e) { this.error = e; }
+        // the plan data (esp. the active pointer) changes outside this tab;
+        // re-read when the user comes back to it
+        document.addEventListener('visibilitychange', async () => {
+          if (document.visibilityState !== 'visible') return;
+          try {
+            const { plans, activeIri } = await loadPlans();
+            this.plans = plans;
+            const planParam = new URL(location.href).searchParams.get('plan');
+            this.selected = planParam
+              ? (plans.find(p => p.docUri === location.origin + planParam)?.iri ?? plans[0].iri)
+              : ((activeIri && plans.find(p => p.iri === activeIri)?.iri) ?? plans[0].iri);
+            this.error = null;
+          } catch (e) { /* keep last good state */ }
+          this.requestUpdate();
+        });
+        this.requestUpdate();
+      }
+      render() {
+        if (this.error) return html`<div class="error">Failed to load plans: ${this.error.message}</div>`;
+        if (!this.plans) return html`<div class="loading">Loading plans…</div>`;
+        const plan = this.plans.find(p => p.iri === this.selected) ?? this.plans[0];
+        return html`<plans-board .plan=${plan}></plans-board>`;
+      }
+    }
+
+    customElements.define('plans-board', PlansBoard);
+    customElements.define('plans-app', PlansApp);
+  </script>
+</head>
+<body>
+  <plans-app></plans-app>
+</body>
+</html>

@@ -1,0 +1,122 @@
+@prefix plan: <./plan-ontology.ttl#>.
+@prefix prov: <http://www.w3.org/ns/prov#>.
+@prefix schema: <https://schema.org/>.
+@prefix oslc_rm: <http://open-services.net/ns/rm#>.
+@prefix dct: <http://purl.org/dc/terms/>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+
+plan:active rdfs:range plan:Plan;
+    rdfs:comment "Pointer to the plan currently being worked on. Lives in a small active.ttl next to the plans; the HTML viewer renders the pointed-at plan, and agents read it to know the current focus. Exactly one active pointer at a time."@en;
+    rdfs:label "active"@en;
+    a owl:ObjectProperty.
+<plan-ontology.ttl> a owl:Ontology;
+    dct:title "Plan Ontology"@en;
+    rdfs:label "Plan Ontology"@en;
+    dct:description "A minimal vocabulary for modelling project plans and their tasks. Served from the dev pod; this document is its identifier."@en;
+    owl:versionInfo "1.1.0";
+    rdfs:seeAlso <http://www.w3.org/ns/prov-o#>, schema:ActionStatusType, <http://open-services.net/ns/rm>, <http://open-services.net/ns/cm>.
+plan:Plan a owl:Class;
+    rdfs:label "Plan"@en;
+    rdfs:comment "A plan: a discussion-level artifact describing what is planned, the decisions made, and the tasks that implement it."@en;
+    skos:definition "A curated set of decisions and a roadmap for a feature or refactor, decomposed into tasks."@en;
+    rdfs:subClassOf prov:Plan.
+plan:Task a owl:Class;
+    rdfs:label "Task"@en;
+    rdfs:comment "A unit of planned work belonging to exactly one Plan. Models the 'how' slice: goal, scope, verification, dependencies."@en;
+    rdfs:subClassOf prov:Activity.
+plan:Status a owl:Class;
+    rdfs:label "Status"@en;
+    rdfs:comment "Controlled vocabulary of lifecycle states for plans and tasks. Own enum: schema:ActionStatusType lacks deferred/abandoned, oslc_cm:state is enterprise-flavored."@en.
+plan:draft a plan:Status;
+    rdfs:label "Draft"@en;
+    rdfs:comment "Being written or discussed; not yet a committed roadmap."@en;
+    rdfs:seeAlso schema:PotentialActionStatus.
+plan:planned a plan:Status;
+    rdfs:label "Planned"@en;
+    rdfs:comment "Agreed and scoped, not started."@en;
+    rdfs:seeAlso schema:PotentialActionStatus.
+plan:in-progress a plan:Status;
+    rdfs:label "In Progress"@en;
+    rdfs:comment "Work has started."@en;
+    rdfs:seeAlso schema:ActiveActionStatus.
+plan:done a plan:Status;
+    rdfs:label "Done"@en;
+    rdfs:comment "Completed and verified."@en;
+    rdfs:seeAlso schema:CompletedActionStatus.
+plan:deferred a plan:Status;
+    rdfs:label "Deferred"@en;
+    rdfs:comment "Explicitly postponed to a later plan or follow-up."@en.
+plan:abandoned a plan:Status;
+    rdfs:label "Abandoned"@en;
+    rdfs:comment "Dropped without implementation."@en.
+plan:hasTask a owl:ObjectProperty;
+    rdfs:label "has task"@en;
+    rdfs:comment "Associates a Plan with a Task that implements part of it."@en;
+    rdfs:domain plan:Plan;
+    rdfs:range plan:Task;
+    owl:inverseOf plan:parent.
+plan:parent a owl:ObjectProperty;
+    rdfs:label "parent plan"@en;
+    rdfs:comment "Associates a Task with the Plan it belongs to. Every Task has exactly one parent. Closest existing match: oslc_rm:decomposedBy (a plan is decomposed by its tasks)."@en;
+    rdfs:domain plan:Task;
+    rdfs:range plan:Plan;
+    owl:inverseOf plan:hasTask;
+    rdfs:seeAlso oslc_rm:decomposedBy.
+plan:dependsOn a owl:ObjectProperty;
+    rdfs:label "depends on"@en;
+    rdfs:comment "Task A depends on Task B: B must be done (or its outcome available) before A can be completed."@en;
+    rdfs:domain plan:Task;
+    rdfs:range plan:Task.
+plan:status a owl:ObjectProperty;
+    rdfs:label "status"@en;
+    rdfs:comment "The current lifecycle state of a Plan or Task."@en;
+    rdfs:range plan:Status.
+plan:goal a owl:DatatypeProperty;
+    rdfs:label "goal"@en;
+    rdfs:comment "What this plan or task aims to achieve."@en;
+    rdfs:range xsd:string.
+plan:scope a owl:DatatypeProperty;
+    rdfs:label "scope"@en;
+    rdfs:comment "One concrete item that is in scope (repeat this property per item)."@en;
+    rdfs:range xsd:string.
+plan:outOfScope a owl:DatatypeProperty;
+    rdfs:label "out of scope"@en;
+    rdfs:comment "One concrete item explicitly excluded, possibly deferred (repeat per item)."@en;
+    rdfs:range xsd:string.
+plan:verification a owl:DatatypeProperty;
+    rdfs:label "verification"@en;
+    rdfs:comment "One step describing how completion of this plan or task is verified."@en;
+    rdfs:range xsd:string.
+plan:context a owl:DatatypeProperty;
+    rdfs:label "context"@en;
+    rdfs:comment "One fact, constraint, or observation from the discussion that motivated the plan."@en;
+    rdfs:range xsd:string.
+plan:decision a owl:DatatypeProperty;
+    rdfs:label "decision"@en;
+    rdfs:comment "One decision made for this plan or task, stated as a normative sentence."@en;
+    rdfs:range xsd:string.
+plan:openQuestion a owl:DatatypeProperty;
+    rdfs:label "open question"@en;
+    rdfs:comment "One question that is not yet resolved for this plan or task."@en;
+    rdfs:range xsd:string.
+plan:userStory a owl:DatatypeProperty;
+    rdfs:label "user story"@en;
+    rdfs:comment "One user story motivating the plan (e.g. 'As a pod owner, I want ...')."@en;
+    rdfs:range xsd:string.
+plan:option a owl:DatatypeProperty;
+    rdfs:label "option"@en;
+    rdfs:comment "One candidate solution considered for the plan, including its trade-offs."@en;
+    rdfs:range xsd:string.
+plan:note a owl:DatatypeProperty;
+    rdfs:label "note"@en;
+    rdfs:comment "Free-form remark that does not fit a more specific property."@en;
+    rdfs:range xsd:string.
+plan:touchesFile a owl:DatatypeProperty;
+    rdfs:label "touches file"@en;
+    rdfs:comment "Repository-relative path of a file this task touches (e.g. core/src/search/SearchGateway.ts). Repeated per file; keeps plan-to-code queries ('which tasks touch X?') answerable without a full code graph."@en;
+    rdfs:domain plan:Task;
+    rdfs:range xsd:string.
