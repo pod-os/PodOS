@@ -36,14 +36,13 @@ export class SearchGateway {
   }
 
   private async buildIndex(labelIndexUris: string[]): Promise<SearchIndex> {
-    if (labelIndexUris.length === 0) {
-      return new SearchIndex([]);
-    }
     const labelIndex = await this.resolveLabelIndexes(labelIndexUris);
     return new SearchIndex(labelIndex);
   }
 
-  private async resolveLabelIndexes(labelIndexUris: string[]): Promise<LabelIndex[]> {
+  private async resolveLabelIndexes(
+    labelIndexUris: string[],
+  ): Promise<LabelIndex[]> {
     await this.store.fetchAll(labelIndexUris);
     return labelIndexUris.map((uri) =>
       this.store.get(uri).assume(LabelIndex),
