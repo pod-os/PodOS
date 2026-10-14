@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.34.0
+
+### Changed
+
+- [`PodOS.buildSearchIndex`](https://pod-os.org/reference/core/classes/podos/#buildsearchindex): caches the search index and keeps it fresh when label indexes change, instead of rebuilding on every call. Consumers holding the returned index stay up to date automatically.
+- [`PodOS.addToLabelIndex`](https://pod-os.org/reference/core/classes/podos/#addtolabelindex) and [`PodOS.createDefaultLabelIndex`](https://pod-os.org/reference/core/classes/podos/#createdefaultlabelindex): update the cached search index so newly added labels are found without rebuilding
+- The cached search index is cleared when the session changes, so the next `buildSearchIndex` call starts fresh after a logout
+
 ## 0.33.0
 
 ### Added

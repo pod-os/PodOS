@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.45.0
+
+### Breaking Changes
+
+- [pos-make-findable](https://pod-os.org/reference/elements/components/pos-make-findable/) and [pos-navigation](https://pod-os.org/reference/elements/components/pos-navigation/): the DOM events `pod-os:search:index-created` and `pod-os:search:index-updated` are no longer emitted. Search results stay up to date automatically, as the search index is now managed by `@pod-os/core`.
+
 ## 0.44.0
 
 ### Changed
