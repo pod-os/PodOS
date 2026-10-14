@@ -230,8 +230,10 @@
         /* full-screen task detail */
         .overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, .45); z-index: 50; display: flex; align-items: flex-start; justify-content: center; padding: 3rem 1rem; overflow-y: auto; }
         .sheet { background: var(--surface); border-radius: 14px; max-width: 760px; width: 100%; padding: 1.5rem 1.75rem 2rem; box-shadow: 0 20px 50px rgba(0,0,0,.3); }
-        .sheet-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: .5rem; }
-        .sheet h3 { margin: 0 0 .4rem; font-size: 1.2rem; letter-spacing: -.01em; }
+        .sheet-head { display: flex; justify-content: flex-end; align-items: center; gap: .4rem; margin-bottom: .5rem; }
+        .sheet h3 { margin: 0; font-size: 1.2rem; letter-spacing: -.01em; margin-right: auto; }
+        .sheet .badge-copy { margin-top: 0; }
+        .sheet.copied { outline: 2px solid #86efac; outline-offset: 2px; }
         .sheet .meta { color: var(--muted); font-size: .85rem; margin-bottom: .8rem; }
         .close { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--muted); line-height: 1; padding: .1rem .3rem; border-radius: 6px; }
         .close:hover { background: var(--planned-bg); color: var(--text); }
@@ -387,16 +389,18 @@
         `;
       }
       renderDetail(t) {
+        const taskCopied = this.copiedUri === t.iri;
         return html`
           <div class="overlay" @click=${e => { if (e.target.classList.contains('overlay')) this.close(); }}>
-            <div class="sheet" role="dialog" aria-modal="true" aria-label="${t.title}">
+            <div class="sheet${taskCopied ? ' copied' : ''}" role="dialog" aria-modal="true" aria-label="${t.title}">
               <div class="sheet-head">
                 <h3>${t.title}</h3>
+                <button class="badge badge-copy" title="Copy task URI: ${t.iri}" @click=${ev => this.copyUri(ev, t.iri)}>${taskCopied ? '✓' : '⧉'}</button>
                 <button class="close" @click=${() => this.close()} aria-label="Close">✕</button>
               </div>
               <div class="meta">${statusChip(t.status)}${t.dependsOn.length ? ` · depends on ${t.dependsOn.map(d => d.split('/').pop()).join(', ')}` : ''}${t.modified ? ` · updated ${t.modified}` : ''}</div>
               ${t.files.length ? html`<div class="files">${t.files.map(f => html`<code>${f}</code>`)}</div>` : ''}
-              ${t.goal ? html`<div class="section"><h4>Goal</h4><p>${t.goal.text}</p></div>` : ''}
+              ${t.goal ? html`<div class="section"><h4>Goal</h4><div class="entry"><span class="content"><span class="text">${t.goal.text}</span></span></div></div>` : ''}
               ${t.scope.length ? html`<div class="section"><h4>Scope</h4><ul>${t.scope.map(x => this.renderEntry(x))}</ul></div>` : ''}
               ${t.verification.length ? html`<div class="section"><h4>Verification</h4><ul>${t.verification.map(x => this.renderEntry(x))}</ul></div>` : ''}
               ${t.decisions.length ? html`<div class="section"><h4>Decisions</h4><ul>${t.decisions.map(x => this.renderEntry(x))}</ul></div>` : ''}
