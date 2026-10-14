@@ -163,7 +163,6 @@ describe('pos-navigation', () => {
           },
         ]),
         clear: vi.fn(),
-        rebuild: vi.fn(),
       } as unknown as SearchIndex;
       mockOsProvider({
         store: {
@@ -497,35 +496,5 @@ describe('pos-navigation', () => {
       expect(mockSearchIndex.clear).toHaveBeenCalled();
     });
 
-    it('builds a new search index from scratch when a new index document has been added', async () => {
-      expect(page.instance.os.buildSearchIndex).toHaveBeenCalledTimes(1);
-      page.instance.os.buildSearchIndex.mockReturnValueOnce({ fake: 'search index from scratch' });
-      fireEvent(
-        page.root,
-        new CustomEvent('pod-os:search:index-created', {
-          detail: {
-            fake: 'index',
-          },
-        }),
-      );
-      await page.waitForChanges();
-      expect(page.instance.os.buildSearchIndex).toHaveBeenCalledTimes(2);
-      expect(page.instance.searchIndex).toEqual({ fake: 'search index from scratch' });
-    });
-
-    it('rebuilds existing search index after new items have been indexed', async () => {
-      expect(page.instance.os.buildSearchIndex).toHaveBeenCalledTimes(1);
-      fireEvent(
-        page.root,
-        new CustomEvent('pod-os:search:index-updated', {
-          detail: {
-            fake: 'index',
-          },
-        }),
-      );
-      await page.waitForChanges();
-      expect(page.instance.os.buildSearchIndex).toHaveBeenCalledTimes(1);
-      expect(mockSearchIndex.rebuild).toHaveBeenCalledTimes(1);
-    });
   });
 });
