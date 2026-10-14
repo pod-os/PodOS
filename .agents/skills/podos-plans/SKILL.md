@@ -25,7 +25,8 @@ Query with `sparql_query_files` over the plan files (or all of them at once):
 - Plan code impact: tasks where `plan:touchesFile` matches a path.
 - Full context: for a single plan, query everything about it
   (`plan:context`, `plan:decision`, `plan:openQuestion`, `plan:option`,
-  `plan:note`) — narrative detail lives in the graph.
+  `plan:note` — each resolving to schema:Comment entries) — narrative detail
+  lives in the graph.
 
 For human browsing, open the HTML viewer — there are no markdown views.
 
@@ -55,17 +56,44 @@ Every write must end in a validated file. The loop:
 
 ## Modelling rules
 
-- One decision per `plan:decision` value, stated normatively; preserve verbatim
-  user quotes inline inside the value (this is how human intent survives —
-  never paraphrase a quote into your own words).
+**Entries.** Values of `plan:goal`, `plan:context`, `plan:scope`,
+`plan:verification`, `plan:outOfScope`, `plan:decision`, `plan:openQuestion`,
+`plan:option`, `plan:note` are entry resources typed `schema:Comment`:
+
+```turtle
+<#entry-plan-decision-01> a schema:Comment;
+    schema:text "Move search into core. User: \"…\"";
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm>.
+```
+
+- `schema:text` (exactly 1) carries the entry text; keep verbatim user quotes
+  inline in it — this is how human intent survives; never paraphrase a quote.
+- `prov:wasAttributedTo` (min 1) records who contributed: the human via his
+  WebID (`https://angelo.veltens.org/profile/card#me`), the LLM via its
+  model-specific agent `<../agents.ttl#llm-<model>` (e.g.
+  `<../agents.ttl#llm-glm-5.3-flash>`). Each LLM model gets its own agent in
+  `agents.ttl` (IRI fragment `llm-<model>`, `rdfs:label` = model name);
+  generic `<../agents.ttl#llm>` is reserved for historical entries whose
+  authoring model is unknown. All agents are `foaf:Agent`; repeat per
+  contributing agent. This
+  replaces the former inline `[H]` / `[LLM]` markers —
+  never write those markers into `schema:text` again. Qualifier prose from the
+  old markers ("user confirmed", "implicitly") stays in the text.
+- `dct:created` (0–1, xsd:date) when the entry carries a date (e.g. from a
+  former `[H, clarified 2026-10-09]` marker).
+- Entry IRIs: `<#entry-<subject-slug>-<prop>-<NN>>` in the plan document.
+- No marker in text: don't put `[H]` or `[LLM]` in `schema:text` — attribution
+  lives in `prov:wasAttributedTo`.
+
+- One decision per `plan:decision` entry, stated normatively.
 - `plan:scope` / `plan:outOfScope` / `plan:verification` / `plan:context` /
-  `plan:openQuestion` / `plan:option`: one item per triple, repeated.
+  `plan:openQuestion` / `plan:option`: one entry per triple, repeated.
 - Every task has exactly one `plan:parent`; dependencies via `plan:dependsOn`.
 - `plan:touchesFile` carries repository-relative paths — add them as you learn
   which files a task affects; they power the plan↔code queries.
 - Status vocabulary is closed: `draft`, `planned`, `in-progress`, `done`,
   `deferred`, `abandoned`.
-- Narrative that doesn't fit a property goes in `plan:note`.
+- Narrative that doesn't fit a property goes in a `plan:note` entry.
 - YAGNI: never invent new `plan:` terms. If the vocabulary seems to lack
   something, stop and ask — the ontology is deliberately minimal.
 

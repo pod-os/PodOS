@@ -1,5 +1,6 @@
 @prefix plan: <./plan-ontology.ttl#>.
 @prefix prov: <http://www.w3.org/ns/prov#>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
 @prefix schema: <https://schema.org/>.
 @prefix oslc_rm: <http://open-services.net/ns/rm#>.
 @prefix dct: <http://purl.org/dc/terms/>.
@@ -17,7 +18,7 @@ plan:active rdfs:range plan:Plan;
     dct:title "Plan Ontology"@en;
     rdfs:label "Plan Ontology"@en;
     dct:description "A minimal vocabulary for modelling project plans and their tasks. Served from the dev pod; this document is its identifier."@en;
-    owl:versionInfo "1.1.0";
+    owl:versionInfo "1.2.0";
     rdfs:seeAlso <http://www.w3.org/ns/prov-o#>, schema:ActionStatusType, <http://open-services.net/ns/rm>, <http://open-services.net/ns/cm>.
 plan:Plan a owl:Class;
     rdfs:label "Plan"@en;
@@ -75,46 +76,51 @@ plan:status a owl:ObjectProperty;
     rdfs:label "status"@en;
     rdfs:comment "The current lifecycle state of a Plan or Task."@en;
     rdfs:range plan:Status.
-plan:goal a owl:DatatypeProperty;
+# Entry resources: values of plan:decision, plan:note, plan:context, ... are
+# typed schema:Comment and carry their text in schema:text. Attribution uses
+# the standard PROV-O property prov:wasAttributedTo (human = foaf:Agent via
+# WebID, LLM = foaf:Agent with a rdfs:label naming the model, from agents.ttl).
+# No plan-specific entry vocabulary is needed.
+plan:goal a owl:ObjectProperty;
     rdfs:label "goal"@en;
-    rdfs:comment "What this plan or task aims to achieve."@en;
-    rdfs:range xsd:string.
-plan:scope a owl:DatatypeProperty;
+    rdfs:comment "What this plan or task aims to achieve. Value is a schema:Comment entry (schema:text, prov:wasAttributedTo)."@en;
+    rdfs:range schema:Comment.
+plan:scope a owl:ObjectProperty;
     rdfs:label "scope"@en;
-    rdfs:comment "One concrete item that is in scope (repeat this property per item)."@en;
-    rdfs:range xsd:string.
-plan:outOfScope a owl:DatatypeProperty;
+    rdfs:comment "One concrete item that is in scope (repeat this property per item). Value is a schema:Comment entry."@en;
+    rdfs:range schema:Comment.
+plan:outOfScope a owl:ObjectProperty;
     rdfs:label "out of scope"@en;
-    rdfs:comment "One concrete item explicitly excluded, possibly deferred (repeat per item)."@en;
-    rdfs:range xsd:string.
-plan:verification a owl:DatatypeProperty;
+    rdfs:comment "One concrete item explicitly excluded, possibly deferred (repeat per item). Value is a schema:Comment entry."@en;
+    rdfs:range schema:Comment.
+plan:verification a owl:ObjectProperty;
     rdfs:label "verification"@en;
-    rdfs:comment "One step describing how completion of this plan or task is verified."@en;
-    rdfs:range xsd:string.
-plan:context a owl:DatatypeProperty;
+    rdfs:comment "One step describing how completion of this plan or task is verified. Value is a schema:Comment entry."@en;
+    rdfs:range schema:Comment.
+plan:context a owl:ObjectProperty;
     rdfs:label "context"@en;
-    rdfs:comment "One fact, constraint, or observation from the discussion that motivated the plan."@en;
-    rdfs:range xsd:string.
-plan:decision a owl:DatatypeProperty;
+    rdfs:comment "One fact, constraint, or observation from the discussion that motivated the plan. Value is a schema:Comment entry."@en;
+    rdfs:range schema:Comment.
+plan:decision a owl:ObjectProperty;
     rdfs:label "decision"@en;
-    rdfs:comment "One decision made for this plan or task, stated as a normative sentence."@en;
-    rdfs:range xsd:string.
-plan:openQuestion a owl:DatatypeProperty;
+    rdfs:comment "One decision made for this plan or task, stated as a normative sentence. Value is a schema:Comment entry with schema:text and prov:wasAttributedTo."@en;
+    rdfs:range schema:Comment.
+plan:openQuestion a owl:ObjectProperty;
     rdfs:label "open question"@en;
-    rdfs:comment "One question that is not yet resolved for this plan or task."@en;
-    rdfs:range xsd:string.
-plan:userStory a owl:DatatypeProperty;
+    rdfs:comment "One question that is not yet resolved for this plan or task. Value is a schema:Comment entry."@en;
+    rdfs:range schema:Comment.
+plan:userStory a owl:ObjectProperty;
     rdfs:label "user story"@en;
-    rdfs:comment "One user story motivating the plan (e.g. 'As a pod owner, I want ...')."@en;
-    rdfs:range xsd:string.
-plan:option a owl:DatatypeProperty;
+    rdfs:comment "One user story motivating the plan (e.g. 'As a pod owner, I want ...'). Value is a schema:Comment entry."@en;
+    rdfs:range schema:Comment.
+plan:option a owl:ObjectProperty;
     rdfs:label "option"@en;
-    rdfs:comment "One candidate solution considered for the plan, including its trade-offs."@en;
-    rdfs:range xsd:string.
-plan:note a owl:DatatypeProperty;
+    rdfs:comment "One candidate solution considered for the plan, including its trade-offs. Value is a schema:Comment entry."@en;
+    rdfs:range schema:Comment.
+plan:note a owl:ObjectProperty;
     rdfs:label "note"@en;
-    rdfs:comment "Free-form remark that does not fit a more specific property."@en;
-    rdfs:range xsd:string.
+    rdfs:comment "Free-form remark that does not fit a more specific property. Value is a schema:Comment entry."@en;
+    rdfs:range schema:Comment.
 plan:touchesFile a owl:DatatypeProperty;
     rdfs:label "touches file"@en;
     rdfs:comment "Repository-relative path of a file this task touches (e.g. core/src/search/SearchGateway.ts). Repeated per file; keeps plan-to-code queries ('which tasks touch X?') answerable without a full code graph."@en;

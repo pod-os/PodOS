@@ -41,6 +41,9 @@
     const BASE = new URL('.', location.href).href;
     const PLAN = new URL('plan-ontology.ttl#', BASE).href;
     const DCT = 'http://purl.org/dc/terms/';
+    const SCHEMA = 'https://schema.org/';
+    const PROV = 'http://www.w3.org/ns/prov#';
+    const RDFS = 'http://www.w3.org/2000/01/rdf-schema#';
     const RDF_TYPE = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type';
 
     // ---- data loading ------------------------------------------------
@@ -88,11 +91,36 @@
       return docs;
     }
 
-    function graphToPlan(g, docUri) {
+    let agentsCache = null;
+    async function loadAgents() {
+      if (agentsCache) return agentsCache;
+      try {
+        const text = await fetchTurtle(new URL('agents.ttl', location.href).href);
+        const g = await parseTurtle(text, new URL('agents.ttl', location.href).href);
+        agentsCache = {};
+        for (const q of g.getQuads(null, null, null)) {
+          const s = q.subject.value;
+          agentsCache[s] ??= {};
+          if (q.predicate.value === 'http://xmlns.com/foaf/0.1/name') agentsCache[s].label = q.object.value;
+          if (q.predicate.value === RDFS + 'label' && !agentsCache[s].label) agentsCache[s].label = q.object.value;
+          if (s.startsWith('http') && !s.includes('agents.ttl')) agentsCache[s].webid = true;
+        }
+      } catch { agentsCache = {}; }
+      return agentsCache;
+    }
+
+    function graphToPlan(g, docUri, agents) {
       const planIri = g.getQuads(null, RDF_TYPE, PLAN + 'Plan')[0]?.subject.value;
       if (!planIri) throw new Error('no plan:Plan in ' + docUri);
       const obj = (s, p) => g.getQuads(s, p, null)[0]?.object.value;
       const objs = (s, p) => g.getQuads(s, p, null).map(q => q.object.value);
+      // resolve entry objects (schema:Comment: schema:text + prov:wasAttributedTo [+ dct:created])
+      const entryList = (s, p) => objs(s, PLAN + p).map(iri => {
+        const text = obj(iri, SCHEMA + 'text');
+        if (text === undefined) return { text: iri, agents: [] }; // not an entry resource (legacy literal IRI)
+        const agentList = objs(iri, PROV + 'wasAttributedTo').map(a => agents[a] ?? { label: a.split('#').pop() ?? a, webid: true });
+        return { text, agents: agentList, created: obj(iri, DCT + 'created') };
+      });
       const plan = {
         iri: planIri,
         docUri,
@@ -100,14 +128,14 @@
         description: obj(planIri, DCT + 'description'),
         status: obj(planIri, PLAN + 'status')?.split('#').pop() ?? 'draft',
         created: obj(planIri, DCT + 'created'),
-        goal: obj(planIri, PLAN + 'goal'),
-        contexts: objs(planIri, PLAN + 'context'),
-        decisions: objs(planIri, PLAN + 'decision'),
-        options: objs(planIri, PLAN + 'option'),
-        userStories: objs(planIri, PLAN + 'userStory'),
-        outOfScope: objs(planIri, PLAN + 'outOfScope'),
-        openQuestions: objs(planIri, PLAN + 'openQuestion'),
-        notes: objs(planIri, PLAN + 'note'),
+        goal: entryList(planIri, 'goal')[0],
+        contexts: entryList(planIri, 'context'),
+        decisions: entryList(planIri, 'decision'),
+        options: entryList(planIri, 'option'),
+        userStories: entryList(planIri, 'userStory'),
+        outOfScope: entryList(planIri, 'outOfScope'),
+        openQuestions: entryList(planIri, 'openQuestion'),
+        notes: entryList(planIri, 'note'),
         files: objs(planIri, PLAN + 'touchesFile'),
         tasks: [],
       };
@@ -117,12 +145,12 @@
           iri: t,
           title: obj(t, DCT + 'title') ?? t.split('/').pop(),
           status: obj(t, PLAN + 'status')?.split('#').pop() ?? 'planned',
-          goal: obj(t, PLAN + 'goal'),
-          scope: objs(t, PLAN + 'scope'),
-          verification: objs(t, PLAN + 'verification'),
-          outOfScope: objs(t, PLAN + 'outOfScope'),
-          decisions: objs(t, PLAN + 'decision'),
-          notes: objs(t, PLAN + 'note'),
+          goal: entryList(t, 'goal')[0],
+          scope: entryList(t, 'scope'),
+          verification: entryList(t, 'verification'),
+          outOfScope: entryList(t, 'outOfScope'),
+          decisions: entryList(t, 'decision'),
+          notes: entryList(t, 'note'),
           dependsOn: objs(t, PLAN + 'dependsOn'),
           files: objs(t, PLAN + 'touchesFile'),
         });
@@ -133,10 +161,11 @@
     async function loadPlans() {
       const docs = await discoverPlanDocs();
       const plans = [];
+      const agents = await loadAgents();
       for (const planDoc of docs) {
         const text = await fetchTurtle(planDoc);
         const g = await parseTurtle(text, planDoc);
-        plans.push(graphToPlan(g, planDoc));
+        plans.push(graphToPlan(g, planDoc, agents));
       }
       if (!plans.length) throw new Error('no plans found in ' + location.pathname);
       let activeIri = null;
@@ -215,6 +244,14 @@
         .plan-details .section h4 { margin: 0 0 .45rem; }
         .plan-details p { margin: .25rem 0; }
         .plan-details code { background: var(--accent-soft); border-color: transparent; }
+        /* entry attribution badges: H (human) / LLM + optional date */
+        .entry { margin: .25rem 0; }
+        .entry .badges { display: inline-flex; gap: .3rem; margin-right: .35rem; vertical-align: baseline; }
+        .badge { font-size: .62rem; font-weight: 600; padding: .05rem .4rem; border-radius: 4px; border: 1px solid; vertical-align: 1px; }
+        .badge-human { background: var(--accent-soft); border-color: transparent; color: var(--accent); }
+        .badge-llm { background: #f1f5f9; border-color: #cbd5e1; color: #475569; }
+        .badge-date { background: transparent; border-color: var(--border); color: var(--muted); font-weight: 400; }
+        .badge title { font-weight: 400; }
       `];
       constructor() { super(); this.plan = null; }
       open(iri) { this.openTask = iri; this.requestUpdate(); }
@@ -241,7 +278,7 @@
                        @click=${() => this.open(t.iri)}
                        @keydown=${e => { if (e.key === 'Enter') this.open(t.iri); }}>
                     <h3>${t.title}</h3>
-                    ${t.goal ? html`<div class="goal">${t.goal}</div>` : ''}
+                    ${t.goal ? html`<div class="goal">${t.goal.text}</div>` : ''}
                   </div>
                 `)}
               </div>
@@ -251,16 +288,24 @@
           ${task ? this.renderDetail(task) : ''}
         `;
       }
+      renderEntry(e) {
+        if (typeof e === 'string') return html`<li>${e}</li>`; // legacy literal
+        const badges = html`<span class="badges">
+          ${e.agents.map(a => html`<span class="badge ${a.webid ? 'badge-human' : 'badge-llm'}" title="${a.label}">${a.label}</span>`)}
+          ${e.created ? html`<span class="badge badge-date" title="recorded ${e.created}">${e.created}</span>` : ''}
+        </span>`;
+        return html`<li class="entry">${badges}${e.text}</li>`;
+      }
       renderPlanDetails(p) {
         const sections = [
-          { title: 'Goal', body: p.goal ? html`<p>${p.goal}</p>` : '' },
-          { title: 'User stories', body: p.userStories.length ? html`<ul>${p.userStories.map(s => html`<li>${s}</li>`)}</ul>` : '' },
-          { title: 'Context', body: p.contexts.length ? html`<ul>${p.contexts.map(c => html`<li>${c}</li>`)}</ul>` : '' },
-          { title: 'Decisions', body: p.decisions.length ? html`<ul>${p.decisions.map(d => html`<li>${d}</li>`)}</ul>` : '' },
-          { title: 'Options considered', body: p.options.length ? html`<ul>${p.options.map(o => html`<li>${o}</li>`)}</ul>` : '' },
-          { title: 'Open questions', body: p.openQuestions.length ? html`<ul>${p.openQuestions.map(q => html`<li>${q}</li>`)}</ul>` : '' },
-          { title: 'Notes', body: p.notes.length ? html`<ul>${p.notes.map(n => html`<li>${n}</li>`)}</ul>` : '' },
-          { title: 'Out of scope', body: p.outOfScope.length ? html`<ul>${p.outOfScope.map(o => html`<li>${o}</li>`)}</ul>` : '' },
+          { title: 'Goal', body: p.goal ? html`<p>${p.goal.text}</p>` : '' },
+          { title: 'User stories', body: p.userStories.length ? html`<ul>${p.userStories.map(s => this.renderEntry(s))}</ul>` : '' },
+          { title: 'Context', body: p.contexts.length ? html`<ul>${p.contexts.map(c => this.renderEntry(c))}</ul>` : '' },
+          { title: 'Decisions', body: p.decisions.length ? html`<ul>${p.decisions.map(d => this.renderEntry(d))}</ul>` : '' },
+          { title: 'Options considered', body: p.options.length ? html`<ul>${p.options.map(o => this.renderEntry(o))}</ul>` : '' },
+          { title: 'Open questions', body: p.openQuestions.length ? html`<ul>${p.openQuestions.map(q => this.renderEntry(q))}</ul>` : '' },
+          { title: 'Notes', body: p.notes.length ? html`<ul>${p.notes.map(n => this.renderEntry(n))}</ul>` : '' },
+          { title: 'Out of scope', body: p.outOfScope.length ? html`<ul>${p.outOfScope.map(o => this.renderEntry(o))}</ul>` : '' },
           { title: 'Files', body: p.files.length ? html`<div class="files">${p.files.map(f => html`<code>${f}</code>`)}</div>` : '' },
         ].filter(s => s.body);
         if (!sections.length) return '';
@@ -280,12 +325,12 @@
               </div>
               <div class="meta">${statusChip(t.status)}${t.dependsOn.length ? ` · depends on ${t.dependsOn.map(d => d.split('/').pop()).join(', ')}` : ''}</div>
               ${t.files.length ? html`<div class="files">${t.files.map(f => html`<code>${f}</code>`)}</div>` : ''}
-              ${t.goal ? html`<div class="section"><h4>Goal</h4><p>${t.goal}</p></div>` : ''}
-              ${t.scope.length ? html`<div class="section"><h4>Scope</h4><ul>${t.scope.map(x => html`<li>${x}</li>`)}</ul></div>` : ''}
-              ${t.verification.length ? html`<div class="section"><h4>Verification</h4><ul>${t.verification.map(x => html`<li>${x}</li>`)}</ul></div>` : ''}
-              ${t.decisions.length ? html`<div class="section"><h4>Decisions</h4><ul>${t.decisions.map(x => html`<li>${x}</li>`)}</ul></div>` : ''}
-              ${t.outOfScope.length ? html`<div class="section"><h4>Out of scope</h4><ul>${t.outOfScope.map(x => html`<li>${x}</li>`)}</ul></div>` : ''}
-              ${t.notes.length ? html`<div class="section"><h4>Notes</h4><ul>${t.notes.map(x => html`<li>${x}</li>`)}</ul></div>` : ''}
+              ${t.goal ? html`<div class="section"><h4>Goal</h4><p>${t.goal.text}</p></div>` : ''}
+              ${t.scope.length ? html`<div class="section"><h4>Scope</h4><ul>${t.scope.map(x => this.renderEntry(x))}</ul></div>` : ''}
+              ${t.verification.length ? html`<div class="section"><h4>Verification</h4><ul>${t.verification.map(x => this.renderEntry(x))}</ul></div>` : ''}
+              ${t.decisions.length ? html`<div class="section"><h4>Decisions</h4><ul>${t.decisions.map(x => this.renderEntry(x))}</ul></div>` : ''}
+              ${t.outOfScope.length ? html`<div class="section"><h4>Out of scope</h4><ul>${t.outOfScope.map(x => this.renderEntry(x))}</ul></div>` : ''}
+              ${t.notes.length ? html`<div class="section"><h4>Notes</h4><ul>${t.notes.map(x => this.renderEntry(x))}</ul></div>` : ''}
             </div>
           </div>
         `;
