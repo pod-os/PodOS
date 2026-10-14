@@ -9,8 +9,8 @@
     dct:description "Replace hard-coded items in RichEditor markdown mentions with label search over the search index, same as pos-navigation. Refactor the search-index ownership first, re-enable the mention extension afterwards.";
     plan:status plan:in-progress;
     dct:created "2026-10-09"^^xsd:date;
-    dct:modified "2026-10-14T19:35:34Z"^^xsd:dateTime;
-    plan:hasTask <#task-01-cache-search-index-in-core>, <#task-02-recreate-search-index-on-label-update>, <#task-03-remove-search-dom-events>, <#task-04-fix-cache-reference-invalidation>, <#task-05-mention-suggestions-from-search-and-store>, <#task-06-fallback-create-things-on-the-fly>;
+    dct:modified "2026-10-14T20:07:00Z"^^xsd:dateTime;
+    plan:hasTask <#task-01-cache-search-index-in-core>, <#task-02-recreate-search-index-on-label-update>, <#task-03-remove-search-dom-events>, <#task-04-fix-cache-reference-invalidation>, <#task-05-mention-suggestions-from-search-and-store>, <#task-06-fallback-create-things-on-the-fly>, <#task-07-core-searchindex-demand-api>;
     plan:context <#entry-plan-context-01>, <#entry-plan-context-02>, <#entry-plan-context-03>;
     plan:decision <#entry-plan-decision-01>, <#entry-plan-decision-02>, <#entry-plan-decision-03>, <#entry-plan-decision-04>, <#entry-plan-decision-05>, <#entry-plan-decision-06>, <#entry-plan-decision-07>, <#entry-plan-decision-08>, <#entry-plan-decision-09>, <#entry-plan-decision-10>, <#entry-plan-decision-11>, <#entry-plan-decision-12>, <#entry-plan-decision-13>, <#entry-plan-decision-14>;
     plan:option <#entry-plan-option-01>, <#entry-plan-option-02>, <#entry-plan-option-03>;
@@ -75,12 +75,13 @@
     plan:parent <plan.ttl#plan>;
     plan:status plan:planned;
     dct:created "2026-10-14T19:14:07Z"^^xsd:dateTime;
-    dct:modified "2026-10-14T19:28:27Z"^^xsd:dateTime;
+    dct:modified "2026-10-14T20:14:23Z"^^xsd:dateTime;
     plan:touchesFile "elements/src/components/pos-markdown-document/pos-markdown-document.tsx", "elements/src/components/pos-markdown-document/rich-editor/RichEditor.ts", "elements/src/components/pos-markdown-document/rich-editor/RichEditor.spec.tsx", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/index.ts", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/items.ts";
     plan:goal <#entry-task-05-mention-suggestions-from-search-and-store-goal-01>;
     plan:context <#entry-task-05-mention-suggestions-from-search-and-store-context-01>;
-    plan:decision <#entry-task-05-mention-suggestions-from-search-and-store-decision-01>, <#entry-task-05-mention-suggestions-from-search-and-store-decision-02>, <#entry-task-05-mention-suggestions-from-search-and-store-decision-03>;
-    plan:scope <#entry-task-05-mention-suggestions-from-search-and-store-scope-01>, <#entry-task-05-mention-suggestions-from-search-and-store-scope-02>, <#entry-task-05-mention-suggestions-from-search-and-store-scope-03>;
+    plan:decision <#entry-task-05-mention-suggestions-from-search-and-store-decision-01>, <#entry-task-05-mention-suggestions-from-search-and-store-decision-02>, <#entry-task-05-mention-suggestions-from-search-and-store-decision-03>, <#entry-task-05-mention-suggestions-from-search-and-store-decision-04>, <#entry-task-05-mention-suggestions-from-search-and-store-decision-05>;
+    plan:scope <#entry-task-05-mention-suggestions-from-search-and-store-scope-01>, <#entry-task-05-mention-suggestions-from-search-and-store-scope-02>, <#entry-task-05-mention-suggestions-from-search-and-store-scope-03>, <#entry-task-05-mention-suggestions-from-search-and-store-scope-04>, <#entry-task-05-mention-suggestions-from-search-and-store-scope-05>;
+    plan:note <#entry-task-05-mention-suggestions-from-search-and-store-note-01>;
     plan:verification <#entry-task-05-mention-suggestions-from-search-and-store-verification-01>.
 
 <#task-06-fallback-create-things-on-the-fly> a plan:Task;
@@ -94,12 +95,62 @@
     plan:outOfScope <#entry-task-06-fallback-create-things-on-the-fly-outOfScope-01>;
     plan:context <#entry-task-06-fallback-create-things-on-the-fly-context-01>.
 
+<#task-07-core-searchindex-demand-api> a plan:Task;
+    dct:title "Core search index demand API: build on first use, empty in place on logout";
+    plan:parent <plan.ttl#plan>;
+    plan:status plan:draft;
+    dct:created "2026-10-14T20:14:23Z"^^xsd:dateTime;
+    dct:modified "2026-10-14T20:14:23Z"^^xsd:dateTime;
+    plan:goal <#entry-task-07-core-searchindex-demand-api-goal-01>;
+    plan:scope <#entry-task-07-core-searchindex-demand-api-scope-01>, <#entry-task-07-core-searchindex-demand-api-scope-02>;
+    plan:context <#entry-task-07-core-searchindex-demand-api-context-01>.
+
 # ---- Entries (schema:Comment; text + attribution) ----
+
+<#entry-task-05-mention-suggestions-from-search-and-store-decision-05> a schema:Comment;
+    schema:text "Session handling moves into core: consumers need no session watching at all. Core fetches the profile from its own session and builds the search index on first demand (zero-arg os.buildSearchIndex() — the profile parameter is dropped, core resolves it itself), keeps it warm until logout, and empties held references in place on logout. Angelo's reasoning: core should keep the index up to date but only if it is needed — no index for consumers that never ask, and core-managed freshness once one does. Login needs no handling (pos-app resolves only after OIDC redirect/session restore completes, so consumers mount already logged in); logout is handled by core's existing session tap — which must additionally empty the cached instance in place, not only drop the reference (drafted as task-07). The elements-side session watch (pos-navigation pattern) and the consumer-side profile fetch/build call both become unnecessary; the earlier keep-explicit-build choice is thereby superseded." ;
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-14T20:14:23Z"^^xsd:dateTime.
+
+<#entry-task-05-mention-suggestions-from-search-and-store-scope-05> a schema:Comment;
+    schema:text "With decision-05 the mention flow reduces to: RichEditor takes os: PodOS; mention(os) calls os.buildSearchIndex() (zero-arg demand API, no session logic in the extension) and maps refs to {id, label} via os.store.get(ref).label(); pos-markdown-document passes os through; core owns build-on-demand and logout clearing (task-07)." ;
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-14T20:14:23Z"^^xsd:dateTime.
+
+<#entry-task-07-core-searchindex-demand-api-goal-01> a schema:Comment;
+    schema:text "Core owns the search-index lifecycle end to end: os.buildSearchIndex() (zero-arg) builds on first demand (profile fetched from core's own session), stays warm until logout, and on logout empties the cached instance in place so that references already held by consumers see the cleared index instead of serving the previous user's data. After a re-login the next call is a cache miss and rebuilds." ;
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-14T20:14:23Z"^^xsd:dateTime.
+
+<#entry-task-07-core-searchindex-demand-api-scope-01> a schema:Comment;
+    schema:text "SearchGateway: SearchIndex.clear() currently only drops the cached reference (this.cached = undefined) — held references keep serving stale data. Make the logout path empty the cached instance in place (call SearchIndex.clear() on the instance) so consumers holding a reference see an empty index immediately. Re-login triggers a fresh build (cache miss)." ;
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-14T20:14:23Z"^^xsd:dateTime.
+
+<#entry-task-07-core-searchindex-demand-api-scope-02> a schema:Comment;
+    schema:text "PodOS: demand API keeps the existing name, signature loses the parameter: os.buildSearchIndex(): Promise<SearchIndex> — builds lazily on first call when logged in, resolving the profile from core's own session (fetchProfile(webId) moves inside the build); repeat calls return the cached instance; calls while logged out wait for the next login (or resolve empty — to be decided during planning). No separate searchIndex() name, no profile parameter, no deprecation: every consumer call site (pos-navigation, mention extension) migrates to the zero-arg call." ;
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-14T20:14:23Z"^^xsd:dateTime.
+
+<#entry-task-07-core-searchindex-demand-api-context-01> a schema:Comment;
+    schema:text "Spun out of task-05's planning (2026-10-14): Angelo argued the index should not be built when nobody uses it, but once a consumer exists core should manage it — including emptying held references on logout, which SearchGateway.clear() does not do today (it only drops the cache; pos-navigation papers over the gap with its own session watch + in-place clear). Draft status: needs planning through (logged-out semantics of the demand API, deprecation of buildSearchIndex, consumer migration order) before implementation." ;
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-14T20:14:23Z"^^xsd:dateTime.
 
 <#entry-task-05-mention-suggestions-from-search-and-store-goal-01> a schema:Comment;
     schema:text "The RichEditor mention menu gets its suggestions from the search index and the store instead of hardcoded items: items(query) maps searchIndex.search(query) refs via os.store.get(ref) Things to [{id, label}]. The mention extension is re-enabled and its 3 skipped tests restored — with this task the plan goal (mentions backed by label search, same as pos-navigation) is reached.";
     prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
     dct:created "2026-10-14T19:26:26Z"^^xsd:dateTime.
+
+<#entry-task-05-mention-suggestions-from-search-and-store-note-01> a schema:Comment;
+    schema:text "First implementation attempt of the provider glue in pos-markdown-document.tsx was committed (3fe3ba0a) and then reverted (f5052c1f): Angelo rejected the placement. All the os-backed suggestion logic (obtaining os, building the search index, session watch, ref→label lookup) must live inside the mention extension instead; the component reduces to wiring. Kept from the reverted attempt: the seam tests (mention() items delegation in index.spec.ts, RichEditor constructor provider arg) and the non-blocking lazy-provider design (provider resolves to [] until the index is available; rendering never awaits os)." ;
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-14T20:07:00Z"^^xsd:dateTime.
+
+<#entry-task-05-mention-suggestions-from-search-and-store-decision-04> a schema:Comment;
+    schema:text "Os-backed logic lives in the mention extension, not in the markdown-document component (Angelo rejected the first implementation as misplaced). RichEditor takes os directly — the suggestionsProvider parameter goes away; mention(os) owns the full flow: watching the elements session, explicit index build on login (os.buildSearchIndex(profile)), ref→label mapping via os.store.get(ref). The provider abstraction is dropped. Session handling follows pos-navigation's pattern (watching the elements session store) — core keeps buildSearchIndex(profile) explicit and does NOT build the index on session appearance by itself; Angelo considered core-side building but chose to keep the explicit build (plan decision-05 stands). The first attempt's non-blocking design survives: nothing awaits os or index availability, suggestions are [] until the index is ready. SUPERSEDED (2026-10-14, decision-05): session handling moves into core entirely — the demand API removes the extension-side session watch and the explicit build; see scope-05 and task-07." ;
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-14T20:07:00Z"^^xsd:dateTime.
 
 <#entry-task-05-mention-suggestions-from-search-and-store-context-01> a schema:Comment;
     schema:text "Task reshaped from the dissolved 'Search results carry labels' formulation during planning (2026-10-14). User quotes: \"I do not like to plan too far ahead, but pick the next suitable thing to do that helps us into the direciton of the goal\" (slice selection); \"i think we need to get a Thing from the store then for that ref\" (label resolution); \"do we need the score anywhere?\" (score: nothing consumes it); the reshape itself (no core change, Things built in the elements glue) was confirmed without an exactly quotable statement, scope choice: all the way working in one slice. An earlier TDD attempt of the {uri, label} result shape was fully reverted; the resulting ref→Thing design supersedes it.";
@@ -112,7 +163,7 @@
     dct:created "2026-10-14T19:26:26Z"^^xsd:dateTime.
 
 <#entry-task-05-mention-suggestions-from-search-and-store-decision-02> a schema:Comment;
-    schema:text "Things are built in the elements glue, not in core — user confirmed this reshape during planning (2026-10-14), scope chosen as 'all the way working' in one slice. os access enters RichEditor/mention via an injected suggestionsProvider: pos-markdown-document subscribes pod-os:init, obtains the dedup'd cached index via os.buildSearchIndex(profile) and hands a (query) => [{id, label}] function into the RichEditor constructor.";
+    schema:text "Things are built in the elements glue, not in core — user confirmed this reshape during planning (2026-10-14), scope chosen as 'all the way working' in one slice. os access enters RichEditor/mention via an injected suggestionsProvider: pos-markdown-document subscribes pod-os:init, obtains the dedup'd cached index via os.buildSearchIndex(profile) and hands a (query) => [{id, label}] function into the RichEditor constructor. SUPERSEDED (2026-10-14, decision-04): os-backed logic lives in the mention extension itself; RichEditor takes os directly, no injected provider.";
     prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
     dct:created "2026-10-14T19:26:26Z"^^xsd:dateTime.
 
@@ -127,7 +178,7 @@
     dct:created "2026-10-14T19:26:26Z"^^xsd:dateTime.
 
 <#entry-task-05-mention-suggestions-from-search-and-store-scope-02> a schema:Comment;
-    schema:text "pos-markdown-document: subscribes pod-os:init; after login awaits os.buildSearchIndex(profile) (dedup'd cache -> cheap) and builds the provider mapping refs -> os.store.get(ref) -> {id: ref, label: thing.label()}.";
+    schema:text "pos-markdown-document: subscribes pod-os:init; after login awaits os.buildSearchIndex(profile) (dedup'd cache -> cheap) and builds the provider mapping refs -> os.store.get(ref) -> {id: ref, label: thing.label()}. SUPERSEDED (2026-10-14, decision-04): the component does not own os or session logic anymore — see scope-04.";
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
     dct:created "2026-10-14T19:26:26Z"^^xsd:dateTime.
 
@@ -135,6 +186,11 @@
     schema:text "items.ts (hardcoded Alice/Bob/Carol) is removed; pos-navigation stays untouched (pos-rich-link resolves labels itself); no changes in core at all.";
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
     dct:created "2026-10-14T19:26:26Z"^^xsd:dateTime.
+
+<#entry-task-05-mention-suggestions-from-search-and-store-scope-04> a schema:Comment;
+    schema:text "Per decision-04 (2026-10-14): RichEditor constructor takes os: PodOS (replacing the suggestionsProvider parameter); mention(os) internally watches the elements session (like pos-navigation), calls os.buildSearchIndex(profile) explicitly on login, and maps search refs to {id, label} via os.store.get(ref).label(). pos-markdown-document reduces to pure wiring: obtains os via pod-os:init and passes it into the RichEditor constructor. index.spec.ts adapts to the new mention(os) signature; the SuggestionsProvider type is removed from rich-editor.";
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-14T20:07:00Z"^^xsd:dateTime.
 
 <#entry-task-05-mention-suggestions-from-search-and-store-verification-01> a schema:Comment;
     schema:text "RichEditor.spec.tsx green with mention() re-registered and the 3 tests un-skipped; pos-mention-menu spec green; core suites untouched and green. Wallaby is available in the LLM sandbox (verified 2026-10-14 with core + pos-navigation suites) — this supersedes the older note that wallaby runs are user-side only.";
