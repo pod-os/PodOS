@@ -45,7 +45,8 @@ Every write must end in a validated file. The loop:
    plans container. Change to an existing plan or task → `rdf_patch` against
    that plan's file.
 2. **Edit via Turtle** (`rdf_write` for new files, `rdf_patch` for surgical
-   changes). Keep `dct:modified` on the plan current when its content changes.
+   changes). Keep `dct:modified` on the plan current when its content changes
+   (xsd:dateTime, UTC); entries always carry `dct:created` (xsd:date).
 3. **Validate before reporting done:** `rdf_validate` with
    `dev-solid-server/data/dev/plans/plans.shacl.ttl` against the edited file. `conforms: true`
    is the completion criterion of every write — a failing shape means fix and
@@ -68,6 +69,17 @@ Every write must end in a validated file. The loop:
 
 - `schema:text` (exactly 1) carries the entry text; keep verbatim user quotes
   inline in it — this is how human intent survives; never paraphrase a quote.
+- **Every new entry gets `dct:created`** as `xsd:dateTime` (UTC, e.g.
+  `"2026-10-14T15:58:28Z"^^xsd:dateTime`) — the exact moment it was recorded.
+  It powers the NEW badge in the plan viewer and makes same-day edits
+  distinguishable. Older entries with `xsd:date` are grandfathered; do not
+  backfill them. Historical facts whose true time is known (e.g. a commit
+  timestamp) use that time.
+- **Keep `dct:modified` current** on the plan and on the changed task whenever
+  their content changes — as `xsd:dateTime` (UTC). The viewer compares entry
+  timestamps against the owner's `dct:modified` instant: only entries created
+  strictly at/after it get the NEW badge, so a comment added five minutes
+  after another does not re-highlight the earlier one.
 - `prov:wasAttributedTo` (min 1) records who contributed: the human via his
   WebID (`https://angelo.veltens.org/profile/card#me`), the LLM via its
   model-specific agent `<../agents.ttl#llm-<model>` (e.g.
