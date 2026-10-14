@@ -9,14 +9,13 @@
     dct:description "Replace hard-coded items in RichEditor markdown mentions with label search over the search index, same as pos-navigation. Refactor the search-index ownership first, re-enable the mention extension afterwards.";
     plan:status plan:in-progress;
     dct:created "2026-10-09"^^xsd:date;
-    dct:modified "2026-10-14T15:58:28Z"^^xsd:dateTime;
+    dct:modified "2026-10-14T16:21:55Z"^^xsd:dateTime;
     plan:hasTask <./mentions-fulltext-search.ttl#task-01-cache-search-index-in-core>, <./mentions-fulltext-search.ttl#task-02-recreate-search-index-on-label-update>, <./mentions-fulltext-search.ttl#task-03-remove-search-dom-events>;
     plan:context <#entry-plan-context-01>, <#entry-plan-context-02>, <#entry-plan-context-03>;
-    plan:decision <#entry-plan-decision-01>, <#entry-plan-decision-02>, <#entry-plan-decision-03>, <#entry-plan-decision-04>, <#entry-plan-decision-05>, <#entry-plan-decision-06>, <#entry-plan-decision-07>, <#entry-plan-decision-08>, <#entry-plan-decision-09>, <#entry-plan-decision-10>, <#entry-plan-decision-11>, <#entry-plan-decision-12>, <#entry-plan-decision-13>;
+    plan:decision <#entry-plan-decision-01>, <#entry-plan-decision-02>, <#entry-plan-decision-03>, <#entry-plan-decision-04>, <#entry-plan-decision-05>, <#entry-plan-decision-06>, <#entry-plan-decision-07>, <#entry-plan-decision-08>, <#entry-plan-decision-09>, <#entry-plan-decision-10>, <#entry-plan-decision-11>, <#entry-plan-decision-12>, <#entry-plan-decision-13>, <#entry-plan-decision-14>;
     plan:outOfScope <#entry-plan-outOfScope-01>;
     plan:option <#entry-plan-option-01>, <#entry-plan-option-02>, <#entry-plan-option-03>;
-    plan:note <#entry-plan-note-01>, <#entry-plan-note-02>;
-    plan:openQuestion <#entry-plan-openQuestion-01>, <#entry-plan-openQuestion-02>, <#entry-plan-openQuestion-03>.
+    plan:note <#entry-plan-note-01>, <#entry-plan-note-02>.
 
 <./mentions-fulltext-search.ttl#task-01-cache-search-index-in-core> a plan:Task;
     dct:title "Cache SearchIndex in core's buildSearchIndex";
@@ -149,17 +148,10 @@
     schema:text "Exposure analysis for the merge decision: the hardcoded suggestion menu (Alice/Bob/Carol on localhost:3000) only appears when a user with edit permission enters edit mode and types '#'; view mode and stored mention markdown ([@ id=... label=...] rendered as pos-rich-link) don't touch items.ts. But elements is published and pos-document/pos-app-document-viewer pass editable through — downstream editors would see fake suggestions and could insert broken URIs.";
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
 
-<#entry-plan-openQuestion-01> a schema:Comment;
-    schema:text "os-to-RichEditor bridge design — deferred to post-refactor discussion.";
-    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>.
-
-<#entry-plan-openQuestion-02> a schema:Comment;
-    schema:text "Mention fallback for things not in the index — deferred.";
-    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>.
-
-<#entry-plan-openQuestion-03> a schema:Comment;
-    schema:text "Naming of core search service class — TBD during implementation planning.";
-    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-plan-decision-14> a schema:Comment;
+    schema:text "Questions no longer open, converted to decisions: (1) os-to-RichEditor bridge design — dissolved: the mention feature is out of scope for this plan (decision-13); the bridge question moves with it to a future mentions plan. (2) Mention fallback for things not in the index — dissolved for the same reason. (3) Naming of core search service class — resolved: the SearchGateway itself holds the cache; no new service class was introduced, so there is nothing to name. (resolved 2026-10-14)";
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-14T16:21:32Z"^^xsd:dateTime.
 
 <#entry-task-01-cache-search-index-in-core-goal-01> a schema:Comment;
     schema:text "Repeated calls to os.buildSearchIndex(profile) with the same profile return the same cached SearchIndex instance instead of fetching label indexes and rebuilding every time.";
