@@ -9,7 +9,7 @@
     dct:description "Replace hard-coded items in RichEditor markdown mentions with label search over the search index, same as pos-navigation. Refactor the search-index ownership first, re-enable the mention extension afterwards.";
     plan:status plan:in-progress;
     dct:created "2026-10-09"^^xsd:date;
-    dct:modified "2026-10-14T18:10:57Z"^^xsd:dateTime;
+    dct:modified "2026-10-14T18:41:34Z"^^xsd:dateTime;
     plan:hasTask <#task-01-cache-search-index-in-core>, <#task-02-recreate-search-index-on-label-update>, <#task-03-remove-search-dom-events>, <#task-04-fix-cache-reference-invalidation>;
     plan:context <#entry-plan-context-01>, <#entry-plan-context-02>, <#entry-plan-context-03>;
     plan:decision <#entry-plan-decision-01>, <#entry-plan-decision-02>, <#entry-plan-decision-03>, <#entry-plan-decision-04>, <#entry-plan-decision-05>, <#entry-plan-decision-06>, <#entry-plan-decision-07>, <#entry-plan-decision-08>, <#entry-plan-decision-09>, <#entry-plan-decision-10>, <#entry-plan-decision-11>, <#entry-plan-decision-12>, <#entry-plan-decision-13>, <#entry-plan-decision-14>;
@@ -60,14 +60,15 @@
 <#task-04-fix-cache-reference-invalidation> a plan:Task;
     dct:title "Fix search-index cache reference invalidation in createDefaultLabelIndex";
     plan:parent <plan.ttl#plan>;
-    plan:status plan:in-progress;
+    plan:status plan:done;
     dct:created "2026-10-14T18:05:00Z"^^xsd:dateTime;
-    dct:modified "2026-10-14T18:05:00Z"^^xsd:dateTime;
+    dct:modified "2026-10-14T18:41:34Z"^^xsd:dateTime;
     plan:dependsOn <#task-03-remove-search-dom-events>;
     plan:touchesFile "core/src/search/SearchGateway.ts", "core/src/search/SearchGateway.spec.ts", "core/src/search/SearchIndex.ts", "elements/src/components/pos-navigation/__test/pos-navigation.spec.tsx";
     plan:goal <#entry-task-04-fix-cache-reference-invalidation-goal-01>;
+    plan:verification <#entry-task-04-fix-cache-reference-invalidation-verification-01>;
     plan:decision <#entry-task-04-fix-cache-reference-invalidation-decision-01>;
-    plan:note <#entry-task-04-fix-cache-reference-invalidation-note-01>.
+    plan:note <#entry-task-04-fix-cache-reference-invalidation-note-01>, <#entry-task-04-fix-cache-reference-invalidation-note-02>.
 
 # ---- Entries (schema:Comment; text + attribution) ----
 
@@ -373,7 +374,17 @@
     prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
     dct:created "2026-10-14T18:10:57Z"^^xsd:dateTime.
 
+<#entry-task-04-fix-cache-reference-invalidation-verification-01> a schema:Comment;
+    schema:text "Implemented TDD via wallaby, two cycles: (1) SearchIndex.spec 'replaces the label indexes when new ones are passed and finds their items' red, then rebuild(labelIndexes?) green. (2) SearchGateway.spec 'recreates the cached search index including the new label index document' flipped not.toBe -> toBe, red, then in-place createDefaultLabelIndex green. Separate refactor commit dropped the redundant empty short-circuit in buildIndex. All 36 tests green via wallaby; typecheck clean. Committed 3edab696, 5edde550, 1570f8fd. Scoping: the planned pos-navigation regression test (cycle 3) was dropped — the gateway-level tests fully pin the behavior (same instance, fresh search results, both label-index documents fetched), so a component test would only duplicate the core contract.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>, <https://angelo.veltens.org/profile/card#me>;
+    dct:created "2026-10-14T18:41:34Z"^^xsd:dateTime.
+
 <#entry-task-04-fix-cache-reference-invalidation-note-01> a schema:Comment;
-    schema:text "Task spun off from task-03's bug report (note-01) and open question (openQuestion-01). Fix candidates are undecided: A (createDefaultLabelIndex updates the cached SearchIndex in place via SearchIndex.setLabelIndexes) vs B (keep cache replacement, re-introduce a component-side re-fetch trigger — contradicts task-03 decision-01). Decision pending with Angelo; see task-03 openQuestion-01 for details and affected tests.";
+    schema:text "Task spun off from task-03's bug report (note-01) and open question (openQuestion-01). Fix candidates are undecided: A (createDefaultLabelIndex updates the cached SearchIndex in place via SearchIndex.setLabelIndexes) vs B (keep cache replacement, re-introduce a component-side re-fetch trigger — contradicts task-03 decision-01). Decision pending with Angelo; see task-03 openQuestion-01 for details and affected tests. RESOLVED: see decision-01 and task-03 openQuestion-01.";
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
     dct:created "2026-10-14T18:05:00Z"^^xsd:dateTime.
+
+<#entry-task-04-fix-cache-reference-invalidation-note-02> a schema:Comment;
+    schema:text "Process note: refactoring must only happen in a verified green state. Angelo: \"it is fine to do the refactoring in the same commit, as long as it happens only when all tests are green\". On whether the refactor step should be a separate commit (Angelo: \"do you think it would be better to make the refactoring step a separate commit?\"), the separate-commit style was agreed as preferred (structurally enforces the green checkpoint); the tdd-task prompt was updated with this rule. Scoping decisions (Angelo: \"1. drop it 2. update it 3. captured is ok\"): the planned pos-navigation regression test (cycle 3) is omitted — the gateway-level tests fully pin the behavior (same instance, fresh search results, both label-index documents fetched), so a component test would only duplicate the core contract; the plan status update was requested; the 'captured' local variable in SearchIndex.rebuild (needed because the lunr callback rebinds this) stays as-is.";
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-14T18:41:34Z"^^xsd:dateTime.
