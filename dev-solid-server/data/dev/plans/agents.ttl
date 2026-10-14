@@ -1,0 +1,19 @@
+@prefix plan: <./plan-ontology.ttl#>.
+@prefix prov: <http://www.w3.org/ns/prov#>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+
+# Agents that can be attributed to plan entries (prov:wasAttributedTo).
+# The human is a foaf:Agent referenced by WebID. Each LLM model gets its own
+# agent resource (agents.ttl#llm-<model>); the LLM's rdfs:label carries the
+# model name. #llm is the generic agent used for historical entries whose
+# authoring model is unknown.
+
+<https://angelo.veltens.org/profile/card#me> a foaf:Agent;
+    foaf:name "Angelo".
+
+<#llm> a foaf:Agent;
+    rdfs:label "LLM (unknown model)".
+
+<#llm-glm-5.3-flash> a foaf:Agent;
+    rdfs:label "glm-5.3-flash".

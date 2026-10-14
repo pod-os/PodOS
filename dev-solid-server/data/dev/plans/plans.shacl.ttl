@@ -1,4 +1,7 @@
 @prefix plan: <./plan-ontology.ttl#>.
+@prefix prov: <http://www.w3.org/ns/prov#>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix schema: <https://schema.org/>.
 @prefix dct: <http://purl.org/dc/terms/>.
 @prefix sh: <http://www.w3.org/ns/shacl#>.
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
@@ -50,29 +53,49 @@ _:n3-11 sh:path plan:hasTask;
     sh:name "has task";
     sh:class plan:Task.
 plan:PlanShape sh:property _:n3-11.
-_:n3-12 sh:path plan:decision;
+plan:EntryShape a sh:NodeShape;
+    sh:name "Entry shape";
+    sh:targetObjectsOf plan:decision, plan:openQuestion, plan:userStory, plan:option, plan:note, plan:goal, plan:scope, plan:outOfScope, plan:verification, plan:context.
+_:n3-100 sh:path <https://schema.org/text>;
+    sh:name "text";
+    sh:minCount 1;
+    sh:maxCount 1;
+    sh:datatype xsd:string;
+    sh:minLength 3.
+plan:EntryShape sh:property _:n3-100.
+_:n3-101 sh:path prov:wasAttributedTo;
+    sh:name "attributed to";
+    sh:minCount 1;
+    sh:class foaf:Agent.
+plan:EntryShape sh:property _:n3-101.
+_:n3-102 sh:path dct:created;
+    sh:name "created";
+    sh:maxCount 1;
+    sh:datatype xsd:date.
+plan:EntryShape sh:property _:n3-102.
+_:n3-103 sh:path plan:decision;
     sh:name "decision";
-    sh:datatype xsd:string.
-plan:PlanShape sh:property _:n3-12.
-_:n3-13 sh:path plan:context;
+    sh:class schema:Comment.
+plan:PlanShape sh:property _:n3-103.
+_:n3-104 sh:path plan:context;
     sh:name "context";
-    sh:datatype xsd:string.
-plan:PlanShape sh:property _:n3-13.
+    sh:class schema:Comment.
+plan:PlanShape sh:property _:n3-104.
 _:n3-14 sh:path plan:openQuestion;
     sh:name "open question";
-    sh:datatype xsd:string.
+    sh:class schema:Comment.
 plan:PlanShape sh:property _:n3-14.
 _:n3-15 sh:path plan:option;
     sh:name "option";
-    sh:datatype xsd:string.
+    sh:class schema:Comment.
 plan:PlanShape sh:property _:n3-15.
 _:n3-16 sh:path plan:userStory;
     sh:name "user story";
-    sh:datatype xsd:string.
+    sh:class schema:Comment.
 plan:PlanShape sh:property _:n3-16.
 _:n3-17 sh:path plan:note;
     sh:name "note";
-    sh:datatype xsd:string.
+    sh:class schema:Comment.
 plan:PlanShape sh:property _:n3-17;
     sh:closed false.
 plan:TaskShape a sh:NodeShape;
@@ -130,36 +153,36 @@ _:n3-30 sh:path dct:modified;
 plan:TaskShape sh:property _:n3-30.
 _:n3-31 sh:path plan:goal;
     sh:name "goal";
-    sh:datatype xsd:string.
+    sh:class schema:Comment.
 plan:TaskShape sh:property _:n3-31.
 _:n3-32 sh:path plan:scope;
     sh:name "scope";
-    sh:datatype xsd:string.
+    sh:class schema:Comment.
 plan:TaskShape sh:property _:n3-32.
 _:n3-33 sh:path plan:outOfScope;
     sh:name "out of scope";
-    sh:datatype xsd:string.
+    sh:class schema:Comment.
 plan:TaskShape sh:property _:n3-33.
 _:n3-34 sh:path plan:verification;
     sh:name "verification";
-    sh:datatype xsd:string.
+    sh:class schema:Comment.
 plan:TaskShape sh:property _:n3-34.
 _:n3-35 sh:path plan:decision;
     sh:name "decision";
-    sh:datatype xsd:string.
+    sh:class schema:Comment.
 plan:TaskShape sh:property _:n3-35.
 _:n3-36 sh:path plan:openQuestion;
     sh:name "open question";
-    sh:datatype xsd:string.
+    sh:class schema:Comment.
 plan:TaskShape sh:property _:n3-36.
 _:n3-37 sh:path plan:note;
     sh:name "note";
-    sh:datatype xsd:string.
+    sh:class schema:Comment.
+plan:TaskShape sh:property _:n3-37.
 _:n3-42 sh:path plan:touchesFile;
     sh:name "touches file";
     sh:datatype xsd:string.
-plan:TaskShape sh:property _:n3-37;
-    sh:property _:n3-42;
+plan:TaskShape sh:property _:n3-42;
     sh:closed false.
 plan:NoDependencyCyclesShape a sh:NodeShape;
     sh:name "No dependency cycles";
