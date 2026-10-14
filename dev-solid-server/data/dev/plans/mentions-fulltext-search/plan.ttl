@@ -9,13 +9,13 @@
     dct:description "Replace hard-coded items in RichEditor markdown mentions with label search over the search index, same as pos-navigation. Refactor the search-index ownership first, re-enable the mention extension afterwards.";
     plan:status plan:in-progress;
     dct:created "2026-10-09"^^xsd:date;
-    dct:modified "2026-10-14T18:41:34Z"^^xsd:dateTime;
-    plan:hasTask <#task-01-cache-search-index-in-core>, <#task-02-recreate-search-index-on-label-update>, <#task-03-remove-search-dom-events>, <#task-04-fix-cache-reference-invalidation>;
+    dct:modified "2026-10-14T19:35:34Z"^^xsd:dateTime;
+    plan:hasTask <#task-01-cache-search-index-in-core>, <#task-02-recreate-search-index-on-label-update>, <#task-03-remove-search-dom-events>, <#task-04-fix-cache-reference-invalidation>, <#task-05-mention-suggestions-from-search-and-store>, <#task-06-fallback-create-things-on-the-fly>;
     plan:context <#entry-plan-context-01>, <#entry-plan-context-02>, <#entry-plan-context-03>;
     plan:decision <#entry-plan-decision-01>, <#entry-plan-decision-02>, <#entry-plan-decision-03>, <#entry-plan-decision-04>, <#entry-plan-decision-05>, <#entry-plan-decision-06>, <#entry-plan-decision-07>, <#entry-plan-decision-08>, <#entry-plan-decision-09>, <#entry-plan-decision-10>, <#entry-plan-decision-11>, <#entry-plan-decision-12>, <#entry-plan-decision-13>, <#entry-plan-decision-14>;
-    plan:outOfScope <#entry-plan-outOfScope-01>;
     plan:option <#entry-plan-option-01>, <#entry-plan-option-02>, <#entry-plan-option-03>;
-    plan:note <#entry-plan-note-01>, <#entry-plan-note-02>.
+    plan:note <#entry-plan-note-01>, <#entry-plan-note-02>;
+    plan:decision <#entry-plan-decision-15>.
 
 <#task-01-cache-search-index-in-core> a plan:Task;
     dct:title "Cache SearchIndex in core's buildSearchIndex";
@@ -70,7 +70,96 @@
     plan:decision <#entry-task-04-fix-cache-reference-invalidation-decision-01>;
     plan:note <#entry-task-04-fix-cache-reference-invalidation-note-01>, <#entry-task-04-fix-cache-reference-invalidation-note-02>.
 
+<#task-05-mention-suggestions-from-search-and-store> a plan:Task;
+    dct:title "Mention suggestions from search + store via suggestionsProvider (no core change)";
+    plan:parent <plan.ttl#plan>;
+    plan:status plan:planned;
+    dct:created "2026-10-14T19:14:07Z"^^xsd:dateTime;
+    dct:modified "2026-10-14T19:28:27Z"^^xsd:dateTime;
+    plan:touchesFile "elements/src/components/pos-markdown-document/pos-markdown-document.tsx", "elements/src/components/pos-markdown-document/rich-editor/RichEditor.ts", "elements/src/components/pos-markdown-document/rich-editor/RichEditor.spec.tsx", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/index.ts", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/items.ts";
+    plan:goal <#entry-task-05-mention-suggestions-from-search-and-store-goal-01>;
+    plan:context <#entry-task-05-mention-suggestions-from-search-and-store-context-01>;
+    plan:decision <#entry-task-05-mention-suggestions-from-search-and-store-decision-01>, <#entry-task-05-mention-suggestions-from-search-and-store-decision-02>, <#entry-task-05-mention-suggestions-from-search-and-store-decision-03>;
+    plan:scope <#entry-task-05-mention-suggestions-from-search-and-store-scope-01>, <#entry-task-05-mention-suggestions-from-search-and-store-scope-02>, <#entry-task-05-mention-suggestions-from-search-and-store-scope-03>;
+    plan:verification <#entry-task-05-mention-suggestions-from-search-and-store-verification-01>.
+
+<#task-06-fallback-create-things-on-the-fly> a plan:Task;
+    dct:title "Mention fallback: create things on the fly";
+    plan:parent <plan.ttl#plan>;
+    plan:status plan:draft;
+    dct:created "2026-10-14T19:31:55Z"^^xsd:dateTime;
+    dct:modified "2026-10-14T19:34:23Z"^^xsd:dateTime;
+    plan:dependsOn <#task-05-mention-suggestions-from-search-and-store>;
+    plan:goal <#entry-task-06-fallback-create-things-on-the-fly-goal-01>;
+    plan:outOfScope <#entry-task-06-fallback-create-things-on-the-fly-outOfScope-01>;
+    plan:context <#entry-task-06-fallback-create-things-on-the-fly-context-01>.
+
 # ---- Entries (schema:Comment; text + attribution) ----
+
+<#entry-task-05-mention-suggestions-from-search-and-store-goal-01> a schema:Comment;
+    schema:text "The RichEditor mention menu gets its suggestions from the search index and the store instead of hardcoded items: items(query) maps searchIndex.search(query) refs via os.store.get(ref) Things to [{id, label}]. The mention extension is re-enabled and its 3 skipped tests restored — with this task the plan goal (mentions backed by label search, same as pos-navigation) is reached.";
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-14T19:26:26Z"^^xsd:dateTime.
+
+<#entry-task-05-mention-suggestions-from-search-and-store-context-01> a schema:Comment;
+    schema:text "Task reshaped from the dissolved 'Search results carry labels' formulation during planning (2026-10-14). User quotes: \"I do not like to plan too far ahead, but pick the next suitable thing to do that helps us into the direciton of the goal\" (slice selection); \"i think we need to get a Thing from the store then for that ref\" (label resolution); \"do we need the score anywhere?\" (score: nothing consumes it); the reshape itself (no core change, Things built in the elements glue) was confirmed without an exactly quotable statement, scope choice: all the way working in one slice. An earlier TDD attempt of the {uri, label} result shape was fully reverted; the resulting ref→Thing design supersedes it.";
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-14T19:26:26Z"^^xsd:dateTime.
+
+<#entry-task-05-mention-suggestions-from-search-and-store-decision-01> a schema:Comment;
+    schema:text "Search results stay ref-only lunr hits — SearchIndex/SearchGateway keep their public shape, core untouched. Labels resolve consumer-side: the label triples live in the label-index documents already fetched by buildSearchIndex, so os.store.get(ref) → Thing.label() resolves synchronously without extra fetches (pos-navigation already renders pos-rich-link uri=ref the same way). User: \"i think we need to get a Thing from the store then for that ref\". Supersedes the deferred item task-01 outOfScope-04 (result shape ref -> {uri, label}).";
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-14T19:26:26Z"^^xsd:dateTime.
+
+<#entry-task-05-mention-suggestions-from-search-and-store-decision-02> a schema:Comment;
+    schema:text "Things are built in the elements glue, not in core — user confirmed this reshape during planning (2026-10-14), scope chosen as 'all the way working' in one slice. os access enters RichEditor/mention via an injected suggestionsProvider: pos-markdown-document subscribes pod-os:init, obtains the dedup'd cached index via os.buildSearchIndex(profile) and hands a (query) => [{id, label}] function into the RichEditor constructor.";
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-14T19:26:26Z"^^xsd:dateTime.
+
+<#entry-task-05-mention-suggestions-from-search-and-store-decision-03> a schema:Comment;
+    schema:text "No result-shape rework around the lunr score: nothing in the repo consumes it (only two SearchIndex.spec ordering assertions); keeping raw hits means no decision needed. User asked: \"do we need the score anywhere?\".";
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-14T19:26:26Z"^^xsd:dateTime.
+
+<#entry-task-05-mention-suggestions-from-search-and-store-scope-01> a schema:Comment;
+    schema:text "RichEditor: constructor accepts a suggestionsProvider (query => Promise<{id, label}[]>) and passes it to mention(); mention() re-registered; the 3 skipped registration tests in RichEditor.spec.tsx un-skipped and adapted to the injected provider.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-14T19:26:26Z"^^xsd:dateTime.
+
+<#entry-task-05-mention-suggestions-from-search-and-store-scope-02> a schema:Comment;
+    schema:text "pos-markdown-document: subscribes pod-os:init; after login awaits os.buildSearchIndex(profile) (dedup'd cache -> cheap) and builds the provider mapping refs -> os.store.get(ref) -> {id: ref, label: thing.label()}.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-14T19:26:26Z"^^xsd:dateTime.
+
+<#entry-task-05-mention-suggestions-from-search-and-store-scope-03> a schema:Comment;
+    schema:text "items.ts (hardcoded Alice/Bob/Carol) is removed; pos-navigation stays untouched (pos-rich-link resolves labels itself); no changes in core at all.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-14T19:26:26Z"^^xsd:dateTime.
+
+<#entry-task-05-mention-suggestions-from-search-and-store-verification-01> a schema:Comment;
+    schema:text "RichEditor.spec.tsx green with mention() re-registered and the 3 tests un-skipped; pos-mention-menu spec green; core suites untouched and green. Wallaby is available in the LLM sandbox (verified 2026-10-14 with core + pos-navigation suites) — this supersedes the older note that wallaby runs are user-side only.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-14T19:26:26Z"^^xsd:dateTime.
+
+<#entry-task-06-fallback-create-things-on-the-fly-goal-01> a schema:Comment;
+    schema:text "When the user types a mention label that matches nothing in the search index, the menu offers to create the thing and insert the mention for it. Created things stay unindexed — findability is deliberately left to the existing make-findable flow later.";
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-14T19:31:55Z"^^xsd:dateTime.
+
+<#entry-task-06-fallback-create-things-on-the-fly-outOfScope-01> a schema:Comment;
+    schema:text "Adding the created thing to the label index (make-findable) is out of scope for now — creation only (user: \"without make findable for now, only creation\", 2026-10-14).";
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
+    dct:created "2026-10-14T19:34:23Z"^^xsd:dateTime.
+
+<#entry-task-06-fallback-create-things-on-the-fly-context-01> a schema:Comment;
+    schema:text "Slice-level 'how' (menu UI, thing-creation details, where/how the thing is stored, permissions) is deliberately not planned ahead; to be worked out when this task is picked up after task-05. The task stays in draft until planned through. Definition and stance recorded plan-level in decision-15.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-14T19:31:55Z"^^xsd:dateTime.
+
+<#entry-plan-decision-15> a schema:Comment;
+    schema:text "Mention fallback defined and scoped: fallback = what the mention menu offers when a typed label matches nothing in the search index. Design space: (a) empty menu, nothing insertable (pos-navigation's behavior, search-only); (b) URI-paste escape hatch for existing-but-unindexed things; (c) create on the fly (mention menu offers to create the unindexed thing; make-findable deliberately excluded for now). User chose (c), refined to creation-only: recorded as draft follow-up task-06, depending on task-05; until it lands the search-only behavior (a) applies. This supersedes the out-of-scope ruling (decision-13; the former plan-level outOfScope entry was removed): the mention feature is back in scope — task-05 = suggestions provider + re-enable + un-skip, task-06 = fallback.";
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-14T19:31:55Z"^^xsd:dateTime.
 
 <#entry-plan-context-01> a schema:Comment;
     schema:text "Human topic (verbatim): \"instead of hard-coded items in RichEditor markdown mentions, i want to have a full text search from the search index, same as in pos-navigation\".";
@@ -134,12 +223,12 @@
     prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>.
 
 <#entry-plan-decision-13> a schema:Comment;
-    schema:text "Scope ruling for the remaining plan: the mention feature is out of scope — this plan is only about the search refactoring. User: \"the mention should be out of scope, we are focusing on the search refactoring only here\". Consequently openQuestion-01 (os-to-RichEditor bridge) and openQuestion-02 (mention fallback) are no longer open in this plan.";
+    schema:text "Scope ruling for the remaining plan: the mention feature is out of scope — this plan is only about the search refactoring. User: \"the mention should be out of scope, we are focusing on the search refactoring only here\". Consequently openQuestion-01 (os-to-RichEditor bridge) and openQuestion-02 (mention fallback) are no longer open in this plan. SUPERSEDED (2026-10-14): the mention feature is back in scope — task-05 (provider + re-enable) and task-06 (fallback), see decision-15.";
     prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
     dct:created "2026-10-14T15:58:28Z"^^xsd:dateTime.
 
 <#entry-plan-outOfScope-01> a schema:Comment;
-    schema:text "The mentions feature in all its parts: search-based suggestion provider for RichEditor (os-to-RichEditor bridge), mention fallback for things not in the index, re-enabling the mention extension and un-skipping its 3 tests. User: \"the mention should be out of scope, we are focusing on the search refactoring only here\".";
+    schema:text "[REMOVED 2026-10-14] The mentions feature in all its parts: search-based suggestion provider for RichEditor (os-to-RichEditor bridge), mention fallback for things not in the index, re-enabling the mention extension and un-skipping its 3 tests. User: \"the mention should be out of scope, we are focusing on the search refactoring only here\". All parts are back in scope — provider + re-enable/un-skip via task-05, fallback via task-06 (decision-15); the plan:outOfScope assertion was removed from the plan because such an assertion must reflect current scope, the history lives here and in decision-13/15.";
     prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
     dct:created "2026-10-14T15:58:28Z"^^xsd:dateTime.
 
