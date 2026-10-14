@@ -243,5 +243,23 @@ describe("search index", () => {
       expect(updatedResult).toHaveLength(1);
       expect(updatedResult[0].ref).toEqual("https://pod.example/profile#me");
     });
+
+    it("replaces the label indexes when new ones are passed and finds their items", () => {
+      const firstLabelIndex = {
+        getIndexedItems: () => [
+          { uri: "https://pod.example/1#it", label: "first" },
+        ],
+      } as unknown as LabelIndex;
+      const secondLabelIndex = {
+        getIndexedItems: () => [
+          { uri: "https://pod.example/2#it", label: "second" },
+        ],
+      } as unknown as LabelIndex;
+      const index = new SearchIndex([firstLabelIndex]);
+      index.rebuild([secondLabelIndex]);
+      const result = index.search("second");
+      expect(result).toHaveLength(1);
+      expect(result[0].ref).toEqual("https://pod.example/2#it");
+    });
   });
 });
