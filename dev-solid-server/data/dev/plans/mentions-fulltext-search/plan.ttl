@@ -10,14 +10,14 @@
     plan:status plan:in-progress;
     dct:created "2026-10-09"^^xsd:date;
     dct:modified "2026-10-14T16:21:55Z"^^xsd:dateTime;
-    plan:hasTask <./mentions-fulltext-search.ttl#task-01-cache-search-index-in-core>, <./mentions-fulltext-search.ttl#task-02-recreate-search-index-on-label-update>, <./mentions-fulltext-search.ttl#task-03-remove-search-dom-events>;
+    plan:hasTask <#task-01-cache-search-index-in-core>, <#task-02-recreate-search-index-on-label-update>, <#task-03-remove-search-dom-events>;
     plan:context <#entry-plan-context-01>, <#entry-plan-context-02>, <#entry-plan-context-03>;
     plan:decision <#entry-plan-decision-01>, <#entry-plan-decision-02>, <#entry-plan-decision-03>, <#entry-plan-decision-04>, <#entry-plan-decision-05>, <#entry-plan-decision-06>, <#entry-plan-decision-07>, <#entry-plan-decision-08>, <#entry-plan-decision-09>, <#entry-plan-decision-10>, <#entry-plan-decision-11>, <#entry-plan-decision-12>, <#entry-plan-decision-13>, <#entry-plan-decision-14>;
     plan:outOfScope <#entry-plan-outOfScope-01>;
     plan:option <#entry-plan-option-01>, <#entry-plan-option-02>, <#entry-plan-option-03>;
     plan:note <#entry-plan-note-01>, <#entry-plan-note-02>.
 
-<./mentions-fulltext-search.ttl#task-01-cache-search-index-in-core> a plan:Task;
+<#task-01-cache-search-index-in-core> a plan:Task;
     dct:title "Cache SearchIndex in core's buildSearchIndex";
     plan:parent <plan.ttl#plan>;
     plan:status plan:done;
@@ -29,7 +29,7 @@
     plan:decision <#entry-task-01-cache-search-index-in-core-decision-01>, <#entry-task-01-cache-search-index-in-core-decision-02>, <#entry-task-01-cache-search-index-in-core-decision-03>, <#entry-task-01-cache-search-index-in-core-decision-04>, <#entry-task-01-cache-search-index-in-core-decision-05>;
     plan:note <#entry-task-01-cache-search-index-in-core-note-01>.
 
-<./mentions-fulltext-search.ttl#task-02-recreate-search-index-on-label-update> a plan:Task;
+<#task-02-recreate-search-index-on-label-update> a plan:Task;
     dct:title "Update cached search index on label-index writes";
     plan:parent <plan.ttl#plan>;
     plan:status plan:done;
@@ -42,13 +42,13 @@
     plan:scope <#entry-task-02-recreate-search-index-on-label-update-scope-01>, <#entry-task-02-recreate-search-index-on-label-update-scope-02>, <#entry-task-02-recreate-search-index-on-label-update-scope-03>, <#entry-task-02-recreate-search-index-on-label-update-scope-04>;
     plan:note <#entry-task-02-recreate-search-index-on-label-update-note-01>, <#entry-task-02-recreate-search-index-on-label-update-note-02>, <#entry-task-02-recreate-search-index-on-label-update-note-03>, <#entry-task-02-recreate-search-index-on-label-update-note-04>, <#entry-task-02-recreate-search-index-on-label-update-note-05>, <#entry-task-02-recreate-search-index-on-label-update-note-06>.
 
-<./mentions-fulltext-search.ttl#task-03-remove-search-dom-events> a plan:Task;
+<#task-03-remove-search-dom-events> a plan:Task;
     dct:title "Remove pod-os:search:index-created/updated DOM events";
     plan:parent <plan.ttl#plan>;
     plan:status plan:planned;
     dct:created "2026-10-14T15:58:28Z"^^xsd:dateTime;
     dct:modified "2026-10-14T15:58:28Z"^^xsd:dateTime;
-    plan:dependsOn <./mentions-fulltext-search.ttl#task-02-recreate-search-index-on-label-update>;
+    plan:dependsOn <#task-02-recreate-search-index-on-label-update>;
     plan:touchesFile "elements/src/components/pos-make-findable/pos-make-findable.tsx", "elements/src/components/pos-make-findable/pos-make-findable.spec.tsx", "elements/src/components/pos-navigation/pos-navigation.tsx", "elements/src/components/pos-navigation/__test/pos-navigation.spec.tsx";
     plan:goal <#entry-task-03-remove-search-dom-events-goal-01>;
     plan:scope <#entry-task-03-remove-search-dom-events-scope-01>, <#entry-task-03-remove-search-dom-events-scope-02>, <#entry-task-03-remove-search-dom-events-scope-03>;
