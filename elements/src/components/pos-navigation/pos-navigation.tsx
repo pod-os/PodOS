@@ -77,14 +77,12 @@ export class PosNavigation implements PodOsAware {
     this.debouncedSearch?.unsubscribe();
   }
 
-  @Listen('pod-os:search:index-created')
+  /**
+   * Loads the search index shared by core, which core keeps fresh
+   * by rebuilding its cached instance on label-index writes.
+   */
   private async buildSearchIndex() {
     this.searchIndex = await this.os.buildSearchIndex(session.state.profile);
-  }
-
-  @Listen('pod-os:search:index-updated')
-  rebuildSearchIndex() {
-    this.searchIndex.rebuild();
   }
 
   @Listen('pod-os:navigate')
