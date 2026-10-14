@@ -7,8 +7,9 @@
 <plan.ttl#plan> a plan:Plan;
     dct:title "RDF Metadata for Non-RDF Resources";
     dct:description "Users want to annotate non-RDF resources — such as PDF documents, images, or other binary files stored on a Solid Pod — with RDF metadata. Currently PodOS has no mechanism to attach structured, queryable data to resources that are not themselves RDF documents, making it impossible to describe, tag, or relate those resources within the Linked Data graph.";
-    plan:status plan:draft;
+    plan:status plan:done;
     dct:created "2026-06-09"^^xsd:date;
+    dct:modified "2026-10-14T19:04:19Z"^^xsd:dateTime;
     plan:hasTask <#task-1-auto-follow-describedby>, <#task-2-write-path-routing>, <#task-3-integration-test>, <#task-4-element-smoke-test>;
     plan:userStory <#entry-plan-userStory-01>, <#entry-plan-userStory-02>, <#entry-plan-userStory-03>;
     plan:decision <#entry-plan-decision-01>, <#entry-plan-decision-02>, <#entry-plan-decision-03>, <#entry-plan-decision-04>;

@@ -7,7 +7,8 @@
 <plan.ttl#plan> a plan:Plan;
     dct:title "Remember Me for the IdP in pos-login";
     dct:description "When a user submits the login form, their chosen IdP URL is saved to the existing localSettings store (elements/src/store/settings.ts). On the next visit, pos-login-form reads that value back and pre-fills the IdP input, so the user only has to click Login instead of re-typing the URL. A 'Remember me' checkbox gives them explicit control over whether the IdP is persisted.";
-    plan:status plan:planned;
+    plan:status plan:done;
+    dct:modified "2026-10-14T19:04:19Z"^^xsd:dateTime;
     plan:goal <#entry-plan-goal-01>;
     plan:decision <#entry-plan-decision-01>;
     plan:touchesFile "elements/src/store/settings.ts", "elements/src/components/pos-login-form/pos-login-form.tsx", "elements/src/components/pos-login-form/pos-login-form.css", "elements/src/components/pos-login-form/test/pos-login-form.spec.tsx", "elements/src/components/pos-login/pos-login.integration.spec.tsx";
