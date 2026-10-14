@@ -168,8 +168,8 @@ describe(SearchGateway.name, () => {
       ]);
       await gateway.createDefaultLabelIndex(updatedProfile);
 
-      // then the cached index is a new instance, built anew from the current label indexes
-      expect(await gateway.buildSearchIndex(updatedProfile)).not.toBe(cachedIndex);
+      // then the cached index is still the same instance, updated in place
+      expect(await gateway.buildSearchIndex(updatedProfile)).toBe(cachedIndex);
 
       // and the label indexes were refetched, including the new document
       expect(fetchAllSpy).toHaveBeenLastCalledWith([
