@@ -9,7 +9,7 @@
     dct:description "Replace hard-coded items in RichEditor markdown mentions with label search over the search index, same as pos-navigation. Refactor the search-index ownership first, re-enable the mention extension afterwards.";
     plan:status plan:in-progress;
     dct:created "2026-10-09"^^xsd:date;
-    dct:modified "2026-10-14T20:07:00Z"^^xsd:dateTime;
+    dct:modified "2026-10-15T06:10:00Z"^^xsd:dateTime;
     plan:hasTask <#task-01-cache-search-index-in-core>, <#task-02-recreate-search-index-on-label-update>, <#task-03-remove-search-dom-events>, <#task-04-fix-cache-reference-invalidation>, <#task-05-mention-suggestions-from-search-and-store>, <#task-06-fallback-create-things-on-the-fly>, <#task-07-core-searchindex-demand-api>;
     plan:context <#entry-plan-context-01>, <#entry-plan-context-02>, <#entry-plan-context-03>;
     plan:decision <#entry-plan-decision-01>, <#entry-plan-decision-02>, <#entry-plan-decision-03>, <#entry-plan-decision-04>, <#entry-plan-decision-05>, <#entry-plan-decision-06>, <#entry-plan-decision-07>, <#entry-plan-decision-08>, <#entry-plan-decision-09>, <#entry-plan-decision-10>, <#entry-plan-decision-11>, <#entry-plan-decision-12>, <#entry-plan-decision-13>, <#entry-plan-decision-14>;
@@ -98,12 +98,15 @@
 <#task-07-core-searchindex-demand-api> a plan:Task;
     dct:title "Core search index demand API: build on first use, empty in place on logout";
     plan:parent <plan.ttl#plan>;
-    plan:status plan:draft;
+    plan:status plan:planned;
     dct:created "2026-10-14T20:14:23Z"^^xsd:dateTime;
-    dct:modified "2026-10-14T20:14:23Z"^^xsd:dateTime;
+    dct:modified "2026-10-15T06:10:00Z"^^xsd:dateTime;
     plan:goal <#entry-task-07-core-searchindex-demand-api-goal-01>;
-    plan:scope <#entry-task-07-core-searchindex-demand-api-scope-01>, <#entry-task-07-core-searchindex-demand-api-scope-02>;
-    plan:context <#entry-task-07-core-searchindex-demand-api-context-01>.
+    plan:scope <#entry-task-07-core-searchindex-demand-api-scope-01>, <#entry-task-07-core-searchindex-demand-api-scope-02>, <#entry-task-07-core-searchindex-demand-api-scope-03>, <#entry-task-07-core-searchindex-demand-api-scope-04>;
+    plan:context <#entry-task-07-core-searchindex-demand-api-context-01>;
+    plan:decision <#entry-task-07-core-searchindex-demand-api-decision-01>, <#entry-task-07-core-searchindex-demand-api-decision-02>, <#entry-task-07-core-searchindex-demand-api-decision-03>, <#entry-task-07-core-searchindex-demand-api-decision-04>, <#entry-task-07-core-searchindex-demand-api-decision-05>;
+    plan:verification <#entry-task-07-core-searchindex-demand-api-verification-01>;
+    plan:touchesFile "core/src/search/SearchGateway.ts", "core/src/search/SearchGateway.spec.ts", "core/src/index.ts", "core/src/PodOs.spec.ts".
 
 # ---- Entries (schema:Comment; text + attribution) ----
 
@@ -127,15 +130,55 @@
     prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
     dct:created "2026-10-14T20:14:23Z"^^xsd:dateTime.
 
-<#entry-task-07-core-searchindex-demand-api-scope-02> a schema:Comment;
-    schema:text "PodOS: demand API keeps the existing name, signature loses the parameter: os.buildSearchIndex(): Promise<SearchIndex> — builds lazily on first call when logged in, resolving the profile from core's own session (fetchProfile(webId) moves inside the build); repeat calls return the cached instance; calls while logged out wait for the next login (or resolve empty — to be decided during planning). No separate searchIndex() name, no profile parameter, no deprecation: every consumer call site (pos-navigation, mention extension) migrates to the zero-arg call." ;
+<#entry-task-07-core-searchindex-demand-api-context-01> a schema:Comment;
+    schema:text "Spun out of task-05's planning (2026-10-14): Angelo argued the index should not be built when nobody uses it, but once a consumer exists core should manage it — including emptying held references on logout, which SearchGateway.clear() does not do today (it only drops the cache; pos-navigation papers over the gap with its own session watch + in-place clear). Draft status: needs planning through (logged-out semantics of the demand API, deprecation of buildSearchIndex, consumer migration order) before implementation. PLANNED THROUGH (2026-10-15): logged-out resolves empty & uncached, gateway owns the lifecycle, task-07 lands before task-05 (pos-navigation call-site migrated, session-watch removal deferred to task-05), in-place empty on every session change." ;
     prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
     dct:created "2026-10-14T20:14:23Z"^^xsd:dateTime.
 
-<#entry-task-07-core-searchindex-demand-api-context-01> a schema:Comment;
-    schema:text "Spun out of task-05's planning (2026-10-14): Angelo argued the index should not be built when nobody uses it, but once a consumer exists core should manage it — including emptying held references on logout, which SearchGateway.clear() does not do today (it only drops the cache; pos-navigation papers over the gap with its own session watch + in-place clear). Draft status: needs planning through (logged-out semantics of the demand API, deprecation of buildSearchIndex, consumer migration order) before implementation." ;
-    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
-    dct:created "2026-10-14T20:14:23Z"^^xsd:dateTime.
+<#entry-task-07-core-searchindex-demand-api-scope-02> a schema:Comment;
+    schema:text "SearchGateway takes session + ProfileGateway injected (constructor grows); its buildSearchIndex() becomes zero-arg and resolves the profile itself: read webId from the session, fetchProfile(webId), build + cache as today. PodOS reduces to a thin delegator os.buildSearchIndex() -> searchGateway.buildSearchIndex(). The gateway becomes the single owner of the whole search lifecycle (demand-build, cache, rebuild-on-write, logout-clear). Placement trade-off (LLM): rejected (a) PodOS-orchestrates — smaller diff but PodOS accumulates orchestration logic, and (b) a separate SearchIndexService — cleanest separation but one more object for a single consumer (YAGNI)." ;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-15T06:10:00Z"^^xsd:dateTime.
+
+<#entry-task-07-core-searchindex-demand-api-scope-03> a schema:Comment;
+    schema:text "Logged-out semantics (Angelo chose 'resolve empty', 2026-10-15): a zero-arg call while logged out resolves immediately with a FRESH empty SearchIndex (new SearchIndex([])) that is NOT cached — the next call after login is a cache miss and builds. This prevents pinning a consumer to an empty index forever. Logged-in calls resolve the profile from the session (fetchProfile) and build + cache as today. Rejected (LLM): wait-for-next-login (would block a consumer until login; the mention menu must render without awaiting the index) and reject-with-error (would force session handling back into consumers)." ;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-15T06:10:00Z"^^xsd:dateTime.
+
+<#entry-task-07-core-searchindex-demand-api-scope-04> a schema:Comment;
+    schema:text "Consumer migration deferred (task ordering confirmed 2026-10-15): pos-navigation keeps its session watch and its buildSearchIndex(session.state.profile) call initially; the one-line call-site change to the zero-arg call happens in task-07 (signature is breaking), but the session-watch removal is deferred to task-05's implementation. The mention extension (task-05) is designed against the zero-arg API from the start. The elements-side session store / pos-app profile population stays untouched: it still fills sessionStore.state.profile for other consumers (pos-make-findable uses it); core's gateway reads the webId from its own core session, not from the elements store." ;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-15T06:10:00Z"^^xsd:dateTime.
+
+<#entry-task-07-core-searchindex-demand-api-decision-01> a schema:Comment;
+    schema:text "Placement: the SearchGateway owns the full search lifecycle (session + ProfileGateway injected into its constructor, buildSearchIndex() zero-arg); PodOS becomes a thin delegator. Angelo: 'PodOS index should not contain any logic at best. but not sure if the gateway is the right place' (chose gateway-owns fully, 2026-10-15)." ;
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
+    dct:created "2026-10-15T06:10:00Z"^^xsd:dateTime.
+
+<#entry-task-07-core-searchindex-demand-api-decision-02> a schema:Comment;
+    schema:text "Logged-out call resolves empty immediately — no waiting for the next login, no error (Angelo chose 'resolve empty', 2026-10-15)." ;
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
+    dct:created "2026-10-15T06:10:00Z"^^xsd:dateTime.
+
+<#entry-task-07-core-searchindex-demand-api-decision-03> a schema:Comment;
+    schema:text "In-place empty fires on EVERY session change, not only on the logout transition (Angelo chose 'every session change', 2026-10-15). Implementation (LLM): SearchGateway.clear() becomes 'empty held instance in place, then drop the reference' — this.cached?.clear(); this.cached = undefined; no transition detection (isLoggedIn true->false check) — the tap already fires on every change and login/switch is covered by rebuild-on-demand (cache miss after clear)." ;
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
+    dct:created "2026-10-15T06:10:00Z"^^xsd:dateTime.
+
+<#entry-task-07-core-searchindex-demand-api-decision-04> a schema:Comment;
+    schema:text "Ordering: task-07 lands before task-05; pos-navigation migrates its call site to the zero-arg call in task-07, while removing its session watch is deferred to task-05 (Angelo, 2026-10-15)." ;
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
+    dct:created "2026-10-15T06:10:00Z"^^xsd:dateTime.
+
+<#entry-task-07-core-searchindex-demand-api-decision-05> a schema:Comment;
+    schema:text "The demand API keeps the existing name os.buildSearchIndex() — signature loses the profile parameter (no deprecation, no new name): every consumer call site (pos-navigation, mention extension) migrates to the zero-arg call." ;
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
+    dct:created "2026-10-15T06:10:00Z"^^xsd:dateTime.
+
+<#entry-task-07-core-searchindex-demand-api-verification-01> a schema:Comment;
+    schema:text "Unit tests (SearchGateway.spec, fake Store + fake session): buildSearchIndex() zero-arg while logged out -> resolves fresh empty SearchIndex (search() empty), NOT cached (a later logged-in call builds — fetchAll called); while logged in -> fetchProfile called with session webId, index cached (same instance on repeat), fetchAll once; logout after build -> held instance is empty in place (search() empty on the SAME reference) and cache dropped (next call rebuilds). pos-navigation suite stays green with the one-line call-site change; PodOs.spec 'clears the cached search index when the session changes' extended to assert the in-place empty on held references." ;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-15T06:10:00Z"^^xsd:dateTime.
 
 <#entry-task-05-mention-suggestions-from-search-and-store-goal-01> a schema:Comment;
     schema:text "The RichEditor mention menu gets its suggestions from the search index and the store instead of hardcoded items: items(query) maps searchIndex.search(query) refs via os.store.get(ref) Things to [{id, label}]. The mention extension is re-enabled and its 3 skipped tests restored — with this task the plan goal (mentions backed by label search, same as pos-navigation) is reached.";
