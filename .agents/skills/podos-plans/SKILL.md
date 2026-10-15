@@ -91,6 +91,19 @@ Every write must end in a validated file. The loop:
   replaces the former inline `[H]` / `[LLM]` markers —
   never write those markers into `schema:text` again. Qualifier prose from the
   old markers ("user confirmed", "implicitly") stays in the text.
+- **Attribute by content authorship, not by who was present.** One contributor
+  per entry is the default; the goal is that reading `wasAttributedTo` alone
+  tells the reader *who said what*. A decision or choice the human makes is
+  the human's alone — a `plan:decision` recording his choice carries only his
+  WebID, even when the LLM drafted the option list or wrote the sentence. An
+  entry the LLM authored (`plan:scope`, `plan:verification`, rejected-option
+  rationale) carries only the LLM's agent. Use both **only** when a single
+  entry genuinely interleaves verbatim human input with LLM-authored reasoning
+  that can't be cleanly separated. When an entry would mix the human's choice
+  with the LLM's rationale, **split it**: keep the human's choice in a
+  human-attributed `plan:decision` (an inline `(chose …)` / verbatim quote
+  marks his contribution), and move the LLM's design/rationale into a
+  separate LLM-attributed `plan:scope` or `plan:note` entry.
 - `dct:created` (0–1, xsd:date) when the entry carries a date (e.g. from a
   former `[H, clarified 2026-10-09]` marker).
 - Entry IRIs: `<#entry-<subject-slug>-<prop>-<NN>>` in the plan document.
