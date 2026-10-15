@@ -88,6 +88,27 @@ describe(SearchGateway.name, () => {
       await gateway.buildSearchIndex();
       expect(fetchAllSpy).toHaveBeenCalledTimes(1);
     });
+
+    it("empties the held index in place when cleared", async () => {
+      // given a gateway whose cached index contains an indexed item
+      const { gateway, labelIndexStub } = setupWithFakeStore();
+      labelIndexStub.getIndexedItems = () => [
+        { uri: "https://thing.test#it", label: "Something" },
+      ];
+      const held = await gateway.buildSearchIndex();
+      expect(held.search("Something")).toHaveLength(1);
+
+      // when the cache is cleared
+      gateway.clear();
+
+      // then the held instance serves an empty index
+      expect(held.search("Something")).toEqual([]);
+
+      // and the next logged-in call is a cache miss and rebuilds
+      const rebuilt = await gateway.buildSearchIndex();
+      expect(rebuilt).not.toBe(held);
+      expect(rebuilt.search("Something")).toHaveLength(1);
+    });
   });
 
   function profile(webId: string, labelIndexUris: string[]): WebIdProfile {
