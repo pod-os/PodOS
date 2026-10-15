@@ -9,7 +9,7 @@
     dct:description "Replace hard-coded items in RichEditor markdown mentions with label search over the search index, same as pos-navigation. Refactor the search-index ownership first, re-enable the mention extension afterwards.";
     plan:status plan:in-progress;
     dct:created "2026-10-09"^^xsd:date;
-    dct:modified "2026-10-15T06:18:53Z"^^xsd:dateTime;
+    dct:modified "2026-10-15T06:27:30Z"^^xsd:dateTime;
     plan:hasTask <#task-01-cache-search-index-in-core>, <#task-02-recreate-search-index-on-label-update>, <#task-03-remove-search-dom-events>, <#task-04-fix-cache-reference-invalidation>, <#task-05-mention-suggestions-from-search-and-store>, <#task-06-fallback-create-things-on-the-fly>, <#task-07-core-searchindex-demand-api>;
     plan:context <#entry-plan-context-01>, <#entry-plan-context-02>, <#entry-plan-context-03>;
     plan:decision <#entry-plan-decision-01>, <#entry-plan-decision-02>, <#entry-plan-decision-03>, <#entry-plan-decision-04>, <#entry-plan-decision-05>, <#entry-plan-decision-06>, <#entry-plan-decision-07>, <#entry-plan-decision-08>, <#entry-plan-decision-09>, <#entry-plan-decision-10>, <#entry-plan-decision-11>, <#entry-plan-decision-12>, <#entry-plan-decision-13>, <#entry-plan-decision-14>;
@@ -100,14 +100,14 @@
     plan:parent <plan.ttl#plan>;
     plan:status plan:in-progress;
     dct:created "2026-10-14T20:14:23Z"^^xsd:dateTime;
-    dct:modified "2026-10-15T06:18:53Z"^^xsd:dateTime;
+    dct:modified "2026-10-15T06:27:30Z"^^xsd:dateTime;
     plan:goal <#entry-task-07-core-searchindex-demand-api-goal-01>;
     plan:scope <#entry-task-07-core-searchindex-demand-api-scope-01>, <#entry-task-07-core-searchindex-demand-api-scope-02>, <#entry-task-07-core-searchindex-demand-api-scope-03>, <#entry-task-07-core-searchindex-demand-api-scope-04>;
     plan:context <#entry-task-07-core-searchindex-demand-api-context-01>;
     plan:decision <#entry-task-07-core-searchindex-demand-api-decision-01>, <#entry-task-07-core-searchindex-demand-api-decision-02>, <#entry-task-07-core-searchindex-demand-api-decision-03>, <#entry-task-07-core-searchindex-demand-api-decision-04>, <#entry-task-07-core-searchindex-demand-api-decision-05>;
     plan:verification <#entry-task-07-core-searchindex-demand-api-verification-01>;
     plan:touchesFile "core/src/search/SearchGateway.ts", "core/src/search/SearchGateway.spec.ts", "core/src/index.ts", "core/src/PodOs.spec.ts";
-    plan:note <#entry-task-07-core-searchindex-demand-api-note-01>, <#entry-task-07-core-searchindex-demand-api-note-02>, <#entry-task-07-core-searchindex-demand-api-note-03>, <#entry-task-07-core-searchindex-demand-api-note-04>.
+    plan:note <#entry-task-07-core-searchindex-demand-api-note-01>, <#entry-task-07-core-searchindex-demand-api-note-02>, <#entry-task-07-core-searchindex-demand-api-note-03>, <#entry-task-07-core-searchindex-demand-api-note-04>, <#entry-task-07-core-searchindex-demand-api-note-05>, <#entry-task-07-core-searchindex-demand-api-note-06>.
 
 # ---- Entries (schema:Comment; text + attribution) ----
 
@@ -200,6 +200,16 @@
     schema:text "rdf_patch process note (2026-10-15): the tool cannot round-trip this plan file — its relative IRIs (<../plan-ontology.ttl#>, <#...>) get rewritten to absolute file:// URIs inside a GRAPH block it emits, which breaks the document (verified: rdf_validate then failed to parse). Plan writes therefore use targeted text edits + rdf_validate (with BASE-prefixed copies to sidestep the file:// artifact) instead of rdf_patch; the file was restored from git once after the first mangled patch. This affects every plan write, not just this task." ;
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
     dct:created "2026-10-15T06:18:53Z"^^xsd:dateTime.
+
+<#entry-task-07-core-searchindex-demand-api-note-05> a schema:Comment;
+    schema:text "Cycle 2 process (2026-10-15): the in-place-empty test was first written tautologically (held reference built while logged out) and passed by construction; rewritten to build a NON-empty cached index with real profile + label-index documents (mockTurtleDocument in PodOs.spec, empty profile doc + one labelled item), so the held reference carries alice\'s item across the session change. Red was proven with a standalone probe against the built package (before=1, after=1) because the PodOs-level suite could not express the failure without the fixture. One extra mock (profile/card#me alias) noted: Store.fetch normalizes fragment URIs to their document URI, only the document URL is fetched." ;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-15T06:27:30Z"^^xsd:dateTime.
+
+<#entry-task-07-core-searchindex-demand-api-note-06> a schema:Comment;
+    schema:text "Cycle 3 process (2026-10-15): the elements workspace typecheck (tsc --noEmit) fails on MAIN with ~211 pre-existing errors (loose strictness: TS2564 initializers, TS2322/TS7031 etc.) — it is not wired into the repo-level typecheck script (only core/contacts have one), so it is not a gate; verified the pos-navigation call-site error (TS2554) was the only delta from this task\'s change by stashing the migrated file. The one-line migration to the zero-arg call landed in cycle 2 per decision-04; the session watch stays per scope-04. Cycle-3 red turned out to be a test bug (no re-login emission after the logged-out call), not an implementation gap — the implementation already covered the chain, proven by a standalone probe (logged-out -> alice -> logout -> bob rebuilds correctly); the test was fixed and the single clear() line kept. Also added the verification entry\'s fetchProfile-with-webId assertion to the built-twice test (test-only hardening, verified green before commit)." ;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-15T06:27:30Z"^^xsd:dateTime.
 
 <#entry-task-05-mention-suggestions-from-search-and-store-goal-01> a schema:Comment;
     schema:text "The RichEditor mention menu gets its suggestions from the search index and the store instead of hardcoded items: items(query) maps searchIndex.search(query) refs via os.store.get(ref) Things to [{id, label}]. The mention extension is re-enabled and its 3 skipped tests restored — with this task the plan goal (mentions backed by label search, same as pos-navigation) is reached.";
