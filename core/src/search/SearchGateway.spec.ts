@@ -36,8 +36,12 @@ describe(SearchGateway.name, () => {
       executeUpdate: vi.fn().mockResolvedValue(undefined),
     } as unknown as Store;
     const profileGateway = fakeProfileGateway();
-    const gateway = new SearchGateway(store, fakeSession(sessionInfo), profileGateway);
-    return { gateway, store, labelIndexStub, profileGateway };
+    const sessionSubject = new BehaviorSubject<SessionInfo>(sessionInfo);
+    const session = {
+      observeSession: () => sessionSubject,
+    } as unknown as PodOsSession;
+    const gateway = new SearchGateway(store, session, profileGateway);
+    return { gateway, store, labelIndexStub, profileGateway, sessionSubject };
   }
 
   function fakeProfileGateway(): ProfileGateway {
@@ -61,6 +65,29 @@ describe(SearchGateway.name, () => {
       // then an empty index is returned
       expect(result.search("anything")).toEqual([]);
     });
+
+    it("builds a new index on a logged-in call after a logged-out call", async () => {
+      // given a gateway whose cached index was built while logged in
+      const { gateway, store, sessionSubject } = setupWithFakeStore();
+      const fetchAllSpy = vi.spyOn(store, "fetchAll");
+      await gateway.buildSearchIndex();
+      fetchAllSpy.mockClear();
+
+      // when the session emits a logged-out state and the index is built again
+      sessionSubject.next({ isLoggedIn: false });
+      const loggedOutIndex = await gateway.buildSearchIndex();
+
+      // then a fresh empty index is returned that is not cached
+      expect(loggedOutIndex.search("anything")).toEqual([]);
+
+      // and after re-login the next call is a cache miss and rebuilds
+      sessionSubject.next({
+        isLoggedIn: true,
+        webId: "https://alice.test/profile/card#me",
+      });
+      await gateway.buildSearchIndex();
+      expect(fetchAllSpy).toHaveBeenCalledTimes(1);
+    });
   });
 
   function profile(webId: string, labelIndexUris: string[]): WebIdProfile {
@@ -74,12 +101,17 @@ describe(SearchGateway.name, () => {
   describe("caching", () => {
     it("returns the same index instance when built twice", async () => {
       // given a gateway backed by a fake store
-      const { gateway, store } = setupWithFakeStore();
+      const { gateway, store, profileGateway } = setupWithFakeStore();
       const fetchAllSpy = vi.spyOn(store, "fetchAll");
 
       // when building a search index twice
       const first = await gateway.buildSearchIndex();
       const second = await gateway.buildSearchIndex();
+
+      // then the profile was fetched for the session's webId
+      expect(profileGateway.fetchProfile).toHaveBeenCalledWith(
+        "https://alice.test/profile/card#me",
+      );
 
       // then the same index instance is returned
       expect(second).toBe(first);

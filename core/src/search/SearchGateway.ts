@@ -37,6 +37,7 @@ export class SearchGateway {
   async buildSearchIndex() {
     const webId = this.session.observeSession().getValue().webId;
     if (!webId) {
+      this.clear();
       return new SearchIndex([]);
     }
     const profile = await this.profileGateway.fetchProfile(webId);
