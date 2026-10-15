@@ -82,7 +82,7 @@ export class PosNavigation implements PodOsAware {
    * by rebuilding its cached instance on label-index writes.
    */
   private async buildSearchIndex() {
-    this.searchIndex = await this.os.buildSearchIndex(session.state.profile);
+    this.searchIndex = await this.os.buildSearchIndex();
   }
 
   @Listen('pod-os:navigate')

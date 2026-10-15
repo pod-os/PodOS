@@ -48,10 +48,12 @@ export class SearchGateway {
   }
 
   /**
-   * Clears the cached search index, so that the next call to {@link buildSearchIndex}
-   * builds a new index.
+   * Empties the cached search index in place and drops the cache reference, so
+   * that consumers already holding the instance see an empty index immediately
+   * and the next call to {@link buildSearchIndex} builds a new index.
    */
   clear() {
+    this.cached?.clear();
     this.cached = undefined;
   }
 
