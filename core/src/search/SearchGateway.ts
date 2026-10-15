@@ -1,25 +1,45 @@
 import { WebIdProfile } from "../profile";
+import { ProfileGateway } from "../profile";
 import { Store } from "../Store";
 import { createDefaultLabelIndex } from "./createDefaultLabelIndex";
 import { LabelIndex } from "./LabelIndex";
+import { PodOsSession } from "../authentication";
 import { Thing } from "../thing";
 import { addToLabelIndex } from "./addToLabelIndex";
 import { SearchIndex } from "./SearchIndex";
 
 export class SearchGateway {
   private readonly store: Store;
+  private readonly profileGateway: ProfileGateway;
+  private readonly session: PodOsSession;
   private cached?: SearchIndex;
 
-  constructor(store: Store) {
+  constructor(
+    store: Store,
+    session: PodOsSession,
+    profileGateway: ProfileGateway,
+  ) {
     this.store = store;
+    this.session = session;
+    this.profileGateway = profileGateway;
   }
 
   /**
-   * Fetch the private label index for the given profile and build a search index from it.
-   * Repeated calls return the cached index instance.
-   * @param profile
+   * Build a search index on demand.
+   *
+   * While logged in, the profile is resolved from the current session's webId
+   * and the index is built from the profile's label indexes and cached, so that
+   * repeated calls return the same instance.
+   *
+   * While logged out, a fresh empty index is returned that is NOT cached —
+   * the next call after login is a cache miss and builds.
    */
-  async buildSearchIndex(profile: WebIdProfile) {
+  async buildSearchIndex() {
+    const webId = this.session.observeSession().getValue().webId;
+    if (!webId) {
+      return new SearchIndex([]);
+    }
+    const profile = await this.profileGateway.fetchProfile(webId);
     if (!this.cached) {
       const labelIndexUris = profile.getPrivateLabelIndexes();
       this.cached = await this.buildIndex(labelIndexUris);
