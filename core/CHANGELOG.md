@@ -8,6 +8,10 @@ and this project adheres to
 
 ## 0.34.0
 
+### Breaking changes
+
+- [`PodOS.buildSearchIndex`](https://pod-os.org/reference/core/classes/podos/#buildsearchindex) no longer takes a profile parameter: it builds on demand from the current session — resolving the profile itself, returning an uncached empty index while logged out, and emptying held index references in place on logout
+
 ### Changed
 
 - [`PodOS.buildSearchIndex`](https://pod-os.org/reference/core/classes/podos/#buildsearchindex): caches the search index and keeps it fresh when label indexes change, instead of rebuilding on every call. Consumers holding the returned index stay up to date automatically.
