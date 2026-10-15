@@ -4,7 +4,6 @@ import {
   PodOS,
   PodOsSession,
   SessionInfo,
-  WebIdProfile,
 } from "./index";
 import { BehaviorSubject, of } from "rxjs";
 
@@ -54,16 +53,10 @@ describe("PodOS", () => {
       } as unknown as PodOsSession;
       const podOs = new PodOS({ session });
 
-      // and a profile without a private label index
-      const profile = {
-        webId: "https://alice.test/profile/card#me",
-        getPrivateLabelIndexes: () => [],
-      } as unknown as WebIdProfile;
-
       // when building a search index, then the session changes, then building again
-      const first = await podOs.buildSearchIndex(profile);
+      const first = await podOs.buildSearchIndex();
       sessionSubject.next({ isLoggedIn: false });
-      const second = await podOs.buildSearchIndex(profile);
+      const second = await podOs.buildSearchIndex();
 
       // then a new index is built after the session change
       expect(second).not.toBe(first);
