@@ -66,6 +66,23 @@ describe(SearchGateway.name, () => {
       expect(result.search("anything")).toEqual([]);
     });
 
+    it("builds an empty index when the session is not logged in, even with a stale webId", async () => {
+      // given a gateway whose session is not logged in, but still carries a webId
+      const { gateway, profileGateway } = setupWithFakeStore({
+        isLoggedIn: false,
+        webId: "https://mallory.test/profile/card#me",
+      });
+
+      // when building the search index
+      const result = await gateway.buildSearchIndex();
+
+      // then an empty index is returned
+      expect(result.search("anything")).toEqual([]);
+
+      // and no profile was fetched for the stale webId
+      expect(profileGateway.fetchProfile).not.toHaveBeenCalled();
+    });
+
     it("builds a new index on a logged-in call after a logged-out call", async () => {
       // given a gateway whose cached index was built while logged in
       const { gateway, store, sessionSubject } = setupWithFakeStore();

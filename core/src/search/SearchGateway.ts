@@ -7,6 +7,7 @@ import { PodOsSession } from "../authentication";
 import { Thing } from "../thing";
 import { addToLabelIndex } from "./addToLabelIndex";
 import { SearchIndex } from "./SearchIndex";
+import { lastValueFrom, take } from "rxjs";
 
 export class SearchGateway {
   private readonly store: Store;
@@ -35,11 +36,14 @@ export class SearchGateway {
    * the next call after login is a cache miss and builds.
    */
   async buildSearchIndex() {
-    const webId = this.session.observeSession().getValue().webId;
-    if (!webId) {
+    const session = await lastValueFrom(
+      this.session.observeSession().pipe(take(1)),
+    );
+    if (!session.isLoggedIn) {
       this.clear();
       return new SearchIndex([]);
     }
+    const webId = session.webId as string;
     const profile = await this.profileGateway.fetchProfile(webId);
     if (!this.cached) {
       const labelIndexUris = profile.getPrivateLabelIndexes();
