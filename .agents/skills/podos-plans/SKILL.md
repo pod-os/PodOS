@@ -121,6 +121,12 @@ Every write must end in a validated file. The loop:
   assertion once a decision answers it, and let that decision carry the
   resolution. The section reflects *current* open state,
   not history.
+- **Tasks must not start with open questions.** Before a task moves into
+  implementation, every open question on it is either resolved (→ a
+  `plan:decision`, assertion removed) or explicitly parked as out of scope
+  (→ `plan:outOfScope` entry, assertion removed). A task that is planned
+  through has an empty open-questions list; an open question on an
+  in-flight task means planning is not finished.
 - Every task has exactly one `plan:parent`; dependencies via `plan:dependsOn`.
 - `plan:touchesFile` carries repository-relative paths — add them as you learn
   which files a task affects; they power the plan↔code queries.
