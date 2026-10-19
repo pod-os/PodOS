@@ -1,10 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import {
-  OfflineCache,
-  PodOS,
-  PodOsSession,
-  SessionInfo,
-} from "./index";
+import { OfflineCache, PodOS, PodOsSession, SessionInfo } from "./index";
 import { BehaviorSubject, of } from "rxjs";
 import { mockTurtleDocument } from "./test-support";
 
@@ -43,7 +38,7 @@ describe("PodOS", () => {
   });
 
   describe("search index cache", () => {
-    it("clears the cached search index when the session changes", async () => {
+    it("rebuilds the search index after a session change and re-login", async () => {
       // given a session that emits session changes, logged in at alice
       const sessionSubject = new BehaviorSubject<SessionInfo>({
         isLoggedIn: true,
@@ -58,7 +53,13 @@ describe("PodOS", () => {
       const podOs = new PodOS({ session });
 
       // and alice's profile and label index contain one indexed item
-      mockTurtleDocument(fetchMock, "https://alice.test/profile/card", "");
+      mockTurtleDocument(
+        fetchMock,
+        "https://alice.test/profile/card",
+        `
+      <https://alice.test/profile/card#me> <http://www.w3.org/ns/solid/terms#privateLabelIndex> <https://alice.test/label-index> .
+    `,
+      );
       mockTurtleDocument(
         fetchMock,
         "https://alice.test/label-index",
@@ -67,19 +68,42 @@ describe("PodOS", () => {
     `,
       );
 
-      // when building the search index, then the session changes, then building again
+      // when building the search index while logged in
       const first = await podOs.buildSearchIndex();
+      expect(first.search("Something")).toHaveLength(1);
+
+      // and the session changes, the tap fires, and the user logs in again
       sessionSubject.next({ isLoggedIn: false });
+      sessionSubject.next({
+        isLoggedIn: true,
+        webId: "https://mallory.test/profile/card#me",
+      });
+
+      // and mallory's profile and label index contain another indexed item
+      mockTurtleDocument(
+        fetchMock,
+        "https://mallory.test/profile/card",
+        `
+      <https://mallory.test/profile/card#me> <http://www.w3.org/ns/solid/terms#privateLabelIndex> <https://mallory.test/label-index> .
+    `,
+      );
+      mockTurtleDocument(
+        fetchMock,
+        "https://mallory.test/label-index",
+        `
+      <https://thing.test#other> <http://www.w3.org/2000/01/rdf-schema#label> "Other Thing" .
+    `,
+      );
+
+      // and the search index is built again
       const second = await podOs.buildSearchIndex();
 
-      // then a new index is built after the session change
+      // then a new index is built after the re-login
       expect(second).not.toBe(first);
 
-      // and the reference held before the session change serves an empty index
-      expect(first.search("anything")).toEqual([]);
-
-      // and the held reference does not serve the item indexed for alice anymore
-      expect(first.search("Something")).toEqual([]);
+      // and it contains the item indexed for the re-logged-in user
+      expect(second.search("Other Thing")).toHaveLength(1);
+      expect(second.search("Something")).toEqual([]);
     });
   });
 });
