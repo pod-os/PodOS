@@ -149,6 +149,7 @@ describe('pos-navigation', () => {
 
   describe('searching when logged in', () => {
     let page: RenderResult;
+    let mockOs: PodOS;
 
     let mockSearchIndex: SearchIndex;
     beforeEach(async () => {
@@ -164,12 +165,13 @@ describe('pos-navigation', () => {
         ]),
         clear: vi.fn(),
       } as unknown as SearchIndex;
-      mockOsProvider({
-        store: {
-          get: vi.fn().mockReturnValue({ fake: 'resource' }),
-        },
-        buildSearchIndex: vi.fn().mockReturnValue(mockSearchIndex),
-      } as unknown as PodOS);
+      mockOs = {
+      store: {
+        get: vi.fn().mockReturnValue({ fake: 'resource' }),
+      },
+      buildSearchIndex: vi.fn().mockReturnValue(mockSearchIndex),
+    } as unknown as PodOS;
+    mockOsProvider(mockOs);
 
       page = await render(<pos-navigation uri="https://pod.example/resource"></pos-navigation>);
       // and a fake search index giving 2 results
@@ -488,12 +490,16 @@ describe('pos-navigation', () => {
       );
     });
 
-    it('clears the index when logging out', async () => {
+    it('re-demands the search index when logging out', async () => {
       // when the user signs out
       session.state.isLoggedIn = false;
+      await page.waitForChanges();
 
-      // then the search index is cleared
-      expect(mockSearchIndex.clear).toHaveBeenCalled();
+      // then the component re-demands the index from core
+      // (core owns the index lifecycle and empties it on session change)
+      await waitFor(() => {
+        expect(mockOs.buildSearchIndex).toHaveBeenCalledTimes(2);
+      });
     });
 
   });
