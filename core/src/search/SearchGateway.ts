@@ -40,7 +40,6 @@ export class SearchGateway {
       this.session.observeSession().pipe(take(1)),
     );
     if (!session.isLoggedIn) {
-      this.clear();
       return new SearchIndex([]);
     }
     const webId = session.webId as string;

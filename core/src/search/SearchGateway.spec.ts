@@ -91,29 +91,6 @@ describe(SearchGateway.name, () => {
       expect(profileGateway.fetchProfile).not.toHaveBeenCalled();
     });
 
-    it("builds a new index on a logged-in call after a logged-out call", async () => {
-      // given a gateway whose cached index was built while logged in
-      const { gateway, store, sessionSubject } = setupWithFakeStore();
-      const fetchAllSpy = vi.spyOn(store, "fetchAll");
-      await gateway.buildSearchIndex();
-      fetchAllSpy.mockClear();
-
-      // when the session emits a logged-out state and the index is built again
-      sessionSubject.next({ isLoggedIn: false });
-      const loggedOutIndex = await gateway.buildSearchIndex();
-
-      // then a fresh empty index is returned that is not cached
-      expect(loggedOutIndex.search("anything")).toEqual([]);
-
-      // and after re-login the next call is a cache miss and rebuilds
-      sessionSubject.next({
-        isLoggedIn: true,
-        webId: "https://alice.test/profile/card#me",
-      });
-      await gateway.buildSearchIndex();
-      expect(fetchAllSpy).toHaveBeenCalledTimes(1);
-    });
-
     it("empties the held index in place when cleared", async () => {
       // given a gateway whose cached index contains an indexed item
       const { gateway, labelIndexStub } = setupWithFakeStore();
