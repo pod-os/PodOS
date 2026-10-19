@@ -98,9 +98,9 @@
 <#task-07-core-searchindex-demand-api> a plan:Task;
     dct:title "Core search index demand API: build on first use, empty in place on logout";
     plan:parent <plan.ttl#plan>;
-    plan:status plan:in-progress;
+    plan:status plan:done;
     dct:created "2026-10-14T20:14:23Z"^^xsd:dateTime;
-    dct:modified "2026-10-15T06:27:30Z"^^xsd:dateTime;
+    dct:modified "2026-10-19T20:48:02Z"^^xsd:dateTime;
     plan:goal <#entry-task-07-core-searchindex-demand-api-goal-01>;
     plan:scope <#entry-task-07-core-searchindex-demand-api-scope-01>, <#entry-task-07-core-searchindex-demand-api-scope-02>, <#entry-task-07-core-searchindex-demand-api-scope-03>, <#entry-task-07-core-searchindex-demand-api-scope-04>;
     plan:context <#entry-task-07-core-searchindex-demand-api-context-01>;
