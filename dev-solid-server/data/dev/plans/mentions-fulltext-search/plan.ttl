@@ -174,11 +174,6 @@
     prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
     dct:created "2026-10-19T20:04:16Z"^^xsd:dateTime.
 
-<#entry-task-08-review-fixes-search-demand-api-note-03> a schema:Comment;
-    schema:text "Resolution of the apparent conflict between review scope-01 (drop the logged-out clear() added by ab0e358a) and that commit's message (\"the gateway owns the lifecycle and must be self-consistent\"): the reviewer is right. Angelo: \"A gateway in PodOS will not be used without a PodOS instance. the PodOS instance is crucial for everything\" — the standalone-gateway scenario the commit defended against cannot occur; PodOS's session tap (core/src/index.ts) fires on every session emission and clears before any subsequent demand call, so the in-branch clear() is redundant. Rejected dropping it outside task-08's scope: an LLM-proposed alternative (move the session subscription into SearchGateway to make the gateway the literal single owner, then drop the clear) was not taken up — keeping the tap in PodOS and dropping the branch clear in task-08 as scoped.";
-    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
-    dct:created "2026-10-19T20:04:16Z"^^xsd:dateTime.
-
 <#task-09-drop-store-force-fetch> a plan:Task;
     dct:title "Drop Store.fetch force: true, invalidate rdflib fetcher state at the session boundary";
     plan:parent <plan.ttl#plan>;
