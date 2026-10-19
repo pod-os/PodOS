@@ -72,6 +72,14 @@ Every write must end in a validated file. The loop:
   explicitly ask for it. What matters is that the recorded intent is faithful
   and attributable, not that the exact wording survives; paraphrasing keeps
   entries compact and readable.
+- **Concise, conclusion-first entries.** Each entry states one conclusion a
+  human can act on — not the research trail that produced it. A note is one or
+  two sentences; goals and contexts are short. When a decision supersedes
+  earlier notes, condense them to their surviving conclusions instead of
+  appending correction entries that restate history. Detail a human needs for
+  execution goes in `plan:scope` / `plan:verification`, never as prose padding
+  in a decision. When a change touches existing entries, rewrite those entries
+  to current state rather than layering new entries on top.
 - **Every new entry gets `dct:created`** as `xsd:dateTime` (UTC, e.g.
   `"2026-10-14T15:58:28Z"^^xsd:dateTime`) — the exact moment it was recorded.
   It powers the NEW badge in the plan viewer and makes same-day edits
