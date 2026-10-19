@@ -156,6 +156,7 @@
           verification: entryList(t, 'verification'),
           outOfScope: entryList(t, 'outOfScope'),
           decisions: entryList(t, 'decision'),
+          openQuestions: entryList(t, 'openQuestion'),
           notes: entryList(t, 'note'),
           dependsOn: objs(t, PLAN + 'dependsOn'),
           files: objs(t, PLAN + 'touchesFile'),
@@ -404,6 +405,7 @@
               ${t.scope.length ? html`<div class="section"><h4>Scope</h4><ul>${t.scope.map(x => this.renderEntry(x))}</ul></div>` : ''}
               ${t.verification.length ? html`<div class="section"><h4>Verification</h4><ul>${t.verification.map(x => this.renderEntry(x))}</ul></div>` : ''}
               ${t.decisions.length ? html`<div class="section"><h4>Decisions</h4><ul>${t.decisions.map(x => this.renderEntry(x))}</ul></div>` : ''}
+              ${t.openQuestions.length ? html`<div class="section"><h4>Open questions</h4><ul>${t.openQuestions.map(x => this.renderEntry(x))}</ul></div>` : ''}
               ${t.outOfScope.length ? html`<div class="section"><h4>Out of scope</h4><ul>${t.outOfScope.map(x => this.renderEntry(x))}</ul></div>` : ''}
               ${t.notes.length ? html`<div class="section"><h4>Notes</h4><ul>${t.notes.map(x => this.renderEntry(x))}</ul></div>` : ''}
             </div>
