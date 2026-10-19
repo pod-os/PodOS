@@ -8,24 +8,19 @@ import { ProfileGateway, WebIdProfile } from "../profile";
 import { Thing } from "../thing";
 
 describe(SearchGateway.name, () => {
-  function fakeSession(
-    sessionInfo: { isLoggedIn: boolean; webId?: string } = {
-      isLoggedIn: true,
-      webId: "https://alice.test/profile/card#me",
-    },
-  ) {
+  const loggedInSessionInfo: SessionInfo = {
+    isLoggedIn: true,
+    webId: "https://alice.test/profile/card#me",
+  };
+
+  function fakeSession() {
     return {
       observeSession: () =>
-        new BehaviorSubject<SessionInfo>(sessionInfo),
+        new BehaviorSubject<SessionInfo>(loggedInSessionInfo),
     } as unknown as PodOsSession;
   }
 
-  function setupWithFakeStore(
-    sessionInfo: { isLoggedIn: boolean; webId?: string } = {
-      isLoggedIn: true,
-      webId: "https://alice.test/profile/card#me",
-    },
-  ) {
+  function setupWithFakeStore(sessionInfo: SessionInfo = loggedInSessionInfo) {
     const labelIndexStub = {
       getIndexedItems: () => [],
     } as unknown as LabelIndex;
@@ -46,24 +41,37 @@ describe(SearchGateway.name, () => {
 
   function fakeProfileGateway(): ProfileGateway {
     return {
-      fetchProfile: vi.fn().mockResolvedValue(
-        profile("https://alice.test/profile/card#me", [
-          "https://alice.test/label-index",
-        ]),
-      ),
+      fetchProfile: vi
+        .fn()
+        .mockResolvedValue(
+          profile("https://alice.test/profile/card#me", [
+            "https://alice.test/label-index",
+          ]),
+        ),
     } as unknown as ProfileGateway;
   }
 
   describe("demand api", () => {
     it("builds an empty index without caching it when logged out", async () => {
       // given a gateway with no session (not logged in)
-      const { gateway } = setupWithFakeStore({ isLoggedIn: false });
+      const { gateway, store, sessionSubject } = setupWithFakeStore({
+        isLoggedIn: false,
+      });
+      const fetchAllSpy = vi.spyOn(store, "fetchAll");
 
       // when building the search index without arguments
       const result = await gateway.buildSearchIndex();
 
       // then an empty index is returned
       expect(result.search("anything")).toEqual([]);
+
+      // and the empty index is not cached: the next logged-in call builds
+      sessionSubject.next({
+        isLoggedIn: true,
+        webId: "https://alice.test/profile/card#me",
+      });
+      await gateway.buildSearchIndex();
+      expect(fetchAllSpy).toHaveBeenCalledTimes(1);
     });
 
     it("builds an empty index when the session is not logged in, even with a stale webId", async () => {
@@ -178,9 +186,9 @@ describe(SearchGateway.name, () => {
     it("caches the empty index built for a profile without a label index", async () => {
       // given a logged-in session for a profile without a private label index
       const profileGateway = {
-        fetchProfile: vi.fn().mockResolvedValue(
-          profile("https://pod.test/profile/card#me", []),
-        ),
+        fetchProfile: vi
+          .fn()
+          .mockResolvedValue(profile("https://pod.test/profile/card#me", [])),
       } as unknown as ProfileGateway;
       const { store } = setupWithFakeStore();
       const gateway = new SearchGateway(store, fakeSession(), profileGateway);
@@ -217,7 +225,9 @@ describe(SearchGateway.name, () => {
         uri: "https://thing.test#other",
         label: () => "Another Thing",
       } as unknown as Thing;
-      const labelIndex = { uri: "https://alice.test/label-index" } as LabelIndex;
+      const labelIndex = {
+        uri: "https://alice.test/label-index",
+      } as LabelIndex;
       await gateway.addToLabelIndex(thing, labelIndex);
 
       // then the cached index still is the same instance
@@ -242,7 +252,9 @@ describe(SearchGateway.name, () => {
         uri: "https://thing.test#it",
         label: () => "Something",
       } as unknown as Thing;
-      const labelIndex = { uri: "https://alice.test/label-index" } as LabelIndex;
+      const labelIndex = {
+        uri: "https://alice.test/label-index",
+      } as LabelIndex;
       await gateway.addToLabelIndex(thing, labelIndex);
 
       // then no index was built
@@ -292,9 +304,7 @@ describe(SearchGateway.name, () => {
           store,
         ),
       );
-      const results = (await gateway.buildSearchIndex()).search(
-        "Fresh Thing",
-      );
+      const results = (await gateway.buildSearchIndex()).search("Fresh Thing");
       expect(results).toHaveLength(1);
       expect(results[0].ref).toEqual("https://thing.test#fresh");
     });
@@ -316,4 +326,3 @@ describe(SearchGateway.name, () => {
     });
   });
 });
-
