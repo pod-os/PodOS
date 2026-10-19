@@ -9,8 +9,8 @@
     dct:description "Replace hard-coded items in RichEditor markdown mentions with label search over the search index, same as pos-navigation. Refactor the search-index ownership first, re-enable the mention extension afterwards.";
     plan:status plan:in-progress;
     dct:created "2026-10-09"^^xsd:date;
-    dct:modified "2026-10-15T06:27:30Z"^^xsd:dateTime;
-    plan:hasTask <#task-01-cache-search-index-in-core>, <#task-02-recreate-search-index-on-label-update>, <#task-03-remove-search-dom-events>, <#task-04-fix-cache-reference-invalidation>, <#task-05-mention-suggestions-from-search-and-store>, <#task-06-fallback-create-things-on-the-fly>, <#task-07-core-searchindex-demand-api>;
+    dct:modified "2026-10-19T20:48:02Z"^^xsd:dateTime;
+    plan:hasTask <#task-01-cache-search-index-in-core>, <#task-02-recreate-search-index-on-label-update>, <#task-03-remove-search-dom-events>, <#task-04-fix-cache-reference-invalidation>, <#task-05-mention-suggestions-from-search-and-store>, <#task-06-fallback-create-things-on-the-fly>, <#task-07-core-searchindex-demand-api>, <#task-08-review-fixes-search-demand-api>, <#task-09-drop-store-force-fetch>;
     plan:context <#entry-plan-context-01>, <#entry-plan-context-02>, <#entry-plan-context-03>;
     plan:decision <#entry-plan-decision-01>, <#entry-plan-decision-02>, <#entry-plan-decision-03>, <#entry-plan-decision-04>, <#entry-plan-decision-05>, <#entry-plan-decision-06>, <#entry-plan-decision-07>, <#entry-plan-decision-08>, <#entry-plan-decision-09>, <#entry-plan-decision-10>, <#entry-plan-decision-11>, <#entry-plan-decision-12>, <#entry-plan-decision-13>, <#entry-plan-decision-14>;
     plan:option <#entry-plan-option-01>, <#entry-plan-option-02>, <#entry-plan-option-03>;
@@ -109,7 +109,115 @@
     plan:touchesFile "core/src/search/SearchGateway.ts", "core/src/search/SearchGateway.spec.ts", "core/src/index.ts", "core/src/PodOs.spec.ts";
     plan:note <#entry-task-07-core-searchindex-demand-api-note-01>, <#entry-task-07-core-searchindex-demand-api-note-02>, <#entry-task-07-core-searchindex-demand-api-note-03>, <#entry-task-07-core-searchindex-demand-api-note-04>, <#entry-task-07-core-searchindex-demand-api-note-05>, <#entry-task-07-core-searchindex-demand-api-note-06>.
 
+<#task-08-review-fixes-search-demand-api> a plan:Task;
+    dct:title "Review fixes for the search demand API (task-07 findings)";
+    plan:parent <plan.ttl#plan>;
+    plan:status plan:planned;
+    dct:created "2026-10-15T09:12:19Z"^^xsd:dateTime;
+    dct:modified "2026-10-19T20:48:02Z"^^xsd:dateTime;
+    plan:dependsOn <#task-07-core-searchindex-demand-api>;
+    plan:touchesFile "core/src/search/SearchGateway.ts", "core/src/search/SearchGateway.spec.ts", "core/src/PodOs.spec.ts";
+    plan:goal <#entry-task-08-review-fixes-search-demand-api-goal-01>;
+    plan:decision <#entry-task-08-review-fixes-search-demand-api-goal-01>, <#entry-task-08-review-fixes-search-demand-api-decision-01>;
+    plan:scope <#entry-task-08-review-fixes-search-demand-api-scope-01>, <#entry-task-08-review-fixes-search-demand-api-scope-02>, <#entry-task-08-review-fixes-search-demand-api-scope-03>, <#entry-task-08-review-fixes-search-demand-api-scope-04>;
+    plan:verification <#entry-task-08-review-fixes-search-demand-api-verification-01>;    plan:note <#entry-task-08-review-fixes-search-demand-api-note-01>, <#entry-task-08-review-fixes-search-demand-api-note-02>, <#entry-task-08-review-fixes-search-demand-api-note-03>.
+
 # ---- Entries (schema:Comment; text + attribution) ----
+
+<#entry-task-08-review-fixes-search-demand-api-goal-01> a schema:Comment;
+    schema:text "Resolve the findings of the two-axis review of task-07 (2026-10-15): remove the redundant logged-out clear(), pin the NOT-cached bullet in its own test, key logged-out detection on isLoggedIn instead of !webId, and prove the PodOs-level chain tap -> re-login -> rebuild end to end." ;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-15T09:12:19Z"^^xsd:dateTime.
+
+<#entry-task-08-review-fixes-search-demand-api-scope-01> a schema:Comment;
+    schema:text "SearchGateway.buildSearchIndex(): drop the this.clear() call in the logged-out branch (spec review: scope creep — scope-03 only asks for a fresh, uncached empty index; the extra clear empties held references on a mere demand call, which no spec line requests). The logged-in path stays covered by the session tap, which empties in place on every session change." ;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-15T09:12:19Z"^^xsd:dateTime.
+
+<#entry-task-08-review-fixes-search-demand-api-scope-02> a schema:Comment;
+    schema:text "SearchGateway logged-out detection keys on session.isLoggedIn instead of truthiness of webId (spec review suggestion: a session with isLoggedIn: false plus a stale webId would currently build against the wrong user). Logged-in semantics unchanged (webId read from the session, fetchProfile, build + cache)." ;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-15T09:12:19Z"^^xsd:dateTime.
+
+<#entry-task-08-review-fixes-search-demand-api-scope-03> a schema:Comment;
+    schema:text "SearchGateway.spec: the test 'builds an empty index without caching it when logged out' gets its own NOT-cached assertion (a later logged-in call builds — fetchAll called) per verification-01 of task-07; today that part is only pinned in the adjacent follow-up test. Extract the duplicated default session data in fakeSession()/setupWithFakeStore() while there (test-principles: extract infrastructure; drop the pass-through parameter)." ;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-15T09:12:19Z"^^xsd:dateTime.
+
+<#entry-task-08-review-fixes-search-demand-api-scope-04> a schema:Comment;
+    schema:text "PodOs.spec: extend the session-change test so a single test proves the full chain — build while logged in, session change (tap fires), re-login emission, next buildSearchIndex() call rebuilds (new instance, fetchAll called again). Today the tap-driven rebuild proof is split across PodOs.spec and SearchGateway.spec and the not.toBe assertion would pass even without clear() because the logged-out branch already returns a fresh index." ;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-15T09:12:19Z"^^xsd:dateTime.
+
+<#entry-task-08-review-fixes-search-demand-api-verification-01> a schema:Comment;
+    schema:text "All core suites stay green; the logged-out test now fails when the NOT-cached expectation is violated; the PodOs.spec chain test fails if the tap no longer clears (proven red before implementation, per TDD); the ab0e358a behaviour stays covered by the remaining logged-out invalidation test if kept — otherwise fold its assertions into the pinned test." ;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-15T09:12:19Z"^^xsd:dateTime.
+
+<#entry-task-08-review-fixes-search-demand-api-note-01> a schema:Comment;
+    schema:text "Code observation (Angelo, on SearchGateway.buildSearchIndex): reading the session with this.session.observeSession().getValue().webId is an anti-pattern — observable values must not be accessed synchronously; to be addressed together with the isLoggedIn keying of scope-02.";
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
+    dct:created "2026-10-19T19:54:03Z"^^xsd:dateTime.
+
+<#entry-task-08-review-fixes-search-demand-api-note-02> a schema:Comment;
+    schema:text "Process feedback on LLM-extruded commit messages (Angelo, citing b46e10d234cc5e73bac3f28f63776366da7c5b00 as an example): commit messages have become too verbose — the llm-extruded-commits skill was updated so that bodies stay short and only explain the WHY of a change, never mirror the WHAT.";
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
+    dct:created "2026-10-19T19:54:03Z"^^xsd:dateTime.
+
+<#entry-task-08-review-fixes-search-demand-api-openQuestion-01> a schema:Comment;
+    schema:text "[REMOVED 2026-10-19] Open question: should SearchGateway.buildSearchIndex fetch the profile itself, given it is normally already fetched after login (redundant) but without a hard guarantee when core is used standalone? The question is resolved — the fetch stays as-is, recorded in decision-01 — so the plan:openQuestion assertion was removed; this history lives here.";
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
+    dct:created "2026-10-19T19:54:03Z"^^xsd:dateTime.
+
+<#entry-task-08-review-fixes-search-demand-api-note-03> a schema:Comment;
+    schema:text "Resolution of the apparent conflict between review scope-01 (drop the logged-out clear() added by ab0e358a) and that commit's message (\"the gateway owns the lifecycle and must be self-consistent\"): the reviewer is right. Angelo ruled that a gateway in PodOS will never be used without a PodOS instance — the PodOS instance is crucial for everything — so the standalone-gateway scenario the commit defended against cannot occur; PodOS's session tap fires on every session emission and clears before any subsequent demand call, making the in-branch clear() redundant. Rejected (LLM-proposed, not taken up): moving the session subscription into SearchGateway to make the gateway the literal single owner — the tap stays in PodOS and the branch clear is dropped in task-08 as scoped.";
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
+    dct:created "2026-10-19T20:04:16Z"^^xsd:dateTime.
+
+<#entry-task-08-review-fixes-search-demand-api-note-03> a schema:Comment;
+    schema:text "Resolution of the apparent conflict between review scope-01 (drop the logged-out clear() added by ab0e358a) and that commit's message (\"the gateway owns the lifecycle and must be self-consistent\"): the reviewer is right. Angelo: \"A gateway in PodOS will not be used without a PodOS instance. the PodOS instance is crucial for everything\" — the standalone-gateway scenario the commit defended against cannot occur; PodOS's session tap (core/src/index.ts) fires on every session emission and clears before any subsequent demand call, so the in-branch clear() is redundant. Rejected dropping it outside task-08's scope: an LLM-proposed alternative (move the session subscription into SearchGateway to make the gateway the literal single owner, then drop the clear) was not taken up — keeping the tap in PodOS and dropping the branch clear in task-08 as scoped.";
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
+    dct:created "2026-10-19T20:04:16Z"^^xsd:dateTime.
+
+<#task-09-drop-store-force-fetch> a plan:Task;
+    dct:title "Drop Store.fetch force: true, invalidate rdflib fetcher state at the session boundary";
+    plan:parent <plan.ttl#plan>;
+    plan:status plan:draft;
+    dct:created "2026-10-19T20:46:15Z"^^xsd:dateTime;
+    plan:touchesFile "core/src/Store.ts", "core/src/Store.spec.ts";
+    plan:goal <#entry-task-09-drop-store-force-fetch-goal-01>;
+    plan:context <#entry-task-09-drop-store-force-fetch-context-01>;
+    plan:openQuestion <#entry-task-09-drop-store-force-fetch-openQuestion-01>.
+
+<#entry-task-09-drop-store-force-fetch-goal-01> a schema:Comment;
+    schema:text "Remove the blanket workaround Store.fetch() force: true (added by e6d121e8, 2022, citing rdflib.js issues #247/#441) and instead make rdflib's fetcher state session-aware: invalidate the fetcher's requested[]/state markers at the session boundary — the session tap in PodOS already fires on every session emission and is the natural place. Effect: re-fetching happens exactly when session identity changes, not on every single fetch; profile and label-index documents are no longer re-downloaded on a demand-build after pos-app already fetched them in the same session.";
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-19T20:46:15Z"^^xsd:dateTime.
+
+<#entry-task-09-drop-store-force-fetch-context-01> a schema:Comment;
+    schema:text "Surfaced while resolving the task-08 review question about the gateway's profile fetch (2026-10-19): the redundancy is only problematic because Store.fetch forces every request; per-gateway memoization was rejected as wrong-layer (caching belongs at the rdflib/Store level). Angelo decided the force stays for now — it was added for a reason (resources inaccessible while logged out must become fetchable after login; rdflib's requested[] markers would otherwise mask that) and its safety is unproven — and approved drafting this follow-up task. Parked as out of scope of task-08 via outOfScope-01; as a draft task it may keep its open questions until it is planned through.";
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-19T20:46:15Z"^^xsd:dateTime.
+
+<#entry-task-09-drop-store-force-fetch-openQuestion-01> a schema:Comment;
+    schema:text "Which in-session behavior currently relies on forced re-fetch? pos-resource's reload-on-session-change flows and the describedby-link fetch in Store.fetch (second force occurrence) are the known candidates; both need verification before dropping force. Also to weigh: rdflib 2.4.1 exposes no official fetcher-state invalidation API — resetting the public-ish requested[] map is a patch-level shim; upgrading rdflib or tracking staleness in Store itself are alternatives.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-19T20:46:15Z"^^xsd:dateTime.
+
+<#entry-task-08-review-fixes-search-demand-api-decision-01> a schema:Comment;
+    schema:text "Profile fetch in the gateway stays as-is (Angelo resolved openQuestion-01, 2026-10-19): SearchGateway keeps calling profileGateway.fetchProfile(webId) on cache-miss builds — the redundancy versus pos-app's eager fetch is bounded (one profile+preferences+type-index re-download per login, only when a consumer demands the index) and accepted deliberately; the gateway's own fetch preserves the hard guarantee that core works standalone. Rejected (Angelo): memoizing the fetch in ProfileGateway — caches belong at the rdflib/Store layer, not in gateways, and the problem only exists because Store.fetch forces every request; and removing Store.fetch's force: true for now — it was added for a reason (session-boundary freshness) and its safety is unproven. The proper future fix is recorded as openQuestion-02 (rdflib-level freshness vs session boundary), out of this plan's scope.";
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
+    dct:created "2026-10-19T20:25:01Z"^^xsd:dateTime.
+
+<#entry-task-08-review-fixes-search-demand-api-openQuestion-02> a schema:Comment;
+    schema:text "[REMOVED 2026-10-19] Open question: Store-level freshness across session changes — Store.fetch() force-fetches every request because rdflib's fetcher never invalidates its requested[]/state markers on session change (blanket workaround from commit e6d121e8, 2022, citing rdflib.js issues #247/#441); the proper fix would drop force: true and invalidate the fetcher state at the session boundary. Removed rather than resolved: the work is out of scope for this plan (see outOfScope-01) and tasks must not carry open questions when they start — the topic is parked by outOfScope-01 instead.";
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
+    dct:created "2026-10-19T20:25:01Z"^^xsd:dateTime.
+
+<#entry-task-08-review-fixes-search-demand-api-outOfScope-01> a schema:Comment;
+    schema:text "[REMOVED 2026-10-19] Was: Store-level freshness rework (dropping Store.fetch's force: true, invalidating rdflib's fetcher state at the session boundary) explicitly out of scope for this task and plan. Obsolete since the topic got its own follow-up task — task-09-drop-store-force-fetch (draft) — which now carries the topic; the outOfScope assertion was removed because the topic is no longer merely excluded from task-08 but properly planned as its own task.";
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
+    dct:created "2026-10-19T20:32:26Z"^^xsd:dateTime.
 
 <#entry-task-05-mention-suggestions-from-search-and-store-decision-05> a schema:Comment;
     schema:text "Session handling moves into core: consumers need no session watching at all. Core fetches the profile from its own session and builds the search index on first demand (zero-arg os.buildSearchIndex() — the profile parameter is dropped, core resolves it itself), keeps it warm until logout, and empties held references in place on logout. Angelo's reasoning: core should keep the index up to date but only if it is needed — no index for consumers that never ask, and core-managed freshness once one does. Login needs no handling (pos-app resolves only after OIDC redirect/session restore completes, so consumers mount already logged in); logout is handled by core's existing session tap — which must additionally empty the cached instance in place, not only drop the reference (drafted as task-07). The elements-side session watch (pos-navigation pattern) and the consumer-side profile fetch/build call both become unnecessary; the earlier keep-explicit-build choice is thereby superseded." ;
