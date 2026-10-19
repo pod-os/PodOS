@@ -62,13 +62,7 @@ export class PosNavigation implements PodOsAware {
     subscribePodOs(this);
     this.updateResource();
 
-    this.unsubscribeSessionChange = session.onChange('isLoggedIn', async isLoggedIn => {
-      if (isLoggedIn) {
-        await this.buildSearchIndex();
-      } else {
-        this.clearSearchIndex();
-      }
-    });
+    this.unsubscribeSessionChange = session.onChange('isLoggedIn', () => this.buildSearchIndex());
     this.debouncedSearch = this.changeEvents.pipe(debounce).subscribe(() => this.search());
   }
 
@@ -94,10 +88,6 @@ export class PosNavigation implements PodOsAware {
     }
     this.inputRef?.select();
     this.dialogRef?.show();
-  }
-
-  private clearSearchIndex() {
-    this.searchIndex?.clear();
   }
 
   receivePodOs = async (os: PodOS) => {
