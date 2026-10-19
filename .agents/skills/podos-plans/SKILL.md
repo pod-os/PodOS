@@ -67,8 +67,11 @@ Every write must end in a validated file. The loop:
     prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm>.
 ```
 
-- `schema:text` (exactly 1) carries the entry text; keep verbatim user quotes
-  inline in it — this is how human intent survives; never paraphrase a quote.
+- `schema:text` (exactly 1) carries the entry text; record the user's
+  **intention in paraphrased form** — do not quote the user verbatim unless they
+  explicitly ask for it. What matters is that the recorded intent is faithful
+  and attributable, not that the exact wording survives; paraphrasing keeps
+  entries compact and readable.
 - **Every new entry gets `dct:created`** as `xsd:dateTime` (UTC, e.g.
   `"2026-10-14T15:58:28Z"^^xsd:dateTime`) — the exact moment it was recorded.
   It powers the NEW badge in the plan viewer and makes same-day edits
@@ -113,6 +116,11 @@ Every write must end in a validated file. The loop:
 - One decision per `plan:decision` entry, stated normatively.
 - `plan:scope` / `plan:outOfScope` / `plan:verification` / `plan:context` /
   `plan:openQuestion` / `plan:option`: one entry per triple, repeated.
+- **Open questions are binary: open or gone.** A resolved question must not
+  linger in the open-questions section — remove the `plan:openQuestion`
+  assertion once a decision answers it, and let that decision carry the
+  resolution. The section reflects *current* open state,
+  not history.
 - Every task has exactly one `plan:parent`; dependencies via `plan:dependsOn`.
 - `plan:touchesFile` carries repository-relative paths — add them as you learn
   which files a task affects; they power the plan↔code queries.
