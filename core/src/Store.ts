@@ -105,7 +105,6 @@ export class Store {
     if (descriptionResourceUri) {
       try {
         await this.fetcher.load(sym(descriptionResourceUri.value), {
-          force: true,
           credentials: "omit",
         });
       } catch {
