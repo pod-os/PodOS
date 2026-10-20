@@ -37,6 +37,37 @@ describe("PodOS", () => {
     });
   });
 
+  describe("session boundary", () => {
+    it("re-fetches an already loaded document after the session changes", async () => {
+      // given a session that emits session changes
+      const sessionSubject = new BehaviorSubject<SessionInfo>({
+        isLoggedIn: false,
+      });
+      const fetchMock = vi.fn();
+      const session = {
+        logout: vi.fn(),
+        authenticatedFetch: fetchMock,
+        observeSession: () => sessionSubject,
+      } as unknown as PodOsSession;
+      const podOs = new PodOS({ session });
+
+      // and a document is already loaded into the store
+      mockTurtleDocument(
+        fetchMock,
+        "https://pod.test/resource",
+        '<https://pod.test/resource#it> <https://pod.test/vocab/predicate> "literal value" .',
+      );
+      await podOs.fetch("https://pod.test/resource");
+
+      // when the session changes
+      sessionSubject.next({ isLoggedIn: false });
+
+      // then fetching the same document again hits the network again
+      await podOs.fetch("https://pod.test/resource");
+      expect(fetchMock).toHaveBeenCalledTimes(2);
+    });
+  });
+
   describe("search index cache", () => {
     it("rebuilds the search index after a session change and re-login", async () => {
       // given a session that emits session changes, logged in at alice
