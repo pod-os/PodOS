@@ -5,6 +5,7 @@ import { PosImageNode } from './PosImageNode';
 import { PosRichLinkMark } from './PosRichLinkMark';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import { PodOS } from '@pod-os/core';
 import { mention } from './mention-extension';
 
 export class RichEditor {
@@ -16,8 +17,9 @@ export class RichEditor {
    * @param target The element to render to
    * @param content The content to show in the editor
    * @param baseUrl Base URL for relative links and relative image src
+   * @param os The PodOS instance, backing the mention suggestions (optional)
    */
-  constructor(target: HTMLElement, content: string, baseUrl: string) {
+  constructor(target: HTMLElement, content: string, baseUrl: string, os?: PodOS) {
     this.editor = new Editor({
       element: target,
       extensions: [
@@ -25,7 +27,7 @@ export class RichEditor {
         StarterKit.configure({ link: false }),
         PosImageNode(baseUrl),
         PosRichLinkMark(baseUrl),
-        mention(),
+        mention(os),
       ],
       content,
       contentType: 'markdown',
