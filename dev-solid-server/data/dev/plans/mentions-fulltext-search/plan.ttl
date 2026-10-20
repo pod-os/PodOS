@@ -123,13 +123,13 @@
     plan:parent <#plan>;
     plan:status plan:planned;
     dct:created "2026-10-14T19:14:07Z"^^xsd:dateTime;
-    dct:modified "2026-10-14T20:14:23Z"^^xsd:dateTime;
-    plan:touchesFile "elements/src/components/pos-markdown-document/pos-markdown-document.tsx", "elements/src/components/pos-markdown-document/rich-editor/RichEditor.ts", "elements/src/components/pos-markdown-document/rich-editor/RichEditor.spec.tsx", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/index.ts", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/items.ts";
+    dct:modified "2026-10-20T19:53:00Z"^^xsd:dateTime;
+    plan:touchesFile "elements/src/components/pos-markdown-document/pos-markdown-document.tsx", "elements/src/components/pos-markdown-document/pos-markdown-document.spec.tsx", "elements/src/components/pos-markdown-document/rich-editor/RichEditor.ts", "elements/src/components/pos-markdown-document/rich-editor/RichEditor.spec.tsx", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/index.ts", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/index.spec.ts";
     plan:goal <#entry-task-05-mention-suggestions-from-search-and-store-goal-01>;
     plan:context <#entry-task-05-mention-suggestions-from-search-and-store-context-01>;
-    plan:decision <#entry-task-05-mention-suggestions-from-search-and-store-decision-01>, <#entry-task-05-mention-suggestions-from-search-and-store-decision-02>, <#entry-task-05-mention-suggestions-from-search-and-store-decision-03>, <#entry-task-05-mention-suggestions-from-search-and-store-decision-04>, <#entry-task-05-mention-suggestions-from-search-and-store-decision-05>;
+    plan:decision <#entry-task-05-mention-suggestions-from-search-and-store-decision-01>, <#entry-task-05-mention-suggestions-from-search-and-store-decision-02>, <#entry-task-05-mention-suggestions-from-search-and-store-decision-03>, <#entry-task-05-mention-suggestions-from-search-and-store-decision-04>, <#entry-task-05-mention-suggestions-from-search-and-store-decision-05>, <#entry-task-05-mention-suggestions-from-search-and-store-decision-06>;
     plan:scope <#entry-task-05-mention-suggestions-from-search-and-store-scope-01>, <#entry-task-05-mention-suggestions-from-search-and-store-scope-02>, <#entry-task-05-mention-suggestions-from-search-and-store-scope-03>, <#entry-task-05-mention-suggestions-from-search-and-store-scope-04>, <#entry-task-05-mention-suggestions-from-search-and-store-scope-05>;
-    plan:note <#entry-task-05-mention-suggestions-from-search-and-store-note-01>;
+    plan:note <#entry-task-05-mention-suggestions-from-search-and-store-note-01>, <#entry-task-05-mention-suggestions-from-search-and-store-note-02>, <#entry-task-05-mention-suggestions-from-search-and-store-note-03>;
     plan:verification <#entry-task-05-mention-suggestions-from-search-and-store-verification-01>.
 <#task-06-fallback-create-things-on-the-fly> a plan:Task;
     dct:title "Mention fallback: create things on the fly";
@@ -743,3 +743,15 @@
 <#entry-task-09-drop-store-force-fetch-openQuestion-01> schema:text "[REMOVED 2026-10-19] Resolved by decision-02: dropping force is safe; the only real blocker is OfflineCapableFetcher's header-less cache-hit response.".
 <#entry-task-09-drop-store-force-fetch-decision-02> schema:text "Drop force: true at both call sites in Store.fetch (main fetch + describedby auto-fetch) — rdflib 2.4.1 already carries the PR #871 fix, so the session tap's flagAuthorizationMetadata() is the working invalidation boundary; no shim needed. Supersedes decision-01.".
 <#task-09-drop-store-force-fetch> dct:modified "2026-10-20T18:28:00Z"^^xsd:dateTime.
+<#entry-task-05-mention-suggestions-from-search-and-store-decision-06> a schema:Comment;
+    schema:text "Mention cycle 1 seam (Angelo confirmed, 2026-10-20): test at the mention() extension level, not extension-manager level — Tiptap Mention extensions are name-keyed, so a bare mention() has no separate suggestion.config; the public seam is mention(os).options.suggestion.items. The items function receives { query } and resolves [{id, label}] from the zero-arg buildSearchIndex() demand API and os.store.get(ref).label().";
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
+    dct:created "2026-10-20T19:53:00Z"^^xsd:dateTime.
+<#entry-task-05-mention-suggestions-from-search-and-store-note-02> a schema:Comment;
+    schema:text "Cycles 1–3 (2026-10-20, TDD via wallaby): (1) mention(os) items delegation — items resolves search refs to {id, label} via store.get(ref).label(), empty when no os is given (2 tests, seeded red, green via wallaby; note: TS3919 blocks the first test from an async function, pinned with @ts-ignore per existing RichEditor.spec pattern). (2) mention() re-registered in RichEditor and the 3 skipped tests un-skipped (red confirmed via wallaby, then green). (3) RichEditor wiring: new optional os param passed to mention(os); wiring test asserts the registered mention extension's items() calls buildSearchIndex on the injected os.";
+    prov:wasAttributedTo <../agents.ttl#llm-claude-sonnet-4.5>;
+    dct:created "2026-10-20T19:53:00Z"^^xsd:dateTime.
+<#entry-task-05-mention-suggestions-from-search-and-store-note-03> a schema:Comment;
+    schema:text "Cycle 4 process note (2026-10-20): the first component implementation awaited usePodOS in componentDidLoad, which broke 11 existing pos-markdown-document tests — the editor must keep constructing synchronously (design principle from the reverted attempt, note-01). Angelo ruled (chose 'B', 2026-10-20): pass the PodOS promise straight through usePodOS → RichEditor → mention; the extension awaits it lazily on the first suggestion request. The old-a99f603c tip-tap suggestion items name probe (items.name === 'items') surfaced the stale-extension trap: the original items.ts must be overridden per mention() invocation.";
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-claude-sonnet-4.5>;
+    dct:created "2026-10-20T19:53:00Z"^^xsd:dateTime.
