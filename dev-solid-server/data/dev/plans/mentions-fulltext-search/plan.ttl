@@ -121,9 +121,9 @@
 <#task-05-mention-suggestions-from-search-and-store> a plan:Task;
     dct:title "Mention suggestions from search + store via suggestionsProvider (no core change)";
     plan:parent <#plan>;
-    plan:status plan:in-progress;
+    plan:status plan:done;
     dct:created "2026-10-14T19:14:07Z"^^xsd:dateTime;
-    dct:modified "2026-10-20T20:05:00Z"^^xsd:dateTime;
+    dct:modified "2026-10-20T20:12:00Z"^^xsd:dateTime;
     plan:touchesFile "elements/src/components/pos-markdown-document/pos-markdown-document.tsx", "elements/src/components/pos-markdown-document/pos-markdown-document.spec.tsx", "elements/src/components/pos-markdown-document/pos-markdown-document.integration.spec.tsx", "elements/src/components/pos-markdown-document/rich-editor/RichEditor.ts", "elements/src/components/pos-markdown-document/rich-editor/RichEditor.spec.tsx", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/index.ts", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/index.spec.ts";
     plan:goal <#entry-task-05-mention-suggestions-from-search-and-store-goal-01>;
     plan:context <#entry-task-05-mention-suggestions-from-search-and-store-context-01>;
@@ -410,9 +410,9 @@
     prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
     dct:created "2026-10-14T20:07:00Z"^^xsd:dateTime.
 <#entry-task-05-mention-suggestions-from-search-and-store-verification-01> a schema:Comment;
-    schema:text "RichEditor.spec.tsx green with mention() re-registered and the 3 tests un-skipped; pos-mention-menu spec green; core suites untouched and green. Wallaby is available in the LLM sandbox (verified 2026-10-14 with core + pos-navigation suites) — this supersedes the older note that wallaby runs are user-side only.";
-    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
-    dct:created "2026-10-14T19:26:26Z"^^xsd:dateTime.
+    schema:text "Done (2026-10-20): mention(os) items delegation (index.spec.ts, 2 tests), RichEditor mention re-registered with the 3 rendering tests un-skipped and green, RichEditor wiring to the injected os pinned by test, pos-markdown-document hands the PodOS promise through, and the end-to-end integration test (pos-markdown-document.integration.spec.tsx) drives the built bundle from '#test' input to the real label-index suggestion in the menu. Full elements suite green via wallaby (784/784, 0 skipped); core untouched and green; hardcoded items.ts removed.";
+    prov:wasAttributedTo <../agents.ttl#llm-claude-sonnet-4.5>;
+    dct:created "2026-10-20T20:12:00Z"^^xsd:dateTime.
 <#entry-task-06-fallback-create-things-on-the-fly-goal-01> a schema:Comment;
     schema:text "When the user types a mention label that matches nothing in the search index, the menu offers to create the thing and insert the mention for it. Created things stay unindexed — findability is deliberately left to the existing make-findable flow later.";
     prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
