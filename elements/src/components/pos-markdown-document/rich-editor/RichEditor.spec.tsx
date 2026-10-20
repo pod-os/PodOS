@@ -2,6 +2,7 @@ import { vi } from 'vitest';
 import { afterEach, beforeEach, describe, expect, it } from '@stencil/vitest';
 
 import { RichEditor } from './RichEditor';
+import { PodOS } from '@pod-os/core';
 import { Subscription, tap } from 'rxjs';
 
 describe('RichEditor', () => {
@@ -178,6 +179,23 @@ describe('RichEditor', () => {
           content: '# edit 1 edit 2 edit 3 Hello World\n\n',
         });
       });
+    });
+  });
+
+  describe('wiring', () => {
+    it('wires the mention extension to the given PodOS instance', async () => {
+      const div = document.createElement('div');
+      const mockOs = {
+        buildSearchIndex: vi.fn().mockResolvedValue({ search: vi.fn().mockReturnValue([]) }),
+        store: { get: vi.fn() },
+      } as unknown as PodOS;
+      const editor = new RichEditor(div, '# Hello World', 'https://pod.test', mockOs);
+      // @ts-ignore Accessing a private field here for testing
+      const mention = editor.editor.extensionManager.extensions.find(extension => extension.name === 'mention');
+      expect(mention).toBeDefined();
+      // @ts-ignore the suggestion config is tiptap's internal shape, not a public API
+      await mention.options.suggestion.items({ query: 'ali' });
+      expect(mockOs.buildSearchIndex).toHaveBeenCalled();
     });
   });
 
