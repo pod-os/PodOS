@@ -204,6 +204,33 @@ describe("Store", () => {
       expect(mockSession.authenticatedFetch).toHaveBeenCalledTimes(1);
     });
 
+    it("serves an already fetched document from the store without re-fetching it", async () => {
+      const mockSession = {
+        authenticatedFetch: vi.fn(),
+      } as unknown as PodOsSession;
+      when(mockSession.authenticatedFetch)
+        .calledWith("https://pod.test/resource", expect.anything())
+        .thenResolve({
+          ok: true,
+          status: 200,
+          statusText: "OK",
+          headers: new Headers({
+            "Content-Type": "text/turtle",
+          }),
+          text: () =>
+            Promise.resolve(
+              '<https://pod.test/resource#it> <https://pod.test/vocab/predicate> "literal value" .',
+            ),
+        } as Response);
+      const internalStore = graph();
+      const store = new Store(mockSession, undefined, undefined, internalStore);
+
+      await store.fetch("https://pod.test/resource");
+      await store.fetch("https://pod.test/resource");
+
+      expect(mockSession.authenticatedFetch).toHaveBeenCalledTimes(1);
+    });
+
     it("does not fetch a forged describedby link", async () => {
       const mockSession = {
         authenticatedFetch: vi.fn(),

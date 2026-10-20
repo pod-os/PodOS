@@ -90,11 +90,6 @@ export class Store {
    */
   async fetch(uri: string) {
     const response: ExtendedResponse = await this.fetcher.load(sym(uri), {
-      // force fetching due to
-      // https://github.com/linkeddata/rdflib.js/issues/247
-      // and
-      // https://github.com/linkeddata/rdflib.js/issues/441
-      force: true,
       // explicitly omit credentials due to
       // https://github.com/pod-os/PodOS/issues/17
       credentials: "omit",
