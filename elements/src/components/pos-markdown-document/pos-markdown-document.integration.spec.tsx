@@ -39,22 +39,22 @@ describe('pos-markdown-document', () => {
       </pos-app>,
     );
     await page.waitForChanges();
-    const markdownDocument = page.root.querySelector('pos-markdown-document');
+    const markdownDocument = page.root.querySelector('pos-markdown-document')!;
     await waitFor(() => {
-      expect(markdownDocument.shadowRoot.querySelector('article header button')).not.toBeNull();
+      expect(markdownDocument.shadowRoot!.querySelector('article header button')).not.toBeNull();
     });
 
     // start editing
-    const editButton = markdownDocument.shadowRoot.querySelector('article header button');
+    const editButton = markdownDocument.shadowRoot!.querySelector('article header button') as HTMLElement;
     editButton.click();
     await page.waitForChanges();
 
     // type the mention trigger and query
-    const editor = await waitFor(() => {
-      const el = markdownDocument.shadowRoot.querySelector('div.content .ProseMirror');
+    const editor = (await waitFor(() => {
+      const el = markdownDocument.shadowRoot!.querySelector('div.content .ProseMirror');
       expect(el).not.toBeNull();
       return el;
-    });
+    })) as HTMLElement;
     editor.focus();
     await page.waitForChanges();
     await userEvent.type(editor, '#test');
