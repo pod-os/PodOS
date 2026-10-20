@@ -6,7 +6,6 @@ import '../pos-navigation';
 import { pressKey } from '../../../test/pressKey';
 import { typeToSearch } from './typeToSearch.vitest';
 
-import session from '../../../store/session';
 import { PodOS, SearchIndex } from '@pod-os/core';
 import { mockOsProvider } from '../../../test/mockPodOS.vitest';
 import { withinShadow } from '../../../test/withinShadow';
@@ -45,6 +44,7 @@ describe('pos-navigation', () => {
       store: {
         get: vi.fn().mockReturnValue(mockResource),
       },
+      buildSearchIndex: vi.fn().mockResolvedValue(undefined),
     } as unknown as PodOS);
 
     const page = await render(<pos-navigation uri="https://pod.example/resource"></pos-navigation>);
@@ -147,6 +147,17 @@ describe('pos-navigation', () => {
     );
   });
 
+  it('demands the search index when it receives the PodOS instance', async () => {
+    const mockOs = {
+      buildSearchIndex: vi.fn().mockResolvedValue(undefined),
+    } as unknown as PodOS;
+    mockOsProvider(mockOs);
+
+    await render(<pos-navigation uri="https://pod.example/resource"></pos-navigation>);
+
+    expect(mockOs.buildSearchIndex).toHaveBeenCalled();
+  });
+
   describe('searching when logged in', () => {
     let page: RenderResult;
     let mockOs: PodOS;
@@ -176,10 +187,6 @@ describe('pos-navigation', () => {
       page = await render(<pos-navigation uri="https://pod.example/resource"></pos-navigation>);
       // and a fake search index giving 2 results
 
-      // and the user is signed in
-      session.state.isLoggedIn = true;
-      await page.waitForChanges();
-
       // and therefore the search index is defined
       await waitFor(() => {
         expect(page.instance.searchIndex).toBeDefined();
@@ -187,11 +194,8 @@ describe('pos-navigation', () => {
     });
 
     afterEach(() => {
-      // ensure the element is disconnected before disposing the session
-      // this is important, because stencil testing will disconnect it "eventually" but
-      // if we do not clean up before disposing the session the change handler will still trigger
+      // ensure the element is disconnected to avoid test pollution
       page.instance.disconnectedCallback();
-      session.dispose();
     });
 
     it('informs navigation bar as soon as search index is available', () => {
@@ -489,18 +493,5 @@ describe('pos-navigation', () => {
         }),
       );
     });
-
-    it('re-demands the search index when logging out', async () => {
-      // when the user signs out
-      session.state.isLoggedIn = false;
-      await page.waitForChanges();
-
-      // then the component re-demands the index from core
-      // (core owns the index lifecycle and empties it on session change)
-      await waitFor(() => {
-        expect(mockOs.buildSearchIndex).toHaveBeenCalledTimes(2);
-      });
-    });
-
   });
 });
