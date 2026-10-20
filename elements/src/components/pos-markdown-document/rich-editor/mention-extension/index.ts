@@ -1,9 +1,9 @@
 import Mention from '@tiptap/extension-mention';
 import { mergeAttributes } from '@tiptap/core';
+import { PodOS } from '@pod-os/core';
 import { render } from './render';
-import { items } from './items';
 
-export function mention() {
+export function mention(os?: PodOS) {
   return Mention.configure({
     HTMLAttributes: {
       class: 'mention',
@@ -13,7 +13,16 @@ export function mention() {
     },
     suggestion: {
       char: '#',
-      items,
+      items: async ({ query }: { query: string }) => {
+        if (!os) {
+          return [];
+        }
+        const searchIndex = await os.buildSearchIndex();
+        return searchIndex.search(query).map(({ ref }) => {
+          const thing = os.store.get(ref);
+          return { id: ref, label: thing.label() };
+        });
+      },
       render,
     },
   });
