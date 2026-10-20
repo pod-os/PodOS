@@ -5,9 +5,7 @@ import { PosImageNode } from './PosImageNode';
 import { PosRichLinkMark } from './PosRichLinkMark';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-// mention extension disabled until it is backed by a search-based suggestions provider,
-// see .agents/plans/mentions-fulltext-search/plan.md — re-register and un-skip its tests then.
-// import { mention } from './mention-extension';
+import { mention } from './mention-extension';
 
 export class RichEditor {
   private readonly editor: Editor;
@@ -27,7 +25,7 @@ export class RichEditor {
         StarterKit.configure({ link: false }),
         PosImageNode(baseUrl),
         PosRichLinkMark(baseUrl),
-        // mention(), — disabled until search-based provider exists, see plan.md in .agents/plans/mentions-fulltext-search
+        mention(),
       ],
       content,
       contentType: 'markdown',
