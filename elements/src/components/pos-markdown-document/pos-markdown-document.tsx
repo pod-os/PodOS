@@ -1,5 +1,6 @@
 import { SolidFile } from '@pod-os/core';
-import { Component, h, Method, Prop, State, Event, EventEmitter } from '@stencil/core';
+import { Component, h, Method, Prop, State, Event, EventEmitter, Element } from '@stencil/core';
+import { usePodOS } from '../events/usePodOS';
 
 import { RichEditor } from './rich-editor';
 
@@ -17,6 +18,8 @@ interface ModifiedFile {
   shadow: true,
 })
 export class PosMarkdownDocument {
+  @Element() host: HTMLElement;
+
   /**
    * The file to show / edit
    */
@@ -61,7 +64,7 @@ export class PosMarkdownDocument {
   }
 
   componentDidLoad() {
-    this.editor = new RichEditor(this.editorEl, this.markdown, this.file.url);
+    this.editor = new RichEditor(this.editorEl, this.markdown, this.file.url, usePodOS(this.host));
     this.editor.onUpdate(() => {
       this.isModified = true;
     });

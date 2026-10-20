@@ -17,9 +17,9 @@ export class RichEditor {
    * @param target The element to render to
    * @param content The content to show in the editor
    * @param baseUrl Base URL for relative links and relative image src
-   * @param os The PodOS instance, backing the mention suggestions (optional)
+   * @param os The PodOS instance, backing the mention suggestions (optional). May be a promise, resolving when the PodOS instance becomes available.
    */
-  constructor(target: HTMLElement, content: string, baseUrl: string, os?: PodOS) {
+  constructor(target: HTMLElement, content: string, baseUrl: string, os?: PodOS | Promise<PodOS>) {
     this.editor = new Editor({
       element: target,
       extensions: [
@@ -27,7 +27,7 @@ export class RichEditor {
         StarterKit.configure({ link: false }),
         PosImageNode(baseUrl),
         PosRichLinkMark(baseUrl),
-        mention(os),
+        mention(os ? Promise.resolve(os) : undefined),
       ],
       content,
       contentType: 'markdown',
