@@ -411,11 +411,11 @@
     dct:created "2026-10-14T20:07:00Z"^^xsd:dateTime.
 <#entry-task-05-mention-suggestions-from-search-and-store-verification-01> a schema:Comment;
     schema:text "Done (2026-10-20): mention(os) items delegation (index.spec.ts, 2 tests), RichEditor mention re-registered with the 3 rendering tests un-skipped and green, RichEditor wiring to the injected os pinned by test, pos-markdown-document hands the PodOS promise through, and the end-to-end integration test (pos-markdown-document.integration.spec.tsx) drives the built bundle from '#test' input to the real label-index suggestion in the menu. Full elements suite green via wallaby (784/784, 0 skipped); core untouched and green; hardcoded items.ts removed.";
-    prov:wasAttributedTo <../agents.ttl#llm-claude-sonnet-4.5>;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
     dct:created "2026-10-20T20:12:00Z"^^xsd:dateTime.
 <#entry-task-05-mention-suggestions-from-search-and-store-note-05> a schema:Comment;
     schema:text "Post-completion fixes from Angelo's app testing (2026-10-20): the integration spec used Element | null query results without casts, which surfaced as TS build errors in the running dev app (Property 'click' does not exist on type 'Element') — fixed with non-null assertions + HTMLElement casts in the repo's existing integration-spec style (pos-image), and typecheck now covers it. Prevention rule going forward: run the elements typecheck (npx tsc --noEmit) on every new/changed spec file, not only production code — the elements workspace typecheck is not wired into the repo-level gate (see task-07 note-06), so a TS error only shows up when Angelo builds the app. Related setup fact re-discovered: a dev-watch build (stencil build --dev --watch --serve) wipes dist/esm, breaking integration tests until a prod build (npm run build) is rerun.";
-    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-claude-sonnet-4.5>;
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
     dct:created "2026-10-20T20:18:00Z"^^xsd:dateTime.
 <#entry-task-06-fallback-create-things-on-the-fly-goal-01> a schema:Comment;
     schema:text "When the user types a mention label that matches nothing in the search index, the menu offers to create the thing and insert the mention for it. Created things stay unindexed — findability is deliberately left to the existing make-findable flow later.";
@@ -427,7 +427,7 @@
     dct:created "2026-10-14T19:34:23Z"^^xsd:dateTime.
 <#entry-task-06-fallback-create-things-on-the-fly-context-01> a schema:Comment;
     schema:text "Slice-level 'how' (menu UI, thing-creation details, where/how the thing is stored, permissions) is deliberately not planned ahead; to be worked out when this task is picked up after task-05. The task stays in draft until planned through. Definition and stance recorded plan-level in decision-15. App observation from Angelo (2026-10-20): typing '#' alone shows an empty suggestion box which looks weird — accepted for now, because the upcoming create-on-the-fly option will fill that box; no dedicated empty-state handling is needed before task-06 lands.";
-    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-claude-sonnet-4.5>;
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
     dct:created "2026-10-20T20:18:00Z"^^xsd:dateTime.
 <#entry-plan-decision-15> a schema:Comment;
     schema:text "Mention fallback defined and scoped: fallback = what the mention menu offers when a typed label matches nothing in the search index. Design space: (a) empty menu, nothing insertable (pos-navigation's behavior, search-only); (b) URI-paste escape hatch for existing-but-unindexed things; (c) create on the fly (mention menu offers to create the unindexed thing; make-findable deliberately excluded for now). User chose (c), refined to creation-only: recorded as draft follow-up task-06, depending on task-05; until it lands the search-only behavior (a) applies. This supersedes the out-of-scope ruling (decision-13; the former plan-level outOfScope entry was removed): the mention feature is back in scope — task-05 = suggestions provider + re-enable + un-skip, task-06 = fallback.";
@@ -753,11 +753,11 @@
     dct:created "2026-10-20T19:53:00Z"^^xsd:dateTime.
 <#entry-task-05-mention-suggestions-from-search-and-store-note-02> a schema:Comment;
     schema:text "Cycles 1–3 (2026-10-20, TDD via wallaby): (1) mention(os) items delegation — items resolves search refs to {id, label} via store.get(ref).label(), empty when no os is given (2 tests, seeded red, green via wallaby; note: TS3919 blocks the first test from an async function, pinned with @ts-ignore per existing RichEditor.spec pattern). (2) mention() re-registered in RichEditor and the 3 skipped tests un-skipped (red confirmed via wallaby, then green). (3) RichEditor wiring: new optional os param passed to mention(os); wiring test asserts the registered mention extension's items() calls buildSearchIndex on the injected os.";
-    prov:wasAttributedTo <../agents.ttl#llm-claude-sonnet-4.5>;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
     dct:created "2026-10-20T19:53:00Z"^^xsd:dateTime.
 <#entry-task-05-mention-suggestions-from-search-and-store-note-03> a schema:Comment;
     schema:text "Cycle 4 process note (2026-10-20): the first component implementation awaited usePodOS in componentDidLoad, which broke 11 existing pos-markdown-document tests — the editor must keep constructing synchronously (design principle from the reverted attempt, note-01). Angelo ruled (chose 'B', 2026-10-20): pass the PodOS promise straight through usePodOS → RichEditor → mention; the extension awaits it lazily on the first suggestion request. The old-a99f603c tip-tap suggestion items name probe (items.name === 'items') surfaced the stale-extension trap: the original items.ts must be overridden per mention() invocation.";
-    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-claude-sonnet-4.5>;
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>, <../agents.ttl#llm-glm-5.3-flash>;
     dct:created "2026-10-20T19:53:00Z"^^xsd:dateTime.
 <#entry-task-05-mention-suggestions-from-search-and-store-decision-07> a schema:Comment;
     schema:text "Integration test for the mentions chain renders the BUILT custom elements (integration-dom runs against dist/ via loader's defineCustomElements(), so component source cannot be imported there — @Element() decorators are undefined). Test asserts via DOM (render <pos-app><pos-markdown-document editable file=...>, click edit, type into the ProseMirror element, expect the pos-mention-menu popup). Angelo stopped the trial-and-error here (2026-10-20); the test is written but not yet green — see note-04 for the remaining knowns.";
@@ -765,7 +765,7 @@
     dct:created "2026-10-20T20:05:00Z"^^xsd:dateTime.
 <#entry-task-05-mention-suggestions-from-search-and-store-note-04> a schema:Comment;
     schema:text "Cycle-5 integration test (2026-10-20): green after two findings — (a) the built bundle must be rebuilt (npm run build) before integration-dom sees the new wiring, and the docs/elements readme churn from the build gets reverted before committing; (b) the menu popup mounts into document.body (tiptap suggestion default), not the shadow root, and the typed text must include the '#' trigger char — typing the query alone never activates the suggestion. Resolution: render pos-app + editable pos-markdown-document with a Blob-backed file, click the shadow-root Edit button, type '#test' into div.content .ProseMirror, expect exactly one document.body pos-mention-menu option carrying the real label-index label. Green via vitest (1/1) and wallaby full elements suite (784/784, 0 skipped). Note: wallaby must be restarted with the integration spec in scope (wallaby-skill stop, then run with the spec path) since the session excludes integration specs by default.";
-    prov:wasAttributedTo <../agents.ttl#llm-claude-sonnet-4.5>;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
     dct:created "2026-10-20T20:05:00Z"^^xsd:dateTime.
 <#task-13-mention-typing-performance> a plan:Task;
     dct:title "Mention typing performance: debounce suggestion lookups";
@@ -781,5 +781,5 @@
     dct:created "2026-10-20T20:18:00Z"^^xsd:dateTime.
 <#entry-task-13-mention-typing-performance-context-01> a schema:Comment;
     schema:text "Draft — reported by Angelo after trying the feature in the running app (2026-10-20); needs planning through before implementation (measure first, then pick the throttle point: tiptap suggestion items() vs RichEditor-level rxjs, aligned with pos-navigation's debounce pattern).";
-    prov:wasAttributedTo <../agents.ttl#llm-claude-sonnet-4.5>;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
     dct:created "2026-10-20T20:18:00Z"^^xsd:dateTime.
