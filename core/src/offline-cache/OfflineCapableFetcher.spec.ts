@@ -94,7 +94,7 @@ describe(OfflineCapableFetcher.name, () => {
       },
     );
 
-    it("puts data to cache even when rdflib answers from its dedup without headers", async () => {
+    it("puts data to cache when rdflib dedups a repeated load", async () => {
       // given a turtle document is fetched twice
       const fetch = vi.fn();
       mockTurtleDocument(
