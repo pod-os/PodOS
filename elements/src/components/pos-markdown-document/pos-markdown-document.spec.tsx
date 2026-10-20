@@ -6,7 +6,8 @@ import { RichEditor } from './rich-editor';
 import './pos-markdown-document';
 import { EMPTY, of, Subject } from 'rxjs';
 import { withinShadow } from '../../test/withinShadow';
-import { SolidFile } from '@pod-os/core';
+import { SolidFile, PodOS } from '@pod-os/core';
+import { mockOsProvider } from '../../test/mockPodOS.vitest';
 
 vi.mock('./shoelace', () => ({}));
 
@@ -25,6 +26,20 @@ vi.mock('./rich-editor', () => ({
 describe('pos-markdown-document', () => {
   afterEach(() => {
     vi.clearAllMocks();
+  });
+
+  it('wires the PodOS instance into the RichEditor', async () => {
+    const mockOs = {
+      buildSearchIndex: vi.fn(),
+      store: { get: vi.fn() },
+    } as unknown as PodOS;
+    mockOsProvider(mockOs);
+
+    const file = mockFile();
+    await render(<pos-markdown-document file={file}></pos-markdown-document>);
+
+    const [, , , os] = (RichEditor as Mock).mock.calls[0];
+    await expect(os).resolves.toBe(mockOs);
   });
 
   it('parses and renders the markdown document', async () => {

@@ -3,7 +3,7 @@ import { mergeAttributes } from '@tiptap/core';
 import { PodOS } from '@pod-os/core';
 import { render } from './render';
 
-export function mention(os?: PodOS) {
+export function mention(os?: PodOS | Promise<PodOS>) {
   return Mention.configure({
     HTMLAttributes: {
       class: 'mention',
@@ -17,9 +17,10 @@ export function mention(os?: PodOS) {
         if (!os) {
           return [];
         }
-        const searchIndex = await os.buildSearchIndex();
+        const resolved = await os;
+        const searchIndex = await resolved.buildSearchIndex();
         return searchIndex.search(query).map(({ ref }) => {
-          const thing = os.store.get(ref);
+          const thing = resolved.store.get(ref);
           return { id: ref, label: thing.label() };
         });
       },
