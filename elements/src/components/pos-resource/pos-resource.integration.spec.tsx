@@ -1,5 +1,7 @@
 import { describe, expect, h, it, render } from '@stencil/vitest';
+import { PodOS } from '@pod-os/core';
 import { forever, notFound, server, turtleFile } from '../../test/msw';
+import { waitFor } from '@testing-library/dom';
 import { deepQuerySelector } from 'shadow-dom-testing-library';
 
 describe('pos-resource', () => {
@@ -142,6 +144,10 @@ describe('pos-resource', () => {
       ),
     );
     // when a page has a pos-resource and a label for that resource
+    let os: PodOS;
+    document.addEventListener('pod-os:loaded', evt => {
+      os = (evt as CustomEvent).detail.os;
+    });
     const page = await render(
       <pos-app>
         <pos-resource uri="https://janedoe.test/profile/card#me">
@@ -151,15 +157,24 @@ describe('pos-resource', () => {
         </pos-resource>
       </pos-app>,
     );
+    await waitFor(() => {
+      expect(os).toBeDefined();
+    });
     // then it shows an error at first
-    expect(page.root).toHaveTextContent('Sorry, something went wrong');
-    const resource = page.root.querySelector('pos-resource')!;
+    await waitFor(() => {
+      expect(page.root).toHaveTextContent('Sorry, something went wrong');
+    });
 
-    // but when fetched again
-    await resource.fetch();
+    // but when the user signs in, PodOS flags all previously recorded fetch
+    // responses as out of date, so the failed document becomes re-fetchable
+    os.observeSession().next({
+      isLoggedIn: true,
+      webId: 'https://janedoe.test/profile/card#me',
+    });
 
     // then the page updates to show the newly fetched name
-    await page.waitForChanges();
-    expect(page.root).toHaveTextContent('Jane Doe');
+    await waitFor(() => {
+      expect(page.root).toHaveTextContent('Jane Doe');
+    });
   });
 });
