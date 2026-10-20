@@ -4,7 +4,7 @@
 @prefix dct: <http://purl.org/dc/terms/>.
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
 
-<#plan> dct:modified "2026-10-20T18:28:00Z"^^xsd:dateTime.
+<#plan> dct:modified "2026-10-20T18:36:00Z"^^xsd:dateTime.
 <#task-09-drop-store-force-fetch> dct:modified "2026-10-20T18:28:00Z"^^xsd:dateTime.
 <#entry-task-09-drop-store-force-fetch-decision-02> schema:text "Drop force: true at both call sites in Store.fetch (main fetch + describedby auto-fetch) — rdflib 2.4.1 already carries the PR #871 fix, so the session tap's flagAuthorizationMetadata() is the working invalidation boundary; no shim needed. Supersedes decision-01.".
 <#entry-task-09-drop-store-force-fetch-openQuestion-01> schema:text "[REMOVED 2026-10-19] Resolved by decision-02: dropping force is safe; the only real blocker is OfflineCapableFetcher's header-less cache-hit response.".
@@ -588,9 +588,9 @@
     plan:goal <#entry-task-08-review-fixes-search-demand-api-goal-01>;
     plan:touchesFile "core/src/PodOs.spec.ts", "core/src/search/SearchGateway.spec.ts", "core/src/search/SearchGateway.ts";
     plan:dependsOn <#task-07-core-searchindex-demand-api>;
-    dct:modified "2026-10-19T20:48:02Z"^^xsd:dateTime;
+    dct:modified "2026-10-20T18:36:00Z"^^xsd:dateTime;
     dct:created "2026-10-15T09:12:19Z"^^xsd:dateTime;
-    plan:status plan:planned;
+    plan:status plan:done;
     plan:parent <#plan>;
     dct:title "Review fixes for the search demand API (task-07 findings)";
     a plan:Task.
