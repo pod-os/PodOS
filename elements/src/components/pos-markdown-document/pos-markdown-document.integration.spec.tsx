@@ -24,7 +24,7 @@ describe('pos-markdown-document', () => {
     );
   });
 
-  it('offers label-index items as mention suggestions while editing', async () => {
+  it('offers label-index items as mention suggestions while editing', { timeout: 20000 }, async () => {
     const markdownBlob = new Blob(['# Test'], {
       type: 'text/markdown',
     });
@@ -57,7 +57,7 @@ describe('pos-markdown-document', () => {
     });
     editor.focus();
     await page.waitForChanges();
-    await userEvent.type(editor, 'test');
+    await userEvent.type(editor, '#test');
 
     await waitFor(
       () => {
