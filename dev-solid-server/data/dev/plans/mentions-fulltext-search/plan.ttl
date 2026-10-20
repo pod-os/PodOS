@@ -4,9 +4,8 @@
 @prefix dct: <http://purl.org/dc/terms/>.
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
 
-<http://localhost:3000/dev/plans/mentions-fulltext-search/plan.ttl#plan> dct:modified "2026-10-20T18:22:00Z"^^xsd:dateTime.
-<#plan> dct:modified "2026-10-20T07:35:00Z"^^xsd:dateTime.
-<#task-09-drop-store-force-fetch> dct:modified "2026-10-19T22:07:03Z"^^xsd:dateTime;
+<#plan> dct:modified "2026-10-20T18:24:00Z"^^xsd:dateTime.
+<#task-09-drop-store-force-fetch> dct:modified "2026-10-20T18:24:00Z"^^xsd:dateTime;
     dct:title "Drop Store.fetch force: true, rely on session-boundary invalidation".
 <#entry-task-09-drop-store-force-fetch-context-01> schema:text "Surfaced while reviewing the task-08 gateway profile fetch (2026-10-19): Store.fetch forces every request; caching belongs at the rdflib/Store level, not in gateways. Originally drafted as 'keep force, add session-boundary invalidation'; flipped to 'drop force now' after Angelo pointed out rdflib 2.4.1 already carries the PR #871 fix (decision-02).".
 <#entry-task-09-drop-store-force-fetch-goal-01> schema:text "Store.fetch() no longer force-fetches every request: drop force: true; rdflib's fetcher state is invalidated at the session boundary via the session tap's flagAuthorizationMetadata(). Re-fetching happens when the session changes, not on every fetch.".
@@ -687,7 +686,6 @@
 <#entry-task-09-drop-store-force-fetch-decision-02> schema:text "Drop force: true at both call sites in Store.fetch (main fetch + describedby auto-fetch) — rdflib 2.4.1 already carries the PR #871 fix, so the session tap's flagAuthorizationMetadata() is the working invalidation boundary; no shim needed. Supersedes decision-01.".
 <http://localhost:3000/dev/plans/mentions-fulltext-search/plan.ttl#task-09-drop-store-force-fetch> <http://localhost:3000/dev/plans/plan-ontology.ttl#status> <http://localhost:3000/dev/plans/plan-ontology.ttl#done>;
     <http://localhost:3000/dev/plans/plan-ontology.ttl#touchesFile> "core/src/Store.ts", "core/src/Store.spec.ts", "core/src/PodOs.spec.ts";
-    dct:modified "2026-10-20T18:22:00Z"^^xsd:dateTime;
     <http://localhost:3000/dev/plans/plan-ontology.ttl#verification> <http://localhost:3000/dev/plans/mentions-fulltext-search/plan.ttl#entry-task-09-drop-store-force-fetch-verification-01>;
     <http://localhost:3000/dev/plans/plan-ontology.ttl#note> <http://localhost:3000/dev/plans/mentions-fulltext-search/plan.ttl#entry-task-09-drop-store-force-fetch-note-01>.
 <http://localhost:3000/dev/plans/mentions-fulltext-search/plan.ttl#entry-task-09-drop-store-force-fetch-verification-01> a schema:Comment;
@@ -698,3 +696,10 @@
     schema:text "The openQuestion entry (kept as history, assertion removed) — whether flagAuthorizationMetadata alone can replace the blanket force — is answered by the PodOs.spec session-boundary guard: it pins re-fetch after a session change, keeping force's session-boundary freshness covered while the per-request cost is gone.";
     prov:wasAttributedTo <http://localhost:3000/dev/plans/agents.ttl#llm-glm-5.3-flash>;
     dct:created "2026-10-20T18:22:00Z"^^xsd:dateTime.
+<http://localhost:3000/dev/plans/mentions-fulltext-search/plan.ttl#task-09-drop-store-force-fetch> <http://localhost:3000/dev/plans/plan-ontology.ttl#note> <http://localhost:3000/dev/plans/mentions-fulltext-search/plan.ttl#entry-task-09-drop-store-force-fetch-note-05>.
+<http://localhost:3000/dev/plans/mentions-fulltext-search/plan.ttl#entry-task-09-drop-store-force-fetch-note-05> a schema:Comment;
+    schema:text "Angelo caught the process gap (2026-10-20): the describedby de-force shipped as a refactor with no test pinning it, and the PodOs session-boundary test cannot be shown red independently. He kept the guard test (accepted as a pin rather than a red-green driver) and ruled that a negative test pinning the absence of force: true is overkill — the describedby de-force stays unpinned by design.";
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
+    dct:created "2026-10-20T18:24:00Z"^^xsd:dateTime.
+<http://localhost:3000/dev/plans/mentions-fulltext-search/plan.ttl#entry-task-09-drop-store-force-fetch-verification-01> prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>.
+<http://localhost:3000/dev/plans/mentions-fulltext-search/plan.ttl#entry-task-09-drop-store-force-fetch-note-01> prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>.
