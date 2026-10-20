@@ -14,7 +14,6 @@ import { graph, lit, st, sym } from "rdflib";
 import { pim, rdfs } from "../namespaces";
 import { LabelIndex } from "./LabelIndex";
 import { Thing } from "../thing";
-import { solid } from "@solid-data-modules/rdflib-utils";
 describe(SearchGateway.name, () => {
   describe("build search index", () => {
     it("creates an index that can find indexed items", async () => {
@@ -37,15 +36,14 @@ describe(SearchGateway.name, () => {
       );
 
       // and a profile with a private label index
-      internalStore.add(
-        st(
-          sym("https://pod.test/profile/card#me"),
-          solid("privateLabelIndex"),
-          sym("https://pod.test/profile/privateLabelIndex.ttl"),
-          sym("https://pod.test/profile/card"),
-        ),
+      mockTurtleDocument(
+        fetchMock,
+        "https://pod.test/profile/card",
+        `
+      @prefix solid: <http://www.w3.org/ns/solid/terms#>.
+      <https://pod.test/profile/card#me> solid:privateLabelIndex <https://pod.test/profile/privateLabelIndex.ttl> .
+    `,
       );
-      mockTurtleDocument(fetchMock, "https://pod.test/profile/card", "");
 
       // and the index contains data
       mockTurtleDocument(
