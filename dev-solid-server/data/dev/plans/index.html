@@ -123,7 +123,7 @@
         // correctly against xsd:dateTime modified stamps
         const created = obj(iri, DCT + 'created');
         return { text, agents: agentList, iri, created: created ? (created.length === 10 ? created + 'T00:00:00Z' : created) : undefined,
-          references: objs(iri, DCT + 'references') };
+          references: objs(iri, DCT + 'references'), sources: objs(iri, DCT + 'source') };
       });
       const plan = {
         iri: planIri,
@@ -291,6 +291,8 @@
         .refs { display: inline-flex; flex-wrap: wrap; gap: .3rem; margin-top: .2rem; }
         .ref-link { font-size: .68rem; font-weight: 600; padding: .05rem .45rem; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); color: var(--accent); cursor: pointer; text-decoration: none; }
         .ref-link:hover { border-color: var(--accent); background: var(--accent-soft); }
+        .ref-link.ref-ext { color: var(--muted); font-weight: 400; }
+        .ref-link.ref-ext:hover { color: var(--accent); }
         /* flash: brief highlight of the jumped-to entry */
         @keyframes entry-flash { 0%, 60% { background: var(--accent-soft); box-shadow: inset 3px 0 0 var(--accent); } 100% { background: transparent; box-shadow: none; } }
         .entry.flash { animation: entry-flash 1.6s ease-out; }
@@ -370,6 +372,7 @@
         const justCopied = this.copiedUri === e.iri;
         const copyFailed = this.copiedUri === 'error:' + e.iri;
         const refs = this.renderRefs(e);
+        const sources = this.renderSources(e);
         return html`<li class="entry${isNew ? ' is-new' : ''}${justCopied ? ' copied' : ''}${copyFailed ? ' copy-failed' : ''}"
                         data-entry-iri=${e.iri ?? ''}>
           ${e.iri ? html`<button class="badge badge-copy" title="Copy URI: ${e.iri}" @click=${ev => this.copyUri(ev, e.iri)}>${justCopied ? '✓' : copyFailed ? '✗' : '⧉'}</button>` : ''}
@@ -377,6 +380,7 @@
             <span class="badges">${badges}</span>
             <span class="text">${e.text}</span>
             ${refs ? html`<span class="refs">${refs}</span>` : ''}
+            ${sources ? html`<span class="refs">${sources}</span>` : ''}
           </span>
         </li>`;
       }
@@ -390,6 +394,19 @@
           const target = this.plan.entriesByIri[r];
           const slug = r.split('#').pop() ?? r;
           return html`<a class="ref-link" title="${target.text}" @click=${ev => { ev.preventDefault(); this.jumpTo(r); }}>${slug}</a>`;
+        });
+      }
+      // source chips: external links (e.g. the GitHub review comment an entry
+      // derives from); opened in a new tab, labelled by the URL fragment
+      renderSources(e) {
+        const sources = (e.sources ?? []).filter(Boolean);
+        if (!sources.length) return null;
+        return sources.map(src => {
+          let label = src.split('/').pop() ?? src;
+          const hashIndex = label.indexOf('#');
+          if (hashIndex >= 0) label = label.slice(hashIndex + 1);
+          label = label.replace(/^discussion_r/, 'review r');
+          return html`<a class="ref-link ref-ext" href=${src} target="_blank" rel="noopener" title="Source: ${src}">${label} ↗</a>`;
         });
       }
       jumpTo(iri) {
