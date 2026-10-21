@@ -76,10 +76,10 @@
     plan:context <#entry-task-17-drop-technical-wiring-tests-context-01>;
     plan:goal <#entry-task-17-drop-technical-wiring-tests-goal-01>;
     plan:touchesFile "elements/src/components/pos-markdown-document/pos-markdown-document.spec.tsx", "elements/src/components/pos-markdown-document/rich-editor/RichEditor.spec.tsx";
-    dct:modified "2026-10-21T16:55:00Z"^^xsd:dateTime;
+    dct:modified "2026-10-21T20:12:00Z"^^xsd:dateTime;
     dct:created "2026-10-21T16:55:00Z"^^xsd:dateTime;
     plan:dependsOn <#task-16-mention-index-built-once>, <#task-15-mention-items-own-function>, <#task-14-mention-required-pod-os-instance>;
-    plan:status plan:planned;
+    plan:status plan:done;
     plan:parent <#plan>;
     dct:title "Drop the technical wiring tests";
     a plan:Task.
@@ -181,8 +181,7 @@
     plan:parent <#plan>;
     dct:title "Mention extension requires a PodOS instance";
     a plan:Task.
-<#plan> plan:hasTask <#task-18-integration-test-testing-library>, <#task-17-drop-technical-wiring-tests>, <#task-16-mention-index-built-once>, <#task-15-mention-items-own-function>, <#task-14-mention-required-pod-os-instance>;
-    dct:modified "2026-10-21T20:05:00Z"^^xsd:dateTime.
+<#plan> plan:hasTask <#task-18-integration-test-testing-library>, <#task-17-drop-technical-wiring-tests>, <#task-16-mention-index-built-once>, <#task-15-mention-items-own-function>, <#task-14-mention-required-pod-os-instance>.
 <#entry-task-13-mention-typing-performance-context-01> dct:created "2026-10-20T20:18:00Z"^^xsd:dateTime;
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
     schema:text "Draft — reported by Angelo after trying the feature in the running app (2026-10-20); needs planning through before implementation (measure first, then pick the throttle point: tiptap suggestion items() vs RichEditor-level rxjs, aligned with pos-navigation's debounce pattern).";
@@ -880,7 +879,7 @@
     plan:context <#entry-plan-context-03>, <#entry-plan-context-02>, <#entry-plan-context-01>;
     plan:hasTask <#task-13-mention-typing-performance>, <#task-11-remove-session-watch-demand-on-receive>, <#task-10-simplify-pos-navigation-session-watch>, <#task-09-drop-store-force-fetch>, <#task-08-review-fixes-search-demand-api>, <#task-07-core-searchindex-demand-api>, <#task-06-fallback-create-things-on-the-fly>, <#task-05-mention-suggestions-from-search-and-store>, <#task-04-fix-cache-reference-invalidation>, <#task-03-remove-search-dom-events>, <#task-02-recreate-search-index-on-label-update>, <#task-01-cache-search-index-in-core>;
     dct:created "2026-10-09"^^xsd:date;
-    dct:modified "2026-10-21T20:05:00Z"^^xsd:dateTime;
+    dct:modified "2026-10-21T20:12:00Z"^^xsd:dateTime;
     plan:status plan:in-progress;
     dct:description "Replace hard-coded items in RichEditor markdown mentions with label search over the search index, same as pos-navigation. Refactor the search-index ownership first, re-enable the mention extension afterwards.";
     dct:title "RichEditor mentions <- full-text search (refactor first)";

@@ -188,23 +188,6 @@ describe('RichEditor', () => {
     });
   });
 
-  describe('wiring', () => {
-    it('wires the mention extension to the given PodOS instance', () => {
-      const div = document.createElement('div');
-      const mockSearchIndex = {
-        search: vi.fn().mockReturnValue([]),
-      } as unknown as SearchIndex;
-      const os = {
-        buildSearchIndex: vi.fn().mockResolvedValue(mockSearchIndex),
-        store: { get: vi.fn() },
-      } as unknown as PodOS;
-      const editor = new RichEditor(div, '# Hello World', 'https://pod.test', os);
-      // @ts-ignore Accessing a private field here for testing
-      const mention = editor.editor.extensionManager.extensions.find(extension => extension.name === 'mention');
-      expect(mention).toBeDefined();
-    });
-  });
-
   describe('sanitization', () => {
     const emptyParagraph = '<p><br class="ProseMirror-trailingBreak"></p>';
 
