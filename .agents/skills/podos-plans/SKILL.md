@@ -11,31 +11,113 @@ The vocabulary is `<pod>/plans/plan-ontology.ttl` (prefix `plan:`), the
 shapes are `<pod>/plans/plans.shacl.ttl`.
 
 The currently worked-on plan is the **active plan**, tracked by a
-`plan:active` pointer in `<pod>/plans/active.ttl`. The HTML viewer
+`plan:active` pointer in `<pod>/plans/active.ttl` — resolve it with
+`queries/active-plan.sparql`. The HTML viewer
 (`http://localhost:3000/dev/plans/index.html` with the dev server running,
 via `npm run dev:server`) renders the active plan as a board with full-screen
 task detail; when starting or resuming work, check or set this pointer first.
 
 ## Reading plans
 
-Query with `sparql_query_files` over the plan files (or all of them at once):
+**Queries first — the rules for this skill, in order:**
 
-- Next work: all tasks with `plan:status plan:planned` whose dependencies
-  (`plan:dependsOn`) are all `plan:done` — in that order across plans.
-- Plan code impact: tasks where `plan:touchesFile` matches a path.
+1. **Before writing any SPARQL, run `discover_sparql_queries`** (or look in
+   `.agents/skills/podos-plans/queries/`) — proven query files there
+   already encode the vocabulary, prefixes and patterns that work against the
+   pod. Reuse one, wrapped in a `GRAPH` pattern (below), whenever the
+   question matches. Prefer `queries/next-work.sparql` and
+   `queries/open-tasks-by-plan.sparql` for "what is next / what is open".
+2. **Never invent a prefix block from memory — copy it from the query files.**
+   In particular the pod uses the **HTTPS** form: `PREFIX schema:
+   <https://schema.org/>` (not the conventional `http://schema.org/`). A
+   wrong-variant prefix does not error — the query silently returns nothing.
+3. **Only write ad-hoc SPARQL when no existing query fits.** If you must,
+   start from the closest existing file's prefix block and patterns, not
+   from scratch.
+
+## Reading plans (mechanics)
+
+Read over HTTP with **ld_fetch + rdf_memory_query**, never from the
+filesystem (`file://` paths differ per checkout — the `plan:` prefix cannot
+match across machines). Every fetched document lands in its own named graph
+(see the linked-data-fetch skill); queries must therefore scope to graphs.
+
+**1. Fetch.** Fetch every document you want to query into the `fetched-data`
+store:
+
+- The plan container listing — `ld_fetch http://localhost:3000/dev/plans/`
+  — to discover plan directories (`ldp:contains`; each directory holds a
+  `plan.ttl`).
+- Each plan's document — `ld_fetch http://localhost:3000/dev/plans/<plan-slug>/plan.ttl`
+  — becomes `GRAPH <http://localhost:3000/dev/plans/<plan-slug>/plan.ttl>`.
+- `active.ttl` only for the active-plan query (see below).
+
+Re-fetching the same URI atomically replaces its graph — use it to refresh
+after a write or when data may be stale.
+
+**2. Query.** The query files carry no `GRAPH` clauses — their bare triple
+patterns match nothing in `fetched-data` (the default graph is always
+empty). Before running one, wrap its whole body in a graph pattern. For
+queries that should span **all fetched plans**, use the variable-graph form
+with a plan-prefix filter (keeps unrelated fetched documents out):
+
+```sparql
+GRAPH ?g {
+  <query-file body, verbatim>
+  FILTER(STRSTARTS(STR(?g), "http://localhost:3000/dev/plans/"))
+}
+```
+
+For queries scoped to **one plan**, substitute the concrete graph:
+`GRAPH <http://localhost:3000/dev/plans/<plan-slug>/plan.ttl> { <body> }`.
+Verify the exact graph IRI in the ld_fetch result — never reconstruct it.
+
+**Default to querying over ALL plans.** Fetch every plan file discovered
+from the container listing. Do NOT chase the active-plan pointer:
+the cross-graph active-plan query needs every plan fetched anyway, and a
+missing plan graph makes the query silently return empty — indistinguishable
+from "no data". Determine the plan being worked on from the data itself:
+plans with `plan:status plan:in-progress` (see
+`queries/in-progress-plans.sparql`), or `queries/open-tasks-by-plan.sparql`
+for where open work lives. The `active.ttl` pointer is what the HTML viewer
+switches on — it is secondary for agents; read it only when explicitly asked
+what the viewer shows. Then customize the query when the question doesn't
+match: narrow FILTERs, fill the `<path fragment>` / `<YYYY-MM-DD>`
+placeholders, blend pieces of two files.
+
+- Status filtering uses full IRIs; display is nicer with
+  `STRAFTER(STR(?status), "#")` (see the queries).
+- Table output truncates long `schema:text` cells; use `format: "csv"` for full
+  text, or re-run narrower queries.
+- Hash-URI fetches (`plan.ttl#task-…`) still store the whole document in
+  `GRAPH <plan.ttl>` — query that graph; never re-fetch for a fragment.
+- Next work: `queries/next-work.sparql` — open tasks (draft, planned,
+  in-progress) whose `plan:dependsOn` are all `plan:done`. A `plan:draft`
+  task in the result means the next step is planning it through (resolve or
+  park its open questions, write scope/verification), not implementation.
+- Plan code impact: `queries/tasks-touching-file.sparql` with a path.
 - Full context: for a single plan, query everything about it
   (`plan:context`, `plan:decision`, `plan:openQuestion`, `plan:option`,
   `plan:note` — each resolving to schema:Comment entries) — narrative detail
   lives in the graph.
 
-For human browsing, open the HTML viewer — there are no markdown views.
+- For human browsing, open the HTML viewer — there are no markdown views.
+- `queries/active-plan.sparql` is the one cross-graph join: fetch `active.ttl`
+  (graph `<http://localhost:3000/dev/plans/active.ttl>`) **and** all plan
+  files, then run its plan-side body inside `GRAPH ?g` (with the prefix
+  filter) joined against a fixed
+  `GRAPH <http://localhost:3000/dev/plans/active.ttl> { ?active plan:active ?plan }`.
+  Not the default path — the pointer can be stale or unset while work
+  continues.
+- Before writing an ad-hoc query, check what predicates exist:
+  `rdf_schema_overview` (with `store: "fetched-data"` once the plan documents
+  are fetched) or read `dev-solid-server/data/dev/plans/plan-ontology.ttl`.
+  Unknown properties return empty results, not errors.
 
 IRIs: relative to each plan document — plan `<plan.ttl#plan>`, task
-`<plan.ttl#task-<NN>-<slug>>` (two digits, lowercase-hyphen slug). The plan
-directory also holds `plan-ontology.ttl` (the `plan:` vocabulary) and
-`plans.shacl.ttl` (the shapes); subdirectory plans reference the vocabulary
-via `../plan-ontology.ttl#`. Resolve all IRIs against the pod URL
-(`BASE <http://localhost:3000/dev/plans/>` in filesystem queries).
+`<plan.ttl#task-<NN>-<slug>>` (two digits, lowercase-hyphen slug). Every plan
+directory resolves `plan-ontology.ttl` to the same absolute IRI, so the
+shared `plan:` prefix in the queries works for any plan at any depth.
 
 ## Writing plans
 
@@ -48,12 +130,15 @@ Every write must end in a validated file. The loop:
    changes). Keep `dct:modified` on the plan current when its content changes
    (xsd:dateTime, UTC); entries always carry `dct:created` (xsd:date).
 3. **Validate before reporting done:** `rdf_validate` with
-   `dev-solid-server/data/dev/plans/plans.shacl.ttl` against the edited file. `conforms: true`
-   is the completion criterion of every write — a failing shape means fix and
-   re-validate, never hand back an invalid file.
+   `dev-solid-server/data/dev/plans/plans.shacl.ttl` against the edited file.
+   `conforms: true` is the completion criterion of every write — a failing
+   shape means fix and re-validate, never hand back an invalid file.
 4. **Status transitions** are a one-triple `rdf_patch`
    (`plan:status plan:planned` → `plan:done`, etc.). A `done` transition is
    only written when the user confirms the work is finished.
+5. Writes go through the filesystem; the pod picks them up on the next
+   HTTP read — re-fetch the edited document with `ld_fetch` to see the
+   change in `fetched-data`.
 
 ## Modelling rules
 

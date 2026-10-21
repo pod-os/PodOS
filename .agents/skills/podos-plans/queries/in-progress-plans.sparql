@@ -1,0 +1,12 @@
+PREFIX plan: <http://localhost:3000/dev/plans/plan-ontology.ttl#>
+PREFIX dct:   <http://purl.org/dc/terms/>
+
+# Which plans are currently in progress, across all plan files.
+# Run over all plan sources at once — see the podos-plans skill.
+
+SELECT ?plan ?title
+WHERE {
+  ?plan a plan:Plan ;
+        dct:title ?title ;
+        plan:status plan:in-progress .
+}

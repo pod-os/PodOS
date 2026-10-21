@@ -1,0 +1,16 @@
+PREFIX plan: <http://localhost:3000/dev/plans/plan-ontology.ttl#>
+PREFIX dct:   <http://purl.org/dc/terms/>
+PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX schema:<https://schema.org/>
+PREFIX prov:  <http://www.w3.org/ns/prov#>
+
+# Blocked tasks (inverse check — which open tasks still wait on undone
+# deps; the complement of the next-work query).
+
+SELECT (STRAFTER(STR(?task), "#task-") AS ?id)
+  (GROUP_CONCAT(DISTINCT STRAFTER(STR(?dep), "#task-"); separator=", ") AS ?blockedBy)
+WHERE {
+      ?task plan:dependsOn ?dep . ?dep plan:status ?depStatus .
+    FILTER(?depStatus != plan:done)
+}
+GROUP BY ?task
