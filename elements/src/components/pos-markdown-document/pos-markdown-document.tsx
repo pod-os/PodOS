@@ -64,24 +64,26 @@ export class PosMarkdownDocument {
   }
 
   componentDidLoad() {
-    this.editor = new RichEditor(this.editorEl, this.markdown, this.file.url, usePodOS(this.host));
-    this.editor.onUpdate(() => {
-      this.isModified = true;
+    usePodOS(this.host).then(os => {
+      this.editor = new RichEditor(this.editorEl, this.markdown, this.file.url, os);
+      this.editor.onUpdate(() => {
+        this.isModified = true;
+      });
+      this.editor
+        .observeChanges()
+        .pipe(
+          takeUntil(this.disconnected$),
+          map(changes => changes.content),
+          tap(markdown => {
+            this.isModified = false;
+            this.documentModified.emit({
+              file: this.file,
+              newContent: markdown,
+            });
+          }),
+        )
+        .subscribe();
     });
-    this.editor
-      .observeChanges()
-      .pipe(
-        takeUntil(this.disconnected$),
-        map(changes => changes.content),
-        tap(markdown => {
-          this.isModified = false;
-          this.documentModified.emit({
-            file: this.file,
-            newContent: markdown,
-          });
-        }),
-      )
-      .subscribe();
   }
 
   disconnectedCallback() {
