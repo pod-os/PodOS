@@ -7,7 +7,8 @@ have.
 
 We'll chat about how best to implement your ideas in PodOS and its
 [architecture](https://github.com/pod-os/PodOS/blob/main/docs/contributing/architecture.md),
-as well as the conventions we use to maintain a healthy code base. We use
+as well as the conventions we use to maintain a healthy code base, described in
+our [code style](./docs/contributing/code-style.md). We use
 [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) and
 test-driven development. Unit tests are written before implementation to provide
 small and clear commits.
