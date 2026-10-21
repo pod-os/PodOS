@@ -1,6 +1,6 @@
 ---
 name: documenting-decisions
-description: Write plan:decision entries in PodOS plans — what the text of a decision states (first sentence = the choice, no mechanics, no narration, no WIP state) and how to split entries mixing the human's choice with LLM-authored detail. Use when creating a plan:decision entry, or reviewing or rewriting existing ones. Not for ADRs (see the adr skill).
+description: Write plan:decision entries in PodOS plans — what the text of a decision states (first sentence = the choice, no mechanics, no narration, no WIP state), who it is attributed to (human vs LLM authorship, incl. delegated/autonomous work), and how to split entries mixing the human's choice with LLM-authored detail. Use when creating a plan:decision entry, or when reviewing, rewriting, or attributing existing ones. Not for ADRs (see the adr skill).
 ---
 
 # Documenting decisions
@@ -36,3 +36,12 @@ When an entry would mix the human's choice with LLM-authored mechanics or
 rationale, split it: the choice in a human-attributed `plan:decision`, the
 mechanics and rationale in a separate LLM-attributed `plan:scope` or
 `plan:note` entry (full attribution rules in the podos-plans skill).
+
+## Attribution
+
+Attribution is decided entry by entry with one question: did a human state
+this (verbatim quote, explicit choice, confirmation)? Their WebID if yes; the
+LLM's agent if no.
+
+**Delegation shifts attribution to the LLM.** When the human hands a task over
+to run autonomously ("plan this yourself", "do it without asking"), text extrusions from LLM are attributed to the LLM agent.
