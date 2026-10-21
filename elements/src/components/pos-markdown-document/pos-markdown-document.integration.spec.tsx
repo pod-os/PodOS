@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, h, it, render } from '@stencil/vitest';
-import { authenticatedUser, server, turtleFile } from '../../test/msw';
-import { waitFor } from '@testing-library/dom';
+import { waitFor, within } from '@testing-library/dom';
+import { userEvent } from '@testing-library/user-event';
 
 import { SolidFile } from '@pod-os/core';
-import { userEvent } from '@testing-library/user-event';
+import { authenticatedUser, server, turtleFile } from '../../test/msw';
 
 describe('pos-markdown-document', () => {
   beforeEach(() => {
@@ -24,7 +24,7 @@ describe('pos-markdown-document', () => {
     );
   });
 
-  it('offers label-index items as mention suggestions while editing', { timeout: 20000 }, async () => {
+  it('offers label-index items as mention suggestions while editing', async () => {
     const markdownBlob = new Blob(['# Test'], {
       type: 'text/markdown',
     });
@@ -40,33 +40,27 @@ describe('pos-markdown-document', () => {
     );
     await page.waitForChanges();
     const markdownDocument = page.root.querySelector('pos-markdown-document')!;
-    await waitFor(() => {
-      expect(markdownDocument.shadowRoot!.querySelector('article header button')).not.toBeNull();
-    });
 
     // start editing
-    const editButton = markdownDocument.shadowRoot!.querySelector('article header button') as HTMLElement;
-    editButton.click();
+    await waitFor(() => expect(within(markdownDocument.shadowRoot as HTMLElement).getByRole('button', { name: 'Edit' })).toBeInTheDocument());
+    within(markdownDocument.shadowRoot as HTMLElement)
+      .getByRole('button', { name: 'Edit' })
+      .click();
     await page.waitForChanges();
 
     // type the mention trigger and query
-    const editor = (await waitFor(() => {
-      const el = markdownDocument.shadowRoot!.querySelector('div.content .ProseMirror');
-      expect(el).not.toBeNull();
+    const editor = await waitFor(() => {
+      const el = within(markdownDocument.shadowRoot as HTMLElement).getByRole('textbox');
+      expect(el).toBeInTheDocument();
       return el;
-    })) as HTMLElement;
-    editor.focus();
-    await page.waitForChanges();
+    });
     await userEvent.type(editor, '#test');
 
-    await waitFor(
-      () => {
-        // tiptap mounts the suggestion popup into document.body, not the shadow root
-        const options = Array.from(document.body.querySelectorAll('pos-mention-menu li'));
-        expect(options).toHaveLength(1);
-        expect(options[0]).toHaveTextContent('Test found it');
-      },
-      { timeout: 5000 },
-    );
+    // tiptap mounts the suggestion popup into document.body, not the shadow root
+    await waitFor(() => {
+      const options = within(document.body).getAllByRole('option');
+      expect(options).toHaveLength(1);
+      expect(options[0]).toHaveTextContent('Test found it');
+    });
   });
 });

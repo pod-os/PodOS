@@ -2,7 +2,7 @@ import { vi } from 'vitest';
 import { afterEach, beforeEach, describe, expect, it } from '@stencil/vitest';
 
 import { RichEditor } from './RichEditor';
-import { PodOS, SearchIndex } from '@pod-os/core';
+import { PodOS } from '@pod-os/core';
 import { Subscription, tap } from 'rxjs';
 
 describe('RichEditor', () => {
