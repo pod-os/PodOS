@@ -1,0 +1,21 @@
+PREFIX plan: <http://localhost:3000/dev/plans/plan-ontology.ttl#>
+PREFIX dct:   <http://purl.org/dc/terms/>
+PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX schema:<https://schema.org/>
+PREFIX prov:  <http://www.w3.org/ns/prov#>
+
+# Next work: open tasks whose deps are all done. `plan:draft` tasks are
+# included — they are next work too, but first need planning through
+# (see the podos-plans skill: a task must not start with open questions).
+# Works across all fetched plan graphs at once.
+
+SELECT (STRAFTER(STR(?task), "#task-") AS ?id) ?title ?state
+WHERE {
+      ?task rdf:type plan:Task ; dct:title ?title ; plan:status ?status .
+    FILTER(?status IN (plan:draft, plan:planned, plan:in-progress))
+    BIND(STRAFTER(STR(?status), "#") AS ?state)
+    FILTER NOT EXISTS {
+      ?task plan:dependsOn ?dep . ?dep plan:status ?depStatus .
+      FILTER(?depStatus != plan:done)
+  }
+}
