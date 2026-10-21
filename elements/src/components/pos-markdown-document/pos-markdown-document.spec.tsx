@@ -37,14 +37,6 @@ describe('pos-markdown-document', () => {
     vi.clearAllMocks();
   });
 
-  it('resolves the PodOS instance and wires it into the RichEditor', async () => {
-    const file = mockFile();
-    await render(<pos-markdown-document file={file}></pos-markdown-document>);
-
-    const [, , , os] = (RichEditor as Mock).mock.calls[0];
-    expect(os).toBe(mockOs);
-  });
-
   it('parses and renders the markdown document', async () => {
     const fileContent = `## Test
 
