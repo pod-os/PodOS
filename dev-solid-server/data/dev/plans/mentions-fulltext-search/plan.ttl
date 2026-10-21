@@ -142,10 +142,10 @@
     plan:context <#entry-task-15-mention-items-own-function-context-01>;
     plan:goal <#entry-task-15-mention-items-own-function-goal-01>;
     plan:touchesFile "elements/src/components/pos-markdown-document/rich-editor/mention-extension/index.spec.ts", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/index.ts", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/items.spec.ts", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/items.ts";
-    dct:modified "2026-10-21T16:55:00Z"^^xsd:dateTime;
+    dct:modified "2026-10-21T20:05:00Z"^^xsd:dateTime;
     dct:created "2026-10-21T16:55:00Z"^^xsd:dateTime;
     plan:dependsOn <#task-14-mention-required-pod-os-instance>;
-    plan:status plan:planned;
+    plan:status plan:done;
     plan:parent <#plan>;
     dct:title "Mention items as own tested function";
     a plan:Task.
@@ -182,7 +182,7 @@
     dct:title "Mention extension requires a PodOS instance";
     a plan:Task.
 <#plan> plan:hasTask <#task-18-integration-test-testing-library>, <#task-17-drop-technical-wiring-tests>, <#task-16-mention-index-built-once>, <#task-15-mention-items-own-function>, <#task-14-mention-required-pod-os-instance>;
-    dct:modified "2026-10-21T16:55:00Z"^^xsd:dateTime.
+    dct:modified "2026-10-21T20:05:00Z"^^xsd:dateTime.
 <#entry-task-13-mention-typing-performance-context-01> dct:created "2026-10-20T20:18:00Z"^^xsd:dateTime;
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
     schema:text "Draft — reported by Angelo after trying the feature in the running app (2026-10-20); needs planning through before implementation (measure first, then pick the throttle point: tiptap suggestion items() vs RichEditor-level rxjs, aligned with pos-navigation's debounce pattern).";
