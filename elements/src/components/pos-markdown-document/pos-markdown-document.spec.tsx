@@ -1,5 +1,5 @@
 import { Mock, vi } from 'vitest';
-import { afterEach, describe, expect, h, it, render } from '@stencil/vitest';
+import { afterEach, beforeEach, describe, expect, h, it, render } from '@stencil/vitest';
 
 // @ts-ignore
 import { RichEditor } from './rich-editor';
@@ -24,22 +24,25 @@ vi.mock('./rich-editor', () => ({
 }));
 
 describe('pos-markdown-document', () => {
+  const mockOs = {
+    buildSearchIndex: vi.fn(),
+    store: { get: vi.fn() },
+  } as unknown as PodOS;
+
+  beforeEach(() => {
+    mockOsProvider(mockOs);
+  });
+
   afterEach(() => {
     vi.clearAllMocks();
   });
 
-  it('wires the PodOS instance into the RichEditor', async () => {
-    const mockOs = {
-      buildSearchIndex: vi.fn(),
-      store: { get: vi.fn() },
-    } as unknown as PodOS;
-    mockOsProvider(mockOs);
-
+  it('resolves the PodOS instance and wires it into the RichEditor', async () => {
     const file = mockFile();
     await render(<pos-markdown-document file={file}></pos-markdown-document>);
 
     const [, , , os] = (RichEditor as Mock).mock.calls[0];
-    await expect(os).resolves.toBe(mockOs);
+    expect(os).toBe(mockOs);
   });
 
   it('parses and renders the markdown document', async () => {
