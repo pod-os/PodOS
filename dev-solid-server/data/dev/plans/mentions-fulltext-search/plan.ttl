@@ -5,7 +5,7 @@
 @prefix dct: <http://purl.org/dc/terms/>.
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
 
-<#plan> dct:modified "2026-10-21T21:39:00Z"^^xsd:dateTime;
+<#plan> dct:modified "2026-10-21T21:45:00Z"^^xsd:dateTime;
     plan:hasTask <#task-19-shadow-dom-testing-library>.
 <#task-19-shadow-dom-testing-library> dct:modified "2026-10-21T21:39:00Z"^^xsd:dateTime;
     plan:status plan:done.
@@ -186,19 +186,66 @@
     dct:title "Mention extension requires a PodOS instance";
     a plan:Task.
 <#plan> plan:hasTask <#task-18-integration-test-testing-library>, <#task-17-drop-technical-wiring-tests>, <#task-16-mention-index-built-once>, <#task-15-mention-items-own-function>, <#task-14-mention-required-pod-os-instance>.
-<#entry-task-13-mention-typing-performance-context-01> dct:created "2026-10-20T20:18:00Z"^^xsd:dateTime;
+<#entry-task-13-mention-typing-performance-context-01> dct:created "2026-10-21T21:45:00Z"^^xsd:dateTime;
+    dct:modified "2026-10-21T21:45:00Z"^^xsd:dateTime;
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
-    schema:text "Draft — reported by Angelo after trying the feature in the running app (2026-10-20); needs planning through before implementation (measure first, then pick the throttle point: tiptap suggestion items() vs RichEditor-level rxjs, aligned with pos-navigation's debounce pattern).";
+    schema:text "Measured before choosing the throttle point (2026-10-21): the suggestion lookup is synchronous lunr query evaluation over the prebuilt inverted index — 0.09 ms per keystroke at 100 indexed items, 0.3 ms at 1k, 2.8 ms at 10k, 16–32 ms at 50k–100k; the cost grows with postings, not corpus size. The items call already resolves the cached-index promise from task-16, so the per-keystroke cost is the lookup plus the popup re-render. The installed @tiptap/suggestion 3.31.3 natively supports a debounce option on the suggestion config: setTimeout-based, items is called only after the user pauses; a pending lookup is aborted when a newer query, Escape, cursor exit or plugin destroy supersedes it; items receive an AbortSignal; stale results are discarded; the menu keeps its previous items while the next lookup is pending. Planned through (2026-10-21), see decisions and scope.";
     a schema:Comment.
 <#entry-task-13-mention-typing-performance-goal-01> dct:created "2026-10-20T20:18:00Z"^^xsd:dateTime;
     prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
     schema:text "Typing in the mention editor stays responsive: every keystroke currently runs items() synchronously (lunr search over the whole index per keystroke); debounce or otherwise throttle the lookup like pos-navigation's debounced search.";
     a schema:Comment.
+<#entry-task-13-mention-typing-performance-decision-01> dct:created "2026-10-21T21:45:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "Throttle mention suggestion lookups with the suggestion plugin's built-in debounce option instead of an rxjs pipeline around the items function.";
+    a schema:Comment.
+<#entry-task-13-mention-typing-performance-decision-02> dct:created "2026-10-21T21:45:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "Debounce the suggestion lookup by 120 ms — typeahead latency, not the 300 ms used for pos-navigation's search box.";
+    a schema:Comment.
+<#entry-task-13-mention-typing-performance-scope-01> dct:created "2026-10-21T21:45:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "mention-extension/index.ts: add debounce: 120 to the suggestion config; everything else about the config stays. The items function, items.ts and its spec stay unthrottled — the throttle lives in the plugin, not the lookup.";
+    a schema:Comment.
+<#entry-task-13-mention-typing-performance-scope-02> dct:created "2026-10-21T21:45:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "index.spec.ts: pass the full suggestion props shape (query, editor, signal) to the items call so the spec matches the plugin's contract, and add a typed pin that items stays synchronously fast and unthrottled — the debounce belongs to the plugin.";
+    a schema:Comment.
+<#entry-task-13-mention-typing-performance-scope-03> dct:created "2026-10-21T21:45:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "pos-markdown-document.integration.spec.tsx: keep the real 120 ms debounce (a simulated clock in the built bundle is not worth the machinery) and let the existing waitFor accommodate the delayed popup.";
+    a schema:Comment.
+<#entry-task-13-mention-typing-performance-outofscope-01> dct:created "2026-10-21T21:45:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "pos-navigation stays untouched — its rxjs debounce pattern is not unified with the mention debounce (different UX contexts).";
+    a schema:Comment.
+<#entry-task-13-mention-typing-performance-outofscope-02> dct:created "2026-10-21T21:45:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "No redesign of the mention menu: loading state, empty-query state and the empty-menu arrow-key quirk (selectedIndex becomes NaN when arrowing with zero items) are not addressed here; task-06's create-on-the-fly will define the empty state later.";
+    a schema:Comment.
+<#entry-task-13-mention-typing-performance-verification-01> dct:created "2026-10-21T21:45:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "Unit tests (mention extension spec, via wallaby): items resolves the search-index suggestions synchronously for the passed props shape; the suggestion config carries the debounce option. Proven red before the config change.";
+    a schema:Comment.
+<#entry-task-13-mention-typing-performance-verification-02> dct:created "2026-10-21T21:45:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "pos-markdown-document.integration.spec.tsx passes with the debounced popup (waitFor resolves after the debounce window); npx tsc --noEmit on elements/ shows no new errors from the changed files; full elements suite green via wallaby (user side).";
+    a schema:Comment.
+<#entry-task-13-mention-typing-performance-note-01> dct:created "2026-10-21T21:45:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "While the debounce window runs, the plugin calls onStart/onUpdate with the previous items and loading: true, so the menu briefly shows the stale list rather than blanking; the render ignores the loading flag and the menu component has no loading state (kept as-is). Sizing rationale: at realistic pod sizes (up to ~1k indexed items) a lookup is sub-millisecond, so the debounce only trims popup re-renders during fast typing; a smaller value keeps the menu from lagging noticeably and leaves less empty-box time for task-06's future create option.";
+    a schema:Comment.
 <#task-13-mention-typing-performance> plan:context <#entry-task-13-mention-typing-performance-context-01>;
     plan:goal <#entry-task-13-mention-typing-performance-goal-01>;
-    dct:modified "2026-10-20T20:18:00Z"^^xsd:dateTime;
+    plan:decision <#entry-task-13-mention-typing-performance-decision-01>, <#entry-task-13-mention-typing-performance-decision-02>;
+    plan:scope <#entry-task-13-mention-typing-performance-scope-01>, <#entry-task-13-mention-typing-performance-scope-02>, <#entry-task-13-mention-typing-performance-scope-03>;
+    plan:outOfScope <#entry-task-13-mention-typing-performance-outofscope-01>, <#entry-task-13-mention-typing-performance-outofscope-02>;
+    plan:verification <#entry-task-13-mention-typing-performance-verification-01>, <#entry-task-13-mention-typing-performance-verification-02>;
+    plan:note <#entry-task-13-mention-typing-performance-note-01>;
+    plan:touchesFile "elements/src/components/pos-markdown-document/rich-editor/mention-extension/index.ts", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/index.spec.ts", "elements/src/components/pos-markdown-document/pos-markdown-document.integration.spec.tsx";
+    dct:modified "2026-10-21T21:45:00Z"^^xsd:dateTime;
     dct:created "2026-10-20T20:18:00Z"^^xsd:dateTime;
-    plan:status plan:draft;
+    plan:status plan:planned;
     plan:parent <#plan>;
     dct:title "Mention typing performance: debounce suggestion lookups";
     a plan:Task.
@@ -978,5 +1025,4 @@
     plan:parent <#plan>;
     dct:title "Standardize shadow-DOM testing on shadow-dom-testing-library";
     a plan:Task.
-<#plan> plan:hasTask <#task-19-shadow-dom-testing-library>;
-    dct:modified "2026-10-21T21:39:00Z"^^xsd:dateTime.
+<#plan> plan:hasTask <#task-19-shadow-dom-testing-library>.
