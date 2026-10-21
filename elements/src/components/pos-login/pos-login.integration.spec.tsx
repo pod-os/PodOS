@@ -1,7 +1,6 @@
 import { describe, expect, h, it, render, RenderResult } from '@stencil/vitest';
 import { authenticatedUser, server, turtleFile } from '../../test/msw';
-import { waitFor, within } from '@testing-library/dom';
-import { http, HttpResponse } from 'msw';
+import { waitFor } from '@testing-library/dom';
 import {
   deepQuerySelector,
   getByShadowLabelText,
@@ -9,7 +8,9 @@ import {
   queryByShadowRole,
   queryByShadowText,
 } from 'shadow-dom-testing-library';
+import { http, HttpResponse } from 'msw';
 import { userEvent } from '@testing-library/user-event';
+import { withinShadow } from '../../test/withinShadow';
 
 describe('pos-login', () => {
   it('renders a login button', async () => {
@@ -170,5 +171,5 @@ describe('pos-login', () => {
 
 function getLoginButton(page: RenderResult) {
   const login = deepQuerySelector(page.root, 'pos-login')!;
-  return within(login.shadowRoot as unknown as HTMLElement).getByRole('button', { name: 'Login' });
+  return withinShadow(login).getByRole('button', { name: 'Login' });
 }

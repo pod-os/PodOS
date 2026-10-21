@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, h, it, render } from '@stencil/vitest';
+import { findByShadowRole } from 'shadow-dom-testing-library';
 import { waitFor, within } from '@testing-library/dom';
 import { userEvent } from '@testing-library/user-event';
 
@@ -39,21 +40,14 @@ describe('pos-markdown-document', () => {
       </pos-app>,
     );
     await page.waitForChanges();
-    const markdownDocument = page.root.querySelector('pos-markdown-document')!;
+    const markdownDocument = page.root.querySelector('pos-markdown-document') as HTMLElement;
 
     // start editing
-    await waitFor(() => expect(within(markdownDocument.shadowRoot as HTMLElement).getByRole('button', { name: 'Edit' })).toBeInTheDocument());
-    within(markdownDocument.shadowRoot as HTMLElement)
-      .getByRole('button', { name: 'Edit' })
-      .click();
+    await userEvent.click(await findByShadowRole(markdownDocument, 'button', { name: 'Edit' }));
     await page.waitForChanges();
 
     // type the mention trigger and query
-    const editor = await waitFor(() => {
-      const el = within(markdownDocument.shadowRoot as HTMLElement).getByRole('textbox');
-      expect(el).toBeInTheDocument();
-      return el;
-    });
+    const editor = await findByShadowRole(markdownDocument, 'textbox');
     await userEvent.type(editor, '#test');
 
     // tiptap mounts the suggestion popup into document.body, not the shadow root

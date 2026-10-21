@@ -31,11 +31,11 @@ infrastructure, not test data.**
 - **Third-party widgets may render outside the shadow root.** Libraries that
   mount popups or overlays often attach them to `document.body`. Query
   `within(document.body)` for such UI.
-- **Use `withinShadow`** (`elements/src/test/withinShadow.ts`) to query inside
-  a component's shadow root instead of casting `shadowRoot as HTMLElement`
-  inline. The helper already contains the required cast; inline casts fail the
-  Stencil build gate that integration specs go through
-  (`npm run vitest:integration`).
+- **Query shadow DOM with `withinShadow`.** Use
+  `withinShadow(page)` (`elements/src/test/withinShadow.ts`) to run
+  `@testing-library/dom` role queries inside a component's shadow root. For a
+  nested component, pass the element:
+  `withinShadow(deepQuerySelector(page.root, 'pos-foo'))`.
 
 ## Quick Check
 
