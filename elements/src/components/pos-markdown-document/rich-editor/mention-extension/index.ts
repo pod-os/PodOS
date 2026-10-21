@@ -5,6 +5,7 @@ import { render } from './render';
 import { items } from './items';
 
 export function mention(os: PodOS) {
+  const searchIndex = os.buildSearchIndex();
   return Mention.configure({
     HTMLAttributes: {
       class: 'mention',
@@ -14,7 +15,7 @@ export function mention(os: PodOS) {
     },
     suggestion: {
       char: '#',
-      items: ({ query }: { query: string }) => items(os, query),
+      items: ({ query }: { query: string }) => searchIndex.then((index) => items(os, index, query)),
       render,
     },
   });

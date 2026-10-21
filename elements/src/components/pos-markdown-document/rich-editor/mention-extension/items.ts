@@ -1,7 +1,6 @@
-import { PodOS } from '@pod-os/core';
+import { PodOS, SearchIndex } from '@pod-os/core';
 
-export async function items(os: PodOS, query: string) {
-  const searchIndex = await os.buildSearchIndex();
+export function items(os: PodOS, searchIndex: SearchIndex, query: string) {
   return searchIndex.search(query).map(({ ref }) => {
     const thing = os.store.get(ref);
     return { id: ref, label: thing.label() };
