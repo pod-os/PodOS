@@ -175,9 +175,9 @@
     plan:context <#entry-task-14-mention-required-pod-os-instance-context-01>;
     plan:goal <#entry-task-14-mention-required-pod-os-instance-goal-01>;
     plan:touchesFile "elements/src/components/pos-markdown-document/pos-markdown-document.spec.tsx", "elements/src/components/pos-markdown-document/pos-markdown-document.tsx", "elements/src/components/pos-markdown-document/rich-editor/RichEditor.ts", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/index.ts";
-    dct:modified "2026-10-21T16:55:00Z"^^xsd:dateTime;
+    dct:modified "2026-10-21T19:17:34Z"^^xsd:dateTime;
     dct:created "2026-10-21T16:55:00Z"^^xsd:dateTime;
-    plan:status plan:planned;
+    plan:status plan:done;
     plan:parent <#plan>;
     dct:title "Mention extension requires a PodOS instance";
     a plan:Task.

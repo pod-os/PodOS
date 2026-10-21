@@ -63,27 +63,26 @@ export class PosMarkdownDocument {
     this.markdown = await this.file.blob().text();
   }
 
-  componentDidLoad() {
-    usePodOS(this.host).then(os => {
-      this.editor = new RichEditor(this.editorEl, this.markdown, this.file.url, os);
-      this.editor.onUpdate(() => {
-        this.isModified = true;
-      });
-      this.editor
-        .observeChanges()
-        .pipe(
-          takeUntil(this.disconnected$),
-          map(changes => changes.content),
-          tap(markdown => {
-            this.isModified = false;
-            this.documentModified.emit({
-              file: this.file,
-              newContent: markdown,
-            });
-          }),
-        )
-        .subscribe();
+  async componentDidLoad() {
+    const os = await usePodOS(this.host);
+    this.editor = new RichEditor(this.editorEl, this.markdown, this.file.url, os);
+    this.editor.onUpdate(() => {
+      this.isModified = true;
     });
+    this.editor
+      .observeChanges()
+      .pipe(
+        takeUntil(this.disconnected$),
+        map(changes => changes.content),
+        tap(markdown => {
+          this.isModified = false;
+          this.documentModified.emit({
+            file: this.file,
+            newContent: markdown,
+          });
+        }),
+      )
+      .subscribe();
   }
 
   disconnectedCallback() {
