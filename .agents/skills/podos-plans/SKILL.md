@@ -157,6 +157,19 @@ Every write must end in a validated file. The loop:
   explicitly ask for it. What matters is that the recorded intent is faithful
   and attributable, not that the exact wording survives; paraphrasing keeps
   entries compact and readable.
+- **Cross-entry references are explicit triples, never prose.** When an entry
+  relates to another entry ("per decision-04", "see task-07 note-06",
+  "supersedes task-01 outOfScope-04"), assert it with
+  `dct:references <#entry-...>` and drop the slug from the prose. Rewrite the
+  sentence so it reads standalone: name the thing in words ("supersedes the
+  deferred result-shape ruling", "with the session-handling decision") instead
+  of bare "decision-05"/"note-06" — a reader without IRI knowledge must not
+  depend on the slug. The viewer renders `dct:references` as clickable chips
+  that jump to (and flash-highlight) the referenced entry, opening its task
+  sheet if it lives in another task. Note that entry numbering is not stable:
+  decisions/scope entries get renumbered and removed during plan evolution, so
+  prose slugs rot — a dangling "Per decision-04" is unreadable once the
+  referenced entry is gone.
 - **Concise, conclusion-first entries.** Each entry states one conclusion a
   human can act on — not the research trail that produced it. A note is one or
   two sentences; goals and contexts are short. When a decision supersedes

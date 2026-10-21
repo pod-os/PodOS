@@ -122,7 +122,8 @@
         // normalize: xsd:date values become midnight-UTC instants so they compare
         // correctly against xsd:dateTime modified stamps
         const created = obj(iri, DCT + 'created');
-        return { text, agents: agentList, iri, created: created ? (created.length === 10 ? created + 'T00:00:00Z' : created) : undefined };
+        return { text, agents: agentList, iri, created: created ? (created.length === 10 ? created + 'T00:00:00Z' : created) : undefined,
+          references: objs(iri, DCT + 'references') };
       });
       const plan = {
         iri: planIri,
@@ -162,6 +163,15 @@
           files: objs(t, PLAN + 'touchesFile'),
         });
       }
+      // entry -> owning container, for jumping to cross-task references:
+      // the board needs to know which task sheet (or plan section) holds an entry IRI
+      plan.entryOwners = {};
+      plan.entriesByIri = {};
+      for (const t of plan.tasks) for (const list of [t.goal, ...t.scope, ...t.verification, ...t.outOfScope, ...t.decisions, ...t.openQuestions, ...t.notes]) if (list?.iri) {
+        plan.entryOwners[list.iri] = t.iri;
+        plan.entriesByIri[list.iri] = list;
+      }
+      for (const list of [...plan.contexts, ...plan.decisions, ...plan.options, ...plan.userStories, ...plan.outOfScope, ...plan.openQuestions, ...plan.notes, ...(plan.goal ? [plan.goal] : [])]) if (list?.iri) plan.entriesByIri[list.iri] = list;
       return plan;
     }
 
@@ -277,6 +287,13 @@
         .badge-copy:hover { border-color: var(--accent); color: var(--accent); }
         .badge.badge-copy.copied { border-color: var(--done); color: var(--done); }
         .badge title { font-weight: 400; }
+        /* references: clickable chips under the entry text, jump + flash on click */
+        .refs { display: inline-flex; flex-wrap: wrap; gap: .3rem; margin-top: .2rem; }
+        .ref-link { font-size: .68rem; font-weight: 600; padding: .05rem .45rem; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); color: var(--accent); cursor: pointer; text-decoration: none; }
+        .ref-link:hover { border-color: var(--accent); background: var(--accent-soft); }
+        /* flash: brief highlight of the jumped-to entry */
+        @keyframes entry-flash { 0%, 60% { background: var(--accent-soft); box-shadow: inset 3px 0 0 var(--accent); } 100% { background: transparent; box-shadow: none; } }
+        .entry.flash { animation: entry-flash 1.6s ease-out; }
         .review-btn { font-size: .75rem; padding: .2rem .6rem; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); cursor: pointer; }
         .review-btn:hover { border-color: #10b981; color: var(--done); }
         .review-row { display: flex; align-items: baseline; gap: .6rem; margin: .35rem 0 .75rem; }
@@ -352,13 +369,42 @@
         </span>`;
         const justCopied = this.copiedUri === e.iri;
         const copyFailed = this.copiedUri === 'error:' + e.iri;
-        return html`<li class="entry${isNew ? ' is-new' : ''}${justCopied ? ' copied' : ''}${copyFailed ? ' copy-failed' : ''}">
+        const refs = this.renderRefs(e);
+        return html`<li class="entry${isNew ? ' is-new' : ''}${justCopied ? ' copied' : ''}${copyFailed ? ' copy-failed' : ''}"
+                        data-entry-iri=${e.iri ?? ''}>
           ${e.iri ? html`<button class="badge badge-copy" title="Copy URI: ${e.iri}" @click=${ev => this.copyUri(ev, e.iri)}>${justCopied ? '✓' : copyFailed ? '✗' : '⧉'}</button>` : ''}
           <span class="content">
             <span class="badges">${badges}</span>
             <span class="text">${e.text}</span>
+            ${refs ? html`<span class="refs">${refs}</span>` : ''}
           </span>
         </li>`;
+      }
+      // clickable chips for the entry's dct:references targets; clicking jumps
+      // to the referenced entry (opening its task sheet if it lives in another
+      // task) and flash-highlights it
+      renderRefs(e) {
+        const refs = (e.references ?? []).filter(r => r && this.plan.entriesByIri[r]);
+        if (!refs.length) return null;
+        return refs.map(r => {
+          const target = this.plan.entriesByIri[r];
+          const slug = r.split('#').pop() ?? r;
+          return html`<a class="ref-link" title="${target.text}" @click=${ev => { ev.preventDefault(); this.jumpTo(r); }}>${slug}</a>`;
+        });
+      }
+      jumpTo(iri) {
+        const owner = this.plan.entryOwners[iri];
+        const wasClosed = !this.openTask;
+        if (owner && owner !== this.openTask) this.openTask = owner;
+        this.requestUpdate();
+        // after the (possibly newly opened) sheet renders, scroll + highlight
+        requestAnimationFrame(() => {
+          const el = this.shadowRoot?.querySelector(`[data-entry-iri="${CSS.escape(iri)}"]`);
+          if (!el) return;
+          el.scrollIntoView({ behavior: wasClosed ? 'auto' : 'smooth', block: 'center' });
+          el.classList.add('flash');
+          el.addEventListener('animationend', () => el.classList.remove('flash'), { once: true });
+        });
       }
       copyUri(ev, iri) {
         ev.stopPropagation();
