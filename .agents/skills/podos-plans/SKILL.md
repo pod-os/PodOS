@@ -243,8 +243,9 @@ Every write must end in a validated file. The loop:
 
 - One decision per `plan:decision` entry, stated normatively — the
   `documenting-decisions` skill defines what the text of a decision carries
-  and what stays out. Apply it when creating a decision entry and when
-  reviewing or rewriting existing ones.
+  and what stays out, including whose choice it is when the work runs
+  autonomously. Apply it when creating a decision entry and when reviewing or
+  rewriting existing ones.
 - `plan:scope` / `plan:outOfScope` / `plan:verification` / `plan:context` /
   `plan:openQuestion` / `plan:option`: one entry per triple, repeated.
 - **Open questions are binary: open or gone.** A resolved question must not
