@@ -28,10 +28,30 @@ task detail; when starting or resuming work, check or set this pointer first.
    question matches. Prefer `queries/next-work.sparql` and
    `queries/open-tasks-by-plan.sparql` for "what is next / what is open".
 2. **Never invent a prefix block from memory — copy it from the query files.**
-   In particular the pod uses the **HTTPS** form: `PREFIX schema:
-   <https://schema.org/>` (not the conventional `http://schema.org/`). A
-   wrong-variant prefix does not error — the query silently returns nothing.
-3. **Only write ad-hoc SPARQL when no existing query fits.** If you must,
+   The canonical block:
+
+   ```sparql
+   PREFIX plan:   <http://localhost:3000/dev/plans/plan-ontology.ttl#>
+   PREFIX dct:    <http://purl.org/dc/terms/>
+   PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+   PREFIX schema: <https://schema.org/>
+   PREFIX prov:   <http://www.w3.org/ns/prov#>
+   ```
+
+   Two silent-trap variants: the pod uses the **HTTPS** form for `schema:`
+   (not the conventional `http://schema.org/`), and `plan:` lives on the
+   **localhost pod**, not the published ontology IRI. A wrong-variant prefix
+   does not error — the query silently returns nothing; a **missing** prefix
+   does error — undeclared, the parser fails. Both fail before any data is
+   read.
+3. **Match IRI form to the query context.** Relative IRIs (`<#entry-...>`,
+   `<../agents.ttl#llm-...>`) are document-idiom: legal in the plan's Turtle,
+   where the base resolves at parse time. A standalone SPARQL query has no
+   base IRI — relative forms fail to parse ("expected IRI parsing failed")
+   and the store only holds absolute IRIs. In queries, always write the
+   resolved absolute form:
+   `<http://localhost:3000/dev/plans/<plan-slug>/plan.ttl#entry-...>`.
+4. **Only write ad-hoc SPARQL when no existing query fits.** If you must,
    start from the closest existing file's prefix block and patterns, not
    from scratch.
 
@@ -112,7 +132,9 @@ placeholders, blend pieces of two files.
 - Before writing an ad-hoc query, check what predicates exist:
   `rdf_schema_overview` (with `store: "fetched-data"` once the plan documents
   are fetched) or read `dev-solid-server/data/dev/plans/plan-ontology.ttl`.
-  Unknown properties return empty results, not errors.
+  Unknown properties return empty results, not errors — and an empty result
+  from an ad-hoc query means suspect the query (wrong prefix or wrong IRI,
+  see rules 2–3) before concluding "no data".
 
 IRIs: relative to each plan document — plan `<plan.ttl#plan>`, task
 `<plan.ttl#task-<NN>-<slug>>` (two digits, lowercase-hyphen slug). Every plan
