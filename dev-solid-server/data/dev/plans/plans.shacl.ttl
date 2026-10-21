@@ -72,6 +72,18 @@ _:n3-102 sh:path dct:created;
     sh:maxCount 1;
     sh:or ( [ sh:datatype xsd:date ] [ sh:datatype xsd:dateTime ] ).
 plan:EntryShape sh:property _:n3-102.
+plan:LinkedEntryShape a sh:NodeShape;
+    sh:name "Every plan entry is linked to its plan or task";
+    sh:targetClass schema:Comment.
+_:n3-105 sh:sparql [
+    sh:select """
+        SELECT $this WHERE {
+          FILTER NOT EXISTS { ?owner ?property $this }
+        }
+    """ ;
+    sh:name "linked entry" ;
+    sh:message "Entry is not linked to any plan or task" ] .
+plan:LinkedEntryShape sh:property _:n3-105.
 _:n3-103 sh:path plan:decision;
     sh:name "decision";
     sh:class schema:Comment.
