@@ -28,7 +28,7 @@ describe('mention extension', () => {
     const extension = mention(mockOs);
     expect(mockOs.buildSearchIndex).toHaveBeenCalled();
 
-    const items = extension.options.suggestion.items;
+    const items = extension.options.suggestion.items!;
     await items({ query: 'ali', editor: null as any, signal: null as any });
     await items({ query: 'al', editor: null as any, signal: null as any });
 
