@@ -7,6 +7,40 @@
 
 <#entry-task-13-mention-typing-performance-decision-03> dct:created "2026-10-22T20:39:00Z"^^xsd:dateTime;
     schema:text "The debounce is unit-tested by driving the actual suggestion plugin under fake timers, not asserted on the config object — the integration spec stays out of debounce verification.".
+<#plan> plan:hasTask <#task-20-mention-e2e-playwright>.
+<#task-20-mention-e2e-playwright> plan:goal <#entry-task-20-mention-e2e-playwright-goal-01>;
+    plan:context <#entry-task-20-mention-e2e-playwright-context-01>;
+    plan:decision <#entry-task-20-mention-e2e-playwright-decision-01>;
+    plan:openQuestion <#entry-task-20-mention-e2e-playwright-openQuestion-01>;
+    plan:scope <#entry-task-20-mention-e2e-playwright-scope-01>;
+    plan:touchesFile "apps/tests/mention.spec.ts", "docs/contributing/testing/testing-strategy.md";
+    dct:created "2026-10-22T21:10:00Z"^^xsd:dateTime;
+    dct:modified "2026-10-22T21:15:00Z"^^xsd:dateTime;
+    plan:status plan:planned;
+    plan:parent <#plan>;
+    plan:dependsOn <#task-05-mention-suggestions-from-search-and-store>;
+    dct:title "Mention feature e2e test in the apps Playwright suite";
+    a plan:Task.
+<#entry-task-20-mention-e2e-playwright-decision-01> dct:created "2026-10-22T21:10:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
+    schema:text "The mention feature is covered by one end-to-end happy-path test in the apps Playwright suite, running from typing the trigger through selecting a suggestion to following the inserted mention link to its target resource — e2e tests do not cover edge cases.";
+    a schema:Comment.
+<#entry-task-20-mention-e2e-playwright-goal-01> dct:created "2026-10-22T21:10:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "In the PodOS Browser app, typing a mention in an edited markdown document offers suggestions from the pod's label index, selecting one inserts the mention as a link into the document, and clicking that link navigates the app to the mentioned resource — verified by a real-browser Playwright test in apps/tests.";
+    a schema:Comment.
+<#entry-task-20-mention-e2e-playwright-context-01> dct:created "2026-10-22T21:10:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "The mentions chain is covered by unit specs and the MSW-backed integration spec in elements, but has no coverage in the apps Playwright suite; the testing strategy states e2e tests run on the application level only. The test stays a happy-path test — no-match queries, suggestion selection and the debounce window are excluded.";
+    a schema:Comment.
+<#entry-task-20-mention-e2e-playwright-openQuestion-01> dct:created "2026-10-22T21:10:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "Which Playwright setup serves the elements bundle under test: playwright-app.config.ts serves the built app, which loads @pod-os/elements from the CDN, while playwright-elements.config.ts targets the elements dev server on localhost:3333 — the test must run against the local bundle carrying the mention feature.";
+    a schema:Comment.
+<#entry-task-20-mention-e2e-playwright-scope-01> dct:created "2026-10-22T21:10:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "Add one happy-path spec in apps/tests: sign in as alice, open markdown/document.md, click Edit, type the '#' trigger plus a query and assert the mention menu shows labels seeded in the test pod's label index (test-solid-server/data/alice/settings/privateLabelIndex.ttl); select a suggestion (Enter or click) so the mention is inserted as a pos-rich-link carrying the thing's URI, then click it and assert the app navigates to that URI and renders the target resource. Record the e2e happy-path-only rule in docs/contributing/testing/testing-strategy.md. Mechanism note: the rendered mention is a pos-rich-link that fires pod-os:link on click, which pos-router in pos-app-browser turns into navigation.";
+    a schema:Comment.
 <#plan> plan:hasTask <#task-19-shadow-dom-testing-library>.
 <#task-19-shadow-dom-testing-library> dct:modified "2026-10-21T21:39:00Z"^^xsd:dateTime;
     plan:status plan:done.
@@ -936,6 +970,7 @@
     plan:context <#entry-plan-context-03>, <#entry-plan-context-02>, <#entry-plan-context-01>;
     plan:hasTask <#task-13-mention-typing-performance>, <#task-11-remove-session-watch-demand-on-receive>, <#task-10-simplify-pos-navigation-session-watch>, <#task-09-drop-store-force-fetch>, <#task-08-review-fixes-search-demand-api>, <#task-07-core-searchindex-demand-api>, <#task-06-fallback-create-things-on-the-fly>, <#task-05-mention-suggestions-from-search-and-store>, <#task-04-fix-cache-reference-invalidation>, <#task-03-remove-search-dom-events>, <#task-02-recreate-search-index-on-label-update>, <#task-01-cache-search-index-in-core>;
     dct:created "2026-10-09"^^xsd:date;
+    dct:modified "2026-10-22T21:10:00Z"^^xsd:dateTime;
     plan:status plan:in-progress;
     dct:description "Replace hard-coded items in RichEditor markdown mentions with label search over the search index, same as pos-navigation. Refactor the search-index ownership first, re-enable the mention extension afterwards.";
     dct:title "RichEditor mentions <- full-text search (refactor first)";
