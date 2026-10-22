@@ -58,3 +58,6 @@ Naming convention: `*.integration.spec.tsx`
 Stencil allows for E2E tests using a real browser and playwright. We are currently only implementing [E2E tests on the
 application level](../../../apps/tests), not for individual components. This might change in the future.
 
+E2E tests cover the happy path only: they verify that a feature works end to end, from user input to visible outcome.
+Edge cases, error states and timing details are covered at the unit and integration levels.
+
