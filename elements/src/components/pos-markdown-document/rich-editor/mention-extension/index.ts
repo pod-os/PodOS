@@ -15,6 +15,7 @@ export function mention(os: PodOS) {
     },
     suggestion: {
       char: '#',
+      debounce: 120,
       items: async ({ query }: { query: string }) => items(os, await searchIndex, query),
       render,
     },
