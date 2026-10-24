@@ -1023,6 +1023,43 @@ describe("Store", () => {
       }`,
       );
     });
+
+    it("creates an update without type, if no type is given", async () => {
+      const fetchMock = vi.fn();
+      const mockSession = {
+        authenticatedFetch: fetchMock,
+      } as unknown as PodOsSession;
+      when(fetchMock)
+        .calledWith("https://pod.test/new-thing", expect.anything())
+        .thenResolve({
+          ok: true,
+          status: 404,
+          statusText: "Not found",
+          headers: new Headers({
+            "Content-Type": "text/plain",
+            "wac-allow": 'user="read write append control",public="read"',
+            "accept-patch": "application/sparql-update",
+            allow: "PATCH, PUT",
+          }),
+          text: () => Promise.resolve("Not found"),
+        } as Response);
+
+      const store = new Store(mockSession);
+      await store.addNewThing(
+        "https://pod.test/new-thing#it",
+        "A new thing without a type",
+      );
+
+      thenSparqlUpdateIsSentToUrl(
+        fetchMock,
+        "https://pod.test/new-thing",
+        `
+      INSERT DATA {
+        <https://pod.test/new-thing#it>
+          <http://www.w3.org/2000/01/rdf-schema#label> "A new thing without a type" .
+      }`,
+      );
+    });
   });
 
   describe("findTypes", () => {
