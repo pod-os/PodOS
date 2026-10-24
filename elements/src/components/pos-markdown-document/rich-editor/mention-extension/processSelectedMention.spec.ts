@@ -18,7 +18,7 @@ describe('process selected mention', () => {
     let item: MentionItem;
     beforeEach(() => {
       item = {
-        id: 'some-id',
+        id: 'https://thing.example#it',
         label: 'some-label',
         type: 'indexed',
       };
@@ -28,13 +28,17 @@ describe('process selected mention', () => {
     it('calls the original command', () => {
       expect(command).toHaveBeenCalledWith(item);
     });
+
+    it('does not create a new thing', () => {
+      expect(os.addNewThing).not.toHaveBeenCalled();
+    });
   });
 
   describe('for newly created items', () => {
     let item: MentionItem;
     beforeEach(() => {
       item = {
-        id: 'some-id',
+        id: 'https://thing.example#it',
         label: 'some-label',
         type: 'new-thing',
       };
@@ -42,6 +46,10 @@ describe('process selected mention', () => {
     });
     it('calls the original command', () => {
       expect(command).toHaveBeenCalledWith(item);
+    });
+
+    it('adds a new thing', () => {
+      expect(os.addNewThing).toHaveBeenCalledWith('https://thing.example#it', 'some-label', 'https://schema.org/Thing');
     });
   });
 });
