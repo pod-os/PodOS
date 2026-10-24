@@ -144,11 +144,11 @@
 <#entry-task-03-goal-01> a schema:Comment;
     dct:created "2026-10-24T19:26:12Z"^^xsd:dateTime;
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
-    schema:text "While the mention suggestions are open, the editor input announces itself as a combobox controlling the suggestion listbox; screen reader users hear which option is highlighted and what the menu contains.".
+    schema:text "While the mention suggestions are open, screen reader users can perceive the popup, its contents and which option is highlighted, using a pattern suited to a multi-line rich-text editor.".
 <#entry-task-03-scope-01> a schema:Comment;
     dct:created "2026-10-24T19:26:12Z"^^xsd:dateTime;
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
-    schema:text "Implement the WAI-ARIA combobox/listbox pattern for the suggestion popup: the editor's contenteditable gets role combobox with aria-expanded, aria-controls pointing at the menu listbox id and aria-activedescendant pointing at the currently selected option; options get stable ids; selection changes update activedescendant.".
+    schema:text "The research note docs/contributing/research/mention-suggestion-accessibility.md establishes: no APG pattern exists for autocomplete inside a multi-line editor; Lexical sets aria-activedescendant and aria-controls on the editor root with a listbox popup and stable option ids, no combobox role; Novel shims a full combobox on a hidden input; ARIA 1.2 permits aria-activedescendant on role=textbox; aria-expanded is not valid on textbox in ARIA 1.2. Implementation follows the chosen pattern: option ids, editor-to-popup references, cleanup on onExit.".
 <#entry-task-03-scope-02> a schema:Comment;
     dct:created "2026-10-24T19:26:12Z"^^xsd:dateTime;
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
@@ -222,3 +222,14 @@
 <#plan> dct:modified "2026-10-24T19:28:42Z"^^xsd:dateTime.
 <http://localhost:3000/dev/plans/mention-create-on-the-fly/plan.ttl#task-01-optional-type-in-add-new-thing> plan:status plan:done;
     dct:modified "2026-10-24T19:33:25Z"^^xsd:dateTime.
+<http://localhost:3000/dev/plans/mention-create-on-the-fly/plan.ttl#task-03-mention-menu-a11y-combobox> plan:decision <#entry-task-03-decision-01>;
+    plan:openQuestion <#entry-task-03-openQuestion-01>.
+<#entry-task-03-decision-01> a schema:Comment;
+    dct:created "2026-10-24T22:27:39Z"^^xsd:dateTime;
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
+    schema:text "The multi-line editor does not become a combobox — the popup is exposed through a pattern researched against the WAI-ARIA APG, ProseMirror, Lexical and Tiptap-based apps; the concrete pattern is chosen after reviewing docs/research/mention-suggestion-accessibility.md.".
+<#entry-task-03-openQuestion-01> a schema:Comment;
+    dct:created "2026-10-24T22:27:39Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "Which pattern fits PodOS: the Lexical-style textbox plus aria-activedescendant, the Novel-style hidden-input combobox shim, or something else — per the research's trade-offs, and whether a live region should announce suggestion counts.".
+<http://localhost:3000/dev/plans/mention-create-on-the-fly/plan.ttl#entry-task-03-scope-01> schema:text "The research note docs/research/mention-suggestion-accessibility.md establishes: no APG pattern exists for autocomplete inside a multi-line editor; Lexical sets aria-activedescendant and aria-controls on the editor root with a listbox popup and stable option ids, no combobox role; Novel shims a full combobox on a hidden input; ARIA 1.2 permits aria-activedescendant on role=textbox; aria-expanded is not valid on textbox in ARIA 1.2. Implementation follows the chosen pattern: option ids, editor-to-popup references, cleanup on onExit.".
