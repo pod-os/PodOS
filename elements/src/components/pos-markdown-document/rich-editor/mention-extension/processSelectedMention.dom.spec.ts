@@ -50,7 +50,7 @@ describe('process selected mention', () => {
     });
 
     it('adds a new thing', () => {
-      expect(os.addNewThing).toHaveBeenCalledWith('https://thing.example#it', 'some-label', 'https://schema.org/Thing');
+      expect(os.addNewThing).toHaveBeenCalledWith('https://thing.example#it', 'some-label');
     });
   });
 
