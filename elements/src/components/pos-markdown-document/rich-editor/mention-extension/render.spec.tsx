@@ -3,17 +3,23 @@ import './pos-mention-menu/pos-mention-menu';
 import { SuggestionProps } from '@tiptap/suggestion';
 import { afterEach, beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 import { processCommand } from './processCommand';
+import { mockPodOS } from '../../../../test/mockPodOS.vitest';
 
 vi.mock('./processCommand');
 
 describe('render', () => {
+  function getRender() {
+    const os = mockPodOS();
+    return render(os)();
+  }
+
   beforeEach(() => {
-    (processCommand as Mock).mockImplementation(it => it);
+    (processCommand as Mock).mockImplementation((_, it) => it);
   });
 
   describe('onStart', () => {
     it('mounts an empty menu', () => {
-      const { onStart } = render();
+      const { onStart } = getRender();
       const mount = vi.fn();
       onStart({
         mount,
@@ -25,7 +31,7 @@ describe('render', () => {
       expect(menu).toHaveProperty('items', []);
     });
     it('mounts a menu with items', () => {
-      const { onStart } = render();
+      const { onStart } = getRender();
       const mount = vi.fn();
       const items = [{ id: 'https://resource.test', label: 'Test' }];
       onStart({
@@ -38,7 +44,7 @@ describe('render', () => {
       expect(menu).toHaveProperty('items', items);
     });
     it('passes on the command function', () => {
-      const { onStart } = render();
+      const { onStart } = getRender();
       const mount = vi.fn();
       onStart({
         mount,
@@ -52,7 +58,7 @@ describe('render', () => {
   });
   describe('onUpdate', () => {
     it('updates the menu items and command', () => {
-      const { onStart, onUpdate } = render();
+      const { onStart, onUpdate } = getRender();
       const mount = vi.fn();
       onStart({
         mount,
@@ -70,7 +76,7 @@ describe('render', () => {
     });
 
     it('resets the selection when items change', () => {
-      const { onStart, onUpdate, onKeyDown } = render();
+      const { onStart, onUpdate, onKeyDown } = getRender();
       const mount = (el: HTMLElement) => {
         document.body.appendChild(el);
         return () => el.remove();
@@ -97,7 +103,7 @@ describe('render', () => {
     let menu: HTMLPosMentionMenuElement;
 
     beforeEach(() => {
-      ({ onStart, onKeyDown } = render());
+      ({ onStart, onKeyDown } = getRender());
       onStart({
         items: [],
         command: () => {},
@@ -157,7 +163,7 @@ describe('render', () => {
   describe('onExit', () => {
     it('unmounts', () => {
       const unmount = vi.fn();
-      const { onStart, onExit } = render();
+      const { onStart, onExit } = getRender();
       const mount = vi.fn().mockReturnValue(unmount);
       onStart({
         mount,
