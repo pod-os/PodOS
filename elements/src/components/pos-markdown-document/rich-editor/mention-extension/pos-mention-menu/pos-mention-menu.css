@@ -13,7 +13,7 @@ li[role='option'] {
   border-radius: var(--sl-border-radius-small);
   cursor: pointer;
 
-  &[aria-selected='true'] {
+  &[aria-selected='true'], &:hover  {
     background: var(--sl-color-primary-100);
     color: var(--sl-color-primary-700);
   }
@@ -25,7 +25,7 @@ li[role='option'] {
     &:after {
       content: "'";
     }
-    &[aria-selected='true'] {
+    &[aria-selected='true'], &:hover {
       background: var(--color-green-200);
       color: var(--color-green-900);
       font-weight: var(--weight-bold);
