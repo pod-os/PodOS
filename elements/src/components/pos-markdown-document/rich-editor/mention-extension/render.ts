@@ -1,8 +1,9 @@
 import { SuggestionProps } from '@tiptap/suggestion';
 import { MentionNodeAttrs } from '@tiptap/extension-mention';
 import { processCommand } from './processCommand';
+import { PodOS } from '@pod-os/core';
 
-export const render = () => {
+export const render = (os: PodOS) => () => {
   let menu: HTMLPosMentionMenuElement;
   let unmount: () => void | undefined;
 
@@ -11,13 +12,13 @@ export const render = () => {
       menu = document.createElement('pos-mention-menu');
       menu.items = props.items;
       menu.selectedIndex = 0;
-      menu.command = processCommand(props.command);
+      menu.command = processCommand(os, props.command);
       unmount = props.mount(menu);
     },
     onUpdate: (props: SuggestionProps<any, MentionNodeAttrs>) => {
       menu.items = props.items;
       menu.selectedIndex = 0;
-      menu.command = processCommand(props.command);
+      menu.command = processCommand(os, props.command);
     },
     onExit: () => {
       unmount?.();

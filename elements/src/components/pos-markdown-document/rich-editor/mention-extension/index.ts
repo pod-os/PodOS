@@ -18,7 +18,7 @@ export function mention(os: PodOS, baseUrl: string) {
       debounce: 120,
       shouldShow: ({ query }) => query.length > 0,
       items: async ({ query }: { query: string }) => items(os, await searchIndex, query, baseUrl),
-      render,
+      render: render(os),
     },
   });
 }
