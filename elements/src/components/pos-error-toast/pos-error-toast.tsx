@@ -9,13 +9,13 @@ import { SlAlert } from '@shoelace-style/shoelace';
   shadow: true,
 })
 export class PosErrorToast {
-  private alert: SlAlert;
+  private alert!: SlAlert;
 
   @State()
-  private title: string;
+  private title: string = '';
 
   @State()
-  private message: string;
+  private message: string | undefined;
 
   @Listen('unhandledrejection', { target: 'window' })
   async unhandledRejection(event: PromiseRejectionEvent) {
@@ -25,8 +25,9 @@ export class PosErrorToast {
     this.message = event.reason.toString();
   }
 
-  @Listen('pod-os:error')
+  @Listen('pod-os:error', { target: 'document' })
   async catchError(event) {
+    console.log('catched pos error', event);
     event.stopPropagation();
     console.error(event.detail);
     if (event.detail instanceof Error) {
@@ -37,6 +38,7 @@ export class PosErrorToast {
       this.title = problem.title;
       this.message = problem.detail;
     }
+
     await this.alert.toast();
   }
 
