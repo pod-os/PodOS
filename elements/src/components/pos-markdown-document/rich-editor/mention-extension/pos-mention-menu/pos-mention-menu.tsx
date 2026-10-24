@@ -37,6 +37,9 @@ export class PosMentionMenu {
   }
 
   render() {
+    if (this.items.length === 0) {
+      return null;
+    }
     return (
       <ul role="listbox">
         {this.items.map((item, index) => (

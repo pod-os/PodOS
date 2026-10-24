@@ -6,14 +6,10 @@ import { fireEvent } from '@testing-library/dom';
 import { MentionItem } from './pos-mention-menu';
 
 describe('pos-mention-menu', () => {
-  it('renders empty', async () => {
+  it('does not render when empty', async () => {
     const page = await render(<pos-mention-menu items={[]}></pos-mention-menu>);
 
-    expect(page.root).toMatchInlineSnapshot(`
-        <pos-mention-menu class="hydrated">
-          <ul role="listbox"></ul>
-        </pos-mention-menu>
-    `);
+    expect(page.root).toBeEmptyDOMElement();
   });
 
   it('renders single option', async () => {
