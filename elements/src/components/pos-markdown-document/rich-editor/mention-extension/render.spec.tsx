@@ -2,10 +2,10 @@ import { render } from './render';
 import './pos-mention-menu/pos-mention-menu';
 import { SuggestionProps } from '@tiptap/suggestion';
 import { afterEach, beforeEach, describe, expect, it, Mock, vi } from 'vitest';
-import { processCommand } from './processCommand';
+import { processSelectedMention } from './processSelectedMention';
 import { mockPodOS } from '../../../../test/mockPodOS.vitest';
 
-vi.mock('./processCommand');
+vi.mock('./processSelectedMention');
 
 describe('render', () => {
   function getRender() {
@@ -14,7 +14,7 @@ describe('render', () => {
   }
 
   beforeEach(() => {
-    (processCommand as Mock).mockImplementation((_, it) => it);
+    (processSelectedMention as Mock).mockImplementation((_, it) => it);
   });
 
   describe('onStart', () => {
