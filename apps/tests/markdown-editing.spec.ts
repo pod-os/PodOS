@@ -131,4 +131,51 @@ test.describe("Markdown documents", () => {
       await expect(somethingPage.overview()).toHaveText(/A very generic item/);
     });
   });
+
+  test("Create a new thing using the mention feature", async ({
+    page,
+    navigationBar,
+  }) => {
+    await test.step("Given PodOS Browser is open", async () => {
+      await page.goto("/");
+    });
+
+    await test.step("And Pod owner is signed in", async () => {
+      await signIn(page, alice);
+    });
+
+    const editor =
+      await test.step("when navigating to a markdown document and editing it", async () => {
+        await navigationBar.fillAndSubmit(
+          "http://localhost:4000/alice/markdown/document.md",
+        );
+        const editor = new MarkdownEditor(page);
+        await editor.startEditing();
+        await editor.replaceContent("");
+        return editor;
+      });
+
+    await test.step("and mentioning a thing that does not exist yet", async () => {
+      const mentionMenu = editor.mentionMenu();
+
+      await editor.replaceContent("#Newthing");
+      await expect(mentionMenu.suggestion("Newthing")).toBeVisible();
+    });
+
+    await test.step("and accepting the suggestion", async () => {
+      await editor.acceptSuggestion();
+    });
+
+    await test.step("then thing will be created and linked from the editor", async () => {
+      await expect(editor.link("Newthing")).toBeVisible();
+    });
+
+    await test.step("and the user can follow the link to the newly created thing", async () => {
+      await editor.link("Newthing").click();
+
+      await expect(page).toHaveURL(/uri=[^&]*alice%2Fmarkdown%2Fnewthing%23it/);
+      const somethingPage = new GenericThingPage(page, "Newthing");
+      await expect(somethingPage.heading()).toHaveText("Newthing");
+    });
+  });
 });
