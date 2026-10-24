@@ -1,10 +1,11 @@
 import { Locator, Page } from "@playwright/test";
+import { MentionMenu } from "./MentionMenu";
 
 export class MarkdownEditor {
   private readonly editButton: Locator;
   private readonly editor: Locator;
 
-  constructor(page: Page) {
+  constructor(private page: Page) {
     this.editButton = page
       .getByRole("button", { name: "Edit" })
       .describe("Edit button");
@@ -27,5 +28,10 @@ export class MarkdownEditor {
 
   link(label: string): Locator {
     return this.editor.getByRole("link", { name: label }).describe("Mention");
+  }
+
+  /** The mention suggestion menu shown while a query is typed. */
+  mentionMenu(): MentionMenu {
+    return new MentionMenu(this.page);
   }
 }
