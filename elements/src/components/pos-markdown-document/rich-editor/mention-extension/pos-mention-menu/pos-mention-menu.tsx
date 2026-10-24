@@ -3,6 +3,9 @@ import { Component, h, Listen, Prop } from '@stencil/core';
 export interface MentionItem {
   id: string;
   label: string;
+  type:
+    | 'indexed' // found via search index
+    | 'new-thing'; // new thing to create
 }
 
 @Component({
@@ -40,6 +43,7 @@ export class PosMentionMenu {
           <li
             key={item.id}
             role="option"
+            class={item.type}
             aria-selected={index === this.selectedIndex ? 'true' : undefined}
             onMouseDown={() => this.command(item)}
           >

@@ -107,7 +107,7 @@ describe('render', () => {
     });
 
     const setupMenu = (itemLabels: string[], command = vi.fn()) => {
-      menu.items = itemLabels.map((label, i) => ({ id: `https://test/${i}`, label }));
+      menu.items = itemLabels.map((label, i) => ({ id: `https://test/${i}`, label, type: 'indexed' }));
       menu.command = command;
       return command;
     };
@@ -132,7 +132,7 @@ describe('render', () => {
       const command = setupMenu(['First', 'Second']);
       onKeyDown({ event: new KeyboardEvent('keydown', { key: 'ArrowDown' }) });
       onKeyDown({ event: new KeyboardEvent('keydown', { key: 'Enter' }) });
-      expect(command).toHaveBeenCalledWith({ id: 'https://test/1', label: 'Second' });
+      expect(command).toHaveBeenCalledWith({ id: 'https://test/1', label: 'Second', type: 'indexed' });
     });
 
     it('Enter with no items does not call the command', () => {
