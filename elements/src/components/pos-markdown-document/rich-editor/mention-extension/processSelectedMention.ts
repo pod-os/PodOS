@@ -4,7 +4,7 @@ import { PodOS } from '@pod-os/core';
 export function processSelectedMention(os: PodOS, command: (item: MentionItem) => void) {
   return (item: MentionItem) => {
     if (item.type === 'new-thing') {
-      os.addNewThing(item.id, item.label, 'https://schema.org/Thing').catch(err => {
+      os.addNewThing(item.id, item.label).catch(err => {
         document.dispatchEvent(new CustomEvent('pod-os:error', { detail: err }));
       });
     }
