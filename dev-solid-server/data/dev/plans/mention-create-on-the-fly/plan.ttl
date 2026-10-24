@@ -8,7 +8,7 @@
     dct:title "Create things on the fly from the mention menu";
     dct:description "Add a Create entry to the mention suggestions that immediately inserts the mention and creates the referenced thing in the background. Picks up the deferred task-06 of the mentions-fulltext-search plan.";
     dct:created "2026-10-24"^^xsd:date;
-    dct:modified "2026-10-24T11:20:00Z"^^xsd:dateTime;
+    dct:modified "2026-10-24T12:26:21Z"^^xsd:dateTime;
     plan:status plan:planned;
     plan:decision <#entry-decision-01>, <#entry-decision-02>, <#entry-decision-03>, <#entry-decision-04>, <#entry-decision-05>, <#entry-decision-06>;
     plan:context <#entry-context-01>, <#entry-context-02>;
@@ -27,8 +27,9 @@
     schema:text "The created thing is not added to any label index — consistent with the mentions-fulltext-search plan ruling that make-findable stays out of scope. Angelo explicitly accepted the trade-off: the thing will not appear in future mention suggestions; it is reachable via the document link and container browsing only.".
 <#entry-decision-04> a schema:Comment;
     dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
-    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
-    schema:text "The mention extension stays generic: it proposes the URI, inserts the node and dispatches a create event; pos-markdown-document listens for the event and performs the pod write via PodOS core.".
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>, <https://angelo.veltens.org/profile/card#me>;
+    schema:text "The mention extension performs the pod write itself, using its os handle: processCommand calls os.addNewThing for new-thing items after inserting the mention; no create event, no listener in pos-markdown-document.";
+    dct:modified "2026-10-24T12:26:21Z"^^xsd:dateTime.
 <#entry-decision-05> a schema:Comment;
     dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
     prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
@@ -45,7 +46,8 @@
 <#entry-context-02> a schema:Comment;
     dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
-    schema:text "Investigation findings backing the design: all element-facing APIs already cope with untyped things (Thing.label is type-independent, pos-type-badges renders nothing for zero types, pos-rich-link has no type dependency); the only blocker is the required type parameter in Store.addNewThing. The mention menu is mounted into document.body, outside the shadow root, so the create event must be dispatched from the editor DOM to be catchable by a Stencil listener.".
+    dct:references <#entry-decision-04>;
+    schema:text "Investigation findings backing the design: all element-facing APIs already cope with untyped things (Thing.label is type-independent, pos-type-badges renders nothing for zero types, pos-rich-link has no type dependency); the only blocker is the required type parameter in Store.addNewThing.".
 <#task-01-optional-type-in-add-new-thing> a plan:Task;
     dct:title "Make Store.addNewThing type parameter optional";
     plan:goal <#entry-task-01-goal-01>;
@@ -79,9 +81,10 @@
     plan:scope <#entry-task-02-scope-01>, <#entry-task-02-scope-02>, <#entry-task-02-scope-03>, <#entry-task-02-scope-04>;
     plan:verification <#entry-task-02-verification-01>, <#entry-task-02-verification-02>;
     plan:outOfScope <#entry-task-02-outOfScope-01>;
-    plan:touchesFile "elements/src/components/pos-markdown-document/rich-editor/mention-extension/index.ts", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/items.ts", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/render.ts", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/pos-mention-menu/pos-mention-menu.tsx", "elements/src/components/pos-markdown-document/rich-editor/RichEditor.ts", "elements/src/components/pos-markdown-document/pos-markdown-document.tsx", "elements/src/components/pos-markdown-document/pos-markdown-document.integration.spec.tsx";
+    plan:touchesFile "elements/src/components/pos-markdown-document/rich-editor/mention-extension/index.ts", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/items.ts", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/render.ts", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/processCommand.ts", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/pos-mention-menu/pos-mention-menu.tsx", "elements/src/components/pos-markdown-document/rich-editor/RichEditor.ts", "elements/src/components/pos-markdown-document/pos-markdown-document.integration.spec.tsx";
     plan:dependsOn <#task-01-optional-type-in-add-new-thing>;
     dct:created "2026-10-24"^^xsd:date;
+    dct:modified "2026-10-24T12:26:21Z"^^xsd:dateTime;
     plan:status plan:planned;
     plan:parent <#plan>.
 <#entry-task-02-goal-01> a schema:Comment;
@@ -97,11 +100,12 @@
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
     schema:text "items(): after mapping search results, append the create entry with the proposed URI and the query as label; the URI is proposed synchronously at injection time.".
 <#entry-task-02-scope-02> a schema:Comment;
-    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "MentionItem gains an optional marker field (kind create); render.ts wraps menu.command via processCommand: for create-kind items it calls os.addNewThing(item.id, item.label) after command(item) — the mention inserts synchronously first, the pod write happens in the background; both keyboard and mouse selection flow through one code path; the menu component itself stays dumb.".
 <#entry-task-02-scope-03> a schema:Comment;
     dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
-    schema:text "RichEditor threads the document URI (its baseUrl parameter) into mention(); pos-markdown-document listens for the create event and calls os.addNewThing(uri, name) without a type. No confirmation UI, no dialog.".
+    schema:text "RichEditor threads the document URI (its baseUrl parameter) into mention(); no confirmation UI, no dialog.".
 <#entry-task-02-scope-04> a schema:Comment;
     dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
@@ -109,16 +113,12 @@
 <#entry-task-02-verification-01> a schema:Comment;
     dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
-    schema:text "Unit tests: items() appends the create entry with the proposed URI after search results; render.ts dispatches the create event for create-kind items and calls command(item); the menu renders the create entry and keyboard navigation covers it.".
+    schema:text "Unit tests: items() appends the create entry with the proposed URI after search results; processCommand calls addNewThing for new-thing items only, after command(item); the menu renders the create entry and keyboard navigation covers it.".
 <#entry-task-02-verification-02> a schema:Comment;
     dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
-    schema:text "Integration test extends pos-markdown-document.integration.spec.tsx: typing the trigger plus a query shows search suggestion(s) and the create entry; picking the create entry inserts the mention and fires the create event that pos-markdown-document handles.".
+    schema:text "Integration test extends pos-markdown-document.integration.spec.tsx: typing the trigger plus a query shows search suggestion(s) and the create entry; picking the create entry inserts the mention and creates the thing in the pod (visible via the linked URI)".
 <#entry-task-02-outOfScope-01> a schema:Comment;
     dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>, <https://angelo.veltens.org/profile/card#me>;
     schema:text "Failure handling when the background addNewThing fails (error UX, rollback) is out of scope for now — the trade-off of a possibly dangling link is accepted, consistent with the no-confirmation decision.".
-<#entry-task-02-scope-02> dct:created "2026-10-24T11:10:00Z"^^xsd:dateTime;
-    dct:modified "2026-10-24T11:40:00Z"^^xsd:dateTime;
-    schema:text "MentionItem gains an optional marker field (kind create); render.ts wraps menu.command: for create-kind items it dispatches the pod-os:new-thing-mentioned event (payload uri + label) from props.editor.view.dom BEFORE calling props.command(item), so both keyboard and mouse selection flow through one code path; the menu component itself stays dumb and never touches the editor DOM.".
-<#task-02-create-option-in-mention-suggestions> dct:modified "2026-10-24T11:40:00Z"^^xsd:dateTime.
