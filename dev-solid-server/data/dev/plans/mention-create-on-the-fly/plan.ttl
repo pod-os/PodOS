@@ -8,7 +8,6 @@
     dct:title "Create things on the fly from the mention menu";
     dct:description "Add a Create entry to the mention suggestions that immediately inserts the mention and creates the referenced thing in the background. Picks up the deferred task-06 of the mentions-fulltext-search plan.";
     dct:created "2026-10-24"^^xsd:date;
-    dct:modified "2026-10-24T12:26:21Z"^^xsd:dateTime;
     plan:status plan:planned;
     plan:decision <#entry-decision-01>, <#entry-decision-02>, <#entry-decision-03>, <#entry-decision-04>, <#entry-decision-05>, <#entry-decision-06>;
     plan:context <#entry-context-01>, <#entry-context-02>;
@@ -55,7 +54,6 @@
     plan:verification <#entry-task-01-verification-01>;
     plan:touchesFile "core/src/Store.ts", "core/src/Store.spec.ts", "core/src/index.ts";
     dct:created "2026-10-24"^^xsd:date;
-    dct:modified "2026-10-24T11:20:00Z"^^xsd:dateTime;
     plan:status plan:planned;
     plan:parent <#plan>.
 <#entry-task-01-goal-01> a schema:Comment;
@@ -78,14 +76,12 @@
     dct:title "Create option in the mention suggestions";
     plan:goal <#entry-task-02-goal-01>;
     plan:context <#entry-task-02-context-01>;
-    plan:scope <#entry-task-02-scope-01>, <#entry-task-02-scope-02>, <#entry-task-02-scope-03>, <#entry-task-02-scope-04>;
+    plan:scope <#entry-task-02-scope-01>, <#entry-task-02-scope-02>, <#entry-task-02-scope-03>;
     plan:verification <#entry-task-02-verification-01>, <#entry-task-02-verification-02>;
     plan:outOfScope <#entry-task-02-outOfScope-01>;
     plan:touchesFile "elements/src/components/pos-markdown-document/rich-editor/mention-extension/index.ts", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/items.ts", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/render.ts", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/processCommand.ts", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/pos-mention-menu/pos-mention-menu.tsx", "elements/src/components/pos-markdown-document/rich-editor/RichEditor.ts", "elements/src/components/pos-markdown-document/pos-markdown-document.integration.spec.tsx";
     plan:dependsOn <#task-01-optional-type-in-add-new-thing>;
     dct:created "2026-10-24"^^xsd:date;
-    dct:modified "2026-10-24T12:26:21Z"^^xsd:dateTime;
-    plan:status plan:planned;
     plan:parent <#plan>.
 <#entry-task-02-goal-01> a schema:Comment;
     dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
@@ -106,8 +102,7 @@
     dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
     schema:text "RichEditor threads the document URI (its baseUrl parameter) into mention(); no confirmation UI, no dialog.".
-<#entry-task-02-scope-04> a schema:Comment;
-    dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
+<#entry-task-02-scope-04> dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
     schema:text "Note the relative-resolution caveat in code: URI proposal assumes a file URL reference; trailing-slash container URIs or non-hierarchical URIs would resolve differently. Fine for the markdown-file case.".
 <#entry-task-02-verification-01> a schema:Comment;
@@ -116,9 +111,24 @@
     schema:text "Unit tests: items() appends the create entry with the proposed URI after search results; processCommand calls addNewThing for new-thing items only, after command(item); the menu renders the create entry and keyboard navigation covers it.".
 <#entry-task-02-verification-02> a schema:Comment;
     dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
-    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
-    schema:text "Integration test extends pos-markdown-document.integration.spec.tsx: typing the trigger plus a query shows search suggestion(s) and the create entry; picking the create entry inserts the mention and creates the thing in the pod (visible via the linked URI)".
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
 <#entry-task-02-outOfScope-01> a schema:Comment;
     dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>, <https://angelo.veltens.org/profile/card#me>;
     schema:text "Failure handling when the background addNewThing fails (error UX, rollback) is out of scope for now — the trade-off of a possibly dangling link is accepted, consistent with the no-confirmation decision.".
+<#task-02-create-option-in-mention-suggestions> plan:note <#entry-task-02-note-01>.
+<#entry-task-02-note-01> a schema:Comment;
+    dct:created "2026-10-24T15:58:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <http://localhost:3000/dev/plans/agents.ttl#llm-glm-5.3-flash>, <https://angelo.veltens.org/profile/card#me>;
+    schema:text "Error handling was implemented beyond the original plan: the extension dispatches a pod-os:error event when the background addNewThing fails, and pos-error-toast renders it. This closes the concern the failure-handling outOfScope entry had parked.".
+<#plan> dct:modified "2026-10-24T15:58:00Z"^^xsd:dateTime.
+<#task-02-create-option-in-mention-suggestions> plan:status plan:done;
+    dct:modified "2026-10-24T16:20:00Z"^^xsd:dateTime.
+<#entry-task-02-verification-02> schema:text "Integration test extends pos-markdown-document.integration.spec.tsx: typing the trigger plus a query shows search suggestion(s) and the create entry (indexed and new-thing classes). Picking the create entry is not covered yet — that coverage moved to the optional-type task.".
+<#task-01-optional-type-in-add-new-thing> dct:modified "2026-10-24T16:20:00Z"^^xsd:dateTime;
+    plan:touchesFile "elements/src/components/pos-markdown-document/rich-editor/mention-extension/processSelectedMention.ts", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/processSelectedMention.dom.spec.ts", "elements/src/components/pos-markdown-document/pos-markdown-document.integration.spec.tsx".
+<#entry-task-01-note-01> a schema:Comment;
+    dct:created "2026-10-24T16:20:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <http://localhost:3000/dev/plans/agents.ttl#llm-glm-5.3-flash>, <https://angelo.veltens.org/profile/card#me>;
+    schema:text "Absorbed from the create-option task: the pick-path integration coverage (picking the create entry inserts the mention and creates the thing in the pod) and dropping the hardcoded schema:Thing type in processSelectedMention — the latter resolves the violation of the untyped-thing decision once the type parameter is optional.".
+<#task-01-optional-type-in-add-new-thing> plan:note <#entry-task-01-note-01>.
