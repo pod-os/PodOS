@@ -62,7 +62,7 @@ describe('RichEditor', () => {
           mockOs,
         );
         expect(div.children[0].innerHTML).toEqual(
-          `<p><pos-rich-link uri="https://pod.test/alice/profile/card#me" data-type="mention" class="mention" data-id="https://pod.test/alice/profile/card#me" data-label="Alice" data-mention-suggestion-char="#" contenteditable="false">Alice</pos-rich-link><br class="ProseMirror-trailingBreak"></p>`,
+          `<p><img class="ProseMirror-separator" alt=""><pos-rich-link uri="https://pod.test/alice/profile/card#me" data-type="mention" class="mention" data-id="https://pod.test/alice/profile/card#me" data-label="Alice" data-mention-suggestion-char="#" contenteditable="false">Alice</pos-rich-link><br class="ProseMirror-trailingBreak"></p>`,
         );
       });
 
@@ -70,7 +70,7 @@ describe('RichEditor', () => {
         const div = document.createElement('div');
         new RichEditor(div, '[@ id="https://pod.test/alice/profile/card#me" label="Alice"]', 'https://pod.test', mockOs);
         expect(div.children[0].innerHTML).toEqual(
-          `<p><pos-rich-link uri="https://pod.test/alice/profile/card#me" data-type="mention" class="mention" data-id="https://pod.test/alice/profile/card#me" data-label="Alice" data-mention-suggestion-char="@" contenteditable="false">Alice</pos-rich-link><br class="ProseMirror-trailingBreak"></p>`,
+          `<p><img class="ProseMirror-separator" alt=""><pos-rich-link uri="https://pod.test/alice/profile/card#me" data-type="mention" class="mention" data-id="https://pod.test/alice/profile/card#me" data-label="Alice" data-mention-suggestion-char="@" contenteditable="false">Alice</pos-rich-link><br class="ProseMirror-trailingBreak"></p>`,
         );
       });
 
