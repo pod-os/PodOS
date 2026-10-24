@@ -3,6 +3,7 @@ import { processSelectedMention } from './processSelectedMention';
 import { mockPodOS } from '../../../../test/mockPodOS.vitest';
 import { MentionItem } from './pos-mention-menu/pos-mention-menu';
 import { PodOS } from '@pod-os/core';
+import { waitFor } from '@testing-library/dom';
 
 describe('process selected mention', () => {
   let process: (item: MentionItem) => void;
@@ -50,6 +51,35 @@ describe('process selected mention', () => {
 
     it('adds a new thing', () => {
       expect(os.addNewThing).toHaveBeenCalledWith('https://thing.example#it', 'some-label', 'https://schema.org/Thing');
+    });
+  });
+
+  describe('when adding a new thing fails', () => {
+    let item: MentionItem;
+    let onError: Mock;
+    beforeEach(() => {
+      item = {
+        id: 'https://thing.example#it',
+        label: 'some-label',
+        type: 'new-thing',
+      };
+      onError = vi.fn();
+      document.addEventListener('pod-os:error', onError);
+      (os.addNewThing as Mock).mockRejectedValue(new Error('thing could not be added'));
+      process(item);
+    });
+
+    it('calls the original command', () => {
+      expect(command).toHaveBeenCalledWith(item);
+    });
+
+    it('emits a pod-os:error event', async () => {
+      await waitFor(() => expect(onError).toHaveBeenCalled());
+      expect(onError.mock.calls[0][0]).toEqual(
+        expect.objectContaining({
+          detail: new Error('thing could not be added'),
+        }),
+      );
     });
   });
 });
