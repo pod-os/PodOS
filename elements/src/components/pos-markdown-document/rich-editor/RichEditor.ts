@@ -27,7 +27,7 @@ export class RichEditor {
         StarterKit.configure({ link: false }),
         PosImageNode(baseUrl),
         PosRichLinkMark(baseUrl),
-        mention(os),
+        mention(os, baseUrl),
       ],
       content,
       contentType: 'markdown',

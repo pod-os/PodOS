@@ -1,8 +1,9 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, Mock, vi } from 'vitest';
 
 import { PodOS, SearchIndex } from '@pod-os/core';
 
 import { mention } from './index';
+import { mockPodOS } from '../../../../test/mockPodOS.vitest';
 
 describe('mention extension', () => {
   it('is constructed with the given PodOS instance', () => {
@@ -11,11 +12,12 @@ describe('mention extension', () => {
       store: { get: vi.fn() },
     } as unknown as PodOS;
 
-    expect(mention(mockOs)).toBeDefined();
+    expect(mention(mockOs, 'https://pod.test/alice/document.md')).toBeDefined();
   });
 
   describe('suggestion.shouldShow', () => {
-    const getShouldShow = (mockOs: PodOS) => mention(mockOs).options.suggestion.shouldShow!;
+    const getShouldShow = (mockOs: PodOS) =>
+      mention(mockOs, 'https://pod.test/alice/document.md').options.suggestion.shouldShow!;
 
     const mockOs = {
       buildSearchIndex: vi.fn(),
@@ -36,14 +38,11 @@ describe('mention extension', () => {
     const mockSearchIndex = {
       search: vi.fn().mockReturnValue([{ ref: 'https://pod.test/alice/profile/card#me' }]),
     } as unknown as SearchIndex;
-    const mockOs = {
-      buildSearchIndex: vi.fn().mockResolvedValue(mockSearchIndex),
-      store: {
-        get: vi.fn().mockReturnValue({ label: () => 'Alice' }),
-      },
-    } as unknown as PodOS;
+    const mockOs = mockPodOS();
+    (mockOs.store.get as Mock).mockReturnValue({ label: () => 'Alice' });
+    (mockOs.buildSearchIndex as Mock).mockResolvedValue(mockSearchIndex)
 
-    const extension = mention(mockOs);
+    const extension = mention(mockOs, "https://pod.test/alice/document.md");
     expect(mockOs.buildSearchIndex).toHaveBeenCalled();
 
     const items = extension.options.suggestion.items!;
