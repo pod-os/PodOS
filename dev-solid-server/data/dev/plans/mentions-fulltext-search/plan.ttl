@@ -10,12 +10,12 @@
 <#plan> plan:hasTask <#task-20-mention-e2e-playwright>.
 <#task-20-mention-e2e-playwright> plan:goal <#entry-task-20-mention-e2e-playwright-goal-01>;
     plan:context <#entry-task-20-mention-e2e-playwright-context-01>;
-    plan:decision <#entry-task-20-mention-e2e-playwright-decision-01>, <#entry-task-20-mention-e2e-playwright-decision-02>, <#entry-task-20-mention-e2e-playwright-decision-03>;
+    plan:decision <#entry-task-20-mention-e2e-playwright-decision-01>, <#entry-task-20-mention-e2e-playwright-decision-02>, <#entry-task-20-mention-e2e-playwright-decision-03>, <#entry-task-20-mention-e2e-playwright-decision-04>, <#entry-task-20-mention-e2e-playwright-decision-05>, <#entry-task-20-mention-e2e-playwright-decision-06>;
     plan:note <#entry-task-20-mention-e2e-playwright-note-01>;
     plan:scope <#entry-task-20-mention-e2e-playwright-scope-01>;
-    plan:touchesFile "apps/tests/markdown-editing.spec.ts", "apps/tests/page-objects/MarkdownEditor.ts", "docs/contributing/testing/testing-strategy.md";
+    plan:touchesFile "apps/tests/markdown-editing.spec.ts", "apps/tests/page-objects/MarkdownEditor.ts", "apps/tests/page-objects/MentionMenu.ts", "docs/contributing/testing/testing-strategy.md";
     dct:created "2026-10-22T21:10:00Z"^^xsd:dateTime;
-    dct:modified "2026-10-24T07:00:00Z"^^xsd:dateTime;
+    dct:modified "2026-10-24T07:33:03Z"^^xsd:dateTime;
     plan:status plan:planned;
     plan:parent <#plan>;
     plan:dependsOn <#task-05-mention-suggestions-from-search-and-store>;
@@ -35,6 +35,18 @@
     prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
     schema:text "The e2e acceptance test contains no technical steps — no runtime probe of the served elements bundle; the acceptance test speaks only in user-visible behavior.";
     a schema:Comment.
+<#entry-task-20-mention-e2e-playwright-decision-04> dct:created "2026-10-24T07:33:03Z"^^xsd:dateTime;
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
+    schema:text "The MarkdownEditor page object is created once per test and reused across steps — the first step returns it, later steps reuse the variable.";
+    a schema:Comment.
+<#entry-task-20-mention-e2e-playwright-decision-05> dct:created "2026-10-24T07:33:03Z"^^xsd:dateTime;
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
+    schema:text "The mention suggestion locator lives in a MentionMenu component object — the test names the suggestion by label, not by DOM detail.";
+    a schema:Comment.
+<#entry-task-20-mention-e2e-playwright-decision-06> dct:created "2026-10-24T07:33:03Z"^^xsd:dateTime;
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
+    schema:text "The MentionMenu is a child of the MarkdownEditor page object — the test obtains it through editor.mentionMenu(), not by instantiating it in the test.";
+    a schema:Comment.
 <#entry-task-20-mention-e2e-playwright-goal-01> dct:created "2026-10-22T21:10:00Z"^^xsd:dateTime;
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
     schema:text "In the PodOS Browser app, typing a mention in an edited markdown document offers suggestions from the pod's label index, accepting one inserts the mention as a link into the document, and following that link navigates the app to the mentioned resource — verified by a real-browser Playwright test in apps/tests.";
@@ -46,7 +58,6 @@
 <#entry-task-20-mention-e2e-playwright-scope-01> dct:created "2026-10-22T21:10:00Z"^^xsd:dateTime;
     dct:modified "2026-10-24T07:00:00Z"^^xsd:dateTime;
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
-    schema:text "Cover the mention happy path inside markdown-editing.spec.ts: sign in as alice, open markdown/document.md, start editing via a shared MarkdownEditor page object (Edit button and editor carry .describe names), type the '#' trigger plus a query and assert the suggestion from the test pod's label index (test-solid-server/data/alice/settings/privateLabelIndex.ttl), accept it with Enter so the mention is inserted as a link scoped to the editor, then follow the link and assert the app navigates to that URI and renders the target resource. Refactor the existing edit test onto the same page object. Record the e2e happy-path-only rule in docs/contributing/testing/testing-strategy.md. Mechanism note: the rendered mention is a pos-rich-link that fires pod-os:link on click, which pos-router in pos-app-browser turns into navigation.";
     a schema:Comment.
 <#entry-task-20-mention-e2e-playwright-note-01> dct:created "2026-10-24T07:00:00Z"^^xsd:dateTime;
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
@@ -1081,4 +1092,4 @@
 <#entry-task-13-mention-typing-performance-scope-03> schema:text "pos-markdown-document.integration.spec.tsx needs no debounce handling: its popup waitFor already tolerates the 120 ms delay, so it passes unchanged; the debounce behavior is unit-tested with fake timers instead (see decision-03).";
     dct:references <#entry-task-13-mention-typing-performance-decision-03>.
 <#entry-task-13-mention-typing-performance-verification-02> schema:text "pos-markdown-document.integration.spec.tsx passes unchanged with the debounced popup (waitFor tolerates the 120 ms delay); npx tsc --noEmit on elements/ shows no new errors from the changed files; full elements suite green via wallaby.".
-<#task-13-mention-typing-performance> dct:modified "2026-10-22T20:58:37Z"^^xsd:dateTime.
+<#entry-task-20-mention-e2e-playwright-scope-01> schema:text "Cover the mention happy path inside markdown-editing.spec.ts: sign in as alice, open markdown/document.md, start editing via a shared MarkdownEditor page object (Edit button and editor carry .describe names), type the '#' trigger plus a query and assert the suggestion from the test pod's label index (test-solid-server/data/alice/settings/privateLabelIndex.ttl) through a MentionMenu component object, accept it with Enter so the mention is inserted as a link scoped to the editor, then follow the link and assert the app navigates to that URI and renders the target resource. Refactor the existing edit test onto the same page object. Record the e2e happy-path-only rule in docs/contributing/testing/testing-strategy.md. Mechanism note: the rendered mention is a pos-rich-link that fires pod-os:link on click, which pos-router in pos-app-browser turns into navigation.".
