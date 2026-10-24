@@ -5,11 +5,11 @@
 
 ## Properties
 
-| Property        | Attribute        | Description | Type                          | Default    |
-| --------------- | ---------------- | ----------- | ----------------------------- | ---------- |
-| `command`       | --               |             | `(item: MentionItem) => void` | `() => {}` |
-| `items`         | --               |             | `MentionItem[]`               | `[]`       |
-| `selectedIndex` | `selected-index` |             | `number`                      | `0`        |
+| Property        | Attribute        | Description                                    | Type                          | Default    |
+| --------------- | ---------------- | ---------------------------------------------- | ----------------------------- | ---------- |
+| `command`       | --               | Function to call when a suggestion is selected | `(item: MentionItem) => void` | `() => {}` |
+| `items`         | --               | List of suggestions to display                 | `MentionItem[]`               | `[]`       |
+| `selectedIndex` | `selected-index` | Index of the currently selected suggestion     | `number`                      | `0`        |
 
 
 ----------------------------------------------
