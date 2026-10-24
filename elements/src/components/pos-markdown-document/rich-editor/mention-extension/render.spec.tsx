@@ -1,9 +1,16 @@
 import { render } from './render';
 import './pos-mention-menu/pos-mention-menu';
 import { SuggestionProps } from '@tiptap/suggestion';
-import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, Mock, vi } from 'vitest';
+import { processCommand } from './processCommand';
+
+vi.mock('./processCommand');
 
 describe('render', () => {
+  beforeEach(() => {
+    (processCommand as Mock).mockImplementation(it => it);
+  });
+
   describe('onStart', () => {
     it('mounts an empty menu', () => {
       const { onStart } = render();
