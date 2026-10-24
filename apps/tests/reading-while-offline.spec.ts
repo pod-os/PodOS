@@ -7,11 +7,16 @@ test("can access cached resources while offline", async ({
   page,
   context,
   browserName,
+  includesServiceWorker,
   navigationBar,
 }) => {
   test.skip(
     browserName === "webkit",
     "Does not work with the webkit version provided by Playwright. Manually confirmed it works in a webkit browser.",
+  );
+  test.skip(
+    !includesServiceWorker,
+    "Requires the built app bundle, which includes the service worker.",
   );
   await test.step("given the user has enabled offline cache", async () => {
     await page.goto("/");
