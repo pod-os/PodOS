@@ -934,7 +934,6 @@
     plan:outOfScope <#entry-task-06-fallback-create-things-on-the-fly-outOfScope-01>;
     plan:goal <#entry-task-06-fallback-create-things-on-the-fly-goal-01>;
     plan:dependsOn <#task-05-mention-suggestions-from-search-and-store>;
-    dct:modified "2026-10-24T09:51:00Z"^^xsd:dateTime;
     dct:created "2026-10-14T19:31:55Z"^^xsd:dateTime;
     plan:status plan:deferred;
     plan:parent <#plan>;
@@ -1009,7 +1008,6 @@
     plan:context <#entry-plan-context-03>, <#entry-plan-context-02>, <#entry-plan-context-01>;
     plan:hasTask <#task-13-mention-typing-performance>, <#task-11-remove-session-watch-demand-on-receive>, <#task-10-simplify-pos-navigation-session-watch>, <#task-09-drop-store-force-fetch>, <#task-08-review-fixes-search-demand-api>, <#task-07-core-searchindex-demand-api>, <#task-06-fallback-create-things-on-the-fly>, <#task-05-mention-suggestions-from-search-and-store>, <#task-04-fix-cache-reference-invalidation>, <#task-03-remove-search-dom-events>, <#task-02-recreate-search-index-on-label-update>, <#task-01-cache-search-index-in-core>;
     dct:created "2026-10-09"^^xsd:date;
-    dct:modified "2026-10-24T09:51:00Z"^^xsd:dateTime;
     plan:status plan:done;
     dct:description "Replace hard-coded items in RichEditor markdown mentions with label search over the search index, same as pos-navigation. Refactor the search-index ownership first, re-enable the mention extension afterwards.";
     dct:title "RichEditor mentions <- full-text search (refactor first)";
@@ -1110,3 +1108,11 @@
     dct:references <#entry-task-13-mention-typing-performance-decision-03>.
 <#entry-task-13-mention-typing-performance-verification-02> schema:text "pos-markdown-document.integration.spec.tsx passes unchanged with the debounced popup (waitFor tolerates the 120 ms delay); npx tsc --noEmit on elements/ shows no new errors from the changed files; full elements suite green via wallaby.".
 <#entry-task-20-mention-e2e-playwright-scope-01> schema:text "Cover the mention happy path inside markdown-editing.spec.ts: sign in as alice, open markdown/document.md, start editing via a shared MarkdownEditor page object (Edit button and editor carry .describe names), type the '#' trigger plus a query and assert the suggestion from the test pod's label index (test-solid-server/data/alice/settings/privateLabelIndex.ttl) through a MentionMenu component object, accept it with Enter so the mention is inserted as a link scoped to the editor, then follow the link and assert the app navigates to that URI and renders the target resource. Refactor the existing edit test onto the same page object. Record the e2e happy-path-only rule in docs/contributing/testing/testing-strategy.md. Mechanism note: the rendered mention is a pos-rich-link that fires pod-os:link on click, which pos-router in pos-app-browser turns into navigation.".
+<#entry-task-06-fallback-create-things-on-the-fly-note-02> a schema:Comment;
+    dct:created "2026-10-24T11:12:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    dct:references <http://localhost:3000/dev/plans/mention-create-on-the-fly/plan.ttl#plan>;
+    schema:text "Superseded: the create-on-the-fly design was fully worked out in a dedicated discussion (2026-10-24) and moved to its own plan — see the referenced plan. This task stays deferred here as the historical origin.".
+<#task-06-fallback-create-things-on-the-fly> <plan-ontology.ttl#note> <#entry-task-06-fallback-create-things-on-the-fly-note-02>;
+    dct:modified "2026-10-24T11:12:00Z"^^xsd:dateTime.
+<#plan> dct:modified "2026-10-24T11:12:00Z"^^xsd:dateTime.
