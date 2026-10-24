@@ -15,8 +15,8 @@
     plan:scope <#entry-task-20-mention-e2e-playwright-scope-01>;
     plan:touchesFile "apps/tests/markdown-editing.spec.ts", "apps/tests/page-objects/MarkdownEditor.ts", "apps/tests/page-objects/MentionMenu.ts", "docs/contributing/testing/testing-strategy.md", "docs/contributing/testing/test-principles.md";
     dct:created "2026-10-22T21:10:00Z"^^xsd:dateTime;
-    dct:modified "2026-10-24T07:40:00Z"^^xsd:dateTime;
-    plan:status plan:planned;
+    dct:modified "2026-10-24T09:51:00Z"^^xsd:dateTime;
+    plan:status plan:done;
     plan:parent <#plan>;
     plan:dependsOn <#task-05-mention-suggestions-from-search-and-store>;
     dct:title "Mention feature e2e test in the apps Playwright suite";
@@ -654,11 +654,23 @@
     a schema:Comment.
 <#entry-plan-decision-15> dct:created "2026-10-14T19:31:55Z"^^xsd:dateTime;
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>, <https://angelo.veltens.org/profile/card#me>;
-    schema:text "Mention fallback defined and scoped: fallback = what the mention menu offers when a typed label matches nothing in the search index. Design space: (a) empty menu, nothing insertable (pos-navigation's behavior, search-only); (b) URI-paste escape hatch for existing-but-unindexed things; (c) create on the fly (mention menu offers to create the unindexed thing; make-findable deliberately excluded for now). User chose (c), refined to creation-only: recorded as draft follow-up task-06, depending on task-05; until it lands the search-only behavior (a) applies. This supersedes the out-of-scope ruling (decision-13; the former plan-level outOfScope entry was removed): the mention feature is back in scope — task-05 = suggestions provider + re-enable + un-skip, task-06 = fallback.";
+    schema:text "Mention fallback defined and scoped: fallback = what the mention menu offers when a typed label matches nothing in the search index. Design space: (a) empty menu, nothing insertable (pos-navigation's behavior, search-only); (b) URI-paste escape hatch for existing-but-unindexed things; (c) create on the fly (mention menu offers to create the unindexed thing; make-findable deliberately excluded for now). User chose (c), refined to creation-only: recorded as follow-up task-06, depending on task-05; until it lands the search-only behavior (a) applies. This supersedes the out-of-scope ruling (decision-13; the former plan-level outOfScope entry was removed): the mention feature is back in scope — task-05 = suggestions provider + re-enable + un-skip, task-06 = fallback. Task-06 was later deferred out of the plan without implementation (decision-16).";
+    dct:modified "2026-10-24T09:51:00Z"^^xsd:dateTime;
+    a schema:Comment.
+<#entry-plan-decision-16> dct:created "2026-10-24T09:51:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
+    dct:references <#entry-plan-decision-15>;
+    schema:text "Mention fallback (create things on the fly) is deferred out of this plan without implementation — the search-only empty-menu behavior stands.";
     a schema:Comment.
 <#entry-task-06-fallback-create-things-on-the-fly-context-01> dct:created "2026-10-20T20:18:00Z"^^xsd:dateTime;
+    dct:modified "2026-10-24T09:51:00Z"^^xsd:dateTime;
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>, <https://angelo.veltens.org/profile/card#me>;
-    schema:text "Slice-level 'how' (menu UI, thing-creation details, where/how the thing is stored, permissions) is deliberately not planned ahead; to be worked out when this task is picked up after task-05. The task stays in draft until planned through. Definition and stance recorded plan-level in decision-15. App observation from Angelo (2026-10-20): typing '#' alone shows an empty suggestion box which looks weird — accepted for now, because the upcoming create-on-the-fly option will fill that box; no dedicated empty-state handling is needed before task-06 lands.";
+    schema:text "Slice-level 'how' (menu UI, thing-creation details, where/how the thing is stored, permissions) was never planned — the task is deferred out of the plan unimplemented (decision-16). Definition and stance recorded plan-level in decision-15. App observation from Angelo (2026-10-20): typing '#' alone shows an empty suggestion box which looks weird — accepted at the time in expectation of create-on-the-fly; with the task deferred, the empty box remains the behavior and no dedicated empty-state handling is planned.";
+    a schema:Comment.
+<#entry-task-06-fallback-create-things-on-the-fly-note-01> dct:created "2026-10-24T09:51:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    dct:references <#entry-plan-decision-16>;
+    schema:text "Deferred on Angelo's confirmation (2026-10-24) that the whole plan is done from his perspective — the create-on-the-fly fallback stays unimplemented in this plan.";
     a schema:Comment.
 <#entry-task-06-fallback-create-things-on-the-fly-outOfScope-01> dct:created "2026-10-14T19:34:23Z"^^xsd:dateTime;
     prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
@@ -918,12 +930,13 @@
     dct:title "Core search index demand API: build on first use, empty in place on logout";
     a plan:Task.
 <#task-06-fallback-create-things-on-the-fly> plan:context <#entry-task-06-fallback-create-things-on-the-fly-context-01>;
+    plan:note <#entry-task-06-fallback-create-things-on-the-fly-note-01>;
     plan:outOfScope <#entry-task-06-fallback-create-things-on-the-fly-outOfScope-01>;
     plan:goal <#entry-task-06-fallback-create-things-on-the-fly-goal-01>;
     plan:dependsOn <#task-05-mention-suggestions-from-search-and-store>;
-    dct:modified "2026-10-14T19:34:23Z"^^xsd:dateTime;
+    dct:modified "2026-10-24T09:51:00Z"^^xsd:dateTime;
     dct:created "2026-10-14T19:31:55Z"^^xsd:dateTime;
-    plan:status plan:draft;
+    plan:status plan:deferred;
     plan:parent <#plan>;
     dct:title "Mention fallback: create things on the fly";
     a plan:Task.
@@ -989,15 +1002,15 @@
     plan:parent <#plan>;
     dct:title "Cache SearchIndex in core's buildSearchIndex";
     a plan:Task.
-<#plan> plan:decision <#entry-plan-decision-15>;
+<#plan> plan:decision <#entry-plan-decision-16>, <#entry-plan-decision-15>;
     plan:note <#entry-plan-note-02>, <#entry-plan-note-01>;
     plan:option <#entry-plan-option-03>, <#entry-plan-option-02>, <#entry-plan-option-01>;
     plan:decision <#entry-plan-decision-14>, <#entry-plan-decision-13>, <#entry-plan-decision-12>, <#entry-plan-decision-11>, <#entry-plan-decision-10>, <#entry-plan-decision-09>, <#entry-plan-decision-08>, <#entry-plan-decision-07>, <#entry-plan-decision-06>, <#entry-plan-decision-05>, <#entry-plan-decision-04>, <#entry-plan-decision-03>, <#entry-plan-decision-02>, <#entry-plan-decision-01>;
     plan:context <#entry-plan-context-03>, <#entry-plan-context-02>, <#entry-plan-context-01>;
     plan:hasTask <#task-13-mention-typing-performance>, <#task-11-remove-session-watch-demand-on-receive>, <#task-10-simplify-pos-navigation-session-watch>, <#task-09-drop-store-force-fetch>, <#task-08-review-fixes-search-demand-api>, <#task-07-core-searchindex-demand-api>, <#task-06-fallback-create-things-on-the-fly>, <#task-05-mention-suggestions-from-search-and-store>, <#task-04-fix-cache-reference-invalidation>, <#task-03-remove-search-dom-events>, <#task-02-recreate-search-index-on-label-update>, <#task-01-cache-search-index-in-core>;
     dct:created "2026-10-09"^^xsd:date;
-    dct:modified "2026-10-22T21:10:00Z"^^xsd:dateTime;
-    plan:status plan:in-progress;
+    dct:modified "2026-10-24T09:51:00Z"^^xsd:dateTime;
+    plan:status plan:done;
     dct:description "Replace hard-coded items in RichEditor markdown mentions with label search over the search index, same as pos-navigation. Refactor the search-index ownership first, re-enable the mention extension afterwards.";
     dct:title "RichEditor mentions <- full-text search (refactor first)";
     a plan:Plan.
