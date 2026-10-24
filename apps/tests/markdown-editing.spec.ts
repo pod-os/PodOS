@@ -106,13 +106,10 @@ test.describe("Markdown documents", () => {
       });
 
     await test.step("and typing the mention trigger plus a query", async () => {
-      await editor.replaceContent("#Someth");
+      const mentionMenu = editor.mentionMenu();
 
-      const suggestion = page
-        .getByRole("option")
-        .filter({ hasText: "Something" })
-        .describe("Mention suggestion");
-      await expect(suggestion).toBeVisible();
+      await editor.replaceContent("#Someth");
+      await expect(mentionMenu.suggestion("Something")).toBeVisible();
     });
 
     await test.step("and accepting the suggestion", async () => {
