@@ -14,6 +14,24 @@ describe('mention extension', () => {
     expect(mention(mockOs)).toBeDefined();
   });
 
+  describe('suggestion.shouldShow', () => {
+    const getShouldShow = (mockOs: PodOS) => mention(mockOs).options.suggestion.shouldShow!;
+
+    const mockOs = {
+      buildSearchIndex: vi.fn(),
+    } as unknown as PodOS;
+
+    it('hides the suggestion menu while no character has been typed after #', () => {
+      const shouldShow = getShouldShow(mockOs);
+      expect(shouldShow({ query: '', text: '#' } as any)).toBe(false);
+    });
+
+    it('shows the suggestion menu once at least one character has been typed', () => {
+      const shouldShow = getShouldShow(mockOs);
+      expect(shouldShow({ query: 'a', text: '#a' } as any)).toBe(true);
+    });
+  });
+
   it('builds the search index once at configuration time, not per suggestion lookup', async () => {
     const mockSearchIndex = {
       search: vi.fn().mockReturnValue([{ ref: 'https://pod.test/alice/profile/card#me' }]),
