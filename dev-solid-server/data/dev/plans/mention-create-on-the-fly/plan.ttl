@@ -1,0 +1,224 @@
+@prefix plan: <../plan-ontology.ttl#>.
+@prefix prov: <http://www.w3.org/ns/prov#>.
+@prefix schema: <https://schema.org/>.
+@prefix dct: <http://purl.org/dc/terms/>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+
+<#plan> a plan:Plan;
+    dct:title "Create things on the fly from the mention menu";
+    dct:description "Add a Create entry to the mention suggestions that immediately inserts the mention and creates the referenced thing in the background. Picks up the deferred task-06 of the mentions-fulltext-search plan.";
+    dct:created "2026-10-24"^^xsd:date;
+    plan:status plan:planned;
+    plan:decision <#entry-decision-01>, <#entry-decision-02>, <#entry-decision-03>, <#entry-decision-04>, <#entry-decision-05>, <#entry-decision-06>;
+    plan:context <#entry-context-01>, <#entry-context-02>;
+    plan:hasTask <#task-01-optional-type-in-add-new-thing>, <#task-02-create-option-in-mention-suggestions>.
+<#entry-decision-01> a schema:Comment;
+    dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
+    schema:text "The mention menu always offers a Create entry below the search suggestions; picking it inserts the mention immediately and creates the thing in the background, with no confirmation step. Angelo explicitly accepted that every pick, including accidental or exploratory ones, performs a pod write and creates a permanent thing.".
+<#entry-decision-02> a schema:Comment;
+    dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
+    schema:text "The created thing is a minimal placeholder without any rdf:type. This is the preferred route, contingent on the core change staying small (it did — see the optional-type task); the fallback of reusing an existing generic type is dropped.".
+<#entry-decision-03> a schema:Comment;
+    dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
+    schema:text "The created thing is not added to any label index — consistent with the mentions-fulltext-search plan ruling that make-findable stays out of scope. Angelo explicitly accepted the trade-off: the thing will not appear in future mention suggestions; it is reachable via the document link and container browsing only.".
+<#entry-decision-04> a schema:Comment;
+    dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>, <https://angelo.veltens.org/profile/card#me>;
+    schema:text "The mention extension performs the pod write itself, using its os handle: processCommand calls os.addNewThing for new-thing items after inserting the mention; no create event, no listener in pos-markdown-document.";
+    dct:modified "2026-10-24T12:26:21Z"^^xsd:dateTime.
+<#entry-decision-05> a schema:Comment;
+    dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
+    schema:text "The extension passes the document URI itself as referenceUri to proposeUriForNewThing. Relative URI resolution targets the containing directory, so the thing lands next to the document without any container derivation.".
+<#entry-decision-06> a schema:Comment;
+    dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
+    schema:text "Because the URI is known in advance (proposeUriForNewThing is synchronous), the create entry is a regular MentionItem plus a marker field; the standard tiptap command path inserts the pos-rich-link unchanged.".
+<#entry-context-01> a schema:Comment;
+    dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>, <https://angelo.veltens.org/profile/card#me>;
+    dct:references <http://localhost:3000/dev/plans/mentions-fulltext-search/plan.ttl#entry-plan-decision-16>;
+    schema:text "Picks up the deferred task-06 of the mentions-fulltext-search plan (mention fallback: create things on the fly, 2026-10-24). This plan records the slice-level how that task never received: menu entry, wiring through the extension, thing creation, storage location.".
+<#entry-context-02> a schema:Comment;
+    dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    dct:references <#entry-decision-04>;
+    schema:text "Investigation findings backing the design: all element-facing APIs already cope with untyped things (Thing.label is type-independent, pos-type-badges renders nothing for zero types, pos-rich-link has no type dependency); the only blocker is the required type parameter in Store.addNewThing.".
+<#task-01-optional-type-in-add-new-thing> a plan:Task;
+    dct:title "Make Store.addNewThing type parameter optional";
+    plan:goal <#entry-task-01-goal-01>;
+    plan:scope <#entry-task-01-scope-01>, <#entry-task-01-scope-02>;
+    plan:verification <#entry-task-01-verification-01>;
+    plan:touchesFile "core/src/Store.ts", "core/src/Store.spec.ts", "core/src/index.ts";
+    dct:created "2026-10-24"^^xsd:date;
+    plan:status plan:planned;
+    plan:parent <#plan>.
+<#entry-task-01-goal-01> a schema:Comment;
+    dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>, <https://angelo.veltens.org/profile/card#me>;
+    schema:text "os.addNewThing can create a thing with a label but without an rdf:type triple, enabling placeholder things that carry only a label.".
+<#entry-task-01-scope-01> a schema:Comment;
+    dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "Store.addNewThing: the type parameter becomes optional; when omitted, only the rdfs:label triple is inserted. The PodOS facade mirrors the optional parameter.".
+<#entry-task-01-scope-02> a schema:Comment;
+    dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "An untyped thing still gets a proper RDF document created (rdflib writes to the URI document), so no extra handling is needed.".
+<#entry-task-01-verification-01> a schema:Comment;
+    dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "Store.spec: addNewThing without type inserts only the label triple; with type, both triples as today. All existing core suites stay green.".
+<#task-02-create-option-in-mention-suggestions> a plan:Task;
+    dct:title "Create option in the mention suggestions";
+    plan:goal <#entry-task-02-goal-01>;
+    plan:context <#entry-task-02-context-01>;
+    plan:scope <#entry-task-02-scope-01>, <#entry-task-02-scope-02>, <#entry-task-02-scope-03>;
+    plan:verification <#entry-task-02-verification-01>, <#entry-task-02-verification-02>;
+    plan:outOfScope <#entry-task-02-outOfScope-01>;
+    plan:touchesFile "elements/src/components/pos-markdown-document/rich-editor/mention-extension/index.ts", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/items.ts", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/render.ts", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/processCommand.ts", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/pos-mention-menu/pos-mention-menu.tsx", "elements/src/components/pos-markdown-document/rich-editor/RichEditor.ts", "elements/src/components/pos-markdown-document/pos-markdown-document.integration.spec.tsx";
+    plan:dependsOn <#task-01-optional-type-in-add-new-thing>;
+    dct:created "2026-10-24"^^xsd:date;
+    plan:parent <#plan>.
+<#entry-task-02-goal-01> a schema:Comment;
+    dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>, <https://angelo.veltens.org/profile/card#me>;
+    schema:text "Typing the mention trigger shows the Create entry below the search suggestions at all times; picking it inserts the mention pointing at the proposed URI and creates the thing next to the document in the background.".
+<#entry-task-02-context-01> a schema:Comment;
+    dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "The extension needs the document URI for URI proposal; RichEditor already receives it as baseUrl and threads it into mention(). The mention menu lives in document.body outside the shadow root, so events must be dispatched from the editor DOM.".
+<#entry-task-02-scope-01> a schema:Comment;
+    dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "items(): after mapping search results, append the create entry with the proposed URI and the query as label; the URI is proposed synchronously at injection time.".
+<#entry-task-02-scope-02> a schema:Comment;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "MentionItem gains an optional marker field (kind create); render.ts wraps menu.command via processCommand: for create-kind items it calls os.addNewThing(item.id, item.label) after command(item) — the mention inserts synchronously first, the pod write happens in the background; both keyboard and mouse selection flow through one code path; the menu component itself stays dumb.".
+<#entry-task-02-scope-03> a schema:Comment;
+    dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "RichEditor threads the document URI (its baseUrl parameter) into mention(); no confirmation UI, no dialog.".
+<#entry-task-02-scope-04> dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "Note the relative-resolution caveat in code: URI proposal assumes a file URL reference; trailing-slash container URIs or non-hierarchical URIs would resolve differently. Fine for the markdown-file case.".
+<#entry-task-02-verification-01> a schema:Comment;
+    dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "Unit tests: items() appends the create entry with the proposed URI after search results; processCommand calls addNewThing for new-thing items only, after command(item); the menu renders the create entry and keyboard navigation covers it.".
+<#entry-task-02-verification-02> a schema:Comment;
+    dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-02-outOfScope-01> a schema:Comment;
+    dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>, <https://angelo.veltens.org/profile/card#me>;
+    schema:text "Failure handling when the background addNewThing fails (error UX, rollback) is out of scope for now — the trade-off of a possibly dangling link is accepted, consistent with the no-confirmation decision.".
+<#task-02-create-option-in-mention-suggestions> plan:note <#entry-task-02-note-01>.
+<#entry-task-02-note-01> a schema:Comment;
+    dct:created "2026-10-24T15:58:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <http://localhost:3000/dev/plans/agents.ttl#llm-glm-5.3-flash>, <https://angelo.veltens.org/profile/card#me>;
+    schema:text "Error handling was implemented beyond the original plan: the extension dispatches a pod-os:error event when the background addNewThing fails, and pos-error-toast renders it. This closes the concern the failure-handling outOfScope entry had parked.".
+<#task-02-create-option-in-mention-suggestions> plan:status plan:done;
+    dct:modified "2026-10-24T16:20:00Z"^^xsd:dateTime.
+<#entry-task-02-verification-02> schema:text "Integration test extends pos-markdown-document.integration.spec.tsx: typing the trigger plus a query shows search suggestion(s) and the create entry (indexed and new-thing classes). Picking the create entry is not covered yet — that coverage moved to the optional-type task.".
+<#task-01-optional-type-in-add-new-thing> dct:modified "2026-10-24T16:20:00Z"^^xsd:dateTime;
+    plan:touchesFile "elements/src/components/pos-markdown-document/rich-editor/mention-extension/processSelectedMention.ts", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/processSelectedMention.dom.spec.ts", "elements/src/components/pos-markdown-document/pos-markdown-document.integration.spec.tsx".
+<#entry-task-01-note-01> a schema:Comment;
+    dct:created "2026-10-24T16:20:00Z"^^xsd:dateTime;
+    prov:wasAttributedTo <http://localhost:3000/dev/plans/agents.ttl#llm-glm-5.3-flash>, <https://angelo.veltens.org/profile/card#me>;
+    schema:text "Absorbed from the create-option task: the pick-path integration coverage (picking the create entry inserts the mention and creates the thing in the pod) and dropping the hardcoded schema:Thing type in processSelectedMention — the latter resolves the violation of the untyped-thing decision once the type parameter is optional.".
+<#task-01-optional-type-in-add-new-thing> plan:note <#entry-task-01-note-01>.
+<#plan> plan:hasTask <#task-03-mention-menu-a11y-combobox>, <#task-04-mention-menu-touch-and-create-label>, <#task-05-mention-create-error-feedback>.
+<#task-03-mention-menu-a11y-combobox> a plan:Task;
+    dct:title "Mention menu: combobox wiring and screen reader announcements";
+    plan:goal <#entry-task-03-goal-01>;
+    plan:scope <#entry-task-03-scope-01>, <#entry-task-03-scope-02>;
+    plan:verification <#entry-task-03-verification-01>;
+    plan:touchesFile "elements/src/components/pos-markdown-document/rich-editor/mention-extension/render.ts", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/render.spec.tsx", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/pos-mention-menu/pos-mention-menu.tsx", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/pos-mention-menu/pos-mention-menu.spec.tsx";
+    dct:created "2026-10-24T19:26:12Z"^^xsd:dateTime;
+    plan:status plan:planned;
+    plan:parent <#plan>.
+<#entry-task-03-goal-01> a schema:Comment;
+    dct:created "2026-10-24T19:26:12Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "While the mention suggestions are open, the editor input announces itself as a combobox controlling the suggestion listbox; screen reader users hear which option is highlighted and what the menu contains.".
+<#entry-task-03-scope-01> a schema:Comment;
+    dct:created "2026-10-24T19:26:12Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "Implement the WAI-ARIA combobox/listbox pattern for the suggestion popup: the editor's contenteditable gets role combobox with aria-expanded, aria-controls pointing at the menu listbox id and aria-activedescendant pointing at the currently selected option; options get stable ids; selection changes update activedescendant.".
+<#entry-task-03-scope-02> a schema:Comment;
+    dct:created "2026-10-24T19:26:12Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "Escape dismissal is already handled by the tiptap suggestion plugin (verified in @tiptap/suggestion 3.32.0) — no Escape work needed. Tiptap's own docs prescribe no accessibility pattern; the combobox wiring is our responsibility.".
+<#entry-task-03-verification-01> a schema:Comment;
+    dct:created "2026-10-24T19:26:12Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "Specs assert the combobox attributes on the editor DOM while the menu is open and their cleanup on menu close; pos-mention-menu specs assert option ids and reflect activedescendant updates on selectedIndex changes.".
+<#task-04-mention-menu-touch-and-create-label> a plan:Task;
+    dct:title "Mention menu: touch selection and DOM text for the create entry";
+    plan:goal <#entry-task-04-goal-01>;
+    plan:scope <#entry-task-04-scope-01>, <#entry-task-04-scope-02>;
+    plan:verification <#entry-task-04-verification-01>;
+    plan:touchesFile "elements/src/components/pos-markdown-document/rich-editor/mention-extension/pos-mention-menu/pos-mention-menu.tsx", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/pos-mention-menu/pos-mention-menu.css", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/pos-mention-menu/pos-mention-menu.spec.tsx";
+    dct:created "2026-10-24T19:26:12Z"^^xsd:dateTime;
+    plan:status plan:planned;
+    plan:parent <#plan>.
+<#entry-task-04-goal-01> a schema:Comment;
+    dct:created "2026-10-24T19:26:12Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "The mention menu works on touch devices and the create affordance is real text: suggestions can be selected by tap, and the 'Create' hint is DOM content that screen readers, translations and tests see.".
+<#entry-task-04-scope-01> a schema:Comment;
+    dct:created "2026-10-24T19:26:12Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "Option selection listens to pointerdown (or click) instead of mousedown; the blanket mousedown preventDefault on the host is scoped so taps on options select and the editor keeps focus.".
+<#entry-task-04-scope-02> a schema:Comment;
+    dct:created "2026-10-24T19:26:12Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "The create entry's 'Create ' prefix and closing quote move from CSS ::before/::after generated content into the rendered DOM; styling stays in CSS.".
+<#entry-task-04-verification-01> a schema:Comment;
+    dct:created "2026-10-24T19:26:12Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "pos-mention-menu specs: selecting via a dispatched pointerdown (or click) calls the command; the create entry renders its label with visible 'Create' text as DOM content.".
+<#task-05-mention-create-error-feedback> a plan:Task;
+    dct:title "Announce background create failures accessibly";
+    plan:goal <#entry-task-05-goal-01>;
+    plan:context <#entry-task-05-context-01>;
+    plan:scope <#entry-task-05-scope-01>;
+    plan:verification <#entry-task-05-verification-01>;
+    plan:touchesFile "elements/src/components/pos-markdown-document/rich-editor/mention-extension/processSelectedMention.ts", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/processSelectedMention.dom.spec.ts";
+    dct:created "2026-10-24T19:26:12Z"^^xsd:dateTime;
+    plan:status plan:planned;
+    plan:parent <#plan>.
+<#entry-task-05-goal-01> a schema:Comment;
+    dct:created "2026-10-24T19:26:12Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "When the background creation of a picked create entry fails, the failure is communicated in an accessible way, not only as a document-level CustomEvent.".
+<#entry-task-05-context-01> a schema:Comment;
+    dct:created "2026-10-24T19:26:12Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "Today the failure path dispatches pod-os:error on document, which the error toast renders; whether that surface is announced to screen readers is unverified — the task must check and close that gap.".
+<#entry-task-05-scope-01> a schema:Comment;
+    dct:created "2026-10-24T19:26:12Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "Verify how pos-error-toast surfaces the failure to assistive technology (live region or focus move); if it is silent to AT, wire an accessible announcement for the error and reuse that mechanism.".
+<#entry-task-05-verification-01> a schema:Comment;
+    dct:created "2026-10-24T19:26:12Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "Spec coverage that the failure path reaches the accessible announcement mechanism; existing processSelectedMention specs stay green.".
+<#task-03-mention-menu-a11y-combobox> plan:touchesFile "apps/tests/page-objects/MarkdownEditor.ts", "apps/tests/page-objects/MentionMenu.ts", "apps/tests/markdown-editing.spec.ts";
+    plan:verification <#entry-task-03-verification-02>.
+<#task-04-mention-menu-touch-and-create-label> plan:verification <#entry-task-04-verification-02>.
+<#entry-task-03-verification-02> a schema:Comment;
+    dct:created "2026-10-24T19:28:42Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "The mention e2e selectors ride along: with the combobox role in place the MarkdownEditor page object locates the editor by combobox role and the MentionMenu scopes option queries to the listbox instead of the whole page, keeping the existing markdown-editing specs passing with the sharper locators.".
+<#entry-task-04-verification-02> a schema:Comment;
+    dct:created "2026-10-24T19:28:42Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
+    schema:text "With the create hint as DOM text the suggestion's accessible name reflects what the user sees; the e2e specs keep naming suggestions by label while the locators gain the visible wording.".
+<#plan> dct:modified "2026-10-24T19:28:42Z"^^xsd:dateTime.
+<http://localhost:3000/dev/plans/mention-create-on-the-fly/plan.ttl#task-01-optional-type-in-add-new-thing> plan:status plan:done;
+    dct:modified "2026-10-24T19:33:25Z"^^xsd:dateTime.

@@ -1,12 +1,25 @@
 import { render } from './render';
 import './pos-mention-menu/pos-mention-menu';
 import { SuggestionProps } from '@tiptap/suggestion';
-import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, Mock, vi } from 'vitest';
+import { processSelectedMention } from './processSelectedMention';
+import { mockPodOS } from '../../../../test/mockPodOS.vitest';
+
+vi.mock('./processSelectedMention');
 
 describe('render', () => {
+  function getRender() {
+    const os = mockPodOS();
+    return render(os)();
+  }
+
+  beforeEach(() => {
+    (processSelectedMention as Mock).mockImplementation((_, it) => it);
+  });
+
   describe('onStart', () => {
     it('mounts an empty menu', () => {
-      const { onStart } = render();
+      const { onStart } = getRender();
       const mount = vi.fn();
       onStart({
         mount,
@@ -18,7 +31,7 @@ describe('render', () => {
       expect(menu).toHaveProperty('items', []);
     });
     it('mounts a menu with items', () => {
-      const { onStart } = render();
+      const { onStart } = getRender();
       const mount = vi.fn();
       const items = [{ id: 'https://resource.test', label: 'Test' }];
       onStart({
@@ -31,7 +44,7 @@ describe('render', () => {
       expect(menu).toHaveProperty('items', items);
     });
     it('passes on the command function', () => {
-      const { onStart } = render();
+      const { onStart } = getRender();
       const mount = vi.fn();
       onStart({
         mount,
@@ -45,7 +58,7 @@ describe('render', () => {
   });
   describe('onUpdate', () => {
     it('updates the menu items and command', () => {
-      const { onStart, onUpdate } = render();
+      const { onStart, onUpdate } = getRender();
       const mount = vi.fn();
       onStart({
         mount,
@@ -63,7 +76,7 @@ describe('render', () => {
     });
 
     it('resets the selection when items change', () => {
-      const { onStart, onUpdate, onKeyDown } = render();
+      const { onStart, onUpdate, onKeyDown } = getRender();
       const mount = (el: HTMLElement) => {
         document.body.appendChild(el);
         return () => el.remove();
@@ -90,7 +103,7 @@ describe('render', () => {
     let menu: HTMLPosMentionMenuElement;
 
     beforeEach(() => {
-      ({ onStart, onKeyDown } = render());
+      ({ onStart, onKeyDown } = getRender());
       onStart({
         items: [],
         command: () => {},
@@ -107,7 +120,7 @@ describe('render', () => {
     });
 
     const setupMenu = (itemLabels: string[], command = vi.fn()) => {
-      menu.items = itemLabels.map((label, i) => ({ id: `https://test/${i}`, label }));
+      menu.items = itemLabels.map((label, i) => ({ id: `https://test/${i}`, label, type: 'indexed' }));
       menu.command = command;
       return command;
     };
@@ -132,7 +145,7 @@ describe('render', () => {
       const command = setupMenu(['First', 'Second']);
       onKeyDown({ event: new KeyboardEvent('keydown', { key: 'ArrowDown' }) });
       onKeyDown({ event: new KeyboardEvent('keydown', { key: 'Enter' }) });
-      expect(command).toHaveBeenCalledWith({ id: 'https://test/1', label: 'Second' });
+      expect(command).toHaveBeenCalledWith({ id: 'https://test/1', label: 'Second', type: 'indexed' });
     });
 
     it('Enter with no items does not call the command', () => {
@@ -150,7 +163,7 @@ describe('render', () => {
   describe('onExit', () => {
     it('unmounts', () => {
       const unmount = vi.fn();
-      const { onStart, onExit } = render();
+      const { onStart, onExit } = getRender();
       const mount = vi.fn().mockReturnValue(unmount);
       onStart({
         mount,

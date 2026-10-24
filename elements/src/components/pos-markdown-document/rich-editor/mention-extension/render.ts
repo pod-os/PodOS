@@ -1,21 +1,24 @@
 import { SuggestionProps } from '@tiptap/suggestion';
 import { MentionNodeAttrs } from '@tiptap/extension-mention';
+import { processSelectedMention } from './processSelectedMention';
+import { PodOS } from '@pod-os/core';
 
-export const render = () => {
+export const render = (os: PodOS) => () => {
   let menu: HTMLPosMentionMenuElement;
   let unmount: () => void | undefined;
+
   return {
     onStart: (props: SuggestionProps<any, MentionNodeAttrs>) => {
       menu = document.createElement('pos-mention-menu');
       menu.items = props.items;
       menu.selectedIndex = 0;
-      menu.command = props.command;
+      menu.command = processSelectedMention(os, props.command);
       unmount = props.mount(menu);
     },
     onUpdate: (props: SuggestionProps<any, MentionNodeAttrs>) => {
       menu.items = props.items;
       menu.selectedIndex = 0;
-      menu.command = props.command;
+      menu.command = processSelectedMention(os, props.command);
     },
     onExit: () => {
       unmount?.();

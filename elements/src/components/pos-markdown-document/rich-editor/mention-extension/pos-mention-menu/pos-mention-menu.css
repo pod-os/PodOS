@@ -12,9 +12,23 @@ li[role='option'] {
   padding: 0.25rem 0.5rem;
   border-radius: var(--sl-border-radius-small);
   cursor: pointer;
-}
 
-li[role='option'][aria-selected='true'] {
-  background: var(--sl-color-primary-100);
-  color: var(--sl-color-primary-700);
+  &[aria-selected='true'], &:hover  {
+    background: var(--sl-color-primary-100);
+    color: var(--sl-color-primary-700);
+  }
+
+  &.new-thing {
+    &:before {
+      content: "Create '";
+    }
+    &:after {
+      content: "'";
+    }
+    &[aria-selected='true'], &:hover {
+      background: var(--color-green-200);
+      color: var(--color-green-900);
+      font-weight: var(--weight-bold);
+    }
+  }
 }

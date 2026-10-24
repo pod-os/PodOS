@@ -3,16 +3,13 @@ import { describe, expect, h, it, render } from '@stencil/vitest';
 
 import './pos-mention-menu';
 import { fireEvent } from '@testing-library/dom';
+import { MentionItem } from './pos-mention-menu';
 
 describe('pos-mention-menu', () => {
-  it('renders empty', async () => {
+  it('does not render when empty', async () => {
     const page = await render(<pos-mention-menu items={[]}></pos-mention-menu>);
 
-    expect(page.root).toMatchInlineSnapshot(`
-        <pos-mention-menu class="hydrated">
-          <ul role="listbox"></ul>
-        </pos-mention-menu>
-    `);
+    expect(page.root).toBeEmptyDOMElement();
   });
 
   it('renders single option', async () => {
@@ -20,15 +17,37 @@ describe('pos-mention-menu', () => {
       {
         id: 'https://resource.test',
         label: 'Something',
+        type: 'indexed',
       },
-    ];
+    ] as MentionItem[];
     const page = await render(<pos-mention-menu items={items}></pos-mention-menu>);
 
     expect(page.root).toMatchInlineSnapshot(`
       <pos-mention-menu class="hydrated">
         <ul role="listbox">
-          <li role="option" aria-selected="true">
+          <li role="option" class="indexed" aria-selected="true">
             Something
+          </li>
+        </ul>
+      </pos-mention-menu>
+    `);
+  });
+
+  it('renders only a create option', async () => {
+    const items = [
+      {
+        id: 'https://resource.test',
+        label: 'New Thing',
+        type: 'new-thing',
+      },
+    ] as MentionItem[];
+    const page = await render(<pos-mention-menu items={items}></pos-mention-menu>);
+
+    expect(page.root).toMatchInlineSnapshot(`
+      <pos-mention-menu class="hydrated">
+        <ul role="listbox">
+          <li role="option" class="new-thing" aria-selected="true">
+            New Thing
           </li>
         </ul>
       </pos-mention-menu>
@@ -40,21 +59,23 @@ describe('pos-mention-menu', () => {
       {
         id: 'https://first.test',
         label: 'First',
+        type: 'indexed',
       },
       {
         id: 'https://second.test',
         label: 'Second',
+        type: 'indexed',
       },
-    ];
+    ] as MentionItem[];
     const page = await render(<pos-mention-menu items={items}></pos-mention-menu>);
 
     expect(page.root).toMatchInlineSnapshot(`
       <pos-mention-menu class="hydrated">
         <ul role="listbox">
-          <li role="option" aria-selected="true">
+          <li role="option" class="indexed" aria-selected="true">
             First
           </li>
-          <li role="option">
+          <li role="option" class="indexed">
             Second
           </li>
         </ul>
@@ -67,7 +88,8 @@ describe('pos-mention-menu', () => {
     const item = {
       id: 'https://resource.test',
       label: 'Something',
-    };
+      type: 'indexed',
+    } as MentionItem;
     const page = await render(<pos-mention-menu items={[item]} command={command}></pos-mention-menu>);
 
     const option = page.root.querySelector('li[role="option"]')!;
@@ -81,8 +103,8 @@ describe('pos-mention-menu', () => {
       const page = await render(
         <pos-mention-menu
           items={[
-            { id: 'https://first.test', label: 'First' },
-            { id: 'https://second.test', label: 'Second' },
+            { id: 'https://first.test', label: 'First', type: 'indexed' },
+            { id: 'https://second.test', label: 'Second', type: 'indexed' },
           ]}
         ></pos-mention-menu>,
       );
@@ -96,8 +118,8 @@ describe('pos-mention-menu', () => {
         <pos-mention-menu
           selectedIndex={1}
           items={[
-            { id: 'https://first.test', label: 'First' },
-            { id: 'https://second.test', label: 'Second' },
+            { id: 'https://first.test', label: 'First', type: 'indexed' },
+            { id: 'https://second.test', label: 'Second', type: 'indexed' },
           ]}
         ></pos-mention-menu>,
       );

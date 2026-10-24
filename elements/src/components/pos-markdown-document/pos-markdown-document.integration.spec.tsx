@@ -53,8 +53,11 @@ describe('pos-markdown-document', () => {
     // tiptap mounts the suggestion popup into document.body, not the shadow root
     await waitFor(() => {
       const options = within(document.body).getAllByRole('option');
-      expect(options).toHaveLength(1);
+      expect(options).toHaveLength(2);
       expect(options[0]).toHaveTextContent('Test found it');
+      expect(options[0]).toHaveClass('indexed');
+      expect(options[1]).toHaveTextContent('test');
+      expect(options[1]).toHaveClass('new-thing');
     });
   });
 });

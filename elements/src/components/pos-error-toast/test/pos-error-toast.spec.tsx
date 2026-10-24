@@ -68,6 +68,34 @@ describe('pos-error-toast', () => {
       `);
     });
 
+    it('shows toast if an error is emitted from the document', async () => {
+      // when pod-os:error is emitted from the document
+      document.dispatchEvent(
+        new CustomEvent('pod-os:error', {
+          detail: new Error('Test error message'),
+        }),
+      );
+      await page.waitForChanges();
+
+      // then the alert toast is shown
+      expect(alertElement.toast).toHaveBeenCalled();
+      expect(page.root).toMatchInlineSnapshot(`
+        <pos-error-toast class="hydrated">
+          <mock:shadow-root>
+            <sl-alert variant="danger" duration="10000" closable>
+              <sl-icon slot="icon" name="exclamation-octagon"></sl-icon>
+              <strong>
+                Error
+              </strong>
+              <br>
+              Test error message
+            </sl-alert>
+            <slot></slot>
+          </mock:shadow-root>
+        </pos-error-toast>
+      `);
+    });
+
     it('shows toast if a problem result is emitted', async () => {
       // when pod-os:error is emitted with a problem result
       const problem: Problem = {
