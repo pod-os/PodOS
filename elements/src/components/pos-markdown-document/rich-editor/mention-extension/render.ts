@@ -2,6 +2,7 @@ import { SuggestionProps } from '@tiptap/suggestion';
 import { MentionNodeAttrs } from '@tiptap/extension-mention';
 import { processSelectedMention } from './processSelectedMention';
 import { PodOS } from '@pod-os/core';
+import { EditorView } from '@tiptap/pm/view';
 
 export const render = (os: PodOS) => () => {
   let menu: HTMLPosMentionMenuElement;
@@ -27,13 +28,17 @@ export const render = (os: PodOS) => () => {
       props.editor.view.dom.removeAttribute('aria-activedescendant');
       unmount?.();
     },
-    onKeyDown: ({ event }: { event: KeyboardEvent }) => {
+    onKeyDown: ({ event, view }: { event: KeyboardEvent; view: EditorView }) => {
       switch (event.key) {
         case 'ArrowDown':
-          menu.selectedIndex = (menu.selectedIndex + 1) % menu.items.length;
+          const selectedDown = (menu.selectedIndex + 1) % menu.items.length;
+          menu.selectedIndex = selectedDown;
+          view.dom.setAttribute('aria-activedescendant', `pos-mention-menu-option-${selectedDown + 1}`);
           return true;
         case 'ArrowUp':
-          menu.selectedIndex = (menu.selectedIndex - 1 + menu.items.length) % menu.items.length;
+          const selectedUp = (menu.selectedIndex - 1 + menu.items.length) % menu.items.length;
+          menu.selectedIndex = selectedUp;
+          view.dom.setAttribute('aria-activedescendant', `pos-mention-menu-option-${selectedUp + 1}`);
           return true;
         case 'Enter': {
           const item = menu.items[menu.selectedIndex];

@@ -4,6 +4,7 @@ import { SuggestionProps } from '@tiptap/suggestion';
 import { afterEach, beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 import { processSelectedMention } from './processSelectedMention';
 import { mockPodOS } from '../../../../test/mockPodOS.vitest';
+import { EditorView } from '@tiptap/pm/view';
 
 vi.mock('./processSelectedMention');
 
@@ -92,7 +93,10 @@ describe('render', () => {
       onStart({ mount, items, command: () => {}, editor: fakeDom() } as unknown as SuggestionProps);
       const menu = document.querySelector('pos-mention-menu') as HTMLPosMentionMenuElement;
 
-      onKeyDown({ event: new KeyboardEvent('keydown', { key: 'ArrowDown' }) });
+      onKeyDown({
+        event: new KeyboardEvent('keydown', { key: 'ArrowDown' }),
+        view: fakeDom().view as unknown as EditorView,
+      });
       expect(menu.selectedIndex).toBe(1);
 
       onUpdate({ items } as unknown as SuggestionProps);
@@ -132,36 +136,36 @@ describe('render', () => {
 
     it('ArrowDown selects the next item, wrapping around', () => {
       setupMenu(['First', 'Second']);
-      onKeyDown({ event: new KeyboardEvent('keydown', { key: 'ArrowDown' }) });
+      onKeyDown({ event: new KeyboardEvent('keydown', { key: 'ArrowDown' }), view: fakeDom().view });
       expect(menu.selectedIndex).toBe(1);
-      onKeyDown({ event: new KeyboardEvent('keydown', { key: 'ArrowDown' }) });
+      onKeyDown({ event: new KeyboardEvent('keydown', { key: 'ArrowDown' }), view: fakeDom().view });
       expect(menu.selectedIndex).toBe(0);
     });
 
     it('ArrowUp selects the previous item, wrapping around', () => {
       setupMenu(['First', 'Second']);
-      onKeyDown({ event: new KeyboardEvent('keydown', { key: 'ArrowUp' }) });
+      onKeyDown({ event: new KeyboardEvent('keydown', { key: 'ArrowUp' }), view: fakeDom().view });
       expect(menu.selectedIndex).toBe(1);
-      onKeyDown({ event: new KeyboardEvent('keydown', { key: 'ArrowUp' }) });
+      onKeyDown({ event: new KeyboardEvent('keydown', { key: 'ArrowUp' }), view: fakeDom().view });
       expect(menu.selectedIndex).toBe(0);
     });
 
     it('Enter confirms the currently selected item', () => {
       const command = setupMenu(['First', 'Second']);
-      onKeyDown({ event: new KeyboardEvent('keydown', { key: 'ArrowDown' }) });
-      onKeyDown({ event: new KeyboardEvent('keydown', { key: 'Enter' }) });
+      onKeyDown({ event: new KeyboardEvent('keydown', { key: 'ArrowDown' }), view: fakeDom().view });
+      onKeyDown({ event: new KeyboardEvent('keydown', { key: 'Enter' }), view: fakeDom().view });
       expect(command).toHaveBeenCalledWith({ id: 'https://test/1', label: 'Second', type: 'indexed' });
     });
 
     it('Enter with no items does not call the command', () => {
       const command = setupMenu([]);
-      const handled = onKeyDown({ event: new KeyboardEvent('keydown', { key: 'Enter' }) });
+      const handled = onKeyDown({ event: new KeyboardEvent('keydown', { key: 'Enter' }), view: fakeDom().view });
       expect(command).not.toHaveBeenCalled();
       expect(handled).toBe(true);
     });
 
     it('ignores other keys', () => {
-      const handled = onKeyDown({ event: new KeyboardEvent('keydown', { key: 'a' }) });
+      const handled = onKeyDown({ event: new KeyboardEvent('keydown', { key: 'a' }), view: fakeDom().view });
       expect(handled).toBe(false);
     });
   });

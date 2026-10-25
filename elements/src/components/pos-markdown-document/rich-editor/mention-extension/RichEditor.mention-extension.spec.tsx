@@ -78,7 +78,7 @@ describe('RichEditor', () => {
         </li>
       `);
 
-      // and the first option is the active decendent of the editor
+      // and the first option is the active descendant of the editor
       expect(textbox).toHaveAttribute('aria-activedescendant', 'pos-mention-menu-option-1');
 
       // and an option shows up to create a new item
@@ -112,6 +112,62 @@ describe('RichEditor', () => {
       expect(textbox).not.toHaveAttribute('aria-controls');
       // and it has no active descendant
       expect(textbox).not.toHaveAttribute('aria-activedescendant');
+    });
+
+    it('down arrow key selects next option', async () => {
+      // given 'test' was mentioned
+      tiptap.commands.insertContent('#test');
+
+      // and the listbox popped up
+      const textbox = getByRole(root, 'textbox');
+      const listbox = await findByRole(root, 'listbox');
+      expect(listbox).toBeVisible();
+
+      // when pressing down arrow
+      await userEvent.type(textbox, '{ArrowDown}');
+
+      // then the second option becomes active
+      const option = await findAllByRole(listbox, 'option');
+      expect(option.length).toBe(2);
+      expect(textbox).toHaveAttribute('aria-activedescendant', 'pos-mention-menu-option-2');
+      expect(option[1]).toMatchInlineSnapshot(`
+        <li
+          aria-selected="true"
+          class="new-thing"
+          id="pos-mention-menu-option-2"
+          role="option"
+        >
+          test
+        </li>
+      `);
+    });
+
+    it('up arrow key selects previous option (wrapping around to the last)', async () => {
+      // given 'test' was mentioned
+      tiptap.commands.insertContent('#test');
+
+      // and the listbox popped up
+      const textbox = getByRole(root, 'textbox');
+      const listbox = await findByRole(root, 'listbox');
+      expect(listbox).toBeVisible();
+
+      // when pressing down arrow
+      await userEvent.type(textbox, '{ArrowUp}');
+
+      // then the second option becomes active
+      const option = await findAllByRole(listbox, 'option');
+      expect(option.length).toBe(2);
+      expect(textbox).toHaveAttribute('aria-activedescendant', 'pos-mention-menu-option-2');
+      expect(option[1]).toMatchInlineSnapshot(`
+        <li
+          aria-selected="true"
+          class="new-thing"
+          id="pos-mention-menu-option-2"
+          role="option"
+        >
+          test
+        </li>
+      `);
     });
   });
 });
