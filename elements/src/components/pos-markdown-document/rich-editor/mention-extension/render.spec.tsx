@@ -75,7 +75,7 @@ describe('render', () => {
       expect(menu).toHaveProperty('items', []);
       const items = [{ id: 'https://resource.test', label: 'Test' }];
       const command = () => {};
-      onUpdate({ items, command } as unknown as SuggestionProps);
+      onUpdate({ items, command, editor: fakeDom() } as unknown as SuggestionProps);
       expect(menu).toHaveProperty('items', items);
       expect(menu).toHaveProperty('command', command);
     });
@@ -99,7 +99,7 @@ describe('render', () => {
       });
       expect(menu.selectedIndex).toBe(1);
 
-      onUpdate({ items } as unknown as SuggestionProps);
+      onUpdate({ items, editor: fakeDom() } as unknown as SuggestionProps);
       expect(menu.selectedIndex).toBe(0);
 
       menu.remove();

@@ -4,6 +4,11 @@ import { processSelectedMention } from './processSelectedMention';
 import { PodOS } from '@pod-os/core';
 import { EditorView } from '@tiptap/pm/view';
 
+function selectOption(menu: HTMLPosMentionMenuElement, selectedIndex: number, view: EditorView) {
+  menu.selectedIndex = selectedIndex;
+  view.dom.setAttribute('aria-activedescendant', `pos-mention-menu-option-${selectedIndex + 1}`);
+}
+
 export const render = (os: PodOS) => () => {
   let menu: HTMLPosMentionMenuElement;
   let unmount: () => void | undefined;
@@ -12,15 +17,14 @@ export const render = (os: PodOS) => () => {
     onStart: (props: SuggestionProps<any, MentionNodeAttrs>) => {
       menu = document.createElement('pos-mention-menu');
       menu.items = props.items;
-      menu.selectedIndex = 0;
       props.editor.view.dom.setAttribute('aria-controls', 'pos-mention-menu-listbox');
-      props.editor.view.dom.setAttribute('aria-activedescendant', 'pos-mention-menu-option-1');
       menu.command = processSelectedMention(os, props.command);
       unmount = props.mount(menu);
+      selectOption(menu, 0, props.editor.view);
     },
     onUpdate: (props: SuggestionProps<any, MentionNodeAttrs>) => {
       menu.items = props.items;
-      menu.selectedIndex = 0;
+      selectOption(menu, 0, props.editor.view);
       menu.command = processSelectedMention(os, props.command);
     },
     onExit: (props: SuggestionProps<any, MentionNodeAttrs>) => {
@@ -31,14 +35,10 @@ export const render = (os: PodOS) => () => {
     onKeyDown: ({ event, view }: { event: KeyboardEvent; view: EditorView }) => {
       switch (event.key) {
         case 'ArrowDown':
-          const selectedDown = (menu.selectedIndex + 1) % menu.items.length;
-          menu.selectedIndex = selectedDown;
-          view.dom.setAttribute('aria-activedescendant', `pos-mention-menu-option-${selectedDown + 1}`);
+          selectOption(menu, (menu.selectedIndex + 1) % menu.items.length, view);
           return true;
         case 'ArrowUp':
-          const selectedUp = (menu.selectedIndex - 1 + menu.items.length) % menu.items.length;
-          menu.selectedIndex = selectedUp;
-          view.dom.setAttribute('aria-activedescendant', `pos-mention-menu-option-${selectedUp + 1}`);
+          selectOption(menu, (menu.selectedIndex - 1 + menu.items.length) % menu.items.length, view);
           return true;
         case 'Enter': {
           const item = menu.items[menu.selectedIndex];
