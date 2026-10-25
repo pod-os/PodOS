@@ -24,6 +24,7 @@ export const render = (os: PodOS) => () => {
     },
     onExit: (props: SuggestionProps<any, MentionNodeAttrs>) => {
       props.editor.view.dom.removeAttribute('aria-controls');
+      props.editor.view.dom.removeAttribute('aria-activedescendant');
       unmount?.();
     },
     onKeyDown: ({ event }: { event: KeyboardEvent }) => {

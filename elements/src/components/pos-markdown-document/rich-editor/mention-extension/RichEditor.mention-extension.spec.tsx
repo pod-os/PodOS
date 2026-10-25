@@ -110,6 +110,8 @@ describe('RichEditor', () => {
 
       // and the editor does not announce it controls a listbox anymore
       expect(textbox).not.toHaveAttribute('aria-controls');
+      // and it has no active descendant
+      expect(textbox).not.toHaveAttribute('aria-activedescendant');
     });
   });
 });
