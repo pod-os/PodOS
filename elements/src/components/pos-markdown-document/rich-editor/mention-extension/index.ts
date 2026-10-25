@@ -15,6 +15,7 @@ export function mention(os: PodOS, baseUrl: string, container: HTMLElement) {
     },
     suggestion: {
       char: '#',
+      dismissOnOutsideClick: false,
       container,
       debounce: 120,
       shouldShow: ({ query }) => query.length > 0,

@@ -15,6 +15,15 @@ describe('mention extension', () => {
     expect(mention(mockOs, 'https://pod.test/alice/document.md', null as unknown as HTMLElement)).toBeDefined();
   });
 
+  /**
+   * This is important, because without this option tiptap will register clicking on an actual suggestion
+   * as an "outside" click and dismiss the popup instead of inserting the suggestion
+   */
+  it('does not dismiss the suggestion menu on clicks outside the editor or menu', () => {
+    const extension = mention(mockPodOS(), 'https://pod.test/alice/document.md', null as unknown as HTMLElement);
+    expect(extension.options.suggestion.dismissOnOutsideClick).toBe(false);
+  });
+
   describe('suggestion.shouldShow', () => {
     const getShouldShow = (mockOs: PodOS) =>
       mention(mockOs, 'https://pod.test/alice/document.md', null as unknown as HTMLElement).options.suggestion

@@ -105,15 +105,17 @@ test.describe("Markdown documents", () => {
         return editor;
       });
 
-    await test.step("and typing the mention trigger plus a query", async () => {
-      const mentionMenu = editor.mentionMenu();
+    const mentionMenu =
+      await test.step("and typing the mention trigger plus a query", async () => {
+        const mentionMenu = editor.mentionMenu();
 
-      await editor.replaceContent("#Someth");
-      await expect(mentionMenu.suggestion("Something")).toBeVisible();
-    });
+        await editor.replaceContent("#Someth");
+        await expect(mentionMenu.suggestion("Something")).toBeVisible();
+        return mentionMenu;
+      });
 
-    await test.step("and accepting the suggestion", async () => {
-      await editor.acceptSuggestion();
+    await test.step("and selecting the suggestion", async () => {
+      await mentionMenu.suggestion("Something").click();
     });
 
     await test.step("then the mention is inserted as a link in the editor", async () => {
