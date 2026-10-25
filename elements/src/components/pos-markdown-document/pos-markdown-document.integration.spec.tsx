@@ -50,9 +50,9 @@ describe('pos-markdown-document', () => {
     const editor = await findByShadowRole(markdownDocument, 'textbox');
     await userEvent.type(editor, '#test');
 
-    // tiptap mounts the suggestion popup into document.body, not the shadow root
-    await waitFor(() => {
-      const options = within(document.body).getAllByRole('option');
+    await waitFor(async () => {
+      const listbox = await findByShadowRole(markdownDocument, 'listbox');
+      const options = await within(listbox).findAllByRole('option');
       expect(options).toHaveLength(2);
       expect(options[0]).toHaveTextContent('Test found it');
       expect(options[0]).toHaveClass('indexed');

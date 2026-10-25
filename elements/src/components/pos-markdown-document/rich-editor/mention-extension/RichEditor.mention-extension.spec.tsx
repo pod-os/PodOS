@@ -20,6 +20,7 @@ describe('RichEditor', () => {
     it('shows a pop up to select an indexed item or create a new one', async () => {
       // given a RichEditor
       const root = document.createElement('div');
+      document.body.appendChild(root);
       const editor = new RichEditor(root, '', 'https://pod.test', mockOs);
       editor.startEditing();
       // @ts-ignore Accessing a private field here for testing
@@ -48,7 +49,7 @@ describe('RichEditor', () => {
       expect(text).toHaveClass('suggestion');
 
       // and an option shows up for the matching indexed item
-      const listbox = await findByRole(document.body, 'listbox');
+      const listbox = await findByRole(root, 'listbox');
       expect(listbox).toHaveAttribute('id', 'pos-mention-menu-listbox');
       const option = await findAllByRole(listbox, 'option');
       expect(option.length).toBe(2);

@@ -12,12 +12,13 @@ describe('mention extension', () => {
       store: { get: vi.fn() },
     } as unknown as PodOS;
 
-    expect(mention(mockOs, 'https://pod.test/alice/document.md')).toBeDefined();
+    expect(mention(mockOs, 'https://pod.test/alice/document.md', null as unknown as HTMLElement)).toBeDefined();
   });
 
   describe('suggestion.shouldShow', () => {
     const getShouldShow = (mockOs: PodOS) =>
-      mention(mockOs, 'https://pod.test/alice/document.md').options.suggestion.shouldShow!;
+      mention(mockOs, 'https://pod.test/alice/document.md', null as unknown as HTMLElement).options.suggestion
+        .shouldShow!;
 
     const mockOs = {
       buildSearchIndex: vi.fn(),
@@ -40,9 +41,9 @@ describe('mention extension', () => {
     } as unknown as SearchIndex;
     const mockOs = mockPodOS();
     (mockOs.store.get as Mock).mockReturnValue({ label: () => 'Alice' });
-    (mockOs.buildSearchIndex as Mock).mockResolvedValue(mockSearchIndex)
+    (mockOs.buildSearchIndex as Mock).mockResolvedValue(mockSearchIndex);
 
-    const extension = mention(mockOs, "https://pod.test/alice/document.md");
+    const extension = mention(mockOs, 'https://pod.test/alice/document.md', null as unknown as HTMLElement);
     expect(mockOs.buildSearchIndex).toHaveBeenCalled();
 
     const items = extension.options.suggestion.items!;
