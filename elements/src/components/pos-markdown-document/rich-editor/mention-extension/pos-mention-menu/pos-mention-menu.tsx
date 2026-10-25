@@ -70,7 +70,7 @@ export class PosMentionMenu {
             aria-selected={index === this.selectedIndex ? 'true' : undefined}
             onMouseDown={() => this.command(item)}
           >
-            {item.label}
+            {item.type === 'new-thing' ? `Create '${item.label}'` : item.label}
           </li>
         ))}
       </ul>

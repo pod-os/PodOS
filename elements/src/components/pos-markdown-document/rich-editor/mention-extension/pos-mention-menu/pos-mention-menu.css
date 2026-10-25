@@ -19,12 +19,6 @@ li[role='option'] {
   }
 
   &.new-thing {
-    &:before {
-      content: "Create '";
-    }
-    &:after {
-      content: "'";
-    }
     &[aria-selected='true'], &:hover {
       background-color: var(--pos-success-background-color);
       color: var(--pos-sucess-text-color);

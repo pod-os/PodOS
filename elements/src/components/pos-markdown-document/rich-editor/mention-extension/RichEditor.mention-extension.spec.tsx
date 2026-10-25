@@ -88,7 +88,7 @@ describe('RichEditor', () => {
           id="pos-mention-menu-option-2"
           role="option"
         >
-          test
+          Create 'test'
         </li>
       `);
     });
@@ -137,7 +137,7 @@ describe('RichEditor', () => {
           id="pos-mention-menu-option-2"
           role="option"
         >
-          test
+          Create 'test'
         </li>
       `);
     });
@@ -165,7 +165,7 @@ describe('RichEditor', () => {
           id="pos-mention-menu-option-2"
           role="option"
         >
-          test
+          Create 'test'
         </li>
       `);
     });

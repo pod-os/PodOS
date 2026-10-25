@@ -59,7 +59,7 @@ describe('pos-markdown-document', () => {
       expect(options).toHaveLength(2);
       expect(options[0]).toHaveTextContent('Test found it');
       expect(options[0]).toHaveClass('indexed');
-      expect(options[1]).toHaveTextContent('test');
+      expect(options[1]).toHaveTextContent("Create 'test'");
       expect(options[1]).toHaveClass('new-thing');
       return options;
     });

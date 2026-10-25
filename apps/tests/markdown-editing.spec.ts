@@ -161,7 +161,7 @@ test.describe("Markdown documents", () => {
       const mentionMenu = editor.mentionMenu();
 
       await editor.replaceContent("#Newthing");
-      await expect(mentionMenu.suggestion("Newthing")).toBeVisible();
+      await expect(mentionMenu.suggestion("Create 'Newthing'")).toBeVisible();
     });
 
     await test.step("and accepting the suggestion", async () => {

@@ -53,7 +53,7 @@ describe('pos-mention-menu', () => {
       <pos-mention-menu class="hydrated">
         <ul role="listbox" id="pos-mention-menu-listbox">
           <li id="pos-mention-menu-option-1" role="option" class="new-thing" aria-selected="true">
-            New Thing
+            Create 'New Thing'
           </li>
         </ul>
       </pos-mention-menu>
