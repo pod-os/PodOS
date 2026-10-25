@@ -176,7 +176,9 @@ describe('render', () => {
         editor: fakeDom(),
       } as unknown as SuggestionProps);
       expect(mount).toHaveBeenCalled();
-      onExit();
+      onExit({
+        editor: fakeDom(),
+      } as unknown as SuggestionProps);
       expect(unmount).toHaveBeenCalled();
     });
   });
@@ -187,6 +189,7 @@ function fakeDom() {
     view: {
       dom: {
         setAttribute: vi.fn(),
+        removeAttribute: vi.fn(),
       },
     },
   };

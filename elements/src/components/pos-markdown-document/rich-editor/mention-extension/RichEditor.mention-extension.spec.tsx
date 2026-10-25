@@ -1,12 +1,14 @@
 import { vi } from 'vitest';
-import { describe, expect, it } from '@stencil/vitest';
+import { beforeEach, describe, expect, it } from '@stencil/vitest';
 
 import { RichEditor } from '../RichEditor';
 import { PodOS, Thing } from '@pod-os/core';
 
 import './pos-mention-menu/pos-mention-menu';
-import { findAllByRole, getByRole, getByText, findByRole } from '@testing-library/dom';
+import { findAllByRole, findByRole, getByRole, getByText } from '@testing-library/dom';
 import { when } from 'vitest-when';
+import { Editor } from '@tiptap/core';
+import { userEvent } from '@testing-library/user-event';
 
 describe('RichEditor', () => {
   const search = vi.fn().mockReturnValue([]);
@@ -17,14 +19,16 @@ describe('RichEditor', () => {
   } as unknown as PodOS;
 
   describe('when a thing is mentioned', () => {
-    it('shows a pop up to select an indexed item or create a new one', async () => {
+    let root: HTMLElement;
+    let tiptap: Editor;
+    beforeEach(() => {
       // given a RichEditor
-      const root = document.createElement('div');
+      root = document.createElement('div');
       document.body.appendChild(root);
       const editor = new RichEditor(root, '', 'https://pod.test', mockOs);
       editor.startEditing();
       // @ts-ignore Accessing a private field here for testing
-      const tiptap = editor.editor;
+      tiptap = editor.editor;
 
       // and PodOS indexed "Test item"
       when(search)
@@ -39,22 +43,28 @@ describe('RichEditor', () => {
         .thenReturn({
           label: () => 'Test Item',
         } as Thing);
+    });
 
+    it('controls nothing initially', () => {
       const textbox = getByRole(root, 'textbox');
       expect(textbox).not.toHaveAttribute('aria-controls');
+    });
 
+    it('shows a pop up to select an indexed item or create a new one', async () => {
       // when mentioning 'test'
       tiptap.commands.insertContent('#test');
 
       // then it is inserted in the Editor as a suggestion
-
+      const textbox = getByRole(root, 'textbox');
       const text = getByText(textbox, '#test');
       expect(text).toHaveClass('suggestion');
 
-      // and an option shows up for the matching indexed item
+      // then a listbox pops up controled by the editor
       const listbox = await findByRole(root, 'listbox');
       expect(listbox).toHaveAttribute('id', 'pos-mention-menu-listbox');
       expect(textbox).toHaveAttribute('aria-controls', 'pos-mention-menu-listbox');
+
+      // and an option shows up for the matching indexed item
       const option = await findAllByRole(listbox, 'option');
       expect(option.length).toBe(2);
       expect(option[0]).toMatchInlineSnapshot(`
@@ -76,6 +86,25 @@ describe('RichEditor', () => {
             test
           </li>
         `);
+    });
+
+    it('closes the suggestions when ESC is pressed', async () => {
+      // given 'test' was mentioned
+      tiptap.commands.insertContent('#test');
+
+      // and the listbox popped up
+      const textbox = getByRole(root, 'textbox');
+      const listbox = await findByRole(root, 'listbox');
+      expect(listbox).toBeVisible();
+
+      // when pressing ESC to dismiss it
+      await userEvent.type(textbox, '{Esc}');
+
+      // then it disappears
+      expect(listbox).not.toBeVisible();
+
+      // and the editor does not announce it controls a listbox anymore
+      expect(textbox).not.toHaveAttribute('aria-controls');
     });
   });
 });

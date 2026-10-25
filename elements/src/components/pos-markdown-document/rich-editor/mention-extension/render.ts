@@ -21,7 +21,8 @@ export const render = (os: PodOS) => () => {
       menu.selectedIndex = 0;
       menu.command = processSelectedMention(os, props.command);
     },
-    onExit: () => {
+    onExit: (props: SuggestionProps<any, MentionNodeAttrs>) => {
+      props.editor.view.dom.removeAttribute('aria-controls');
       unmount?.();
     },
     onKeyDown: ({ event }: { event: KeyboardEvent }) => {
