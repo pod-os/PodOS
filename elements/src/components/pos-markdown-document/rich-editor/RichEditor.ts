@@ -32,6 +32,11 @@ export class RichEditor {
       content,
       contentType: 'markdown',
       editable: false,
+      editorProps: {
+        attributes: {
+          'aria-multiline': 'true',
+        },
+      },
     });
     this.editor.on('update', () => {
       this.modifications.next({ content: this.editor.getMarkdown() });
