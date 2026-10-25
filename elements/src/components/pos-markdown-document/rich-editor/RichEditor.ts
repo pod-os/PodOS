@@ -35,6 +35,7 @@ export class RichEditor {
       editorProps: {
         attributes: {
           'aria-multiline': 'true',
+          'aria-autocomplete': 'list',
         },
       },
     });

@@ -16,9 +16,10 @@ describe('RichEditor', () => {
     beforeEach(() => {
       new RichEditor(document.body, '', 'https://pod.test', mockOs);
     });
-    it('is anounced as a multiline textbox', () => {
+    it('is announced as a multiline textbox with autocomplete', () => {
       const textbox = getByRole(document.body, 'textbox');
       expect(textbox).toHaveAttribute('aria-multiline', 'true');
+      expect(textbox).toHaveAttribute('aria-autocomplete', 'list');
     });
   });
 
