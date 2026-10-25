@@ -24,7 +24,7 @@ describe('pos-mention-menu', () => {
 
     expect(page.root).toMatchInlineSnapshot(`
       <pos-mention-menu class="hydrated">
-        <ul role="listbox">
+        <ul role="listbox" id="pos-mention-menu-listbox">
           <li role="option" class="indexed" aria-selected="true">
             Something
           </li>
@@ -45,7 +45,7 @@ describe('pos-mention-menu', () => {
 
     expect(page.root).toMatchInlineSnapshot(`
       <pos-mention-menu class="hydrated">
-        <ul role="listbox">
+        <ul role="listbox" id="pos-mention-menu-listbox">
           <li role="option" class="new-thing" aria-selected="true">
             New Thing
           </li>
@@ -71,7 +71,7 @@ describe('pos-mention-menu', () => {
 
     expect(page.root).toMatchInlineSnapshot(`
       <pos-mention-menu class="hydrated">
-        <ul role="listbox">
+        <ul role="listbox" id="pos-mention-menu-listbox">
           <li role="option" class="indexed" aria-selected="true">
             First
           </li>

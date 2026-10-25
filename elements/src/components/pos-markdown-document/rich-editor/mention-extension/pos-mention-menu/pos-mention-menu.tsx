@@ -41,7 +41,7 @@ export class PosMentionMenu {
       return null;
     }
     return (
-      <ul role="listbox">
+      <ul role="listbox" id="pos-mention-menu-listbox">
         {this.items.map((item, index) => (
           <li
             key={item.id}

@@ -49,6 +49,7 @@ describe('RichEditor', () => {
 
       // and an option shows up for the matching indexed item
       const listbox = await findByRole(document.body, 'listbox');
+      expect(listbox).toHaveAttribute('id', 'pos-mention-menu-listbox');
       const option = await findAllByRole(listbox, 'option');
       expect(option.length).toBe(2);
       expect(option[0]).toMatchInlineSnapshot(`
