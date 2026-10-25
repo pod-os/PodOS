@@ -40,17 +40,21 @@ describe('RichEditor', () => {
           label: () => 'Test Item',
         } as Thing);
 
+      const textbox = getByRole(root, 'textbox');
+      expect(textbox).not.toHaveAttribute('aria-controls');
+
       // when mentioning 'test'
       tiptap.commands.insertContent('#test');
 
       // then it is inserted in the Editor as a suggestion
-      const textbox = getByRole(root, 'textbox');
+
       const text = getByText(textbox, '#test');
       expect(text).toHaveClass('suggestion');
 
       // and an option shows up for the matching indexed item
       const listbox = await findByRole(root, 'listbox');
       expect(listbox).toHaveAttribute('id', 'pos-mention-menu-listbox');
+      expect(textbox).toHaveAttribute('aria-controls', 'pos-mention-menu-listbox');
       const option = await findAllByRole(listbox, 'option');
       expect(option.length).toBe(2);
       expect(option[0]).toMatchInlineSnapshot(`

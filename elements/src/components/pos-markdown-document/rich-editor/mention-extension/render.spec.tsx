@@ -24,6 +24,7 @@ describe('render', () => {
       onStart({
         mount,
         items: [],
+        editor: fakeDom(),
       } as unknown as SuggestionProps);
       expect(mount).toHaveBeenCalled();
       const menu = mount.mock.calls[0][0];
@@ -37,6 +38,7 @@ describe('render', () => {
       onStart({
         mount,
         items,
+        editor: fakeDom(),
       } as unknown as SuggestionProps);
       expect(mount).toHaveBeenCalled();
       const menu = mount.mock.calls[0][0];
@@ -50,6 +52,7 @@ describe('render', () => {
         mount,
         items: [],
         command: 'fake command',
+        editor: fakeDom(),
       } as unknown as SuggestionProps);
       expect(mount).toHaveBeenCalled();
       const menu = mount.mock.calls[0][0];
@@ -64,6 +67,7 @@ describe('render', () => {
         mount,
         items: [],
         command: () => {},
+        editor: fakeDom(),
       } as unknown as SuggestionProps);
       expect(mount).toHaveBeenCalled();
       const menu = mount.mock.calls[0][0];
@@ -85,7 +89,7 @@ describe('render', () => {
         { id: 'https://first.test', label: 'First' },
         { id: 'https://second.test', label: 'Second' },
       ];
-      onStart({ mount, items, command: () => {} } as unknown as SuggestionProps);
+      onStart({ mount, items, command: () => {}, editor: fakeDom() } as unknown as SuggestionProps);
       const menu = document.querySelector('pos-mention-menu') as HTMLPosMentionMenuElement;
 
       onKeyDown({ event: new KeyboardEvent('keydown', { key: 'ArrowDown' }) });
@@ -111,6 +115,7 @@ describe('render', () => {
           document.body.appendChild(el);
           return () => el.remove();
         },
+        editor: fakeDom(),
       } as unknown as SuggestionProps);
       menu = document.querySelector('pos-mention-menu') as HTMLPosMentionMenuElement;
     });
@@ -168,6 +173,7 @@ describe('render', () => {
       onStart({
         mount,
         items: [],
+        editor: fakeDom(),
       } as unknown as SuggestionProps);
       expect(mount).toHaveBeenCalled();
       onExit();
@@ -175,3 +181,13 @@ describe('render', () => {
     });
   });
 });
+
+function fakeDom() {
+  return {
+    view: {
+      dom: {
+        setAttribute: vi.fn(),
+      },
+    },
+  };
+}

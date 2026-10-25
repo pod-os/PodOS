@@ -12,6 +12,7 @@ export const render = (os: PodOS) => () => {
       menu = document.createElement('pos-mention-menu');
       menu.items = props.items;
       menu.selectedIndex = 0;
+      props.editor.view.dom.setAttribute('aria-controls', 'pos-mention-menu-listbox');
       menu.command = processSelectedMention(os, props.command);
       unmount = props.mount(menu);
     },
