@@ -63,7 +63,7 @@
     "shadow-dom-testing-library": "^1.14.2",
     "url-template": "^3.1.1",
     "vitest": "^4.1.11",
-    "vitest-when": "^0.10.0"
+    "vitest-when": "^0.10.2"
   },
   "license": "MIT",
   "repository": {
