@@ -1,10 +1,9 @@
 import { render } from './render';
 import './pos-mention-menu/pos-mention-menu';
-import { SuggestionProps } from '@tiptap/suggestion';
+import { SuggestionKeyDownProps, SuggestionProps } from '@tiptap/suggestion';
 import { afterEach, beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 import { processSelectedMention } from './processSelectedMention';
 import { mockPodOS } from '../../../../test/mockPodOS.vitest';
-import { EditorView } from '@tiptap/pm/view';
 
 vi.mock('./processSelectedMention');
 
@@ -31,6 +30,18 @@ describe('render', () => {
       const menu = mount.mock.calls[0][0];
       expect(menu).toMatchInlineSnapshot(`<pos-mention-menu />`);
       expect(menu).toHaveProperty('items', []);
+    });
+    it('hands the editor over to the menu to control it', () => {
+      const { onStart } = getRender();
+      const mount = vi.fn();
+      const editor = fakeDom();
+      onStart({
+        mount,
+        items: [],
+        editor,
+      } as unknown as SuggestionProps);
+      const menu = mount.mock.calls[0][0];
+      expect(menu).toHaveProperty('controls', editor.view.dom);
     });
     it('mounts a menu with items', () => {
       const { onStart } = getRender();
@@ -95,8 +106,7 @@ describe('render', () => {
 
       onKeyDown({
         event: new KeyboardEvent('keydown', { key: 'ArrowDown' }),
-        view: fakeDom().view as unknown as EditorView,
-      });
+      } as unknown as SuggestionKeyDownProps);
       expect(menu.selectedIndex).toBe(1);
 
       onUpdate({ items, editor: fakeDom() } as unknown as SuggestionProps);
@@ -136,36 +146,40 @@ describe('render', () => {
 
     it('ArrowDown selects the next item, wrapping around', () => {
       setupMenu(['First', 'Second']);
-      onKeyDown({ event: new KeyboardEvent('keydown', { key: 'ArrowDown' }), view: fakeDom().view });
+      onKeyDown({ event: new KeyboardEvent('keydown', { key: 'ArrowDown' }) } as unknown as SuggestionKeyDownProps);
       expect(menu.selectedIndex).toBe(1);
-      onKeyDown({ event: new KeyboardEvent('keydown', { key: 'ArrowDown' }), view: fakeDom().view });
+      onKeyDown({ event: new KeyboardEvent('keydown', { key: 'ArrowDown' }) } as unknown as SuggestionKeyDownProps);
       expect(menu.selectedIndex).toBe(0);
     });
 
     it('ArrowUp selects the previous item, wrapping around', () => {
       setupMenu(['First', 'Second']);
-      onKeyDown({ event: new KeyboardEvent('keydown', { key: 'ArrowUp' }), view: fakeDom().view });
+      onKeyDown({ event: new KeyboardEvent('keydown', { key: 'ArrowUp' }) } as unknown as SuggestionKeyDownProps);
       expect(menu.selectedIndex).toBe(1);
-      onKeyDown({ event: new KeyboardEvent('keydown', { key: 'ArrowUp' }), view: fakeDom().view });
+      onKeyDown({ event: new KeyboardEvent('keydown', { key: 'ArrowUp' }) } as unknown as SuggestionKeyDownProps);
       expect(menu.selectedIndex).toBe(0);
     });
 
     it('Enter confirms the currently selected item', () => {
       const command = setupMenu(['First', 'Second']);
-      onKeyDown({ event: new KeyboardEvent('keydown', { key: 'ArrowDown' }), view: fakeDom().view });
-      onKeyDown({ event: new KeyboardEvent('keydown', { key: 'Enter' }), view: fakeDom().view });
+      onKeyDown({ event: new KeyboardEvent('keydown', { key: 'ArrowDown' }) } as unknown as SuggestionKeyDownProps);
+      onKeyDown({ event: new KeyboardEvent('keydown', { key: 'Enter' }) } as unknown as SuggestionKeyDownProps);
       expect(command).toHaveBeenCalledWith({ id: 'https://test/1', label: 'Second', type: 'indexed' });
     });
 
     it('Enter with no items does not call the command', () => {
       const command = setupMenu([]);
-      const handled = onKeyDown({ event: new KeyboardEvent('keydown', { key: 'Enter' }), view: fakeDom().view });
+      const handled = onKeyDown({
+        event: new KeyboardEvent('keydown', { key: 'Enter' }),
+      } as unknown as SuggestionKeyDownProps);
       expect(command).not.toHaveBeenCalled();
       expect(handled).toBe(true);
     });
 
     it('ignores other keys', () => {
-      const handled = onKeyDown({ event: new KeyboardEvent('keydown', { key: 'a' }), view: fakeDom().view });
+      const handled = onKeyDown({
+        event: new KeyboardEvent('keydown', { key: 'a' }),
+      } as unknown as SuggestionKeyDownProps);
       expect(handled).toBe(false);
     });
   });

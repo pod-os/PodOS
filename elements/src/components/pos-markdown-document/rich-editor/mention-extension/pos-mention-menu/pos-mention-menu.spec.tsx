@@ -7,7 +7,9 @@ import { MentionItem } from './pos-mention-menu';
 
 describe('pos-mention-menu', () => {
   it('does not render when empty', async () => {
-    const page = await render(<pos-mention-menu items={[]}></pos-mention-menu>);
+    const page = await render(
+      <pos-mention-menu items={[]} controls={document.createElement('div')}></pos-mention-menu>,
+    );
 
     expect(page.root).toBeEmptyDOMElement();
   });
@@ -20,7 +22,9 @@ describe('pos-mention-menu', () => {
         type: 'indexed',
       },
     ] as MentionItem[];
-    const page = await render(<pos-mention-menu items={items}></pos-mention-menu>);
+    const page = await render(
+      <pos-mention-menu items={items} controls={document.createElement('div')}></pos-mention-menu>,
+    );
 
     expect(page.root).toMatchInlineSnapshot(`
       <pos-mention-menu class="hydrated">
@@ -41,7 +45,9 @@ describe('pos-mention-menu', () => {
         type: 'new-thing',
       },
     ] as MentionItem[];
-    const page = await render(<pos-mention-menu items={items}></pos-mention-menu>);
+    const page = await render(
+      <pos-mention-menu items={items} controls={document.createElement('div')}></pos-mention-menu>,
+    );
 
     expect(page.root).toMatchInlineSnapshot(`
       <pos-mention-menu class="hydrated">
@@ -67,7 +73,9 @@ describe('pos-mention-menu', () => {
         type: 'indexed',
       },
     ] as MentionItem[];
-    const page = await render(<pos-mention-menu items={items}></pos-mention-menu>);
+    const page = await render(
+      <pos-mention-menu items={items} controls={document.createElement('div')}></pos-mention-menu>,
+    );
 
     expect(page.root).toMatchInlineSnapshot(`
       <pos-mention-menu class="hydrated">
@@ -90,7 +98,9 @@ describe('pos-mention-menu', () => {
       label: 'Something',
       type: 'indexed',
     } as MentionItem;
-    const page = await render(<pos-mention-menu items={[item]} command={command}></pos-mention-menu>);
+    const page = await render(
+      <pos-mention-menu items={[item]} command={command} controls={document.createElement('div')}></pos-mention-menu>,
+    );
 
     const option = page.root.querySelector('li[role="option"]')!;
     fireEvent(option, new MouseEvent('mousedown', { bubbles: true, cancelable: true, composed: true }));
@@ -106,6 +116,7 @@ describe('pos-mention-menu', () => {
             { id: 'https://first.test', label: 'First', type: 'indexed' },
             { id: 'https://second.test', label: 'Second', type: 'indexed' },
           ]}
+          controls={document.createElement('div')}
         ></pos-mention-menu>,
       );
 
@@ -121,11 +132,60 @@ describe('pos-mention-menu', () => {
             { id: 'https://first.test', label: 'First', type: 'indexed' },
             { id: 'https://second.test', label: 'Second', type: 'indexed' },
           ]}
+          controls={document.createElement('div')}
         ></pos-mention-menu>,
       );
 
       await page.waitForChanges();
       expect(page.root.querySelector('li:nth-child(2)')).toEqualAttribute('aria-selected', 'true');
+    });
+  });
+
+  describe('active descendant', () => {
+    const items = [
+      { id: 'https://first.test', label: 'First', type: 'indexed' },
+      { id: 'https://second.test', label: 'Second', type: 'indexed' },
+    ] as MentionItem[];
+
+    it('points the controlling element to the selected option once it is rendered', async () => {
+      const controls = document.createElement('div');
+      const page = await render(<pos-mention-menu controls={controls} items={items}></pos-mention-menu>);
+
+      await page.waitForChanges();
+      expect(controls).toHaveAttribute('aria-activedescendant', 'pos-mention-menu-option-1');
+    });
+
+    it('follows the selected index', async () => {
+      const controls = document.createElement('div');
+      const page = await render(
+        <pos-mention-menu controls={controls} selectedIndex={1} items={items}></pos-mention-menu>,
+      );
+
+      await page.waitForChanges();
+      expect(controls).toHaveAttribute('aria-activedescendant', 'pos-mention-menu-option-2');
+    });
+
+    it('removes the attribute while the options are still loading', async () => {
+      const controls = document.createElement('div');
+      controls.setAttribute('aria-activedescendant', 'pos-mention-menu-option-1');
+      const page = await render(<pos-mention-menu controls={controls} items={[]}></pos-mention-menu>);
+
+      await page.waitForChanges();
+      expect(controls).not.toHaveAttribute('aria-activedescendant');
+    });
+
+    it('removes the attribute when the menu is disconnected', async () => {
+      const controls = document.createElement('div');
+      const page = await render(<pos-mention-menu controls={controls} items={items}></pos-mention-menu>);
+
+      await page.waitForChanges();
+      expect(controls).toHaveAttribute('aria-activedescendant', 'pos-mention-menu-option-1');
+
+      // when the menu is removed
+      page.root.remove();
+
+      // the editor does not announce an active descendant anymore
+      expect(controls).not.toHaveAttribute('aria-activedescendant');
     });
   });
 });

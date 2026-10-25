@@ -31,6 +31,25 @@ export class PosMentionMenu {
   @Prop()
   command: (item: MentionItem) => void = () => {};
 
+  /**
+   * Element that announces the active descendant of the listbox, typically the
+   * editor that controls it via aria-controls
+   */
+  @Prop()
+  controls!: HTMLElement;
+
+  componentDidRender() {
+    if (this.items.length > 0) {
+      this.controls.setAttribute('aria-activedescendant', `pos-mention-menu-option-${this.selectedIndex + 1}`);
+    } else {
+      this.controls.removeAttribute('aria-activedescendant');
+    }
+  }
+
+  disconnectedCallback() {
+    this.controls.removeAttribute('aria-activedescendant');
+  }
+
   @Listen('mousedown')
   onMouseDown(e: MouseEvent) {
     e.preventDefault();
