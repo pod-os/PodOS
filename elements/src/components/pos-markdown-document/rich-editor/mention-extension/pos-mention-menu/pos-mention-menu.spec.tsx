@@ -25,7 +25,7 @@ describe('pos-mention-menu', () => {
     expect(page.root).toMatchInlineSnapshot(`
       <pos-mention-menu class="hydrated">
         <ul role="listbox" id="pos-mention-menu-listbox">
-          <li role="option" class="indexed" aria-selected="true">
+          <li id="pos-mention-menu-option-1" role="option" class="indexed" aria-selected="true">
             Something
           </li>
         </ul>
@@ -46,12 +46,12 @@ describe('pos-mention-menu', () => {
     expect(page.root).toMatchInlineSnapshot(`
       <pos-mention-menu class="hydrated">
         <ul role="listbox" id="pos-mention-menu-listbox">
-          <li role="option" class="new-thing" aria-selected="true">
+          <li id="pos-mention-menu-option-1" role="option" class="new-thing" aria-selected="true">
             New Thing
           </li>
         </ul>
       </pos-mention-menu>
-    `);
+`);
   });
 
   it('renders multiple options', async () => {
@@ -72,10 +72,10 @@ describe('pos-mention-menu', () => {
     expect(page.root).toMatchInlineSnapshot(`
       <pos-mention-menu class="hydrated">
         <ul role="listbox" id="pos-mention-menu-listbox">
-          <li role="option" class="indexed" aria-selected="true">
+          <li id="pos-mention-menu-option-1" role="option" class="indexed" aria-selected="true">
             First
           </li>
-          <li role="option" class="indexed">
+          <li id="pos-mention-menu-option-2" role="option" class="indexed">
             Second
           </li>
         </ul>

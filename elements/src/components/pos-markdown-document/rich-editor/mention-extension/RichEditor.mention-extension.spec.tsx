@@ -59,7 +59,7 @@ describe('RichEditor', () => {
       const text = getByText(textbox, '#test');
       expect(text).toHaveClass('suggestion');
 
-      // then a listbox pops up controled by the editor
+      // then a listbox pops up controlled by the editor
       const listbox = await findByRole(root, 'listbox');
       expect(listbox).toHaveAttribute('id', 'pos-mention-menu-listbox');
       expect(textbox).toHaveAttribute('aria-controls', 'pos-mention-menu-listbox');
@@ -68,24 +68,29 @@ describe('RichEditor', () => {
       const option = await findAllByRole(listbox, 'option');
       expect(option.length).toBe(2);
       expect(option[0]).toMatchInlineSnapshot(`
-          <li
-            aria-selected="true"
-            class="indexed"
-            role="option"
-          >
-            Test Item
-          </li>
-        `);
+        <li
+          aria-selected="true"
+          class="indexed"
+          id="pos-mention-menu-option-1"
+          role="option"
+        >
+          Test Item
+        </li>
+      `);
+
+      // and the first option is the active decendent of the editor
+      expect(textbox).toHaveAttribute('aria-activedescendant', 'pos-mention-menu-option-1');
 
       // and an option shows up to create a new item
       expect(option[1]).toMatchInlineSnapshot(`
-          <li
-            class="new-thing"
-            role="option"
-          >
-            test
-          </li>
-        `);
+        <li
+          class="new-thing"
+          id="pos-mention-menu-option-2"
+          role="option"
+        >
+          test
+        </li>
+      `);
     });
 
     it('closes the suggestions when ESC is pressed', async () => {

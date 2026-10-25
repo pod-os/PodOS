@@ -13,6 +13,7 @@ export const render = (os: PodOS) => () => {
       menu.items = props.items;
       menu.selectedIndex = 0;
       props.editor.view.dom.setAttribute('aria-controls', 'pos-mention-menu-listbox');
+      props.editor.view.dom.setAttribute('aria-activedescendant', 'pos-mention-menu-option-1');
       menu.command = processSelectedMention(os, props.command);
       unmount = props.mount(menu);
     },
