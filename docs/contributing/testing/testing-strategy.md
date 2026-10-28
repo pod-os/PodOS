@@ -50,10 +50,11 @@ Naming conventions:
 Integration tests verify a component in integration with other components, e.g.
 a real `pos-app` / `pos-resource` arround it.
 
-The tests run against a compiled bundle, so after every change to the production
-code, a build has to be done. All custom elements provided by the bundle can be
-used in the test without any imports. The bundle also includes PodOS core, so
-the tests are very close to the real behaviour.
+The tests run against a compiled bundle, so after every change to the
+production code, a build has to be done. The bundle embeds `@pod-os/core`, so
+after changing core, rebuild core first, then elements. All custom elements
+provided by the bundle can be used in the test without any imports. The bundle
+also includes PodOS core, so the tests are very close to the real behaviour.
 
 Network requests are mocked using a mock service worker provided by
 [msw](https://mswjs.io).
