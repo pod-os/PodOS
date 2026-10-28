@@ -8,7 +8,6 @@
     dct:title "Create things on the fly from the mention menu";
     dct:description "Add a Create entry to the mention suggestions that immediately inserts the mention and creates the referenced thing in the background. Picks up the deferred task-06 of the mentions-fulltext-search plan.";
     dct:created "2026-10-24"^^xsd:date;
-    plan:status plan:planned;
     plan:decision <#entry-decision-01>, <#entry-decision-02>, <#entry-decision-03>, <#entry-decision-04>, <#entry-decision-05>, <#entry-decision-06>;
     plan:context <#entry-context-01>, <#entry-context-02>;
     plan:hasTask <#task-01-optional-type-in-add-new-thing>, <#task-02-create-option-in-mention-suggestions>.
@@ -125,9 +124,6 @@
     schema:text "Error handling was implemented beyond the original plan: the extension dispatches a pod-os:error event when the background addNewThing fails, and pos-error-toast renders it. This closes the concern the failure-handling outOfScope entry had parked.".
 <#task-02-create-option-in-mention-suggestions> plan:status plan:done;
     dct:modified "2026-10-24T16:20:00Z"^^xsd:dateTime.
-<#entry-task-02-verification-02> a schema:Comment;
-    dct:created "2026-10-24T11:20:00Z"^^xsd:dateTime;
-    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
 <#task-01-optional-type-in-add-new-thing> dct:modified "2026-10-25T16:30:00Z"^^xsd:dateTime;
     plan:touchesFile "elements/src/components/pos-markdown-document/rich-editor/mention-extension/processSelectedMention.ts", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/processSelectedMention.dom.spec.ts", "elements/src/components/pos-markdown-document/pos-markdown-document.integration.spec.tsx".
 <#entry-task-01-note-01> a schema:Comment;
@@ -196,7 +192,6 @@
     plan:verification <#entry-task-05-verification-01>;
     plan:touchesFile "elements/src/components/pos-markdown-document/rich-editor/mention-extension/processSelectedMention.ts", "elements/src/components/pos-markdown-document/rich-editor/mention-extension/processSelectedMention.dom.spec.ts";
     dct:created "2026-10-24T19:26:12Z"^^xsd:dateTime;
-    plan:status plan:planned;
     plan:parent <#plan>.
 <#entry-task-05-goal-01> a schema:Comment;
     dct:created "2026-10-24T19:26:12Z"^^xsd:dateTime;
@@ -225,9 +220,18 @@
     dct:created "2026-10-24T19:28:42Z"^^xsd:dateTime;
     prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>;
     schema:text "With the create hint as DOM text the suggestion's accessible name reflects what the user sees; the e2e specs keep naming suggestions by label while the locators gain the visible wording.".
-<#plan> dct:modified "2026-10-28T19:46:23Z"^^xsd:dateTime.
 <http://localhost:3000/dev/plans/mention-create-on-the-fly/plan.ttl#task-03-mention-menu-a11y-combobox> plan:decision <#entry-task-03-decision-01>.
 <#entry-task-03-decision-01> a schema:Comment;
     dct:created "2026-10-24T22:27:39Z"^^xsd:dateTime;
     prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>;
     schema:text "The editor stays a plain textbox: while suggestions are open it references the suggestion listbox with aria-controls and marks the highlighted option with aria-activedescendant, following the Lexical-style pattern from the accessibility research.".
+<#task-05-mention-create-error-feedback> plan:note <#entry-task-05-note-01>.
+<#entry-task-05-note-01> a schema:Comment;
+    dct:created "2026-10-28T20:55:26Z"^^xsd:dateTime;
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>, <https://angelo.veltens.org/profile/card#me>;
+    schema:text "Investigation answered the verification question: sl-alert (Shoelace 2.20.1) renders role=\"alert\" and aria-live=\"polite\", but toast() appends the alert to #sl-toast-stack and only then flips aria-hidden — the live region does not exist in the accessibility tree when content arrives, so announcements are unreliable. This is upstream shoelace-style/shoelace#1359 (open since 2023, unfixed). Web Awesome 3.14.0, the successor, implements the robust pattern: a persistent live-region container with per-toast announcer elements (role=alert/assertive for danger). Angelo decided to record the finding and not work around it locally in pos-error-toast; revisit when a Shoelace fix or a Web Awesome migration lands.";
+    dct:source <https://github.com/shoelace-style/shoelace/issues/1359>, <https://github.com/shoelace-style/webawesome>, <https://github.com/shoelace-style/webawesome/blob/3daedc45ee/packages/webawesome/src/components/toast/toast.ts#L56-L79>.
+<#task-05-mention-create-error-feedback> plan:status plan:done;
+    dct:modified "2026-10-28T21:03:59Z"^^xsd:dateTime.
+<#plan> plan:status plan:done;
+    dct:modified "2026-10-28T21:03:59Z"^^xsd:dateTime.
