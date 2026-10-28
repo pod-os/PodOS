@@ -30,6 +30,10 @@ and this project adheres to
   `buildSearchIndex` call starts fresh after a logout
 - [`PodOS.addNewThing](https://pod-os.org/reference/core/classes/podos/#addnewthing):
   Type is optional now. Things can be created with a label only.
+- [`PodOS.fetch`](https://pod-os.org/reference/core/classes/podos/#fetch):
+  no longer forces documents to be re-fetched from the network. Already-fetched
+  documents are served from the internal store, and freshness of cached
+  documents is now decided by rdflib itself.
 
 ## 0.33.0
 
