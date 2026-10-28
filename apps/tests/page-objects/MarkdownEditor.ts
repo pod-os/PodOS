@@ -4,12 +4,14 @@ import { MentionMenu } from "./MentionMenu";
 export class MarkdownEditor {
   private readonly editButton: Locator;
   private readonly editor: Locator;
+  private readonly document: Locator;
 
-  constructor(private page: Page) {
+  constructor(readonly page: Page) {
     this.editButton = page
       .getByRole("button", { name: "Edit" })
       .describe("Edit button");
-    this.editor = page.getByRole("textbox").describe("Editor");
+    this.document = page.getByRole("article").describe("Document");
+    this.editor = this.document.getByRole("textbox").describe("Editor");
   }
 
   async startEditing() {
@@ -32,6 +34,6 @@ export class MarkdownEditor {
 
   /** The mention suggestion menu shown while a query is typed. */
   mentionMenu(): MentionMenu {
-    return new MentionMenu(this.page);
+    return new MentionMenu(this.document, this.editor);
   }
 }

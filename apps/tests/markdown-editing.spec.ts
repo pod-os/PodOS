@@ -105,17 +105,18 @@ test.describe("Markdown documents", () => {
         return editor;
       });
 
-    const mentionMenu =
+    const suggestion =
       await test.step("and typing the mention trigger plus a query", async () => {
         const mentionMenu = editor.mentionMenu();
 
         await editor.replaceContent("#Someth");
-        await expect(mentionMenu.suggestion("Something")).toBeVisible();
-        return mentionMenu;
+        const suggestion = await mentionMenu.suggestion("Something");
+        await expect(suggestion).toBeVisible();
+        return suggestion;
       });
 
     await test.step("and selecting the suggestion", async () => {
-      await mentionMenu.suggestion("Something").click();
+      await suggestion.click();
     });
 
     await test.step("then the mention is inserted as a link in the editor", async () => {
@@ -161,7 +162,8 @@ test.describe("Markdown documents", () => {
       const mentionMenu = editor.mentionMenu();
 
       await editor.replaceContent("#Newthing");
-      await expect(mentionMenu.suggestion("Create 'Newthing'")).toBeVisible();
+      const createIt = await mentionMenu.suggestion("Create 'Newthing'");
+      await expect(createIt).toBeVisible();
     });
 
     await test.step("and accepting the suggestion", async () => {
