@@ -37,7 +37,6 @@
 <#task-4-integration-test> a plan:Task;
     dct:title "pos-login integration test: pre-fill on next open";
     plan:parent <#plan>;
-    plan:status plan:planned;
     plan:dependsOn <#task-2-login-form-remember-me>;
     plan:touchesFile "elements/src/components/pos-login/pos-login.integration.spec.tsx";
     plan:scope <#entry-task-4-integration-test-scope-01>.
@@ -115,3 +114,5 @@
     dct:modified "2026-10-28T20:02:06Z"^^xsd:dateTime.
 <#plan> dct:modified "2026-10-28T20:02:06Z"^^xsd:dateTime;
     <http://localhost:3000/dev/plans/plan-ontology.ttl#hasTask> <#task-1-extend-settings-store>, <#task-2-login-form-remember-me>, <#task-3-unit-tests>, <#task-4-integration-test>.
+<#task-4-integration-test> plan:status plan:done;
+    dct:modified "2026-10-28T20:15:43Z"^^xsd:dateTime.
