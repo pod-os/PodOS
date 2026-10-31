@@ -77,7 +77,7 @@ An example registration for a tool:
 <> a tools:ToolIndex;
 tools:registration :tool1_rego.
 
-:tool1  a tools:Registration ;
+:tool1_rego a tools:Registration ;
 ac:capability :tool1_rego_cap1;
 schema:name "Recipe pane".
 
@@ -86,8 +86,8 @@ ac:action odrl:display;
 ac:resourceType schema:Recipe;
 ac:invocation :tool1_rego_cap1_invocation1.
 
-:tool1_rego_cap1_invocation1 a tools:HtmlToolInvocation;
-tools:htmlToolFragment  "<pos-label>".
+:tool1_rego_cap1_invocation1 a tools:HtmlFragmentInvocation;
+schema:url "http://alice.pod.example/tools/recipe.html".
 ```
 
 ### Positive Consequences
