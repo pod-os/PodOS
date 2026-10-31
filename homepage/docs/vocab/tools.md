@@ -1,3 +1,7 @@
+---
+title: PodOS tools vocabulary
+---
+
 # PodOS tools vocabulary
 
 `https://pod-os.org/vocab/tools.ttl#`
@@ -5,7 +9,7 @@
 A vocabulary for registering apps and HTML tools for use by PodOS. It extends
 [Application Capability](https://dokieli.github.io/application-capability/)
 with a private tool index and an HTML fragment invocation. The Turtle
-definition is at [`tools.ttl`](https://pod-os.org/vocab/tools.ttl).
+definition is at [`tools.ttl`](/vocab/tools.ttl).
 
 ## Classes
 
@@ -86,7 +90,6 @@ document.
 @base <https://alice.pod.example/settings/prefs.ttl> .
 @prefix tools: <https://pod-os.org/vocab/tools.ttl#> .
 
-# In the user's preferences document
 <https://alice.pod.example/profile/card#me> tools:toolIndex <tool-index.ttl> .
 ```
 
@@ -174,7 +177,6 @@ The Turtle file includes SHACL shapes that check:
 
 ## See also
 
-- [Turtle definition](https://pod-os.org/vocab/tools.ttl)
-- [ADR-0018](https://github.com/pod-os/PodOS/pull/248)
+- [Turtle definition](/vocab/tools.ttl)
+- [ADR-0018](https://github.com/pod-os/PodOS/blob/main/docs/decisions/0018-self-host-app-registration-vocab.md)
 - [Application Capability](https://dokieli.github.io/application-capability/)
-- [Solid Type Indexes](https://solid.github.io/type-indexes/)
