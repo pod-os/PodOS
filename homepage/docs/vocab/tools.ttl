@@ -1,0 +1,43 @@
+@prefix tools: <https://pod-os.org/vocab/tools.ttl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ac: <https://www.w3.org/ns/ac#> .
+
+<https://pod-os.org/vocab/tools.ttl> a owl:Ontology ;
+    dcterms:title "PodOS tools vocabulary"@en ;
+    dcterms:description "A vocabulary for registering apps and HTML tools for use by PodOS."@en ;
+    dcterms:created "2026-10-31"^^xsd:date ;
+    dcterms:modified "2026-10-31"^^xsd:date ;
+    owl:versionInfo "0.1.0" .
+
+tools:ToolIndex a rdfs:Class ;
+    rdfs:label "Tool index"@en ;
+    rdfs:comment "A registry of app and tool registrations, modelled on the Solid type index."@en ;
+    rdfs:isDefinedBy <https://pod-os.org/vocab/tools.ttl> .
+
+tools:Registration a rdfs:Class ;
+    rdfs:label "Registration"@en ;
+    rdfs:comment "An entry in a tool index that describes an app or HTML tool."@en ;
+    rdfs:isDefinedBy <https://pod-os.org/vocab/tools.ttl> .
+
+tools:HtmlFragmentInvocation a rdfs:Class ;
+    rdfs:subClassOf ac:Invocation ;
+    rdfs:label "HTML fragment invocation"@en ;
+    rdfs:comment "An Application Capability invocation for rendering a HTML fragment, e.g. as a HTML tool in PodOS."@en ;
+    rdfs:isDefinedBy <https://pod-os.org/vocab/tools.ttl> .
+
+tools:toolIndex a rdf:Property ;
+    rdfs:label "tool index"@en ;
+    rdfs:comment "Links the WebID to the tool index, usually in the preferences document."@en ;
+    rdfs:range tools:ToolIndex ;
+    rdfs:isDefinedBy <https://pod-os.org/vocab/tools.ttl> .
+
+tools:registration a rdf:Property ;
+    rdfs:label "registration"@en ;
+    rdfs:comment "Links a tool index to one of its registrations."@en ;
+    rdfs:domain tools:ToolIndex ;
+    rdfs:range tools:Registration ;
+    rdfs:isDefinedBy <https://pod-os.org/vocab/tools.ttl> .
