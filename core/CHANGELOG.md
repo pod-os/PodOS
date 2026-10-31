@@ -6,28 +6,70 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.34.0
+
+### Breaking changes
+
+- [`PodOS.buildSearchIndex`](https://pod-os.org/reference/core/classes/podos/#buildsearchindex)
+  no longer takes a profile parameter: it builds on demand from the current
+  session — resolving the profile itself, returning an uncached empty index
+  while logged out, and emptying held index references in place on logout
+
+### Changed
+
+- [`PodOS.buildSearchIndex`](https://pod-os.org/reference/core/classes/podos/#buildsearchindex):
+  caches the search index and keeps it fresh when label indexes change, instead
+  of rebuilding on every call. Consumers holding the returned index stay up to
+  date automatically.
+- [`PodOS.addToLabelIndex`](https://pod-os.org/reference/core/classes/podos/#addtolabelindex)
+  and
+  [`PodOS.createDefaultLabelIndex`](https://pod-os.org/reference/core/classes/podos/#createdefaultlabelindex):
+  update the cached search index so newly added labels are found without
+  rebuilding
+- The cached search index is cleared when the session changes, so the next
+  `buildSearchIndex` call starts fresh after a logout
+- [`PodOS.addNewThing](https://pod-os.org/reference/core/classes/podos/#addnewthing):
+  Type is optional now. Things can be created with a label only.
+- [`PodOS.fetch`](https://pod-os.org/reference/core/classes/podos/#fetch):
+  no longer forces documents to be re-fetched from the network. Already-fetched
+  documents are served from the internal store, and freshness of cached
+  documents is now decided by rdflib itself.
+
 ## 0.33.0
 
 ### Added
 
-- [`PodOS.editPropertyValue`](https://pod-os.org/reference/core/classes/podos/#editpropertyvalue): updates the value of a literal property of a thing
+- [`PodOS.editPropertyValue`](https://pod-os.org/reference/core/classes/podos/#editpropertyvalue):
+  updates the value of a literal property of a thing
 
 ## 0.32.0
 
 ### Added
 
-- [`Thing.observeLiterals`](https://pod-os.org/reference/core/classes/thing/#observeliterals) pushes changes to literals
+- [`Thing.observeLiterals`](https://pod-os.org/reference/core/classes/thing/#observeliterals)
+  pushes changes to literals
 
 ## 0.31.0
 
 ### Breaking changes
 
-- [`Store.fetch`](https://pod-os.org/reference/core/classes/store/#fetch) no longer returns the rdflib response. It now resolves to `Promise<void>` instead of `Promise<ExtendedResponse>`. This change also affects the public [`PodOS.fetch`](https://pod-os.org/reference/core/classes/podos/#fetch). The fetch is needed to load metadata documents linked via `rel="describedby"` automatically, and the response object is no longer meaningful as a single return value.
+- [`Store.fetch`](https://pod-os.org/reference/core/classes/store/#fetch) no
+  longer returns the rdflib response. It now resolves to `Promise<void>` instead
+  of `Promise<ExtendedResponse>`. This change also affects the public
+  [`PodOS.fetch`](https://pod-os.org/reference/core/classes/podos/#fetch). The
+  fetch is needed to load metadata documents linked via `rel="describedby"`
+  automatically, and the response object is no longer meaningful as a single
+  return value.
 
 ### Changed
 
-- [`Store.fetch`](https://pod-os.org/reference/core/classes/store/#fetch) now auto-follows a `Link: rel="describedby"` response header and loads the referenced metadata document into the store.
-- Adding data now works on Non-RDF documents. Data will be added to the corresponding [description resource](https://solidproject.org/TR/protocol#auxiliary-resources-description-resource). This is now supported by:
+- [`Store.fetch`](https://pod-os.org/reference/core/classes/store/#fetch) now
+  auto-follows a `Link: rel="describedby"` response header and loads the
+  referenced metadata document into the store.
+- Adding data now works on Non-RDF documents. Data will be added to the
+  corresponding
+  [description resource](https://solidproject.org/TR/protocol#auxiliary-resources-description-resource).
+  This is now supported by:
   - [`Store.addPropertyValue`](https://pod-os.org/reference/core/classes/store/#addpropertyvalue)
   - [`Store.addRelation`](https://pod-os.org/reference/core/classes/store/#addrelation)
 
@@ -39,58 +81,92 @@ and this project adheres to
 
 ### Added
 
-- [`Thing.observeAnyValue`](https://pod-os.org/reference/core/classes/thing/#observeanyvalue) pushes changes to the value of predicates
-- [`Thing.observeLabel`](https://pod-os.org/reference/core/classes/thing/#observelabel) pushes changes to labels
-- [`Thing.observeDescription`](https://pod-os.org/reference/core/classes/thing/#observedescription) pushes changes to descriptions
+- [`Thing.observeAnyValue`](https://pod-os.org/reference/core/classes/thing/#observeanyvalue)
+  pushes changes to the value of predicates
+- [`Thing.observeLabel`](https://pod-os.org/reference/core/classes/thing/#observelabel)
+  pushes changes to labels
+- [`Thing.observeDescription`](https://pod-os.org/reference/core/classes/thing/#observedescription)
+  pushes changes to descriptions
 
 ## 0.28.0
 
-- [`addRelation`](https://pod-os.org/reference/core/classes/podos/#addrelation): A method to add a relation (link) between things
+- [`addRelation`](https://pod-os.org/reference/core/classes/podos/#addrelation):
+  A method to add a relation (link) between things
 
 ## 0.27.0
 
 ### Added
 
-- [`Thing.observeTypes`](https://pod-os.org/reference/core/classes/thing/#observetypes) pushes changes to types
-- [`Thing.observeRelations`](https://pod-os.org/reference/core/classes/thing/#observerelations) pushes changes to relations
-- [`Thing.observeReverseRelations`](https://pod-os.org/reference/core/classes/thing/#observereverserelations) pushes changes to reverse relations
+- [`Thing.observeTypes`](https://pod-os.org/reference/core/classes/thing/#observetypes)
+  pushes changes to types
+- [`Thing.observeRelations`](https://pod-os.org/reference/core/classes/thing/#observerelations)
+  pushes changes to relations
+- [`Thing.observeReverseRelations`](https://pod-os.org/reference/core/classes/thing/#observereverserelations)
+  pushes changes to reverse relations
 
 ### Fixed
 
-- [`Thing.relations`](https://pod-os.org/reference/core/classes/Thing/#relations) and [`Thing.reverseRelations`](https://pod-os.org/reference/core/classes/thing/#reverserelations) remove duplicate values
+- [`Thing.relations`](https://pod-os.org/reference/core/classes/Thing/#relations)
+  and
+  [`Thing.reverseRelations`](https://pod-os.org/reference/core/classes/thing/#reverserelations)
+  remove duplicate values
 
 ## 0.26.0
 
 ### Breaking changes
 
-- `Thing.store` is now a `Store` instead of an `IndexedFormula`. Internal store is no longer accessible. This change also affects all sub-classes of `Thing`. This change is necessary to allow reactivity to be implemented on `Thing` methods.
+- `Thing.store` is now a `Store` instead of an `IndexedFormula`. Internal store
+  is no longer accessible. This change also affects all sub-classes of `Thing`.
+  This change is necessary to allow reactivity to be implemented on `Thing`
+  methods.
 
 ### Added
 
-- [`PodOS.proposeAppsFor`](https://pod-os.org/reference/core/classes/podos/#proposeappsfor) proposes apps that can open a given resource
+- [`PodOS.proposeAppsFor`](https://pod-os.org/reference/core/classes/podos/#proposeappsfor)
+  proposes apps that can open a given resource
 
 ### Added
 
-- [`Store.findTypes`]((https://pod-os.org/reference/core/classes/store/#findTypes)) returns types for a given resource
-- [`Store.holds`]((https://pod-os.org/reference/core/classes/store/#holds)) determines whether the store includes a certain quad pattern
-- [`Store.statementsMatching`]((https://pod-os.org/reference/core/classes/store/#statementsMatching)) returns array of statements matching a quad pattern
-- [`Store.each`]((https://pod-os.org/reference/core/classes/store/#each)) returns array of RDF/JS terms matching the first wild card in a quad pattern
-- [`Store.any`]((https://pod-os.org/reference/core/classes/store/#any)) returns any one RDF/JS term matching the first wildcard in the provided quad pattern
-- [`Store.anyValue`]((https://pod-os.org/reference/core/classes/store/#anyValue)) returns the value of any one RDF/JS term matching the first wildcard in the provided quad pattern
-- [`Store.profileQuery`]((https://pod-os.org/reference/core/classes/store/#profileQuery)) creates a [query](https://solid-contrib.github.io/data-modules/rdflib-utils/classes/index.ProfileQuery.html) to fetch information from a user's profile document
-- [`Store.preferencesQuery`]((https://pod-os.org/reference/core/classes/store/#preferencesQuery)) creates a [query](https://solid-contrib.github.io/data-modules/rdflib-utils/classes/index.PreferencesQuery.html) to fetch information from a user's preferences file
-- [`LdpContainer.observeContains`](https://pod-os.org/reference/core/classes/ldpcontainer/#observeContains) pushes new array when `LdpContainer.contains` changes.
+- [`Store.findTypes`](<(https://pod-os.org/reference/core/classes/store/#findTypes)>)
+  returns types for a given resource
+- [`Store.holds`](<(https://pod-os.org/reference/core/classes/store/#holds)>)
+  determines whether the store includes a certain quad pattern
+- [`Store.statementsMatching`](<(https://pod-os.org/reference/core/classes/store/#statementsMatching)>)
+  returns array of statements matching a quad pattern
+- [`Store.each`](<(https://pod-os.org/reference/core/classes/store/#each)>)
+  returns array of RDF/JS terms matching the first wild card in a quad pattern
+- [`Store.any`](<(https://pod-os.org/reference/core/classes/store/#any)>)
+  returns any one RDF/JS term matching the first wildcard in the provided quad
+  pattern
+- [`Store.anyValue`](<(https://pod-os.org/reference/core/classes/store/#anyValue)>)
+  returns the value of any one RDF/JS term matching the first wildcard in the
+  provided quad pattern
+- [`Store.profileQuery`](<(https://pod-os.org/reference/core/classes/store/#profileQuery)>)
+  creates a
+  [query](https://solid-contrib.github.io/data-modules/rdflib-utils/classes/index.ProfileQuery.html)
+  to fetch information from a user's profile document
+- [`Store.preferencesQuery`](<(https://pod-os.org/reference/core/classes/store/#preferencesQuery)>)
+  creates a
+  [query](https://solid-contrib.github.io/data-modules/rdflib-utils/classes/index.PreferencesQuery.html)
+  to fetch information from a user's preferences file
+- [`LdpContainer.observeContains`](https://pod-os.org/reference/core/classes/ldpcontainer/#observeContains)
+  pushes new array when `LdpContainer.contains` changes.
 
 ## 0.25.0
 
 ### Breaking Changes
 
-- `PodOS.loadContactsModule` got removed, use [`PodOS.loadModule`](https://pod-os.org/reference/core/classes/podos/#loadmodule) instead
-- `@solid-data-modules/contacts-rdflib` is no longer part of core. If you need it, you must install it yourself and load it using [`PodOS.loadModule`](https://pod-os.org/reference/core/classes/podos/#loadmodule)
+- `PodOS.loadContactsModule` got removed, use
+  [`PodOS.loadModule`](https://pod-os.org/reference/core/classes/podos/#loadmodule)
+  instead
+- `@solid-data-modules/contacts-rdflib` is no longer part of core. If you need
+  it, you must install it yourself and load it using
+  [`PodOS.loadModule`](https://pod-os.org/reference/core/classes/podos/#loadmodule)
 
 ### Added
 
-- [`PodOS.loadModule`](https://pod-os.org/reference/core/classes/PodOS/#loadmodule): Dynamically loads a module by its name
+- [`PodOS.loadModule`](https://pod-os.org/reference/core/classes/PodOS/#loadmodule):
+  Dynamically loads a module by its name
 
 ## 0.24.0
 
@@ -115,26 +191,33 @@ and this project adheres to
 
 ### Fixed
 
-- continues profile fetch when preferences file fetch fails https://github.com/pod-os/PodOS/issues/174
+- continues profile fetch when preferences file fetch fails
+  https://github.com/pod-os/PodOS/issues/174
 
 ## 0.23.0
 
 ### Added
 
-- [`Store.findMembers`](https://pod-os.org/reference/core/classes/store/#findmembers) returns instances of classes and subclasses
-- [`Store.observeFindMembers`](https://pod-os.org/reference/core/classes/store/#observefindmembers) returns an `Observable` and pushes new values when graph is updated
+- [`Store.findMembers`](https://pod-os.org/reference/core/classes/store/#findmembers)
+  returns instances of classes and subclasses
+- [`Store.observeFindMembers`](https://pod-os.org/reference/core/classes/store/#observefindmembers)
+  returns an `Observable` and pushes new values when graph is updated
 
 ## 0.22.0
 
 ### Added
 
-- [`PictureGateway`](https://pod-os.org/reference/core/classes/picturegateway/): New gateway class to handle picture upload and linking
-  operations
-- [`PodOS.uploadAndAddPicture()`](https://pod-os.org/reference/core/classes/picturegateway/#uploadandaddpicture): Upload a picture file and associate it with a
-  thing using schema:image predicate
-- [`Thing.container()`](https://pod-os.org/reference/core/classes/thing/#container): Get the LDP container URI for a thing
-- [`Store.additions$`](https://pod-os.org/reference/core/classes/store/#additions) and [`Store.removals$`](https://pod-os.org/reference/core/classes/store/#removals) are `rxjs` `Subject`s for listening
-  to changes to the store
+- [`PictureGateway`](https://pod-os.org/reference/core/classes/picturegateway/):
+  New gateway class to handle picture upload and linking operations
+- [`PodOS.uploadAndAddPicture()`](https://pod-os.org/reference/core/classes/picturegateway/#uploadandaddpicture):
+  Upload a picture file and associate it with a thing using schema:image
+  predicate
+- [`Thing.container()`](https://pod-os.org/reference/core/classes/thing/#container):
+  Get the LDP container URI for a thing
+- [`Store.additions$`](https://pod-os.org/reference/core/classes/store/#additions)
+  and
+  [`Store.removals$`](https://pod-os.org/reference/core/classes/store/#removals)
+  are `rxjs` `Subject`s for listening to changes to the store
 
 ### Changed
 

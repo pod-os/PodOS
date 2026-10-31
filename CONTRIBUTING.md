@@ -7,7 +7,8 @@ have.
 
 We'll chat about how best to implement your ideas in PodOS and its
 [architecture](https://github.com/pod-os/PodOS/blob/main/docs/contributing/architecture.md),
-as well as the conventions we use to maintain a healthy code base. We use
+as well as the conventions we use to maintain a healthy code base, described in
+our [code style](./docs/contributing/code-style.md). We use
 [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) and
 test-driven development. Unit tests are written before implementation to provide
 small and clear commits.
@@ -23,11 +24,19 @@ needed.
 
 All contributions have to be made under the same [license](./LICENSE) as PodOS.
 
+## Git Hooks
+
+A pre-commit hook runs checks on every commit. It is installed automatically
+with `npm ci`. If npm skipped install scripts in your environment, enable it
+manually with `npx husky`. Commits that fail these checks are rejected locally;
+a matching CI run enforces the same checks for everyone.
+
 ## Changelog Guidelines
 
 When updating changelogs in `CHANGELOG.md`:
 
-- **Add entries under next release version e.g. `## 0.23.5`** at the top of the file
+- **Add entries under next release version e.g. `## 0.23.5`** at the top of the
+  file
 - **Keep descriptions user-centric and concise** - focus on what changed from
   the user's perspective
 - **Use single-line descriptions** - avoid listing implementation details or

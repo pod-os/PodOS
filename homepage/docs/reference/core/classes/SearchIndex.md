@@ -34,7 +34,7 @@ Defined in: [src/search/SearchIndex.ts:11](https://github.com/pod-os/PodOS/blob/
 
 > **clear**(): `void`
 
-Defined in: [src/search/SearchIndex.ts:64](https://github.com/pod-os/PodOS/blob/main/core/src/search/SearchIndex.ts#L64)
+Defined in: [src/search/SearchIndex.ts:68](https://github.com/pod-os/PodOS/blob/main/core/src/search/SearchIndex.ts#L68)
 
 Remove all data from the search index.
 
@@ -46,11 +46,18 @@ Remove all data from the search index.
 
 ### rebuild()
 
-> **rebuild**(): `SearchIndex`
+> **rebuild**(`labelIndexes?`): `SearchIndex`
 
-Defined in: [src/search/SearchIndex.ts:19](https://github.com/pod-os/PodOS/blob/main/core/src/search/SearchIndex.ts#L19)
+Defined in: [src/search/SearchIndex.ts:20](https://github.com/pod-os/PodOS/blob/main/core/src/search/SearchIndex.ts#L20)
 
-Recreates the search index with the current data from all label indexes
+Recreates the search index with the current data from all label indexes.
+Optionally replaces the captured label indexes before rebuilding.
+
+#### Parameters
+
+##### labelIndexes?
+
+[`LabelIndex`](LabelIndex.md)[]
 
 #### Returns
 
@@ -62,7 +69,7 @@ Recreates the search index with the current data from all label indexes
 
 > **search**(`term`, `maxResults?`): `Result`[]
 
-Defined in: [src/search/SearchIndex.ts:52](https://github.com/pod-os/PodOS/blob/main/core/src/search/SearchIndex.ts#L52)
+Defined in: [src/search/SearchIndex.ts:56](https://github.com/pod-os/PodOS/blob/main/core/src/search/SearchIndex.ts#L56)
 
 Search the index for a given term. It finds partial matches, but will rank exact matches higher.
 

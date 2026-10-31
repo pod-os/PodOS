@@ -1,0 +1,17 @@
+PREFIX plan: <http://localhost:3000/dev/plans/plan-ontology.ttl#>
+PREFIX dct:   <http://purl.org/dc/terms/>
+PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX schema:<https://schema.org/>
+PREFIX prov:  <http://www.w3.org/ns/prov#>
+
+# History of a task's file(s): all entries across all tasks touching a file,
+# chronological — e.g. before editing a file that several tasks have touched.
+# Replace <path fragment> with the path you care about before running.
+
+SELECT DISTINCT ?created ?task ?text
+WHERE {
+      ?task plan:touchesFile ?f . FILTER(CONTAINS(?f, "<path fragment>"))
+    ?task ?pred ?entry .
+    ?entry schema:text ?text ; dct:created ?created .
+}
+ORDER BY DESC(?created)

@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
+import { BehaviorSubject } from "rxjs";
 import { SearchGateway } from "./SearchGateway";
-import { PodOsSession } from "../authentication";
+import { PodOsSession, SessionInfo } from "../authentication";
 import { Store } from "../Store";
 
 import {
@@ -8,37 +9,41 @@ import {
   mockNotFound,
   mockTurtleDocument,
 } from "../test-support";
-import { WebIdProfile } from "../profile";
+import { ProfileGateway, WebIdProfile } from "../profile";
 import { graph, lit, st, sym } from "rdflib";
 import { pim, rdfs } from "../namespaces";
 import { LabelIndex } from "./LabelIndex";
 import { Thing } from "../thing";
-import { solid } from "@solid-data-modules/rdflib-utils";
-
 describe(SearchGateway.name, () => {
   describe("build search index", () => {
     it("creates an index that can find indexed items", async () => {
-      // given a session and a store
+      // given a logged-in session and a store
       const fetchMock = vi.fn();
       const mockSession = {
         authenticatedFetch: fetchMock,
+        observeSession: () =>
+          new BehaviorSubject<SessionInfo>({
+            isLoggedIn: true,
+            webId: "https://pod.test/profile/card#me",
+          }),
       } as unknown as PodOsSession;
       const internalStore = graph();
       const store = new Store(mockSession, undefined, undefined, internalStore);
-      const gateway = new SearchGateway(store);
+      const gateway = new SearchGateway(
+        store,
+        mockSession,
+        new ProfileGateway(store),
+      );
 
       // and a profile with a private label index
-      internalStore.add(
-        st(
-          sym("https://pod.test/profile/card#me"),
-          solid("privateLabelIndex"),
-          sym("https://pod.test/profile/privateLabelIndex.ttl"),
-          sym("https://pod.test/profile/card"),
-        ),
+      mockTurtleDocument(
+        fetchMock,
+        "https://pod.test/profile/card",
+        `
+      @prefix solid: <http://www.w3.org/ns/solid/terms#>.
+      <https://pod.test/profile/card#me> solid:privateLabelIndex <https://pod.test/profile/privateLabelIndex.ttl> .
+    `,
       );
-      const profile = store
-        .get("https://pod.test/profile/card#me")
-        .assume(WebIdProfile);
 
       // and the index contains data
       mockTurtleDocument(
@@ -49,8 +54,8 @@ describe(SearchGateway.name, () => {
     `,
       );
 
-      // when building a search index for that profile
-      const searchIndex = await gateway.buildSearchIndex(profile);
+      // when building the search index on demand
+      const searchIndex = await gateway.buildSearchIndex();
 
       // then the search can find the indexed item
       const result = searchIndex.search("test");
@@ -68,7 +73,11 @@ describe(SearchGateway.name, () => {
       } as unknown as PodOsSession;
       const internalStore = graph();
       const store = new Store(mockSession, undefined, undefined, internalStore);
-      const gateway = new SearchGateway(store);
+      const gateway = new SearchGateway(
+        store,
+        mockSession,
+        new ProfileGateway(store),
+      );
 
       // and no label index yet
       mockNotFound(fetchMock, "https://pod.example/label-index");
@@ -115,7 +124,11 @@ _:patch
           undefined,
           internalStore,
         );
-        const gateway = new SearchGateway(store);
+        const gateway = new SearchGateway(
+          store,
+          mockSession,
+          new ProfileGateway(store),
+        );
 
         // and no label index yet
         mockNotFound(
@@ -181,7 +194,11 @@ _:patch
           undefined,
           internalStore,
         );
-        const gateway = new SearchGateway(store);
+        const gateway = new SearchGateway(
+          store,
+          mockSession,
+          new ProfileGateway(store),
+        );
 
         // and no label index yet
         mockNotFound(

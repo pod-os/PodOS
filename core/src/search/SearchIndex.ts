@@ -6,7 +6,7 @@ import lunr, { Index } from "lunr";
  */
 export class SearchIndex {
   private index: Index;
-  private readonly labelIndexes: LabelIndex[];
+  private labelIndexes: LabelIndex[];
 
   constructor(labelIndexes: LabelIndex[]) {
     this.labelIndexes = labelIndexes;
@@ -14,17 +14,21 @@ export class SearchIndex {
   }
 
   /**
-   * Recreates the search index with the current data from all label indexes
+   * Recreates the search index with the current data from all label indexes.
+   * Optionally replaces the captured label indexes before rebuilding.
    */
-  rebuild() {
-    const labelIndexes = this.labelIndexes;
+  rebuild(labelIndexes?: LabelIndex[]) {
+    if (labelIndexes) {
+      this.labelIndexes = labelIndexes;
+    }
+    const captured = this.labelIndexes;
     this.index = lunr(function () {
       this.ref("uri");
       this.field("uri");
       this.field("label");
       this.metadataWhitelist = ["position"];
 
-      const items = labelIndexes.flatMap((it) => it.getIndexedItems());
+      const items = captured.flatMap((it) => it.getIndexedItems());
 
       items.forEach((item) => {
         this.add({

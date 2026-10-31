@@ -25,8 +25,6 @@ export class PosMakeFindable implements PodOsAware {
   @State() isIndexed = false;
 
   @Event({ eventName: 'pod-os:error' }) errorEmitter: EventEmitter;
-  @Event({ eventName: 'pod-os:search:index-updated' }) indexUpdatedEmitter: EventEmitter;
-  @Event({ eventName: 'pod-os:search:index-created' }) indexCreatedEmitter: EventEmitter;
 
   @Element() el: HTMLElement;
 
@@ -68,13 +66,10 @@ export class PosMakeFindable implements PodOsAware {
   private async onClick(e: MouseEvent) {
     e.preventDefault();
     if (this.indexes.length === 1) {
-      const index = this.indexes[0];
-      await this.addToLabelIndex(index);
-      this.indexUpdatedEmitter.emit(index);
+      await this.addToLabelIndex(this.indexes[0]);
     } else if (this.indexes.length === 0) {
       const index = await this.createDefaultLabelIndex();
       await this.addToLabelIndex(index);
-      this.indexCreatedEmitter.emit(index);
     }
   }
 
@@ -141,7 +136,6 @@ export class PosMakeFindable implements PodOsAware {
     const index = e.detail.item.value;
     e.preventDefault();
     await this.addToLabelIndex(index);
-    this.indexUpdatedEmitter.emit(index);
   }
 }
 

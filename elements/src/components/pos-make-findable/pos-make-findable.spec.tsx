@@ -64,10 +64,6 @@ describe('pos-make-findable', () => {
     // and the component received that PodOs instance
     mockOsProvider(mockOs);
 
-    // and the document listens for index updates
-    const indexUpdateListener = vi.fn();
-    document.addEventListener('pod-os:search:index-updated', indexUpdateListener);
-
     // and a make findable component for a thing
     page = await render(<pos-make-findable uri="https://thing.example#it"></pos-make-findable>);
 
@@ -80,15 +76,6 @@ describe('pos-make-findable', () => {
 
     // and the state changes to indexed
     expect(page.instance.isIndexed).toEqual(true);
-
-    // and an index update event is emitted
-    expect(indexUpdateListener).toHaveBeenCalledWith(
-      expect.objectContaining({
-        detail: expect.objectContaining({
-          fake: 'index',
-        }),
-      }),
-    );
   });
 
   it('indicates if thing is already indexed', async () => {
@@ -199,10 +186,6 @@ describe('pos-make-findable', () => {
       .thenResolve({ fake: 'newly created default index' } as unknown as LabelIndex);
     mockOsProvider(mockOs);
 
-    // and the page listens for index creation
-    const indexCreatedListener = vi.fn();
-    document.addEventListener('pod-os:search:index-created', indexCreatedListener);
-
     // and a make findable component for a thing
     page = await render(<pos-make-findable uri="https://thing.example#it"></pos-make-findable>);
 
@@ -218,15 +201,6 @@ describe('pos-make-findable', () => {
 
     // and the state changes to indexed
     expect(page.instance.isIndexed).toEqual(true);
-
-    // and an index created event is emitted
-    expect(indexCreatedListener).toHaveBeenCalledWith(
-      expect.objectContaining({
-        detail: expect.objectContaining({
-          fake: 'newly created default index',
-        }),
-      }),
-    );
   });
 
   it('emits error if creating the default index fails', async () => {
@@ -456,10 +430,6 @@ describe('pos-make-findable', () => {
     });
 
     it('add thing to the chosen label index', async () => {
-      // and the page listens for index updates
-      const indexUpdateListener = vi.fn();
-      page.root.addEventListener('pod-os:search:index-updated', indexUpdateListener);
-
       // when the button is clicked
       const button = withinShadow(page).getByRole('button');
       await userEvent.click(button);
@@ -480,11 +450,6 @@ describe('pos-make-findable', () => {
 
       // and the state changes to indexed
       expect(page.instance.isIndexed).toEqual(true);
-
-      // then
-      expect(indexUpdateListener).toHaveBeenCalledWith(
-        expect.objectContaining({ detail: expect.objectContaining({ uri: 'https://pod.example/first-index' }) }),
-      );
     });
   });
 });

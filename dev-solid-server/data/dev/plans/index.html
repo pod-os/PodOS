@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plans</title>
+  <!--
+    Plans viewer. Renders the active plan (plan:active pointer in active.ttl)
+    as a board; clicking a task opens a full-screen detail sheet.
+    Source of truth: .agents/plans/<slug>/plan.ttl in the PodOS repo, copied
+    into this pod container (see .agents/skills/podos-plans/SKILL.md).
+    Vocabulary: plan-ontology.ttl# in this container (see below for base IRI)
+  -->
+  <link href="https://esm.sh/@pod-os/elements@latest/dist/elements/elements.css" rel="stylesheet" />
+  <style>
+    :root {
+      /* PodOS design tokens (from elements.css / Pollen), with local fallbacks */
+      --bg: var(--pos-background-color, #f6f7f9);
+      --surface: var(--color-white, #ffffff);
+      --border: var(--pos-border-color, #e2e5ea);
+      --text: var(--pos-normal-text-color, #1a1f28);
+      --muted: var(--pos-subtle-text-color, #6b7280);
+      --accent: var(--pos-primary-color, #4f46e5);
+      --accent-soft: var(--pos-primary-highlight-color, #eef2ff);
+      --done: #15803d; --done-bg: #ecfdf3; --done-border: #86efac;
+      --progress: #b45309; --progress-bg: #fffbeb; --progress-border: #fcd34d;
+      --planned: #475569; --planned-bg: #f1f5f9; --planned-border: #cbd5e1;
+      --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    }
+    html { background: var(--bg); }
+    body {
+      margin: 0; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      color: var(--text); -webkit-font-smoothing: antialiased;
+      font-size: 15px; line-height: 1.5;
+    }
+  </style>
+  <script type="module">
+    import { LitElement, html, css } from 'https://cdn.jsdelivr.net/npm/lit@3.1.4/+esm';
+
+    // vocabulary lives beside this page; resolve relative IRIs against this page's URL
+    const BASE = new URL('.', location.href).href;
+    const PLAN = new URL('plan-ontology.ttl#', BASE).href;
+    const DCT = 'http://purl.org/dc/terms/';
+    const SCHEMA = 'https://schema.org/';
+    const PROV = 'http://www.w3.org/ns/prov#';
+    const RDFS = 'http://www.w3.org/2000/01/rdf-schema#';
+    const RDF_TYPE = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type';
+
+    // ---- data loading ------------------------------------------------
+
+    async function fetchTurtle(url) {
+      // cache-bust: the pod data changes between visits; a cached response
+      // would show a stale active-plan pointer or stale plan content
+      const busted = `${url}${url.includes('?') ? '&' : '?'}t=${Date.now()}`;
+      const res = await fetch(busted, { headers: { Accept: 'text/turtle' } });
+      if (!res.ok) throw new Error(`${res.status} ${url}`);
+      return res.text();
+    }
+
+    async function parseTurtle(text, baseIRI) {
+      const { Parser, Store } = await importN3();
+      const g = new Store();
+      new Parser({ baseIRI }).parse(text).forEach(q => g.addQuad(q));
+      return g;
+    }
+
+    let n3Promise = null;
+    function importN3() {
+      if (!n3Promise) n3Promise = import('https://cdn.jsdelivr.net/npm/n3@1.17.2/+esm');
+      return n3Promise;
+    }
+
+    /** Discover plan containers by querying each sub-container's own
+     *  listing for a plan.ttl resource — no hard-coded slugs. */
+    async function discoverPlanDocs() {
+      const base = new URL('.', location.href).pathname; // /dev/plans/
+      const indexText = await fetchTurtle(base);
+      const g = await parseTurtle(indexText, location.origin + base);
+      const contains = g.getQuads(null, 'http://www.w3.org/ns/ldp#contains', null)
+        .map(q => q.object.value)
+        .filter(u => u.endsWith('/'));
+      const docs = [];
+      for (const dir of contains) {
+        const dirText = await fetchTurtle(dir);
+        const dg = await parseTurtle(dirText, dir);
+        const hasPlan = dg.getQuads(null, 'http://www.w3.org/ns/ldp#contains', null)
+          .map(q => q.object.value)
+          .find(u => u.endsWith('plan.ttl'));
+        if (hasPlan) docs.push(hasPlan);
+      }
+      return docs;
+    }
+
+    let agentsCache = null;
+    async function loadAgents() {
+      if (agentsCache) return agentsCache;
+      try {
+        const text = await fetchTurtle(new URL('agents.ttl', location.href).href);
+        const g = await parseTurtle(text, new URL('agents.ttl', location.href).href);
+        agentsCache = {};
+        for (const q of g.getQuads(null, null, null)) {
+          const s = q.subject.value;
+          agentsCache[s] ??= {};
+          if (q.predicate.value === 'http://xmlns.com/foaf/0.1/name') agentsCache[s].label = q.object.value;
+          if (q.predicate.value === RDFS + 'label' && !agentsCache[s].label) agentsCache[s].label = q.object.value;
+          if (s.startsWith('http') && !s.includes('agents.ttl')) agentsCache[s].webid = true;
+        }
+      } catch { agentsCache = {}; }
+      return agentsCache;
+    }
+
+    function graphToPlan(g, docUri, agents) {
+      const planIri = g.getQuads(null, RDF_TYPE, PLAN + 'Plan')[0]?.subject.value;
+      if (!planIri) throw new Error('no plan:Plan in ' + docUri);
+      const obj = (s, p) => g.getQuads(s, p, null)[0]?.object.value;
+      const objs = (s, p) => g.getQuads(s, p, null).map(q => q.object.value);
+      // resolve entry objects (schema:Comment: schema:text + prov:wasAttributedTo [+ dct:created])
+      const entryList = (s, p) => objs(s, PLAN + p).map(iri => {
+        const text = obj(iri, SCHEMA + 'text');
+        if (text === undefined) return { text: iri, agents: [], iri }; // not an entry resource (legacy literal IRI)
+        const agentList = objs(iri, PROV + 'wasAttributedTo').map(a => agents[a] ?? { label: a.split('#').pop() ?? a, webid: true });
+        // normalize: xsd:date values become midnight-UTC instants so they compare
+        // correctly against xsd:dateTime modified stamps
+        const created = obj(iri, DCT + 'created');
+        return { text, agents: agentList, iri, created: created ? (created.length === 10 ? created + 'T00:00:00Z' : created) : undefined,
+          references: objs(iri, DCT + 'references'), sources: objs(iri, DCT + 'source') };
+      });
+      const plan = {
+        iri: planIri,
+        docUri,
+        title: obj(planIri, DCT + 'title'),
+        description: obj(planIri, DCT + 'description'),
+        status: obj(planIri, PLAN + 'status')?.split('#').pop() ?? 'draft',
+        created: obj(planIri, DCT + 'created'),
+        modified: obj(planIri, DCT + 'modified'),
+        goal: entryList(planIri, 'goal')[0],
+        contexts: entryList(planIri, 'context'),
+        decisions: entryList(planIri, 'decision'),
+        options: entryList(planIri, 'option'),
+        userStories: entryList(planIri, 'userStory'),
+        outOfScope: entryList(planIri, 'outOfScope'),
+        openQuestions: entryList(planIri, 'openQuestion'),
+        notes: entryList(planIri, 'note'),
+        files: objs(planIri, PLAN + 'touchesFile'),
+        tasks: [],
+      };
+      const taskIris = objs(planIri, PLAN + 'hasTask').sort();
+      for (const t of taskIris) {
+        plan.tasks.push({
+          iri: t,
+          title: obj(t, DCT + 'title') ?? t.split('/').pop(),
+          status: obj(t, PLAN + 'status')?.split('#').pop() ?? 'planned',
+          created: obj(t, DCT + 'created'),
+          modified: obj(t, DCT + 'modified'),
+          goal: entryList(t, 'goal')[0],
+          scope: entryList(t, 'scope'),
+          verification: entryList(t, 'verification'),
+          outOfScope: entryList(t, 'outOfScope'),
+          decisions: entryList(t, 'decision'),
+          openQuestions: entryList(t, 'openQuestion'),
+          notes: entryList(t, 'note'),
+          dependsOn: objs(t, PLAN + 'dependsOn'),
+          files: objs(t, PLAN + 'touchesFile'),
+        });
+      }
+      // entry -> owning container, for jumping to cross-task references:
+      // the board needs to know which task sheet (or plan section) holds an entry IRI
+      plan.entryOwners = {};
+      plan.entriesByIri = {};
+      for (const t of plan.tasks) for (const list of [t.goal, ...t.scope, ...t.verification, ...t.outOfScope, ...t.decisions, ...t.openQuestions, ...t.notes]) if (list?.iri) {
+        plan.entryOwners[list.iri] = t.iri;
+        plan.entriesByIri[list.iri] = list;
+      }
+      for (const list of [...plan.contexts, ...plan.decisions, ...plan.options, ...plan.userStories, ...plan.outOfScope, ...plan.openQuestions, ...plan.notes, ...(plan.goal ? [plan.goal] : [])]) if (list?.iri) plan.entriesByIri[list.iri] = list;
+      return plan;
+    }
+
+    async function loadPlans() {
+      const docs = await discoverPlanDocs();
+      const plans = [];
+      const agents = await loadAgents();
+      for (const planDoc of docs) {
+        const text = await fetchTurtle(planDoc);
+        const g = await parseTurtle(text, planDoc);
+        plans.push(graphToPlan(g, planDoc, agents));
+      }
+      if (!plans.length) throw new Error('no plans found in ' + location.pathname);
+      let activeIri = null;
+      try {
+        const aText = await fetchTurtle(new URL('active.ttl', location.href).href);
+        const ag = await parseTurtle(aText, new URL('active.ttl', location.href).href);
+        activeIri = ag.getQuads(null, PLAN + 'active', null)[0]?.object.value ?? null;
+      } catch { /* pointer file missing -> fall back to first plan */ }
+      return { plans, activeIri };
+    }
+
+    // ---- shared helpers ------------------------------------------------
+
+    const STATUS_ORDER = ['draft', 'planned', 'in-progress', 'done'];
+    const STATUS_LABEL = { draft: 'Draft', planned: 'Planned', 'in-progress': 'In progress', done: 'Done', deferred: 'Deferred', abandoned: 'Abandoned' };
+
+    function statusChip(status) {
+      return html`<span class="chip chip-${status}">${STATUS_LABEL[status] ?? status}</span>`;
+    }
+
+    const chipStyles = css`
+      .chip { display: inline-block; font-size: .72rem; font-weight: 500; padding: .1rem .55rem; border-radius: 999px; border: 1px solid; }
+      .chip-done { background: var(--done-bg); border-color: var(--done-border); color: var(--done); }
+      .chip-planned { background: var(--planned-bg); border-color: var(--planned-border); color: var(--planned); }
+      .chip-in-progress { background: var(--progress-bg); border-color: var(--progress-border); color: var(--progress); }
+      .chip-draft { background: var(--planned-bg); border-color: var(--planned-border); color: var(--planned); }
+      .chip-deferred, .chip-abandoned { background: #fef2f2; border-color: #fecaca; color: #b91c1c; }
+    `;
+
+    const fileTagStyles = css`
+      .file, code { background: #f1f5f9; border: 1px solid #e2e8f0; padding: .05rem .4rem; border-radius: 4px; font-family: var(--mono); font-size: .78rem; color: #334155; }
+    `;
+
+    // ---- Board (the validated prototype design) -------------------------
+
+    class PlansBoard extends LitElement {
+      static properties = { plan: {}, reviewed: {}, copiedUri: {} };
+      openTask = null;
+      reviewKey = '';
+      static styles = [chipStyles, fileTagStyles, css`
+        :host { display: block; }
+        .plan-head h1 { margin: 0 0 .35rem; font-size: 1.45rem; letter-spacing: -.01em; }
+        .plan-head .meta { color: var(--muted); font-size: .85rem; margin-bottom: .75rem; }
+        .columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; align-items: start; }
+        .col h2 { font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 .5rem; }
+        .card { border: 1px solid var(--border); border-radius: 10px; padding: .7rem .85rem; margin-bottom: .6rem; background: var(--surface); cursor: pointer; box-shadow: 0 1px 2px rgba(16,24,40,.04); }
+        .card:hover { border-color: #c7cdd6; }
+        .card.done { opacity: .7; }
+        /* tasks added/changed since the last review: left accent bar */
+        .card.is-new { box-shadow: inset 3px 0 0 #10b981; }
+        .card.is-new:hover { border-color: #c7cdd6; }
+        .card h3 { margin: 0 0 .35rem; font-size: .95rem; font-weight: 600; }
+        .goal { font-size: .82rem; color: var(--muted); line-height: 1.4;
+          display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        p { margin: .4rem 0; }
+        /* full-screen task detail */
+        .overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, .45); z-index: 50; display: flex; align-items: flex-start; justify-content: center; padding: 3rem 1rem; overflow-y: auto; }
+        .sheet { background: var(--surface); border-radius: 14px; max-width: 760px; width: 100%; padding: 1.5rem 1.75rem 2rem; box-shadow: 0 20px 50px rgba(0,0,0,.3); }
+        .sheet-head { display: flex; justify-content: flex-end; align-items: center; gap: .4rem; margin-bottom: .5rem; }
+        .sheet h3 { margin: 0; font-size: 1.2rem; letter-spacing: -.01em; margin-right: auto; }
+        .sheet .badge-copy { margin-top: 0; }
+        .sheet.copied { outline: 2px solid #86efac; outline-offset: 2px; }
+        .sheet .meta { color: var(--muted); font-size: .85rem; margin-bottom: .8rem; }
+        .close { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--muted); line-height: 1; padding: .1rem .3rem; border-radius: 6px; }
+        .close:hover { background: var(--planned-bg); color: var(--text); }
+        .section h4 { font-weight: 600; font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin: 1.1rem 0 .25rem; }
+        .section ul { margin: .2rem 0; padding-left: 1.2rem; }
+        .section li { margin: .3rem 0; }
+        /* plan-level detail sections below the board */
+        .section h4 { font-weight: 600; font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin: 1.1rem 0 .25rem; }
+        .section ul { margin: .2rem 0; padding-left: 1.2rem; }
+        .section li { margin: .3rem 0; }
+        /* plan-level detail sections below the board: each in its own card */
+        .plan-details { margin-top: 1.75rem; max-width: 900px; display: grid; gap: .8rem; }
+        .plan-details .section {
+          background: var(--surface);
+          border: 1px solid var(--border);
+          border-radius: 10px;
+          padding: .8rem 1rem;
+          box-shadow: 0 1px 2px rgba(16,24,40,.04);
+        }
+        .plan-details .section h4 { margin: 0 0 .45rem; }
+        .plan-details p { margin: .25rem 0; }
+        .plan-details code { background: var(--accent-soft); border-color: transparent; }
+        /* entry rows: copy button in the left gutter, content column beside it.
+           Hovering the copy button highlights the row it copies (CSS :has, no JS). */
+        .entry { display: flex; align-items: flex-start; gap: .55rem; margin: .25rem -.2rem; padding: .2rem .2rem; border-radius: 8px; transition: background .15s; }
+        .entry:has(> .badge-copy:hover) { background: var(--accent-soft); }
+        /* copied state must win over the hover highlight (same/hi spec, later rule) */
+        .entry.copied:has(> .badge-copy) { background: #ecfdf3; }
+        .entry.is-new { box-shadow: inset 3px 0 0 #10b981; padding-left: .45rem; }
+        .entry > .badge-copy { flex: none; margin-top: .1rem; }
+        .entry .content { flex: 1; min-width: 0; }
+        .entry .badges { display: inline-flex; gap: .3rem; margin-bottom: .15rem; }
+        .entry .text { display: block; }
+        .badge { font-size: .62rem; font-weight: 600; padding: .05rem .4rem; border-radius: 4px; border: 1px solid; vertical-align: 1px; }
+        .badge-human { background: var(--accent-soft); border-color: transparent; color: var(--accent); }
+        .badge-llm { background: #f1f5f9; border-color: #cbd5e1; color: #475569; }
+        .badge-date { background: transparent; border-color: var(--border); color: var(--muted); font-weight: 400; }
+        .badge-new { background: transparent; border-color: var(--border); color: var(--done); font-weight: 700; letter-spacing: .04em; }
+        .badge-copy { background: var(--surface); border-color: var(--border); color: var(--muted); cursor: pointer; font-weight: 600; font-family: var(--mono); font-size: .8rem; padding: .1rem .45rem; min-width: 1.9rem; }
+        .badge-copy:hover { border-color: var(--accent); color: var(--accent); }
+        .badge.badge-copy.copied { border-color: var(--done); color: var(--done); }
+        .badge title { font-weight: 400; }
+        /* references: clickable chips under the entry text, jump + flash on click */
+        .refs { display: inline-flex; flex-wrap: wrap; gap: .3rem; margin-top: .2rem; }
+        .ref-link { font-size: .68rem; font-weight: 600; padding: .05rem .45rem; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); color: var(--accent); cursor: pointer; text-decoration: none; }
+        .ref-link:hover { border-color: var(--accent); background: var(--accent-soft); }
+        .ref-link.ref-ext { color: var(--muted); font-weight: 400; }
+        .ref-link.ref-ext:hover { color: var(--accent); }
+        /* flash: brief highlight of the jumped-to entry */
+        @keyframes entry-flash { 0%, 60% { background: var(--accent-soft); box-shadow: inset 3px 0 0 var(--accent); } 100% { background: transparent; box-shadow: none; } }
+        .entry.flash { animation: entry-flash 1.6s ease-out; }
+        .review-btn { font-size: .75rem; padding: .2rem .6rem; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); cursor: pointer; }
+        .review-btn:hover { border-color: #10b981; color: var(--done); }
+        .review-row { display: flex; align-items: baseline; gap: .6rem; margin: .35rem 0 .75rem; }
+        .reviewed-info { color: var(--muted); font-size: .78rem; }
+      `];
+      constructor() { super(); this.plan = null; this.reviewed = null; this.copiedUri = null; }
+      willUpdate(changed) {
+        if (changed.has('plan') && this.plan) {
+          // per-plan review baseline: stored only after the user explicitly
+          // clicks "Mark reviewed". Until then reviewed stays null and every
+          // timestamped entry counts as NEW (first-visit behaviour).
+          this.reviewKey = 'plans-reviewed:v2:' + (this.plan.docUri ?? this.plan.iri);
+          this.reviewed = localStorage.getItem(this.reviewKey);
+        }
+      }
+      // recency cutoff: the stored "last reviewed" instant of THIS plan
+      // (localStorage, keyed per plan doc); only set by the "Mark reviewed"
+      // button. With no baseline (reviewed = null) every timestamped entry
+      // counts as NEW — nothing is silently swallowed on first visit.
+      isNew(instant) {
+        return !!(instant && (this.reviewed == null || instant > this.reviewed));
+      }
+      markReviewed() {
+        this.reviewed = new Date().toISOString();
+        localStorage.setItem(this.reviewKey, this.reviewed);
+        this.requestUpdate();
+      }
+      open(iri) { this.openTask = iri; this.requestUpdate(); }
+      close() { this.openTask = null; this.requestUpdate(); }
+      onKeydown(e) {
+        if (e.key === 'Escape' && this.openTask) this.close();
+      }
+      render() {
+        const p = this.plan;
+        const cols = STATUS_ORDER.map(s => p.tasks.filter(t => t.status === s));
+        const task = p.tasks.find(t => t.iri === this.openTask);
+        return html`
+          <div class="plan-head">
+            <h1>${p.title}</h1>
+            <div class="meta">${statusChip(p.status)} ${p.created ? html`· created ${p.created?.slice(0,10)}` : ''} ${p.modified ? html`· updated ${p.modified}` : ''}</div>
+            <div class="review-row">
+              <button class="review-btn" title="Mark everything as seen — NEW highlights reset" @click=${() => this.markReviewed()}>Mark reviewed</button>
+              <span class="reviewed-info">new since ${this.reviewed ?? '—'}</span>
+            </div>
+          </div>
+          ${p.description ? html`<p>${p.description}</p>` : ''}
+          <div class="columns" @keydown=${e => this.onKeydown(e)}>
+            ${STATUS_ORDER.map((s, i) => html`
+              <div class="col">
+                <h2>${STATUS_LABEL[s]} (${cols[i].length})</h2>
+                ${cols[i].map(t => html`
+                  <div class="card ${t.status}${this.isNew(t.modified ?? t.created) ? ' is-new' : ''}" role="button" tabindex="0"
+                       @click=${() => this.open(t.iri)}
+                       @keydown=${e => { if (e.key === 'Enter') this.open(t.iri); }}>
+                    <h3>${t.title}</h3>
+                    ${t.goal ? html`<div class="goal">${t.goal.text}</div>` : ''}
+                  </div>
+                `)}
+              </div>
+            `)}
+          </div>
+          ${this.renderPlanDetails(p)}
+          ${task ? this.renderDetail(task) : ''}
+        `;
+      }
+      renderEntry(e, since) {
+        if (typeof e === 'string') return html`<li>${e}</li>`; // legacy literal
+        const isNew = this.isNew(e.created);
+        const badges = html`<span class="badges">
+          ${isNew ? html`<span class="badge badge-new" title="added ${e.created}">NEW</span>` : ''}
+          ${e.agents.map(a => html`<span class="badge ${a.webid ? 'badge-human' : 'badge-llm'}" title="${a.label}">${a.label}</span>`)}
+          ${e.created ? html`<span class="badge badge-date" title="recorded ${e.created}">${e.created.slice(0, 10)}</span>` : ''}
+        </span>`;
+        const justCopied = this.copiedUri === e.iri;
+        const copyFailed = this.copiedUri === 'error:' + e.iri;
+        const refs = this.renderRefs(e);
+        const sources = this.renderSources(e);
+        return html`<li class="entry${isNew ? ' is-new' : ''}${justCopied ? ' copied' : ''}${copyFailed ? ' copy-failed' : ''}"
+                        data-entry-iri=${e.iri ?? ''}>
+          ${e.iri ? html`<button class="badge badge-copy" title="Copy URI: ${e.iri}" @click=${ev => this.copyUri(ev, e.iri)}>${justCopied ? '✓' : copyFailed ? '✗' : '⧉'}</button>` : ''}
+          <span class="content">
+            <span class="badges">${badges}</span>
+            <span class="text">${e.text}</span>
+            ${refs ? html`<span class="refs">${refs}</span>` : ''}
+            ${sources ? html`<span class="refs">${sources}</span>` : ''}
+          </span>
+        </li>`;
+      }
+      // clickable chips for the entry's dct:references targets; clicking jumps
+      // to the referenced entry (opening its task sheet if it lives in another
+      // task) and flash-highlights it
+      renderRefs(e) {
+        const refs = (e.references ?? []).filter(r => r && this.plan.entriesByIri[r]);
+        if (!refs.length) return null;
+        return refs.map(r => {
+          const target = this.plan.entriesByIri[r];
+          const slug = r.split('#').pop() ?? r;
+          return html`<a class="ref-link" title="${target.text}" @click=${ev => { ev.preventDefault(); this.jumpTo(r); }}>${slug}</a>`;
+        });
+      }
+      // source chips: external links (e.g. the GitHub review comment an entry
+      // derives from); opened in a new tab, labelled by the URL fragment
+      renderSources(e) {
+        const sources = (e.sources ?? []).filter(Boolean);
+        if (!sources.length) return null;
+        return sources.map(src => {
+          let label = src.split('/').pop() ?? src;
+          const hashIndex = label.indexOf('#');
+          if (hashIndex >= 0) label = label.slice(hashIndex + 1);
+          label = label.replace(/^discussion_r/, 'review r');
+          return html`<a class="ref-link ref-ext" href=${src} target="_blank" rel="noopener" title="Source: ${src}">${label} ↗</a>`;
+        });
+      }
+      jumpTo(iri) {
+        const owner = this.plan.entryOwners[iri];
+        const wasClosed = !this.openTask;
+        if (owner && owner !== this.openTask) this.openTask = owner;
+        this.requestUpdate();
+        // after the (possibly newly opened) sheet renders, scroll + highlight
+        requestAnimationFrame(() => {
+          const el = this.shadowRoot?.querySelector(`[data-entry-iri="${CSS.escape(iri)}"]`);
+          if (!el) return;
+          el.scrollIntoView({ behavior: wasClosed ? 'auto' : 'smooth', block: 'center' });
+          el.classList.add('flash');
+          el.addEventListener('animationend', () => el.classList.remove('flash'), { once: true });
+        });
+      }
+      copyUri(ev, iri) {
+        ev.stopPropagation();
+        const done = ok => {
+          this.copiedUri = ok ? iri : 'error:' + iri;
+          this.requestUpdate();
+          setTimeout(() => { this.copiedUri = null; this.requestUpdate(); }, 1500);
+        };
+        navigator.clipboard.writeText(iri).then(() => done(true), () => done(false));
+      }
+      renderPlanDetails(p) {
+        const since = this.reviewed;
+        const sections = [
+          { title: 'Goal', body: p.goal ? html`<div class="entry${this.isNew(p.goal.created) ? ' is-new' : ''}">${p.goal.iri ? html`<button class="badge badge-copy" title="Copy URI: ${p.goal.iri}" @click=${ev => this.copyUri(ev, p.goal.iri)}>⧉</button>` : ''}<span class="content"><span class="text">${p.goal.text}</span></span></div>` : '' },
+          { title: 'User stories', body: p.userStories.length ? html`<ul>${p.userStories.map(s => this.renderEntry(s, since))}</ul>` : '' },
+          { title: 'Context', body: p.contexts.length ? html`<ul>${p.contexts.map(c => this.renderEntry(c, since))}</ul>` : '' },
+          { title: 'Decisions', body: p.decisions.length ? html`<ul>${p.decisions.map(d => this.renderEntry(d, since))}</ul>` : '' },
+          { title: 'Options considered', body: p.options.length ? html`<ul>${p.options.map(o => this.renderEntry(o, since))}</ul>` : '' },
+          { title: 'Open questions', body: p.openQuestions.length ? html`<ul>${p.openQuestions.map(q => this.renderEntry(q, since))}</ul>` : '' },
+          { title: 'Notes', body: p.notes.length ? html`<ul>${p.notes.map(n => this.renderEntry(n, since))}</ul>` : '' },
+          { title: 'Out of scope', body: p.outOfScope.length ? html`<ul>${p.outOfScope.map(o => this.renderEntry(o, since))}</ul>` : '' },
+          { title: 'Files', body: p.files.length ? html`<div class="files">${p.files.map(f => html`<code>${f}</code>`)}</div>` : '' },
+        ].filter(s => s.body);
+        if (!sections.length) return '';
+        return html`
+          <div class="plan-details">
+            ${sections.map(s => html`<div class="section"><h4>${s.title}</h4>${s.body}</div>`)}
+          </div>
+        `;
+      }
+      renderDetail(t) {
+        const taskCopied = this.copiedUri === t.iri;
+        return html`
+          <div class="overlay" @click=${e => { if (e.target.classList.contains('overlay')) this.close(); }}>
+            <div class="sheet${taskCopied ? ' copied' : ''}" role="dialog" aria-modal="true" aria-label="${t.title}">
+              <div class="sheet-head">
+                <h3>${t.title}</h3>
+                <button class="badge badge-copy" title="Copy task URI: ${t.iri}" @click=${ev => this.copyUri(ev, t.iri)}>${taskCopied ? '✓' : '⧉'}</button>
+                <button class="close" @click=${() => this.close()} aria-label="Close">✕</button>
+              </div>
+              <div class="meta">${statusChip(t.status)}${t.dependsOn.length ? ` · depends on ${t.dependsOn.map(d => d.split('/').pop()).join(', ')}` : ''}${t.modified ? ` · updated ${t.modified}` : ''}</div>
+              ${t.files.length ? html`<div class="files">${t.files.map(f => html`<code>${f}</code>`)}</div>` : ''}
+              ${t.goal ? html`<div class="section"><h4>Goal</h4><div class="entry"><span class="content"><span class="text">${t.goal.text}</span></span></div></div>` : ''}
+              ${t.scope.length ? html`<div class="section"><h4>Scope</h4><ul>${t.scope.map(x => this.renderEntry(x))}</ul></div>` : ''}
+              ${t.verification.length ? html`<div class="section"><h4>Verification</h4><ul>${t.verification.map(x => this.renderEntry(x))}</ul></div>` : ''}
+              ${t.decisions.length ? html`<div class="section"><h4>Decisions</h4><ul>${t.decisions.map(x => this.renderEntry(x))}</ul></div>` : ''}
+              ${t.openQuestions.length ? html`<div class="section"><h4>Open questions</h4><ul>${t.openQuestions.map(x => this.renderEntry(x))}</ul></div>` : ''}
+              ${t.outOfScope.length ? html`<div class="section"><h4>Out of scope</h4><ul>${t.outOfScope.map(x => this.renderEntry(x))}</ul></div>` : ''}
+              ${t.notes.length ? html`<div class="section"><h4>Notes</h4><ul>${t.notes.map(x => this.renderEntry(x))}</ul></div>` : ''}
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    // ---- app shell ------------------------------------------------------
+
+    class PlansApp extends LitElement {
+      static properties = { plans: {}, selected: {} };
+      static styles = css`
+        :host { display: block; padding: 1.5rem 2rem 5rem; max-width: 1100px; margin: 0 auto; }
+        .muted { color: var(--muted); font-size: .85rem; }
+        .loading { padding: 2rem; color: var(--muted); }
+        .error { padding: 1rem; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; color: #991b1b; }
+      `;
+      constructor() {
+        super();
+        this.plans = null;
+        this.selected = null;
+        window.addEventListener('keydown', e => {
+          if (e.key === 'Escape') {
+            const board = this.shadowRoot?.querySelector('plans-board');
+            board?.close?.();
+          }
+        });
+      }
+      async connectedCallback() {
+        super.connectedCallback();
+        try {
+          const { plans, activeIri } = await loadPlans();
+          this.plans = plans;
+          // ?plan= URL param wins over the pointer (deep links keep working);
+          // otherwise render the active plan from active.ttl
+          const planParam = new URL(location.href).searchParams.get('plan');
+          this.selected = planParam
+            ? (plans.find(p => p.docUri === location.origin + planParam)?.iri ?? plans[0].iri)
+            : ((activeIri && plans.find(p => p.iri === activeIri)?.iri) ?? plans[0].iri);
+        } catch (e) { this.error = e; }
+        // the plan data (esp. the active pointer) changes outside this tab;
+        // re-read when the user comes back to it
+        document.addEventListener('visibilitychange', async () => {
+          if (document.visibilityState !== 'visible') return;
+          try {
+            const { plans, activeIri } = await loadPlans();
+            this.plans = plans;
+            const planParam = new URL(location.href).searchParams.get('plan');
+            this.selected = planParam
+              ? (plans.find(p => p.docUri === location.origin + planParam)?.iri ?? plans[0].iri)
+              : ((activeIri && plans.find(p => p.iri === activeIri)?.iri) ?? plans[0].iri);
+            this.error = null;
+          } catch (e) { /* keep last good state */ }
+          this.requestUpdate();
+        });
+        this.requestUpdate();
+      }
+      render() {
+        if (this.error) return html`<div class="error">Failed to load plans: ${this.error.message}</div>`;
+        if (!this.plans) return html`<div class="loading">Loading plans…</div>`;
+        const plan = this.plans.find(p => p.iri === this.selected) ?? this.plans[0];
+        return html`<plans-board .plan=${plan}></plans-board>`;
+      }
+    }
+
+    customElements.define('plans-board', PlansBoard);
+    customElements.define('plans-app', PlansApp);
+  </script>
+</head>
+<body>
+  <plans-app></plans-app>
+</body>
+</html>

@@ -6,21 +6,29 @@
 
 # Class: SearchGateway
 
-Defined in: [src/search/SearchGateway.ts:9](https://github.com/pod-os/PodOS/blob/main/core/src/search/SearchGateway.ts#L9)
+Defined in: [src/search/SearchGateway.ts:12](https://github.com/pod-os/PodOS/blob/main/core/src/search/SearchGateway.ts#L12)
 
 ## Constructors
 
 ### Constructor
 
-> **new SearchGateway**(`store`): `SearchGateway`
+> **new SearchGateway**(`store`, `session`, `profileGateway`): `SearchGateway`
 
-Defined in: [src/search/SearchGateway.ts:12](https://github.com/pod-os/PodOS/blob/main/core/src/search/SearchGateway.ts#L12)
+Defined in: [src/search/SearchGateway.ts:18](https://github.com/pod-os/PodOS/blob/main/core/src/search/SearchGateway.ts#L18)
 
 #### Parameters
 
 ##### store
 
 [`Store`](Store.md)
+
+##### session
+
+[`PodOsSession`](../interfaces/PodOsSession.md)
+
+##### profileGateway
+
+[`ProfileGateway`](ProfileGateway.md)
 
 #### Returns
 
@@ -32,7 +40,7 @@ Defined in: [src/search/SearchGateway.ts:12](https://github.com/pod-os/PodOS/blo
 
 > **addToLabelIndex**(`thing`, `labelIndex`): `Promise`\<`void`\>
 
-Defined in: [src/search/SearchGateway.ts:32](https://github.com/pod-os/PodOS/blob/main/core/src/search/SearchGateway.ts#L32)
+Defined in: [src/search/SearchGateway.ts:78](https://github.com/pod-os/PodOS/blob/main/core/src/search/SearchGateway.ts#L78)
 
 #### Parameters
 
@@ -52,17 +60,18 @@ Defined in: [src/search/SearchGateway.ts:32](https://github.com/pod-os/PodOS/blo
 
 ### buildSearchIndex()
 
-> **buildSearchIndex**(`profile`): `Promise`\<[`SearchIndex`](SearchIndex.md)\>
+> **buildSearchIndex**(): `Promise`\<[`SearchIndex`](SearchIndex.md)\>
 
-Defined in: [src/search/SearchGateway.ts:20](https://github.com/pod-os/PodOS/blob/main/core/src/search/SearchGateway.ts#L20)
+Defined in: [src/search/SearchGateway.ts:38](https://github.com/pod-os/PodOS/blob/main/core/src/search/SearchGateway.ts#L38)
 
-Fetch the private label index for the given profile and build a search index from it
+Build a search index on demand.
 
-#### Parameters
+While logged in, the profile is resolved from the current session's webId
+and the index is built from the profile's label indexes and cached, so that
+repeated calls return the same instance.
 
-##### profile
-
-[`WebIdProfile`](WebIdProfile.md)
+While logged out, a fresh empty index is returned that is NOT cached —
+the next call after login is a cache miss and builds.
 
 #### Returns
 
@@ -70,11 +79,27 @@ Fetch the private label index for the given profile and build a search index fro
 
 ***
 
+### clear()
+
+> **clear**(): `void`
+
+Defined in: [src/search/SearchGateway.ts:59](https://github.com/pod-os/PodOS/blob/main/core/src/search/SearchGateway.ts#L59)
+
+Empties the cached search index in place and drops the cache reference, so
+that consumers already holding the instance see an empty index immediately
+and the next call to [buildSearchIndex](#buildsearchindex) builds a new index.
+
+#### Returns
+
+`void`
+
+***
+
 ### createDefaultLabelIndex()
 
 > **createDefaultLabelIndex**(`profile`): `Promise`\<[`LabelIndex`](LabelIndex.md)\>
 
-Defined in: [src/search/SearchGateway.ts:36](https://github.com/pod-os/PodOS/blob/main/core/src/search/SearchGateway.ts#L36)
+Defined in: [src/search/SearchGateway.ts:85](https://github.com/pod-os/PodOS/blob/main/core/src/search/SearchGateway.ts#L85)
 
 #### Parameters
 

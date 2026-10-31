@@ -1,12 +1,13 @@
 import { Mock, vi } from 'vitest';
-import { afterEach, describe, expect, h, it, render } from '@stencil/vitest';
+import { afterEach, beforeEach, describe, expect, h, it, render } from '@stencil/vitest';
 
 // @ts-ignore
 import { RichEditor } from './rich-editor';
 import './pos-markdown-document';
 import { EMPTY, of, Subject } from 'rxjs';
 import { withinShadow } from '../../test/withinShadow';
-import { SolidFile } from '@pod-os/core';
+import { SolidFile, PodOS } from '@pod-os/core';
+import { mockOsProvider } from '../../test/mockPodOS.vitest';
 
 vi.mock('./shoelace', () => ({}));
 
@@ -23,6 +24,15 @@ vi.mock('./rich-editor', () => ({
 }));
 
 describe('pos-markdown-document', () => {
+  const mockOs = {
+    buildSearchIndex: vi.fn(),
+    store: { get: vi.fn() },
+  } as unknown as PodOS;
+
+  beforeEach(() => {
+    mockOsProvider(mockOs);
+  });
+
   afterEach(() => {
     vi.clearAllMocks();
   });

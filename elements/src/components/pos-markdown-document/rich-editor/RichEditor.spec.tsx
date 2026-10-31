@@ -2,20 +2,38 @@ import { vi } from 'vitest';
 import { afterEach, beforeEach, describe, expect, it } from '@stencil/vitest';
 
 import { RichEditor } from './RichEditor';
+import { PodOS } from '@pod-os/core';
 import { Subscription, tap } from 'rxjs';
+import { getByRole } from '@testing-library/dom';
 
 describe('RichEditor', () => {
+  const mockOs = {
+    buildSearchIndex: vi.fn().mockResolvedValue({ search: vi.fn().mockReturnValue([]) }),
+    store: { get: vi.fn() },
+  } as unknown as PodOS;
+
+  describe('accessibility announcements', () => {
+    beforeEach(() => {
+      new RichEditor(document.body, '', 'https://pod.test', mockOs);
+    });
+    it('is announced as a multiline textbox with autocomplete', () => {
+      const textbox = getByRole(document.body, 'textbox');
+      expect(textbox).toHaveAttribute('aria-multiline', 'true');
+      expect(textbox).toHaveAttribute('aria-autocomplete', 'list');
+    });
+  });
+
   describe('rendering', () => {
     it('basic html', () => {
       const div = document.createElement('div');
-      new RichEditor(div, '# Hello World', 'https://pod.test');
+      new RichEditor(div, '# Hello World', 'https://pod.test', mockOs);
       expect(div.children[0].innerHTML).toEqual(`<h1>Hello World</h1>`);
     });
 
     describe('Images', () => {
       it('renders image as pos-image', () => {
         const div = document.createElement('div');
-        new RichEditor(div, '![](https://image.test/image.png)', 'https://pod.test');
+        new RichEditor(div, '![](https://image.test/image.png)', 'https://pod.test', mockOs);
         expect(div.children[0].innerHTML).toEqual(
           `<pos-image src="https://image.test/image.png" contenteditable="false" class="ProseMirror-selectednode"></pos-image>`,
         );
@@ -23,7 +41,7 @@ describe('RichEditor', () => {
 
       it('renders image with relative src relative to the base url', () => {
         const div = document.createElement('div');
-        new RichEditor(div, '![](image.png)', 'https://pod.test/container/readme.md');
+        new RichEditor(div, '![](image.png)', 'https://pod.test/container/readme.md', mockOs);
         expect(div.children[0].innerHTML).toEqual(
           `<pos-image src="https://pod.test/container/image.png" contenteditable="false" class="ProseMirror-selectednode"></pos-image>`,
         );
@@ -31,7 +49,7 @@ describe('RichEditor', () => {
 
       it('renders image alt text', () => {
         const div = document.createElement('div');
-        new RichEditor(div, '![Some image](https://image.test/image.png)', 'https://pod.test');
+        new RichEditor(div, '![Some image](https://image.test/image.png)', 'https://pod.test', mockOs);
         expect(div.children[0].innerHTML).toEqual(
           `<pos-image src="https://image.test/image.png" alt="Some image" contenteditable="false" class="ProseMirror-selectednode"></pos-image>`,
         );
@@ -39,17 +57,52 @@ describe('RichEditor', () => {
 
       it('renders image title', () => {
         const div = document.createElement('div');
-        new RichEditor(div, '![](https://image.test/image.png "Some image")', 'https://pod.test');
+        new RichEditor(div, '![](https://image.test/image.png "Some image")', 'https://pod.test', mockOs);
         expect(div.children[0].innerHTML).toEqual(
           `<pos-image src="https://image.test/image.png" title="Some image" contenteditable="false" class="ProseMirror-selectednode"></pos-image>`,
         );
       });
     });
 
+    describe('Mentions', () => {
+      it('renders a mention as pos-rich-link with the mention class', () => {
+        const div = document.createElement('div');
+        new RichEditor(
+          div,
+          '[@ id="https://pod.test/alice/profile/card#me" label="Alice" char="#"]',
+          'https://pod.test',
+          mockOs,
+        );
+        expect(div.children[0].innerHTML).toEqual(
+          `<p><img class="ProseMirror-separator" alt=""><pos-rich-link uri="https://pod.test/alice/profile/card#me" data-type="mention" class="mention" data-id="https://pod.test/alice/profile/card#me" data-label="Alice" data-mention-suggestion-char="#" contenteditable="false">Alice</pos-rich-link><br class="ProseMirror-trailingBreak"></p>`,
+        );
+      });
+
+      it('renders a mention without explicit char attribute', () => {
+        const div = document.createElement('div');
+        new RichEditor(
+          div,
+          '[@ id="https://pod.test/alice/profile/card#me" label="Alice"]',
+          'https://pod.test',
+          mockOs,
+        );
+        expect(div.children[0].innerHTML).toEqual(
+          `<p><img class="ProseMirror-separator" alt=""><pos-rich-link uri="https://pod.test/alice/profile/card#me" data-type="mention" class="mention" data-id="https://pod.test/alice/profile/card#me" data-label="Alice" data-mention-suggestion-char="@" contenteditable="false">Alice</pos-rich-link><br class="ProseMirror-trailingBreak"></p>`,
+        );
+      });
+
+      it('round-trips a mention through markdown', () => {
+        const markdown = '[@ id="https://pod.test/alice/profile/card#me" label="Alice"]';
+        const div = document.createElement('div');
+        const editor = new RichEditor(div, markdown, 'https://pod.test', mockOs);
+        expect(editor.getContent()).toEqual(markdown);
+      });
+    });
+
     describe('Links', () => {
       it('renders links as pos-rich-link', () => {
         const div = document.createElement('div');
-        new RichEditor(div, '[Link text](https://link.test/target)', 'https://pod.test');
+        new RichEditor(div, '[Link text](https://link.test/target)', 'https://pod.test', mockOs);
         expect(div.children[0].innerHTML).toEqual(
           `<p><pos-rich-link uri="https://link.test/target">Link text</pos-rich-link></p>`,
         );
@@ -57,7 +110,7 @@ describe('RichEditor', () => {
 
       it('renders relative links relative to the base URL', () => {
         const div = document.createElement('div');
-        new RichEditor(div, '[Link text](other.md)', 'https://pod.test/container/readme.md');
+        new RichEditor(div, '[Link text](other.md)', 'https://pod.test/container/readme.md', mockOs);
         expect(div.children[0].innerHTML).toEqual(
           `<p><pos-rich-link uri="https://pod.test/container/other.md">Link text</pos-rich-link></p>`,
         );
@@ -68,13 +121,13 @@ describe('RichEditor', () => {
   describe('editing', () => {
     it('is not editable initially', () => {
       const div = document.createElement('div');
-      const editor = new RichEditor(div, '# Hello World', 'https://pod.test');
+      const editor = new RichEditor(div, '# Hello World', 'https://pod.test', mockOs);
       expect(editor.isEditable()).toBe(false);
     });
 
     it('can start and stop editing', () => {
       const div = document.createElement('div');
-      const editor = new RichEditor(div, '# Hello World', 'https://pod.test');
+      const editor = new RichEditor(div, '# Hello World', 'https://pod.test', mockOs);
       editor.startEditing();
       expect(editor.isEditable()).toBe(true);
       editor.stopEditing();
@@ -94,7 +147,7 @@ describe('RichEditor', () => {
 
       it('debounces changes for 3 seconds', async () => {
         const div = document.createElement('div');
-        const editor = new RichEditor(div, '# Hello World\n\n', 'https://pod.test');
+        const editor = new RichEditor(div, '# Hello World\n\n', 'https://pod.test', mockOs);
         editor.startEditing();
         const save = vi.fn();
         subscription = editor
@@ -121,7 +174,7 @@ describe('RichEditor', () => {
 
       it('waits until changes have settled for 3 seconds', async () => {
         const div = document.createElement('div');
-        const editor = new RichEditor(div, '# Hello World\n\n', 'https://pod.test');
+        const editor = new RichEditor(div, '# Hello World\n\n', 'https://pod.test', mockOs);
         editor.startEditing();
         const save = vi.fn();
         subscription = editor
@@ -157,7 +210,7 @@ describe('RichEditor', () => {
 
     function editorWithContent(content: string) {
       const div = document.createElement('div');
-      new RichEditor(div, content, 'https://pod.test');
+      new RichEditor(div, content, 'https://pod.test', mockOs);
       return div.children[0].innerHTML;
     }
 

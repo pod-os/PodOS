@@ -1,0 +1,50 @@
+import { SuggestionProps } from '@tiptap/suggestion';
+import { MentionNodeAttrs } from '@tiptap/extension-mention';
+import { processSelectedMention } from './processSelectedMention';
+import { PodOS } from '@pod-os/core';
+
+export const render = (os: PodOS) => () => {
+  let menu: HTMLPosMentionMenuElement;
+  let unmount: () => void | undefined;
+
+  return {
+    onStart: (props: SuggestionProps<any, MentionNodeAttrs>) => {
+      menu = document.createElement('pos-mention-menu');
+      menu.items = props.items;
+      props.editor.view.dom.setAttribute('aria-controls', 'pos-mention-menu-listbox');
+      menu.controls = props.editor.view.dom;
+      menu.command = processSelectedMention(os, props.command);
+      unmount = props.mount(menu);
+      menu.selectedIndex = 0;
+    },
+    onUpdate: (props: SuggestionProps<any, MentionNodeAttrs>) => {
+      menu.items = props.items;
+      menu.selectedIndex = 0;
+      menu.command = processSelectedMention(os, props.command);
+    },
+    onExit: (props: SuggestionProps<any, MentionNodeAttrs>) => {
+      props.editor.view.dom.removeAttribute('aria-controls');
+      props.editor.view.dom.removeAttribute('aria-activedescendant');
+      unmount?.();
+    },
+    onKeyDown: ({ event }: { event: KeyboardEvent }) => {
+      switch (event.key) {
+        case 'ArrowDown':
+          menu.selectedIndex = (menu.selectedIndex + 1) % menu.items.length;
+          return true;
+        case 'ArrowUp':
+          menu.selectedIndex = (menu.selectedIndex - 1 + menu.items.length) % menu.items.length;
+          return true;
+        case 'Enter': {
+          const item = menu.items[menu.selectedIndex];
+          if (item) {
+            menu.command(item);
+          }
+          return true;
+        }
+        default:
+          return false;
+      }
+    },
+  };
+};

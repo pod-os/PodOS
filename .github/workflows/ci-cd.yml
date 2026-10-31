@@ -315,7 +315,7 @@ jobs:
         run: |
           sed -i "s/\"@pod-os\/core\": \"[^\"]*\"/\"@pod-os\/core\": \"${{ steps.bump-core.outputs.next-version }}\"/" package.json
       - name: Update package-lock.json
-        run: npm install --package-lock-only
+        run: npm install --package-lock-only --ignore-scripts
       - name: Commit and push version bumps
         run: |
           git add core/package.json elements/package.json package-lock.json

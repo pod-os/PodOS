@@ -2,7 +2,6 @@ import { PodOS, SearchIndex, Thing } from '@pod-os/core';
 import { Component, Event, EventEmitter, h, Listen, Prop, State, Watch } from '@stencil/core';
 import { Subject } from 'rxjs';
 
-import session from '../../store/session';
 import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../events/PodOsAware';
 import { debounce } from './debounce';
 
@@ -43,8 +42,6 @@ export class PosNavigation implements PodOsAware {
 
   @State() private resource: Thing = null;
 
-  private unsubscribeSessionChange?: () => void;
-
   private readonly changeEvents = new Subject<void>();
   private debouncedSearch = null;
 
@@ -62,29 +59,19 @@ export class PosNavigation implements PodOsAware {
     subscribePodOs(this);
     this.updateResource();
 
-    this.unsubscribeSessionChange = session.onChange('isLoggedIn', async isLoggedIn => {
-      if (isLoggedIn) {
-        await this.buildSearchIndex();
-      } else {
-        this.clearSearchIndex();
-      }
-    });
     this.debouncedSearch = this.changeEvents.pipe(debounce).subscribe(() => this.search());
   }
 
   disconnectedCallback() {
-    if (this.unsubscribeSessionChange) this.unsubscribeSessionChange();
     this.debouncedSearch?.unsubscribe();
   }
 
-  @Listen('pod-os:search:index-created')
+  /**
+   * Loads the search index shared by core, which core keeps fresh
+   * by rebuilding its cached instance on label-index writes.
+   */
   private async buildSearchIndex() {
-    this.searchIndex = await this.os.buildSearchIndex(session.state.profile);
-  }
-
-  @Listen('pod-os:search:index-updated')
-  rebuildSearchIndex() {
-    this.searchIndex.rebuild();
+    this.searchIndex = await this.os.buildSearchIndex();
   }
 
   @Listen('pod-os:navigate')
@@ -98,12 +85,9 @@ export class PosNavigation implements PodOsAware {
     this.dialogRef?.show();
   }
 
-  private clearSearchIndex() {
-    this.searchIndex?.clear();
-  }
-
   receivePodOs = async (os: PodOS) => {
     this.os = os;
+    await this.buildSearchIndex();
   };
 
   private onChange(event) {

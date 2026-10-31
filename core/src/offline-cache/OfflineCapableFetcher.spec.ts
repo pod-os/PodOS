@@ -94,6 +94,48 @@ describe(OfflineCapableFetcher.name, () => {
       },
     );
 
+    it("puts data to cache when rdflib dedups a repeated load", async () => {
+      // given a turtle document is fetched twice
+      const fetch = vi.fn();
+      mockTurtleDocument(
+        fetch,
+        "https://alice.pod.test/thing",
+        `
+      <https://alice.pod.test/thing#it> <http://www.w3.org/2000/01/rdf-schema#label> "A thing".
+    `,
+        { etag: 'W/"1234567890"' },
+      );
+      const store = graph();
+
+      const offlineCache = mockOfflineCache();
+      const fetcher = new OfflineCapableFetcher(store, {
+        fetch,
+        offlineCache,
+        isOnline: () => true,
+      });
+
+      // when the second load is answered by rdflib's dedup
+      await fetcher.load("https://alice.pod.test/thing");
+      await fetcher.load("https://alice.pod.test/thing");
+
+      // then the second load hits no network and flows through putToCache
+      // without breaking on the dedup answer
+      expect(fetch).toHaveBeenCalledTimes(1);
+      expect(offlineCache.put).toHaveBeenCalledTimes(2);
+      expect(offlineCache.put).toHaveBeenNthCalledWith(1, {
+        url: "https://alice.pod.test/thing",
+        revision: 'W/"1234567890"',
+        statements:
+          '<https://alice.pod.test/thing#it> <http://www.w3.org/2000/01/rdf-schema#label> "A thing" .',
+      });
+      expect(offlineCache.put).toHaveBeenNthCalledWith(2, {
+        url: "https://alice.pod.test/thing",
+        revision: 'W/"1234567890"',
+        statements:
+          '<https://alice.pod.test/thing#it> <http://www.w3.org/2000/01/rdf-schema#label> "A thing" .',
+      });
+    });
+
     it("uses current time as revision if no etag is given", async () => {
       vi.useFakeTimers({
         now: 1234,

@@ -1,0 +1,118 @@
+@prefix plan: <../plan-ontology.ttl#>.
+@prefix prov: <http://www.w3.org/ns/prov#>.
+@prefix schema: <https://schema.org/>.
+@prefix dct: <http://purl.org/dc/terms/>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+
+<#plan> a plan:Plan;
+    dct:title "Remember Me for the IdP in pos-login";
+    dct:description "When a user submits the login form, their chosen IdP URL is saved to the existing localSettings store (elements/src/store/settings.ts). On the next visit, pos-login-form reads that value back and pre-fills the IdP input, so the user only has to click Login instead of re-typing the URL. A 'Remember me' checkbox gives them explicit control over whether the IdP is persisted.";
+    plan:status plan:done;
+    plan:goal <#entry-plan-goal-01>;
+    plan:decision <#entry-plan-decision-01>;
+    plan:touchesFile "elements/src/store/settings.ts", "elements/src/components/pos-login-form/pos-login-form.tsx", "elements/src/components/pos-login-form/pos-login-form.css", "elements/src/components/pos-login-form/test/pos-login-form.spec.tsx", "elements/src/components/pos-login/pos-login.integration.spec.tsx";
+    plan:outOfScope <#entry-plan-outOfScope-01>, <#entry-plan-outOfScope-02>, <#entry-plan-outOfScope-03>.
+<#task-1-extend-settings-store> a plan:Task;
+    dct:title "Extend localSettings store with rememberedIdp";
+    plan:parent <#plan>;
+    plan:status plan:planned;
+    plan:touchesFile "elements/src/store/settings.ts";
+    plan:scope <#entry-task-1-extend-settings-store-scope-01>, <#entry-task-1-extend-settings-store-scope-02>;
+    plan:outOfScope <#entry-task-1-extend-settings-store-outOfScope-01>.
+<#task-2-login-form-remember-me> a plan:Task;
+    dct:title "pos-login-form: rememberMe state, pre-fill, submit, checkbox UI";
+    plan:parent <#plan>;
+    plan:status plan:planned;
+    plan:dependsOn <#task-1-extend-settings-store>;
+    plan:touchesFile "elements/src/components/pos-login-form/pos-login-form.tsx", "elements/src/components/pos-login-form/pos-login-form.css";
+    plan:scope <#entry-task-2-login-form-remember-me-scope-01>, <#entry-task-2-login-form-remember-me-scope-02>, <#entry-task-2-login-form-remember-me-scope-03>, <#entry-task-2-login-form-remember-me-scope-04>, <#entry-task-2-login-form-remember-me-scope-05>;
+    plan:outOfScope <#entry-task-2-login-form-remember-me-outOfScope-01>.
+<#task-3-unit-tests> a plan:Task;
+    dct:title "pos-login-form unit tests";
+    plan:parent <#plan>;
+    plan:status plan:planned;
+    plan:dependsOn <#task-2-login-form-remember-me>;
+    plan:touchesFile "elements/src/components/pos-login-form/test/pos-login-form.spec.tsx";
+    plan:scope <#entry-task-3-unit-tests-scope-01>, <#entry-task-3-unit-tests-scope-02>, <#entry-task-3-unit-tests-scope-03>, <#entry-task-3-unit-tests-scope-04>, <#entry-task-3-unit-tests-scope-05>, <#entry-task-3-unit-tests-scope-06>, <#entry-task-3-unit-tests-scope-07>.
+<#task-4-integration-test> a plan:Task;
+    dct:title "pos-login integration test: pre-fill on next open";
+    plan:parent <#plan>;
+    plan:dependsOn <#task-2-login-form-remember-me>;
+    plan:touchesFile "elements/src/components/pos-login/pos-login.integration.spec.tsx";
+    plan:scope <#entry-task-4-integration-test-scope-01>.
+<#entry-plan-goal-01> a schema:Comment;
+    schema:text "Remember the chosen IdP URL across visits, pre-fill it on the next login, with explicit user control via a 'Remember me' checkbox.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-plan-decision-01> a schema:Comment;
+    schema:text "Reuse elements/src/store/settings.ts instead of raw localStorage: it already uses @stencil/store backed by localStorage. Automatic persistence comes from the on('set') handler in persistChanges() which writes the whole settings object to localStorage on every state change (no manual setItem/removeItem needed); cross-tab sync comes free from the storage-event listener in syncChangesAcrossTabs(); and all persisted user preferences keep a single source of truth (localStorage key \"settings\").";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-plan-outOfScope-01> a schema:Comment;
+    schema:text "No auto-login / silent login on page load — the user must still click Login and confirm. This keeps the behaviour predictable and avoids surprising redirects.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-plan-outOfScope-02> a schema:Comment;
+    schema:text "No separate 'forget me' button — unchecking the box and logging in again is the natural flow for opting out.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-plan-outOfScope-03> a schema:Comment;
+    schema:text "No migration of the old rememberedIdp localStorage key — the key never shipped, so there is nothing to migrate.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-1-extend-settings-store-scope-01> a schema:Comment;
+    schema:text "Add rememberedIdp: string | null to LocalSettings; initialise it to null in the default initialSettings (storedSettings ? JSON.parse(storedSettings) : { offlineCache: false, rememberedIdp: null }).";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-1-extend-settings-store-scope-02> a schema:Comment;
+    schema:text "Sync in syncChangesAcrossTabs: localSettings.state.rememberedIdp = newSettings.rememberedIdp ?? null.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-1-extend-settings-store-outOfScope-01> a schema:Comment;
+    schema:text "pos-login-form changes (task-2).";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-2-login-form-remember-me-scope-01> a schema:Comment;
+    schema:text "Import localSettings; add @State() rememberMe: boolean = false.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-2-login-form-remember-me-scope-02> a schema:Comment;
+    schema:text "Read from the store on component init (componentWillLoad): if localSettings.state.rememberedIdp is set, pre-fill this.idpUrl, set rememberMe = true and canSubmit = true.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-2-login-form-remember-me-scope-03> a schema:Comment;
+    schema:text "In handleSubmit: localSettings.state.rememberedIdp = this.rememberMe ? this.idpUrl : null; then emit pod-os:idp-url-selected (emission must happen regardless of checkbox state).";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-2-login-form-remember-me-scope-04> a schema:Comment;
+    schema:text "Render: checkbox row below the datalist, above the submit button — label.remember-me wrapping an input#rememberMe[type=checkbox] bound to rememberMe state.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-2-login-form-remember-me-scope-05> a schema:Comment;
+    schema:text "CSS: label.remember-me { display: flex; align-items: center; gap: var(--size-2); cursor: pointer; } and label.remember-me input[type=checkbox] { width: auto; accent-color: var(--pos-primary-color); } (override the full-width input rule).";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-2-login-form-remember-me-outOfScope-01> a schema:Comment;
+    schema:text "Store changes (task-1); integration test (task-4).";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-3-unit-tests-scope-01> a schema:Comment;
+    schema:text "Add a beforeEach resetting the store: localSettings.state.rememberedIdp = null.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-3-unit-tests-scope-02> a schema:Comment;
+    schema:text "Update the existing full-render snapshot: new checkbox row between the datalist and the submit input (label.remember-me > input#rememberMe + 'Remember me').";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-3-unit-tests-scope-03> a schema:Comment;
+    schema:text "New test: renders 'Remember me' checkbox unchecked by default (checkbox.checked === false when store is empty).";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-3-unit-tests-scope-04> a schema:Comment;
+    schema:text "New test: pre-fills IdP URL and checks box when a value is in settings (set localSettings.state.rememberedIdp before mount; input value and checkbox checked; submit button already enabled).";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-3-unit-tests-scope-05> a schema:Comment;
+    schema:text "New test: saves IdP URL to settings on submit when 'Remember me' is checked (enter URL, check box, submit; localSettings.state.rememberedIdp equals the entered URL).";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-3-unit-tests-scope-06> a schema:Comment;
+    schema:text "New test: clears IdP URL from settings on submit when 'Remember me' is unchecked (pre-seed store, uncheck, submit; localSettings.state.rememberedIdp is null).";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-3-unit-tests-scope-07> a schema:Comment;
+    schema:text "New test: still emits pod-os:idp-url-selected even when 'Remember me' is unchecked (regression guard).";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-4-integration-test-scope-01> a schema:Comment;
+    schema:text "Add one scenario after the existing 'allows Alice to log in' test: 'pre-fills the IdP URL when one has been remembered' — 1. seed localSettings.state.rememberedIdp with a remembered IdP URL; 2. mount the page; 3. open the login dialog; 4. assert the pos-login-form input already has the remembered URL as its value; 5. assert the submit button is already enabled (no typing required).";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#task-1-extend-settings-store> <http://localhost:3000/dev/plans/plan-ontology.ttl#status> <http://localhost:3000/dev/plans/plan-ontology.ttl#done>;
+    dct:modified "2026-10-28T20:02:06Z"^^xsd:dateTime.
+<#task-2-login-form-remember-me> <http://localhost:3000/dev/plans/plan-ontology.ttl#status> <http://localhost:3000/dev/plans/plan-ontology.ttl#done>;
+    dct:modified "2026-10-28T20:02:06Z"^^xsd:dateTime.
+<#task-3-unit-tests> <http://localhost:3000/dev/plans/plan-ontology.ttl#status> <http://localhost:3000/dev/plans/plan-ontology.ttl#done>;
+    dct:modified "2026-10-28T20:02:06Z"^^xsd:dateTime.
+<#plan> dct:modified "2026-10-28T20:02:06Z"^^xsd:dateTime;
+    <http://localhost:3000/dev/plans/plan-ontology.ttl#hasTask> <#task-1-extend-settings-store>, <#task-2-login-form-remember-me>, <#task-3-unit-tests>, <#task-4-integration-test>.
+<#task-4-integration-test> plan:status plan:done;
+    dct:modified "2026-10-28T20:15:43Z"^^xsd:dateTime.

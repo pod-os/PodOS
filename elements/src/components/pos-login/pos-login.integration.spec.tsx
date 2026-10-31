@@ -1,7 +1,6 @@
-import { describe, expect, h, it, render, RenderResult } from '@stencil/vitest';
+import { afterEach, describe, expect, h, it, render, RenderResult } from '@stencil/vitest';
 import { authenticatedUser, server, turtleFile } from '../../test/msw';
-import { waitFor, within } from '@testing-library/dom';
-import { http, HttpResponse } from 'msw';
+import { waitFor } from '@testing-library/dom';
 import {
   deepQuerySelector,
   getByShadowLabelText,
@@ -9,9 +8,15 @@ import {
   queryByShadowRole,
   queryByShadowText,
 } from 'shadow-dom-testing-library';
+import { http, HttpResponse } from 'msw';
 import { userEvent } from '@testing-library/user-event';
+import { withinShadow } from '../../test/withinShadow';
 
 describe('pos-login', () => {
+  afterEach(() => {
+    localStorage.removeItem('settings');
+  });
+
   it('renders a login button', async () => {
     // When a page renders a pos-login
     const page = await render(
@@ -118,6 +123,42 @@ describe('pos-login', () => {
     });
   });
 
+  it('pre-fills the IdP URL when one has been remembered', async () => {
+    // Given an IdP URL was remembered from a previous visit
+    const rememberedIdp = 'https://remembered.idp.test';
+    localStorage.setItem('settings', JSON.stringify({ offlineCache: false, rememberedIdp }));
+    // The settings store in the bundle reads localStorage only once when its module is
+    // evaluated. At this point in a full test run it is already loaded, so the only way
+    // to get the seeded value into the store is its real cross-tab sync: dispatching the
+    // storage event makes the store's own listener pick up the value.
+    window.dispatchEvent(
+      new StorageEvent('storage', {
+        key: 'settings',
+        newValue: localStorage.getItem('settings'),
+      }),
+    );
+
+    // when a page renders a pos-login
+    const page = await render(
+      <pos-app>
+        <pos-login></pos-login>
+      </pos-app>,
+    );
+
+    // and the login dialog is opened
+    const loginButton = getLoginButton(page);
+    await userEvent.click(loginButton);
+
+    // then the IdP input already has the remembered URL as its value
+    const dialog = getByShadowRole(page.root, 'dialog');
+    const idpUrl = getByShadowLabelText(dialog, 'Please enter your Identity Provider');
+    expect((idpUrl as HTMLInputElement).value).toBe(rememberedIdp);
+
+    // and the login button is already enabled, without typing anything
+    const loginButtonInDialog = getByShadowRole(dialog, 'button', { name: 'Login' });
+    expect(loginButtonInDialog).toBeEnabled();
+  });
+
   it('shows user info and allows to sign out, when already logged in', async () => {
     // Given Jane is authenticated
     server.use(
@@ -170,5 +211,5 @@ describe('pos-login', () => {
 
 function getLoginButton(page: RenderResult) {
   const login = deepQuerySelector(page.root, 'pos-login')!;
-  return within(login.shadowRoot as unknown as HTMLElement).getByRole('button', { name: 'Login' });
+  return withinShadow(login).getByRole('button', { name: 'Login' });
 }

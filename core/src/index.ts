@@ -71,14 +71,18 @@ export class PodOS {
       onlineStatus,
       internalStore,
     );
-    this.searchGateway = new SearchGateway(this.store);
+    this.profileGateway = new ProfileGateway(this.store);
+    this.searchGateway = new SearchGateway(
+      this.store,
+      this.session,
+      this.profileGateway,
+    );
     this.fileFetcher = new FileFetcher(this.session);
     this.fileGateway = new FileGateway(this.store, this.fileFetcher);
     this.attachmentGateway = new AttachmentGateway(this.fileGateway);
     this.pictureGateway = new PictureGateway(this.fileGateway);
     this.flagAuthorizationMetaDataOnSessionChange();
     this.uriService = new UriService(this.store);
-    this.profileGateway = new ProfileGateway(this.store);
   }
 
   /*
@@ -94,6 +98,7 @@ export class PodOS {
       .pipe(
         tap(() => {
           this.store.flagAuthorizationMetadata();
+          this.searchGateway.clear();
         }),
       )
       .subscribe();
@@ -168,7 +173,7 @@ export class PodOS {
     return listKnownTerms();
   }
 
-  addNewThing(uri: string, name: string, type: string): Promise<void> {
+  addNewThing(uri: string, name: string, type?: string): Promise<void> {
     return this.store.addNewThing(uri, name, type);
   }
 
@@ -192,11 +197,15 @@ export class PodOS {
   }
 
   /**
-   * Fetch the private label index for the given profile and build a search index from it
-   * @param profile
+   * Build the search index on demand.
+   *
+   * While logged in, the index is built from the logged-in user's label indexes
+   * and cached, so repeated calls return the same instance.
+   *
+   * While logged out, a fresh empty index is returned that is not cached.
    */
-  async buildSearchIndex(profile: WebIdProfile) {
-    return this.searchGateway.buildSearchIndex(profile);
+  async buildSearchIndex() {
+    return this.searchGateway.buildSearchIndex();
   }
 
   logout() {

@@ -6,7 +6,6 @@ import '../pos-navigation';
 import { pressKey } from '../../../test/pressKey';
 import { typeToSearch } from './typeToSearch.vitest';
 
-import session from '../../../store/session';
 import { PodOS, SearchIndex } from '@pod-os/core';
 import { mockOsProvider } from '../../../test/mockPodOS.vitest';
 import { withinShadow } from '../../../test/withinShadow';
@@ -45,6 +44,7 @@ describe('pos-navigation', () => {
       store: {
         get: vi.fn().mockReturnValue(mockResource),
       },
+      buildSearchIndex: vi.fn().mockResolvedValue(undefined),
     } as unknown as PodOS);
 
     const page = await render(<pos-navigation uri="https://pod.example/resource"></pos-navigation>);
@@ -147,8 +147,20 @@ describe('pos-navigation', () => {
     );
   });
 
+  it('demands the search index when it receives the PodOS instance', async () => {
+    const mockOs = {
+      buildSearchIndex: vi.fn().mockResolvedValue(undefined),
+    } as unknown as PodOS;
+    mockOsProvider(mockOs);
+
+    await render(<pos-navigation uri="https://pod.example/resource"></pos-navigation>);
+
+    expect(mockOs.buildSearchIndex).toHaveBeenCalled();
+  });
+
   describe('searching when logged in', () => {
     let page: RenderResult;
+    let mockOs: PodOS;
 
     let mockSearchIndex: SearchIndex;
     beforeEach(async () => {
@@ -163,21 +175,17 @@ describe('pos-navigation', () => {
           },
         ]),
         clear: vi.fn(),
-        rebuild: vi.fn(),
       } as unknown as SearchIndex;
-      mockOsProvider({
-        store: {
-          get: vi.fn().mockReturnValue({ fake: 'resource' }),
-        },
-        buildSearchIndex: vi.fn().mockReturnValue(mockSearchIndex),
-      } as unknown as PodOS);
+      mockOs = {
+      store: {
+        get: vi.fn().mockReturnValue({ fake: 'resource' }),
+      },
+      buildSearchIndex: vi.fn().mockReturnValue(mockSearchIndex),
+    } as unknown as PodOS;
+    mockOsProvider(mockOs);
 
       page = await render(<pos-navigation uri="https://pod.example/resource"></pos-navigation>);
       // and a fake search index giving 2 results
-
-      // and the user is signed in
-      session.state.isLoggedIn = true;
-      await page.waitForChanges();
 
       // and therefore the search index is defined
       await waitFor(() => {
@@ -186,11 +194,8 @@ describe('pos-navigation', () => {
     });
 
     afterEach(() => {
-      // ensure the element is disconnected before disposing the session
-      // this is important, because stencil testing will disconnect it "eventually" but
-      // if we do not clean up before disposing the session the change handler will still trigger
+      // ensure the element is disconnected to avoid test pollution
       page.instance.disconnectedCallback();
-      session.dispose();
     });
 
     it('informs navigation bar as soon as search index is available', () => {
@@ -487,45 +492,6 @@ describe('pos-navigation', () => {
           detail: 'https://result.test/1',
         }),
       );
-    });
-
-    it('clears the index when logging out', async () => {
-      // when the user signs out
-      session.state.isLoggedIn = false;
-
-      // then the search index is cleared
-      expect(mockSearchIndex.clear).toHaveBeenCalled();
-    });
-
-    it('builds a new search index from scratch when a new index document has been added', async () => {
-      expect(page.instance.os.buildSearchIndex).toHaveBeenCalledTimes(1);
-      page.instance.os.buildSearchIndex.mockReturnValueOnce({ fake: 'search index from scratch' });
-      fireEvent(
-        page.root,
-        new CustomEvent('pod-os:search:index-created', {
-          detail: {
-            fake: 'index',
-          },
-        }),
-      );
-      await page.waitForChanges();
-      expect(page.instance.os.buildSearchIndex).toHaveBeenCalledTimes(2);
-      expect(page.instance.searchIndex).toEqual({ fake: 'search index from scratch' });
-    });
-
-    it('rebuilds existing search index after new items have been indexed', async () => {
-      expect(page.instance.os.buildSearchIndex).toHaveBeenCalledTimes(1);
-      fireEvent(
-        page.root,
-        new CustomEvent('pod-os:search:index-updated', {
-          detail: {
-            fake: 'index',
-          },
-        }),
-      );
-      await page.waitForChanges();
-      expect(page.instance.os.buildSearchIndex).toHaveBeenCalledTimes(1);
-      expect(mockSearchIndex.rebuild).toHaveBeenCalledTimes(1);
     });
   });
 });

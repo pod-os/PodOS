@@ -17,6 +17,24 @@ infrastructure, not test data.**
    tests need it
 5. **Simple Objects Stay Inline** - Objects with ≤5 parameters stay inline;
    complex objects use builders
+6. **Test Observable Behavior** - assert what a unit does, not how it does it:
+   no private fields, library internals, or mock-argument assertions. Wiring is
+   covered by integration tests; when in doubt, delete the technical test
+7. **Default Timeouts** - use `waitFor` with testing-library defaults,
+   role-based queries and `userEvent`; a test needing a large timeout is usually
+   wrong, not too slow
+8. **Query by Role** - role-based queries survive refactoring; internal
+   selectors and CSS classes do not
+
+## Pitfalls
+
+- **Third-party widgets may render outside the shadow root.** Libraries that
+  mount popups or overlays often attach them to `document.body`. Query
+  `within(document.body)` for such UI.
+- **Query shadow DOM with `withinShadow`.** Use `withinShadow(page)`
+  (`elements/src/test/withinShadow.ts`) to run `@testing-library/dom` role
+  queries inside a component's shadow root. For a nested component, pass the
+  element: `withinShadow(deepQuerySelector(page.root, 'pos-foo'))`.
 
 ## Quick Check
 

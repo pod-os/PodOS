@@ -12,12 +12,10 @@
 
 ## Events
 
-| Event                         | Description | Type               |
-| ----------------------------- | ----------- | ------------------ |
-| `pod-os:error`                |             | `CustomEvent<any>` |
-| `pod-os:init`                 |             | `CustomEvent<any>` |
-| `pod-os:search:index-created` |             | `CustomEvent<any>` |
-| `pod-os:search:index-updated` |             | `CustomEvent<any>` |
+| Event          | Description | Type               |
+| -------------- | ----------- | ------------------ |
+| `pod-os:error` |             | `CustomEvent<any>` |
+| `pod-os:init`  |             | `CustomEvent<any>` |
 
 
 ## Dependencies

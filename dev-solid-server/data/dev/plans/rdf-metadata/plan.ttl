@@ -1,0 +1,236 @@
+@prefix plan: <../plan-ontology.ttl#>.
+@prefix prov: <http://www.w3.org/ns/prov#>.
+@prefix schema: <https://schema.org/>.
+@prefix dct: <http://purl.org/dc/terms/>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+
+<plan.ttl#plan> a plan:Plan;
+    dct:title "RDF Metadata for Non-RDF Resources";
+    dct:description "Users want to annotate non-RDF resources — such as PDF documents, images, or other binary files stored on a Solid Pod — with RDF metadata. Currently PodOS has no mechanism to attach structured, queryable data to resources that are not themselves RDF documents, making it impossible to describe, tag, or relate those resources within the Linked Data graph.";
+    plan:status plan:done;
+    dct:created "2026-06-09"^^xsd:date;
+    dct:modified "2026-10-14T19:04:19Z"^^xsd:dateTime;
+    plan:hasTask <#task-1-auto-follow-describedby>, <#task-2-write-path-routing>, <#task-3-integration-test>, <#task-4-element-smoke-test>;
+    plan:userStory <#entry-plan-userStory-01>, <#entry-plan-userStory-02>, <#entry-plan-userStory-03>;
+    plan:decision <#entry-plan-decision-01>, <#entry-plan-decision-02>, <#entry-plan-decision-03>, <#entry-plan-decision-04>;
+    plan:openQuestion <#entry-plan-openQuestion-01>, <#entry-plan-openQuestion-02>;
+    plan:note <#entry-plan-note-01>;
+    plan:outOfScope <#entry-plan-outOfScope-01>, <#entry-plan-outOfScope-02>, <#entry-plan-outOfScope-03>, <#entry-plan-outOfScope-04>.
+<#task-1-auto-follow-describedby> a plan:Task;
+    dct:title "Auto-follow describedby in Store.fetch (read path)";
+    plan:parent <plan.ttl#plan>;
+    plan:status plan:done;
+    dct:created "2026-06-09"^^xsd:date;
+    plan:goal <#entry-task-1-auto-follow-describedby-goal-01>;
+    plan:scope <#entry-task-1-auto-follow-describedby-scope-01>, <#entry-task-1-auto-follow-describedby-scope-02>;
+    plan:verification <#entry-task-1-auto-follow-describedby-verification-01>;
+    plan:outOfScope <#entry-task-1-auto-follow-describedby-outOfScope-01>, <#entry-task-1-auto-follow-describedby-outOfScope-02>;
+    plan:note <#entry-task-1-auto-follow-describedby-note-01>.
+<#task-2-write-path-routing> a plan:Task;
+    dct:title "Write-path routing for binary resources";
+    plan:parent <plan.ttl#plan>;
+    plan:status plan:done;
+    dct:created "2026-06-09"^^xsd:date;
+    plan:goal <#entry-task-2-write-path-routing-goal-01>;
+    plan:scope <#entry-task-2-write-path-routing-scope-01>, <#entry-task-2-write-path-routing-scope-02>, <#entry-task-2-write-path-routing-scope-03>, <#entry-task-2-write-path-routing-scope-04>;
+    plan:verification <#entry-task-2-write-path-routing-verification-01>;
+    plan:outOfScope <#entry-task-2-write-path-routing-outOfScope-01>, <#entry-task-2-write-path-routing-outOfScope-02>;
+    plan:note <#entry-task-2-write-path-routing-note-01>.
+<#task-3-integration-test> a plan:Task;
+    dct:title "End-to-end integration test";
+    plan:parent <plan.ttl#plan>;
+    plan:status plan:done;
+    dct:created "2026-06-09"^^xsd:date;
+    plan:goal <#entry-task-3-integration-test-goal-01>;
+    plan:scope <#entry-task-3-integration-test-scope-01>, <#entry-task-3-integration-test-scope-02>;
+    plan:verification <#entry-task-3-integration-test-verification-01>;
+    plan:outOfScope <#entry-task-3-integration-test-outOfScope-01>, <#entry-task-3-integration-test-outOfScope-02>;
+    plan:note <#entry-task-3-integration-test-note-01>.
+<#task-4-element-smoke-test> a plan:Task;
+    dct:title "Element smoke test";
+    plan:parent <plan.ttl#plan>;
+    plan:status plan:done;
+    dct:created "2026-06-09"^^xsd:date;
+    plan:goal <#entry-task-4-element-smoke-test-goal-01>;
+    plan:scope <#entry-task-4-element-smoke-test-scope-01>, <#entry-task-4-element-smoke-test-scope-02>;
+    plan:verification <#entry-task-4-element-smoke-test-verification-01>;
+    plan:outOfScope <#entry-task-4-element-smoke-test-outOfScope-01>, <#entry-task-4-element-smoke-test-outOfScope-02>;
+    plan:note <#entry-task-4-element-smoke-test-note-01>.
+
+# ---- Entries (schema:Comment; text + attribution) ----
+
+<#entry-plan-userStory-01> a schema:Comment;
+    schema:text "As a Pod owner, I want to attach a title and description to a PDF stored on my Pod, so that I can identify and search for it alongside my other linked data.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-plan-userStory-02> a schema:Comment;
+    schema:text "As a Pod owner, I want to tag an image with RDF predicates (e.g. subject, date taken), so that I can browse and filter my photos by metadata.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-plan-userStory-03> a schema:Comment;
+    schema:text "As a dashboard developer, I want pos-label and pos-value to work on binary resources the same way they work on RDF documents, so that I do not need to handle non-RDF resources specially in my markup.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-plan-decision-01> a schema:Comment;
+    schema:text "Follow the Solid Protocol auxiliary resource mechanism: Link: rel=\"describedby\". The metadata document URL is server-assigned (CSS uses a .meta suffix, e.g. image.jpg.meta). PodOS does not hardcode any suffix convention.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-plan-decision-02> a schema:Comment;
+    schema:text "Auto-following rdfs:seeAlso blindly is unsafe (rdflib stores the Link header as rdfs:seeAlso, but hand-authored links also use that predicate). Auto-follow only the IANA link-relations/describedby predicate — pending upstream rdflib fix (linkeddata/rdflib.js#741).";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-plan-decision-03> a schema:Comment;
+    schema:text "Keep enrichment transparent: Store.fetch() loads the .meta document into the store so callers, gateways and elements need no changes.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-plan-decision-04> a schema:Comment;
+    schema:text "Writes for binary-resource Things route to the .meta document (updater.editable(metaUrl)), not to the binary URI itself — a binary is not a valid SPARQL/RDF update target. Fail gracefully when no describedby link exists.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-plan-openQuestion-01> a schema:Comment;
+    schema:text "When exactly does the rdflib describedby fix land, and do we vendor a patch in the meantime?";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-plan-openQuestion-02> a schema:Comment;
+    schema:text "Should PodOS ever create .meta documents for binaries that have none (write-new)? Deferred for now.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-plan-note-01> a schema:Comment;
+    schema:text "Related: linkeddata/rdflib.js#741 (upstream rdflib bug to fix); docs/features/full-text-search.md (also relies on RDF labels attached to resources); ADR-0003 Handle data with rdflib.js; ADR-0016 RDFa alignment.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-plan-outOfScope-01> a schema:Comment;
+    schema:text "Uploading or replacing binary file content (already handled by FileFetcher).";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-plan-outOfScope-02> a schema:Comment;
+    schema:text "Indexing metadata for full-text search (overlap noted, but separate feature).";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-plan-outOfScope-03> a schema:Comment;
+    schema:text "Supporting servers that do not implement auxiliary resources.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-plan-outOfScope-04> a schema:Comment;
+    schema:text "Creating a .meta document for a binary that has none yet (write-new, not write-update; may be addressed in a follow-up).";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-task-1-auto-follow-describedby-goal-01> a schema:Comment;
+    schema:text "After Store.fetch(uri), automatically load any metadata document linked via rel=\"describedby\", so that the returned Thing for a binary resource is transparently enriched with its RDF metadata triples.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-task-1-auto-follow-describedby-scope-01> a schema:Comment;
+    schema:text "Change to Store.fetch() only. After the initial fetch, query the store for <uri> <http://www.iana.org/assignments/link-relations/describedby> ?metaUrl. If a ?metaUrl is found, call store.fetch(metaUrl) to load the metadata document into the store.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-task-1-auto-follow-describedby-scope-02> a schema:Comment;
+    schema:text "No changes to elements, gateways, or other consumers — they already operate on Thing objects.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-task-1-auto-follow-describedby-verification-01> a schema:Comment;
+    schema:text "Fetch a binary resource (e.g. a PDF) from a CSS server that has a .meta document. Confirm the Thing returned by store.get(binaryUri) contains metadata triples (e.g. schema:description, dct:title).";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-task-1-auto-follow-describedby-outOfScope-01> a schema:Comment;
+    schema:text "Write path (Task 2).";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-task-1-auto-follow-describedby-outOfScope-02> a schema:Comment;
+    schema:text "Creating .meta documents that don't yet exist.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-task-1-auto-follow-describedby-note-01> a schema:Comment;
+    schema:text "Depends on: None (rdflib fix assumed upstream).";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-task-2-write-path-routing-goal-01> a schema:Comment;
+    schema:text "When writing triples for a Thing whose URI is a binary resource, route writes to the metadata document (the describedby target) instead of to thing.uri.doc(), which would point to the binary itself — an invalid SPARQL/RDF update target.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-task-2-write-path-routing-scope-01> a schema:Comment;
+    schema:text "Extend store.addPropertyValue() and/or the write layer to detect when the subject URI is a non-RDF resource.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-task-2-write-path-routing-scope-02> a schema:Comment;
+    schema:text "For binary resources, resolve the writable graph by following the describedby triple already in the store (loaded by Task 1 or a prior fetch).";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-task-2-write-path-routing-scope-03> a schema:Comment;
+    schema:text "After Store.fetch() has loaded the .meta URL, updater.editable(metaUrl) returns true — writes can target that document.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-task-2-write-path-routing-scope-04> a schema:Comment;
+    schema:text "Must fail gracefully when no describedby link exists (i.e. no .meta document).";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-task-2-write-path-routing-verification-01> a schema:Comment;
+    schema:text "Fetch a binary resource so its .meta is in the store. Call store.addPropertyValue(thing, predicate, value) on the binary Thing. Confirm the triple is written to the .meta document, not to the binary URI. Confirm the write round-trips (re-fetch shows the new triple).";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-task-2-write-path-routing-outOfScope-01> a schema:Comment;
+    schema:text "Creating a .meta document for a binary that has none yet.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-task-2-write-path-routing-outOfScope-02> a schema:Comment;
+    schema:text "Read path (Task 1).";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-task-2-write-path-routing-note-01> a schema:Comment;
+    schema:text "Depends on: None (parallel with Task 1).";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-task-3-integration-test-goal-01> a schema:Comment;
+    schema:text "Confirm the full round-trip works end-to-end: fetch a binary resource, verify metadata triples appear, write a new triple, verify it persists in the .meta document.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-task-3-integration-test-scope-01> a schema:Comment;
+    schema:text "One integration test using Community Solid Server (which already serves .meta documents and rel=\"describedby\" headers).";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-task-3-integration-test-scope-02> a schema:Comment;
+    schema:text "Test steps: 1. PUT a binary resource (e.g. test.pdf) and its .meta document to CSS. 2. Call Store.fetch(binaryUri) — verify metadata triples are loaded. 3. Call store.addPropertyValue() on the binary Thing — verify write succeeds. 4. Re-fetch or re-read the store — verify the new triple is present. 5. Optionally: verify the .meta document on the server contains the new triple.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-task-3-integration-test-verification-01> a schema:Comment;
+    schema:text "Test passes green in CI.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-task-3-integration-test-outOfScope-01> a schema:Comment;
+    schema:text "Element-level testing (Task 4).";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-task-3-integration-test-outOfScope-02> a schema:Comment;
+    schema:text "Servers that don't support auxiliary resources.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-task-3-integration-test-note-01> a schema:Comment;
+    schema:text "Depends on Task 1 and Task 2.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-task-4-element-smoke-test-goal-01> a schema:Comment;
+    schema:text "Verify that existing PodOS elements (pos-label, pos-value, pos-list, etc.) surface metadata for binary resources with zero code changes — confirming that the transparent enrichment from Task 1 is sufficient.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-task-4-element-smoke-test-scope-01> a schema:Comment;
+    schema:text "Load a page that renders a binary resource using existing PodOS elements. Confirm that labels (e.g. dct:title), descriptions, and other metadata from the .meta document render correctly.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-task-4-element-smoke-test-scope-02> a schema:Comment;
+    schema:text "This is a validation step, not an implementation task — if it fails, the gap is in Task 1 or Task 2, not in the elements.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-task-4-element-smoke-test-verification-01> a schema:Comment;
+    schema:text "Manual or automated: render a binary resource's Thing via pos-label and pos-value, confirm metadata values appear.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-task-4-element-smoke-test-outOfScope-01> a schema:Comment;
+    schema:text "Any changes to element code.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-task-4-element-smoke-test-outOfScope-02> a schema:Comment;
+    schema:text "Write-path testing (covered by Task 3).";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+
+<#entry-task-4-element-smoke-test-note-01> a schema:Comment;
+    schema:text "Depends on Task 1.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.

@@ -1,0 +1,211 @@
+@prefix plan: <./plan-ontology.ttl#>.
+@prefix prov: <http://www.w3.org/ns/prov#>.
+@prefix schema: <https://schema.org/>.
+@prefix dct: <http://purl.org/dc/terms/>.
+@prefix sh: <http://www.w3.org/ns/shacl#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+
+plan:PlanShape a sh:NodeShape;
+    sh:name "Plan shape";
+    sh:targetClass plan:Plan.
+_:n3-0 sh:path dct:title;
+    sh:name "title";
+    sh:minCount 1;
+    sh:maxCount 1;
+    sh:datatype xsd:string;
+    sh:minLength 3.
+plan:PlanShape sh:property _:n3-0.
+_:n3-1 sh:path dct:description;
+    sh:name "description";
+    sh:maxCount 1;
+    sh:datatype xsd:string.
+plan:PlanShape sh:property _:n3-1.
+_:n3-2 sh:path plan:status;
+    sh:name "status";
+    sh:minCount 1;
+    sh:maxCount 1.
+_:n3-3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> plan:draft;
+    <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:n3-4.
+_:n3-4 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> plan:planned;
+    <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:n3-5.
+_:n3-5 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> plan:in-progress;
+    <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:n3-6.
+_:n3-6 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> plan:done;
+    <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:n3-7.
+_:n3-7 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> plan:deferred;
+    <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:n3-8.
+_:n3-8 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> plan:abandoned;
+    <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil>.
+_:n3-2 sh:in _:n3-3.
+plan:PlanShape sh:property _:n3-2.
+_:n3-9 sh:path dct:created;
+    sh:name "created";
+    sh:maxCount 1;
+    sh:or ( [ sh:datatype xsd:date ] [ sh:datatype xsd:dateTime ] ).
+plan:PlanShape sh:property _:n3-9.
+_:n3-10 sh:path dct:modified;
+    sh:name "modified";
+    sh:maxCount 1;
+    sh:datatype xsd:dateTime.
+plan:PlanShape sh:property _:n3-10.
+_:n3-11 sh:path plan:hasTask;
+    sh:name "has task";
+    sh:class plan:Task.
+plan:PlanShape sh:property _:n3-11.
+plan:EntryShape a sh:NodeShape;
+    sh:name "Entry shape";
+    sh:targetObjectsOf plan:decision, plan:openQuestion, plan:userStory, plan:option, plan:note, plan:goal, plan:scope, plan:outOfScope, plan:verification, plan:context.
+_:n3-100 sh:path <https://schema.org/text>;
+    sh:name "text";
+    sh:minCount 1;
+    sh:maxCount 1;
+    sh:datatype xsd:string;
+    sh:minLength 3.
+plan:EntryShape sh:property _:n3-100.
+_:n3-101 sh:path prov:wasAttributedTo;
+    sh:name "attributed to";
+    sh:minCount 1;
+    sh:nodeKind sh:IRI.
+plan:EntryShape sh:property _:n3-101.
+_:n3-102 sh:path dct:created;
+    sh:name "created";
+    sh:maxCount 1;
+    sh:or ( [ sh:datatype xsd:date ] [ sh:datatype xsd:dateTime ] ).
+plan:EntryShape sh:property _:n3-102.
+plan:LinkedEntryShape a sh:NodeShape;
+    sh:name "Every plan entry is linked to its plan or task";
+    sh:targetClass schema:Comment.
+_:n3-105 sh:sparql [
+    sh:select """
+        SELECT $this WHERE {
+          FILTER NOT EXISTS { ?owner ?property $this }
+        }
+    """ ;
+    sh:name "linked entry" ;
+    sh:message "Entry is not linked to any plan or task" ] .
+plan:LinkedEntryShape sh:property _:n3-105.
+_:n3-103 sh:path plan:decision;
+    sh:name "decision";
+    sh:class schema:Comment.
+plan:PlanShape sh:property _:n3-103.
+_:n3-104 sh:path plan:context;
+    sh:name "context";
+    sh:class schema:Comment.
+plan:PlanShape sh:property _:n3-104.
+_:n3-14 sh:path plan:openQuestion;
+    sh:name "open question";
+    sh:class schema:Comment.
+plan:PlanShape sh:property _:n3-14.
+_:n3-15 sh:path plan:option;
+    sh:name "option";
+    sh:class schema:Comment.
+plan:PlanShape sh:property _:n3-15.
+_:n3-16 sh:path plan:userStory;
+    sh:name "user story";
+    sh:class schema:Comment.
+plan:PlanShape sh:property _:n3-16.
+_:n3-17 sh:path plan:note;
+    sh:name "note";
+    sh:class schema:Comment.
+plan:PlanShape sh:property _:n3-17;
+    sh:closed false.
+plan:TaskShape a sh:NodeShape;
+    sh:name "Task shape";
+    sh:targetClass plan:Task.
+_:n3-18 sh:path dct:title;
+    sh:name "title";
+    sh:minCount 1;
+    sh:maxCount 1;
+    sh:datatype xsd:string;
+    sh:minLength 3.
+plan:TaskShape sh:property _:n3-18.
+_:n3-19 sh:path dct:description;
+    sh:name "description";
+    sh:maxCount 1;
+    sh:datatype xsd:string.
+plan:TaskShape sh:property _:n3-19.
+_:n3-20 sh:path plan:parent;
+    sh:name "parent plan";
+    sh:minCount 1;
+    sh:maxCount 1;
+    sh:class plan:Plan.
+plan:TaskShape sh:property _:n3-20.
+_:n3-21 sh:path plan:status;
+    sh:name "status";
+    sh:minCount 1;
+    sh:maxCount 1.
+_:n3-22 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> plan:draft;
+    <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:n3-23.
+_:n3-23 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> plan:planned;
+    <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:n3-24.
+_:n3-24 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> plan:in-progress;
+    <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:n3-25.
+_:n3-25 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> plan:done;
+    <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:n3-26.
+_:n3-26 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> plan:deferred;
+    <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:n3-27.
+_:n3-27 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> plan:abandoned;
+    <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil>.
+_:n3-21 sh:in _:n3-22.
+plan:TaskShape sh:property _:n3-21.
+_:n3-28 sh:path plan:dependsOn;
+    sh:name "depends on";
+    sh:class plan:Task.
+plan:TaskShape sh:property _:n3-28.
+_:n3-29 sh:path dct:created;
+    sh:name "created";
+    sh:maxCount 1;
+    sh:or ( [ sh:datatype xsd:date ] [ sh:datatype xsd:dateTime ] ).
+plan:TaskShape sh:property _:n3-29.
+_:n3-30 sh:path dct:modified;
+    sh:name "modified";
+    sh:maxCount 1;
+    sh:datatype xsd:dateTime.
+plan:TaskShape sh:property _:n3-30.
+_:n3-31 sh:path plan:goal;
+    sh:name "goal";
+    sh:class schema:Comment.
+plan:TaskShape sh:property _:n3-31.
+_:n3-32 sh:path plan:scope;
+    sh:name "scope";
+    sh:class schema:Comment.
+plan:TaskShape sh:property _:n3-32.
+_:n3-33 sh:path plan:outOfScope;
+    sh:name "out of scope";
+    sh:class schema:Comment.
+plan:TaskShape sh:property _:n3-33.
+_:n3-34 sh:path plan:verification;
+    sh:name "verification";
+    sh:class schema:Comment.
+plan:TaskShape sh:property _:n3-34.
+_:n3-35 sh:path plan:decision;
+    sh:name "decision";
+    sh:class schema:Comment.
+plan:TaskShape sh:property _:n3-35.
+_:n3-36 sh:path plan:openQuestion;
+    sh:name "open question";
+    sh:class schema:Comment.
+plan:TaskShape sh:property _:n3-36.
+_:n3-37 sh:path plan:note;
+    sh:name "note";
+    sh:class schema:Comment.
+plan:TaskShape sh:property _:n3-37.
+_:n3-42 sh:path plan:touchesFile;
+    sh:name "touches file";
+    sh:datatype xsd:string.
+plan:TaskShape sh:property _:n3-42;
+    sh:closed false.
+plan:NoDependencyCyclesShape a sh:NodeShape;
+    sh:name "No dependency cycles";
+    sh:targetClass plan:Task.
+# NOTE: NoDependencyCyclesShape has no sh:sparql constraint — the local
+# rdf-validate-shacl build does not implement SPARQLConstraintComponent.
+# If dependency chains grow, check cycles with `?task plan:dependsOn+ ?task`.
+
+plan:UniqueParentShape a sh:NodeShape;
+    sh:name "Task has at most one parent plan";
+    sh:targetClass plan:Task.
+_:n3-41 sh:path plan:parent;
+    sh:name "parent plan";
+    sh:maxCount 1.
+plan:UniqueParentShape sh:property _:n3-41.
