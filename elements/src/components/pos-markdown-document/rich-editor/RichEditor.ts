@@ -27,11 +27,17 @@ export class RichEditor {
         StarterKit.configure({ link: false }),
         PosImageNode(baseUrl),
         PosRichLinkMark(baseUrl),
-        mention(os, baseUrl),
+        mention(os, baseUrl, target),
       ],
       content,
       contentType: 'markdown',
       editable: false,
+      editorProps: {
+        attributes: {
+          'aria-multiline': 'true',
+          'aria-autocomplete': 'list',
+        },
+      },
     });
     this.editor.on('update', () => {
       this.modifications.next({ content: this.editor.getMarkdown() });

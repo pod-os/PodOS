@@ -31,6 +31,25 @@ export class PosMentionMenu {
   @Prop()
   command: (item: MentionItem) => void = () => {};
 
+  /**
+   * Element that announces the active descendant of the listbox, typically the
+   * editor that controls it via aria-controls
+   */
+  @Prop()
+  controls!: HTMLElement;
+
+  componentDidRender() {
+    if (this.items.length > 0) {
+      this.controls.setAttribute('aria-activedescendant', `pos-mention-menu-option-${this.selectedIndex + 1}`);
+    } else {
+      this.controls.removeAttribute('aria-activedescendant');
+    }
+  }
+
+  disconnectedCallback() {
+    this.controls.removeAttribute('aria-activedescendant');
+  }
+
   @Listen('mousedown')
   onMouseDown(e: MouseEvent) {
     e.preventDefault();
@@ -41,16 +60,17 @@ export class PosMentionMenu {
       return null;
     }
     return (
-      <ul role="listbox">
+      <ul role="listbox" id="pos-mention-menu-listbox">
         {this.items.map((item, index) => (
           <li
+            id={`pos-mention-menu-option-${index + 1}`}
             key={item.id}
             role="option"
             class={item.type}
             aria-selected={index === this.selectedIndex ? 'true' : undefined}
             onMouseDown={() => this.command(item)}
           >
-            {item.label}
+            {item.type === 'new-thing' ? `Create '${item.label}'` : item.label}
           </li>
         ))}
       </ul>

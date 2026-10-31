@@ -4,12 +4,24 @@ import { afterEach, beforeEach, describe, expect, it } from '@stencil/vitest';
 import { RichEditor } from './RichEditor';
 import { PodOS } from '@pod-os/core';
 import { Subscription, tap } from 'rxjs';
+import { getByRole } from '@testing-library/dom';
 
 describe('RichEditor', () => {
   const mockOs = {
     buildSearchIndex: vi.fn().mockResolvedValue({ search: vi.fn().mockReturnValue([]) }),
     store: { get: vi.fn() },
   } as unknown as PodOS;
+
+  describe('accessibility announcements', () => {
+    beforeEach(() => {
+      new RichEditor(document.body, '', 'https://pod.test', mockOs);
+    });
+    it('is announced as a multiline textbox with autocomplete', () => {
+      const textbox = getByRole(document.body, 'textbox');
+      expect(textbox).toHaveAttribute('aria-multiline', 'true');
+      expect(textbox).toHaveAttribute('aria-autocomplete', 'list');
+    });
+  });
 
   describe('rendering', () => {
     it('basic html', () => {
@@ -68,7 +80,12 @@ describe('RichEditor', () => {
 
       it('renders a mention without explicit char attribute', () => {
         const div = document.createElement('div');
-        new RichEditor(div, '[@ id="https://pod.test/alice/profile/card#me" label="Alice"]', 'https://pod.test', mockOs);
+        new RichEditor(
+          div,
+          '[@ id="https://pod.test/alice/profile/card#me" label="Alice"]',
+          'https://pod.test',
+          mockOs,
+        );
         expect(div.children[0].innerHTML).toEqual(
           `<p><img class="ProseMirror-separator" alt=""><pos-rich-link uri="https://pod.test/alice/profile/card#me" data-type="mention" class="mention" data-id="https://pod.test/alice/profile/card#me" data-label="Alice" data-mention-suggestion-char="@" contenteditable="false">Alice</pos-rich-link><br class="ProseMirror-trailingBreak"></p>`,
         );

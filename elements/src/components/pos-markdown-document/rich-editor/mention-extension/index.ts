@@ -4,7 +4,7 @@ import { PodOS } from '@pod-os/core';
 import { render } from './render';
 import { items } from './items';
 
-export function mention(os: PodOS, baseUrl: string) {
+export function mention(os: PodOS, baseUrl: string, container: HTMLElement) {
   const searchIndex = os.buildSearchIndex();
   return Mention.configure({
     HTMLAttributes: {
@@ -15,6 +15,8 @@ export function mention(os: PodOS, baseUrl: string) {
     },
     suggestion: {
       char: '#',
+      dismissOnOutsideClick: false,
+      container,
       debounce: 120,
       shouldShow: ({ query }) => query.length > 0,
       items: async ({ query }: { query: string }) => items(os, await searchIndex, query, baseUrl),

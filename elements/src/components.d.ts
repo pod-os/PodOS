@@ -263,6 +263,10 @@ export namespace Components {
          */
         "command": (item: MentionItem) => void;
         /**
+          * Element that announces the active descendant of the listbox, typically the editor that controls it via aria-controls
+         */
+        "controls": HTMLElement;
+        /**
           * List of suggestions to display
           * @default []
          */
@@ -1805,6 +1809,10 @@ declare namespace LocalJSX {
           * @default () => {}
          */
         "command"?: (item: MentionItem) => void;
+        /**
+          * Element that announces the active descendant of the listbox, typically the editor that controls it via aria-controls
+         */
+        "controls": HTMLElement;
         /**
           * List of suggestions to display
           * @default []

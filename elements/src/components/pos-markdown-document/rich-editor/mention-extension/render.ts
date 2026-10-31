@@ -11,16 +11,20 @@ export const render = (os: PodOS) => () => {
     onStart: (props: SuggestionProps<any, MentionNodeAttrs>) => {
       menu = document.createElement('pos-mention-menu');
       menu.items = props.items;
-      menu.selectedIndex = 0;
+      props.editor.view.dom.setAttribute('aria-controls', 'pos-mention-menu-listbox');
+      menu.controls = props.editor.view.dom;
       menu.command = processSelectedMention(os, props.command);
       unmount = props.mount(menu);
+      menu.selectedIndex = 0;
     },
     onUpdate: (props: SuggestionProps<any, MentionNodeAttrs>) => {
       menu.items = props.items;
       menu.selectedIndex = 0;
       menu.command = processSelectedMention(os, props.command);
     },
-    onExit: () => {
+    onExit: (props: SuggestionProps<any, MentionNodeAttrs>) => {
+      props.editor.view.dom.removeAttribute('aria-controls');
+      props.editor.view.dom.removeAttribute('aria-activedescendant');
       unmount?.();
     },
     onKeyDown: ({ event }: { event: KeyboardEvent }) => {

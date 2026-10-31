@@ -43,6 +43,10 @@ body {
   color: var(--pos-normal-text-color);
   --pos-error-background-color: var(--color-red-50);
   --pos-error-border-color: var(--color-red-600);
+  --pos-error-text-color: var(--color-red-800);
+  --pos-success-background-color: var(--color-green-200);
+  --pos-sucess-border-color: var(--color-green-600);
+  --pos-sucess-text-color: var(--color-green-900);
 
   /* Shoelace overrides */
   --sl-color-primary-600: var(--pos-primary-color);
@@ -80,5 +84,8 @@ body {
     --pos-card-background: var(--color-grey-900);
     --pos-error-background-color: var(--color-red-950);
     --pos-error-border-color: var(--color-red-400);
+    --pos-success-background-color: var(--color-green-950);
+    --pos-sucess-border-color: var(--color-green-400);
+    --pos-sucess-text-color: var(--color-green-100);
   }
 }

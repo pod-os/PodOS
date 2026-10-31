@@ -1,15 +1,22 @@
-import { Locator, Page } from "@playwright/test";
+import { Locator } from "@playwright/test";
 
 export class MentionMenu {
-  private readonly page: Page;
+  constructor(
+    private readonly document: Locator,
+    private readonly editor: Locator,
+  ) {}
 
-  constructor(page: Page) {
-    this.page = page;
+  async suggestion(label: string): Promise<Locator> {
+    const suggestions = await this.listbox();
+    return suggestions
+      .getByRole("option", { name: label })
+      .describe(`Suggestion "${label}"`);
   }
 
-  suggestion(label: string): Locator {
-    return this.page
-      .getByRole("option", { name: label })
-      .describe("Mention suggestion");
+  async listbox(): Promise<Locator> {
+    const controlledId = await this.editor.getAttribute("aria-controls");
+    return this.document
+      .locator(`[id="${controlledId}"]`)
+      .describe("Mention suggestions");
   }
 }
