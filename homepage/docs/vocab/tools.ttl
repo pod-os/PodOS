@@ -18,7 +18,7 @@
 
 tools:ToolIndex a rdfs:Class ;
     rdfs:label "Tool index"@en ;
-    rdfs:comment "A registry of app and tool registrations, modelled on the Solid type index."@en ;
+    rdfs:comment "A registry of app and tool registrations."@en ;
     rdfs:isDefinedBy <https://pod-os.org/vocab/tools.ttl> .
 
 tools:Registration a rdfs:Class ;
