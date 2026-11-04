@@ -28,7 +28,7 @@ li[role='option'] {
     &[aria-selected='true'],
     &:hover {
       background-color: var(--pos-success-background-color);
-      color: var(--pos-sucess-text-color);
+      color: var(--pos-success-text-color);
       font-weight: var(--weight-bold);
     }
   }
