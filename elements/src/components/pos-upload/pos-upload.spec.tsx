@@ -21,7 +21,6 @@ vi.mock('@uppy/image-editor', () => ({ default: {} }));
 vi.mock('@uppy/webcam', () => ({ default: {} }));
 
 import './pos-upload';
-import { when } from 'vitest-when';
 import { err, ok } from 'neverthrow';
 import { HttpProblem } from '@pod-os/core';
 
@@ -62,7 +61,7 @@ describe('pos-upload', () => {
 
     // and a single file has been selected for upload
     const filesToUpload = [{ data: new File([''], 'image.png', { type: 'image/png' }) }];
-    when(getFilesByIds).calledWith(['image.png']).thenReturn(filesToUpload);
+    vi.when(getFilesByIds).calledWith(['image.png']).thenReturn(filesToUpload);
 
     // when upload is triggered for the file
     expect(addUploader).toHaveBeenCalled();
@@ -86,7 +85,7 @@ describe('pos-upload', () => {
 
     // and a single blob has been selected for upload
     const filesToUpload = [{ data: new Blob(['file to upload']), name: 'file.txt', type: 'text/plain' }];
-    when(getFilesByIds).calledWith(['file.txt']).thenReturn(filesToUpload);
+    vi.when(getFilesByIds).calledWith(['file.txt']).thenReturn(filesToUpload);
 
     // when upload is triggered for the file
     expect(addUploader).toHaveBeenCalled();
@@ -119,7 +118,7 @@ describe('pos-upload', () => {
       { data: new File([''], 'image.png', { type: 'image/png' }) },
       { data: new File([''], 'file.pdf', { type: 'application/pdf' }) },
     ];
-    when(getFilesByIds).calledWith(['image.png', 'file.pdf']).thenReturn(filesToUpload);
+    vi.when(getFilesByIds).calledWith(['image.png', 'file.pdf']).thenReturn(filesToUpload);
 
     // when upload is triggered for the files
     expect(addUploader).toHaveBeenCalled();
@@ -147,7 +146,7 @@ describe('pos-upload', () => {
 
     // and a single file has been selected for upload
     const filesToUpload = [{ data: new File([''], 'image.png', { type: 'image/png' }) }];
-    when(getFilesByIds).calledWith(['image.png']).thenReturn(filesToUpload);
+    vi.when(getFilesByIds).calledWith(['image.png']).thenReturn(filesToUpload);
 
     // when upload is triggered for the file
     expect(addUploader).toHaveBeenCalled();
@@ -171,10 +170,10 @@ describe('pos-upload', () => {
     const failingFile = new File(['failing'], 'fails.pdf', { type: 'application/pdf' });
 
     const uploadFn = vi.fn();
-    when(uploadFn)
+    vi.when(uploadFn)
       .calledWith(workingFile)
       .thenReturn(ok({ url: 'https://pod.test/works.png' }));
-    when(uploadFn)
+    vi.when(uploadFn)
       .calledWith(failingFile)
       .thenReturn(
         err({
@@ -188,7 +187,7 @@ describe('pos-upload', () => {
 
     // and multiple files have been selected for upload
     const filesToUpload = [{ data: workingFile }, { data: failingFile }];
-    when(getFilesByIds).calledWith(['works.png', 'fails.pdf']).thenReturn(filesToUpload);
+    vi.when(getFilesByIds).calledWith(['works.png', 'fails.pdf']).thenReturn(filesToUpload);
 
     // when upload is triggered for the files
     expect(addUploader).toHaveBeenCalled();
@@ -215,7 +214,7 @@ describe('pos-upload', () => {
 
     // and a single file has been selected for upload
     const fileToUpload = [{ data: { size: 123 } }];
-    when(getFilesByIds).calledWith(['image.png']).thenReturn(fileToUpload);
+    vi.when(getFilesByIds).calledWith(['image.png']).thenReturn(fileToUpload);
 
     // when upload is triggered for the file
     expect(addUploader).toHaveBeenCalled();

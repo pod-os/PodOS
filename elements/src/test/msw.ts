@@ -1,7 +1,6 @@
 import { setupServer } from 'msw/node';
 import { http, HttpResponse } from 'msw';
 import { vi } from 'vitest';
-import { when } from 'vitest-when';
 
 export const server = setupServer();
 
@@ -75,7 +74,7 @@ export function jpeg(url: string, data: string) {
     });
     const jpgBlob = await jpgResponse.blob();
     vi.spyOn(URL, 'createObjectURL');
-    when(URL.createObjectURL).calledWith(jpgBlob).thenReturn(`blob:${data}`);
+    vi.when(URL.createObjectURL).calledWith(jpgBlob).thenReturn(`blob:${data}`);
     return jpgResponse;
   });
 }

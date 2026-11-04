@@ -1,7 +1,6 @@
 import { Mock, vi } from 'vitest';
 import { beforeEach, describe, expect, it } from '@stencil/vitest';
 import { IndexedDbOfflineCache } from './IndexedDbOfflineCache';
-import { when } from 'vitest-when';
 import { IDBPDatabase, openDB } from 'idb';
 
 import { CachedRdfDocument } from '@pod-os/core';
@@ -20,7 +19,7 @@ describe('IndexDbOfflineCache', () => {
       getFromIndex: vi.fn(),
     } as unknown as IDBPDatabase;
     const dbPromise = Promise.resolve(db);
-    when(openDB).calledWith('OfflineCacheDB', 1, expect.anything()).thenReturn(dbPromise);
+    vi.when(openDB).calledWith('OfflineCacheDB', 1, expect.anything()).thenReturn(dbPromise);
     cache = new IndexedDbOfflineCache();
   });
 
@@ -45,7 +44,7 @@ describe('IndexDbOfflineCache', () => {
 
     it('should store document in IndexDB when revision is new', async () => {
       // given no existing document in cache
-      when(db.getFromIndex)
+      vi.when(db.getFromIndex)
         .calledWith('documents', 'url-revision', ['https://document.example/', 'old-revision'])
         .thenResolve({
           url: 'https://document.example/',
@@ -74,7 +73,7 @@ describe('IndexDbOfflineCache', () => {
         statements: 'known content',
         revision: 'known-revision',
       };
-      when(db.getFromIndex)
+      vi.when(db.getFromIndex)
         .calledWith('documents', 'url-revision', ['https://document.example/', 'known-revision'])
         .thenResolve(existingDoc);
 
@@ -96,7 +95,7 @@ describe('IndexDbOfflineCache', () => {
   describe('get', () => {
     it('should get undefined when no document is found', async () => {
       // given no existing document in cache
-      when(db.get).calledWith('documents', 'https://document.example/').thenResolve(undefined);
+      vi.when(db.get).calledWith('documents', 'https://document.example/').thenResolve(undefined);
 
       // when the document is retrieved from the cache
       const result = await cache.get('https://document.example/');
@@ -112,7 +111,7 @@ describe('IndexDbOfflineCache', () => {
         statements: 'known content',
         revision: 'known-revision',
       };
-      when(db.get).calledWith('documents', 'https://document.example/').thenResolve(existingDoc);
+      vi.when(db.get).calledWith('documents', 'https://document.example/').thenResolve(existingDoc);
 
       // when the document is retrieved from the cache
       const result = await cache.get('https://document.example/');

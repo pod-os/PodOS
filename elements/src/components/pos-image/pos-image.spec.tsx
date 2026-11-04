@@ -1,6 +1,5 @@
 import { Mock, vi } from 'vitest';
 import { beforeEach, describe, expect, h, it, render } from '@stencil/vitest';
-import { when } from 'vitest-when';
 
 import { BrokenFile } from '../broken-file/BrokenFile';
 import { mockPodOS } from '../../test/mockPodOS.vitest';
@@ -27,7 +26,7 @@ describe('pos-image', () => {
 
   it('renders loading indicator while fetching', async () => {
     const os = mockPodOS();
-    when(os.files().fetchFile)
+    vi.when(os.files().fetchFile)
       .calledWith('https://pod.test/image.png')
       .thenReturn(new Promise(() => null));
     const page = await render(<pos-image src="https://pod.test/image.png" alt="image" />);
@@ -40,7 +39,7 @@ describe('pos-image', () => {
   it('renders img after loading', async () => {
     const file = mockBinaryFile(pngBlob);
     const os = mockPodOS();
-    when(os.files().fetchFile).calledWith('https://pod.test/image.png').thenResolve(file);
+    vi.when(os.files().fetchFile).calledWith('https://pod.test/image.png').thenResolve(file);
     const page = await render(<pos-image src="https://pod.test/image.png" alt="image" />);
     await page.waitForChanges();
     expect(URL.createObjectURL).toHaveBeenCalledWith(pngBlob);
@@ -50,7 +49,7 @@ describe('pos-image', () => {
   it('uses the same image for a blurred background', async () => {
     const file = mockBinaryFile(pngBlob);
     const os = mockPodOS();
-    when(os.files().fetchFile).calledWith('https://pod.test/image.png').thenResolve(file);
+    vi.when(os.files().fetchFile).calledWith('https://pod.test/image.png').thenResolve(file);
     const page = await render(<pos-image src="https://pod.test/image.png" alt="image" blurred-background />);
     await page.waitForChanges();
     expect(URL.createObjectURL).toHaveBeenCalledWith(pngBlob);
@@ -63,7 +62,7 @@ describe('pos-image', () => {
     document.addEventListener('pod-os:resource-loaded', onResourceLoaded);
     const file = mockBinaryFile(pngBlob);
     const os = mockPodOS();
-    when(os.files().fetchFile).calledWith('https://pod.test/image.png').thenResolve(file);
+    vi.when(os.files().fetchFile).calledWith('https://pod.test/image.png').thenResolve(file);
     const page = await render(<pos-image src="https://pod.test/image.png" alt="image" />);
     await page.waitForChanges();
     expect(onResourceLoaded).toHaveBeenCalled();
@@ -72,7 +71,7 @@ describe('pos-image', () => {
 
   it('renders html img tag with src when fetch failed', async () => {
     const os = mockPodOS();
-    when(os.files().fetchFile).calledWith('https://pod.test/image.png').thenReject(new Error('network error'));
+    vi.when(os.files().fetchFile).calledWith('https://pod.test/image.png').thenReject(new Error('network error'));
     const page = await render(<pos-image src="https://pod.test/image.png" />);
     await page.waitForChanges();
     expect(page.root.shadowRoot).toEqualHtml('<img src="https://pod.test/image.png">');
@@ -80,7 +79,7 @@ describe('pos-image', () => {
 
   it('renders a link when img tag fails to load image', async () => {
     const os = mockPodOS();
-    when(os.files().fetchFile).calledWith('https://pod.test/image.png').thenReject(new Error('network error'));
+    vi.when(os.files().fetchFile).calledWith('https://pod.test/image.png').thenReject(new Error('network error'));
     const page = await render(<pos-image src="https://pod.test/image.png" />);
     await page.waitForChanges();
     page.root.shadowRoot!.querySelector('img')!.dispatchEvent(new Event('error'));
@@ -103,7 +102,7 @@ describe('pos-image', () => {
       },
     } as unknown as BrokenFileData;
     const os = mockPodOS();
-    when(os.files().fetchFile).calledWith('https://pod.test/image.png').thenResolve(brokenImage);
+    vi.when(os.files().fetchFile).calledWith('https://pod.test/image.png').thenResolve(brokenImage);
     (BrokenFile as Mock).mockReturnValue(<div class="error">403 - Forbidden - https://pod.test/image.png</div>);
     const page = await render(<pos-image src="https://pod.test/image.png" />);
     await page.waitForChanges();
@@ -113,8 +112,8 @@ describe('pos-image', () => {
   it('updates and loads resource when src changes', async () => {
     const file = mockBinaryFile(pngBlob);
     const os = mockPodOS();
-    when(os.files().fetchFile).calledWith('https://pod.test/image.png').thenResolve(file);
-    when(os.files().fetchFile)
+    vi.when(os.files().fetchFile).calledWith('https://pod.test/image.png').thenResolve(file);
+    vi.when(os.files().fetchFile)
       .calledWith('https://pod.test/other.png')
       .thenReturn(new Promise(() => null));
     const page = await render(<pos-image src="https://pod.test/image.png" />);
@@ -127,11 +126,11 @@ describe('pos-image', () => {
   it('re-fetches resource when session state changes', async () => {
     const file = mockBinaryFile(pngBlob);
     const os = mockPodOS();
-    when(os.files().fetchFile, { times: 1 }).calledWith('https://pod.test/image.png').thenResolve(file);
+    vi.when(os.files().fetchFile).calledWith('https://pod.test/image.png').thenResolveOnce(file);
     const page = await render(<pos-image src="https://pod.test/image.png" />);
-    when(os.files().fetchFile, { times: 1 })
+    vi.when(os.files().fetchFile)
       .calledWith('https://pod.test/image.png')
-      .thenReturn(new Promise(() => null));
+      .thenReturnOnce(new Promise(() => null));
     session.state.isLoggedIn = true;
     await page.waitForChanges();
     expect(page.root.shadowRoot).toEqualHtml('<sl-skeleton effect="sheen"></sl-skeleton>');
@@ -150,9 +149,9 @@ describe('pos-image', () => {
       }
     };
     const os = mockPodOS();
-    when(os.files().fetchFile, { times: 1 }).calledWith('https://pod.test/image.png').thenResolve(unauthorizedFile);
+    vi.when(os.files().fetchFile).calledWith('https://pod.test/image.png').thenResolveOnce(unauthorizedFile);
     const page = await render(<pos-image src="https://pod.test/image.png" />);
-    when(os.files().fetchFile, { times: 1 }).calledWith('https://pod.test/image.png').thenResolve(file);
+    vi.when(os.files().fetchFile).calledWith('https://pod.test/image.png').thenResolveOnce(file);
     expect(sessionChanged).toBeDefined();
     sessionChanged!();
     await page.waitForChanges();

@@ -1,6 +1,5 @@
-import { describe, expect, h, it, render } from '@stencil/vitest';
+import { describe, expect, h, it, render, vi } from '@stencil/vitest';
 import './pos-list';
-import { when } from 'vitest-when';
 import { of } from 'rxjs';
 import { mockResource } from '../../test/mockResource';
 import { mockOsProvider, mockPodOS } from '../../test/mockPodOS.vitest';
@@ -70,7 +69,7 @@ describe('pos-list', () => {
   it('renders the template for all things of the given type', async () => {
     const os = mockPodOS();
     mockOsProvider(os);
-    when(os.store.observeFindMembers)
+    vi.when(os.store.observeFindMembers)
       .calledWith('http://schema.org/Recipe')
       .thenReturn(of(['https://recipe.test/1']));
 

@@ -2,7 +2,6 @@ import { Components } from '../../components';
 import { BinaryFile, BrokenFile as BrokenFileData, PodOS, Thing } from '@pod-os/core';
 import { mockOsProvider, mockPodOS } from '../../test/mockPodOS.vitest';
 import { BrokenFile } from '../broken-file/BrokenFile';
-import { when } from 'vitest-when';
 
 import session from '../../store/session';
 
@@ -43,7 +42,7 @@ describe('pos-document', () => {
   it('renders loading indicator while fetching', async () => {
     const os = mockPodOS();
     mockOsProvider(os);
-    when(os.files().fetchFile)
+    vi.when(os.files().fetchFile)
       .calledWith('https://pod.test/test.pdf')
       .thenReturn(new Promise(() => null));
     const page = await render(<pos-document src="https://pod.test/test.pdf"></pos-document>);
@@ -56,7 +55,7 @@ describe('pos-document', () => {
     const file = mockBinaryFile(pdfBlob);
     const os = mockPodOS();
     mockOsProvider(os);
-    when(os.files().fetchFile).calledWith('https://pod.test/test.pdf').thenResolve(file);
+    vi.when(os.files().fetchFile).calledWith('https://pod.test/test.pdf').thenResolve(file);
     const page = await render(<pos-document src="https://pod.test/test.pdf"></pos-document>);
     await page.waitForChanges();
     expect(os.files().fetchFile).toHaveBeenCalledOnce();
@@ -71,8 +70,8 @@ describe('pos-document', () => {
     const os = mockPodOS();
     mockOsProvider(os);
     const file = mockBinaryFile(markdownBlob);
-    when(os.files().fetchFile).calledWith('https://pod.test/test.md').thenResolve(file);
-    when(os.store.get)
+    vi.when(os.files().fetchFile).calledWith('https://pod.test/test.md').thenResolve(file);
+    vi.when(os.store.get)
       .calledWith('https://pod.test/test.md')
       .thenReturn({ editable: true } as unknown as Thing);
     const page = await render(<pos-document src="https://pod.test/test.md"></pos-document>);
@@ -93,8 +92,8 @@ describe('pos-document', () => {
     const os = mockPodOS();
     mockOsProvider(os);
     const file = mockBinaryFile(markdownBlob);
-    when(os.files().fetchFile).calledWith('https://pod.test/test.md').thenResolve(file);
-    when(os.store.get)
+    vi.when(os.files().fetchFile).calledWith('https://pod.test/test.md').thenResolve(file);
+    vi.when(os.store.get)
       .calledWith('https://pod.test/test.md')
       .thenReturn({ editable: false } as unknown as Thing);
     const page = await render(<pos-document src="https://pod.test/test.md"></pos-document>);
@@ -109,7 +108,7 @@ describe('pos-document', () => {
     const os = mockPodOS();
     mockOsProvider(os);
     const file = mockBinaryFile(pdfBlob);
-    when(os.files().fetchFile).calledWith('https://pod.test/test.pdf').thenResolve(file);
+    vi.when(os.files().fetchFile).calledWith('https://pod.test/test.pdf').thenResolve(file);
     const onResourceLoaded = vi.fn();
     document.addEventListener('pod-os:resource-loaded', onResourceLoaded);
     const page = await render(<pos-document src="https://pod.test/test.pdf"></pos-document>);
@@ -121,7 +120,7 @@ describe('pos-document', () => {
   it('renders error when fetch failed', async () => {
     const os = mockPodOS();
     mockOsProvider(os);
-    when(os.files().fetchFile).calledWith('https://pod.test/test.pdf').thenReject(new Error('network error'));
+    vi.when(os.files().fetchFile).calledWith('https://pod.test/test.pdf').thenReject(new Error('network error'));
     const page = await render(<pos-document src="https://pod.test/test.pdf"></pos-document>);
     await page.waitForChanges();
     expect(page.root.shadowRoot).toEqualHtml(`
@@ -138,7 +137,7 @@ describe('pos-document', () => {
     } as unknown as BrokenFileData;
     const os = mockPodOS();
     mockOsProvider(os);
-    when(os.files().fetchFile).calledWith('https://pod.test/test.pdf').thenResolve(brokenImage);
+    vi.when(os.files().fetchFile).calledWith('https://pod.test/test.pdf').thenResolve(brokenImage);
     (BrokenFile as Mock).mockReturnValue(<div class="error">403 - Forbidden - https://pod.test/test.pdf</div>);
     const page = await render(<pos-document src="https://pod.test/test.pdf"></pos-document>);
     await page.waitForChanges();
@@ -151,8 +150,8 @@ describe('pos-document', () => {
     const file = mockBinaryFile(pdfBlob);
     const os = mockPodOS();
     mockOsProvider(os);
-    when(os.files().fetchFile).calledWith('https://pod.test/test.pdf').thenResolve(file);
-    when(os.files().fetchFile)
+    vi.when(os.files().fetchFile).calledWith('https://pod.test/test.pdf').thenResolve(file);
+    vi.when(os.files().fetchFile)
       .calledWith('https://pod.test/other.png')
       .thenReturn(new Promise(() => null));
     const page = await render(<pos-document src="https://pod.test/test.pdf"></pos-document>);
@@ -167,16 +166,16 @@ describe('pos-document', () => {
 
     // given a file can be fetched initially
     const file = mockBinaryFile(pdfBlob);
-    when(os.files().fetchFile, { times: 1 }).calledWith('https://pod.test/test.pdf').thenResolve(file);
+    vi.when(os.files().fetchFile).calledWith('https://pod.test/test.pdf').thenResolveOnce(file);
 
     // and a pos-document showing that file
     const page = await render(<pos-document src="https://pod.test/test.pdf"></pos-document>);
     await page.waitForChanges();
 
     // and a second fetch will keep loading
-    when(os.files().fetchFile, { times: 1 })
+    vi.when(os.files().fetchFile)
       .calledWith('https://pod.test/test.pdf')
-      .thenReturn(new Promise(() => null));
+      .thenReturnOnce(new Promise(() => null));
 
     // when the session state changes
     session.state.isLoggedIn = true;
@@ -191,13 +190,13 @@ describe('pos-document', () => {
     mockOsProvider(os);
     // given the initial fetch of a file results in an error
     const file = mockBinaryFile(pdfBlob);
-    when(os.files().fetchFile, { times: 1 }).calledWith('https://pod.test/test.pdf').thenReject(new Error('failed'));
+    vi.when(os.files().fetchFile).calledWith('https://pod.test/test.pdf').thenRejectOnce(new Error('failed'));
     const page = await render(<pos-document src="https://pod.test/test.pdf"></pos-document>);
     await page.waitForChanges();
     expect(page.root.shadowRoot).toEqualHtml('<div class="error"> failed </div>');
 
     // But after sign-in the fetch works
-    when(os.files().fetchFile, { times: 1 }).calledWith('https://pod.test/test.pdf').thenResolve(file);
+    vi.when(os.files().fetchFile).calledWith('https://pod.test/test.pdf').thenResolveOnce(file);
     session.state.isLoggedIn = true;
     await page.waitForChanges();
 
@@ -216,7 +215,7 @@ describe('pos-document', () => {
       // and PodOS can put the file successfully
       const os = mockPodOS();
       mockOsProvider(os);
-      when(os.files().putFile)
+      vi.when(os.files().putFile)
         .calledWith(file, 'new content')
         .thenResolve(new Response(null, { status: 200 }));
 
@@ -242,8 +241,8 @@ describe('pos-document', () => {
       // and PodOS can put the file successfully
       const os = mockPodOS();
       mockOsProvider(os);
-      when(os.files().fetchFile).calledWith('https://pod.test/test.md').thenResolve(file);
-      when(os.store.get)
+      vi.when(os.files().fetchFile).calledWith('https://pod.test/test.md').thenResolve(file);
+      vi.when(os.store.get)
         .calledWith('https://pod.test/test.md')
         .thenReturn({ editable: true } as unknown as Thing);
 
@@ -259,7 +258,7 @@ describe('pos-document', () => {
       const putPromise = new Promise<Response>(resolve => {
         resolvePut = () => resolve({ ok: true } as Response);
       });
-      when(os.files().putFile).calledWith(file, 'modified content').thenReturn(putPromise);
+      vi.when(os.files().putFile).calledWith(file, 'modified content').thenReturn(putPromise);
 
       page.root.dispatchEvent(
         new CustomEvent('pod-os:document-modified', { detail: { file, newContent: 'modified content' } }),
@@ -294,8 +293,8 @@ describe('pos-document', () => {
         // and the file can be fetched initially
         os = mockPodOS();
         mockOsProvider(os);
-        when(os.files().fetchFile).calledWith('https://pod.test/test.md').thenResolve(file);
-        when(os.store.get)
+        vi.when(os.files().fetchFile).calledWith('https://pod.test/test.md').thenResolve(file);
+        vi.when(os.store.get)
           .calledWith('https://pod.test/test.md')
           .thenReturn({ editable: true } as unknown as Thing);
 
@@ -315,7 +314,7 @@ describe('pos-document', () => {
       it('emits pod-os:error when putFile responds with non-ok http status', async () => {
         // but PodOS will fail to put the file responding with non-ok http status
         const error = { status: 401, statusText: 'Unauthorized', ok: false } as Response;
-        when(os.files().putFile).calledWith(file, 'new content').thenResolve(error);
+        vi.when(os.files().putFile).calledWith(file, 'new content').thenResolve(error);
 
         // when the file was modified with new content
         page.root.dispatchEvent(
@@ -337,11 +336,7 @@ describe('pos-document', () => {
 
       it('emits pod-os:error when putFile responds with exception', async () => {
         // but PodOS will fail to put the file, throwing an error
-        when(os.files().putFile)
-          .calledWith(file, 'new content')
-          .thenDo(() => {
-            throw new Error('Network error');
-          });
+        vi.when(os.files().putFile).calledWith(file, 'new content').thenThrow(new Error('Network error'));
 
         // when the file was modified with new content
         page.root.dispatchEvent(

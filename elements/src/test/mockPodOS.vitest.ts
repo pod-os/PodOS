@@ -1,6 +1,5 @@
 import { Mock, vi } from 'vitest';
 import { PodOS } from '@pod-os/core';
-import { when } from 'vitest-when';
 import { BehaviorSubject, ReplaySubject } from 'rxjs';
 import { createPodOS } from '../pod-os';
 import { usePodOS } from '../components/events/usePodOS';
@@ -58,7 +57,7 @@ export function mockPodOS(): PodOS {
   };
   const observedLabel$ = new ReplaySubject<string>();
   observedLabel$.next(alice.name);
-  when(os.store.get)
+  vi.when(os.store.get)
     .calledWith(alice.webId)
     .thenReturn({
       label: () => alice.name,

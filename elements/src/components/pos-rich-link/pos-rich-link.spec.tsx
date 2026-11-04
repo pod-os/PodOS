@@ -1,7 +1,6 @@
 import { vi } from 'vitest';
 import { beforeEach, describe, expect, h, it, render, RenderResult } from '@stencil/vitest';
 import { getByText } from '@testing-library/dom';
-import { when } from 'vitest-when';
 
 import './pos-rich-link';
 
@@ -92,7 +91,7 @@ describe('pos-rich-link without uri', () => {
       uri: 'https://pod.example/resource',
       relations: vi.fn(),
     };
-    when(thing.relations)
+    vi.when(thing.relations)
       .calledWith('https://schema.org/video')
       .thenReturn([{ predicate: 'https://schema.org/video', uris: ['https://video.test/video-1'] }]);
 
@@ -108,7 +107,7 @@ describe('pos-rich-link without uri', () => {
       uri: 'https://video.test/video-1',
       reverseRelations: vi.fn(),
     };
-    when(thing.reverseRelations)
+    vi.when(thing.reverseRelations)
       .calledWith('https://schema.org/video')
       .thenReturn([{ predicate: 'https://schema.org/video', uris: ['https://pod.example/resource'] }]);
 

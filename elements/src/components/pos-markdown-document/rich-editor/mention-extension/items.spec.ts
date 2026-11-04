@@ -3,7 +3,6 @@ import { describe, expect, it, vi } from 'vitest';
 import { PodOS, SearchIndex } from '@pod-os/core';
 
 import { items } from './items';
-import { when } from 'vitest-when';
 
 describe('mention items', () => {
   it('returns mention suggestions from the search index and the store', () => {
@@ -33,7 +32,7 @@ describe('mention items', () => {
       },
       proposeUriForNewThing,
     } as unknown as PodOS;
-    when(proposeUriForNewThing)
+    vi.when(proposeUriForNewThing)
       .calledWith('https://pod.test/alice/document.md', 'something')
       .thenReturn('https://pod.test/alice/something#it');
 
