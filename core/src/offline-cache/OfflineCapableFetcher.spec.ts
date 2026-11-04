@@ -1,7 +1,6 @@
 import { describe, expect, it, Mock, vi } from "vitest";
 import { OfflineCapableFetcher } from "./OfflineCapableFetcher";
 import { graph, sym } from "rdflib";
-import { when } from "vitest-when";
 import { OfflineCache } from "./OfflineCache";
 import { mockTurtleDocument } from "../test-support";
 
@@ -312,7 +311,7 @@ describe(OfflineCapableFetcher.name, () => {
 
       // and an offline cache containing a document
       const offlineCache = mockOfflineCache();
-      when(offlineCache.get)
+      vi.when(offlineCache.get)
         .calledWith("https://alice.pod.test/thing")
         .thenResolve({
           url: "https://alice.pod.test/thing",
@@ -470,7 +469,7 @@ describe(OfflineCapableFetcher.name, () => {
 
         // and an offline cache containing a document
         const offlineCache = mockOfflineCache();
-        when(offlineCache.get)
+        vi.when(offlineCache.get)
           .calledWith("https://alice.pod.test/thing")
           .thenResolve({
             url: "https://alice.pod.test/thing",
@@ -549,14 +548,14 @@ describe(OfflineCapableFetcher.name, () => {
 
       // and an offline cache containing one document only
       const offlineCache = mockOfflineCache();
-      when(offlineCache.get)
+      vi.when(offlineCache.get)
         .calledWith("https://alice.pod.test/one")
         .thenResolve({
           url: "https://alice.pod.test/one",
           revision: "some-revision",
           statements: `<https://alice.pod.test/one#it> <http://www.w3.org/2000/01/rdf-schema#label> "First" .`,
         });
-      when(offlineCache.get)
+      vi.when(offlineCache.get)
         .calledWith("https://alice.pod.test/two")
         .thenResolve({
           url: "https://alice.pod.test/two",

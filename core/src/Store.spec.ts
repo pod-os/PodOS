@@ -1,5 +1,4 @@
 import { beforeEach, describe, expect, it, Mock, vi } from "vitest";
-import { when } from "vitest-when";
 import { blankNode, graph, IndexedFormula, quad, sym, lit } from "rdflib";
 import { Parser as SparqlParser, Update } from "sparqljs";
 import { PodOsSession } from "./authentication";
@@ -67,7 +66,7 @@ describe("Store", () => {
       const mockSession = {
         authenticatedFetch: vi.fn(),
       } as unknown as PodOsSession;
-      when(mockSession.authenticatedFetch)
+      vi.when(mockSession.authenticatedFetch)
         .calledWith("https://pod.test/resource", expect.anything())
         .thenResolve({
           ok: true,
@@ -129,7 +128,7 @@ describe("Store", () => {
         authenticatedFetch: vi.fn(),
       } as unknown as PodOsSession;
 
-      when(mockSession.authenticatedFetch)
+      vi.when(mockSession.authenticatedFetch)
         .calledWith("https://pod.test/report.pdf", expect.anything())
         .thenResolve({
           ok: true,
@@ -141,7 +140,7 @@ describe("Store", () => {
           }),
         } as Response);
 
-      when(mockSession.authenticatedFetch)
+      vi.when(mockSession.authenticatedFetch)
         .calledWith("https://pod.test/report.pdf.meta", expect.anything())
         .thenResolve({
           ok: true,
@@ -183,7 +182,7 @@ describe("Store", () => {
       const mockSession = {
         authenticatedFetch: vi.fn(),
       } as unknown as PodOsSession;
-      when(mockSession.authenticatedFetch)
+      vi.when(mockSession.authenticatedFetch)
         .calledWith("https://pod.test/resource", expect.anything())
         .thenResolve({
           ok: true,
@@ -208,7 +207,7 @@ describe("Store", () => {
       const mockSession = {
         authenticatedFetch: vi.fn(),
       } as unknown as PodOsSession;
-      when(mockSession.authenticatedFetch)
+      vi.when(mockSession.authenticatedFetch)
         .calledWith("https://pod.test/resource", expect.anything())
         .thenResolve({
           ok: true,
@@ -235,7 +234,7 @@ describe("Store", () => {
       const mockSession = {
         authenticatedFetch: vi.fn(),
       } as unknown as PodOsSession;
-      when(mockSession.authenticatedFetch)
+      vi.when(mockSession.authenticatedFetch)
         .calledWith("https://pod.test/resource", expect.anything())
         .thenResolve({
           ok: true,
@@ -265,7 +264,7 @@ describe("Store", () => {
       } as unknown as PodOsSession;
 
       // First fetch: a binary resource with a Link header pointing to a .meta document
-      when(mockSession.authenticatedFetch)
+      vi.when(mockSession.authenticatedFetch)
         .calledWith("https://pod.test/report.pdf", expect.anything())
         .thenResolve({
           ok: true,
@@ -278,7 +277,7 @@ describe("Store", () => {
         } as Response);
 
       // Second fetch: the .meta document fails
-      when(mockSession.authenticatedFetch)
+      vi.when(mockSession.authenticatedFetch)
         .calledWith("https://pod.test/report.pdf.meta", expect.anything())
         .thenResolve({
           ok: false,
@@ -314,7 +313,7 @@ describe("Store", () => {
         authenticatedFetch: vi.fn(),
       } as unknown as PodOsSession;
 
-      when(mockSession.authenticatedFetch)
+      vi.when(mockSession.authenticatedFetch)
         .calledWith("https://pod.test/resource", expect.anything())
         .thenResolve({
           ok: true,
@@ -343,7 +342,7 @@ describe("Store", () => {
         authenticatedFetch: vi.fn(),
       } as unknown as PodOsSession;
 
-      when(mockSession.authenticatedFetch)
+      vi.when(mockSession.authenticatedFetch)
         .calledWith("https://pod.test/resource", expect.anything())
         .thenResolve({
           ok: true,
@@ -368,7 +367,7 @@ describe("Store", () => {
       const mockSession = {
         authenticatedFetch: vi.fn(),
       } as unknown as PodOsSession;
-      when(mockSession.authenticatedFetch)
+      vi.when(mockSession.authenticatedFetch)
         .calledWith("https://pod.test/resource.png", expect.anything())
         .thenResolve({
           ok: true,
@@ -404,7 +403,7 @@ describe("Store", () => {
       const mockSession = {
         authenticatedFetch: vi.fn(),
       } as unknown as PodOsSession;
-      when(mockSession.authenticatedFetch)
+      vi.when(mockSession.authenticatedFetch)
         .calledWith("https://pod.test/resource1", expect.anything())
         .thenResolve({
           ok: true,
@@ -418,7 +417,7 @@ describe("Store", () => {
               '<https://pod.test/resource1#it> <https://pod.test/vocab/predicate> "literal value 1" .',
             ),
         } as Response);
-      when(mockSession.authenticatedFetch)
+      vi.when(mockSession.authenticatedFetch)
         .calledWith("https://pod.test/resource2", expect.anything())
         .thenResolve({
           ok: true,
@@ -523,7 +522,7 @@ describe("Store", () => {
       const mockSession = {
         authenticatedFetch: vi.fn(),
       } as unknown as PodOsSession;
-      when(mockSession.authenticatedFetch)
+      vi.when(mockSession.authenticatedFetch)
         .calledWith("https://pod.test/resource1", expect.anything())
         .thenResolve({
           ok: false,
@@ -534,7 +533,7 @@ describe("Store", () => {
           }),
           text: () => Promise.resolve("Internal Server Error"),
         } as Response);
-      when(mockSession.authenticatedFetch)
+      vi.when(mockSession.authenticatedFetch)
         .calledWith("https://pod.test/resource2", expect.anything())
         .thenResolve({
           ok: true,
@@ -606,7 +605,7 @@ describe("Store", () => {
         authenticatedFetch: vi.fn(),
       } as unknown as PodOsSession;
 
-      when(mockSession.authenticatedFetch)
+      vi.when(mockSession.authenticatedFetch)
         .calledWith("https://pod.test/resource", expect.anything())
         .thenResolve({
           ok: true,
@@ -639,7 +638,7 @@ describe("Store", () => {
         authenticatedFetch: vi.fn(),
       } as unknown as PodOsSession;
 
-      when(mockSession.authenticatedFetch)
+      vi.when(mockSession.authenticatedFetch)
         .calledWith("https://pod.test/resource", expect.anything())
         .thenResolve({
           ok: true,
@@ -672,7 +671,7 @@ describe("Store", () => {
       const mockSession = {
         authenticatedFetch: fetchMock,
       } as unknown as PodOsSession;
-      when(fetchMock)
+      vi.when(fetchMock)
         .calledWith("https://pod.test/resource", expect.anything())
         .thenResolve({
           ok: true,
@@ -713,7 +712,7 @@ describe("Store", () => {
         authenticatedFetch: fetchMock,
       } as unknown as PodOsSession;
       // given a non-RDF resource can be fetched and links to a description resource
-      when(fetchMock)
+      vi.when(fetchMock)
         .calledWith("https://pod.test/resource.pdf", expect.anything())
         .thenResolve({
           ok: true,
@@ -728,7 +727,7 @@ describe("Store", () => {
           text: () => Promise.resolve(""),
         } as Response);
       // and the description resource can be fetched and is writable
-      when(fetchMock)
+      vi.when(fetchMock)
         .calledWith("https://pod.test/resource.pdf.meta", expect.anything())
         .thenResolve({
           ok: true,
@@ -770,7 +769,7 @@ describe("Store", () => {
         authenticatedFetch: fetchMock,
       } as unknown as PodOsSession;
       // given a non-RDF resource can be fetched but does not link to a description resource
-      when(fetchMock)
+      vi.when(fetchMock)
         .calledWith("https://pod.test/resource.pdf", expect.anything())
         .thenResolve({
           ok: true,
@@ -808,7 +807,7 @@ describe("Store", () => {
       const mockSession = {
         authenticatedFetch: fetchMock,
       } as unknown as PodOsSession;
-      when(fetchMock)
+      vi.when(fetchMock)
         .calledWith("https://pod.test/resource", expect.anything())
         .thenResolve({
           ok: true,
@@ -854,7 +853,7 @@ describe("Store", () => {
       const mockSession = {
         authenticatedFetch: fetchMock,
       } as unknown as PodOsSession;
-      when(fetchMock)
+      vi.when(fetchMock)
         .calledWith("https://pod.test/resource", expect.anything())
         .thenResolve({
           ok: true,
@@ -895,7 +894,7 @@ describe("Store", () => {
         authenticatedFetch: fetchMock,
       } as unknown as PodOsSession;
       // given a non-RDF resource can be fetched and links to a description resource
-      when(fetchMock)
+      vi.when(fetchMock)
         .calledWith("https://pod.test/resource.pdf", expect.anything())
         .thenResolve({
           ok: true,
@@ -910,7 +909,7 @@ describe("Store", () => {
           text: () => Promise.resolve(""),
         } as Response);
       // and the description resource can be fetched and is writable
-      when(fetchMock)
+      vi.when(fetchMock)
         .calledWith("https://pod.test/resource.pdf.meta", expect.anything())
         .thenResolve({
           ok: true,
@@ -952,7 +951,7 @@ describe("Store", () => {
         authenticatedFetch: fetchMock,
       } as unknown as PodOsSession;
       // given a non-RDF resource can be fetched but does not link to a description resource
-      when(fetchMock)
+      vi.when(fetchMock)
         .calledWith("https://pod.test/resource.pdf", expect.anything())
         .thenResolve({
           ok: true,
@@ -990,7 +989,7 @@ describe("Store", () => {
       const mockSession = {
         authenticatedFetch: fetchMock,
       } as unknown as PodOsSession;
-      when(fetchMock)
+      vi.when(fetchMock)
         .calledWith("https://pod.test/new-thing", expect.anything())
         .thenResolve({
           ok: true,
@@ -1029,7 +1028,7 @@ describe("Store", () => {
       const mockSession = {
         authenticatedFetch: fetchMock,
       } as unknown as PodOsSession;
-      when(fetchMock)
+      vi.when(fetchMock)
         .calledWith("https://pod.test/new-thing", expect.anything())
         .thenResolve({
           ok: true,

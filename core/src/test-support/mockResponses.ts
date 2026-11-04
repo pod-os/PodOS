@@ -1,5 +1,4 @@
-import { expect, Mock } from "vitest";
-import { when } from "vitest-when";
+import { expect, Mock, vi } from "vitest";
 
 /**
  * Mock a turtle document at the given URL
@@ -14,7 +13,7 @@ export function mockTurtleDocument(
   ttl: string,
   additionalHeaders: Record<string, string> = {},
 ) {
-  when(fetch)
+  vi.when(fetch)
     .calledWith(url, expect.anything())
     .thenResolve({
       ok: true,
@@ -46,7 +45,8 @@ export function mockLdpContainer(
   moreTurtle: string = "",
   additionalHeaders: Record<string, string> = {},
 ) {
-  when(fetch)
+  vi.when(fetch);
+  vi.when(fetch)
     .calledWith(url, expect.anything())
     .thenResolve({
       ok: true,
@@ -78,7 +78,8 @@ export function mockLdpContainer(
  * @param url - The URL to mock
  */
 export function mockNotFound(fetch: Mock, url: string) {
-  when(fetch)
+  vi.when(fetch);
+  vi.when(fetch)
     .calledWith(url, expect.anything())
     .thenResolve({
       ok: true,
