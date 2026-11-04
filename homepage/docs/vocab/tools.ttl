@@ -1,0 +1,153 @@
+@prefix tools: <https://pod-os.org/vocab/tools.ttl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ac: <https://www.w3.org/ns/ac#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix hydra: <http://www.w3.org/ns/hydra/core#> .
+@prefix schema: <https://schema.org/> .
+
+<https://pod-os.org/vocab/tools.ttl> a owl:Ontology ;
+    dcterms:title "PodOS tools vocabulary"@en ;
+    dcterms:description "A vocabulary and SHACL shapes for registering apps and HTML tools for use by PodOS."@en ;
+    dcterms:created "2026-10-31"^^xsd:date ;
+    dcterms:modified "2026-10-31"^^xsd:date ;
+    owl:versionInfo "0.1.0" .
+
+tools:ToolIndex a rdfs:Class ;
+    rdfs:label "Tool index"@en ;
+    rdfs:comment "A registry of app and tool registrations."@en ;
+    rdfs:isDefinedBy <https://pod-os.org/vocab/tools.ttl> .
+
+tools:Registration a rdfs:Class ;
+    rdfs:label "Registration"@en ;
+    rdfs:comment "An entry in a tool index that describes an app or HTML tool."@en ;
+    rdfs:isDefinedBy <https://pod-os.org/vocab/tools.ttl> .
+
+tools:AppRegistration a rdfs:Class ;
+    rdfs:subClassOf tools:Registration ;
+    rdfs:label "App registration"@en ;
+    rdfs:comment "A registration for an external app invoked through a URI template."@en ;
+    rdfs:isDefinedBy <https://pod-os.org/vocab/tools.ttl> .
+
+tools:ToolRegistration a rdfs:Class ;
+    rdfs:subClassOf tools:Registration ;
+    rdfs:label "Tool registration"@en ;
+    rdfs:comment "A registration for a PodOS tool rendered from an HTML fragment."@en ;
+    rdfs:isDefinedBy <https://pod-os.org/vocab/tools.ttl> .
+
+tools:HtmlFragmentInvocation a rdfs:Class ;
+    rdfs:subClassOf ac:Invocation ;
+    rdfs:label "HTML fragment invocation"@en ;
+    rdfs:comment "An Application Capability invocation for rendering an HTML fragment, e.g. as an HTML tool in PodOS. The fragment is identified by a schema:url."@en ;
+    rdfs:isDefinedBy <https://pod-os.org/vocab/tools.ttl> .
+
+tools:toolIndex a rdf:Property ;
+    rdfs:label "tool index"@en ;
+    rdfs:comment "Links the WebID to the tool index, usually in the preferences document."@en ;
+    rdfs:range tools:ToolIndex ;
+    rdfs:isDefinedBy <https://pod-os.org/vocab/tools.ttl> .
+
+tools:registration a rdf:Property ;
+    rdfs:label "registration"@en ;
+    rdfs:comment "Links a tool index to one of its registrations."@en ;
+    rdfs:domain tools:ToolIndex ;
+    rdfs:range tools:Registration ;
+    rdfs:isDefinedBy <https://pod-os.org/vocab/tools.ttl> .
+
+# Shapes
+
+tools:ToolIndexShape a sh:NodeShape ;
+    sh:targetClass tools:ToolIndex ;
+    sh:property [
+        sh:path tools:registration ;
+        sh:nodeKind sh:BlankNodeOrIRI ;
+        sh:or (
+            [ sh:class tools:AppRegistration ]
+            [ sh:class tools:ToolRegistration ]
+        )
+    ] .
+
+tools:RegistrationShape a sh:NodeShape ;
+    sh:property [
+        sh:path ac:capability ;
+        sh:minCount 1 ;
+        sh:nodeKind sh:BlankNodeOrIRI
+    ] ;
+    sh:property [
+        sh:path schema:name ;
+        sh:minCount 1 ;
+        sh:nodeKind sh:Literal
+    ] .
+
+# App
+
+tools:AppRegistrationShape a sh:NodeShape ;
+    sh:targetClass tools:AppRegistration ;
+    sh:node tools:RegistrationShape ;
+    sh:property [
+        sh:path ac:capability ;
+        sh:node tools:AppCapabilityShape
+    ] .
+
+tools:AppCapabilityShape a sh:NodeShape ;
+    sh:class ac:Capability ;
+    sh:property [
+        sh:path ac:action ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI
+    ] ;
+    sh:property [
+        sh:path ac:invocation ;
+        sh:minCount 1 ;
+        sh:nodeKind sh:BlankNodeOrIRI ;
+        sh:node tools:UriTemplateInvocationShape
+    ] .
+
+tools:UriTemplateInvocationShape a sh:NodeShape ;
+    sh:class ac:UriTemplateInvocation ;
+    sh:property [
+        sh:path hydra:template ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:Literal
+    ] .
+
+# Tool
+
+tools:ToolRegistrationShape a sh:NodeShape ;
+    sh:targetClass tools:ToolRegistration ;
+    sh:node tools:RegistrationShape ;
+    sh:property [
+        sh:path ac:capability ;
+        sh:node tools:ToolCapabilityShape
+    ] .
+
+tools:ToolCapabilityShape a sh:NodeShape ;
+    sh:class ac:Capability ;
+    sh:property [
+        sh:path ac:action ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI
+    ] ;
+    sh:property [
+        sh:path ac:invocation ;
+        sh:minCount 1 ;
+        sh:nodeKind sh:BlankNodeOrIRI ;
+        sh:node tools:HtmlFragmentInvocationShape
+    ] .
+
+tools:HtmlFragmentInvocationShape a sh:NodeShape ;
+    sh:targetClass tools:HtmlFragmentInvocation ;
+    sh:class tools:HtmlFragmentInvocation ;
+    sh:property [
+        sh:path schema:url ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI
+    ] .
+
