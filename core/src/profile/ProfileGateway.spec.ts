@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it, Mock, vi } from "vitest";
 import { ProfileGateway } from "./ProfileGateway";
 import { Store } from "../Store";
-import { when } from "vitest-when";
 import { Thing } from "../thing";
 import { WebIdProfile } from "./WebIdProfile";
 
@@ -28,7 +27,7 @@ describe("ProfileGateway", () => {
       getPrivateTypeIndex,
     } as unknown as WebIdProfile;
     const assume = vi.fn();
-    when(assume).calledWith(WebIdProfile).thenReturn(profile);
+    vi.when(assume).calledWith(WebIdProfile).thenReturn(profile);
     (store.get as Mock).mockReturnValue({
       assume,
     } as unknown as Thing);
@@ -137,7 +136,7 @@ describe("ProfileGateway", () => {
       "https://alice.example/settings/pref.ttl",
     );
     // and fetching the preferences file returns 404
-    when(store.fetch)
+    vi.when(store.fetch)
       .calledWith("https://alice.example/settings/pref.ttl")
       .thenReject(
         new Error(

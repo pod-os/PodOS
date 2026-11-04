@@ -1,5 +1,4 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { when } from "vitest-when";
 import { PodOsSession } from "../authentication";
 import { BinaryFile } from "./BinaryFile";
 import { BrokenFile } from "./BrokenFile";
@@ -20,7 +19,7 @@ describe("FileFetcher", () => {
       const session = mockSession();
 
       // and an authenticated fetch for an image url returns the blob
-      when(session.authenticatedFetch)
+      vi.when(session.authenticatedFetch)
         .calledWith("https://pod.test/image.png")
         .thenResolve({
           ok: true,
@@ -48,7 +47,7 @@ describe("FileFetcher", () => {
       const session = mockSession();
 
       // and an authenticated fetch for an image url returns a http error code
-      when(session.authenticatedFetch)
+      vi.when(session.authenticatedFetch)
         .calledWith("https://pod.test/image.png")
         .thenResolve({
           ok: false,
@@ -83,7 +82,7 @@ describe("FileFetcher", () => {
       // and a file fetcher
       fileFetcher = new FileFetcher(session);
       // and PUT usually works
-      when(session.authenticatedFetch)
+      vi.when(session.authenticatedFetch)
         .calledWith(expect.anything(), expect.anything())
         .thenResolve({
           ok: true,
@@ -147,7 +146,7 @@ describe("FileFetcher", () => {
       const file = markdownFile();
 
       // and PUT fails with an error
-      when(session.authenticatedFetch)
+      vi.when(session.authenticatedFetch)
         .calledWith(expect.anything(), expect.anything())
         .thenResolve({
           ok: false,
@@ -183,7 +182,7 @@ describe("FileFetcher", () => {
         // and a file fetcher
         fileFetcher = new FileFetcher(session);
         // and PUT usually works
-        when(session.authenticatedFetch)
+        vi.when(session.authenticatedFetch)
           .calledWith(expect.anything(), expect.anything())
           .thenResolve({
             ok: true,
@@ -250,7 +249,7 @@ describe("FileFetcher", () => {
           status: 401,
           statusText: "Unauthorized",
         } as Response;
-        when(session.authenticatedFetch)
+        vi.when(session.authenticatedFetch)
           .calledWith(expect.anything(), expect.anything())
           .thenResolve(httpResponse);
         // when a new file is created
@@ -272,7 +271,7 @@ describe("FileFetcher", () => {
 
       it("returns error result if fetch is rejected with an error", async () => {
         // and PUT fails with an error
-        when(session.authenticatedFetch)
+        vi.when(session.authenticatedFetch)
           .calledWith(expect.anything(), expect.anything())
           .thenReject(new Error("Network Error"));
         // when a new file is created
@@ -308,7 +307,7 @@ describe("FileFetcher", () => {
         // and a file fetcher
         fileFetcher = new FileFetcher(session);
         // and PUT usually works
-        when(session.authenticatedFetch)
+        vi.when(session.authenticatedFetch)
           .calledWith(expect.anything(), expect.anything())
           .thenResolve({
             ok: true,
@@ -475,7 +474,7 @@ describe("FileFetcher", () => {
           status: 401,
           statusText: "Unauthorized",
         } as Response;
-        when(session.authenticatedFetch)
+        vi.when(session.authenticatedFetch)
           .calledWith(expect.anything(), expect.anything())
           .thenResolve(httpResponse);
         // when a new file is created
@@ -497,7 +496,7 @@ describe("FileFetcher", () => {
 
       it("returns error result if fetch is rejected with an error", async () => {
         // and PUT fails with an error
-        when(session.authenticatedFetch)
+        vi.when(session.authenticatedFetch)
           .calledWith(expect.anything(), expect.anything())
           .thenReject(new Error("Network Error"));
         // when a new file is created
