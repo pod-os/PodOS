@@ -1,6 +1,8 @@
 name: Deploy Homepage
 on:
   push:
+    branches:
+      - main
     paths:
       - homepage/**
       - docs/**
