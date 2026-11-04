@@ -2,7 +2,6 @@ import { Mock, vi } from 'vitest';
 import { beforeEach, describe, expect, h, it, render, RenderResult } from '@stencil/vitest';
 import { PodOS } from '@pod-os/core';
 import { fireEvent } from '@testing-library/dom';
-import { when } from 'vitest-when';
 import { mockPodOS } from '../../../test/mockPodOS.vitest';
 import '../pos-new-thing-form';
 import { withinShadow } from '../../../test/withinShadow';
@@ -120,7 +119,7 @@ describe('pos-new-thing-form', () => {
     const page = await render(<pos-new-thing-form referenceUri="https://pod.test/container/"></pos-new-thing-form>);
 
     const os = mockPodOS();
-    when(os.proposeUriForNewThing)
+    vi.when(os.proposeUriForNewThing)
       .calledWith('https://pod.test/container/', 'New Thing')
       .thenReturn('https://pod.test/container/new-thing#it');
     await page.instance.receivePodOs(os);
@@ -163,7 +162,7 @@ describe('pos-new-thing-form', () => {
         page = await render(<pos-new-thing-form referenceUri="https://pod.test/container/"></pos-new-thing-form>);
 
         os = mockPodOS();
-        when(os.proposeUriForNewThing)
+        vi.when(os.proposeUriForNewThing)
           .calledWith('https://pod.test/container/', 'New Thing')
           .thenReturn('https://pod.test/container/new-thing#it');
         await page.instance.receivePodOs(os);
@@ -221,7 +220,7 @@ describe('pos-new-thing-form', () => {
         page = await render(<pos-new-thing-form referenceUri="https://pod.test/container/"></pos-new-thing-form>);
 
         os = mockPodOS() as unknown as PodOS;
-        when(os.proposeUriForNewThing as Mock)
+        vi.when(os.proposeUriForNewThing as Mock)
           .calledWith('https://pod.test/container/', 'New Thing')
           .thenReturn('https://pod.test/container/new-thing#it');
         (os.addNewThing as Mock).mockRejectedValue(new Error('simulated error for test'));

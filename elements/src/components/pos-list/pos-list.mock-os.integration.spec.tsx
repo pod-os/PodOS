@@ -3,7 +3,6 @@ import { describe, expect, h, it, render, beforeEach, afterEach } from '@stencil
 import { ReplaySubject, Subject } from 'rxjs';
 import { PodOS, Thing } from '@pod-os/core';
 import { mockPodOS } from '../../test/mockPodOS.vitest';
-import { when } from 'vitest-when';
 
 describe('pos-list (with mocked PodOS instance)', () => {
   let listener: (event: any) => void;
@@ -25,15 +24,15 @@ describe('pos-list (with mocked PodOS instance)', () => {
 
   it('children render label for all things of the given type, reactively', async () => {
     const observedMembers$ = new Subject<string[]>();
-    when(os.store.observeFindMembers).calledWith('http://schema.org/Video').thenReturn(observedMembers$);
+    vi.when(os.store.observeFindMembers).calledWith('http://schema.org/Video').thenReturn(observedMembers$);
     const observedLabel1$ = new ReplaySubject<string>();
     observedLabel1$.next('Video 1');
-    when(os.store.get)
+    vi.when(os.store.get)
       .calledWith('https://video.test/video-1')
       .thenReturn({ uri: 'https://video.test/video-1', observeLabel: () => observedLabel1$ } as unknown as Thing);
     const observedLabel2$ = new ReplaySubject<string>();
     observedLabel2$.next('Video 2');
-    when(os.store.get)
+    vi.when(os.store.get)
       .calledWith('https://video.test/video-2')
       .thenReturn({ uri: 'https://video.test/video-2', observeLabel: () => observedLabel2$ } as unknown as Thing);
 

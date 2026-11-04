@@ -4,7 +4,6 @@ import { parseTemplate } from 'url-template';
 import { mockPodOS } from '../../../test/mockPodOS.vitest';
 import '../pos-share';
 
-import { when } from 'vitest-when';
 import { OpenWithApp, Thing } from '@pod-os/core';
 
 import { openNewTab } from '../openNewTab';
@@ -19,7 +18,7 @@ describe('pos-share', () => {
     vi.resetAllMocks();
     os = mockPodOS();
     const thing = { fake: 'Thing' } as unknown as Thing;
-    when(os.store.get).calledWith('https://resource.example#it').thenReturn(thing);
+    vi.when(os.store.get).calledWith('https://resource.example#it').thenReturn(thing);
     (os.proposeAppsFor as Mock).mockReturnValue([]);
   });
 
@@ -44,7 +43,7 @@ describe('pos-share', () => {
   describe('proposed apps', () => {
     it('renders a proposed app', async () => {
       const os = mockPodOS();
-      when(os.proposeAppsFor)
+      vi.when(os.proposeAppsFor)
         .calledWith(thing)
         .thenReturn([
           {
@@ -74,7 +73,7 @@ describe('pos-share', () => {
 
     it('renders multiple proposed apps', async () => {
       const os = mockPodOS();
-      when(os.proposeAppsFor)
+      vi.when(os.proposeAppsFor)
         .calledWith(thing)
         .thenReturn([
           {
@@ -113,9 +112,9 @@ describe('pos-share', () => {
       const os = mockPodOS();
 
       const newThing = { new: 'Thing' } as unknown as Thing;
-      when(os.store.get).calledWith('https://new.example').thenReturn(newThing);
+      vi.when(os.store.get).calledWith('https://new.example').thenReturn(newThing);
 
-      when(os.proposeAppsFor)
+      vi.when(os.proposeAppsFor)
         .calledWith(newThing)
         .thenReturn([
           {
@@ -151,10 +150,10 @@ describe('pos-share', () => {
 
       // given a thing
       const something = { new: 'Thing' } as unknown as Thing;
-      when(os.store.get).calledWith('https://resource.example#it').thenReturn(something);
+      vi.when(os.store.get).calledWith('https://resource.example#it').thenReturn(something);
 
       // and when first asked for apps to propose there are none
-      when(os.proposeAppsFor, { times: 1 }).calledWith(something).thenReturn([]);
+      vi.when(os.proposeAppsFor).calledWith(something).thenReturnOnce([]);
 
       // and a page with a pos-share for the resource
       const page = await render(<pos-share uri="https://resource.example#it" />);
@@ -170,9 +169,9 @@ describe('pos-share', () => {
     `);
 
       // and when again asked to propose apps, there is one app
-      when(os.proposeAppsFor, { times: 1 })
+      vi.when(os.proposeAppsFor)
         .calledWith(something)
-        .thenReturn([
+        .thenReturnOnce([
           {
             name: 'Some app',
             urlTemplate: parseTemplate('https://irrelevant.example'),
@@ -206,10 +205,10 @@ describe('pos-share', () => {
 
       // given a thing
       const something = { new: 'Thing' } as unknown as Thing;
-      when(os.store.get).calledWith('https://resource.example#it').thenReturn(something);
+      vi.when(os.store.get).calledWith('https://resource.example#it').thenReturn(something);
 
       // and when first asked for apps to propose there are none
-      when(os.proposeAppsFor, { times: 1 }).calledWith(something).thenReturn([]);
+      vi.when(os.proposeAppsFor).calledWith(something).thenReturnOnce([]);
 
       // and a page with a pos-share for the resource
       const page = await render(<pos-share uri="https://resource.example#it" />);
@@ -225,9 +224,9 @@ describe('pos-share', () => {
     `);
 
       // and when again asked to propose apps, there is one app
-      when(os.proposeAppsFor, { times: 1 })
+      vi.when(os.proposeAppsFor)
         .calledWith(something)
-        .thenReturn([
+        .thenReturnOnce([
           {
             name: 'Some app',
             urlTemplate: parseTemplate('https://irrelevant.example'),

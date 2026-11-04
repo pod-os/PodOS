@@ -2,19 +2,18 @@ import { vi } from 'vitest';
 import { describe, expect, it, render, h } from '@stencil/vitest';
 import { mockPodOS } from '../../test/mockPodOS.vitest';
 import './pos-type-index-entries';
-import { when } from 'vitest-when';
 import { Thing, TypeIndex, TypeRegistration } from '@pod-os/core';
 
 describe('pos-type-index-entries', () => {
   function mockTypeIndex(typeIndex: TypeIndex) {
     const os = mockPodOS();
     const assume = vi.fn();
-    when(os.store.get)
+    vi.when(os.store.get)
       .calledWith('https://alice.example/settings/publicTypeIndex')
       .thenReturn({
         assume,
       } as unknown as Thing);
-    when(assume).calledWith(TypeIndex).thenReturn(typeIndex);
+    vi.when(assume).calledWith(TypeIndex).thenReturn(typeIndex);
   }
 
   it('renders nothing if type index is empty', async () => {

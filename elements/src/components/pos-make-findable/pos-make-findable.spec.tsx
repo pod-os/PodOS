@@ -4,7 +4,6 @@ import { afterEach, beforeEach, describe, expect, h, it, render, RenderResult } 
 
 import './pos-make-findable';
 
-import { when } from 'vitest-when';
 import session from '../../store/session';
 import { LabelIndex, PodOS, Thing, WebIdProfile } from '@pod-os/core';
 import { withinShadow } from '../../test/withinShadow';
@@ -49,14 +48,14 @@ describe('pos-make-findable', () => {
       },
       addToLabelIndex: vi.fn(),
     } as unknown as PodOS;
-    when(mockOs.store.get)
+    vi.when(mockOs.store.get)
       .calledWith('https://thing.example#it')
       .thenReturn({ fake: 'thing' } as unknown as Thing);
     const labelIndexAssume = vi.fn();
-    when(labelIndexAssume)
+    vi.when(labelIndexAssume)
       .calledWith(LabelIndex)
       .thenReturn({ fake: 'index', contains: () => false });
-    when(mockOs.store.get)
+    vi.when(mockOs.store.get)
       .calledWith('https://pod.example/label-index')
       .thenReturn({
         assume: labelIndexAssume,
@@ -91,13 +90,13 @@ describe('pos-make-findable', () => {
         get: vi.fn(),
       },
     } as unknown as PodOS;
-    when(mockOs.store.get)
+    vi.when(mockOs.store.get)
       .calledWith('https://thing.example#it')
       .thenReturn({ fake: 'thing' } as unknown as Thing);
     const contains = vi.fn();
     const labelIndexAssume = vi.fn();
-    when(labelIndexAssume).calledWith(LabelIndex).thenReturn({ fake: 'index', contains });
-    when(mockOs.store.get)
+    vi.when(labelIndexAssume).calledWith(LabelIndex).thenReturn({ fake: 'index', contains });
+    vi.when(mockOs.store.get)
       .calledWith('https://pod.example/label-index')
       .thenReturn({
         assume: labelIndexAssume,
@@ -105,7 +104,7 @@ describe('pos-make-findable', () => {
     mockOsProvider(mockOs);
 
     // and the index already contains the URI
-    when(contains).calledWith('https://thing.example#it').thenReturn(true);
+    vi.when(contains).calledWith('https://thing.example#it').thenReturn(true);
 
     // when a make-findable component for the thing is rendered
     page = await render(<pos-make-findable uri="https://thing.example#it"></pos-make-findable>);
@@ -128,14 +127,14 @@ describe('pos-make-findable', () => {
       },
       addToLabelIndex: vi.fn(),
     } as unknown as PodOS;
-    when(mockOs.store.get)
+    vi.when(mockOs.store.get)
       .calledWith('https://thing.example#it')
       .thenReturn({ fake: 'thing' } as unknown as Thing);
     const labelIndexAssume = vi.fn();
-    when(labelIndexAssume)
+    vi.when(labelIndexAssume)
       .calledWith(LabelIndex)
       .thenReturn({ fake: 'index', contains: () => false });
-    when(mockOs.store.get)
+    vi.when(mockOs.store.get)
       .calledWith('https://pod.example/label-index')
       .thenReturn({
         assume: labelIndexAssume,
@@ -176,12 +175,12 @@ describe('pos-make-findable', () => {
       addToLabelIndex: vi.fn(),
       createDefaultLabelIndex: vi.fn(),
     } as unknown as PodOS;
-    when(mockOs.store.get)
+    vi.when(mockOs.store.get)
       .calledWith('https://thing.example#it')
       .thenReturn({ fake: 'thing' } as unknown as Thing);
 
     // and it is able to create a default index for the user profile
-    when(mockOs.createDefaultLabelIndex)
+    vi.when(mockOs.createDefaultLabelIndex)
       .calledWith(session.state.profile)
       .thenResolve({ fake: 'newly created default index' } as unknown as LabelIndex);
     mockOsProvider(mockOs);
@@ -218,12 +217,12 @@ describe('pos-make-findable', () => {
       addToLabelIndex: vi.fn(),
       createDefaultLabelIndex: vi.fn(),
     } as unknown as PodOS;
-    when(mockOs.store.get)
+    vi.when(mockOs.store.get)
       .calledWith('https://thing.example#it')
       .thenReturn({ fake: 'thing' } as unknown as Thing);
 
     // but leads to an error when creating the default index
-    when(mockOs.createDefaultLabelIndex).calledWith(session.state.profile).thenReject(new Error('simulated error'));
+    vi.when(mockOs.createDefaultLabelIndex).calledWith(session.state.profile).thenReject(new Error('simulated error'));
     mockOsProvider(mockOs);
 
     // and a make findable component for a thing
@@ -273,14 +272,14 @@ describe('pos-make-findable', () => {
       },
       addToLabelIndex: vi.fn(),
     } as unknown as PodOS;
-    when(mockOs.store.get)
+    vi.when(mockOs.store.get)
       .calledWith('https://thing.example#it')
       .thenReturn({ fake: 'thing' } as unknown as Thing);
     const labelIndexAssume = vi.fn();
-    when(labelIndexAssume)
+    vi.when(labelIndexAssume)
       .calledWith(LabelIndex)
       .thenReturn({ fake: 'index', contains: () => false });
-    when(mockOs.store.get)
+    vi.when(mockOs.store.get)
       .calledWith('https://pod.example/label-index')
       .thenReturn({
         assume: labelIndexAssume,
@@ -317,10 +316,10 @@ describe('pos-make-findable', () => {
         get: vi.fn(),
       },
     } as unknown as PodOS;
-    when(mockOs.store.get)
+    vi.when(mockOs.store.get)
       .calledWith('https://thing.example#it')
       .thenReturn({ uri: 'https://thing.example#it' } as unknown as Thing);
-    when(mockOs.store.get)
+    vi.when(mockOs.store.get)
       .calledWith('https://other.example#it')
       .thenReturn({ uri: 'https://other.example#it' } as unknown as Thing);
     mockOsProvider(mockOs);
@@ -376,23 +375,23 @@ describe('pos-make-findable', () => {
         },
         addToLabelIndex: vi.fn(),
       } as unknown as PodOS;
-      when(mockOs.store.get)
+      vi.when(mockOs.store.get)
         .calledWith('https://thing.example#it')
         .thenReturn({ fake: 'thing' } as unknown as Thing);
       const firstIndexAssume = vi.fn();
-      when(firstIndexAssume)
+      vi.when(firstIndexAssume)
         .calledWith(LabelIndex)
         .thenReturn({ uri: 'https://pod.example/first-index', contains: () => false });
-      when(mockOs.store.get)
+      vi.when(mockOs.store.get)
         .calledWith('https://pod.example/first-index')
         .thenReturn({
           assume: firstIndexAssume,
         } as unknown as Thing);
       const secondIndexAssume = vi.fn();
-      when(secondIndexAssume)
+      vi.when(secondIndexAssume)
         .calledWith(LabelIndex)
         .thenReturn({ uri: 'https://pod.example/second-index', contains: () => true });
-      when(mockOs.store.get)
+      vi.when(mockOs.store.get)
         .calledWith('https://pod.example/second-index')
         .thenReturn({
           assume: secondIndexAssume,

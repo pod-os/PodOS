@@ -6,7 +6,6 @@ import { PodOS, Thing } from '@pod-os/core';
 
 import './pos-mention-menu/pos-mention-menu';
 import { findAllByRole, findByRole, getByRole, getByText } from '@testing-library/dom';
-import { when } from 'vitest-when';
 import { Editor } from '@tiptap/core';
 import { userEvent } from '@testing-library/user-event';
 
@@ -31,14 +30,14 @@ describe('RichEditor', () => {
       tiptap = editor.editor;
 
       // and PodOS indexed "Test item"
-      when(search)
+      vi.when(search)
         .calledWith('test')
         .thenReturn([
           {
             ref: 'https://pod.test/test-item#it',
           },
         ]);
-      when(mockOs.store.get)
+      vi.when(mockOs.store.get)
         .calledWith('https://pod.test/test-item#it')
         .thenReturn({
           label: () => 'Test Item',
