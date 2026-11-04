@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.45.1
+
+### Fixed
+
+- [pos-markdown-document](https://pod-os.org/reference/elements/components/pos-markdown-document/): mentioning things by name now works when the name contains spaces
+
 ## 0.45.0
 
 ### Breaking Changes

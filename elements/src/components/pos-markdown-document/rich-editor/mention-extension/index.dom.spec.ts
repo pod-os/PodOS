@@ -36,5 +36,28 @@ describe('mention extension', () => {
       expect(search).toHaveBeenCalledTimes(1);
       expect(search).toHaveBeenLastCalledWith('aliv');
     });
+
+    it('includes spaces in the search query', async () => {
+      vi.useFakeTimers();
+      const search = vi.fn().mockReturnValue([]);
+      const mockOs = {
+        buildSearchIndex: vi.fn().mockResolvedValue({ search }),
+        store: { get: vi.fn() },
+      } as unknown as PodOS;
+
+      const div = document.createElement('div');
+      const editor = new RichEditor(div, '', 'https://pod.test', mockOs);
+      editor.startEditing();
+
+      // @ts-ignore Accessing a private field here for testing
+      const tiptap = editor.editor;
+      tiptap.commands.insertContent('#Frodo');
+
+      // the query continues after a space, e.g. searching for "Frodo Beutlin"
+      tiptap.commands.insertContent(' Beutlin');
+
+      await vi.advanceTimersByTimeAsync(120);
+      expect(search).toHaveBeenLastCalledWith('Frodo Beutlin');
+    });
   });
 });
