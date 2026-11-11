@@ -15,6 +15,13 @@ describe('SourceEditor', () => {
     expect(textbox).toEqualAttribute('data-language', 'markdown');
   });
 
+  it('renders turtle with highlighting', () => {
+    new SourceEditor(root, '<> <> <> .', 'text/turtle');
+    const textbox = getByRole(root, 'textbox');
+    expect(textbox).toHaveTextContent('<> <> <> .');
+    expect(textbox).toEqualAttribute('data-language', 'turtle');
+  });
+
   it('renders other content types without highlighting', () => {
     new SourceEditor(root, 'Anything else', 'data/anything');
     const textbox = getByRole(root, 'textbox');

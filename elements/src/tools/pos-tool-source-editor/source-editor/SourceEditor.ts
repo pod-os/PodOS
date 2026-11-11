@@ -4,10 +4,17 @@ import { EditorState } from '@codemirror/state';
 
 import { markdown } from '@codemirror/lang-markdown';
 import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode';
+import { turtle } from './turtle-lang';
+import { LanguageSupport } from '@codemirror/language';
+
+const languages: Record<string, () => LanguageSupport> = {
+  'text/markdown': markdown,
+  'text/turtle': turtle,
+};
 
 export class SourceEditor {
   constructor(target: HTMLElement, content: string, contentType: string) {
-    const highlighter = contentType === 'text/markdown' ? [markdown()] : [];
+    const lang = languages[contentType] ? [languages[contentType]()] : [];
     const dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     new EditorView({
       doc: content,
@@ -17,7 +24,7 @@ export class SourceEditor {
         EditorState.readOnly.of(true),
         EditorView.editable.of(false),
         EditorView.contentAttributes.of({ tabindex: '0' }),
-        ...highlighter,
+        ...lang,
         dark ? vscodeDark : vscodeLight,
       ],
     });
