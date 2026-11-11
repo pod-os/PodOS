@@ -3,6 +3,7 @@ import { SourceEditor } from './source-editor';
 import { useResource } from '../../components/events/useResource';
 
 import '@shoelace-style/shoelace/dist/components/skeleton/skeleton.js';
+import { usePodOS } from '../../components/events/usePodOS';
 
 @Component({
   tag: 'pos-tool-source-editor',
@@ -15,9 +16,12 @@ export class PosToolSourceEditor {
   private loading = true;
 
   async componentDidLoad() {
-    await useResource(this.editorEl!);
+    const os = await usePodOS(this.editorEl!);
+    const resource = await useResource(this.editorEl!);
+    const file = await os.files().fetchFile(resource.uri);
+    const content = await file.blob()!.text(); // TODO handle missing blob
     this.loading = false;
-    new SourceEditor(this.editorEl!);
+    new SourceEditor(this.editorEl!, content);
   }
 
   render() {

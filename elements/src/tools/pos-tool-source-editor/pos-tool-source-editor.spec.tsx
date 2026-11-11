@@ -1,10 +1,18 @@
-import { describe, expect, h, it, render } from '@stencil/vitest';
+import { vi } from 'vitest';
+import { beforeEach, describe, expect, h, it, render } from '@stencil/vitest';
+
+import { mockPodOS } from '../../test/mockPodOS.vitest';
 import './pos-tool-source-editor';
 import { getByRole } from '@testing-library/dom';
 import { mockResource } from '../../test/mockResource';
-import { Thing } from '@pod-os/core';
+import { PodOS, SolidFile, Thing } from '@pod-os/core';
 
 describe('pos-tool-source-editor', () => {
+  let os: PodOS;
+  beforeEach(() => {
+    os = mockPodOS();
+  });
+
   it('renders skeleton while loading', async () => {
     const page = await render(<pos-tool-source-editor></pos-tool-source-editor>);
     expect(page.root).toMatchInlineSnapshot(`
@@ -25,7 +33,9 @@ describe('pos-tool-source-editor', () => {
     `);
   });
 
-  it('renders a contenteditable textbox after the resource is available', async () => {
+  it('renders a contenteditable textbox with the file content after the file has been fetched', async () => {
+    mockFile(os, 'https://resource.test/document.ttl', 'file source content');
+
     mockResource({
       uri: 'https://resource.test/document.ttl',
     } as unknown as Thing);
@@ -50,9 +60,21 @@ describe('pos-tool-source-editor', () => {
         <div
           class="cm-line cm-activeLine"
         >
-          TODO: show real document content
+          file source content
         </div>
       </div>
     `);
   });
 });
+
+function mockFile(os: PodOS, url: string = 'https://resource.test/document.ttl', textContent: string) {
+  const file = {
+    url: url,
+    blob: () => ({
+      text: () => {
+        return Promise.resolve(textContent);
+      },
+    }),
+  } as SolidFile;
+  vi.when(os.files().fetchFile).calledWith(url).thenResolveOnce(file);
+}
