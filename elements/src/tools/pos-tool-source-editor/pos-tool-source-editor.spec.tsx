@@ -1,11 +1,14 @@
-import { vi } from 'vitest';
+import { Mock, vi } from 'vitest';
 import { beforeEach, describe, expect, h, it, render } from '@stencil/vitest';
+import { BrokenFile } from '../../components/broken-file/BrokenFile';
 
 import { mockPodOS } from '../../test/mockPodOS.vitest';
 import './pos-tool-source-editor';
 import { mockResource } from '../../test/mockResource';
-import { PodOS, SolidFile, Thing } from '@pod-os/core';
+import { BrokenFile as BrokenFileData, PodOS, SolidFile, Thing } from '@pod-os/core';
 import { getByShadowRole } from 'shadow-dom-testing-library';
+
+vi.mock('../../components/broken-file/BrokenFile');
 
 describe('pos-tool-source-editor', () => {
   let os: PodOS;
@@ -67,6 +70,34 @@ describe('pos-tool-source-editor', () => {
           file source content
         </div>
       </div>
+    `);
+  });
+
+  it('renders error for broken file', async () => {
+    const brokenFile = {
+      blob: () => null,
+      toString: () => '403 - Forbidden - https://resource.test/document.ttl',
+    } as unknown as BrokenFileData;
+
+    vi.when(os.files().fetchFile).calledWith('https://resource.test/document.ttl').thenResolveOnce(brokenFile);
+
+    (BrokenFile as Mock).mockReturnValue(<div class="error">403 - Forbidden - https://resource.test/document.ttl</div>);
+
+    mockResource({
+      uri: 'https://resource.test/document.ttl',
+    } as unknown as Thing);
+    const page = await render(<pos-tool-source-editor></pos-tool-source-editor>);
+
+    await page.waitForChanges();
+
+    expect(page.root).toMatchInlineSnapshot(`
+      <pos-tool-source-editor class="hydrated">
+        <mock:shadow-root>
+          <div class="error">
+            403 - Forbidden - https://resource.test/document.ttl
+          </div>
+        </mock:shadow-root>
+      </pos-tool-source-editor>
     `);
   });
 });
