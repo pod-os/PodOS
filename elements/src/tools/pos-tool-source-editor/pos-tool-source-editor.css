@@ -1,3 +1,7 @@
+.content {
+  background-color: var(--pos-background-color);
+}
+
 .skeleton {
   display: flex;
   gap: var(--size-2);
