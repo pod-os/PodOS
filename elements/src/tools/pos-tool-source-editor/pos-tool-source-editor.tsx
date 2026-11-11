@@ -20,9 +20,10 @@ export class PosToolSourceEditor {
     const os = await usePodOS(this.editorEl!);
     const resource = await useResource(this.editorEl!);
     const file = await os.files().fetchFile(resource.uri);
-    const content = await file.blob()!.text(); // TODO handle missing blob
+    const blob = file.blob()!; // TODO handle missing blob
+    const content = await blob.text();
     this.loading = false;
-    new SourceEditor(this.editorEl!, content);
+    new SourceEditor(this.editorEl!, content, blob.type);
   }
 
   render() {
