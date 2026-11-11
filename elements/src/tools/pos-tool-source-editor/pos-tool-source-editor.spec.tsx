@@ -47,13 +47,15 @@ describe('pos-tool-source-editor', () => {
     expect(textbox).toMatchInlineSnapshot(`
       <div
         aria-multiline="true"
+        aria-readonly="true"
         autocapitalize="off"
         autocorrect="off"
         class="cm-content"
-        contenteditable="true"
+        contenteditable="false"
         role="textbox"
         spellcheck="false"
         style="tab-size: 4;"
+        tabindex="0"
         translate="no"
         writingsuggestions="false"
       >
