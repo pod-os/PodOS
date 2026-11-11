@@ -416,6 +416,8 @@ export namespace Components {
          */
         "tools": ToolConfig[];
     }
+    interface PosToolSourceEditor {
+    }
     interface PosTypeBadges {
     }
     interface PosTypeIndexEntries {
@@ -1358,6 +1360,12 @@ declare global {
         prototype: HTMLPosToolSelectElement;
         new (): HTMLPosToolSelectElement;
     };
+    interface HTMLPosToolSourceEditorElement extends Components.PosToolSourceEditor, HTMLStencilElement {
+    }
+    var HTMLPosToolSourceEditorElement: {
+        prototype: HTMLPosToolSourceEditorElement;
+        new (): HTMLPosToolSourceEditorElement;
+    };
     interface HTMLPosTypeBadgesElementEventMap {
         "pod-os:resource": any;
     }
@@ -1499,6 +1507,7 @@ declare global {
         "pos-switch": HTMLPosSwitchElement;
         "pos-tool-attachments": HTMLPosToolAttachmentsElement;
         "pos-tool-select": HTMLPosToolSelectElement;
+        "pos-tool-source-editor": HTMLPosToolSourceEditorElement;
         "pos-type-badges": HTMLPosTypeBadgesElement;
         "pos-type-index-entries": HTMLPosTypeIndexEntriesElement;
         "pos-type-router": HTMLPosTypeRouterElement;
@@ -1991,6 +2000,8 @@ declare namespace LocalJSX {
          */
         "tools"?: ToolConfig[];
     }
+    interface PosToolSourceEditor {
+    }
     interface PosTypeBadges {
         "onPod-os:resource"?: (event: PosTypeBadgesCustomEvent<any>) => void;
     }
@@ -2185,6 +2196,7 @@ declare namespace LocalJSX {
         "pos-switch": PosSwitch;
         "pos-tool-attachments": PosToolAttachments;
         "pos-tool-select": PosToolSelect;
+        "pos-tool-source-editor": PosToolSourceEditor;
         "pos-type-badges": PosTypeBadges;
         "pos-type-index-entries": Omit<PosTypeIndexEntries, keyof PosTypeIndexEntriesAttributes> & { [K in keyof PosTypeIndexEntries & keyof PosTypeIndexEntriesAttributes]?: PosTypeIndexEntries[K] } & { [K in keyof PosTypeIndexEntries & keyof PosTypeIndexEntriesAttributes as `attr:${K}`]?: PosTypeIndexEntriesAttributes[K] } & { [K in keyof PosTypeIndexEntries & keyof PosTypeIndexEntriesAttributes as `prop:${K}`]?: PosTypeIndexEntries[K] };
         "pos-type-router": PosTypeRouter;
@@ -2316,6 +2328,7 @@ declare module "@stencil/core" {
              * Allows selecting a tool from within a set of available tools
              */
             "pos-tool-select": LocalJSX.IntrinsicElements["pos-tool-select"] & JSXBase.HTMLAttributes<HTMLPosToolSelectElement>;
+            "pos-tool-source-editor": LocalJSX.IntrinsicElements["pos-tool-source-editor"] & JSXBase.HTMLAttributes<HTMLPosToolSourceEditorElement>;
             "pos-type-badges": LocalJSX.IntrinsicElements["pos-type-badges"] & JSXBase.HTMLAttributes<HTMLPosTypeBadgesElement>;
             "pos-type-index-entries": LocalJSX.IntrinsicElements["pos-type-index-entries"] & JSXBase.HTMLAttributes<HTMLPosTypeIndexEntriesElement>;
             /**
