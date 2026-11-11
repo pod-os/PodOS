@@ -39,6 +39,21 @@ export const AvailableTools: { [key: string]: ToolConfig } = {
       },
     ],
   },
+  SourceEditor: {
+    element: 'pos-tool-source-editor',
+    label: 'Src',
+    icon: 'code-slash',
+    types: [
+      {
+        uri: mimeType('text/markdown'),
+        priority: 10,
+      },
+      {
+        uri: 'http://www.w3.org/2007/ont/link#RDFDocument',
+        priority: 10,
+      },
+    ],
+  },
   ImageViewer: {
     element: 'pos-app-image-viewer',
     label: 'Pic',
