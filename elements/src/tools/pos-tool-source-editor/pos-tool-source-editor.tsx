@@ -1,4 +1,4 @@
-import { Component, h, State } from '@stencil/core';
+import { Component, h, Host, State } from '@stencil/core';
 import { SourceEditor } from './source-editor';
 import { useResource } from '../../components/events/useResource';
 
@@ -7,7 +7,8 @@ import { usePodOS } from '../../components/events/usePodOS';
 
 @Component({
   tag: 'pos-tool-source-editor',
-  styleUrl: 'pos-tool-source-editor.css',
+  styleUrls: ['./pos-tool-source-editor.css', '../../apps/styles/default-app-layout.css'],
+  shadow: true,
 })
 export class PosToolSourceEditor {
   private editorEl: HTMLElement | undefined;
@@ -26,11 +27,13 @@ export class PosToolSourceEditor {
 
   render() {
     return (
-      <article>
-        <div class="content" ref={el => (this.editorEl = el)}>
-          {this.loading ? <Skeleton></Skeleton> : null}
-        </div>
-      </article>
+      <Host>
+        <section>
+          <div class="content" ref={el => (this.editorEl = el)}>
+            {this.loading ? <Skeleton></Skeleton> : null}
+          </div>
+        </section>
+      </Host>
     );
   }
 }

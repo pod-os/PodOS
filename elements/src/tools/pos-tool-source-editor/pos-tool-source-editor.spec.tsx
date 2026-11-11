@@ -3,9 +3,9 @@ import { beforeEach, describe, expect, h, it, render } from '@stencil/vitest';
 
 import { mockPodOS } from '../../test/mockPodOS.vitest';
 import './pos-tool-source-editor';
-import { getByRole } from '@testing-library/dom';
 import { mockResource } from '../../test/mockResource';
 import { PodOS, SolidFile, Thing } from '@pod-os/core';
+import { getByShadowRole } from 'shadow-dom-testing-library';
 
 describe('pos-tool-source-editor', () => {
   let os: PodOS;
@@ -17,18 +17,20 @@ describe('pos-tool-source-editor', () => {
     const page = await render(<pos-tool-source-editor></pos-tool-source-editor>);
     expect(page.root).toMatchInlineSnapshot(`
       <pos-tool-source-editor class="hydrated">
-        <article>
-          <div class="content">
-            <div class="skeleton">
-              <sl-skeleton effect="sheen"></sl-skeleton>
-              <sl-skeleton effect="sheen"></sl-skeleton>
-              <sl-skeleton effect="sheen"></sl-skeleton>
-              <sl-skeleton effect="sheen"></sl-skeleton>
-              <sl-skeleton effect="sheen"></sl-skeleton>
-              <sl-skeleton effect="sheen"></sl-skeleton>
+        <mock:shadow-root>
+          <section>
+            <div class="content">
+              <div class="skeleton">
+                <sl-skeleton effect="sheen"></sl-skeleton>
+                <sl-skeleton effect="sheen"></sl-skeleton>
+                <sl-skeleton effect="sheen"></sl-skeleton>
+                <sl-skeleton effect="sheen"></sl-skeleton>
+                <sl-skeleton effect="sheen"></sl-skeleton>
+                <sl-skeleton effect="sheen"></sl-skeleton>
+              </div>
             </div>
-          </div>
-        </article>
+          </section>
+        </mock:shadow-root>
       </pos-tool-source-editor>
     `);
   });
@@ -43,7 +45,7 @@ describe('pos-tool-source-editor', () => {
 
     await page.waitForChanges();
 
-    const textbox = getByRole(page.root, 'textbox');
+    const textbox = getByShadowRole(page.root, 'textbox');
     expect(textbox).toMatchInlineSnapshot(`
       <div
         aria-multiline="true"

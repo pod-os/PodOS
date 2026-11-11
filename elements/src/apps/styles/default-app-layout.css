@@ -21,6 +21,7 @@ section {
     section {
       &:first-of-type {
         flex: 1;
+        min-width: 0;
       }
     }
 

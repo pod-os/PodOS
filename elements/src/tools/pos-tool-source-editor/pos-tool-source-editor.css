@@ -6,6 +6,7 @@
   display: flex;
   gap: var(--size-2);
   flex-direction: column;
+  padding: var(--size-2);
 
   sl-skeleton {
     &:nth-child(2) {
