@@ -61,7 +61,7 @@
     "@testing-library/dom": "^10.4.2",
     "@testing-library/jest-dom": "^6.9.1",
     "@vitest/coverage-v8": "^5.1.0",
-    "fake-indexeddb": "^6.2.5",
+    "fake-indexeddb": "^6.2.7",
     "happy-dom": "^20.13.0",
     "msw": "^2.15.0",
     "prettier": "^3.9.9",
