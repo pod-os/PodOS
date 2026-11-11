@@ -416,6 +416,9 @@ export namespace Components {
          */
         "tools": ToolConfig[];
     }
+    /**
+     * A tool to edit the source code of a document
+     */
     interface PosToolSourceEditor {
     }
     interface PosTypeBadges {
@@ -1360,6 +1363,9 @@ declare global {
         prototype: HTMLPosToolSelectElement;
         new (): HTMLPosToolSelectElement;
     };
+    /**
+     * A tool to edit the source code of a document
+     */
     interface HTMLPosToolSourceEditorElement extends Components.PosToolSourceEditor, HTMLStencilElement {
     }
     var HTMLPosToolSourceEditorElement: {
@@ -2000,6 +2006,9 @@ declare namespace LocalJSX {
          */
         "tools"?: ToolConfig[];
     }
+    /**
+     * A tool to edit the source code of a document
+     */
     interface PosToolSourceEditor {
     }
     interface PosTypeBadges {
@@ -2328,6 +2337,9 @@ declare module "@stencil/core" {
              * Allows selecting a tool from within a set of available tools
              */
             "pos-tool-select": LocalJSX.IntrinsicElements["pos-tool-select"] & JSXBase.HTMLAttributes<HTMLPosToolSelectElement>;
+            /**
+             * A tool to edit the source code of a document
+             */
             "pos-tool-source-editor": LocalJSX.IntrinsicElements["pos-tool-source-editor"] & JSXBase.HTMLAttributes<HTMLPosToolSourceEditorElement>;
             "pos-type-badges": LocalJSX.IntrinsicElements["pos-type-badges"] & JSXBase.HTMLAttributes<HTMLPosTypeBadgesElement>;
             "pos-type-index-entries": LocalJSX.IntrinsicElements["pos-type-index-entries"] & JSXBase.HTMLAttributes<HTMLPosTypeIndexEntriesElement>;
