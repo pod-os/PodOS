@@ -35,7 +35,7 @@
   },
   "homepage": "https://github.com/pod-os/PodOS#readme",
   "devDependencies": {
-    "@wallabyjs/cli": "^1.0.28",
+    "@wallabyjs/cli": "^1.0.29",
     "husky": "^9.1.7",
     "prettier": "^3.9.9"
   },
