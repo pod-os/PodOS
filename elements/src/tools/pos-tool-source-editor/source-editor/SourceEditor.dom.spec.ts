@@ -1,6 +1,8 @@
-import { beforeEach, describe, expect, it } from '@stencil/vitest';
+import { vi, beforeEach, describe, expect, it } from '@stencil/vitest';
 import { SourceEditor } from './SourceEditor';
 import { getByRole } from '@testing-library/dom';
+import { userEvent } from '@testing-library/user-event';
+import { EditorSelection } from '@codemirror/state';
 
 describe('SourceEditor', () => {
   let root: HTMLElement;
@@ -52,6 +54,28 @@ describe('SourceEditor', () => {
       expect(editor.isEditable()).toBe(false);
       expect(textbox).toEqualAttribute('contenteditable', 'false');
       expect(textbox).toEqualAttribute('aria-readonly', 'true');
+    });
+  });
+
+  describe('on update', () => {
+    it('calls given callback on update', async () => {
+      const callback = vi.fn();
+      const editor = new SourceEditor(root, { content: '# Markdown', contentType: 'text/markdown' });
+      editor.onUpdate(callback);
+      const textbox = getByRole(root, 'textbox');
+      await userEvent.type(textbox, 'updated content');
+      // @ts-ignore Accessing a private field here for testing
+      editor.view.dispatch({ changes: { from: 0, insert: 'updated content' } });
+      expect(callback).toHaveBeenCalled();
+    });
+
+    it('does not callback on updates that do not change the content', async () => {
+      const callback = vi.fn();
+      const editor = new SourceEditor(root, { content: '# Markdown', contentType: 'text/markdown' });
+      editor.onUpdate(callback);
+      // @ts-ignore Accessing a private field here for testing
+      editor.view.dispatch({ selection: EditorSelection.cursor(0) });
+      expect(callback).not.toHaveBeenCalled();
     });
   });
 });

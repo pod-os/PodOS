@@ -1,5 +1,5 @@
 import { basicSetup } from 'codemirror';
-import { EditorView } from '@codemirror/view';
+import { EditorView, ViewUpdate } from '@codemirror/view';
 import { EditorState } from '@codemirror/state';
 
 import { markdown } from '@codemirror/lang-markdown';
@@ -21,6 +21,8 @@ export interface SourceEditorOptions {
 export class SourceEditor {
   private readonly view: EditorView;
 
+  private updateCallback: () => void = () => null;
+
   constructor(target: HTMLElement, { editable = true, content, contentType }: SourceEditorOptions) {
     const lang = languages[contentType] ? [languages[contentType]()] : [];
     const readonly = editable
@@ -34,8 +36,23 @@ export class SourceEditor {
     this.view = new EditorView({
       doc: content,
       parent: target,
-      extensions: [basicSetup, ...readonly, ...lang, dark ? vscodeDark : vscodeLight, EditorView.lineWrapping],
+      extensions: [
+        basicSetup,
+        ...readonly,
+        ...lang,
+        dark ? vscodeDark : vscodeLight,
+        EditorView.lineWrapping,
+        EditorView.updateListener.of((update: ViewUpdate) => {
+          if (update.docChanged) {
+            this.updateCallback();
+          }
+        }),
+      ],
     });
+  }
+
+  onUpdate(callback: () => void) {
+    this.updateCallback = callback;
   }
 
   isEditable() {
