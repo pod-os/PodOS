@@ -159,6 +159,23 @@ describe('pos-tool-source-editor', () => {
       expect(saveButton).toBeEnabled();
       expect(status).toMatchInlineSnapshot(`<pos-save-status savestatus="idle"></pos-save-status>`);
     });
+
+    it('indicates that saving has failed', async () => {
+      let failSaving: Function;
+      const savingPromise = new Promise<Response>((_, reject) => {
+        failSaving = reject;
+      });
+      vi.when(os.files().putFile).calledWith(file, 'file source content').thenReturnOnce(savingPromise);
+      const saveButton = getByShadowRole(page.root, 'button', { name: 'Save' });
+      await userEvent.click(saveButton);
+      expect(saveButton).toBeDisabled();
+      const status = page.root.shadowRoot?.querySelector('pos-save-status');
+      expect(status).toMatchInlineSnapshot(`<pos-save-status savestatus="saving"></pos-save-status>`);
+      failSaving!();
+      await page.waitForChanges();
+      expect(saveButton).toBeEnabled();
+      expect(status).toMatchInlineSnapshot(`<pos-save-status savestatus="failed"></pos-save-status>`);
+    });
   });
 
   it('renders error for broken file', async () => {
