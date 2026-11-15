@@ -1,4 +1,4 @@
-import { Component, EventEmitter, h, Host, State, Event } from '@stencil/core';
+import { Component, EventEmitter, h, Host, State, Event, Listen } from '@stencil/core';
 import { SourceEditor } from './source-editor';
 import { useResource } from '../../components/events/useResource';
 
@@ -34,6 +34,18 @@ export class PosToolSourceEditor {
 
   @Event({ eventName: 'pod-os:error' })
   errorEmitter!: EventEmitter;
+
+  @Listen('pod-os:link', { target: 'document', capture: true })
+  @Listen('pod-os:tool-selected', { target: 'document', capture: true })
+  @Listen('pod-os:logout', { target: 'document', capture: true })
+  confirmNavigation(evt: CustomEvent) {
+    if (this.saveStatus !== 'idle') {
+      const ok = window.confirm('There are unsaved changes that will be lost, if you proceed.');
+      if (!ok) {
+        evt.stopPropagation();
+      }
+    }
+  }
 
   async componentDidLoad() {
     this.os = await usePodOS(this.editorEl);
