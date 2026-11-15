@@ -139,11 +139,12 @@ describe('pos-tool-source-editor', () => {
       const saveButton = getByShadowRole(page.root, 'button', { name: 'Save' });
       await userEvent.click(saveButton);
       expect(saveButton).toBeDisabled();
-      expect(saveButton).toHaveTextContent('Saving…');
+      const status = getByShadowRole(page.root, 'status');
+      expect(status).toHaveTextContent('saving changes');
       finishSaving!();
       await page.waitForChanges();
       expect(saveButton).toBeEnabled();
-      expect(saveButton).toHaveTextContent('Save');
+      expect(status).toHaveTextContent('all saved');
     });
   });
 
