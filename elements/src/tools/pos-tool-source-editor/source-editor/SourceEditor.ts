@@ -34,7 +34,7 @@ export class SourceEditor {
     this.view = new EditorView({
       doc: content,
       parent: target,
-      extensions: [basicSetup, ...readonly, ...lang, dark ? vscodeDark : vscodeLight],
+      extensions: [basicSetup, ...readonly, ...lang, dark ? vscodeDark : vscodeLight, EditorView.lineWrapping],
     });
   }
 
