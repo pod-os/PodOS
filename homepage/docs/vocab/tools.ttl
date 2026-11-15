@@ -1,4 +1,4 @@
-@prefix tools: <https://pod-os.org/vocab/tools.ttl#> .
+@prefix tools: <https://pod-os.org/vocab/tools#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
@@ -9,53 +9,53 @@
 @prefix hydra: <http://www.w3.org/ns/hydra/core#> .
 @prefix schema: <https://schema.org/> .
 
-<https://pod-os.org/vocab/tools.ttl> a owl:Ontology ;
+<https://pod-os.org/vocab/tools> a owl:Ontology ;
     dcterms:title "PodOS tools vocabulary"@en ;
     dcterms:description "A vocabulary and SHACL shapes for registering apps and HTML tools for use by PodOS."@en ;
     dcterms:created "2026-10-31"^^xsd:date ;
-    dcterms:modified "2026-10-31"^^xsd:date ;
+    dcterms:modified "2026-11-14"^^xsd:date ;
     owl:versionInfo "0.1.0" .
 
 tools:ToolIndex a rdfs:Class ;
     rdfs:label "Tool index"@en ;
     rdfs:comment "A registry of app and tool registrations."@en ;
-    rdfs:isDefinedBy <https://pod-os.org/vocab/tools.ttl> .
+    rdfs:isDefinedBy <https://pod-os.org/vocab/tools> .
 
 tools:Registration a rdfs:Class ;
     rdfs:label "Registration"@en ;
     rdfs:comment "An entry in a tool index that describes an app or HTML tool."@en ;
-    rdfs:isDefinedBy <https://pod-os.org/vocab/tools.ttl> .
+    rdfs:isDefinedBy <https://pod-os.org/vocab/tools> .
 
 tools:AppRegistration a rdfs:Class ;
     rdfs:subClassOf tools:Registration ;
     rdfs:label "App registration"@en ;
     rdfs:comment "A registration for an external app invoked through a URI template."@en ;
-    rdfs:isDefinedBy <https://pod-os.org/vocab/tools.ttl> .
+    rdfs:isDefinedBy <https://pod-os.org/vocab/tools> .
 
 tools:ToolRegistration a rdfs:Class ;
     rdfs:subClassOf tools:Registration ;
     rdfs:label "Tool registration"@en ;
     rdfs:comment "A registration for a PodOS tool rendered from an HTML fragment."@en ;
-    rdfs:isDefinedBy <https://pod-os.org/vocab/tools.ttl> .
+    rdfs:isDefinedBy <https://pod-os.org/vocab/tools> .
 
 tools:HtmlFragmentInvocation a rdfs:Class ;
     rdfs:subClassOf ac:Invocation ;
     rdfs:label "HTML fragment invocation"@en ;
     rdfs:comment "An Application Capability invocation for rendering an HTML fragment, e.g. as an HTML tool in PodOS. The fragment is identified by a schema:url."@en ;
-    rdfs:isDefinedBy <https://pod-os.org/vocab/tools.ttl> .
+    rdfs:isDefinedBy <https://pod-os.org/vocab/tools> .
 
 tools:toolIndex a rdf:Property ;
     rdfs:label "tool index"@en ;
     rdfs:comment "Links the WebID to the tool index, usually in the preferences document."@en ;
     rdfs:range tools:ToolIndex ;
-    rdfs:isDefinedBy <https://pod-os.org/vocab/tools.ttl> .
+    rdfs:isDefinedBy <https://pod-os.org/vocab/tools> .
 
 tools:registration a rdf:Property ;
     rdfs:label "registration"@en ;
     rdfs:comment "Links a tool index to one of its registrations."@en ;
     rdfs:domain tools:ToolIndex ;
     rdfs:range tools:Registration ;
-    rdfs:isDefinedBy <https://pod-os.org/vocab/tools.ttl> .
+    rdfs:isDefinedBy <https://pod-os.org/vocab/tools> .
 
 # Shapes
 
@@ -148,6 +148,6 @@ tools:HtmlFragmentInvocationShape a sh:NodeShape ;
         sh:path schema:url ;
         sh:minCount 1 ;
         sh:maxCount 1 ;
-        sh:nodeKind sh:IRI
+        sh:nodeKind sh:Literal
     ] .
 
