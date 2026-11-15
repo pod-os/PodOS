@@ -6,6 +6,7 @@ import '@shoelace-style/shoelace/dist/components/skeleton/skeleton.js';
 import { usePodOS } from '../../components/events/usePodOS';
 import { BrokenFile as BrokenFileData, PodOS, SolidFile } from '@pod-os/core';
 import { BrokenFile } from '../../components/broken-file/BrokenFile';
+import { SaveStatus } from '../../components/pos-save-status/pos-save-status';
 
 /**
  * A tool to edit the source code of a document
@@ -29,7 +30,7 @@ export class PosToolSourceEditor {
   private file: SolidFile | undefined;
 
   @State()
-  private saveStatus: 'idle' | 'saving' | 'failed' = 'idle';
+  private saveStatus: SaveStatus = 'idle';
 
   async componentDidLoad() {
     this.os = await usePodOS(this.editorEl!);
@@ -40,6 +41,7 @@ export class PosToolSourceEditor {
     if (blob) {
       const content = await blob.text();
       this.editor = new SourceEditor(this.editorEl!, { content, contentType: blob.type, editable: resource.editable });
+      this.editor.onUpdate(() => (this.saveStatus = 'pending'));
     } else {
       this.brokenFile = this.file as BrokenFileData;
     }
@@ -49,6 +51,7 @@ export class PosToolSourceEditor {
   async save() {
     this.saveStatus = 'saving';
     await this.os?.files().putFile(this.file!, this.editor?.getContent() ?? '');
+    // TODO handle errors
     this.saveStatus = 'idle';
   }
 

@@ -114,6 +114,19 @@ describe('pos-tool-source-editor', () => {
     `);
     });
 
+    it('indicates unsaved changes to the content', async () => {
+      // given the editor is currently idle
+      const status = page.root.shadowRoot?.querySelector('pos-save-status');
+      expect(status).toMatchInlineSnapshot(`<pos-save-status savestatus="idle"></pos-save-status>`);
+
+      // when the user edits the document
+      // @ts-ignore Accessing a private field here for testing
+      page.instance.editor.view.dispatch({ changes: { from: 0, insert: 'some changes' } });
+      await page.waitForChanges();
+      // then the status indicates pending changes
+      expect(status).toMatchInlineSnapshot(`<pos-save-status savestatus="pending"></pos-save-status>`);
+    });
+
     it('renders a save button', () => {
       const saveButton = getByShadowRole(page.root, 'button', { name: 'Save' });
       expect(saveButton).toMatchInlineSnapshot(`
