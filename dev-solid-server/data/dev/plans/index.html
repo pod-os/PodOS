@@ -16,18 +16,37 @@
     :root {
       /* PodOS design tokens (from elements.css / Pollen), with local fallbacks */
       --bg: var(--pos-background-color, #f6f7f9);
-      --surface: var(--color-white, #ffffff);
+      --surface: var(--pos-card-background, var(--color-white, #ffffff));
       --border: var(--pos-border-color, #e2e5ea);
+      --border-strong: #c7cdd6;
       --text: var(--pos-normal-text-color, #1a1f28);
       --muted: var(--pos-subtle-text-color, #6b7280);
       --accent: var(--pos-primary-color, #4f46e5);
       --accent-soft: var(--pos-primary-highlight-color, #eef2ff);
+      --overlay: rgba(15, 23, 42, .45);
       --done: #15803d; --done-bg: #ecfdf3; --done-border: #86efac;
       --progress: #b45309; --progress-bg: #fffbeb; --progress-border: #fcd34d;
       --planned: #475569; --planned-bg: #f1f5f9; --planned-border: #cbd5e1;
+      --danger: #b91c1c; --danger-bg: #fef2f2; --danger-border: #fecaca;
+      --code-bg: #f1f5f9; --code-border: #e2e8f0; --code-text: #334155;
       --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
     }
-    html { background: var(--bg); }
+    /* Dark palette for the locally defined colors (the --pos-* tokens switch
+       via elements.css' own prefers-color-scheme block; --color-white does
+       not, so --surface points at --pos-card-background instead). */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --border-strong: #374151;
+        --accent-soft: color-mix(in srgb, var(--accent) 22%, transparent);
+        --overlay: rgba(0, 0, 0, .6);
+        --done: #4ade80; --done-bg: rgba(34, 197, 94, .14); --done-border: rgba(74, 222, 128, .4);
+        --progress: #fcd34d; --progress-bg: rgba(252, 211, 77, .12); --progress-border: rgba(252, 211, 77, .4);
+        --planned: #94a3b8; --planned-bg: rgba(148, 163, 184, .14); --planned-border: rgba(148, 163, 184, .35);
+        --danger: #f87171; --danger-bg: rgba(239, 68, 68, .14); --danger-border: rgba(248, 113, 113, .4);
+        --code-bg: rgba(148, 163, 184, .14); --code-border: rgba(148, 163, 184, .25); --code-text: #cbd5e1;
+      }
+    }
+    html { background: var(--bg); color-scheme: light dark; }
     body {
       margin: 0; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
       color: var(--text); -webkit-font-smoothing: antialiased;
@@ -209,11 +228,11 @@
       .chip-planned { background: var(--planned-bg); border-color: var(--planned-border); color: var(--planned); }
       .chip-in-progress { background: var(--progress-bg); border-color: var(--progress-border); color: var(--progress); }
       .chip-draft { background: var(--planned-bg); border-color: var(--planned-border); color: var(--planned); }
-      .chip-deferred, .chip-abandoned { background: #fef2f2; border-color: #fecaca; color: #b91c1c; }
+      .chip-deferred, .chip-abandoned { background: var(--danger-bg); border-color: var(--danger-border); color: var(--danger); }
     `;
 
     const fileTagStyles = css`
-      .file, code { background: #f1f5f9; border: 1px solid #e2e8f0; padding: .05rem .4rem; border-radius: 4px; font-family: var(--mono); font-size: .78rem; color: #334155; }
+      .file, code { background: var(--code-bg); border: 1px solid var(--code-border); padding: .05rem .4rem; border-radius: 4px; font-family: var(--mono); font-size: .78rem; color: var(--code-text); }
     `;
 
     // ---- Board (the validated prototype design) -------------------------
@@ -229,22 +248,22 @@
         .columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; align-items: start; }
         .col h2 { font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 .5rem; }
         .card { border: 1px solid var(--border); border-radius: 10px; padding: .7rem .85rem; margin-bottom: .6rem; background: var(--surface); cursor: pointer; box-shadow: 0 1px 2px rgba(16,24,40,.04); }
-        .card:hover { border-color: #c7cdd6; }
+        .card:hover { border-color: var(--border-strong); }
         .card.done { opacity: .7; }
         /* tasks added/changed since the last review: left accent bar */
         .card.is-new { box-shadow: inset 3px 0 0 #10b981; }
-        .card.is-new:hover { border-color: #c7cdd6; }
+        .card.is-new:hover { border-color: var(--border-strong); }
         .card h3 { margin: 0 0 .35rem; font-size: .95rem; font-weight: 600; }
         .goal { font-size: .82rem; color: var(--muted); line-height: 1.4;
           display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
         p { margin: .4rem 0; }
         /* full-screen task detail */
-        .overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, .45); z-index: 50; display: flex; align-items: flex-start; justify-content: center; padding: 3rem 1rem; overflow-y: auto; }
+        .overlay { position: fixed; inset: 0; background: var(--overlay); z-index: 50; display: flex; align-items: flex-start; justify-content: center; padding: 3rem 1rem; overflow-y: auto; }
         .sheet { background: var(--surface); border-radius: 14px; max-width: 760px; width: 100%; padding: 1.5rem 1.75rem 2rem; box-shadow: 0 20px 50px rgba(0,0,0,.3); }
         .sheet-head { display: flex; justify-content: flex-end; align-items: center; gap: .4rem; margin-bottom: .5rem; }
         .sheet h3 { margin: 0; font-size: 1.2rem; letter-spacing: -.01em; margin-right: auto; }
         .sheet .badge-copy { margin-top: 0; }
-        .sheet.copied { outline: 2px solid #86efac; outline-offset: 2px; }
+        .sheet.copied { outline: 2px solid var(--done-border); outline-offset: 2px; }
         .sheet .meta { color: var(--muted); font-size: .85rem; margin-bottom: .8rem; }
         .close { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--muted); line-height: 1; padding: .1rem .3rem; border-radius: 6px; }
         .close:hover { background: var(--planned-bg); color: var(--text); }
@@ -272,7 +291,7 @@
         .entry { display: flex; align-items: flex-start; gap: .55rem; margin: .25rem -.2rem; padding: .2rem .2rem; border-radius: 8px; transition: background .15s; }
         .entry:has(> .badge-copy:hover) { background: var(--accent-soft); }
         /* copied state must win over the hover highlight (same/hi spec, later rule) */
-        .entry.copied:has(> .badge-copy) { background: #ecfdf3; }
+        .entry.copied:has(> .badge-copy) { background: var(--done-bg); }
         .entry.is-new { box-shadow: inset 3px 0 0 #10b981; padding-left: .45rem; }
         .entry > .badge-copy { flex: none; margin-top: .1rem; }
         .entry .content { flex: 1; min-width: 0; }
@@ -280,7 +299,7 @@
         .entry .text { display: block; }
         .badge { font-size: .62rem; font-weight: 600; padding: .05rem .4rem; border-radius: 4px; border: 1px solid; vertical-align: 1px; }
         .badge-human { background: var(--accent-soft); border-color: transparent; color: var(--accent); }
-        .badge-llm { background: #f1f5f9; border-color: #cbd5e1; color: #475569; }
+        .badge-llm { background: var(--planned-bg); border-color: var(--planned-border); color: var(--planned); }
         .badge-date { background: transparent; border-color: var(--border); color: var(--muted); font-weight: 400; }
         .badge-new { background: transparent; border-color: var(--border); color: var(--done); font-weight: 700; letter-spacing: .04em; }
         .badge-copy { background: var(--surface); border-color: var(--border); color: var(--muted); cursor: pointer; font-weight: 600; font-family: var(--mono); font-size: .8rem; padding: .1rem .45rem; min-width: 1.9rem; }
@@ -485,7 +504,7 @@
         :host { display: block; padding: 1.5rem 2rem 5rem; max-width: 1100px; margin: 0 auto; }
         .muted { color: var(--muted); font-size: .85rem; }
         .loading { padding: 2rem; color: var(--muted); }
-        .error { padding: 1rem; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; color: #991b1b; }
+        .error { padding: 1rem; background: var(--danger-bg); border: 1px solid var(--danger-border); border-radius: 8px; color: var(--danger); }
       `;
       constructor() {
         super();
