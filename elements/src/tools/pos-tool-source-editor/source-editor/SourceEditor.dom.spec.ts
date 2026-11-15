@@ -36,4 +36,22 @@ describe('SourceEditor', () => {
       expect(content).toEqual('# Markdown');
     });
   });
+
+  describe('editable', () => {
+    it('is editable', () => {
+      const editor = new SourceEditor(root, { content: '# Markdown', contentType: 'text/markdown', editable: true });
+      const textbox = getByRole(root, 'textbox');
+      expect(editor.isEditable()).toBe(true);
+      expect(textbox).toEqualAttribute('contenteditable', 'true');
+      expect(textbox).not.toHaveAttribute('aria-readonly');
+    });
+
+    it('is read-only', () => {
+      const editor = new SourceEditor(root, { content: '# Markdown', contentType: 'text/markdown', editable: false });
+      const textbox = getByRole(root, 'textbox');
+      expect(editor.isEditable()).toBe(false);
+      expect(textbox).toEqualAttribute('contenteditable', 'false');
+      expect(textbox).toEqualAttribute('aria-readonly', 'true');
+    });
+  });
 });

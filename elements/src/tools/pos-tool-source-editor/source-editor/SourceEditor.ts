@@ -38,6 +38,10 @@ export class SourceEditor {
     });
   }
 
+  isEditable() {
+    return !this.view.state.readOnly;
+  }
+
   getContent() {
     return this.view.state.doc.toString();
   }
