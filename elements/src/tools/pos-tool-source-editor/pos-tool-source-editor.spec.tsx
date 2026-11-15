@@ -7,6 +7,7 @@ import './pos-tool-source-editor';
 import { mockResource } from '../../test/mockResource';
 import { BrokenFile as BrokenFileData, PodOS, SolidFile, Thing } from '@pod-os/core';
 import { getByShadowRole } from 'shadow-dom-testing-library';
+import { userEvent } from '@testing-library/user-event';
 
 vi.mock('../../components/broken-file/BrokenFile');
 
@@ -77,8 +78,9 @@ describe('pos-tool-source-editor', () => {
 
   describe('editable document', () => {
     let page: RenderResult;
+    let file: SolidFile;
     beforeEach(async () => {
-      mockFile(os, 'https://resource.test/document.ttl', 'file source content');
+      file = mockFile(os, 'https://resource.test/document.ttl', 'file source content');
 
       mockResource({
         uri: 'https://resource.test/document.ttl',
@@ -113,13 +115,19 @@ describe('pos-tool-source-editor', () => {
     });
 
     it('renders a save button', () => {
-      const header = getByShadowRole(page.root, 'button', { name: 'Save' });
-      expect(header).toMatchInlineSnapshot(`
+      const saveButton = getByShadowRole(page.root, 'button', { name: 'Save' });
+      expect(saveButton).toMatchInlineSnapshot(`
         <button>
           <sl-icon name="cloud-arrow-up"></sl-icon>
           Save
         </button>
       `);
+    });
+
+    it('saves the document when clicking the save button', async () => {
+      const saveButton = getByShadowRole(page.root, 'button', { name: 'Save' });
+      await userEvent.click(saveButton);
+      expect(os.files().putFile).toHaveBeenCalledWith(file, 'file source content');
     });
   });
 
@@ -152,7 +160,7 @@ describe('pos-tool-source-editor', () => {
   });
 });
 
-function mockFile(os: PodOS, url: string = 'https://resource.test/document.ttl', textContent: string) {
+function mockFile(os: PodOS, url: string = 'https://resource.test/document.ttl', textContent: string): SolidFile {
   const file = {
     url: url,
     blob: () => ({
@@ -162,4 +170,5 @@ function mockFile(os: PodOS, url: string = 'https://resource.test/document.ttl',
     }),
   } as SolidFile;
   vi.when(os.files().fetchFile).calledWith(url).thenResolveOnce(file);
+  return file;
 }

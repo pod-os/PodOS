@@ -4,7 +4,7 @@ import { useResource } from '../../components/events/useResource';
 
 import '@shoelace-style/shoelace/dist/components/skeleton/skeleton.js';
 import { usePodOS } from '../../components/events/usePodOS';
-import { BrokenFile as BrokenFileData } from '@pod-os/core';
+import { BrokenFile as BrokenFileData, PodOS, SolidFile } from '@pod-os/core';
 import { BrokenFile } from '../../components/broken-file/BrokenFile';
 
 /**
@@ -25,20 +25,26 @@ export class PosToolSourceEditor {
   private brokenFile: BrokenFileData | null = null;
 
   private editor: SourceEditor | undefined;
+  private os: PodOS | undefined;
+  private file: SolidFile | undefined
 
   async componentDidLoad() {
-    const os = await usePodOS(this.editorEl!);
+    this.os = await usePodOS(this.editorEl!);
     const resource = await useResource(this.editorEl!);
-    const file = await os.files().fetchFile(resource.uri);
+    this.file = await this.os.files().fetchFile(resource.uri);
 
-    const blob = file.blob();
+    const blob = this.file.blob();
     if (blob) {
       const content = await blob.text();
       this.editor = new SourceEditor(this.editorEl!, { content, contentType: blob.type, editable: resource.editable });
     } else {
-      this.brokenFile = file as BrokenFileData;
+      this.brokenFile = this.file as BrokenFileData;
     }
     this.loading = false;
+  }
+
+  async save() {
+    await this.os?.files().putFile(this.file!, this.editor?.getContent() ?? "")
   }
 
   render() {
@@ -50,7 +56,7 @@ export class PosToolSourceEditor {
         <section class="editor">
           <header>
             {this.editor?.isEditable() ? (
-              <button>
+              <button onClick={() => this.save()}>
                 <sl-icon name="cloud-arrow-up"></sl-icon>
                 Save
               </button>
