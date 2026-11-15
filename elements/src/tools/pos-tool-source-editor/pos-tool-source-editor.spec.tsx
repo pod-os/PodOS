@@ -43,6 +43,7 @@ describe('pos-tool-source-editor', () => {
 
     mockResource({
       uri: 'https://resource.test/document.ttl',
+      editable: false,
     } as unknown as Thing);
     const page = await render(<pos-tool-source-editor></pos-tool-source-editor>);
 

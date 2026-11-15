@@ -12,8 +12,14 @@ const languages: Record<string, () => LanguageSupport> = {
   'text/turtle': turtle,
 };
 
+export interface SourceEditorOptions {
+  editable?: boolean;
+  contentType: string;
+  content: string;
+}
+
 export class SourceEditor {
-  constructor(target: HTMLElement, content: string, contentType: string, editable: boolean = true) {
+  constructor(target: HTMLElement, { editable = true, content, contentType }: SourceEditorOptions) {
     const lang = languages[contentType] ? [languages[contentType]()] : [];
     const readonly = editable
       ? []

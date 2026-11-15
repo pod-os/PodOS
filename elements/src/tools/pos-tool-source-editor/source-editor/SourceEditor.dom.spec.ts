@@ -9,21 +9,21 @@ describe('SourceEditor', () => {
   });
 
   it('renders markdown with highlighting', () => {
-    new SourceEditor(root, '# Markdown', 'text/markdown');
+    new SourceEditor(root, { content: '# Markdown', contentType: 'text/markdown' });
     const textbox = getByRole(root, 'textbox');
     expect(textbox).toHaveTextContent('# Markdown');
     expect(textbox).toEqualAttribute('data-language', 'markdown');
   });
 
   it('renders turtle with highlighting', () => {
-    new SourceEditor(root, '<> <> <> .', 'text/turtle');
+    new SourceEditor(root, { content: '<> <> <> .', contentType: 'text/turtle' });
     const textbox = getByRole(root, 'textbox');
     expect(textbox).toHaveTextContent('<> <> <> .');
     expect(textbox).toEqualAttribute('data-language', 'turtle');
   });
 
   it('renders other content types without highlighting', () => {
-    new SourceEditor(root, 'Anything else', 'data/anything');
+    new SourceEditor(root, { content: 'Anything else', contentType: 'data/anything' });
     const textbox = getByRole(root, 'textbox');
     expect(textbox).toHaveTextContent('Anything else');
     expect(textbox).not.toHaveAttribute('data-language');

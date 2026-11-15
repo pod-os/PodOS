@@ -32,7 +32,7 @@ export class PosToolSourceEditor {
     const blob = file.blob();
     if (blob) {
       const content = await blob.text();
-      new SourceEditor(this.editorEl!, content, blob.type, resource.editable);
+      new SourceEditor(this.editorEl!, { content, contentType: blob.type, editable: resource.editable });
     } else {
       this.brokenFile = file as BrokenFileData;
     }
