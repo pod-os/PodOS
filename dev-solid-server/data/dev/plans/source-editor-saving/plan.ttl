@@ -4,12 +4,12 @@
 @prefix dct: <http://purl.org/dc/terms/>.
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
 
-<plan.ttl#plan> a plan:Plan;
+<#plan> a plan:Plan;
     dct:title "Source editor saving";
     dct:description "pos-tool-source-editor renders file contents read-only with CodeMirror syntax highlighting (ADR-0019). Users cannot change anything. This plan adds editing and explicit saving to the source editor, with good UX for unsaved changes, kept minimal within a ~2h budget.";
     plan:status plan:in-progress;
     dct:created "2026-11-11"^^xsd:date;
-    dct:modified "2026-11-11T21:25:00Z"^^xsd:dateTime;
+    dct:modified "2026-11-15T19:52:00Z"^^xsd:dateTime;
     plan:hasTask <#task-1-make-editor-editable>, <#task-2-save-button-and-status>, <#task-3-navigation-guard>, <#task-4-e2e-test>;
     plan:context <#entry-plan-context-01>, <#entry-plan-context-02>;
     plan:decision <#entry-plan-decision-01>, <#entry-plan-decision-02>, <#entry-plan-decision-03>, <#entry-plan-decision-04>, <#entry-plan-decision-05>;
@@ -17,30 +17,30 @@
     plan:note <#entry-plan-note-01>, <#entry-plan-note-02>, <#entry-plan-note-03>, <#entry-plan-note-04>.
 <#task-1-make-editor-editable> a plan:Task;
     dct:title "Make SourceEditor editable when the user may edit";
-    plan:parent <plan.ttl#plan>;
-    plan:status plan:planned;
+    plan:parent <#plan>;
+    plan:status plan:done;
     dct:created "2026-11-11"^^xsd:date;
-    dct:modified "2026-11-11T21:25:00Z"^^xsd:dateTime;
+    dct:modified "2026-11-15T19:52:00Z"^^xsd:dateTime;
     plan:goal <#entry-task-1-goal-01>;
     plan:scope <#entry-task-1-scope-01>, <#entry-task-1-scope-02>;
     plan:verification <#entry-task-1-verification-01>;
     plan:touchesFile "elements/src/tools/pos-tool-source-editor/source-editor/SourceEditor.ts", "elements/src/tools/pos-tool-source-editor/source-editor/SourceEditor.dom.spec.ts", "elements/src/tools/pos-tool-source-editor/pos-tool-source-editor.tsx", "elements/src/tools/pos-tool-source-editor/pos-tool-source-editor.spec.tsx".
 <#task-2-save-button-and-status> a plan:Task;
     dct:title "Save button and save status in pos-tool-source-editor";
-    plan:parent <plan.ttl#plan>;
-    plan:status plan:planned;
+    plan:parent <#plan>;
+    plan:status plan:done;
     dct:created "2026-11-11"^^xsd:date;
-    dct:modified "2026-11-11T21:25:00Z"^^xsd:dateTime;
+    dct:modified "2026-11-15T19:52:00Z"^^xsd:dateTime;
     plan:goal <#entry-task-2-goal-01>;
     plan:scope <#entry-task-2-scope-01>, <#entry-task-2-scope-02>, <#entry-task-2-scope-03>;
     plan:verification <#entry-task-2-verification-01>;
     plan:touchesFile "elements/src/tools/pos-tool-source-editor/pos-tool-source-editor.tsx", "elements/src/tools/pos-tool-source-editor/pos-tool-source-editor.spec.tsx", "elements/src/tools/pos-tool-source-editor/pos-tool-source-editor.css".
 <#task-3-navigation-guard> a plan:Task;
     dct:title "Warn about unsaved changes before navigation";
-    plan:parent <plan.ttl#plan>;
-    plan:status plan:planned;
+    plan:parent <#plan>;
+    plan:status plan:done;
     dct:created "2026-11-11"^^xsd:date;
-    dct:modified "2026-11-11T21:25:00Z"^^xsd:dateTime;
+    dct:modified "2026-11-15T19:52:00Z"^^xsd:dateTime;
     plan:goal <#entry-task-3-goal-01>;
     plan:scope <#entry-task-3-scope-01>, <#entry-task-3-scope-02>;
     plan:verification <#entry-task-3-verification-01>;
@@ -48,10 +48,10 @@
     plan:touchesFile "elements/src/tools/pos-tool-source-editor/pos-tool-source-editor.tsx", "elements/src/tools/pos-tool-source-editor/pos-tool-source-editor.spec.tsx".
 <#task-4-e2e-test> a plan:Task;
     dct:title "End-to-end test: edit and save a Turtle document";
-    plan:parent <plan.ttl#plan>;
+    plan:parent <#plan>;
     plan:status plan:planned;
     dct:created "2026-11-11"^^xsd:date;
-    dct:modified "2026-11-11T21:25:00Z"^^xsd:dateTime;
+    dct:modified "2026-11-15T19:52:00Z"^^xsd:dateTime;
     plan:goal <#entry-task-4-goal-01>;
     plan:scope <#entry-task-4-scope-01>;
     plan:verification <#entry-task-4-verification-01>;
