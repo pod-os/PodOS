@@ -154,7 +154,9 @@ describe('pos-tool-source-editor', () => {
       expect(saveButton).toBeDisabled();
       const status = page.root.shadowRoot?.querySelector('pos-save-status');
       expect(status).toMatchInlineSnapshot(`<pos-save-status savestatus="saving"></pos-save-status>`);
-      finishSaving!();
+      finishSaving!({
+        ok: true,
+      });
       await page.waitForChanges();
       expect(saveButton).toBeEnabled();
       expect(status).toMatchInlineSnapshot(`<pos-save-status savestatus="idle"></pos-save-status>`);
@@ -174,6 +176,18 @@ describe('pos-tool-source-editor', () => {
       failSaving!();
       await page.waitForChanges();
       expect(saveButton).toBeEnabled();
+      expect(status).toMatchInlineSnapshot(`<pos-save-status savestatus="failed"></pos-save-status>`);
+    });
+
+    it('indicates that saving has failed with a bad http response', async () => {
+      vi.when(os.files().putFile)
+        .calledWith(file, 'file source content')
+        .thenResolveOnce({
+          ok: false,
+        } as Response);
+      const saveButton = getByShadowRole(page.root, 'button', { name: 'Save' });
+      await userEvent.click(saveButton);
+      const status = page.root.shadowRoot?.querySelector('pos-save-status');
       expect(status).toMatchInlineSnapshot(`<pos-save-status savestatus="failed"></pos-save-status>`);
     });
   });

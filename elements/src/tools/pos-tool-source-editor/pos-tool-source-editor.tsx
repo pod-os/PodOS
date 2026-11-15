@@ -51,8 +51,12 @@ export class PosToolSourceEditor {
   async save() {
     this.saveStatus = 'saving';
     try {
-      await this.os.files().putFile(this.file!, this.editor?.getContent() ?? '');
-      this.saveStatus = 'idle';
+      const response = await this.os.files().putFile(this.file!, this.editor?.getContent() ?? '');
+      if (response.ok) {
+        this.saveStatus = 'idle';
+      } else {
+        this.saveStatus = 'failed';
+      }
     } catch (err) {
       console.error(err); // TODO throw pos error
       this.saveStatus = 'failed';
