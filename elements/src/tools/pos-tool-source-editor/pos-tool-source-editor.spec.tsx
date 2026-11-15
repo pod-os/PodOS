@@ -252,6 +252,31 @@ describe('pos-tool-source-editor', () => {
         });
       },
     );
+
+    describe('losing changes when leaving/closing the browser tab', () => {
+      it('prevents losing unsaved changes', () => {
+        // given the user edited the document
+        // @ts-ignore Accessing a private field here for testing
+        page.instance.editor.view.dispatch({ changes: { from: 0, insert: 'some changes' } });
+
+        // when they try to leave the page
+        const event = new Event('beforeunload', { cancelable: true });
+        window.dispatchEvent(event);
+
+        // then this is prevented
+        expect(event.defaultPrevented).toBe(true);
+      });
+
+      it('can safely unload if no changes are pending', () => {
+        // given the user did not edit the document
+        // when they try to leave the page
+        const event = new Event('beforeunload', { cancelable: true });
+        window.dispatchEvent(event);
+
+        // then this is not prevented
+        expect(event.defaultPrevented).toBe(false);
+      });
+    });
   });
 
   it('renders error for broken file', async () => {

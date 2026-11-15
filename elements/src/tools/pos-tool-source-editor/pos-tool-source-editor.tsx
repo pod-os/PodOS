@@ -47,6 +47,13 @@ export class PosToolSourceEditor {
     }
   }
 
+  @Listen('beforeunload', { target: 'window' })
+  confirmUnload(event: BeforeUnloadEvent) {
+    if (this.saveStatus !== 'idle') {
+      event.preventDefault();
+    }
+  }
+
   async componentDidLoad() {
     this.os = await usePodOS(this.editorEl);
     const resource = await useResource(this.editorEl);
