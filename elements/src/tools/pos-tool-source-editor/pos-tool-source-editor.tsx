@@ -24,6 +24,8 @@ export class PosToolSourceEditor {
   @State()
   private brokenFile: BrokenFileData | null = null;
 
+  private editor: SourceEditor | undefined;
+
   async componentDidLoad() {
     const os = await usePodOS(this.editorEl!);
     const resource = await useResource(this.editorEl!);
@@ -32,7 +34,7 @@ export class PosToolSourceEditor {
     const blob = file.blob();
     if (blob) {
       const content = await blob.text();
-      new SourceEditor(this.editorEl!, { content, contentType: blob.type, editable: resource.editable });
+      this.editor = new SourceEditor(this.editorEl!, { content, contentType: blob.type, editable: resource.editable });
     } else {
       this.brokenFile = file as BrokenFileData;
     }
@@ -45,7 +47,15 @@ export class PosToolSourceEditor {
     }
     return (
       <Host>
-        <section>
+        <section class="editor">
+          <header>
+            {this.editor?.isEditable() ? (
+              <button>
+                <sl-icon name="cloud-arrow-up"></sl-icon>
+                Save
+              </button>
+            ) : null}
+          </header>
           <div class="content" ref={el => (this.editorEl = el)}>
             {this.loading ? <Skeleton></Skeleton> : null}
           </div>

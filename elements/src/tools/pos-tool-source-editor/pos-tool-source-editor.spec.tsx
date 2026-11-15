@@ -1,5 +1,5 @@
 import { Mock, vi } from 'vitest';
-import { beforeEach, describe, expect, h, it, render } from '@stencil/vitest';
+import { beforeEach, describe, expect, h, it, render, RenderResult } from '@stencil/vitest';
 import { BrokenFile } from '../../components/broken-file/BrokenFile';
 
 import { mockPodOS } from '../../test/mockPodOS.vitest';
@@ -21,7 +21,8 @@ describe('pos-tool-source-editor', () => {
     expect(page.root).toMatchInlineSnapshot(`
       <pos-tool-source-editor class="hydrated">
         <mock:shadow-root>
-          <section>
+          <section class="editor">
+            <header></header>
             <div class="content">
               <div class="skeleton">
                 <sl-skeleton effect="sheen"></sl-skeleton>
@@ -74,19 +75,22 @@ describe('pos-tool-source-editor', () => {
     `);
   });
 
-  it('renders an editable textbox with the file content after an editable file has been fetched', async () => {
-    mockFile(os, 'https://resource.test/document.ttl', 'file source content');
+  describe('editable document', () => {
+    let page: RenderResult;
+    beforeEach(async () => {
+      mockFile(os, 'https://resource.test/document.ttl', 'file source content');
 
-    mockResource({
-      uri: 'https://resource.test/document.ttl',
-      editable: true,
-    } as unknown as Thing);
-    const page = await render(<pos-tool-source-editor></pos-tool-source-editor>);
+      mockResource({
+        uri: 'https://resource.test/document.ttl',
+        editable: true,
+      } as unknown as Thing);
+      page = await render(<pos-tool-source-editor></pos-tool-source-editor>);
+      await page.waitForChanges();
+    });
 
-    await page.waitForChanges();
-
-    const textbox = getByShadowRole(page.root, 'textbox');
-    expect(textbox).toMatchInlineSnapshot(`
+    it('renders an editable textbox with the file content after an editable file has been fetched', async () => {
+      const textbox = getByShadowRole(page.root, 'textbox');
+      expect(textbox).toMatchInlineSnapshot(`
       <div
         aria-multiline="true"
         autocapitalize="off"
@@ -106,6 +110,17 @@ describe('pos-tool-source-editor', () => {
         </div>
       </div>
     `);
+    });
+
+    it('renders a save button', () => {
+      const header = getByShadowRole(page.root, 'button', { name: 'Save' });
+      expect(header).toMatchInlineSnapshot(`
+        <button>
+          <sl-icon name="cloud-arrow-up"></sl-icon>
+          Save
+        </button>
+      `);
+    });
   });
 
   it('renders error for broken file', async () => {
