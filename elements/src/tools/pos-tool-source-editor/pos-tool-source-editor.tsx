@@ -17,7 +17,7 @@ import { SaveStatus } from '../../components/pos-save-status/pos-save-status';
   shadow: true,
 })
 export class PosToolSourceEditor {
-  private editorEl: HTMLElement | undefined;
+  private editorEl!: HTMLElement;
 
   @State()
   private loading = true;
@@ -26,15 +26,15 @@ export class PosToolSourceEditor {
   private brokenFile: BrokenFileData | null = null;
 
   private editor: SourceEditor | undefined;
-  private os: PodOS | undefined;
+  private os!: PodOS;
   private file: SolidFile | undefined;
 
   @State()
   private saveStatus: SaveStatus = 'idle';
 
   async componentDidLoad() {
-    this.os = await usePodOS(this.editorEl!);
-    const resource = await useResource(this.editorEl!);
+    this.os = await usePodOS(this.editorEl);
+    const resource = await useResource(this.editorEl);
     this.file = await this.os.files().fetchFile(resource.uri);
 
     const blob = this.file.blob();
@@ -51,7 +51,7 @@ export class PosToolSourceEditor {
   async save() {
     this.saveStatus = 'saving';
     try {
-      await this.os?.files().putFile(this.file!, this.editor?.getContent() ?? '');
+      await this.os.files().putFile(this.file!, this.editor?.getContent() ?? '');
       this.saveStatus = 'idle';
     } catch (err) {
       console.error(err); // TODO throw pos error
@@ -77,7 +77,7 @@ export class PosToolSourceEditor {
               </div>
             ) : null}
           </header>
-          <div class="content" ref={el => (this.editorEl = el)}>
+          <div class="content" ref={el => (this.editorEl = el!)}>
             {this.loading ? <Skeleton></Skeleton> : null}
           </div>
         </section>
