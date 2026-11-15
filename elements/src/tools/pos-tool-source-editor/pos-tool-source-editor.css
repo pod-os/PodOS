@@ -12,26 +12,32 @@ section.editor {
     padding: var(--size-1);
     flex-direction: row;
     justify-content: flex-end;
-    button {
-      background: var(--pos-primary-color);
-      color: var(--pos-primary-text-color);
-      outline: none;
-      border: none;
-      border-radius: var(--radius-xs);
-      display: inline-flex;
+    .saving {
+      display: flex;
+      flex-direction: row;
       gap: var(--size-1);
-      justify-content: center;
       align-items: center;
-      height: var(--size-8);
-      flex-shrink: 1;
+      button {
+        background: var(--pos-primary-color);
+        color: var(--pos-primary-text-color);
+        outline: none;
+        border: none;
+        border-radius: var(--radius-xs);
+        display: inline-flex;
+        gap: var(--size-1);
+        justify-content: center;
+        align-items: center;
+        height: var(--size-8);
+        flex-shrink: 1;
 
-      &:focus {
-        outline: var(--pos-input-focus-outline);
-      }
+        &:focus {
+          outline: var(--pos-input-focus-outline);
+        }
 
-      &:hover {
-        filter: brightness(110%);
-        box-shadow: var(--shadow-md);
+        &:hover {
+          filter: brightness(110%);
+          box-shadow: var(--shadow-md);
+        }
       }
     }
   }

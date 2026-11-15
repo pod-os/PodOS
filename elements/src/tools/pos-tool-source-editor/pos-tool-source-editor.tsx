@@ -6,7 +6,6 @@ import '@shoelace-style/shoelace/dist/components/skeleton/skeleton.js';
 import { usePodOS } from '../../components/events/usePodOS';
 import { BrokenFile as BrokenFileData, PodOS, SolidFile } from '@pod-os/core';
 import { BrokenFile } from '../../components/broken-file/BrokenFile';
-import { SaveStatusIndicator } from '../../components/save-status/SaveStatus';
 
 /**
  * A tool to edit the source code of a document
@@ -67,7 +66,7 @@ export class PosToolSourceEditor {
                   <sl-icon name="cloud-arrow-up"></sl-icon>
                   Save
                 </button>
-                <SaveStatusIndicator saveStatus={this.saveStatus}></SaveStatusIndicator>,
+                <pos-save-status saveStatus={this.saveStatus}></pos-save-status>
               </div>
             ) : null}
           </header>

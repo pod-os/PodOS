@@ -8,11 +8,13 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { Attachment, HttpProblem, LdpContainer, Literal, NetworkProblem, PodOS, Problem, Relation, SolidFile, Thing } from "@pod-os/core";
 import { SwitchCaseRule } from "./components/pos-switch/rules";
 import { MentionItem } from "./components/pos-markdown-document/rich-editor/mention-extension/pos-mention-menu/pos-mention-menu";
+import { SaveStatus } from "./components/pos-save-status/pos-save-status";
 import { ToolConfig } from "./components/pos-type-router/selectToolsForTypes";
 import { ResultAsync } from "neverthrow";
 export { Attachment, HttpProblem, LdpContainer, Literal, NetworkProblem, PodOS, Problem, Relation, SolidFile, Thing } from "@pod-os/core";
 export { SwitchCaseRule } from "./components/pos-switch/rules";
 export { MentionItem } from "./components/pos-markdown-document/rich-editor/mention-extension/pos-mention-menu/pos-mention-menu";
+export { SaveStatus } from "./components/pos-save-status/pos-save-status";
 export { ToolConfig } from "./components/pos-type-router/selectToolsForTypes";
 export { ResultAsync } from "neverthrow";
 export namespace Components {
@@ -366,6 +368,9 @@ export namespace Components {
           * @default 'standalone'
          */
         "mode": 'standalone' | 'pod';
+    }
+    interface PosSaveStatus {
+        "saveStatus": SaveStatus;
     }
     interface PosSelectTerm {
         /**
@@ -1262,6 +1267,12 @@ declare global {
         prototype: HTMLPosRouterElement;
         new (): HTMLPosRouterElement;
     };
+    interface HTMLPosSaveStatusElement extends Components.PosSaveStatus, HTMLStencilElement {
+    }
+    var HTMLPosSaveStatusElement: {
+        prototype: HTMLPosSaveStatusElement;
+        new (): HTMLPosSaveStatusElement;
+    };
     interface HTMLPosSelectTermElementEventMap {
         "pod-os:init": any;
         "pod-os:term-selected": { uri: string };
@@ -1506,6 +1517,7 @@ declare global {
         "pos-reverse-relations": HTMLPosReverseRelationsElement;
         "pos-rich-link": HTMLPosRichLinkElement;
         "pos-router": HTMLPosRouterElement;
+        "pos-save-status": HTMLPosSaveStatusElement;
         "pos-select-term": HTMLPosSelectTermElement;
         "pos-setting-offline-cache": HTMLPosSettingOfflineCacheElement;
         "pos-share": HTMLPosShareElement;
@@ -1949,6 +1961,9 @@ declare namespace LocalJSX {
          */
         "onPod-os:route-changed"?: (event: PosRouterCustomEvent<string>) => void;
     }
+    interface PosSaveStatus {
+        "saveStatus": SaveStatus;
+    }
     interface PosSelectTerm {
         "onPod-os:init"?: (event: PosSelectTermCustomEvent<any>) => void;
         /**
@@ -2136,6 +2151,9 @@ declare namespace LocalJSX {
     interface PosRouterAttributes {
         "mode": 'standalone' | 'pod';
     }
+    interface PosSaveStatusAttributes {
+        "saveStatus": SaveStatus;
+    }
     interface PosSelectTermAttributes {
         "placeholder": string;
         "value": string;
@@ -2198,6 +2216,7 @@ declare namespace LocalJSX {
         "pos-reverse-relations": PosReverseRelations;
         "pos-rich-link": Omit<PosRichLink, keyof PosRichLinkAttributes> & { [K in keyof PosRichLink & keyof PosRichLinkAttributes]?: PosRichLink[K] } & { [K in keyof PosRichLink & keyof PosRichLinkAttributes as `attr:${K}`]?: PosRichLinkAttributes[K] } & { [K in keyof PosRichLink & keyof PosRichLinkAttributes as `prop:${K}`]?: PosRichLink[K] };
         "pos-router": Omit<PosRouter, keyof PosRouterAttributes> & { [K in keyof PosRouter & keyof PosRouterAttributes]?: PosRouter[K] } & { [K in keyof PosRouter & keyof PosRouterAttributes as `attr:${K}`]?: PosRouterAttributes[K] } & { [K in keyof PosRouter & keyof PosRouterAttributes as `prop:${K}`]?: PosRouter[K] };
+        "pos-save-status": Omit<PosSaveStatus, keyof PosSaveStatusAttributes> & { [K in keyof PosSaveStatus & keyof PosSaveStatusAttributes]?: PosSaveStatus[K] } & { [K in keyof PosSaveStatus & keyof PosSaveStatusAttributes as `attr:${K}`]?: PosSaveStatusAttributes[K] } & { [K in keyof PosSaveStatus & keyof PosSaveStatusAttributes as `prop:${K}`]?: PosSaveStatus[K] } & OneOf<"saveStatus", PosSaveStatus["saveStatus"], PosSaveStatusAttributes["saveStatus"]>;
         "pos-select-term": Omit<PosSelectTerm, keyof PosSelectTermAttributes> & { [K in keyof PosSelectTerm & keyof PosSelectTermAttributes]?: PosSelectTerm[K] } & { [K in keyof PosSelectTerm & keyof PosSelectTermAttributes as `attr:${K}`]?: PosSelectTermAttributes[K] } & { [K in keyof PosSelectTerm & keyof PosSelectTermAttributes as `prop:${K}`]?: PosSelectTerm[K] };
         "pos-setting-offline-cache": PosSettingOfflineCache;
         "pos-share": Omit<PosShare, keyof PosShareAttributes> & { [K in keyof PosShare & keyof PosShareAttributes]?: PosShare[K] } & { [K in keyof PosShare & keyof PosShareAttributes as `attr:${K}`]?: PosShareAttributes[K] } & { [K in keyof PosShare & keyof PosShareAttributes as `prop:${K}`]?: PosShare[K] } & OneOf<"uri", PosShare["uri"], PosShareAttributes["uri"]>;
@@ -2316,6 +2335,7 @@ declare module "@stencil/core" {
              * It also intercepts the URLs from `pod-os:link` events and pushes them as a new `uri` parameter.
              */
             "pos-router": LocalJSX.IntrinsicElements["pos-router"] & JSXBase.HTMLAttributes<HTMLPosRouterElement>;
+            "pos-save-status": LocalJSX.IntrinsicElements["pos-save-status"] & JSXBase.HTMLAttributes<HTMLPosSaveStatusElement>;
             "pos-select-term": LocalJSX.IntrinsicElements["pos-select-term"] & JSXBase.HTMLAttributes<HTMLPosSelectTermElement>;
             "pos-setting-offline-cache": LocalJSX.IntrinsicElements["pos-setting-offline-cache"] & JSXBase.HTMLAttributes<HTMLPosSettingOfflineCacheElement>;
             /**

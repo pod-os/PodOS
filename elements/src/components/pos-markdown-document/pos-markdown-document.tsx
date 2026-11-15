@@ -3,9 +3,9 @@ import { Component, h, Method, Prop, State, Event, EventEmitter, Element } from 
 import { usePodOS } from '../events/usePodOS';
 
 import { RichEditor } from './rich-editor';
-import { SaveStatus, SaveStatusIndicator } from '../save-status/SaveStatus';
 import './shoelace';
 import { map, Subject, takeUntil, tap } from 'rxjs';
+import { SaveStatus } from '../pos-save-status/pos-save-status';
 
 interface ModifiedFile {
   file: SolidFile;
@@ -113,7 +113,7 @@ export class PosMarkdownDocument {
       <article>
         {this.editable ? (
           <header>
-            {this.isEditing ? <SaveStatusIndicator saveStatus={this.getStatus()} /> : null}
+            {this.isEditing ? <pos-save-status saveStatus={this.getStatus()} /> : null}
             {this.isEditing ? (
               <button onClick={() => this.stopEditing()}>
                 <sl-icon name="eye"></sl-icon>

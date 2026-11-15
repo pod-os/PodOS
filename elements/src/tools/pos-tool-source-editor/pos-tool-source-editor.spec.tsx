@@ -139,12 +139,12 @@ describe('pos-tool-source-editor', () => {
       const saveButton = getByShadowRole(page.root, 'button', { name: 'Save' });
       await userEvent.click(saveButton);
       expect(saveButton).toBeDisabled();
-      const status = getByShadowRole(page.root, 'status');
-      expect(status).toHaveTextContent('saving changes');
+      const status = page.root.shadowRoot?.querySelector('pos-save-status');
+      expect(status).toMatchInlineSnapshot(`<pos-save-status savestatus="saving"></pos-save-status>`);
       finishSaving!();
       await page.waitForChanges();
       expect(saveButton).toBeEnabled();
-      expect(status).toHaveTextContent('all saved');
+      expect(status).toMatchInlineSnapshot(`<pos-save-status savestatus="idle"></pos-save-status>`);
     });
   });
 
