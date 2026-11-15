@@ -19,6 +19,8 @@ export interface SourceEditorOptions {
 }
 
 export class SourceEditor {
+  private readonly view: EditorView;
+
   constructor(target: HTMLElement, { editable = true, content, contentType }: SourceEditorOptions) {
     const lang = languages[contentType] ? [languages[contentType]()] : [];
     const readonly = editable
@@ -29,10 +31,14 @@ export class SourceEditor {
           EditorView.contentAttributes.of({ tabindex: '0' }),
         ];
     const dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    new EditorView({
+    this.view = new EditorView({
       doc: content,
       parent: target,
       extensions: [basicSetup, ...readonly, ...lang, dark ? vscodeDark : vscodeLight],
     });
+  }
+
+  getContent() {
+    return this.view.state.doc.toString();
   }
 }

@@ -28,4 +28,12 @@ describe('SourceEditor', () => {
     expect(textbox).toHaveTextContent('Anything else');
     expect(textbox).not.toHaveAttribute('data-language');
   });
+
+  describe('get content', () => {
+    it('gets raw content', () => {
+      const editor = new SourceEditor(root, { content: '# Markdown', contentType: 'text/markdown' });
+      const content = editor.getContent();
+      expect(content).toEqual('# Markdown');
+    });
+  });
 });
