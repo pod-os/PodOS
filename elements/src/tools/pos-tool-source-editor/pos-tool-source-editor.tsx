@@ -26,7 +26,10 @@ export class PosToolSourceEditor {
 
   private editor: SourceEditor | undefined;
   private os: PodOS | undefined;
-  private file: SolidFile | undefined
+  private file: SolidFile | undefined;
+
+  @State()
+  private saveStatus: 'idle' | 'saving' | 'failed' = 'idle';
 
   async componentDidLoad() {
     this.os = await usePodOS(this.editorEl!);
@@ -44,7 +47,9 @@ export class PosToolSourceEditor {
   }
 
   async save() {
-    await this.os?.files().putFile(this.file!, this.editor?.getContent() ?? "")
+    this.saveStatus = 'saving';
+    await this.os?.files().putFile(this.file!, this.editor?.getContent() ?? '');
+    this.saveStatus = 'idle';
   }
 
   render() {
@@ -56,10 +61,11 @@ export class PosToolSourceEditor {
         <section class="editor">
           <header>
             {this.editor?.isEditable() ? (
-              <button onClick={() => this.save()}>
-                <sl-icon name="cloud-arrow-up"></sl-icon>
-                Save
+              <button onClick={() => this.save()} disabled={this.saveStatus === 'saving'}>
+                <sl-icon name={this.saveStatus === 'saving' ? 'hourglass-split' : 'cloud-arrow-up'}></sl-icon>
+                {this.saveStatus === 'saving' ? 'Saving…' : 'Save'}
               </button>
+
             ) : null}
           </header>
           <div class="content" ref={el => (this.editorEl = el)}>

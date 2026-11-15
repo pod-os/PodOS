@@ -129,6 +129,22 @@ describe('pos-tool-source-editor', () => {
       await userEvent.click(saveButton);
       expect(os.files().putFile).toHaveBeenCalledWith(file, 'file source content');
     });
+
+    it('indicates saving in progress while saving', async () => {
+      let finishSaving: Function;
+      const savingPromise = new Promise<Response>(resolve => {
+        finishSaving = resolve;
+      });
+      vi.when(os.files().putFile).calledWith(file, 'file source content').thenReturnOnce(savingPromise);
+      const saveButton = getByShadowRole(page.root, 'button', { name: 'Save' });
+      await userEvent.click(saveButton);
+      expect(saveButton).toBeDisabled();
+      expect(saveButton).toHaveTextContent('Saving…');
+      finishSaving!();
+      await page.waitForChanges();
+      expect(saveButton).toBeEnabled();
+      expect(saveButton).toHaveTextContent('Save');
+    });
   });
 
   it('renders error for broken file', async () => {
