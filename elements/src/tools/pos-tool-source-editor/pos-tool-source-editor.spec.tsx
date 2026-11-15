@@ -8,6 +8,7 @@ import { mockResource } from '../../test/mockResource';
 import { BrokenFile as BrokenFileData, PodOS, SolidFile, Thing } from '@pod-os/core';
 import { getByShadowRole } from 'shadow-dom-testing-library';
 import { userEvent } from '@testing-library/user-event';
+import { onPodOsError } from '../../test/onPodOsError';
 
 vi.mock('../../components/broken-file/BrokenFile');
 
@@ -163,20 +164,19 @@ describe('pos-tool-source-editor', () => {
     });
 
     it('indicates that saving has failed', async () => {
-      let failSaving: Function;
-      const savingPromise = new Promise<Response>((_, reject) => {
-        failSaving = reject;
-      });
-      vi.when(os.files().putFile).calledWith(file, 'file source content').thenReturnOnce(savingPromise);
+      vi.when(os.files().putFile)
+        .calledWith(file, 'file source content')
+        .thenRejectOnce(new Error('something went wrong'));
       const saveButton = getByShadowRole(page.root, 'button', { name: 'Save' });
+      const onError = onPodOsError(page.root);
       await userEvent.click(saveButton);
-      expect(saveButton).toBeDisabled();
       const status = page.root.shadowRoot?.querySelector('pos-save-status');
-      expect(status).toMatchInlineSnapshot(`<pos-save-status savestatus="saving"></pos-save-status>`);
-      failSaving!();
-      await page.waitForChanges();
-      expect(saveButton).toBeEnabled();
       expect(status).toMatchInlineSnapshot(`<pos-save-status savestatus="failed"></pos-save-status>`);
+      expect(onError).toHaveBeenCalledWith(
+        expect.objectContaining({
+          detail: new Error('something went wrong'),
+        }),
+      );
     });
 
     it('indicates that saving has failed with a bad http response', async () => {
@@ -184,11 +184,19 @@ describe('pos-tool-source-editor', () => {
         .calledWith(file, 'file source content')
         .thenResolveOnce({
           ok: false,
+          status: 401,
+          statusText: 'Unauthorized',
         } as Response);
+      const onError = onPodOsError(page.root);
       const saveButton = getByShadowRole(page.root, 'button', { name: 'Save' });
       await userEvent.click(saveButton);
       const status = page.root.shadowRoot?.querySelector('pos-save-status');
       expect(status).toMatchInlineSnapshot(`<pos-save-status savestatus="failed"></pos-save-status>`);
+      expect(onError).toHaveBeenCalledWith(
+        expect.objectContaining({
+          detail: new Error('Failed to save file: 401 Unauthorized'),
+        }),
+      );
     });
   });
 

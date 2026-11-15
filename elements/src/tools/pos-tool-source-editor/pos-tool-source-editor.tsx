@@ -1,4 +1,4 @@
-import { Component, h, Host, State } from '@stencil/core';
+import { Component, EventEmitter, h, Host, State, Event } from '@stencil/core';
 import { SourceEditor } from './source-editor';
 import { useResource } from '../../components/events/useResource';
 
@@ -32,6 +32,9 @@ export class PosToolSourceEditor {
   @State()
   private saveStatus: SaveStatus = 'idle';
 
+  @Event({ eventName: 'pod-os:error' })
+  errorEmitter!: EventEmitter;
+
   async componentDidLoad() {
     this.os = await usePodOS(this.editorEl);
     const resource = await useResource(this.editorEl);
@@ -56,9 +59,10 @@ export class PosToolSourceEditor {
         this.saveStatus = 'idle';
       } else {
         this.saveStatus = 'failed';
+        this.errorEmitter.emit(new Error(`Failed to save file: ${response.status} ${response.statusText}`));
       }
     } catch (err) {
-      console.error(err); // TODO throw pos error
+      this.errorEmitter.emit(err);
       this.saveStatus = 'failed';
     }
   }

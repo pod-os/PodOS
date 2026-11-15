@@ -591,6 +591,10 @@ export interface PosToolSelectCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosToolSelectElement;
 }
+export interface PosToolSourceEditorCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosToolSourceEditorElement;
+}
 export interface PosTypeBadgesCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosTypeBadgesElement;
@@ -1374,10 +1378,21 @@ declare global {
         prototype: HTMLPosToolSelectElement;
         new (): HTMLPosToolSelectElement;
     };
+    interface HTMLPosToolSourceEditorElementEventMap {
+        "pod-os:error": any;
+    }
     /**
      * A tool to edit the source code of a document
      */
     interface HTMLPosToolSourceEditorElement extends Components.PosToolSourceEditor, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosToolSourceEditorElementEventMap>(type: K, listener: (this: HTMLPosToolSourceEditorElement, ev: PosToolSourceEditorCustomEvent<HTMLPosToolSourceEditorElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosToolSourceEditorElementEventMap>(type: K, listener: (this: HTMLPosToolSourceEditorElement, ev: PosToolSourceEditorCustomEvent<HTMLPosToolSourceEditorElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPosToolSourceEditorElement: {
         prototype: HTMLPosToolSourceEditorElement;
@@ -2025,6 +2040,7 @@ declare namespace LocalJSX {
      * A tool to edit the source code of a document
      */
     interface PosToolSourceEditor {
+        "onPod-os:error"?: (event: PosToolSourceEditorCustomEvent<any>) => void;
     }
     interface PosTypeBadges {
         "onPod-os:resource"?: (event: PosTypeBadgesCustomEvent<any>) => void;
