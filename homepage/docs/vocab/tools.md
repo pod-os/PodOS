@@ -4,12 +4,12 @@ title: PodOS tools vocabulary
 
 # PodOS tools vocabulary
 
-`https://pod-os.org/vocab/tools.ttl#`
+`https://pod-os.org/vocab/tools#`
 
 A vocabulary for registering apps and HTML tools for use by PodOS. It extends
 [Application Capability](https://dokieli.github.io/application-capability/)
-with a private tool index and an HTML fragment invocation. The Turtle
-definition is at [`tools.ttl`](/vocab/tools.ttl).
+with a private tool index and an HTML fragment invocation. Fetch a Turtle
+definition with `Accept: text/turtle` or visit [`tools.ttl`](/vocab/tools.ttl).
 
 ## Classes
 
@@ -21,7 +21,7 @@ definition is at [`tools.ttl`](/vocab/tools.ttl).
 
 ## ToolIndex {#ToolIndex}
 
-`https://pod-os.org/vocab/tools.ttl#ToolIndex`
+`https://pod-os.org/vocab/tools#ToolIndex`
 
 A registry of app and tool registrations. The user's WebID points to it from
 their preferences document with `tools:toolIndex`.
@@ -32,7 +32,7 @@ their preferences document with `tools:toolIndex`.
 
 ## Registration {#Registration}
 
-`https://pod-os.org/vocab/tools.ttl#Registration`
+`https://pod-os.org/vocab/tools#Registration`
 
 An entry in a tool index. Use `AppRegistration` for apps and `ToolRegistration`
 for tools.
@@ -44,7 +44,7 @@ for tools.
 
 ## AppRegistration {#AppRegistration}
 
-`https://pod-os.org/vocab/tools.ttl#AppRegistration`
+`https://pod-os.org/vocab/tools#AppRegistration`
 
 A registration for an external app. Each capability uses an
 `ac:UriTemplateInvocation`.
@@ -56,7 +56,7 @@ A registration for an external app. Each capability uses an
 
 ## ToolRegistration {#ToolRegistration}
 
-`https://pod-os.org/vocab/tools.ttl#ToolRegistration`
+`https://pod-os.org/vocab/tools#ToolRegistration`
 
 A registration for a PodOS tool. Each capability uses a
 `tools:HtmlFragmentInvocation`.
@@ -68,13 +68,13 @@ A registration for a PodOS tool. Each capability uses a
 
 ## HtmlFragmentInvocation {#HtmlFragmentInvocation}
 
-`https://pod-os.org/vocab/tools.ttl#HtmlFragmentInvocation`
+`https://pod-os.org/vocab/tools#HtmlFragmentInvocation`
 
 An `ac:Invocation` that renders an HTML fragment inside PodOS.
 
 | Property | Expected type | Description |
 |---|---|---|
-| `schema:url` | IRI | The HTML fragment to render. |
+| `schema:url` | Literal | The URL of the HTML fragment to render. |
 
 ## Examples
 
@@ -88,7 +88,7 @@ document.
 
 ```turtle
 @base <https://alice.pod.example/settings/prefs.ttl> .
-@prefix tools: <https://pod-os.org/vocab/tools.ttl#> .
+@prefix tools: <https://pod-os.org/vocab/tools#> .
 
 <https://alice.pod.example/profile/card#me> tools:toolIndex <tool-index.ttl> .
 ```
@@ -101,7 +101,7 @@ index document.
 
 ```turtle
 @base <https://alice.pod.example/settings/tool-index.ttl> .
-@prefix tools: <https://pod-os.org/vocab/tools.ttl#> .
+@prefix tools: <https://pod-os.org/vocab/tools#> .
 
 <tool-index.ttl> a tools:ToolIndex ;
     tools:registration <#umai>, <#recipe-pane> .
@@ -115,7 +115,7 @@ the `url` query parameter.
 
 ```turtle
 @base <https://alice.pod.example/settings/tool-index.ttl> .
-@prefix tools: <https://pod-os.org/vocab/tools.ttl#> .
+@prefix tools: <https://pod-os.org/vocab/tools#> .
 @prefix ac: <https://www.w3.org/ns/ac#> .
 @prefix hydra: <http://www.w3.org/ns/hydra/core#> .
 @prefix schema: <https://schema.org/> .
@@ -146,7 +146,7 @@ current page.
 
 ```turtle
 @base <https://alice.pod.example/settings/tool-index.ttl> .
-@prefix tools: <https://pod-os.org/vocab/tools.ttl#> .
+@prefix tools: <https://pod-os.org/vocab/tools#> .
 @prefix ac: <https://www.w3.org/ns/ac#> .
 @prefix schema: <https://schema.org/> .
 @prefix odrl: <http://www.w3.org/ns/odrl/2/> .
@@ -161,7 +161,7 @@ current page.
     ac:invocation <#recipe-pane-inv> .
 
 <#recipe-pane-inv> a tools:HtmlFragmentInvocation ;
-    schema:url <https://alice.pod.example/tools/recipe.html> .
+    schema:url "https://alice.pod.example/tools/recipe.html" .
 ```
 
 ## Validation
