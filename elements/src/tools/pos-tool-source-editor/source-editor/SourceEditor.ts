@@ -13,20 +13,20 @@ const languages: Record<string, () => LanguageSupport> = {
 };
 
 export class SourceEditor {
-  constructor(target: HTMLElement, content: string, contentType: string) {
+  constructor(target: HTMLElement, content: string, contentType: string, editable: boolean = true) {
     const lang = languages[contentType] ? [languages[contentType]()] : [];
+    const readonly = editable
+      ? []
+      : [
+          EditorState.readOnly.of(true),
+          EditorView.editable.of(false),
+          EditorView.contentAttributes.of({ tabindex: '0' }),
+        ];
     const dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     new EditorView({
       doc: content,
       parent: target,
-      extensions: [
-        basicSetup,
-        EditorState.readOnly.of(true),
-        EditorView.editable.of(false),
-        EditorView.contentAttributes.of({ tabindex: '0' }),
-        ...lang,
-        dark ? vscodeDark : vscodeLight,
-      ],
+      extensions: [basicSetup, ...readonly, ...lang, dark ? vscodeDark : vscodeLight],
     });
   }
 }

@@ -38,7 +38,7 @@ describe('pos-tool-source-editor', () => {
     `);
   });
 
-  it('renders a contenteditable textbox with the file content after the file has been fetched', async () => {
+  it('renders a read-only textbox with the file content after an uneditable file has been fetched', async () => {
     mockFile(os, 'https://resource.test/document.ttl', 'file source content');
 
     mockResource({
@@ -61,6 +61,40 @@ describe('pos-tool-source-editor', () => {
         spellcheck="false"
         style="tab-size: 4;"
         tabindex="0"
+        translate="no"
+        writingsuggestions="false"
+      >
+        <div
+          class="cm-line cm-activeLine"
+        >
+          file source content
+        </div>
+      </div>
+    `);
+  });
+
+  it('renders an editable textbox with the file content after an editable file has been fetched', async () => {
+    mockFile(os, 'https://resource.test/document.ttl', 'file source content');
+
+    mockResource({
+      uri: 'https://resource.test/document.ttl',
+      editable: true,
+    } as unknown as Thing);
+    const page = await render(<pos-tool-source-editor></pos-tool-source-editor>);
+
+    await page.waitForChanges();
+
+    const textbox = getByShadowRole(page.root, 'textbox');
+    expect(textbox).toMatchInlineSnapshot(`
+      <div
+        aria-multiline="true"
+        autocapitalize="off"
+        autocorrect="off"
+        class="cm-content"
+        contenteditable="true"
+        role="textbox"
+        spellcheck="false"
+        style="tab-size: 4;"
         translate="no"
         writingsuggestions="false"
       >
