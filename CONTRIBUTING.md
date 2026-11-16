@@ -33,7 +33,8 @@ a matching CI run enforces the same checks for everyone.
 
 ## Changelog Guidelines
 
-When updating changelogs in `CHANGELOG.md`:
+Based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). When updating
+changelogs in `CHANGELOG.md`:
 
 - **Add entries under next release version e.g. `## 0.23.5`** at the top of the
   file

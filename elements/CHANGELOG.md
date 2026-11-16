@@ -8,8 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
+- [pos-save-status](https://pod-os.org/reference/elements/components/pos-save-status/): New element to render a save status indicator
 - [pos-tool-source-editor](https://pod-os.org/reference/elements/tools/pos-tool-source-editor/): New tool to edit the source code of a document using [CodeMirror](https://codemirror.net/)
-  - Currently read-only
   - syntax highlighting for Markdown and turtle documents
   - Uses the VS Code theme matching the user's preferred color scheme (dark / light)
 - [pos-type-router](https://pod-os.org/reference/elements/components/pos-type-router/): Now offers `pos-tool-source-editor` for RDF and Markdown documents

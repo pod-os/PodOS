@@ -11,5 +11,5 @@
     - [ ] stories for new PodOS elements have been added to [storybook](../../storybook)
   - [ ] Readme.md files of PodOS elements have been re-generated
   - [ ] architectural decisions are documented as an [ADR](../decisions/0000-use-markdown-architectural-decision-records.md)
-  - [ ] Changelogs are updated according to
-        [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
+  - [ ] Changelogs are updated according to the
+        [Changelog Guidelines](../../CONTRIBUTING.md#changelog-guidelines)
