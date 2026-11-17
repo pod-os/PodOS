@@ -84,10 +84,25 @@ export default async function handler(
   request: Request,
   context: Context,
 ): Promise<Response> {
+  // Enable CORS
+  if (request.method === "OPTIONS") {
+    return new Response(null, {
+      status: 204,
+      headers: {
+        "access-control-allow-origin": "*",
+        "access-control-allow-methods": "GET, HEAD",
+        // Allow authenticated fetch with long accept
+        "access-control-allow-headers": "accept, authorization, dpop",
+        // Preflight only needed every 10min
+        "access-control-max-age": "600",
+      },
+    });
+  }
+
   if (request.method !== "GET" && request.method !== "HEAD") {
     return new Response("Method not allowed\n", {
       status: 405,
-      headers: { allow: "GET, HEAD" },
+      headers: { allow: "GET, HEAD", "access-control-allow-origin": "*" },
     });
   }
 
@@ -109,6 +124,7 @@ export default async function handler(
   const alternate = representation === "turtle" ? "text/html" : "text/turtle";
 
   headers.set("vary", appendVary(headers.get("vary"), "Accept"));
+  headers.set("access-control-allow-origin", "*");
   headers.append(
     "link",
     `<${url.origin}${VOCABULARY_PATH}>; rel="alternate"; type="${alternate}"`,
