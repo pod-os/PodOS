@@ -4,5 +4,5 @@
 :it
     a schema:Thing ;
     schema:name "Turtle Document" ;
-    schema:description "Updated description" ;
+    schema:description "Initial description" ;
 .
