@@ -49,7 +49,6 @@
 <#task-4-e2e-test> a plan:Task;
     dct:title "End-to-end test: edit and save a Turtle document";
     plan:parent <#plan>;
-    plan:status plan:planned;
     dct:created "2026-11-11"^^xsd:date;
     dct:modified "2026-11-15T19:52:00Z"^^xsd:dateTime;
     plan:goal <#entry-task-4-goal-01>;
