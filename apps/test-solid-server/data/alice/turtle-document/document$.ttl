@@ -1,0 +1,8 @@
+@prefix : <#> .
+@prefix schema: <http://schema.org/> .
+
+:it
+    a schema:Thing ;
+    schema:name "Turtle Document" ;
+    schema:description "Updated description" ;
+.
