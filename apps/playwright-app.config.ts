@@ -16,10 +16,12 @@ const appConfig: PlaywrightTestConfig<
   webServer: [
     {
       command: "npm start",
+      reuseExistingServer: !process.env.CI,
       port: 3000,
     },
     {
       command: "npm run start:solid-server",
+      reuseExistingServer: !process.env.CI,
       port: 4000,
     },
   ],

@@ -37,7 +37,7 @@ test.describe("Turtle documents", () => {
       await navigationBar.fillAndSubmit(TURTLE_DOCUMENT_URI);
     });
 
-    await test.step("and opening it in the source editor", async () => {
+    await test.step("and the document is shown in the source editor", async () => {
       await sourceEditor.open();
       await expect(sourceEditor.content()).toContainText(
         'schema:name "Turtle Document"',

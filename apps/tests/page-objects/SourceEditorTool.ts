@@ -24,6 +24,7 @@ export class SourceEditorTool {
   /** Opens the Src tool tab for the currently shown resource. */
   async open() {
     await this.page
+      .getByRole("main")
       .getByRole("tablist", { name: "Tools" })
       .getByRole("tab", { name: /Src/i })
       .describe("Src tool tab")
