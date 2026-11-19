@@ -38,6 +38,7 @@ export class PosLoginForm {
       <form method="dialog" onSubmit={() => this.handleSubmit()}>
         <label htmlFor="idpUrl">Please enter your Identity Provider</label>
         <input
+          autofocus={true}
           id="idpUrl"
           type="url"
           value={this.idpUrl}

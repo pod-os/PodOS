@@ -14,6 +14,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - Uses the VS Code theme matching the user's preferred color scheme (dark / light)
 - [pos-type-router](https://pod-os.org/reference/elements/components/pos-type-router/): Now offers `pos-tool-source-editor` for RDF and Markdown documents
 
+### Fixed
+
+- [pos-dialog](https://pod-os.org/reference/elements/components/pos-dialog/), [pos-add-new-thing](https://pod-os.org/reference/elements/components/https://pod-os.org/reference/elements/components/pos-add-new-thing//): Close the dialog when the form is submitted
+
 ## 0.45.1
 
 ### Fixed

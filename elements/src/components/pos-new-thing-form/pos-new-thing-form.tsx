@@ -5,9 +5,7 @@ import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../events/PodOsAw
 @Component({
   tag: 'pos-new-thing-form',
   styleUrl: 'pos-new-thing-form.css',
-  shadow: {
-    delegatesFocus: true,
-  },
+  shadow: false,
 })
 export class PosNewThingForm implements PodOsAware {
   @Prop() referenceUri!: string;
@@ -48,7 +46,7 @@ export class PosNewThingForm implements PodOsAware {
           onPod-os:term-selected={e => this.onTermSelected(e)}
         />
         <label htmlFor="name">Name</label>
-        <input id="name" type="text" value={this.name} onInput={e => this.handleChange(e)} />
+        <input autofocus={true} id="name" type="text" value={this.name} onInput={e => this.handleChange(e)} />
         {this.newUri ? (
           <div id="new-uri" title="This will be the URI of the new thing">
             {this.newUri}
