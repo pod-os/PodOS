@@ -37,7 +37,7 @@
   "devDependencies": {
     "@wallabyjs/cli": "^1.0.29",
     "husky": "^9.1.7",
-    "prettier": "^3.9.9"
+    "prettier": "^3.10.1"
   },
   "workspaces": [
     "core",
