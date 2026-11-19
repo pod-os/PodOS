@@ -1,0 +1,3 @@
+[build]
+  base = "homepage"
+  publish = "site"
