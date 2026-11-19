@@ -26,9 +26,46 @@ test.describe("Source Editor", () => {
     });
 
     await test.step("then the turtle sources are shown in an editor", async () => {
-      expect(editor.textbox()).toContainText(
-        `@prefix : <#>.@prefix schema: <http://schema.org/>.<>    schema:name "A turtle file";    schema:description "Used to test the pos-tool-source-editor" .`,
+      await expect(editor.textbox()).toContainText(
+        '@prefix : <#>.@prefix schema: <http://schema.org/>.<>    schema:name "A turtle file";    schema:description "Used to test the pos-tool-source-editor" .',
       );
+    });
+
+    await test.step("when the user edits the content", async () => {
+      await editor.replaceContent(
+        `@prefix : <#>.
+@prefix schema: <http://schema.org/>.
+
+<>
+   schema:name "An updated turtle file";
+   schema:description "Updated description" .`,
+      );
+    });
+
+    await test.step("then the editor indicates pending changes", async () => {
+      await expect(editor.getStatus()).toContainText("pending changes");
+    });
+
+    await test.step("and contains the new text", async () => {
+      await expect(editor.textbox()).toContainText(
+        '@prefix : <#>.@prefix schema: <http://schema.org/>.<>    schema:name "An updated turtle file";    schema:description "Updated description" .',
+      );
+    });
+
+    await test.step("when the users saves their changes", async () => {
+      await editor.save();
+    });
+
+    await test.step("then it indicates all is saved", async () => {
+      await expect(editor.getStatus()).toContainText("all saved");
+    });
+
+    await test.step("and the changes survive a page refresh", async () => {
+      await page.reload();
+      await expect(editor.textbox()).toContainText(
+        '@prefix : <#>.@prefix schema: <http://schema.org/>.<>    schema:name "An updated turtle file";    schema:description "Updated description" .',
+      );
+      await expect(editor.getStatus()).toContainText("all saved");
     });
   });
 });
