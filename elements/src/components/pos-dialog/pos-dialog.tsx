@@ -11,7 +11,7 @@ import '@shoelace-style/shoelace/dist/components/icon/icon.js';
   shadow: false, // shadow dom prevents the html dialog from working normally (autofocus, close on submit)
 })
 export class PosDialog {
-  private dialog: HTMLDialogElement;
+  private dialog!: HTMLDialogElement;
 
   @Method()
   async showModal() {

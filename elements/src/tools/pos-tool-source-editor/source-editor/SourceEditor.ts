@@ -1,0 +1,65 @@
+import { basicSetup } from 'codemirror';
+import { EditorView, ViewUpdate } from '@codemirror/view';
+import { EditorState } from '@codemirror/state';
+
+import { markdown } from '@codemirror/lang-markdown';
+import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode';
+import { turtle } from './turtle-lang';
+import { LanguageSupport } from '@codemirror/language';
+
+const languages: Record<string, () => LanguageSupport> = {
+  'text/markdown': markdown,
+  'text/turtle': turtle,
+};
+
+export interface SourceEditorOptions {
+  editable?: boolean;
+  contentType: string;
+  content: string;
+}
+
+export class SourceEditor {
+  private readonly view: EditorView;
+
+  private updateCallback: () => void = () => null;
+
+  constructor(target: HTMLElement, { editable = true, content, contentType }: SourceEditorOptions) {
+    const lang = languages[contentType] ? [languages[contentType]()] : [];
+    const readonly = editable
+      ? []
+      : [
+          EditorState.readOnly.of(true),
+          EditorView.editable.of(false),
+          EditorView.contentAttributes.of({ tabindex: '0' }),
+        ];
+    const dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    this.view = new EditorView({
+      doc: content,
+      parent: target,
+      extensions: [
+        basicSetup,
+        ...readonly,
+        ...lang,
+        dark ? vscodeDark : vscodeLight,
+        EditorView.lineWrapping,
+        EditorView.updateListener.of((update: ViewUpdate) => {
+          if (update.docChanged) {
+            this.updateCallback();
+          }
+        }),
+      ],
+    });
+  }
+
+  onUpdate(callback: () => void) {
+    this.updateCallback = callback;
+  }
+
+  isEditable() {
+    return !this.view.state.readOnly;
+  }
+
+  getContent() {
+    return this.view.state.doc.toString();
+  }
+}

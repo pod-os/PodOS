@@ -1,17 +1,16 @@
 import { Mock, vi } from 'vitest';
 import { beforeEach, describe, expect, h, it, render, RenderResult } from '@stencil/vitest';
 import { PodOS } from '@pod-os/core';
-import { fireEvent } from '@testing-library/dom';
+import { fireEvent, within } from '@testing-library/dom';
 import { mockPodOS } from '../../../test/mockPodOS.vitest';
 import '../pos-new-thing-form';
-import { withinShadow } from '../../../test/withinShadow';
 import { userEvent } from '@testing-library/user-event';
 
 describe('pos-new-thing-form', () => {
   it('renders a form', async () => {
     const page = await render(<pos-new-thing-form referenceUri="https://pod.test/container/"></pos-new-thing-form>);
 
-    expect(page.root.shadowRoot).toEqualHtml(
+    expect(page.root.innerHTML).toEqualHtml(
       `
           <form method="dialog">
             <label for="type">
@@ -21,7 +20,7 @@ describe('pos-new-thing-form', () => {
             <label for="name">
               Name
             </label>
-            <input id="name" type="text">
+            <input autofocus id="name" type="text">
             <input id="create" type="submit" value="Create" disabled>
           </form>`,
     );
@@ -30,7 +29,7 @@ describe('pos-new-thing-form', () => {
   describe('enabling and disabling the create button', () => {
     it('is disabled initially', async () => {
       const page = await render(<pos-new-thing-form referenceUri="https://pod.test/container/"></pos-new-thing-form>);
-      const button: HTMLButtonElement = withinShadow(page).getByDisplayValue('Create');
+      const button: HTMLButtonElement = within(page.root).getByDisplayValue('Create');
 
       expect(button.disabled).toBe(true);
     });
@@ -38,10 +37,10 @@ describe('pos-new-thing-form', () => {
     it('is still disabled after selecting a term', async () => {
       // given
       const page = await render(<pos-new-thing-form referenceUri="https://pod.test/container/"></pos-new-thing-form>);
-      const button: HTMLButtonElement = withinShadow(page).getByDisplayValue('Create');
+      const button: HTMLButtonElement = within(page.root).getByDisplayValue('Create');
 
       // when user selects a term
-      const termSelect = page.root.shadowRoot!.querySelector('pos-select-term')!;
+      const termSelect = page.root.querySelector('pos-select-term')!;
       fireEvent(
         termSelect,
         new CustomEvent('pod-os:term-selected', { detail: { uri: 'https://schema.org/description' } }),
@@ -51,7 +50,7 @@ describe('pos-new-thing-form', () => {
       expect(button.disabled).toBe(true);
     });
 
-    it('is still disabled after entering a name', async () => {
+    it('is not disabled after entering a name', async () => {
       // given
       const page = await render(<pos-new-thing-form referenceUri="https://pod.test/container/"></pos-new-thing-form>);
 
@@ -59,13 +58,13 @@ describe('pos-new-thing-form', () => {
       await page.instance.receivePodOs(os);
 
       // when user fills in a name
-      const nameField = page.root.shadowRoot!.querySelector('input[type=text]')!;
+      const nameField = page.root.querySelector('input[type=text]')!;
       fireEvent.input(nameField, { target: { value: 'New Thing' } });
       await page.waitForChanges();
 
       // then the button is disabled
-      const button: HTMLButtonElement = withinShadow(page).getByDisplayValue('Create');
-      expect(button.disabled).toBe(true);
+      const button: HTMLButtonElement = within(page.root).getByDisplayValue('Create');
+      expect(button.disabled).toBe(false);
     });
 
     it('is enabled after a term has been selected and a name typed', async () => {
@@ -75,19 +74,19 @@ describe('pos-new-thing-form', () => {
       await page.instance.receivePodOs(os);
 
       // when user selects a term
-      const termSelect = page.root.shadowRoot!.querySelector('pos-select-term')!;
+      const termSelect = page.root.querySelector('pos-select-term')!;
       fireEvent(
         termSelect,
         new CustomEvent('pod-os:term-selected', { detail: { uri: 'https://schema.org/description' } }),
       );
 
       // and fills in a name
-      const nameField = page.root.shadowRoot!.querySelector('input[type=text]')!;
+      const nameField = page.root.querySelector('input[type=text]')!;
       fireEvent.input(nameField, { target: { value: 'New Thing' } });
       await page.waitForChanges();
 
       // then the button is enabled
-      const button: HTMLButtonElement = withinShadow(page).getByDisplayValue('Create');
+      const button: HTMLButtonElement = within(page.root).getByDisplayValue('Create');
       expect(button.disabled).toBe(false);
     });
 
@@ -98,11 +97,11 @@ describe('pos-new-thing-form', () => {
       await page.instance.receivePodOs(os);
 
       // when user fills in a name
-      const nameField = page.root.shadowRoot!.querySelector('input[type=text]')!;
+      const nameField = page.root.querySelector('input[type=text]')!;
       fireEvent.input(nameField, { target: { value: 'New Thing' } });
 
       // and after that selects a term
-      const termSelect = page.root.shadowRoot!.querySelector('pos-select-term')!;
+      const termSelect = page.root.querySelector('pos-select-term')!;
       fireEvent(
         termSelect,
         new CustomEvent('pod-os:term-selected', { detail: { uri: 'https://schema.org/description' } }),
@@ -110,7 +109,7 @@ describe('pos-new-thing-form', () => {
       await page.waitForChanges();
 
       // then the button is enabled
-      const button: HTMLButtonElement = withinShadow(page).getByDisplayValue('Create');
+      const button: HTMLButtonElement = within(page.root).getByDisplayValue('Create');
       expect(button.disabled).toBe(false);
     });
   });
@@ -124,7 +123,7 @@ describe('pos-new-thing-form', () => {
       .thenReturn('https://pod.test/container/new-thing#it');
     await page.instance.receivePodOs(os);
 
-    const nameField = page.root.shadowRoot!.querySelector('input[type=text]')!;
+    const nameField = page.root.querySelector('input[type=text]')!;
     await userEvent.type(nameField, 'New Thing');
     // fireEvent.input(nameField, { target: { value: 'New Thing' } });
 
@@ -132,7 +131,7 @@ describe('pos-new-thing-form', () => {
 
     expect(os.proposeUriForNewThing).toHaveBeenCalledWith('https://pod.test/container/', 'New Thing');
 
-    expect(page.root.shadowRoot).toEqualHtml(
+    expect(page.root.innerHTML).toEqualHtml(
       `
           <form method="dialog">
             <label for="type">
@@ -142,11 +141,11 @@ describe('pos-new-thing-form', () => {
             <label for="name">
               Name
             </label>
-            <input id="name" type="text">
+            <input autofocus id="name" type="text">
             <div id="new-uri" title="This will be the URI of the new thing">
               https://pod.test/container/new-thing#it
             </div>
-            <input id="create" type="submit" value="Create" disabled>
+            <input id="create" type="submit" value="Create">
           </form>`,
     );
   });
@@ -172,16 +171,16 @@ describe('pos-new-thing-form', () => {
         page.root.addEventListener('pod-os:link', linkEventListener);
 
         // when user selects a term and adds a name
-        const termSelect = page.root.shadowRoot!.querySelector('pos-select-term')!;
+        const termSelect = page.root.querySelector('pos-select-term')!;
         fireEvent(termSelect, new CustomEvent('pod-os:term-selected', { detail: { uri: 'https://schema.org/Thing' } }));
 
-        const nameField = page.root.shadowRoot!.querySelector('input[type=text]')!;
+        const nameField = page.root.querySelector('input[type=text]')!;
         fireEvent.input(nameField, { target: { value: 'New Thing' } });
 
         await page.waitForChanges();
 
         // and submits the form
-        const form: HTMLFormElement = page.root.shadowRoot!.querySelector('form')!;
+        const form: HTMLFormElement = page.root.querySelector('form')!;
         fireEvent.submit(form);
         await page.waitForChanges();
       });
@@ -205,7 +204,7 @@ describe('pos-new-thing-form', () => {
       it('resets the form', async () => {
         expect(page.instance.name).toBe('');
         expect(page.instance.newUri).toBe('');
-        expect(page.instance.selectedTypeUri).toBe('');
+        expect(page.instance.selectedTypeUri).toBe(undefined);
       });
     });
 
@@ -235,16 +234,16 @@ describe('pos-new-thing-form', () => {
         page.root.addEventListener('pod-os:error', errorEventListener);
 
         // when user selects a term and adds a name
-        const termSelect = page.root.shadowRoot!.querySelector('pos-select-term')!;
+        const termSelect = page.root.querySelector('pos-select-term')!;
         fireEvent(termSelect, new CustomEvent('pod-os:term-selected', { detail: { uri: 'https://schema.org/Thing' } }));
 
-        const nameField = page.root.shadowRoot!.querySelector('input[type=text]')!;
+        const nameField = page.root.querySelector('input[type=text]')!;
         fireEvent.input(nameField, { target: { value: 'New Thing' } });
 
         await page.waitForChanges();
 
         // and submits the form
-        const form: HTMLFormElement = page.root.shadowRoot!.querySelector('form')!;
+        const form: HTMLFormElement = page.root.querySelector('form')!;
         fireEvent.submit(form);
         await page.waitForChanges();
       });

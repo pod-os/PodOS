@@ -15,7 +15,7 @@ type TestFixtures = {
 };
 
 export const test = base.extend<TestFixtures & TestOptions>({
-  includesServiceWorker: false,
+  includesServiceWorker: [false, { option: true }],
   navigationBar: async ({ page }, use) => {
     await use(new NavigationBar(page));
   },

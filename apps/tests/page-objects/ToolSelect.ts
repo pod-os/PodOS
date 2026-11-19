@@ -1,5 +1,6 @@
 import { Locator, Page } from "@playwright/test";
 import { GenericThingPage } from "./GenericThingPage";
+import { SourceEditor } from "./SourceEditor";
 
 /**
  * Represents the tool tab bar (`pos-tool-select`) that lets the user switch
@@ -15,6 +16,11 @@ export class ToolSelect {
   async openDataTool(thingName: string): Promise<GenericThingPage> {
     await this.openTool("Data").click();
     return new GenericThingPage(this.page, thingName);
+  }
+
+  async openSrcTool(): Promise<SourceEditor> {
+    await this.openTool("Src").click();
+    return new SourceEditor(this.page);
   }
 
   private openTool(label: string): Locator {

@@ -8,11 +8,13 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { Attachment, HttpProblem, LdpContainer, Literal, NetworkProblem, PodOS, Problem, Relation, SolidFile, Thing } from "@pod-os/core";
 import { SwitchCaseRule } from "./components/pos-switch/rules";
 import { MentionItem } from "./components/pos-markdown-document/rich-editor/mention-extension/pos-mention-menu/pos-mention-menu";
+import { SaveStatus } from "./components/pos-save-status/pos-save-status";
 import { ToolConfig } from "./components/pos-type-router/selectToolsForTypes";
 import { ResultAsync } from "neverthrow";
 export { Attachment, HttpProblem, LdpContainer, Literal, NetworkProblem, PodOS, Problem, Relation, SolidFile, Thing } from "@pod-os/core";
 export { SwitchCaseRule } from "./components/pos-switch/rules";
 export { MentionItem } from "./components/pos-markdown-document/rich-editor/mention-extension/pos-mention-menu/pos-mention-menu";
+export { SaveStatus } from "./components/pos-save-status/pos-save-status";
 export { ToolConfig } from "./components/pos-type-router/selectToolsForTypes";
 export { ResultAsync } from "neverthrow";
 export namespace Components {
@@ -367,6 +369,9 @@ export namespace Components {
          */
         "mode": 'standalone' | 'pod';
     }
+    interface PosSaveStatus {
+        "saveStatus": SaveStatus;
+    }
     interface PosSelectTerm {
         /**
           * @default 'Type to search...'
@@ -415,6 +420,11 @@ export namespace Components {
           * @default []
          */
         "tools": ToolConfig[];
+    }
+    /**
+     * A tool to edit the source code of a document
+     */
+    interface PosToolSourceEditor {
     }
     interface PosTypeBadges {
     }
@@ -580,6 +590,10 @@ export interface PosSwitchCustomEvent<T> extends CustomEvent<T> {
 export interface PosToolSelectCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPosToolSelectElement;
+}
+export interface PosToolSourceEditorCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPosToolSourceEditorElement;
 }
 export interface PosTypeBadgesCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -1257,6 +1271,12 @@ declare global {
         prototype: HTMLPosRouterElement;
         new (): HTMLPosRouterElement;
     };
+    interface HTMLPosSaveStatusElement extends Components.PosSaveStatus, HTMLStencilElement {
+    }
+    var HTMLPosSaveStatusElement: {
+        prototype: HTMLPosSaveStatusElement;
+        new (): HTMLPosSaveStatusElement;
+    };
     interface HTMLPosSelectTermElementEventMap {
         "pod-os:init": any;
         "pod-os:term-selected": { uri: string };
@@ -1357,6 +1377,26 @@ declare global {
     var HTMLPosToolSelectElement: {
         prototype: HTMLPosToolSelectElement;
         new (): HTMLPosToolSelectElement;
+    };
+    interface HTMLPosToolSourceEditorElementEventMap {
+        "pod-os:error": any;
+    }
+    /**
+     * A tool to edit the source code of a document
+     */
+    interface HTMLPosToolSourceEditorElement extends Components.PosToolSourceEditor, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPosToolSourceEditorElementEventMap>(type: K, listener: (this: HTMLPosToolSourceEditorElement, ev: PosToolSourceEditorCustomEvent<HTMLPosToolSourceEditorElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPosToolSourceEditorElementEventMap>(type: K, listener: (this: HTMLPosToolSourceEditorElement, ev: PosToolSourceEditorCustomEvent<HTMLPosToolSourceEditorElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLPosToolSourceEditorElement: {
+        prototype: HTMLPosToolSourceEditorElement;
+        new (): HTMLPosToolSourceEditorElement;
     };
     interface HTMLPosTypeBadgesElementEventMap {
         "pod-os:resource": any;
@@ -1492,6 +1532,7 @@ declare global {
         "pos-reverse-relations": HTMLPosReverseRelationsElement;
         "pos-rich-link": HTMLPosRichLinkElement;
         "pos-router": HTMLPosRouterElement;
+        "pos-save-status": HTMLPosSaveStatusElement;
         "pos-select-term": HTMLPosSelectTermElement;
         "pos-setting-offline-cache": HTMLPosSettingOfflineCacheElement;
         "pos-share": HTMLPosShareElement;
@@ -1499,6 +1540,7 @@ declare global {
         "pos-switch": HTMLPosSwitchElement;
         "pos-tool-attachments": HTMLPosToolAttachmentsElement;
         "pos-tool-select": HTMLPosToolSelectElement;
+        "pos-tool-source-editor": HTMLPosToolSourceEditorElement;
         "pos-type-badges": HTMLPosTypeBadgesElement;
         "pos-type-index-entries": HTMLPosTypeIndexEntriesElement;
         "pos-type-router": HTMLPosTypeRouterElement;
@@ -1934,6 +1976,9 @@ declare namespace LocalJSX {
          */
         "onPod-os:route-changed"?: (event: PosRouterCustomEvent<string>) => void;
     }
+    interface PosSaveStatus {
+        "saveStatus": SaveStatus;
+    }
     interface PosSelectTerm {
         "onPod-os:init"?: (event: PosSelectTermCustomEvent<any>) => void;
         /**
@@ -1990,6 +2035,12 @@ declare namespace LocalJSX {
           * @default []
          */
         "tools"?: ToolConfig[];
+    }
+    /**
+     * A tool to edit the source code of a document
+     */
+    interface PosToolSourceEditor {
+        "onPod-os:error"?: (event: PosToolSourceEditorCustomEvent<any>) => void;
     }
     interface PosTypeBadges {
         "onPod-os:resource"?: (event: PosTypeBadgesCustomEvent<any>) => void;
@@ -2116,6 +2167,9 @@ declare namespace LocalJSX {
     interface PosRouterAttributes {
         "mode": 'standalone' | 'pod';
     }
+    interface PosSaveStatusAttributes {
+        "saveStatus": SaveStatus;
+    }
     interface PosSelectTermAttributes {
         "placeholder": string;
         "value": string;
@@ -2178,6 +2232,7 @@ declare namespace LocalJSX {
         "pos-reverse-relations": PosReverseRelations;
         "pos-rich-link": Omit<PosRichLink, keyof PosRichLinkAttributes> & { [K in keyof PosRichLink & keyof PosRichLinkAttributes]?: PosRichLink[K] } & { [K in keyof PosRichLink & keyof PosRichLinkAttributes as `attr:${K}`]?: PosRichLinkAttributes[K] } & { [K in keyof PosRichLink & keyof PosRichLinkAttributes as `prop:${K}`]?: PosRichLink[K] };
         "pos-router": Omit<PosRouter, keyof PosRouterAttributes> & { [K in keyof PosRouter & keyof PosRouterAttributes]?: PosRouter[K] } & { [K in keyof PosRouter & keyof PosRouterAttributes as `attr:${K}`]?: PosRouterAttributes[K] } & { [K in keyof PosRouter & keyof PosRouterAttributes as `prop:${K}`]?: PosRouter[K] };
+        "pos-save-status": Omit<PosSaveStatus, keyof PosSaveStatusAttributes> & { [K in keyof PosSaveStatus & keyof PosSaveStatusAttributes]?: PosSaveStatus[K] } & { [K in keyof PosSaveStatus & keyof PosSaveStatusAttributes as `attr:${K}`]?: PosSaveStatusAttributes[K] } & { [K in keyof PosSaveStatus & keyof PosSaveStatusAttributes as `prop:${K}`]?: PosSaveStatus[K] } & OneOf<"saveStatus", PosSaveStatus["saveStatus"], PosSaveStatusAttributes["saveStatus"]>;
         "pos-select-term": Omit<PosSelectTerm, keyof PosSelectTermAttributes> & { [K in keyof PosSelectTerm & keyof PosSelectTermAttributes]?: PosSelectTerm[K] } & { [K in keyof PosSelectTerm & keyof PosSelectTermAttributes as `attr:${K}`]?: PosSelectTermAttributes[K] } & { [K in keyof PosSelectTerm & keyof PosSelectTermAttributes as `prop:${K}`]?: PosSelectTerm[K] };
         "pos-setting-offline-cache": PosSettingOfflineCache;
         "pos-share": Omit<PosShare, keyof PosShareAttributes> & { [K in keyof PosShare & keyof PosShareAttributes]?: PosShare[K] } & { [K in keyof PosShare & keyof PosShareAttributes as `attr:${K}`]?: PosShareAttributes[K] } & { [K in keyof PosShare & keyof PosShareAttributes as `prop:${K}`]?: PosShare[K] } & OneOf<"uri", PosShare["uri"], PosShareAttributes["uri"]>;
@@ -2185,6 +2240,7 @@ declare namespace LocalJSX {
         "pos-switch": PosSwitch;
         "pos-tool-attachments": PosToolAttachments;
         "pos-tool-select": PosToolSelect;
+        "pos-tool-source-editor": PosToolSourceEditor;
         "pos-type-badges": PosTypeBadges;
         "pos-type-index-entries": Omit<PosTypeIndexEntries, keyof PosTypeIndexEntriesAttributes> & { [K in keyof PosTypeIndexEntries & keyof PosTypeIndexEntriesAttributes]?: PosTypeIndexEntries[K] } & { [K in keyof PosTypeIndexEntries & keyof PosTypeIndexEntriesAttributes as `attr:${K}`]?: PosTypeIndexEntriesAttributes[K] } & { [K in keyof PosTypeIndexEntries & keyof PosTypeIndexEntriesAttributes as `prop:${K}`]?: PosTypeIndexEntries[K] };
         "pos-type-router": PosTypeRouter;
@@ -2295,6 +2351,7 @@ declare module "@stencil/core" {
              * It also intercepts the URLs from `pod-os:link` events and pushes them as a new `uri` parameter.
              */
             "pos-router": LocalJSX.IntrinsicElements["pos-router"] & JSXBase.HTMLAttributes<HTMLPosRouterElement>;
+            "pos-save-status": LocalJSX.IntrinsicElements["pos-save-status"] & JSXBase.HTMLAttributes<HTMLPosSaveStatusElement>;
             "pos-select-term": LocalJSX.IntrinsicElements["pos-select-term"] & JSXBase.HTMLAttributes<HTMLPosSelectTermElement>;
             "pos-setting-offline-cache": LocalJSX.IntrinsicElements["pos-setting-offline-cache"] & JSXBase.HTMLAttributes<HTMLPosSettingOfflineCacheElement>;
             /**
@@ -2316,6 +2373,10 @@ declare module "@stencil/core" {
              * Allows selecting a tool from within a set of available tools
              */
             "pos-tool-select": LocalJSX.IntrinsicElements["pos-tool-select"] & JSXBase.HTMLAttributes<HTMLPosToolSelectElement>;
+            /**
+             * A tool to edit the source code of a document
+             */
+            "pos-tool-source-editor": LocalJSX.IntrinsicElements["pos-tool-source-editor"] & JSXBase.HTMLAttributes<HTMLPosToolSourceEditorElement>;
             "pos-type-badges": LocalJSX.IntrinsicElements["pos-type-badges"] & JSXBase.HTMLAttributes<HTMLPosTypeBadgesElement>;
             "pos-type-index-entries": LocalJSX.IntrinsicElements["pos-type-index-entries"] & JSXBase.HTMLAttributes<HTMLPosTypeIndexEntriesElement>;
             /**

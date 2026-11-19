@@ -8,6 +8,7 @@ nav:
       - elements/index.md
       - elements/apps
       - elements/components
+      - elements/tools
   - '@pod-os/core':
       - core/index.md
       - core/*

@@ -18,11 +18,11 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@axe-core/playwright": "^4.10.2",
-    "@playwright/test": "^1.53.1",
-    "@solid/community-server": "^7.1.9",
-    "netlify-cli": "^26.0.1",
-    "pwa-asset-generator": "^8.0.5",
-    "serve": "^14.2.4"
+    "@axe-core/playwright": "^4.14.0",
+    "@playwright/test": "^1.65.1",
+    "@solid/community-server": "^7.3.0",
+    "netlify-cli": "^26.2.0",
+    "pwa-asset-generator": "^8.1.7",
+    "serve": "^14.2.8"
   }
 }

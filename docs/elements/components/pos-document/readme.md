@@ -36,6 +36,7 @@
 ```mermaid
 graph TD;
   pos-document --> pos-markdown-document
+  pos-markdown-document --> pos-save-status
   pos-app-document-viewer --> pos-document
   style pos-document fill:#f9f,stroke:#333,stroke-width:4px
 ```

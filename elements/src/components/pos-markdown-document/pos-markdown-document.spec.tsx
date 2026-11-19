@@ -223,21 +223,9 @@ This is a test document`,
       page.instance.startEditing();
       await page.waitForChanges();
 
-      expect(page.root.shadowRoot!.querySelector('header .status')).toMatchInlineSnapshot(`
-        <span
-          aria-labelledby="status-message"
-          aria-live="polite"
-          class="status success"
-          role="status"
-        >
-          <sl-icon name="check2-circle" aria-hidden="true"></sl-icon>
-          <span
-            id="status-message"
-          >
-            all saved
-          </span>
-        </span>
-      `);
+      expect(page.root.shadowRoot!.querySelector('pos-save-status')).toMatchInlineSnapshot(
+        `<pos-save-status savestatus="idle"></pos-save-status>`,
+      );
     });
 
     it('shows that saving the changes failed', async () => {
@@ -249,21 +237,9 @@ This is a test document`,
       page.instance.startEditing();
       await page.waitForChanges();
 
-      expect(page.root.shadowRoot!.querySelector('header .status')).toMatchInlineSnapshot(`
-        <span
-          aria-labelledby="status-message"
-          aria-live="polite"
-          class="status error"
-          role="status"
-        >
-          <sl-icon name="x-octagon" aria-hidden="true"></sl-icon>
-          <span
-            id="status-message"
-          >
-            saving failed
-          </span>
-        </span>
-      `);
+      expect(page.root.shadowRoot!.querySelector('pos-save-status')).toMatchInlineSnapshot(
+        `<pos-save-status savestatus="failed"></pos-save-status>`,
+      );
     });
 
     it('shows that a save is in progress', async () => {
@@ -275,21 +251,9 @@ This is a test document`,
       page.instance.startEditing();
       await page.waitForChanges();
 
-      expect(page.root.shadowRoot!.querySelector('header .status')).toMatchInlineSnapshot(`
-        <span
-          aria-labelledby="status-message"
-          aria-live="polite"
-          class="status saving"
-          role="status"
-        >
-          <sl-icon name="cloud-upload" aria-hidden="true"></sl-icon>
-          <span
-            id="status-message"
-          >
-            saving changes
-          </span>
-        </span>
-      `);
+      expect(page.root.shadowRoot!.querySelector('pos-save-status')).toMatchInlineSnapshot(
+        `<pos-save-status savestatus="saving"></pos-save-status>`,
+      );
     });
 
     it('shows pending changes, if editor has been modified', async () => {
@@ -300,21 +264,9 @@ This is a test document`,
       page.instance.isModified = true;
       await page.waitForChanges();
 
-      expect(page.root.shadowRoot!.querySelector('header .status')).toMatchInlineSnapshot(`
-        <span
-          aria-labelledby="status-message"
-          aria-live="polite"
-          class="status pending"
-          role="status"
-        >
-          <sl-icon name="clock-history" aria-hidden="true"></sl-icon>
-          <span
-            id="status-message"
-          >
-            pending changes
-          </span>
-        </span>
-      `);
+      expect(page.root.shadowRoot!.querySelector('pos-save-status')).toMatchInlineSnapshot(
+        `<pos-save-status savestatus="pending"></pos-save-status>`,
+      );
     });
 
     it('shows pending changes, if editor has been modified even if last saving failed', async () => {
@@ -327,21 +279,9 @@ This is a test document`,
       page.instance.isModified = true;
       await page.waitForChanges();
 
-      expect(page.root.shadowRoot!.querySelector('header .status')).toMatchInlineSnapshot(`
-        <span
-          aria-labelledby="status-message"
-          aria-live="polite"
-          class="status pending"
-          role="status"
-        >
-          <sl-icon name="clock-history" aria-hidden="true"></sl-icon>
-          <span
-            id="status-message"
-          >
-            pending changes
-          </span>
-        </span>
-      `);
+      expect(page.root.shadowRoot!.querySelector('pos-save-status')).toMatchInlineSnapshot(
+        `<pos-save-status savestatus="pending"></pos-save-status>`,
+      );
     });
   });
 

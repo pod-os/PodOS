@@ -48,9 +48,14 @@ Type: `Promise<void>`
 
  - [pos-document](../pos-document)
 
+### Depends on
+
+- [pos-save-status](../pos-save-status)
+
 ### Graph
 ```mermaid
 graph TD;
+  pos-markdown-document --> pos-save-status
   pos-document --> pos-markdown-document
   style pos-markdown-document fill:#f9f,stroke:#333,stroke-width:4px
 ```

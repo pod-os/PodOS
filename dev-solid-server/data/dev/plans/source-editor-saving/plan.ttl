@@ -1,0 +1,148 @@
+@prefix plan: <../plan-ontology.ttl#>.
+@prefix prov: <http://www.w3.org/ns/prov#>.
+@prefix schema: <https://schema.org/>.
+@prefix dct: <http://purl.org/dc/terms/>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+
+<#plan> a plan:Plan;
+    dct:title "Source editor saving";
+    dct:description "pos-tool-source-editor renders file contents read-only with CodeMirror syntax highlighting (ADR-0019). Users cannot change anything. This plan adds editing and explicit saving to the source editor, with good UX for unsaved changes, kept minimal within a ~2h budget.";
+    plan:status plan:in-progress;
+    dct:created "2026-11-11"^^xsd:date;
+    dct:modified "2026-11-15T19:52:00Z"^^xsd:dateTime;
+    plan:hasTask <#task-1-make-editor-editable>, <#task-2-save-button-and-status>, <#task-3-navigation-guard>, <#task-4-e2e-test>;
+    plan:context <#entry-plan-context-01>, <#entry-plan-context-02>;
+    plan:decision <#entry-plan-decision-01>, <#entry-plan-decision-02>, <#entry-plan-decision-03>, <#entry-plan-decision-04>, <#entry-plan-decision-05>;
+    plan:outOfScope <#entry-plan-outOfScope-01>, <#entry-plan-outOfScope-02>;
+    plan:note <#entry-plan-note-01>, <#entry-plan-note-02>, <#entry-plan-note-03>, <#entry-plan-note-04>.
+<#task-1-make-editor-editable> a plan:Task;
+    dct:title "Make SourceEditor editable when the user may edit";
+    plan:parent <#plan>;
+    plan:status plan:done;
+    dct:created "2026-11-11"^^xsd:date;
+    dct:modified "2026-11-15T19:52:00Z"^^xsd:dateTime;
+    plan:goal <#entry-task-1-goal-01>;
+    plan:scope <#entry-task-1-scope-01>, <#entry-task-1-scope-02>;
+    plan:verification <#entry-task-1-verification-01>;
+    plan:touchesFile "elements/src/tools/pos-tool-source-editor/source-editor/SourceEditor.ts", "elements/src/tools/pos-tool-source-editor/source-editor/SourceEditor.dom.spec.ts", "elements/src/tools/pos-tool-source-editor/pos-tool-source-editor.tsx", "elements/src/tools/pos-tool-source-editor/pos-tool-source-editor.spec.tsx".
+<#task-2-save-button-and-status> a plan:Task;
+    dct:title "Save button and save status in pos-tool-source-editor";
+    plan:parent <#plan>;
+    plan:status plan:done;
+    dct:created "2026-11-11"^^xsd:date;
+    dct:modified "2026-11-15T19:52:00Z"^^xsd:dateTime;
+    plan:goal <#entry-task-2-goal-01>;
+    plan:scope <#entry-task-2-scope-01>, <#entry-task-2-scope-02>, <#entry-task-2-scope-03>;
+    plan:verification <#entry-task-2-verification-01>;
+    plan:touchesFile "elements/src/tools/pos-tool-source-editor/pos-tool-source-editor.tsx", "elements/src/tools/pos-tool-source-editor/pos-tool-source-editor.spec.tsx", "elements/src/tools/pos-tool-source-editor/pos-tool-source-editor.css".
+<#task-3-navigation-guard> a plan:Task;
+    dct:title "Warn about unsaved changes before navigation";
+    plan:parent <#plan>;
+    plan:status plan:done;
+    dct:created "2026-11-11"^^xsd:date;
+    dct:modified "2026-11-15T19:52:00Z"^^xsd:dateTime;
+    plan:goal <#entry-task-3-goal-01>;
+    plan:scope <#entry-task-3-scope-01>, <#entry-task-3-scope-02>;
+    plan:verification <#entry-task-3-verification-01>;
+    plan:outOfScope <#entry-task-3-outOfScope-01>;
+    plan:touchesFile "elements/src/tools/pos-tool-source-editor/pos-tool-source-editor.tsx", "elements/src/tools/pos-tool-source-editor/pos-tool-source-editor.spec.tsx".
+<#task-4-e2e-test> a plan:Task;
+    dct:title "End-to-end test: edit and save a Turtle document";
+    plan:parent <#plan>;
+    plan:status plan:planned;
+    dct:created "2026-11-11"^^xsd:date;
+    dct:modified "2026-11-15T19:52:00Z"^^xsd:dateTime;
+    plan:goal <#entry-task-4-goal-01>;
+    plan:scope <#entry-task-4-scope-01>;
+    plan:verification <#entry-task-4-verification-01>;
+    plan:touchesFile "apps/tests/source-editor.spec.ts".
+<#entry-plan-context-01> a schema:Comment;
+    schema:text "The source editor is the only tool that can show and should change the exact bytes of a document (Turtle, Markdown source, others). Markdown already has an autosave rich-text flow, but saving broken Turtle syntax would corrupt RDF documents on the pod, so autosave is risky for source editing.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-plan-context-02> a schema:Comment;
+    schema:text "Angelo has roughly two hours of budget for this feature and wants minimal scope rather than a full autosave/syntax-guard/draft-persistence feature set.";
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>.
+<#entry-plan-decision-01> a schema:Comment;
+    schema:text "Explicit saving only: the source editor gets a save button and a dirty indicator; changes are written to the pod solely when the user presses save. Chose this over autosave because autosaving risks persisting broken Turtle syntax.";
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>.
+<#entry-plan-decision-02> a schema:Comment;
+    schema:text "Treat all content types uniformly in iteration one: Turtle and Markdown source both get the same explicit save flow. Consistency keeps the implementation minimal.";
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>.
+<#entry-plan-decision-03> a schema:Comment;
+    schema:text "Navigation away with unsaved changes is guarded by intercepting pod-os:link and pod-os:tool-selected on window in the capture phase: when the editor is dirty and the user does not confirm, stopImmediatePropagation prevents pos-router and pos-type-router from navigating. No router changes needed.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-plan-decision-04> a schema:Comment;
+    schema:text "Losing edits on browser back/forward and tab close is accepted for now. beforeunload can be added later as a cheap extra guard; draft persistence (localStorage) is the eventual fix, not blocking navigation.";
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>.
+<#entry-plan-decision-05> a schema:Comment;
+    schema:text "Saving happens directly in pos-tool-source-editor via os.files().putFile, not through the pod-os:document-modified event: the tool is not mounted under pos-document, so delegating there would add coupling without benefit.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-plan-outOfScope-01> a schema:Comment;
+    schema:text "Syntax validation before saving (Turtle parse check). Accepted risk for now; a future iteration can disable save while the document does not parse.";
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>.
+<#entry-plan-outOfScope-02> a schema:Comment;
+    schema:text "Draft persistence and autosave. Explicit saving with a warning is the whole of iteration one.";
+    prov:wasAttributedTo <https://angelo.veltens.org/profile/card#me>.
+<#entry-plan-note-01> a schema:Comment;
+    schema:text "Save status UX follows the markdown editor's vocabulary: unsaved changes while dirty, saving changes during the request, all saved after success, saving failed on error.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-plan-note-02> a schema:Comment;
+    schema:text "Editing is only offered when thing.editable is true, mirroring how pos-document gates the markdown editor.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-plan-note-03> a schema:Comment;
+    schema:text "popstate (browser back/forward) cannot be intercepted and is not covered by the guard.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-plan-note-04> a schema:Comment;
+    schema:text "TDD with wallaby from the workspace directory elements/. Read the testing docs under docs/contributing/testing/ before writing tests.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-1-goal-01> a schema:Comment;
+    schema:text "Users can type in the CodeMirror source editor instead of being blocked by a read-only view.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-1-scope-01> a schema:Comment;
+    schema:text "Remove the readOnly/editable=false extensions from SourceEditor and make editability a constructor option; pos-tool-source-editor passes it based on thing.editable from useResource.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-1-scope-02> a schema:Comment;
+    schema:text "Existing dom specs keep asserting the read-only behavior for the non-editable case.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-1-verification-01> a schema:Comment;
+    schema:text "SourceEditor.dom.spec covers an editable instance accepting input; the component spec covers that editability follows thing.editable.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-2-goal-01> a schema:Comment;
+    schema:text "Users can persist their edits with an explicit save action and see the save status at a glance.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-2-scope-01> a schema:Comment;
+    schema:text "Save button plus status indicator (unsaved changes / saving / all saved / saving failed) rendered by pos-tool-source-editor when editable.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-2-scope-02> a schema:Comment;
+    schema:text "On save, call os.files().putFile(file, currentEditorContent); mark dirty on any editor change, clear it after a successful save.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-2-scope-03> a schema:Comment;
+    schema:text "Surface save errors as pod-os:error like pos-document does.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-2-verification-01> a schema:Comment;
+    schema:text "Component spec: clicking save calls putFile with the edited content; status transitions idle/saving/saved/failed are covered.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-3-goal-01> a schema:Comment;
+    schema:text "Users do not silently lose their edits when clicking a link or switching tools while the editor has unsaved changes.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-3-scope-01> a schema:Comment;
+    schema:text "While dirty, intercept pod-os:link and pod-os:tool-selected on window in the capture phase; confirm dialog, then stopImmediatePropagation on cancel. Clean up listeners in disconnectedCallback.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-3-scope-02> a schema:Comment;
+    schema:text "Add a beforeunload guard that warns on tab close or reload while dirty.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-3-verification-01> a schema:Comment;
+    schema:text "Component spec: dispatching pod-os:link and pod-os:tool-selected while dirty stops propagation without confirm, and lets it through after save or confirmed discard.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-3-outOfScope-01> a schema:Comment;
+    schema:text "Guarding browser back/forward (popstate) - not interceptable.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-4-goal-01> a schema:Comment;
+    schema:text "The happy path works end to end: open a Turtle document, edit it, save, and see the change persisted on the pod.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-4-scope-01> a schema:Comment;
+    schema:text "E2E test in apps/tests following the acceptance-test conventions (page objects, user intention language), run via npm run test:elements.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.
+<#entry-task-4-verification-01> a schema:Comment;
+    schema:text "The E2E test passes green and the edited Turtle content is visible after reloading the resource.";
+    prov:wasAttributedTo <../agents.ttl#llm-glm-5.3-flash>.

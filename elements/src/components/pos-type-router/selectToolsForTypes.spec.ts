@@ -16,7 +16,6 @@ describe('select tools for types', () => {
 
   it.each`
     typeUri                                                             | expectedApp
-    ${'http://www.w3.org/2007/ont/link#RDFDocument'}                    | ${AvailableTools.RdfDocument}
     ${'http://www.w3.org/ns/iana/media-types/application/pdf#Resource'} | ${AvailableTools.DocumentViewer}
     ${'http://purl.org/dc/terms/Image'}                                 | ${AvailableTools.ImageViewer}
     ${'http://www.w3.org/2007/ont/link#Document'}                       | ${AvailableTools.DocumentViewer}
@@ -61,7 +60,12 @@ describe('select tools for types', () => {
       { uri: 'http://www.w3.org/ns/ldp#Resource', label: 'Resource' },
     ];
     const tools = selectToolsForTypes(types);
-    expect(tools).toEqual([AvailableTools.DocumentViewer, AvailableTools.Generic, AvailableTools.Attachments]);
+    expect(tools).toEqual([
+      AvailableTools.DocumentViewer,
+      AvailableTools.SourceEditor,
+      AvailableTools.Generic,
+      AvailableTools.Attachments,
+    ]);
   });
 
   it('favours image viewer over other apps for images', () => {
@@ -91,6 +95,7 @@ describe('select tools for types', () => {
     expect(tools).toEqual([
       AvailableTools.RdfDocument,
       AvailableTools.DocumentViewer,
+      AvailableTools.SourceEditor,
       AvailableTools.Generic,
       AvailableTools.Attachments,
     ]);
@@ -110,6 +115,7 @@ describe('select tools for types', () => {
       AvailableTools.LdpContainer,
       AvailableTools.RdfDocument,
       AvailableTools.DocumentViewer,
+      AvailableTools.SourceEditor,
       AvailableTools.Generic,
       AvailableTools.Attachments,
     ]);

@@ -5,27 +5,25 @@ import { PodOsAware, PodOsEventEmitter, subscribePodOs } from '../events/PodOsAw
 @Component({
   tag: 'pos-new-thing-form',
   styleUrl: 'pos-new-thing-form.css',
-  shadow: {
-    delegatesFocus: true,
-  },
+  shadow: false,
 })
 export class PosNewThingForm implements PodOsAware {
   @Prop() referenceUri!: string;
-  @State() os: PodOS;
+  @State() os!: PodOS;
 
-  @State() newUri: string;
-  @State() name: string;
-  @State() selectedTypeUri: string;
+  @State() newUri: string = '';
+  @State() name: string = '';
+  @State() selectedTypeUri: string | undefined = undefined;
 
   @State() canSubmit: boolean = false;
 
-  @Event({ eventName: 'pod-os:link' }) linkEmitter: EventEmitter;
-  @Event({ eventName: 'pod-os:error' }) errorEmitter: EventEmitter;
+  @Event({ eventName: 'pod-os:link' }) linkEmitter!: EventEmitter;
+  @Event({ eventName: 'pod-os:error' }) errorEmitter!: EventEmitter;
 
   @Watch('name')
   @Watch('selectedTypeUri')
   validate() {
-    this.canSubmit = Boolean(this.name && this.selectedTypeUri);
+    this.canSubmit = Boolean(this.name);
   }
 
   componentWillLoad() {
@@ -35,7 +33,7 @@ export class PosNewThingForm implements PodOsAware {
     this.os = os;
   };
 
-  @Event({ eventName: 'pod-os:init' }) subscribePodOs: PodOsEventEmitter;
+  @Event({ eventName: 'pod-os:init' }) subscribePodOs!: PodOsEventEmitter;
 
   render() {
     return (
@@ -48,7 +46,7 @@ export class PosNewThingForm implements PodOsAware {
           onPod-os:term-selected={e => this.onTermSelected(e)}
         />
         <label htmlFor="name">Name</label>
-        <input id="name" type="text" value={this.name} onInput={e => this.handleChange(e)} />
+        <input autofocus={true} id="name" type="text" value={this.name} onInput={e => this.handleChange(e)} />
         {this.newUri ? (
           <div id="new-uri" title="This will be the URI of the new thing">
             {this.newUri}
@@ -59,16 +57,16 @@ export class PosNewThingForm implements PodOsAware {
     );
   }
 
-  handleChange(event) {
-    this.name = event.target.value;
+  handleChange(event: Event) {
+    this.name = (event.target as HTMLInputElement).value;
     this.newUri = this.os.proposeUriForNewThing(this.referenceUri, this.name);
   }
 
-  onTermSelected(event) {
+  onTermSelected(event: CustomEvent) {
     this.selectedTypeUri = event.detail.uri;
   }
 
-  async handleSubmit(event) {
+  async handleSubmit(event: Event) {
     try {
       await this.os.addNewThing(this.newUri, this.name, this.selectedTypeUri);
       this.linkEmitter.emit(this.newUri);
@@ -82,6 +80,6 @@ export class PosNewThingForm implements PodOsAware {
   private reset() {
     this.name = '';
     this.newUri = '';
-    this.selectedTypeUri = '';
+    this.selectedTypeUri = undefined;
   }
 }

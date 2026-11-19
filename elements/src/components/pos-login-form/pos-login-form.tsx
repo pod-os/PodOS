@@ -16,7 +16,7 @@ export class PosLoginForm {
   /**
    * Emits the selected IDP URL to use for login
    */
-  @Event({ eventName: 'pod-os:idp-url-selected' }) idpUrlSelected: EventEmitter;
+  @Event({ eventName: 'pod-os:idp-url-selected' }) idpUrlSelected!: EventEmitter;
 
   @State() rememberMe: boolean = false;
 
@@ -38,6 +38,7 @@ export class PosLoginForm {
       <form method="dialog" onSubmit={() => this.handleSubmit()}>
         <label htmlFor="idpUrl">Please enter your Identity Provider</label>
         <input
+          autofocus={true}
           id="idpUrl"
           type="url"
           value={this.idpUrl}
@@ -69,12 +70,12 @@ export class PosLoginForm {
     );
   }
 
-  handleChange(event) {
+  handleChange(event: Event) {
     this.validate();
-    this.idpUrl = event.target.value;
+    this.idpUrl = (event.target as HTMLInputElement).value;
   }
 
-  async handleSubmit() {
+  handleSubmit() {
     localSettings.state.rememberedIdp = this.rememberMe ? this.idpUrl : null;
     this.idpUrlSelected.emit(this.idpUrl);
   }

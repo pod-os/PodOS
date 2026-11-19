@@ -23,6 +23,7 @@
 graph TD;
   pos-app-document-viewer --> pos-document
   pos-document --> pos-markdown-document
+  pos-markdown-document --> pos-save-status
   style pos-app-document-viewer fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

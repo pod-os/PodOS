@@ -45,5 +45,9 @@
     "dev-solid-server",
     "contacts",
     "service-worker"
-  ]
+  ],
+  "dependencies": {
+    "@codemirror/view": "^6.43.15",
+    "codemirror": "^6.0.2"
+  }
 }

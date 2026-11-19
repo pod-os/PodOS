@@ -42,3 +42,8 @@ runs:
       env:
         NETLIFY_SITE_ID: ${{ inputs.netlify-site-id }}
         NETLIFY_AUTH_TOKEN: ${{ inputs.netlify-auth-token }}
+
+    - name: Explain Netlify deployment failure
+      if: steps.deploy.conclusion == 'failure'
+      shell: bash
+      run: $GITHUB_WORKSPACE/.github/scripts/netlify-deploy-failure-help.sh "${{ inputs.app-name }}"

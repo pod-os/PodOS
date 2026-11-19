@@ -18,7 +18,7 @@ describe('pos-login-form', () => {
         <label for="idpUrl">
           Please enter your Identity Provider
         </label>
-      <input id="idpUrl" type="url" required list="suggestedIssuers" placeholder="Type to search...">
+      <input autofocus id="idpUrl" type="url" required list="suggestedIssuers" placeholder="Type to search...">
         <datalist id="suggestedIssuers">
           <option value="https://solidcommunity.net/">
             solidcommunity.net

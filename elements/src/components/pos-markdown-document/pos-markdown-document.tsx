@@ -3,9 +3,9 @@ import { Component, h, Method, Prop, State, Event, EventEmitter, Element } from 
 import { usePodOS } from '../events/usePodOS';
 
 import { RichEditor } from './rich-editor';
-
 import './shoelace';
 import { map, Subject, takeUntil, tap } from 'rxjs';
+import { SaveStatus } from '../pos-save-status/pos-save-status';
 
 interface ModifiedFile {
   file: SolidFile;
@@ -113,7 +113,7 @@ export class PosMarkdownDocument {
       <article>
         {this.editable ? (
           <header>
-            {this.isEditing ? this.getStatus() : null}
+            {this.isEditing ? <pos-save-status saveStatus={this.getStatus()} /> : null}
             {this.isEditing ? (
               <button onClick={() => this.stopEditing()}>
                 <sl-icon name="eye"></sl-icon>
@@ -132,33 +132,10 @@ export class PosMarkdownDocument {
     );
   }
 
-  private getStatus() {
+  private getStatus(): SaveStatus {
     if (this.isModified) {
-      return <Status status="pending" message="pending changes" icon="clock-history"></Status>;
+      return 'pending';
     }
-    if (this.saveStatus === 'failed') {
-      return <Status status="error" message="saving failed" icon="x-octagon"></Status>;
-    }
-    if (this.saveStatus === 'saving') {
-      return <Status status="saving" message="saving changes" icon="cloud-upload"></Status>;
-    }
-    return <Status status="success" message="all saved" icon="check2-circle"></Status>;
+    return this.saveStatus;
   }
-}
-
-function Status({ status, icon, message }) {
-  return (
-    <span
-      class={{
-        status: true,
-        [status]: true,
-      }}
-      role="status"
-      aria-live="polite"
-      aria-labelledby="status-message"
-    >
-      <sl-icon name={icon} aria-hidden="true"></sl-icon>
-      <span id="status-message">{message}</span>
-    </span>
-  );
 }

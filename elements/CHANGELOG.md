@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.46.0
+
+### Added
+
+- [pos-save-status](https://pod-os.org/reference/elements/components/pos-save-status/): New element to render a save status indicator
+- [pos-tool-source-editor](https://pod-os.org/reference/elements/tools/pos-tool-source-editor/): New tool to edit the source code of a document using [CodeMirror](https://codemirror.net/)
+  - syntax highlighting for Markdown and turtle documents
+  - Uses the VS Code theme matching the user's preferred color scheme (dark / light)
+- [pos-type-router](https://pod-os.org/reference/elements/components/pos-type-router/): Now offers `pos-tool-source-editor` for RDF and Markdown documents
+
+### Changed
+
+- [pos-new-thing-form](https://pod-os.org/reference/elements/components/pos-new-thing-form/) can create a new thing without needing to specify a type
+
+### Fixed
+
+- [pos-dialog](https://pod-os.org/reference/elements/components/pos-dialog/), [pos-add-new-thing](https://pod-os.org/reference/elements/components/https://pod-os.org/reference/elements/components/pos-add-new-thing//): Close the dialog when the form is submitted
+
 ## 0.45.1
 
 ### Fixed

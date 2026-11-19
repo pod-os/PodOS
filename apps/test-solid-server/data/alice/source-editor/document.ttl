@@ -1,0 +1,6 @@
+@prefix : <#>.
+@prefix schema: <http://schema.org/>.
+
+<>
+    schema:name "A turtle file";
+    schema:description "Used to test the pos-tool-source-editor" .
