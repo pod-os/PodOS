@@ -24,4 +24,8 @@ jobs:
       - name: Build homepage
         run: nix-shell --run "make build"
       - name: Deploy PodOS Homepage
+        id: deploy
         run: npx netlify-cli deploy --dir=site --prod
+      - name: Explain Netlify deployment failure
+        if: steps.deploy.conclusion == 'failure'
+        run: $GITHUB_WORKSPACE/.github/scripts/netlify-deploy-failure-help.sh "the PodOS Homepage"
