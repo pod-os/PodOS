@@ -16,7 +16,7 @@ describe('pos-new-thing-form', () => {
             <label for="type">
               Type
             </label>
-            <pos-select-term id="type" placeholder value></pos-select-term>
+            <pos-select-term id="type" placeholder></pos-select-term>
             <label for="name">
               Name
             </label>
@@ -50,7 +50,7 @@ describe('pos-new-thing-form', () => {
       expect(button.disabled).toBe(true);
     });
 
-    it('is still disabled after entering a name', async () => {
+    it('is not disabled after entering a name', async () => {
       // given
       const page = await render(<pos-new-thing-form referenceUri="https://pod.test/container/"></pos-new-thing-form>);
 
@@ -64,7 +64,7 @@ describe('pos-new-thing-form', () => {
 
       // then the button is disabled
       const button: HTMLButtonElement = within(page.root).getByDisplayValue('Create');
-      expect(button.disabled).toBe(true);
+      expect(button.disabled).toBe(false);
     });
 
     it('is enabled after a term has been selected and a name typed', async () => {
@@ -137,7 +137,7 @@ describe('pos-new-thing-form', () => {
             <label for="type">
               Type
             </label>
-            <pos-select-term id="type" placeholder value></pos-select-term>
+            <pos-select-term id="type" placeholder></pos-select-term>
             <label for="name">
               Name
             </label>
@@ -145,7 +145,7 @@ describe('pos-new-thing-form', () => {
             <div id="new-uri" title="This will be the URI of the new thing">
               https://pod.test/container/new-thing#it
             </div>
-            <input id="create" type="submit" value="Create" disabled>
+            <input id="create" type="submit" value="Create">
           </form>`,
     );
   });
@@ -204,7 +204,7 @@ describe('pos-new-thing-form', () => {
       it('resets the form', async () => {
         expect(page.instance.name).toBe('');
         expect(page.instance.newUri).toBe('');
-        expect(page.instance.selectedTypeUri).toBe('');
+        expect(page.instance.selectedTypeUri).toBe(undefined);
       });
     });
 

@@ -13,7 +13,7 @@ export class PosNewThingForm implements PodOsAware {
 
   @State() newUri: string = '';
   @State() name: string = '';
-  @State() selectedTypeUri: string = '';
+  @State() selectedTypeUri: string | undefined = undefined;
 
   @State() canSubmit: boolean = false;
 
@@ -23,7 +23,7 @@ export class PosNewThingForm implements PodOsAware {
   @Watch('name')
   @Watch('selectedTypeUri')
   validate() {
-    this.canSubmit = Boolean(this.name && this.selectedTypeUri);
+    this.canSubmit = Boolean(this.name);
   }
 
   componentWillLoad() {
@@ -80,6 +80,6 @@ export class PosNewThingForm implements PodOsAware {
   private reset() {
     this.name = '';
     this.newUri = '';
-    this.selectedTypeUri = '';
+    this.selectedTypeUri = undefined;
   }
 }
