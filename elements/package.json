@@ -64,12 +64,12 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@vitest/coverage-v8": "^5.1.0",
     "fake-indexeddb": "^6.2.8",
-    "happy-dom": "^20.13.0",
+    "happy-dom": "^20.14.6",
     "msw": "^2.15.0",
     "prettier": "^3.10.1",
     "shadow-dom-testing-library": "^1.14.2",
     "url-template": "^3.1.1",
-    "vitest": "^5.1.0"
+    "vitest": "^5.1.1"
   },
   "license": "MIT",
   "repository": {
